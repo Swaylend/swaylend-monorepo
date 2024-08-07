@@ -1,0 +1,21 @@
+[package]
+name = "test_project"
+description = "A cargo-generate template for Rust + Sway integration testing."
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+
+[[test]]
+harness = true
+name = "integration_tests"
+path = "tests/harness.rs"
+
+[dependencies]
+fuels = { workspace = true, features = ["fuel-core-lib"] }
+tokio = { workspace = true }
+dotenv = { workspace = true }
+reqwest = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+rand = { workspace = true }
+anyhow = { workspace = true }

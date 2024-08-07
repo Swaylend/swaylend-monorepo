@@ -1,0 +1,33 @@
+{
+  "name": "sway-lend-indexer",
+  "version": "0.1.0",
+  "scripts": {
+    "clean": "tsc --clean",
+    "build": "tsc --build",
+    "codegen": "envio codegen",
+    "dev": "envio dev",
+    "test": "ts-mocha test/**/*.spec.ts",
+    "start": "tsx generated/src/Index.bs.js"
+  },
+  "dependencies": {
+    "chai": "4.3.10",
+    "ethers": "6.8.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.8.3",
+    "@types/chai": "^4.3.11",
+    "@types/mocha": "10.0.6",
+    "@types/node": "20.8.8",
+    "envio": "2.1.4-fuel",
+    "mocha": "10.2.0",
+    "ts-mocha": "^10.0.0",
+    "typescript": "5.2.2"
+  },
+  "optionalDependencies": {
+    "generated": "./generated"
+  },
+  "packageManager": "pnpm@9.1.1",
+  "engines": {
+    "node": ">=20.15.0"
+  }
+}

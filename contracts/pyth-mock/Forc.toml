@@ -1,0 +1,7 @@
+[project]
+entry = "main.sw"
+license = "Apache-2.0"
+name = "pyth_mock"
+
+[dependencies]
+pyth_interface = { git = "https://github.com/pyth-network/pyth-crosschain", tag = "pyth-fuel-contract-v0.5.0" }

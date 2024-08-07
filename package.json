@@ -1,0 +1,21 @@
+{
+  "name": "@lutralabs/sway-lend-monorepo",
+  "private": true,
+  "license": "MIT",
+  "workspaces": ["apps/**/*"],
+  "scripts": {
+    "lint": "biome check .",
+    "lint:fix": "biome check --write ."
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.8.3"
+  },
+  "packageManager": "pnpm@9.1.1",
+  "engines": {
+    "node": ">=20.15.0"
+  },
+  "volta": {
+    "node": "20.15.0",
+    "pnpm": "9.1.1"
+  }
+}

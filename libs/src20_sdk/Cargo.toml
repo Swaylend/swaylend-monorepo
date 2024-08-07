@@ -1,0 +1,25 @@
+[package]
+name = "src20_sdk"
+version = "0.0.3"
+edition = "2021"
+license = "Apache-2.0"
+description = "Sway token standard SRC-20 rust sdk"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+fuels = { workspace = true }
+tokio = { workspace = true }
+dotenv = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+rand = { workspace = true }
+
+sha2 = "0.10.8"
+tai64 = "4.0.0"
+
+
+[[test]]
+harness = true
+name = "tests"
+path = "tests/harness.rs"

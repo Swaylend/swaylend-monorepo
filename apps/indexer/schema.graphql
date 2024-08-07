@@ -1,0 +1,143 @@
+# Collateral Asset Schema
+type CollateralAsset {
+  id: ID!
+  priceFeedId: String!
+  decimals: Int!
+  borrowCollateralFactor: BigInt!
+  liquidateCollateralFactor: BigInt!
+  liquidationPenalty: BigInt!
+  supplyCap: BigInt!
+  paused: Boolean!
+
+  # Derived fields
+  users: [UserCollateral!]! @derivedFrom(field: "collateralAsset")
+}
+
+# User Schema
+type User {
+  id: ID! # This will probably be the user's address
+  address: String!
+  principal: BigInt!
+  baseTrackingIndex: BigInt!
+  baseTrackingAccrued: BigInt!
+
+  # Calculated fields
+  totalCollateralBought: BigInt!
+  totalValueLiquidated: BigInt!
+
+  # Derived fields
+  collateralAssets: [UserCollateral!]! @derivedFrom(field: "user")
+  collateralEvents: [UserCollateralEvent!]! @derivedFrom(field: "user")
+  baseEvents: [UserBaseEvent!]! @derivedFrom(field: "user")
+  liquidationEventsLiquidator: [LiquidationEvent!]! @derivedFrom(field: "liquidator")
+  liquidationEventsLiquidated: [LiquidationEvent!]! @derivedFrom(field: "liquidated")
+  absorbCollateralEvents: [AbsorbCollateralEvent!]! @derivedFrom(field: "user")
+  buyCollateralEvents: [BuyCollateralEvent!]! @derivedFrom(field: "user")
+}
+
+# Pause Configuration Schema
+type PauseConfiguration {
+  id: ID! # This will be a static value (as we only have 1 pause configuration)
+  supplyPaused: Boolean!
+  withdrawPaused: Boolean!
+  absorbPaused: Boolean!
+  buyPaused: Boolean!
+}
+
+# Market Schema
+type MarketState {
+  id: ID! # This will be a static value (as we only have 1 market)
+  baseSupplyIndex: BigInt!
+  baseBorrowIndex: BigInt!
+  trackingSupplyIndex: BigInt!
+  trackingBorrowIndex: BigInt!
+  totalSupplyBase: BigInt!
+  totalBorrowBase: BigInt!
+  lastAccrualTime: BigInt!
+}
+
+# User - Collateral Schema
+type UserCollateral {
+  id: ID! # `user.id-collateralAsset.id`
+  user: User!
+  collateralAsset: CollateralAsset!
+  amount: BigInt!
+}
+
+###############################
+# Event Schemas for analytics #
+###############################
+
+enum CollateralActionType {
+  Supply,
+  Withdraw,
+}
+
+# User Collateral Actions
+type UserCollateralEvent {
+  id: ID! # random ? 
+  user: User!
+  collateralAsset: CollateralAsset!
+  amount: BigInt!
+  actionType: CollateralActionType!
+  timestamp: Int!
+}
+
+enum BaseActionType {
+  Supply,
+  Withdraw,
+  Borrow,
+  Repay,
+}
+
+# User Base Actions
+type UserBaseEvent {
+  id: ID! # random ?
+  user: User!
+  amount: BigInt!
+  actionType: BaseActionType!
+  timestamp: Int!
+}
+
+# Liquidation Events
+type LiquidationEvent {
+  id: ID! # random ?
+  liquidator: User!
+  liquidated: User!
+  basePaidOut: BigInt!
+  basePaidOutValue: BigInt!
+  totalBase: BigInt!
+  totalBaseValue: BigInt!
+  decimals: Int!
+  timestamp: Int!
+}
+
+# Absorb Collateral Events
+type AbsorbCollateralEvent {
+  id: ID! # random ?
+  user: User!
+  collateralAsset: CollateralAsset!
+  amount: BigInt!
+  seizeValue: BigInt!
+  decimals: Int!
+  timestamp: Int!
+}
+
+# Buy Collateral Events
+type BuyCollateralEvent {
+  id: ID! # random ?
+  user: User!
+  recipient: String!
+  collateralAsset: CollateralAsset!
+  amount: BigInt!
+  price: BigInt!
+  timestamp: Int!
+}
+
+# Reserves Withdrawn Events
+type ReservesWithdrawnEvent {
+  id: ID! # random ?
+  recipient: String!
+  amount: BigInt!
+  timestamp: Int!
+}

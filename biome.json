@@ -1,0 +1,117 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.8.3/schema.json",
+  "files": {
+    "include": [
+      "**/*.js",
+      "**/*.ts",
+      "**/*.jsx",
+      "**/*.tsx",
+      "**/*.cjs",
+      "**/*.cts",
+      "**/*.mjs",
+      "**/*.mts",
+      "**/*.json"
+    ],
+    "ignore": [
+      "**/node_modules/**",
+      "**/dist/**",
+      "**/build/**",
+      "**/coverage/**",
+      "**/contract-types/**",
+      "**/.next/**",
+      "**/files/**",
+      "**/out/**",
+      "patches/**",
+      "assets/**",
+      ".nx/**",
+      "**/target/**",
+      "**/data/**",
+      "**/generated/**",
+      "**/typechain-types/**",
+      "**/cache/**",
+      "**/cache_forge/**",
+      "**/artifacts/**",
+      "**/contracts/lib/**",
+      "**/__generated__/**",
+      "**/ignition/deployments/**",
+      "**/subgraphs/tests/.latest.json"
+    ]
+  },
+  "organizeImports": {
+    "enabled": true
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "complexity": {
+        "noStaticOnlyClass": "off",
+        "noForEach": "off"
+      },
+      "style": {
+        "noNonNullAssertion": "off"
+      },
+      "suspicious": {
+        "noExplicitAny": "off",
+        "noImplicitAnyLet": "off",
+        "noArrayIndexKey": "off"
+      },
+      "security": {
+        "noDangerouslySetInnerHtml": "off"
+      },
+      "correctness": {
+        "useExhaustiveDependencies": "off"
+      },
+      "a11y": {
+        "useKeyWithClickEvents": "off"
+      }
+    }
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "tab"
+  },
+  "javascript": {
+    "formatter": {
+      "indentStyle": "space",
+      "quoteStyle": "single",
+      "trailingCommas": "es5",
+      "indentWidth": 2,
+      "lineEnding": "lf",
+      "semicolons": "always"
+    }
+  },
+  "json": {
+    "formatter": {
+      "enabled": true,
+      "indentWidth": 2,
+      "indentStyle": "space",
+      "lineEnding": "lf"
+    }
+  },
+  "overrides": [
+    {
+      "include": ["**/subgraphs/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "useImportType": "off"
+          },
+          "suspicious": {
+            "noShadowRestrictedNames": "off"
+          }
+        }
+      }
+    },
+    {
+      "include": ["**/dapp/src/app/api/frame/**"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "useJsxKeyInIterable": "off"
+          }
+        }
+      }
+    }
+  ]
+}

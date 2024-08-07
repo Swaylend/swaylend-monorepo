@@ -1,0 +1,12 @@
+[workspace]
+members = [
+    # ABIs
+    "abis/market_abi",
+    # Contracts
+    "contracts/market",
+    "contracts/token",
+    "contracts/test",
+    "contracts/pyth-mock",
+    # Libs
+    "libs/i256",
+]

@@ -1,0 +1,25 @@
+[package]
+name = "market"
+description = "A cargo-generate template for Rust + Sway integration testing."
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+
+[[test]]
+harness = true
+name = "integration_tests"
+path = "tests/harness.rs"
+
+[dependencies]
+pyth_mock = { path = "../pyth-mock" }
+pyth_sdk = { workspace = true }
+src20_sdk = { workspace = true }
+fuels = { workspace = true }
+tokio = { workspace = true }
+dotenv = { workspace = true }
+reqwest = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+rand = { workspace = true }
+chrono = { workspace = true }
+anyhow = { workspace = true }

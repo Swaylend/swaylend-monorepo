@@ -1,0 +1,24 @@
+[workspace]
+members = [
+    "contracts/market",
+    "libs/src20_sdk",
+    "apps/oracle",
+    # Pyth mock
+    "contracts/pyth-mock",
+    # Test
+    "contracts/test",
+]
+resolver = "2"
+
+[workspace.dependencies]
+pyth_sdk = { git = "https://github.com/pyth-network/pyth-crosschain", rev = "f41782f005f4bf99b8f765214b91b1397bc7c39b" }
+tokio = { version = "1.12", features = ["full"] }
+src20_sdk = { path = "libs/src20_sdk" }
+fuels = { version = "0.65.1", features = ["fuel-core-lib"] }
+dotenv = "0.15.0"
+serde = "1.0.197"
+serde_json = "1.0.114"
+reqwest = "0.11.20"
+rand = "0.8.5"
+chrono = "0.4.38"
+anyhow = "1.0.86"
