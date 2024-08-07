@@ -1,8 +1,28 @@
 use dotenv::dotenv;
 use fuels::accounts::ViewOnlyAccount;
 use fuels::prelude::{ContractId, Provider, WalletUnlocked};
-use pyth_sdk::pyth_utils::{update_data_bytes, Pyth, PythOracleContract};
+use fuels::programs::calls::CallParameters;
+use fuels::types::{AssetId, Bytes};
+use market_sdk::MarketContract;
+use pyth_sdk::constants::{
+    BTC_USD_PRICE_FEED_ID, ETH_USD_PRICE_FEED_ID, UNI_USD_PRICE_FEED_ID, USDC_USD_PRICE_FEED_ID,
+};
+use pyth_sdk::pyth_utils::{Pyth, PythOracleContract};
+use reqwest::ClientBuilder;
+use serde::Deserialize;
 use std::{str::FromStr, thread::sleep, time::Duration};
+
+#[derive(Deserialize)]
+struct BinaryData {
+    encoding: String,
+    data: Vec<String>,
+}
+
+#[derive(Deserialize)]
+struct PriceUpdate {
+    binary: BinaryData,
+    parsed: serde_json::Value,
+}
 
 #[tokio::main]
 async fn main() {
@@ -13,18 +33,47 @@ async fn main() {
     let provider = Provider::connect(rpc).await.unwrap();
     let secret = std::env::var("SECRET").unwrap();
     let oracle_address = std::env::var("ORACLE_ADDRESS").unwrap();
+    let market_address = std::env::var("MARKET_ADDRESS").unwrap();
 
     // Wallet
     let wallet =
         WalletUnlocked::new_from_private_key(secret.parse().unwrap(), Some(provider.clone()));
+
+    // Market contract
+    let market_contract_id = ContractId::from_str(&market_address).unwrap();
+    let market_contract = MarketContract::new(market_contract_id, wallet.clone()).await;
 
     // Pyth contract
     let id = ContractId::from_str(&oracle_address).unwrap();
     let oracle =
         Pyth { instance: PythOracleContract::new(id, wallet.clone()), wallet: wallet.clone() };
 
+    // Base asset id
+    let base_asset_id =
+        AssetId::from_str("0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07")
+            .unwrap();
+
+    // Price feed ids to update
+    let ids = vec![
+        BTC_USD_PRICE_FEED_ID,
+        ETH_USD_PRICE_FEED_ID,
+        UNI_USD_PRICE_FEED_ID,
+        USDC_USD_PRICE_FEED_ID,
+    ];
+
+    let mut params = Vec::new();
+    for price_id in ids {
+        params.push(("ids[]", price_id.to_string()));
+    }
+
+    let http_client = ClientBuilder::new().timeout(Duration::from_millis(5000)).build().unwrap();
+    let url = "https://hermes.pyth.network/v2/updates/price/latest";
+
     loop {
-        let update_data = update_data_bytes(None).await.unwrap();
+        let response = http_client.get(url).query(&params).send().await.unwrap();
+        let price_update_json = response.json::<PriceUpdate>().await.unwrap();
+        let update_data =
+            vec![Bytes(hex::decode(price_update_json.binary.data[0].clone()).unwrap())];
         let fee = oracle.update_fee(&update_data).await.unwrap().value;
         let update_result = oracle.update_price_feeds(fee, &update_data).await;
 

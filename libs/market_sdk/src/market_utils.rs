@@ -1,8 +1,10 @@
+use market::*;
+use token_sdk::Asset;
+
 use std::path::PathBuf;
 
 use fuels::{
     accounts::{wallet::WalletUnlocked, ViewOnlyAccount},
-    macros::abigen,
     programs::{
         calls::{CallParameters, ContractDependency},
         contract::{Contract, LoadConfiguration, StorageConfiguration},
@@ -16,27 +18,7 @@ use fuels::{
 use rand::Rng;
 use serde::Deserialize;
 
-use crate::utils::number_utils::{format_units, format_units_u128};
-
-use super::token_utils::Asset;
-
-abigen!(Contract(
-    name = "Market",
-    abi = "contracts/market/out/release/market-abi.json"
-));
-
-fn convert_i128(value: I256) -> i128 {
-    let val: i128 = value.value.try_into().unwrap();
-    val * if value.negative { -1 } else { 1 }
-}
-
-pub fn convert_u256_to_u128(value: fuels::types::U256) -> u128 {
-    value.low_u128()
-}
-
-pub struct User {
-    wallet: WalletUnlocked,
-}
+use crate::{convert_i256_to_i128, convert_u256_to_u128, format_units, format_units_u128};
 
 pub struct MarketContract {
     pub instance: Market<WalletUnlocked>,
@@ -67,7 +49,6 @@ pub struct ContractConfiguration {
     base_token: Bits256,
     base_token_decimals: u32,
     base_token_price_feed_id: Bits256,
-    pyth_contract_id: ContractId,
     fuel_eth_base_asset_id: Bits256,
     market_config: MarketConfig,
 }
@@ -78,7 +59,6 @@ pub fn get_market_config(
     base_token_bits256: Bits256,
     base_token_decimals: u32,
     base_token_price_feed_id: Bits256,
-    pyth_contract_id: ContractId,
     fuel_eth_base_asset_id: Bits256,
 ) -> anyhow::Result<ContractConfiguration> {
     let config_json_path =
@@ -92,7 +72,6 @@ pub fn get_market_config(
         base_token: base_token_bits256,
         base_token_decimals,
         base_token_price_feed_id,
-        pyth_contract_id,
         fuel_eth_base_asset_id,
         market_config: config,
     })
@@ -638,10 +617,10 @@ impl MarketContract {
         let b_rate = convert_u256_to_u128(market_basic.base_borrow_index) as f64 / scale15;
         let total_collateral = self.totals_collateral(collateral.bits256).await?;
         let last_accrual_time = market_basic.last_accrual_time;
-        let usdc_reserves = convert_i128(self.get_reserves().await?.value);
+        let usdc_reserves = convert_i256_to_i128(self.get_reserves().await?.value);
 
         let usdc_reserves = format!("{} USDC", usdc_reserves as f64 / 10u64.pow(6) as f64);
-        let collateral_reserves = convert_i128(
+        let collateral_reserves = convert_i256_to_i128(
             self.get_collateral_reserves(collateral.bits256)
                 .await?
                 .value,
@@ -678,7 +657,7 @@ impl MarketContract {
             .get_user_collateral(alice_address, collateral.bits256)
             .await?;
         println!("\nAlice 🦹");
-        println!("  Principal = {}", convert_i128(basic.principal));
+        println!("  Principal = {}", convert_i256_to_i128(basic.principal));
         println!("  Present supply = {supply} USDC | borrow = {borrow} USDC");
         println!(
             "  Supplied collateral {} {collateral_symbol}",
@@ -699,7 +678,7 @@ impl MarketContract {
             .await?;
         println!("\nBob 🧛");
 
-        println!("  Principal = {}", convert_i128(basic.principal));
+        println!("  Principal = {}", convert_i256_to_i128(basic.principal));
         println!("  Present supply = {supply} USDC | borrow = {borrow} USDC");
         println!(
             "  Supplied collateral {} {collateral_symbol}",
@@ -719,7 +698,7 @@ impl MarketContract {
             .get_user_collateral(chad_address, collateral.bits256)
             .await?;
         println!("\nChad 🤵");
-        println!("  Principal = {}", convert_i128(basic.principal));
+        println!("  Principal = {}", convert_i256_to_i128(basic.principal));
         println!("  Present supply = {supply} USDC | borrow = {borrow} USDC");
         println!(
             "  Supplied collateral {} {collateral_symbol}",

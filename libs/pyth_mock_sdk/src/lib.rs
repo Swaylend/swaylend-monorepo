@@ -1,8 +1,9 @@
+use pyth_mock::*;
+
 use std::path::PathBuf;
 
 use fuels::{
     accounts::wallet::WalletUnlocked,
-    macros::abigen,
     programs::{
         contract::{Contract, LoadConfiguration, StorageConfiguration},
         responses::CallResponse,
@@ -10,11 +11,6 @@ use fuels::{
     types::{transaction::TxPolicies, Bits256, Bytes},
 };
 use rand::Rng;
-
-abigen!(Contract(
-    name = "PythMock",
-    abi = "contracts/pyth-mock/out/release/pyth_mock-abi.json"
-));
 
 pub struct PythMockContract {
     pub instance: PythMock<WalletUnlocked>,

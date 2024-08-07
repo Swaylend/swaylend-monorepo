@@ -1,6 +1,6 @@
-use crate::utils::contracts_utils::token_utils::deploy_tokens;
 use dotenv::dotenv;
 use fuels::accounts::{provider::Provider, wallet::WalletUnlocked};
+use token_sdk::deploy_tokens;
 
 #[tokio::test]
 async fn deploy() {

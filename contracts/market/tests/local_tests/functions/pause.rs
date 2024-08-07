@@ -1,13 +1,12 @@
-use crate::utils::contracts_utils::market_utils::{
-    get_market_config, MarketContract, PauseConfiguration,
-};
-use crate::utils::contracts_utils::token_utils::deploy_tokens;
+use market::PauseConfiguration;
+
 use crate::utils::init_wallets;
-use crate::utils::number_utils::parse_units;
 use chrono::Utc;
 use fuels::prelude::ViewOnlyAccount;
 use fuels::types::{Address, Bits256, ContractId};
-use pyth_mock::PythMockContract;
+use market_sdk::{get_market_config, parse_units, MarketContract};
+use pyth_mock_sdk::PythMockContract;
+use token_sdk::deploy_tokens;
 
 #[tokio::test]
 async fn pause_test() {
@@ -48,7 +47,6 @@ async fn pause_test() {
         usdc.bits256,
         usdc.decimals as u32,
         usdc.price_feed_id,
-        oracle_contract_id,
         fuel_eth_base_asset_id,
     )
     .unwrap();

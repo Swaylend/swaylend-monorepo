@@ -1,0 +1,16 @@
+[package]
+name = "token_sdk"
+description = ""
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+
+[dependencies]
+pyth_mock = { workspace = true }
+market = { workspace = true }
+src20_sdk = { workspace = true }
+fuels = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+rand = { workspace = true }
+anyhow = { workspace = true }

@@ -1,14 +1,12 @@
-use crate::utils::contracts_utils::{
-    market_utils::{get_market_config, MarketContract},
-    token_utils::load_tokens,
-};
 use dotenv::dotenv;
 use fuels::{
     prelude::{Provider, WalletUnlocked},
-    types::{Bits256, ContractId},
+    types::{AssetId, Bits256, ContractId},
 };
+use market_sdk::{get_market_config, MarketContract};
 use pyth_sdk::constants::USDC_USD_PRICE_FEED_ID;
 use std::{path::PathBuf, str::FromStr};
+use token_sdk::load_tokens;
 
 #[tokio::test]
 async fn deploy() {
@@ -39,7 +37,9 @@ async fn deploy() {
 
     //--------------- MARKET ---------------
     let usdc_price_feed = Bits256::from_hex_str(USDC_USD_PRICE_FEED_ID).unwrap();
-    let fuel_eth_base_asset_id = Bits256::zeroed(); // TODO[Martin]: Change to ETH asset id (everywhere)
+    let fuel_eth_base_asset_id =
+        Bits256::from_hex_str("0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07")
+            .unwrap();
 
     let market_config = get_market_config(
         wallet.address().into(),
@@ -47,7 +47,6 @@ async fn deploy() {
         usdc.bits256,
         usdc.decimals as u32,
         usdc_price_feed,
-        oracle_id,
         fuel_eth_base_asset_id,
     )
     .unwrap();

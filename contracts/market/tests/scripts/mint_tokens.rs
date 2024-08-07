@@ -1,10 +1,10 @@
-use crate::utils::contracts_utils::token_utils::load_tokens;
 use dotenv::dotenv;
 use fuels::{
     accounts::{provider::Provider, wallet::WalletUnlocked},
     types::ContractId,
 };
 use std::{path::PathBuf, str::FromStr};
+use token_sdk::load_tokens;
 
 #[tokio::test]
 async fn mint() {

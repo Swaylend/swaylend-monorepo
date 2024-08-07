@@ -1,4 +1,5 @@
-use super::market_utils::CollateralConfiguration;
+use market::*;
+
 use fuels::accounts::wallet::WalletUnlocked;
 use fuels::programs::contract::{Contract, LoadConfiguration};
 use fuels::test_helpers::generate_random_salt;

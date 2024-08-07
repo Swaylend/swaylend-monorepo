@@ -1,11 +1,11 @@
-use crate::utils::contracts_utils::market_utils::{get_market_config, MarketContract};
-use crate::utils::contracts_utils::token_utils::deploy_tokens;
-use crate::utils::number_utils::parse_units;
-use crate::utils::{init_wallets, print_case_title};
 use chrono::Utc;
 use fuels::prelude::ViewOnlyAccount;
 use fuels::types::{Address, Bits256, ContractId};
-use pyth_mock::PythMockContract;
+use market_sdk::{get_market_config, parse_units, MarketContract};
+use pyth_mock_sdk::PythMockContract;
+use token_sdk::deploy_tokens;
+
+use crate::utils::{init_wallets, print_case_title};
 
 // Multiplies all values by this number
 // It is necessary in order to test how the protocol works with large amounts
@@ -56,7 +56,6 @@ async fn main_test() {
         usdc.bits256,
         usdc.decimals as u32,
         usdc.price_feed_id,
-        oracle_contract_id,
         fuel_eth_base_asset_id,
     )
     .unwrap();

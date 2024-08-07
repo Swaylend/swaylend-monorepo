@@ -5,6 +5,9 @@ version = "0.1.0"
 edition = "2021"
 license = "Apache-2.0"
 
+[lib]
+path = "core/lib.rs"
+
 [[test]]
 harness = true
 name = "integration_tests"
@@ -15,8 +18,9 @@ fuels = { workspace = true, features = ["fuel-core-lib"] }
 pyth_sdk = { workspace = true }
 tokio = { workspace = true }
 dotenv = { workspace = true }
-reqwest = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
-rand = { workspace = true }
 anyhow = { workspace = true }
+
+[dev-dependencies]
+pyth_mock_sdk = { workspace = true }
