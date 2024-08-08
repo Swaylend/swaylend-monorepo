@@ -24,8 +24,8 @@ const App: React.FC = () => {
       <Routes>
         <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
         <Route path={ROUTES.FAUCET} element={<Faucet />} />
-        <Route path={ROUTES.TUTORIALS} element={<Tutorials />} />
-        <Route path={ROUTES.TUTORIAL} element={<Tutorial />} />
+        {/* <Route path={ROUTES.TUTORIALS} element={<Tutorials />} />
+        <Route path={ROUTES.TUTORIAL} element={<Tutorial />} /> */}
         <Route path="*" element={<Navigate to={ROUTES.DASHBOARD} />} />
       </Routes>
       <Footer />
