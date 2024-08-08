@@ -111,11 +111,11 @@ const Header: React.FC<IProps> = () => {
       link: ROUTES.FAUCET,
       icon: theme.images.icons.coins,
     },
-    {
-      name: 'Tutorials',
-      link: ROUTES.TUTORIALS,
-      icon: attention,
-    },
+    // {
+    //   name: 'Tutorials',
+    //   link: ROUTES.TUTORIALS,
+    //   icon: attention,
+    // },
   ];
 
   return (

@@ -84,9 +84,13 @@ const TokensFaucetTable: React.FC<IProps> = () => {
                 Minted
               </Button>
             );
-          if (ethBalance?.eq(0) && t.symbol !== 'ETH')
+          if (t.symbol !== 'ETH')
             return (
-              <Button fixed onClick={() => vm.mint(t.assetId)}>
+              <Button
+                disabled={ethBalance?.eq(0)}
+                fixed
+                onClick={() => vm.mint(t.assetId)}
+              >
                 {vm.loading && vm.actionTokenAssetId === t.assetId ? (
                   <Loading />
                 ) : (
