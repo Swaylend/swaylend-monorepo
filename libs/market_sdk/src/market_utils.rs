@@ -189,7 +189,6 @@ impl MarketContract {
                 .await?
         };
 
-        // TODO[Martin]: Revisting this clone
         let market = Market::new(id.clone(), wallet.clone());
 
         Ok(Self { instance: market })

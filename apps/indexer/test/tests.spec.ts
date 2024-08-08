@@ -28,7 +28,7 @@ const BOB_ADDRESS = Addresses.mockAddresses[2];
 
 describe('Market contract event tests', () => {
   describe('CollateralAsset events', async () => {
-    it('CollateralAssetAdded -> CollateralAssetPaused -> CollateralAssetResumed', async () => {
+    it('CollateralAssetAdded -> CollateralAssetUpdated -> CollateralAssetPaused -> CollateralAssetResumed', async () => {
       // Initializing the mock database
       const mockDbInitial = MockDb.createMockDb();
 
@@ -75,6 +75,47 @@ describe('Market contract event tests', () => {
       // Asserting that the entity in the mock database is the same as the expected entity
       assert.deepEqual(expectedCollateralAsset, actualCollateralAsset);
 
+      // Creating a mock collateral asset updated event
+      const mockCollateralAssetUpdatedEvent =
+        Market.CollateralAssetUpdated.mockData({
+          asset_id: assetId,
+          configuration: {
+            asset_id: assetId,
+            price_feed_id: TEST_PRICE_FEED_ID,
+            decimals: 1,
+            borrow_collateral_factor: BigInt(2),
+            liquidate_collateral_factor: BigInt(3),
+            liquidation_penalty: BigInt(4),
+            supply_cap: BigInt(5),
+            paused: false,
+          },
+        });
+
+      // Processing the mock event on the mock database
+      updatedMockDb = await Market.CollateralAssetUpdated.processEvent({
+        event: mockCollateralAssetUpdatedEvent,
+        mockDb: updatedMockDb,
+      });
+
+      // Expected entity that should be created
+      expectedCollateralAsset = {
+        id: assetId,
+        priceFeedId: TEST_PRICE_FEED_ID,
+        decimals: 1,
+        borrowCollateralFactor: BigInt(2),
+        liquidateCollateralFactor: BigInt(3),
+        liquidationPenalty: BigInt(4),
+        supplyCap: BigInt(5),
+        paused: false,
+      };
+
+      // Getting the entity from the mock database
+      actualCollateralAsset =
+        updatedMockDb.entities.CollateralAsset.get(assetId);
+
+      // Asserting that the entity in the mock database is the same as the expected entity
+      assert.deepEqual(expectedCollateralAsset, actualCollateralAsset);
+
       // Creating a mock collateral asset paused event
       const mockCollateralAssetPausedEvent =
         Market.CollateralAssetPaused.mockData({
@@ -91,11 +132,11 @@ describe('Market contract event tests', () => {
       expectedCollateralAsset = {
         id: assetId,
         priceFeedId: TEST_PRICE_FEED_ID,
-        decimals: 0,
-        borrowCollateralFactor: BigInt(0),
-        liquidateCollateralFactor: BigInt(0),
-        liquidationPenalty: BigInt(0),
-        supplyCap: BigInt(0),
+        decimals: 1,
+        borrowCollateralFactor: BigInt(2),
+        liquidateCollateralFactor: BigInt(3),
+        liquidationPenalty: BigInt(4),
+        supplyCap: BigInt(5),
         paused: true,
       };
 
@@ -122,11 +163,11 @@ describe('Market contract event tests', () => {
       expectedCollateralAsset = {
         id: assetId,
         priceFeedId: TEST_PRICE_FEED_ID,
-        decimals: 0,
-        borrowCollateralFactor: BigInt(0),
-        liquidateCollateralFactor: BigInt(0),
-        liquidationPenalty: BigInt(0),
-        supplyCap: BigInt(0),
+        decimals: 1,
+        borrowCollateralFactor: BigInt(2),
+        liquidateCollateralFactor: BigInt(3),
+        liquidationPenalty: BigInt(4),
+        supplyCap: BigInt(5),
         paused: false,
       };
 

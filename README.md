@@ -17,24 +17,19 @@ The Sway Lend alive on [https://swaylend.com](https://swaylend.com)
 >Please note that Sway Lend is in the alpha testing phase and contracts may change in the future, leading to potential loss of supply/borrow amount.
 ---
 
-
-
 ```                                                            
 FUEL TESTNET
 
-Oracle contract = 0x1f6a416e814dd5adf97b994f1eb5b6d694f91bfafdc75686f1f7ed64b760332c
+Pyth Oracle contract = 0x73591bf32f010ce4e83d86005c24e7833b397be38014ab670a73f6fde59ad607
 
-Token factory contract = 0x4069ff37aa31cc75849c78c6e92a92d01499c22e2ae922cfa9c311a845c7de63
+Token factory contract = 0xb2cb14cba2bb4bf4e565d8e0fbd6695df055b4ac25607962a827a72ae8622f5e
 
-Market contract = 0x91240c4837da1d27b4fc4d3f498fd4b92b1e782ace1c6e22622a27ae635c3a76
+Market contract = 0xc574a39aba9d9311df8f07b4d4805ab6b19f64d8364ef1498c73509220985f56
 
-SWAY = 0x65c7f292870616c43cdc02b1959eaae62cb718b637327fb3463e3e9f25616e9c
 ETH  = 0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07
-USDC = 0x403489ee55a733cce6deb3e46e16a0ded38f902ff70224df97e15c243319b6f3
-LINK = 0x65f1449bfcc69fd4bd7b90d9fde52cde32268581bc81ccb6a34c0a2f9b2ab947
-UNI  = 0x3a6d9fd36c8caaf6de9723c399a71c0c183577781d90027f023883dc945cb168
-BTC  = 0xb3a405892c0725ae9cfc117306752f623e3f357963b7489636b83d4842f96d62
-COMP = 0xc05e8d231cba888ee92bd6c8825413ba494c3d623b0cd7b1fc96d72f159c6806
+USDC = 0x23e8c3a2fc7a10cfa612da898d1cb3c0f0bb2a94de29ec4fa742bd2f690d9a67
+UNI  = 0x7a31611c81e974db193570a6b918d083cbf223ddfef0cce18e02746b21ea8964
+BTC  = 0x7d9d3e3df2900080f47b5e55c0501e153d21e67a2cdf86cb86ff5b717daab767
 ```
 
 ---

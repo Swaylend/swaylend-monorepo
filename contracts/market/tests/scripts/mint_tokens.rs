@@ -22,7 +22,7 @@ async fn mint() {
     let token_contract = TokenContract::new(token_contract_id, wallet.clone()).await;
 
     let tokens_json_path =
-        PathBuf::from(env!("CARGO_WORKSPACE_DIR")).join("libs/token_sdk/tokens.json");
+        PathBuf::from(env!("CARGO_WORKSPACE_DIR")).join("libs/token_sdk/tokens.testnet.json");
     let tokens_path_str = tokens_json_path.to_str().unwrap();
 
     let (assets, _) = token_contract.load_tokens(tokens_path_str, &wallet).await;

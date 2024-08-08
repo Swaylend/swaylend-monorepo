@@ -29,7 +29,7 @@ async fn deploy() {
 
     //--------------- Tokens ---------------
     let tokens_json_path =
-        PathBuf::from(env!("CARGO_WORKSPACE_DIR")).join("libs/token_sdk/tokens.json");
+        PathBuf::from(env!("CARGO_WORKSPACE_DIR")).join("libs/token_sdk/tokens.testnet.json");
     let tokens_path_str = tokens_json_path.to_str().unwrap();
 
     let token_contract = TokenContract::new(token_id, wallet.clone()).await;
