@@ -2,7 +2,7 @@ use fuels::{
     prelude::ViewOnlyAccount,
     test_helpers::{launch_custom_provider_and_get_wallets, WalletsConfig},
 };
-use src20_sdk::token_utils::{deploy_token_contract, Asset};
+use token_sdk::{TokenAsset, TokenContract};
 
 #[tokio::test]
 async fn main_test() {
@@ -13,8 +13,8 @@ async fn main_test() {
     let admin = &wallets[0];
     let alice = &wallets[1];
 
-    let token_contarct = deploy_token_contract(&admin).await;
-    let usdc = Asset::new(admin.clone(), token_contarct.contract_id().into(), "USDC");
+    let token_contract = TokenContract::deploy(&admin).await.unwrap();
+    let usdc = TokenAsset::new(admin.clone(), token_contract.contract_id().into(), "USDC");
 
     usdc.mint(alice.address().into(), usdc.parse_units(1000.0) as u64)
         .await

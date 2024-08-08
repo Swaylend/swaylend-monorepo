@@ -3640,14 +3640,27 @@ dependencies = [
  "chrono",
  "dotenv",
  "fuels",
- "pyth_mock",
+ "market_sdk",
+ "pyth_mock_sdk",
  "pyth_sdk",
  "rand",
- "reqwest",
  "serde",
  "serde_json",
- "src20_sdk",
+ "token_sdk",
  "tokio",
+]
+
+[[package]]
+name = "market_sdk"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "fuels",
+ "market",
+ "rand",
+ "serde",
+ "serde_json",
+ "token_sdk",
 ]
 
 [[package]]
@@ -4466,14 +4479,22 @@ name = "pyth_mock"
 version = "0.1.0"
 dependencies = [
  "anyhow",
- "dotenv",
  "fuels",
+ "pyth_mock_sdk",
  "pyth_sdk",
+ "tokio",
+]
+
+[[package]]
+name = "pyth_mock_sdk"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "fuels",
+ "pyth_mock",
  "rand",
- "reqwest",
  "serde",
  "serde_json",
- "tokio",
 ]
 
 [[package]]
@@ -5398,20 +5419,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "src20_sdk"
-version = "0.0.3"
-dependencies = [
- "dotenv",
- "fuels",
- "rand",
- "serde",
- "serde_json",
- "sha2 0.10.8",
- "tai64",
- "tokio",
-]
-
-[[package]]
 name = "stable_deref_trait"
 version = "1.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5519,6 +5526,8 @@ version = "0.1.0"
 dependencies = [
  "dotenv",
  "fuels",
+ "hex",
+ "market_sdk",
  "pyth_sdk",
  "reqwest",
  "serde",
@@ -5698,6 +5707,28 @@ name = "tinyvec_macros"
 version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1f3ccbac311fea05f86f61904b462b55fb3df8837a366dfc601a0161d0532f20"
+
+[[package]]
+name = "token"
+version = "0.1.0"
+dependencies = [
+ "fuels",
+]
+
+[[package]]
+name = "token_sdk"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "fuels",
+ "market",
+ "rand",
+ "serde",
+ "serde_json",
+ "sha2 0.10.8",
+ "token",
+ "tokio",
+]
 
 [[package]]
 name = "tokio"

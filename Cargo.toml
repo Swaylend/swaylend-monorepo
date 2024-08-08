@@ -1,19 +1,34 @@
 [workspace]
 members = [
-    "contracts/market",
-    "libs/src20_sdk",
+    # Apps
     "apps/oracle",
-    # Pyth mock
+    # Contracts (types)
+    "contracts/market",
     "contracts/pyth-mock",
+    "contracts/token",
+    # Libs
+    "libs/market_sdk",
+    "libs/token_sdk",
+    "libs/pyth_mock_sdk",
     # Test
     "contracts/test",
 ]
 resolver = "2"
 
 [workspace.dependencies]
+# Local SDKs
+market_sdk = { path = "libs/market_sdk" }
+token_sdk = { path = "libs/token_sdk" }
+pyth_mock_sdk = { path = "libs/pyth_mock_sdk" }
+
+# Local contracts (types)
+pyth_mock = { path = "contracts/pyth-mock" }
+market = { path = "contracts/market" }
+token = { path = "contracts/token" }
+
+# External
 pyth_sdk = { git = "https://github.com/pyth-network/pyth-crosschain", rev = "f41782f005f4bf99b8f765214b91b1397bc7c39b" }
 tokio = { version = "1.12", features = ["full"] }
-src20_sdk = { path = "libs/src20_sdk" }
 fuels = { version = "0.65.1", features = ["fuel-core-lib"] }
 dotenv = "0.15.0"
 serde = "1.0.197"

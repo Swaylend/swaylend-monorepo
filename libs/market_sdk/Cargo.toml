@@ -1,0 +1,15 @@
+[package]
+name = "market_sdk"
+description = ""
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+
+[dependencies]
+market = { workspace = true }
+token_sdk = { workspace = true }
+fuels = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+rand = { workspace = true }
+anyhow = { workspace = true }

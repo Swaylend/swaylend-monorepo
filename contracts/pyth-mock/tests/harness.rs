@@ -2,7 +2,8 @@ use fuels::{
     test_helpers::{launch_custom_provider_and_get_wallets, NodeConfig, Trigger, WalletsConfig},
     types::{Bits256, Bytes},
 };
-use pyth_mock::PythMockContract;
+
+use pyth_mock_sdk::PythMockContract;
 use pyth_sdk::constants::UNI_USD_PRICE_FEED_ID;
 
 #[tokio::test]

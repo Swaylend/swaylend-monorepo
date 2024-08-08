@@ -5,6 +5,7 @@ use i256::I256;
 pub const BASE_ACCRUAL_SCALE: u256 = 1_000_000; // 1e6
 pub const BASE_INDEX_SCALE_15: u256 = 1_000_000_000_000_000; // 1e15
 pub const FACTOR_SCALE_18: u256 = 1_000_000_000_000_000_000; // 1e18
+
 pub struct CollateralConfiguration {
     pub asset_id: b256,
     pub price_feed_id: b256,

@@ -3,9 +3,6 @@ use fuels::test_helpers::{
     launch_custom_provider_and_get_wallets, NodeConfig, Trigger, WalletsConfig,
 };
 
-pub mod contracts_utils;
-pub mod number_utils;
-
 pub fn print_case_title(num: u8, name: &str, call: &str, amount: &str) {
     println!(
         r#"

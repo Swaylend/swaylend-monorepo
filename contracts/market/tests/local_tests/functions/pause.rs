@@ -1,13 +1,12 @@
-use crate::utils::contracts_utils::market_utils::{
-    get_market_config, MarketContract, PauseConfiguration,
-};
-use crate::utils::contracts_utils::token_utils::deploy_tokens;
+use market::PauseConfiguration;
+use token_sdk::{TokenAsset, TokenContract};
+
 use crate::utils::init_wallets;
-use crate::utils::number_utils::parse_units;
 use chrono::Utc;
 use fuels::prelude::ViewOnlyAccount;
 use fuels::types::{Address, Bits256, ContractId};
-use pyth_mock::PythMockContract;
+use market_sdk::{get_market_config, parse_units, MarketContract};
+use pyth_mock_sdk::PythMockContract;
 
 #[tokio::test]
 async fn pause_test() {
@@ -25,15 +24,17 @@ async fn pause_test() {
     let oracle_contract_id = ContractId::from(oracle.instance.contract_id());
 
     //--------------- TOKENS ---------------
-    let (assets, asset_configs, token_contract) = deploy_tokens(&admin, false).await;
+    let token_contract = TokenContract::deploy(&admin).await.unwrap();
+    let (assets, asset_configs) = token_contract.deploy_tokens(&admin).await;
+
     let usdc = assets.get("USDC").unwrap();
-    let usdc_contract = src20_sdk::token_utils::Asset::new(
+    let usdc_contract = TokenAsset::new(
         admin.clone(),
         token_contract.contract_id().into(),
         &usdc.symbol,
     );
     let uni = assets.get("UNI").unwrap();
-    let uni_contract = src20_sdk::token_utils::Asset::new(
+    let uni_contract = TokenAsset::new(
         admin.clone(),
         token_contract.contract_id().into(),
         &uni.symbol,
@@ -48,7 +49,6 @@ async fn pause_test() {
         usdc.bits256,
         usdc.decimals as u32,
         usdc.price_feed_id,
-        oracle_contract_id,
         fuel_eth_base_asset_id,
     )
     .unwrap();
