@@ -6,7 +6,6 @@ edition = "2021"
 license = "Apache-2.0"
 
 [dependencies]
-pyth_mock = { workspace = true }
 market = { workspace = true }
 token_sdk = { workspace = true }
 fuels = { workspace = true }

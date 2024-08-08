@@ -3644,7 +3644,6 @@ dependencies = [
  "pyth_mock_sdk",
  "pyth_sdk",
  "rand",
- "reqwest",
  "serde",
  "serde_json",
  "token_sdk",
@@ -3658,7 +3657,6 @@ dependencies = [
  "anyhow",
  "fuels",
  "market",
- "pyth_mock",
  "rand",
  "serde",
  "serde_json",
@@ -4481,12 +4479,9 @@ name = "pyth_mock"
 version = "0.1.0"
 dependencies = [
  "anyhow",
- "dotenv",
  "fuels",
  "pyth_mock_sdk",
  "pyth_sdk",
- "serde",
- "serde_json",
  "tokio",
 ]
 
@@ -5727,12 +5722,10 @@ dependencies = [
  "anyhow",
  "fuels",
  "market",
- "pyth_mock",
  "rand",
  "serde",
  "serde_json",
  "sha2 0.10.8",
- "tai64",
  "token",
  "tokio",
 ]

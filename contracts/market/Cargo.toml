@@ -24,7 +24,6 @@ pyth_sdk = { workspace = true }
 fuels = { workspace = true }
 tokio = { workspace = true }
 dotenv = { workspace = true }
-reqwest = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
 rand = { workspace = true }
