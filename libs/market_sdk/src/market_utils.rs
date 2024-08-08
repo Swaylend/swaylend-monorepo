@@ -49,8 +49,52 @@ pub struct ContractConfiguration {
     base_token: Bits256,
     base_token_decimals: u32,
     base_token_price_feed_id: Bits256,
-    fuel_eth_base_asset_id: Bits256,
     market_config: MarketConfig,
+}
+
+impl From<ContractConfiguration> for MarketConfiguration {
+    fn from(value: ContractConfiguration) -> Self {
+        Self {
+            governor: value.governor,
+            pause_guardian: value.pause_guardian,
+            base_token: value.base_token,
+            base_token_decimals: value.base_token_decimals,
+            base_token_price_feed_id: value.base_token_price_feed_id,
+            supply_kink: value.market_config.supply_kink.into(),
+            borrow_kink: value.market_config.borrow_kink.into(),
+            supply_per_second_interest_rate_slope_low: value
+                .market_config
+                .supply_per_second_interest_rate_slope_low
+                .into(),
+            supply_per_second_interest_rate_slope_high: value
+                .market_config
+                .supply_per_second_interest_rate_slope_high
+                .into(),
+            supply_per_second_interest_rate_base: value
+                .market_config
+                .supply_per_second_interest_rate_base
+                .into(),
+            borrow_per_second_interest_rate_slope_low: value
+                .market_config
+                .borrow_per_second_interest_rate_slope_low
+                .into(),
+            borrow_per_second_interest_rate_slope_high: value
+                .market_config
+                .borrow_per_second_interest_rate_slope_high
+                .into(),
+            borrow_per_second_interest_rate_base: value
+                .market_config
+                .borrow_per_second_interest_rate_base
+                .into(),
+            store_front_price_factor: value.market_config.store_front_price_factor.into(),
+            base_tracking_index_scale: value.market_config.base_tracking_index_scale.into(),
+            base_tracking_supply_speed: value.market_config.base_tracking_supply_speed.into(),
+            base_tracking_borrow_speed: value.market_config.base_tracking_borrow_speed.into(),
+            base_min_for_rewards: value.market_config.base_min_for_rewards.into(),
+            base_borrow_min: value.market_config.base_borrow_min.into(),
+            target_reserves: value.market_config.target_reserves.into(),
+        }
+    }
 }
 
 pub fn get_market_config(
@@ -59,7 +103,6 @@ pub fn get_market_config(
     base_token_bits256: Bits256,
     base_token_decimals: u32,
     base_token_price_feed_id: Bits256,
-    fuel_eth_base_asset_id: Bits256,
 ) -> anyhow::Result<ContractConfiguration> {
     let config_json_path =
         PathBuf::from(env!("CARGO_WORKSPACE_DIR")).join("contracts/market/tests/config.json");
@@ -72,7 +115,6 @@ pub fn get_market_config(
         base_token: base_token_bits256,
         base_token_decimals,
         base_token_price_feed_id,
-        fuel_eth_base_asset_id,
         market_config: config,
     })
 }
@@ -82,88 +124,13 @@ const DEFAULT_GAS_LIMIT: u64 = 1_000_000;
 impl MarketContract {
     pub async fn deploy(
         wallet: &WalletUnlocked,
-        market_configuration: ContractConfiguration,
         debug_step: u64, // only for local test
+        fuel_eth_base_asset_id: Bits256,
         random_address: bool,
     ) -> anyhow::Result<Self> {
         let configurables = MarketConfigurables::default()
-            .with_GOVERNOR(market_configuration.governor)?
-            .with_PAUSE_GUARDIAN(market_configuration.pause_guardian)?
-            .with_BASE_TOKEN(market_configuration.base_token)?
-            .with_BASE_TOKEN_DECIMALS(market_configuration.base_token_decimals)?
-            .with_BASE_TOKEN_PRICE_FEED_ID(market_configuration.base_token_price_feed_id)?
-            .with_SUPPLY_KINK(market_configuration.market_config.supply_kink.into())?
-            .with_BORROW_KINK(market_configuration.market_config.borrow_kink.into())?
-            .with_SUPPLY_PER_SECOND_INTEREST_RATE_SLOPE_LOW(
-                market_configuration
-                    .market_config
-                    .supply_per_second_interest_rate_slope_low
-                    .into(),
-            )?
-            .with_SUPPLY_PER_SECOND_INTEREST_RATE_SLOPE_HIGH(
-                market_configuration
-                    .market_config
-                    .supply_per_second_interest_rate_slope_high
-                    .into(),
-            )?
-            .with_SUPPLY_PER_SECOND_INTEREST_RATE_BASE(
-                market_configuration
-                    .market_config
-                    .supply_per_second_interest_rate_base
-                    .into(),
-            )?
-            .with_BORROW_PER_SECOND_INTEREST_RATE_SLOPE_LOW(
-                market_configuration
-                    .market_config
-                    .borrow_per_second_interest_rate_slope_low
-                    .into(),
-            )?
-            .with_BORROW_PER_SECOND_INTEREST_RATE_SLOPE_HIGH(
-                market_configuration
-                    .market_config
-                    .borrow_per_second_interest_rate_slope_high
-                    .into(),
-            )?
-            .with_BORROW_PER_SECOND_INTEREST_RATE_BASE(
-                market_configuration
-                    .market_config
-                    .borrow_per_second_interest_rate_base
-                    .into(),
-            )?
-            .with_STORE_FRONT_PRICE_FACTOR(
-                market_configuration
-                    .market_config
-                    .store_front_price_factor
-                    .into(),
-            )?
-            .with_BASE_TRACKING_INDEX_SCALE(
-                market_configuration
-                    .market_config
-                    .base_tracking_index_scale
-                    .into(),
-            )?
-            .with_BASE_TRACKING_SUPPLY_SPEED(
-                market_configuration
-                    .market_config
-                    .base_tracking_supply_speed
-                    .into(),
-            )?
-            .with_BASE_TRACKING_BORROW_SPEED(
-                market_configuration
-                    .market_config
-                    .base_tracking_borrow_speed
-                    .into(),
-            )?
-            .with_BASE_MIN_FOR_REWARDS(
-                market_configuration
-                    .market_config
-                    .base_min_for_rewards
-                    .into(),
-            )?
-            .with_BASE_BORROW_MIN(market_configuration.market_config.base_borrow_min.into())?
-            .with_TARGET_RESERVES(market_configuration.market_config.target_reserves.into())?
             .with_DEBUG_STEP(debug_step)?
-            .with_FUEL_ETH_BASE_ASSET_ID(market_configuration.fuel_eth_base_asset_id)?;
+            .with_FUEL_ETH_BASE_ASSET_ID(fuel_eth_base_asset_id)?;
 
         let root = PathBuf::from(env!("CARGO_WORKSPACE_DIR"));
 
@@ -215,8 +182,8 @@ impl MarketContract {
     }
 
     // Contract methods
-    pub async fn activate_contract(&self) -> anyhow::Result<CallResponse<()>> {
-        Ok(self.instance.methods().activate_contract().call().await?)
+    pub async fn activate_contract(&self, market_configuration: MarketConfiguration) -> anyhow::Result<CallResponse<()>> {
+        Ok(self.instance.methods().activate_contract(market_configuration).call().await?)
     }
 
     pub async fn debug_increment_timestamp(&self) -> anyhow::Result<CallResponse<()>> {

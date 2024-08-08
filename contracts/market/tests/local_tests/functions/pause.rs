@@ -49,24 +49,23 @@ async fn pause_test() {
         usdc.bits256,
         usdc.decimals as u32,
         usdc.price_feed_id,
-        fuel_eth_base_asset_id,
     )
     .unwrap();
 
     // debug step
     let debug_step: u64 = 10000;
-    let market = MarketContract::deploy(&admin, market_config, debug_step, false)
+    let market = MarketContract::deploy(&admin, debug_step, fuel_eth_base_asset_id, false)
         .await
         .unwrap();
+
+    // Activate contract
+    market.activate_contract(market_config.into()).await.unwrap();
 
     // Set Pyth contract ID
     market
         .set_pyth_contract_id(oracle_contract_id)
         .await
         .unwrap();
-
-    // Activate contract
-    market.activate_contract().await.unwrap();
 
     //--------------- SETUP COLLATERALS ---------------
     for config in &asset_configs {

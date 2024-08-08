@@ -48,19 +48,18 @@ async fn deploy() {
         usdc.bits256,
         usdc.decimals as u32,
         usdc_price_feed,
-        fuel_eth_base_asset_id,
     )
     .unwrap();
 
-    let market = MarketContract::deploy(&wallet, market_config, 0, use_random_address)
+    let market = MarketContract::deploy(&wallet, 0, fuel_eth_base_asset_id, use_random_address)
         .await
         .unwrap();
+    
+    // Activate contract
+    market.activate_contract(market_config.into()).await.unwrap();
 
     // Set Pyth contract ID
     market.set_pyth_contract_id(oracle_id).await.unwrap();
-
-    // Activate contract
-    market.activate_contract().await.unwrap();
 
     let block = provider.latest_block_height().await.unwrap();
 

@@ -10,7 +10,7 @@ use std::bytes::Bytes;
 abi Market {
     // # 0. Activate contract (un-pause)
     #[storage(write, read)]
-    fn activate_contract();
+    fn activate_contract(market_configuration: MarketConfiguration);
 
     // # 1. Debug functionality (for testing purposes)
     // This functionality is exclusively utilized in local tests to evaluate interest accrual. 
@@ -96,7 +96,8 @@ abi Market {
     fn pause(config: PauseConfiguration);
 
     // # 9. Getters
-    fn get_configuration() -> MarketConfiguration;
+    #[storage(read)]
+    fn get_market_configuration() -> MarketConfiguration;
     
     #[storage(read)]
     fn get_market_basics() -> MarketBasics;
@@ -110,8 +111,10 @@ abi Market {
     fn balance_of(asset: b256) -> u64;
 
     // Formulas to help calculate supply and borrow rates
+    #[storage(read)]
     fn get_supply_rate(utilization: u256) -> u256;
 
+    #[storage(read)]
     fn get_borrow_rate(utilization: u256) -> u256;
 
     // ## 10. Pyth calls
@@ -126,4 +129,8 @@ abi Market {
 
     #[payable, storage(read)]
     fn update_price_feeds(update_fee: u64, update_data: Vec<Bytes>);
+
+    // ## 11. Changing market configuration
+    #[storage(write, read)]
+    fn update_market_configuration(configuration: MarketConfiguration);
 }
