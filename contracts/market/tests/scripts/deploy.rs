@@ -54,9 +54,9 @@ async fn deploy() {
     let market = MarketContract::deploy(&wallet, 0, fuel_eth_base_asset_id, use_random_address)
         .await
         .unwrap();
-    
+
     // Activate contract
-    market.activate_contract(market_config.into()).await.unwrap();
+    market.activate_contract(market_config).await.unwrap();
 
     // Set Pyth contract ID
     market.set_pyth_contract_id(oracle_id).await.unwrap();

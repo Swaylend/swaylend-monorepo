@@ -59,7 +59,7 @@ async fn pause_test() {
         .unwrap();
 
     // Activate contract
-    market.activate_contract(market_config.into()).await.unwrap();
+    market.activate_contract(market_config).await.unwrap();
 
     // Set Pyth contract ID
     market

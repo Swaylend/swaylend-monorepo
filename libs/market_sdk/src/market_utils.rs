@@ -20,6 +20,8 @@ use serde::Deserialize;
 
 use crate::{convert_i256_to_i128, convert_u256_to_u128, format_units, format_units_u128};
 
+const DEFAULT_GAS_LIMIT: u64 = 1_000_000;
+
 pub struct MarketContract {
     pub instance: Market<WalletUnlocked>,
 }
@@ -43,83 +45,49 @@ struct MarketConfig {
     target_reserves: u64,
 }
 
-pub struct ContractConfiguration {
-    governor: Address,
-    pause_guardian: Address,
-    base_token: Bits256,
-    base_token_decimals: u32,
-    base_token_price_feed_id: Bits256,
-    market_config: MarketConfig,
-}
-
-impl From<ContractConfiguration> for MarketConfiguration {
-    fn from(value: ContractConfiguration) -> Self {
-        Self {
-            governor: value.governor,
-            pause_guardian: value.pause_guardian,
-            base_token: value.base_token,
-            base_token_decimals: value.base_token_decimals,
-            base_token_price_feed_id: value.base_token_price_feed_id,
-            supply_kink: value.market_config.supply_kink.into(),
-            borrow_kink: value.market_config.borrow_kink.into(),
-            supply_per_second_interest_rate_slope_low: value
-                .market_config
-                .supply_per_second_interest_rate_slope_low
-                .into(),
-            supply_per_second_interest_rate_slope_high: value
-                .market_config
-                .supply_per_second_interest_rate_slope_high
-                .into(),
-            supply_per_second_interest_rate_base: value
-                .market_config
-                .supply_per_second_interest_rate_base
-                .into(),
-            borrow_per_second_interest_rate_slope_low: value
-                .market_config
-                .borrow_per_second_interest_rate_slope_low
-                .into(),
-            borrow_per_second_interest_rate_slope_high: value
-                .market_config
-                .borrow_per_second_interest_rate_slope_high
-                .into(),
-            borrow_per_second_interest_rate_base: value
-                .market_config
-                .borrow_per_second_interest_rate_base
-                .into(),
-            store_front_price_factor: value.market_config.store_front_price_factor.into(),
-            base_tracking_index_scale: value.market_config.base_tracking_index_scale.into(),
-            base_tracking_supply_speed: value.market_config.base_tracking_supply_speed.into(),
-            base_tracking_borrow_speed: value.market_config.base_tracking_borrow_speed.into(),
-            base_min_for_rewards: value.market_config.base_min_for_rewards.into(),
-            base_borrow_min: value.market_config.base_borrow_min.into(),
-            target_reserves: value.market_config.target_reserves.into(),
-        }
-    }
-}
-
 pub fn get_market_config(
     governor: Address,
     pause_guardian: Address,
     base_token_bits256: Bits256,
     base_token_decimals: u32,
     base_token_price_feed_id: Bits256,
-) -> anyhow::Result<ContractConfiguration> {
+) -> anyhow::Result<MarketConfiguration> {
     let config_json_path =
         PathBuf::from(env!("CARGO_WORKSPACE_DIR")).join("contracts/market/tests/config.json");
     let config_json_str = std::fs::read_to_string(config_json_path)?;
     let config: MarketConfig = serde_json::from_str(&config_json_str)?;
 
-    Ok(ContractConfiguration {
+    Ok(MarketConfiguration {
         governor,
         pause_guardian,
         base_token: base_token_bits256,
         base_token_decimals,
         base_token_price_feed_id,
-        market_config: config,
+        supply_kink: config.supply_kink.into(),
+        borrow_kink: config.borrow_kink.into(),
+        supply_per_second_interest_rate_slope_low: config
+            .supply_per_second_interest_rate_slope_low
+            .into(),
+        supply_per_second_interest_rate_slope_high: config
+            .supply_per_second_interest_rate_slope_high
+            .into(),
+        supply_per_second_interest_rate_base: config.supply_per_second_interest_rate_base.into(),
+        borrow_per_second_interest_rate_slope_low: config
+            .borrow_per_second_interest_rate_slope_low
+            .into(),
+        borrow_per_second_interest_rate_slope_high: config
+            .borrow_per_second_interest_rate_slope_high
+            .into(),
+        borrow_per_second_interest_rate_base: config.borrow_per_second_interest_rate_base.into(),
+        store_front_price_factor: config.store_front_price_factor.into(),
+        base_tracking_index_scale: config.base_tracking_index_scale.into(),
+        base_tracking_supply_speed: config.base_tracking_supply_speed.into(),
+        base_tracking_borrow_speed: config.base_tracking_borrow_speed.into(),
+        base_min_for_rewards: config.base_min_for_rewards.into(),
+        base_borrow_min: config.base_borrow_min.into(),
+        target_reserves: config.target_reserves.into(),
     })
 }
-
-const DEFAULT_GAS_LIMIT: u64 = 1_000_000;
 
 impl MarketContract {
     pub async fn deploy(
