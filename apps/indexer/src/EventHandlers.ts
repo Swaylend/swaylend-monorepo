@@ -25,6 +25,28 @@ Market.CollateralAssetAdded.handler(async ({ event, context }) => {
   });
 });
 
+// Update collateral asset
+Market.CollateralAssetUpdated.loader(({ event, context }) => {
+  const assetId = event.data.asset_id;
+  context.CollateralAsset.load(assetId);
+});
+
+Market.CollateralAssetUpdated.handler(async ({ event, context }) => {
+  const assetId = event.data.asset_id;
+
+  context.CollateralAsset.set({
+    id: assetId,
+    priceFeedId: event.data.configuration.price_feed_id,
+    decimals: event.data.configuration.decimals,
+    borrowCollateralFactor: event.data.configuration.borrow_collateral_factor,
+    liquidateCollateralFactor:
+      event.data.configuration.liquidate_collateral_factor,
+    liquidationPenalty: event.data.configuration.liquidation_penalty,
+    supplyCap: event.data.configuration.supply_cap,
+    paused: event.data.configuration.paused,
+  });
+});
+
 // Pause Collateral Asset
 Market.CollateralAssetPaused.loader(({ event, context }) => {
   const assetId = event.data.asset_id;

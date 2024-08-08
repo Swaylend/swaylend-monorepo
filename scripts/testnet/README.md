@@ -12,7 +12,7 @@ Account #0:
 ## Deploy contracts (tokens, market)
 
 ``bash
-./deploy_tokens.sh <oracle address>
+./deploy_tokens.sh
 ``
 
 Insert the oracle and tokens address in the script below after deploying oracle and tokens smart contract on the testnet.
@@ -23,10 +23,10 @@ Insert the oracle and tokens address in the script below after deploying oracle 
 
 ## Mint tokens
 
-Insert the oracle and tokens address in the script below after deploying oracle and tokens smart contract on the testnet.
+Insert tokens address in the script below after deploying tokens smart contract on the testnet.
 
 ``bash
-./mint_tokens.sh <oracle address> <tokens address>
+./mint_tokens.sh <tokens address>
 ``
 
 ## Start frontend

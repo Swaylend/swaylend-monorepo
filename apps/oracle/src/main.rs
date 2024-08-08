@@ -67,6 +67,7 @@ async fn main() {
 
         let mut message = String::new();
         if update_result.is_ok() {
+            message += format!("\n-----------------------------------\n").as_str();
             message += format!("✅ Prices updated\n").as_str();
             message += format!("⛽️ Gas used: {}\n", update_result.unwrap().gas_used).as_str();
             message += format!(
@@ -75,14 +76,16 @@ async fn main() {
                     / 10f64.powf(9f64)
             )
             .as_str();
-            message += format!("-----------------------------------\n\n").as_str();
+            message += format!("-----------------------------------\n").as_str();
         } else {
+            message += format!("\n-----------------------------------\n").as_str();
             message += format!("❌ Prices not updated\n").as_str();
             message += format!("Error: {}\n", update_result.unwrap_err()).as_str();
+            message += format!("-----------------------------------\n").as_str();
         }
 
         println!("{message}");
 
-        sleep(Duration::from_secs(5 * 60));
+        sleep(Duration::from_secs(30));
     }
 }
