@@ -1,12 +1,12 @@
 use dotenv::dotenv;
 use fuels::{
     prelude::{Provider, WalletUnlocked},
-    types::{AssetId, Bits256, ContractId},
+    types::{Bits256, ContractId},
 };
 use market_sdk::{get_market_config, MarketContract};
 use pyth_sdk::constants::USDC_USD_PRICE_FEED_ID;
 use std::{path::PathBuf, str::FromStr};
-use token_sdk::load_tokens;
+use token_sdk::TokenContract;
 
 #[tokio::test]
 async fn deploy() {
@@ -28,11 +28,12 @@ async fn deploy() {
     let token_id = ContractId::from_str(&token_contract_address).unwrap();
 
     //--------------- Tokens ---------------
-
     let tokens_json_path =
-        PathBuf::from(env!("CARGO_WORKSPACE_DIR")).join("libs/src20_sdk/tokens.json");
+        PathBuf::from(env!("CARGO_WORKSPACE_DIR")).join("libs/token_sdk/tokens.json");
     let tokens_path_str = tokens_json_path.to_str().unwrap();
-    let (assets, asset_configs) = load_tokens(tokens_path_str, &wallet, token_id).await;
+
+    let token_contract = TokenContract::new(token_id, wallet.clone()).await;
+    let (assets, asset_configs) = token_contract.load_tokens(tokens_path_str, &wallet).await;
     let usdc = assets.get("USDC").unwrap();
 
     //--------------- MARKET ---------------

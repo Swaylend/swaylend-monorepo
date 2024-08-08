@@ -1,6 +1,6 @@
 use dotenv::dotenv;
 use fuels::accounts::{provider::Provider, wallet::WalletUnlocked};
-use token_sdk::deploy_tokens;
+use token_sdk::TokenContract;
 
 #[tokio::test]
 async fn deploy() {
@@ -9,12 +9,13 @@ async fn deploy() {
     let rpc = std::env::var("RPC").unwrap();
     let provider = Provider::connect(rpc).await.unwrap();
     let secret = std::env::var("SECRET").unwrap();
-    let random_address = std::env::var("RANDOM").unwrap() == "true";
 
     let wallet =
         WalletUnlocked::new_from_private_key(secret.parse().unwrap(), Some(provider.clone()));
 
-    let (_, _, token_contract) = deploy_tokens(&wallet, random_address).await;
+    let token_contract = TokenContract::deploy(&wallet).await.unwrap();
+
+    token_contract.deploy_tokens(&wallet).await;
 
     println!(
         "The tokens have been deployed at {}",

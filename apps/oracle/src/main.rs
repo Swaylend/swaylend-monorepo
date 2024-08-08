@@ -1,9 +1,7 @@
 use dotenv::dotenv;
 use fuels::accounts::ViewOnlyAccount;
 use fuels::prelude::{ContractId, Provider, WalletUnlocked};
-use fuels::programs::calls::CallParameters;
-use fuels::types::{AssetId, Bytes};
-use market_sdk::MarketContract;
+use fuels::types::Bytes;
 use pyth_sdk::constants::{
     BTC_USD_PRICE_FEED_ID, ETH_USD_PRICE_FEED_ID, UNI_USD_PRICE_FEED_ID, USDC_USD_PRICE_FEED_ID,
 };
@@ -33,25 +31,15 @@ async fn main() {
     let provider = Provider::connect(rpc).await.unwrap();
     let secret = std::env::var("SECRET").unwrap();
     let oracle_address = std::env::var("ORACLE_ADDRESS").unwrap();
-    let market_address = std::env::var("MARKET_ADDRESS").unwrap();
 
     // Wallet
     let wallet =
         WalletUnlocked::new_from_private_key(secret.parse().unwrap(), Some(provider.clone()));
 
-    // Market contract
-    let market_contract_id = ContractId::from_str(&market_address).unwrap();
-    let market_contract = MarketContract::new(market_contract_id, wallet.clone()).await;
-
     // Pyth contract
     let id = ContractId::from_str(&oracle_address).unwrap();
     let oracle =
         Pyth { instance: PythOracleContract::new(id, wallet.clone()), wallet: wallet.clone() };
-
-    // Base asset id
-    let base_asset_id =
-        AssetId::from_str("0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07")
-            .unwrap();
 
     // Price feed ids to update
     let ids = vec![

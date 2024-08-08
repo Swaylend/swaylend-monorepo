@@ -3647,7 +3647,6 @@ dependencies = [
  "reqwest",
  "serde",
  "serde_json",
- "src20_sdk",
  "token_sdk",
  "tokio",
 ]
@@ -3663,7 +3662,6 @@ dependencies = [
  "rand",
  "serde",
  "serde_json",
- "src20_sdk",
  "token_sdk",
 ]
 
@@ -5426,20 +5424,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "src20_sdk"
-version = "0.0.3"
-dependencies = [
- "dotenv",
- "fuels",
- "rand",
- "serde",
- "serde_json",
- "sha2 0.10.8",
- "tai64",
- "tokio",
-]
-
-[[package]]
 name = "stable_deref_trait"
 version = "1.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -5730,6 +5714,13 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1f3ccbac311fea05f86f61904b462b55fb3df8837a366dfc601a0161d0532f20"
 
 [[package]]
+name = "token"
+version = "0.1.0"
+dependencies = [
+ "fuels",
+]
+
+[[package]]
 name = "token_sdk"
 version = "0.1.0"
 dependencies = [
@@ -5740,7 +5731,9 @@ dependencies = [
  "rand",
  "serde",
  "serde_json",
- "src20_sdk",
+ "sha2 0.10.8",
+ "tai64",
+ "token",
 ]
 
 [[package]]
