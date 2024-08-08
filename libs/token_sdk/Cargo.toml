@@ -5,6 +5,11 @@ version = "0.1.0"
 edition = "2021"
 license = "Apache-2.0"
 
+[[test]]
+harness = true
+name = "integration_tests"
+path = "tests/harness.rs"
+
 [dependencies]
 token = { workspace = true }
 pyth_mock = { workspace = true }
@@ -14,6 +19,7 @@ serde = { workspace = true }
 serde_json = { workspace = true }
 rand = { workspace = true }
 anyhow = { workspace = true }
+tokio = { workspace = true }
 
 sha2 = "0.10.8"
 tai64 = "4.0.0"
