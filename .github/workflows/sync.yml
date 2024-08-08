@@ -18,11 +18,19 @@ jobs:
       - uses: webfactory/ssh-agent@v0.9.0
         with:
           ssh-private-key: ${{ secrets.FORK_KEY }}
-      - name: Push to fork repo
+      - name: Push to Lutra Labs org fork repo
         env:
           USE_SSH: true
         run: |
           git remote add fork git@github.com:lutralabs/swaylend-monorepo.git
+          git config --global user.email "info@lutralabs.io"
+          git config --global user.name "Lutra Labs Bot"
+          git push fork --force
+      - name: Push to Lutra Labs Bot fork repo
+        env:
+          USE_SSH: true
+        run: |
+          git remote add fork git@github.com:lutralabs-bot/swaylend-monorepo.git
           git config --global user.email "info@lutralabs.io"
           git config --global user.name "Lutra Labs Bot"
           git push fork --force
