@@ -1,10 +1,6 @@
-use crate::utils::{init_wallets, print_case_title, setup, TestData};
-use chrono::Utc;
+use crate::utils::{print_case_title, setup, TestData};
 use fuels::prelude::ViewOnlyAccount;
-use fuels::types::{Address, Bits256, ContractId};
-use market_sdk::{get_market_config, parse_units, MarketContract};
-use pyth_mock_sdk::PythMockContract;
-use token_sdk::{TokenAsset, TokenContract};
+use market_sdk::parse_units;
 
 // Multiplies all values by this number
 // It is necessary in order to test how the protocol works with large amounts
@@ -16,7 +12,6 @@ async fn main_test_no_debug() {
     let scale_9 = 10u64.pow(9) as f64;
     let TestData {
         wallets,
-        admin,
         alice,
         alice_address,
         bob,

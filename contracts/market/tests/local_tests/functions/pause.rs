@@ -1,12 +1,8 @@
-use market::PauseConfiguration;
-use token_sdk::{TokenAsset, TokenContract};
+use crate::utils::{setup, TestData};
 
-use crate::utils::{init_wallets, setup, TestData};
-use chrono::Utc;
 use fuels::prelude::ViewOnlyAccount;
-use fuels::types::{Address, Bits256, ContractId};
-use market_sdk::{get_market_config, parse_units, MarketContract};
-use pyth_mock_sdk::PythMockContract;
+use market::PauseConfiguration;
+use market_sdk::parse_units;
 
 #[tokio::test]
 async fn pause_test() {
