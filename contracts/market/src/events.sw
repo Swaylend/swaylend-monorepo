@@ -96,3 +96,8 @@ pub struct ReservesWithdrawnEvent {
 pub struct PauseConfigurationEvent {
     pub pause_config: PauseConfiguration,
 }
+
+// Market configuration event
+pub struct MarketConfigurationEvent {
+    pub market_config: MarketConfiguration,
+}

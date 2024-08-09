@@ -1,6 +1,7 @@
 library;
 
 use i256::I256;
+use std::constants::ZERO_B256;
 
 pub const BASE_ACCRUAL_SCALE: u256 = 1_000_000; // 1e6
 pub const BASE_INDEX_SCALE_15: u256 = 1_000_000_000_000_000; // 1e15
@@ -23,23 +24,48 @@ pub struct MarketConfiguration {
     pub base_token: b256,
     pub base_token_decimals: u32,
     pub base_token_price_feed_id: b256,
-    pub supply_kink: u256,
-    pub borrow_kink: u256,
-    pub supply_per_second_interest_rate_slope_low: u256,
-    pub supply_per_second_interest_rate_slope_high: u256,
-    pub supply_per_second_interest_rate_base: u256,
-    pub borrow_per_second_interest_rate_slope_low: u256,
-    pub borrow_per_second_interest_rate_slope_high: u256,
-    pub borrow_per_second_interest_rate_base: u256,
-    pub store_front_price_factor: u256,
-    pub base_tracking_index_scale: u256,
-    pub base_tracking_supply_speed: u256,
-    pub base_tracking_borrow_speed: u256,
-    pub base_min_for_rewards: u256,
-    pub base_borrow_min: u256,
-    pub target_reserves: u256,
-    pub debug_step: u64,
-    pub fuel_eth_base_asset_id: b256,
+    pub supply_kink: u256, // decimals: 18
+    pub borrow_kink: u256, // decimals: 18
+    pub supply_per_second_interest_rate_slope_low: u256, // decimals: 18
+    pub supply_per_second_interest_rate_slope_high: u256, // decimals: 18
+    pub supply_per_second_interest_rate_base: u256, // decimals: 18
+    pub borrow_per_second_interest_rate_slope_low: u256, // decimals: 18
+    pub borrow_per_second_interest_rate_slope_high: u256, // decimals: 18
+    pub borrow_per_second_interest_rate_base: u256, // decimals: 18
+    pub store_front_price_factor: u256, // decimals: 18
+    pub base_tracking_index_scale: u256, // decimals: 18
+    pub base_tracking_supply_speed: u256, // decimals: 18
+    pub base_tracking_borrow_speed: u256, // decimals: 18
+    pub base_min_for_rewards: u256, // decimals: base_token_decimals
+    pub base_borrow_min: u256, // decimals: base_token_decimals
+    pub target_reserves: u256, // decimals: base_token_decimals
+}
+
+impl MarketConfiguration {
+    pub fn default() -> Self {
+        MarketConfiguration {
+            governor: Address::from(ZERO_B256),
+            pause_guardian: Address::from(ZERO_B256),
+            base_token: ZERO_B256,
+            base_token_decimals: 0,
+            base_token_price_feed_id: ZERO_B256,
+            supply_kink: 0,
+            borrow_kink: 0,
+            supply_per_second_interest_rate_slope_low: 0,
+            supply_per_second_interest_rate_slope_high: 0,
+            supply_per_second_interest_rate_base: 0,
+            borrow_per_second_interest_rate_slope_low: 0,
+            borrow_per_second_interest_rate_slope_high: 0,
+            borrow_per_second_interest_rate_base: 0,
+            store_front_price_factor: 0,
+            base_tracking_index_scale: 0,
+            base_tracking_supply_speed: 0,
+            base_tracking_borrow_speed: 0,
+            base_min_for_rewards: 0,
+            base_borrow_min: 0,
+            target_reserves: 0,
+        }
+    }
 }
 
 pub struct PauseConfiguration {
