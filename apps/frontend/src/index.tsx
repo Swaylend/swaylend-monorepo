@@ -57,7 +57,7 @@ root.render(
             new FuelWalletConnector(),
             new FueletWalletConnector(),
             new WalletConnectConnector({
-              // TODO: change wallet connect project id, and add it to env
+              // TODO: setup walletconnect project and add project id
               projectId: '',
             }),
           ],
