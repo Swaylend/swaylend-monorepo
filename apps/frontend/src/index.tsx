@@ -1,13 +1,13 @@
 import './index.css';
+import {
+  FuelWalletConnector,
+  FueletWalletConnector,
+  WalletConnectConnector,
+} from '@fuels/connectors';
+import { FuelProvider } from '@fuels/react';
 import ReactDOM from 'react-dom/client';
 import { HashRouter as Router } from 'react-router-dom';
 import App from './App';
-import { FuelProvider } from '@fuels/react';
-import {
-  WalletConnectConnector,
-  FueletWalletConnector,
-  FuelWalletConnector,
-} from '@fuels/connectors';
 import 'normalize.css';
 import { loadState, saveState } from '@src/utils/localStorage';
 import { RootStore, storesContext } from '@stores';

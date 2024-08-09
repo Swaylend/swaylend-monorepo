@@ -8,9 +8,9 @@ import Faucet from '@screens/Faucet';
 // import Tutorial from '@screens/Tutorial';
 // import Tutorials from '@screens/Tutorials';
 import { ROUTES } from '@src/constants';
+import { observer } from 'mobx-react-lite';
 import type React from 'react';
 import { useEffect } from 'react';
-import { observer } from 'mobx-react-lite';
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { useStores } from './stores';
 
