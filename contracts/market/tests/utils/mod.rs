@@ -51,7 +51,6 @@ pub struct TestData {
     pub wallets: Vec<WalletUnlocked>,
 }
 
-// TODO[urban] use this function in all tests
 pub async fn setup() -> TestData {
     //--------------- WALLETS ---------------
     let wallets = init_wallets().await;
