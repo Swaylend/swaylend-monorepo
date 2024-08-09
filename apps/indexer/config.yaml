@@ -1,4 +1,5 @@
 name: Fuel Greeter Indexer
+ecosystem: fuel
 networks:
   - id: 0
     start_block: 7208668
