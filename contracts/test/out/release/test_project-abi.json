@@ -1,0 +1,63 @@
+{
+  "encoding": "1",
+  "types": [
+    {
+      "typeId": 0,
+      "type": "()",
+      "components": [],
+      "typeParameters": null
+    },
+    {
+      "typeId": 1,
+      "type": "u64",
+      "components": null,
+      "typeParameters": null
+    }
+  ],
+  "functions": [
+    {
+      "inputs": [],
+      "name": "get",
+      "output": {
+        "name": "",
+        "type": 1,
+        "typeArguments": null
+      },
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read"
+          ]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "amount",
+          "type": 1,
+          "typeArguments": null
+        }
+      ],
+      "name": "increment",
+      "output": {
+        "name": "",
+        "type": 0,
+        "typeArguments": null
+      },
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read",
+            "write"
+          ]
+        }
+      ]
+    }
+  ],
+  "loggedTypes": [],
+  "messagesTypes": [],
+  "configurables": []
+}
