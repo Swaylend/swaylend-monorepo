@@ -24,7 +24,7 @@ Pyth Oracle contract = 0x73591bf32f010ce4e83d86005c24e7833b397be38014ab670a73f6f
 
 Token factory contract = 0xb2cb14cba2bb4bf4e565d8e0fbd6695df055b4ac25607962a827a72ae8622f5e
 
-Market contract = 0xc574a39aba9d9311df8f07b4d4805ab6b19f64d8364ef1498c73509220985f56
+Market contract = 0x2a525a334bfd792a1effbc4d72b5b9fcdbaa8eab405bf3d691cb7688e370c81d
 
 ETH  = 0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07
 USDC = 0x23e8c3a2fc7a10cfa612da898d1cb3c0f0bb2a94de29ec4fa742bd2f690d9a67
