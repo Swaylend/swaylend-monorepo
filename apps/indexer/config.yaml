@@ -5,7 +5,7 @@ networks:
     contracts:
       - name: Market
         address: 0xc574a39aba9d9311df8f07b4d4805ab6b19f64d8364ef1498c73509220985f56
-        abi_file_path: ../../contracts/market/out/release/market-abi.json
+        abi_file_path: ./abi/market-abi.json
         handler: ./src/EventHandlers.ts
         events:
           - name: CollateralAssetAdded
