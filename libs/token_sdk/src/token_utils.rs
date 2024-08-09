@@ -17,6 +17,7 @@ pub struct TokenContract {
     pub instance: Token<WalletUnlocked>,
 }
 
+#[derive(Clone)]
 pub struct Asset {
     pub asset_id: AssetId,
     pub decimals: u64,
