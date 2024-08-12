@@ -561,6 +561,7 @@ impl Market for Contract {
         let reserves = get_collateral_reserves_internal(asset_id);
 
         // Update price data
+        // FIXME[Martin]: After Fuel responds either remove this or adapt
         // update_price_feeds_if_necessary_internal(price_data_update);
 
         // Calculate the quote for a collateral asset in exchange for an amount of the base asset
