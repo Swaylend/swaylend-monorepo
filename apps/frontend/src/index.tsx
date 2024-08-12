@@ -1,5 +1,10 @@
-import React from 'react';
 import './index.css';
+import {
+  FuelWalletConnector,
+  FueletWalletConnector,
+  WalletConnectConnector,
+} from '@fuels/connectors';
+import { FuelProvider } from '@fuels/react';
 import ReactDOM from 'react-dom/client';
 import { HashRouter as Router } from 'react-router-dom';
 import App from './App';
@@ -45,28 +50,42 @@ root.render(
   // <React.StrictMode>
   <storesContext.Provider value={mobxStore}>
     <QueryClientProvider client={queryClient}>
-      <ThemeWrapper>
-        <Router>
-          <App />
-        </Router>
-        <ToastContainer
-          icon={<div />}
-          position="bottom-right"
-          autoClose={500000}
-          closeButton={({ closeToast }) => (
-            <CloseIcon onClick={(e) => closeToast(e as any)} />
-          )}
-          hideProgressBar
-          newestOnTop={true}
-          closeOnClick={false}
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="dark"
-        />
-        <GlobalStyles />
-      </ThemeWrapper>
+      <FuelProvider
+        ui={false}
+        fuelConfig={{
+          connectors: [
+            new FuelWalletConnector(),
+            new FueletWalletConnector(),
+            new WalletConnectConnector({
+              // TODO: setup walletconnect project and add project id
+              projectId: '',
+            }),
+          ],
+        }}
+      >
+        <ThemeWrapper>
+          <Router>
+            <App />
+          </Router>
+          <ToastContainer
+            icon={<div />}
+            position="bottom-right"
+            autoClose={500000}
+            closeButton={({ closeToast }) => (
+              <CloseIcon onClick={(e) => closeToast(e as any)} />
+            )}
+            hideProgressBar
+            newestOnTop={true}
+            closeOnClick={false}
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="dark"
+          />
+          <GlobalStyles />
+        </ThemeWrapper>
+      </FuelProvider>
       <ReactQueryDevtools initialIsOpen />
     </QueryClientProvider>
   </storesContext.Provider>

@@ -4,6 +4,7 @@ members = [
     "apps/oracle",
     # Contracts (types)
     "contracts/market",
+    "contracts/src-20",
     "contracts/pyth-mock",
     "contracts/token",
     # Libs

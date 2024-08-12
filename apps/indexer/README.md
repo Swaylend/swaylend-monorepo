@@ -19,3 +19,20 @@
 - Get all absorb collateral events
 - Get all buy collateral events
 - Get all reserves withdrawn events
+
+## Hosting:
+
+### Envio hosted service
+
+[Playground](https://envio.dev/app/swaylend/swaylend-monorepo/acb4662/playground)
+
+Current version endpoint: https://indexer.bigdevenergy.link/c755070/v1/graphql
+
+### Docker compose
+
+```bash
+# The following variables need to be changed
+HASURA_GRAPHQL_ENDPOINT: http://localhost:8888/v1/metadata
+# And the port in the docker-compose.yml file
+8888:8080
+```
