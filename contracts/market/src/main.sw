@@ -265,7 +265,7 @@ impl Market for Contract {
     // - `asset_id`: The asset ID of the collateral asset to be withdrawn
     // - `amount`: The amount of collateral to be withdrawn
     // - `price_data_update`: The price data update struct to be used for updating the price feeds
-    #[storage(read, write)]
+    #[payable, storage(read, write)]
     fn withdraw_collateral(asset_id: b256, amount: u256, price_data_update: PriceDataUpdate) {
         // Get the caller's address and calculate the new user and total collateral
         let caller = msg_sender_address();
@@ -372,7 +372,7 @@ impl Market for Contract {
     // ### Parameters:
     // - `amount`: The amount of base asset to be withdrawn
     // - `price_data_update`: The price data update struct to be used for updating the price feeds
-    #[storage(read, write)]
+    #[payable, storage(read, write)]
     fn withdraw_base(amount: u256, price_data_update: PriceDataUpdate) {
         // Only allow withdrawing if paused flag is not set
         require(!storage.pause_config.withdraw_paused.read(), Error::Paused);
@@ -494,7 +494,7 @@ impl Market for Contract {
     // - Absorb a list of underwater accounts onto the protocol balance sheet
     // ### Parameters:
     // - `accounts`: The list of underwater accounts to be absorbed
-    #[storage(read, write)]
+    #[payable, storage(read, write)]
     fn absorb(accounts: Vec<Address>, price_data_update: PriceDataUpdate) {
         // Check that the pause flag is not set
         require(!storage.pause_config.absorb_paused.read(), Error::Paused);
@@ -561,7 +561,7 @@ impl Market for Contract {
         let reserves = get_collateral_reserves_internal(asset_id);
 
         // Update price data
-        update_price_feeds_if_necessary_internal(price_data_update);
+        // update_price_feeds_if_necessary_internal(price_data_update);
 
         // Calculate the quote for a collateral asset in exchange for an amount of the base asset
         let collateral_amount = quote_collateral_internal(asset_id, payment_amount);

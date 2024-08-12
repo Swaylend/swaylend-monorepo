@@ -41,7 +41,7 @@ abi Market {
     #[payable, storage(read, write)]
     fn supply_collateral(); // Payment is required: any collateral asset
 
-    #[storage(read, write)]
+    #[payable, storage(read, write)]
     fn withdraw_collateral(asset: b256, amount: u256, price_data_update: PriceDataUpdate);
 
     #[storage(read)]
@@ -55,7 +55,7 @@ abi Market {
     #[payable, storage(read, write)]
     fn supply_base(); // Payment is required: base asset (USDC)
 
-    #[storage(read, write)]
+    #[payable, storage(read, write)]
     fn withdraw_base(amount: u256, price_data_update: PriceDataUpdate);
 
     #[storage(read)]
@@ -66,7 +66,7 @@ abi Market {
 
     // # 5. Liquidation management
     // Liquidates the user if there is insufficient collateral for the borrowing. 
-    #[storage(read, write)]
+    #[payable, storage(read, write)]
     fn absorb(accounts: Vec<Address>, price_data_update: PriceDataUpdate);
 
     #[storage(read)]

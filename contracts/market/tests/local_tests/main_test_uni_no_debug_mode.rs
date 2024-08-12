@@ -2,6 +2,7 @@ use crate::utils::{init_wallets, print_case_title};
 use chrono::Utc;
 use fuels::prelude::ViewOnlyAccount;
 use fuels::types::{Address, Bits256, ContractId};
+use market::PriceDataUpdate;
 use market_sdk::{get_market_config, parse_units, MarketContract};
 use pyth_mock_sdk::PythMockContract;
 use token_sdk::{TokenAsset, TokenContract};
@@ -79,6 +80,7 @@ async fn main_test_no_debug() {
 
     // ==================== Set oracle prices ====================
     let mut prices = Vec::new();
+    let mut price_feed_ids = Vec::new();
     let publish_time: u64 = Utc::now().timestamp().try_into().unwrap();
     let confidence = 0;
 
@@ -91,10 +93,12 @@ async fn main_test_no_debug() {
         ))
     }
 
-    oracle.update_prices(prices).await.unwrap();
+    oracle.update_prices(&prices).await.unwrap();
 
     for asset in &assets {
         let price = oracle.price(asset.1.price_feed_id).await.unwrap().value;
+
+        price_feed_ids.push(asset.1.price_feed_id);
 
         println!(
             "Price for {} = {}",
@@ -102,6 +106,13 @@ async fn main_test_no_debug() {
             price.price as f64 / 10u64.pow(asset.1.price_feed_decimals as u32) as f64
         );
     }
+
+    let price_data_update = PriceDataUpdate {
+        update_fee: 1,
+        price_feed_ids: price_feed_ids,
+        publish_times: vec![publish_time; assets.len()],
+        update_data: oracle.create_update_data(&prices).await.unwrap(),
+    };
 
     // =================================================
     // ==================== Step #0 ====================
@@ -186,7 +197,7 @@ async fn main_test_no_debug() {
         .with_account(&alice)
         .await
         .unwrap()
-        .withdraw_base(&[&oracle.instance], amount)
+        .withdraw_base(&[&oracle.instance], amount, &price_data_update)
         .await
         .unwrap();
 
@@ -285,6 +296,7 @@ async fn main_test_no_debug() {
             (amount - u128::from(parse_units(1, usdc.decimals)))
                 .try_into()
                 .unwrap(),
+            &price_data_update,
         )
         .await
         .unwrap();
@@ -301,7 +313,11 @@ async fn main_test_no_debug() {
         .with_account(alice)
         .await
         .unwrap()
-        .withdraw_base(&[&oracle.instance], parse_units(2, usdc.decimals))
+        .withdraw_base(
+            &[&oracle.instance],
+            parse_units(2, usdc.decimals),
+            &price_data_update,
+        )
         .await
         .is_err();
     assert!(res);
@@ -334,7 +350,15 @@ async fn main_test_no_debug() {
             res.confidence,
         ),
     )]);
-    oracle.update_prices(prices).await.unwrap();
+    oracle.update_prices(&prices).await.unwrap();
+
+    // New `price_data_update` that will be used in the next steps
+    let price_data_update = PriceDataUpdate {
+        update_fee: 1,
+        price_feed_ids: vec![uni.price_feed_id],
+        publish_times: vec![Utc::now().timestamp().try_into().unwrap()],
+        update_data: oracle.create_update_data(&prices).await.unwrap(),
+    };
 
     println!(
         "🔻 UNI price drops: ${}  -> ${}",
@@ -365,7 +389,7 @@ async fn main_test_no_debug() {
         .with_account(bob)
         .await
         .unwrap()
-        .absorb(&[&oracle.instance], vec![alice_address])
+        .absorb(&[&oracle.instance], vec![alice_address], &price_data_update)
         .await
         .unwrap();
 
@@ -431,6 +455,7 @@ async fn main_test_no_debug() {
             uni.bits256,
             1,
             bob_address,
+            &price_data_update,
         )
         .await
         .unwrap();
@@ -456,7 +481,11 @@ async fn main_test_no_debug() {
         .with_account(bob)
         .await
         .unwrap()
-        .withdraw_base(&[&oracle.instance], amount.try_into().unwrap())
+        .withdraw_base(
+            &[&oracle.instance],
+            amount.try_into().unwrap(),
+            &price_data_update,
+        )
         .await
         .unwrap();
 
@@ -484,7 +513,11 @@ async fn main_test_no_debug() {
         .with_account(chad)
         .await
         .unwrap()
-        .withdraw_base(&[&oracle.instance], amount.try_into().unwrap())
+        .withdraw_base(
+            &[&oracle.instance],
+            amount.try_into().unwrap(),
+            &price_data_update,
+        )
         .await
         .unwrap();
 
@@ -512,7 +545,11 @@ async fn main_test_no_debug() {
         .with_account(alice)
         .await
         .unwrap()
-        .withdraw_base(&[&oracle.instance], amount.try_into().unwrap())
+        .withdraw_base(
+            &[&oracle.instance],
+            amount.try_into().unwrap(),
+            &price_data_update,
+        )
         .await
         .unwrap();
 
@@ -540,7 +577,12 @@ async fn main_test_no_debug() {
         .with_account(chad)
         .await
         .unwrap()
-        .withdraw_collateral(&[&oracle.instance], uni.bits256, amount.try_into().unwrap())
+        .withdraw_collateral(
+            &[&oracle.instance],
+            uni.bits256,
+            amount.try_into().unwrap(),
+            &price_data_update,
+        )
         .await
         .unwrap();
 
