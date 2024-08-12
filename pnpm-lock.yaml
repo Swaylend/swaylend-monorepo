@@ -42,8 +42,8 @@ importers:
         specifier: ^0.5.3
         version: 0.5.15(react-refresh@0.11.0)(type-fest@3.13.1)(webpack-dev-server@4.15.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)(webpack@5.93.0(esbuild@0.22.0)))(webpack@5.93.0(esbuild@0.22.0))
       '@pythnetwork/pyth-fuel-js':
-        specifier: ^1.0.3
-        version: 1.0.3
+        specifier: ^1.0.4
+        version: 1.0.4
       '@svgr/webpack':
         specifier: ^6.5.1
         version: 6.5.1
@@ -2215,8 +2215,8 @@ packages:
   '@popperjs/core@2.11.8':
     resolution: {integrity: sha512-P1st0aksCrn9sGZhp8GMYwBnQsbvAWsZAX44oXNNvLHGqAOcoVxmjZiohstwQ7SqKnbR47akdNi+uleWD8+g6A==}
 
-  '@pythnetwork/pyth-fuel-js@1.0.3':
-    resolution: {integrity: sha512-Lbtz2B1qpMakeFF+RY4PseqF0HCE+/B5c+J5XlaC+TSfIbk5IbqVzSOW3Tu3RoAWziXAMQOBkYHZRuLNQeLZsA==}
+  '@pythnetwork/pyth-fuel-js@1.0.4':
+    resolution: {integrity: sha512-g/z7m7Ic1Pw9ksJsvzKJ/1LELpyFfTdF3UdhP+N0ptJ74xVPWfStxWIDCppHKksqmOawzS4M6vfh/I6/rTAY2w==}
 
   '@radix-ui/primitive@1.1.0':
     resolution: {integrity: sha512-4Z8dn6Upk0qk4P74xBhZ6Hd/w0mPEzOOLxy4xiPXOXqjF7jZS0VAKk7/x/H6FyY2zCkYJqePf1G5KmkmNJ4RBA==}
@@ -11378,7 +11378,7 @@ snapshots:
 
   '@popperjs/core@2.11.8': {}
 
-  '@pythnetwork/pyth-fuel-js@1.0.3':
+  '@pythnetwork/pyth-fuel-js@1.0.4':
     dependencies:
       fuels: 0.92.1
     transitivePeerDependencies:

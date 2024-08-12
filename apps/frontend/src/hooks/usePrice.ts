@@ -37,7 +37,7 @@ export const usePrice = (assetIds: string[]) => {
   }, []);
 
   const oracleContract = new Contract(
-    '0x73591bf32f010ce4e83d86005c24e7833b397be38014ab670a73f6fde59ad607',
+    PYTH_CONTRACT_ADDRESS_SEPOLIA,
     PYTH_CONTRACT_ABI,
     wallet!
   );

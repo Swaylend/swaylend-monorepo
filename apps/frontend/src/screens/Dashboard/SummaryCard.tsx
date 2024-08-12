@@ -3,7 +3,10 @@ import Divider from '@components/Divider';
 import { Row } from '@components/Flex';
 import SizedBox from '@components/SizedBox';
 import Text from '@components/Text';
-import { PYTH_CONTRACT_ABI } from '@pythnetwork/pyth-fuel-js';
+import {
+  PYTH_CONTRACT_ABI,
+  PYTH_CONTRACT_ADDRESS_SEPOLIA,
+} from '@pythnetwork/pyth-fuel-js';
 import { TOKENS_BY_ASSET_ID } from '@src/constants';
 import { useAvailableToBorrow } from '@src/hooks/useAvailableToBorrow';
 import { useBalanceOf } from '@src/hooks/useBalanceOf';
@@ -57,7 +60,7 @@ const SummaryCard: React.FC<IProps> = () => {
   );
 
   const oracleContract = new Contract(
-    '0x73591bf32f010ce4e83d86005c24e7833b397be38014ab670a73f6fde59ad607',
+    PYTH_CONTRACT_ADDRESS_SEPOLIA,
     PYTH_CONTRACT_ABI,
     wallet!
   );

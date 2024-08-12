@@ -1,7 +1,10 @@
 import Button from '@components/Button';
 import SizedBox from '@components/SizedBox';
 import styled from '@emotion/styled';
-import { PYTH_CONTRACT_ABI } from '@pythnetwork/pyth-fuel-js';
+import {
+  PYTH_CONTRACT_ABI,
+  PYTH_CONTRACT_ADDRESS_SEPOLIA,
+} from '@pythnetwork/pyth-fuel-js';
 import InputCard from '@screens/Dashboard/ActionTab/InputCard';
 import useCollapse from '@src/components/Collapse';
 import { Row } from '@src/components/Flex';
@@ -40,7 +43,7 @@ const ActionTab: React.FC<IProps> = () => {
     settingsStore.currentVersionConfig
   );
   const oracleContract = new Contract(
-    '0x73591bf32f010ce4e83d86005c24e7833b397be38014ab670a73f6fde59ad607',
+    PYTH_CONTRACT_ADDRESS_SEPOLIA,
     PYTH_CONTRACT_ABI,
     wallet!
   );
