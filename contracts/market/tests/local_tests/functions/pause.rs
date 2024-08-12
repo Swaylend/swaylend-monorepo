@@ -294,8 +294,6 @@ async fn pause_test() {
 
     market.debug_increment_timestamp().await.unwrap();
 
-    // TODO claim_paused
-
     // =================================================
     // ==================== Step #6 ====================
     // 👛 Wallet: Admin 🗿

@@ -138,7 +138,7 @@ impl Market for Contract {
             .collateral_configurations_keys
             .push(configuration.asset_id);
 
-        log(CollateralAssetAdded { asset_id: configuration.asset_id, configuration }); // TODO[Martin]: What is this event?
+        log(CollateralAssetAdded { asset_id: configuration.asset_id, configuration });
     }
 
     // ## 2.2 Pause an existing collateral asset
@@ -264,8 +264,9 @@ impl Market for Contract {
     // ### Parameters:
     // - `asset_id`: The asset ID of the collateral asset to be withdrawn
     // - `amount`: The amount of collateral to be withdrawn
+    // - `price_data_update`: The price data update struct to be used for updating the price feeds
     #[storage(read, write)]
-    fn withdraw_collateral(asset_id: b256, amount: u256) {
+    fn withdraw_collateral(asset_id: b256, amount: u256, price_data_update: PriceDataUpdate) {
         // Get the caller's address and calculate the new user and total collateral
         let caller = msg_sender_address();
         let user_collateral = storage.user_collateral.get((caller, asset_id)).try_read().unwrap_or(0) - amount;
@@ -277,7 +278,10 @@ impl Market for Contract {
             .user_collateral
             .insert((caller, asset_id), user_collateral);
 
-        // Note: no accrue interest, BorrowCF < LiquidationCF covers small changes
+        // Update price data
+        update_price_feeds_if_necessary_internal(price_data_update);
+
+        // Note: no accrue interest, BorrowCollateralFactor < LiquidationCollateralFactor covers small changes
         // Check if the user is borrow collateralized
         require(is_borrow_collateralized(caller), Error::NotCollateralized);
 
@@ -367,8 +371,9 @@ impl Market for Contract {
     // ## 4.2 Withdraw base (borrowing if possible/necessary)
     // ### Parameters:
     // - `amount`: The amount of base asset to be withdrawn
+    // - `price_data_update`: The price data update struct to be used for updating the price feeds
     #[storage(read, write)]
-    fn withdraw_base(amount: u256) {
+    fn withdraw_base(amount: u256, price_data_update: PriceDataUpdate) {
         // Only allow withdrawing if paused flag is not set
         require(!storage.pause_config.withdraw_paused.read(), Error::Paused);
 
@@ -418,6 +423,9 @@ impl Market for Contract {
                 user_balance.flip().value >= storage.market_configuration.read().base_borrow_min,
                 Error::BorrowTooSmall,
             );
+
+            // Update price data
+            update_price_feeds_if_necessary_internal(price_data_update);
 
             // Check that the user is borrow collateralized
             require(is_borrow_collateralized(caller), Error::NotCollateralized);
@@ -487,12 +495,15 @@ impl Market for Contract {
     // ### Parameters:
     // - `accounts`: The list of underwater accounts to be absorbed
     #[storage(read, write)]
-    fn absorb(accounts: Vec<Address>) {
+    fn absorb(accounts: Vec<Address>, price_data_update: PriceDataUpdate) {
         // Check that the pause flag is not set
         require(!storage.pause_config.absorb_paused.read(), Error::Paused);
 
         // Accrue interest
         accrue_internal();
+
+        // Update price data
+        update_price_feeds_if_necessary_internal(price_data_update);
 
         let mut index = 0;
         // Loop and absorb each account
@@ -523,8 +534,9 @@ impl Market for Contract {
     // - `asset_id`: The asset ID of the collateral asset to be bought
     // - `min_amount`: The minimum amount of collateral to be bought
     // - `recipient`: The address of the recipient of the collateral
+    // - `price_data_update`: The price data update struct to be used for updating the price feeds
     #[payable, storage(read)]
-    fn buy_collateral(asset_id: b256, min_amount: u256, recipient: Address) {
+    fn buy_collateral(asset_id: b256, min_amount: u256, recipient: Address, price_data_update: PriceDataUpdate) {
         // Only allow buying collateral if paused flag is not set
         require(!storage.pause_config.buy_paused.read(), Error::Paused);
         let payment_amount: u256 = msg_amount().into();
@@ -547,6 +559,9 @@ impl Market for Contract {
         // TODO[Martin]: Checkout what these 2 notes do/mean and if we need a re-entrancy guard
         // Note: Re-entrancy can skip the reserves check above on a second buyCollateral call.
         let reserves = get_collateral_reserves_internal(asset_id);
+
+        // Update price data
+        update_price_feeds_if_necessary_internal(price_data_update);
 
         // Calculate the quote for a collateral asset in exchange for an amount of the base asset
         let collateral_amount = quote_collateral_internal(asset_id, payment_amount);
@@ -774,8 +789,8 @@ impl Market for Contract {
     }
 
     #[payable, storage(read)]
-    fn update_price_feeds(update_fee: u64, update_data: Vec<Bytes>) {
-        update_price_feeds_internal(update_fee, update_data)
+    fn update_price_feeds_if_necessary(price_data_update: PriceDataUpdate) {
+        update_price_feeds_if_necessary_internal(price_data_update)
     }
 
     // # 11. Changing market configuration
@@ -822,17 +837,17 @@ fn update_fee_internal(update_data: Vec<Bytes>) -> u64 {
 }
 
 #[payable, storage(read)]
-fn update_price_feeds_internal(update_fee: u64, update_data: Vec<Bytes>) {
+fn update_price_feeds_if_necessary_internal(price_data_update: PriceDataUpdate) {
     let contract_id = storage.pyth_contract_id.read();
     require(contract_id != ZERO_B256, Error::OracleContractIdNotSet);
 
     let oracle = abi(PythCore, contract_id);
-    oracle.update_price_feeds {
-        asset_id: FUEL_ETH_BASE_ASSET_ID, coins: update_fee
+    oracle.update_price_feeds_if_necessary {
+        asset_id: FUEL_ETH_BASE_ASSET_ID, coins: price_data_update.update_fee
     }
-    (update_data);
+    (price_data_update.price_feed_ids, price_data_update.publish_times, price_data_update.update_data);
 }
-
+   
 
 // ## Timestamp getter
 // ### Description:
