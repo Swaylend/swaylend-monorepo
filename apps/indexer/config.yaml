@@ -1,4 +1,4 @@
-name: Fuel Greeter Indexer
+name: Swaylend Indexer
 ecosystem: fuel
 networks:
   - id: 0

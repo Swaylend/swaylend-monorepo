@@ -7,11 +7,12 @@
     "codegen": "envio codegen",
     "dev": "envio dev",
     "test": "ts-mocha test/**/*.spec.ts",
-    "start": "tsx generated/src/Index.bs.js"
+    "start": "ts-node generated/src/Index.bs.js"
   },
   "dependencies": {
     "chai": "4.3.10",
-    "ethers": "6.8.0"
+    "ethers": "6.8.0",
+    "ts-node": "^10.9.2"
   },
   "devDependencies": {
     "@biomejs/biome": "1.8.3",
