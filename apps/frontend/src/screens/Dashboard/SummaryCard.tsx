@@ -266,7 +266,7 @@ const SummaryCard: React.FC<IProps> = () => {
               collateralConfigurations![
                 assetId
               ].borrow_collateral_factor.toString(),
-              4
+              18
             );
             let balance = v;
             if (assetId === dashboardStore.actionTokenAssetId) {
@@ -326,7 +326,7 @@ const SummaryCard: React.FC<IProps> = () => {
               collateralConfigurations![
                 assetId
               ].borrow_collateral_factor.toString(),
-              4
+              18
             );
             let balance = v;
             if (assetId === dashboardStore.actionTokenAssetId) {
