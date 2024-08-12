@@ -23,10 +23,6 @@ export const useCollateralUtilization = (
     rootStore.accountStore.addressInput?.value ?? ''
   );
 
-  // console.log('collateralBalances', collateralBalances);
-  // console.log('assetsConfigs', assetsConfigs);
-  // console.log('userSupplyBorrow', userSupplyBorrow);
-
   const trueCollateralsValue = useMemo(() => {
     if (collateralBalances == null || assetsConfigs == null) return BN.ZERO;
     return Object.entries(collateralBalances!).reduce((acc, [assetId, v]) => {
