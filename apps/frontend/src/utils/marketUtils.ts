@@ -1,4 +1,5 @@
-import { type MarketAbi, OracleAbi__factory } from '@src/contract-types';
+import type { MarketAbi } from '@src/contract-types';
+import { PYTH_CONTRACT_ABI } from '@pythnetwork/pyth-fuel-js';
 import type { AccountStore, DashboardStore, SettingsStore } from '@src/stores';
 import { Contract } from 'fuels';
 import type BN from './BN';
@@ -69,7 +70,7 @@ export const withdrawCollateral = async (
   if (accountStore.provider == null) return;
   const oracle = new Contract(
     priceOracle,
-    OracleAbi__factory.abi,
+    PYTH_CONTRACT_ABI,
     accountStore.provider
   );
 
@@ -99,7 +100,7 @@ export const borrowBase = async (
   if (accountStore.provider == null) return;
   const oracle = new Contract(
     priceOracle,
-    OracleAbi__factory.abi,
+    PYTH_CONTRACT_ABI,
     accountStore.provider
   );
   return market.functions

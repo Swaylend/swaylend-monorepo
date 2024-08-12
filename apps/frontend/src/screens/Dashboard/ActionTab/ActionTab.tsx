@@ -1,6 +1,7 @@
 import Button from '@components/Button';
 import SizedBox from '@components/SizedBox';
 import styled from '@emotion/styled';
+import { PYTH_CONTRACT_ABI } from '@pythnetwork/pyth-fuel-js';
 import InputCard from '@screens/Dashboard/ActionTab/InputCard';
 import useCollapse from '@src/components/Collapse';
 import { Row } from '@src/components/Flex';
@@ -11,7 +12,7 @@ import { ACTION_TYPE } from '@src/stores/DashboardStore';
 import { getMarketContract, getOracleContract } from '@src/utils/readContracts';
 import { initProvider, walletToRead } from '@src/utils/walletToRead';
 import { useStores } from '@stores';
-import type { Provider, WalletUnlocked } from 'fuels';
+import { Contract, type Provider, type WalletUnlocked } from 'fuels';
 import { observer } from 'mobx-react-lite';
 import type React from 'react';
 import { useEffect, useState } from 'react';
@@ -38,10 +39,10 @@ const ActionTab: React.FC<IProps> = () => {
     wallet!,
     settingsStore.currentVersionConfig
   );
-  const oracleContract = getOracleContract(
-    wallet!,
-    provider!,
-    settingsStore.currentVersionConfig
+  const oracleContract = new Contract(
+    '0x73591bf32f010ce4e83d86005c24e7833b397be38014ab670a73f6fde59ad607',
+    PYTH_CONTRACT_ABI,
+    wallet!
   );
   const { data: userSupplyBorrow, isSuccess: isSuccessUserSupplyBorrow } =
     useUserSupplyBorrow(marketContract, accountStore.addressInput?.value ?? '');

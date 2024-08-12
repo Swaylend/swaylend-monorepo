@@ -23,20 +23,32 @@ export const useCollateralUtilization = (
     rootStore.accountStore.addressInput?.value ?? ''
   );
 
+  // console.log('collateralBalances', collateralBalances);
+  // console.log('assetsConfigs', assetsConfigs);
+  // console.log('userSupplyBorrow', userSupplyBorrow);
+
   const trueCollateralsValue = useMemo(() => {
     if (collateralBalances == null || assetsConfigs == null) return BN.ZERO;
     return Object.entries(collateralBalances!).reduce((acc, [assetId, v]) => {
       const token = TOKENS_BY_ASSET_ID[assetId];
       const liquidationFactor = BN.formatUnits(
         assetsConfigs![assetId].liquidate_collateral_factor.toString(),
-        4
+        18
       );
       const balance = BN.formatUnits(v, token.decimals);
       const dollBalance = getTokenPrice(assetId).times(balance);
+      console.log('token', token.name);
+      console.log('dollBalance', dollBalance.toFixed(2));
+      console.log('liquidationFactor', liquidationFactor.toFixed(2));
+      console.log('balance', balance.toFixed(2));
+      console.log('liquidationFactor', liquidationFactor.toFixed(2));
       const trueDollBalance = dollBalance.times(liquidationFactor);
+      console.log('trueDollBalance', trueDollBalance.toFixed(2));
       return acc.plus(trueDollBalance);
     }, BN.ZERO);
   }, [collateralBalances, assetsConfigs]);
+
+  console.log('trueCollateralsValue', trueCollateralsValue.toFixed(2));
 
   const borrowedBalance = useMemo(() => {
     if (userSupplyBorrow == null) return BN.ZERO;

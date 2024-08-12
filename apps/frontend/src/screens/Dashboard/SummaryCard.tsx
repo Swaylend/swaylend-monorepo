@@ -3,6 +3,7 @@ import Divider from '@components/Divider';
 import { Row } from '@components/Flex';
 import SizedBox from '@components/SizedBox';
 import Text from '@components/Text';
+import { PYTH_CONTRACT_ABI } from '@pythnetwork/pyth-fuel-js';
 import { TOKENS_BY_ASSET_ID } from '@src/constants';
 import { useAvailableToBorrow } from '@src/hooks/useAvailableToBorrow';
 import { useBalanceOf } from '@src/hooks/useBalanceOf';
@@ -22,7 +23,7 @@ import {
 } from '@src/utils/dashboardUtils';
 import { getMarketContract, getOracleContract } from '@src/utils/readContracts';
 import { initProvider, walletToRead } from '@src/utils/walletToRead';
-import type { Provider, WalletUnlocked } from 'fuels';
+import { Contract, type Provider, type WalletUnlocked } from 'fuels';
 import { observer } from 'mobx-react-lite';
 import type React from 'react';
 import { useEffect, useMemo, useState } from 'react';
@@ -50,15 +51,15 @@ const SummaryCard: React.FC<IProps> = () => {
     walletToRead().then((w) => setWallet(w));
     initProvider().then((p) => setProvider(p));
   }, []);
-
-  const oracleContract = getOracleContract(
-    wallet!,
-    provider!,
-    settingsStore.currentVersionConfig
-  );
   const marketContract = getMarketContract(
     wallet!,
     settingsStore.currentVersionConfig
+  );
+
+  const oracleContract = new Contract(
+    '0x73591bf32f010ce4e83d86005c24e7833b397be38014ab670a73f6fde59ad607',
+    PYTH_CONTRACT_ABI,
+    wallet!
   );
 
   const { data: maxBorrowAmount } = useAvailableToBorrow(

@@ -3,6 +3,7 @@ import useCollapse from '@components/Collapse';
 import Notification from '@components/Notification';
 import SizedBox from '@components/SizedBox';
 import TokenInput from '@components/TokenInput/TokenInput';
+import { PYTH_CONTRACT_ABI } from '@pythnetwork/pyth-fuel-js';
 import SummaryCard from '@screens/Dashboard/SummaryCard';
 import Card from '@src/components/Card';
 import { Row } from '@src/components/Flex';
@@ -29,7 +30,7 @@ import {
 import { getMarketContract, getOracleContract } from '@src/utils/readContracts';
 import { initProvider, walletToRead } from '@src/utils/walletToRead';
 import { useStores } from '@stores';
-import type { Provider, WalletUnlocked } from 'fuels';
+import { Contract, type Provider, type WalletUnlocked } from 'fuels';
 import { observer } from 'mobx-react-lite';
 import type React from 'react';
 import { useEffect, useState } from 'react';
@@ -51,10 +52,10 @@ const InputCard: React.FC<IProps> = () => {
     wallet!,
     settingsStore.currentVersionConfig
   );
-  const oracleContract = getOracleContract(
-    wallet!,
-    provider!,
-    settingsStore.currentVersionConfig
+  const oracleContract = new Contract(
+    '0x73591bf32f010ce4e83d86005c24e7833b397be38014ab670a73f6fde59ad607',
+    PYTH_CONTRACT_ABI,
+    wallet!
   );
 
   const {

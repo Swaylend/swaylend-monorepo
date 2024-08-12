@@ -13,15 +13,19 @@ const PRICE_FEEDS = {
     symbol: 'Crypto.ETH/USD',
     id: '0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace',
   },
-  '0xb3a405892c0725ae9cfc117306752f623e3f357963b7489636b83d4842f96d62': {
+  '0x7d9d3e3df2900080f47b5e55c0501e153d21e67a2cdf86cb86ff5b717daab767': {
     symbol: 'Crypto.BTC/USD',
-    id: '0x56a3121958b01f99fdc4e1fd01e81050602c7ace3a571918bb55c6a96657cca9',
+    id: '0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43',
   },
-  '0x403489ee55a733cce6deb3e46e16a0ded38f902ff70224df97e15c243319b6f3': {
+  '0x23e8c3a2fc7a10cfa612da898d1cb3c0f0bb2a94de29ec4fa742bd2f690d9a67': {
     symbol: 'Crypto.USDC/USD',
     id: '0xeaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a',
   },
-};
+  '0x7a31611c81e974db193570a6b918d083cbf223ddfef0cce18e02746b21ea8964': {
+    symbol: 'Crypto.UNI/USD',
+    id: '0x78d185a741d07edb3412b09008b7c5cfb9bbbd7d568bf00ba737b456ba171501',
+  },
+} as Record<string, any>;
 
 export const usePrice = (assetIds: string[]) => {
   const [wallet, setWallet] = useState<WalletUnlocked | null>(null);
@@ -33,32 +37,17 @@ export const usePrice = (assetIds: string[]) => {
   }, []);
 
   const oracleContract = new Contract(
-    PYTH_CONTRACT_ADDRESS_SEPOLIA,
+    '0x73591bf32f010ce4e83d86005c24e7833b397be38014ab670a73f6fde59ad607',
     PYTH_CONTRACT_ABI,
     wallet!
   );
 
   const fetchPrice = async (assetId: string) => {
-    if (
-      assetId ===
-      '0xb3a405892c0725ae9cfc117306752f623e3f357963b7489636b83d4842f96d62'
-    )
-      return new BN(66292.123);
-
-    if (
-      assetId !==
-        '0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07' &&
-      assetId !==
-        '0xb3a405892c0725ae9cfc117306752f623e3f357963b7489636b83d4842f96d62' &&
-      assetId !==
-        '0x403489ee55a733cce6deb3e46e16a0ded38f902ff70224df97e15c243319b6f3'
-    )
-      throw new Error('Invalid assetId');
     const { value } = await oracleContract.functions
       .price_unsafe(PRICE_FEEDS[assetId].id)
       .get();
-    if (!value) throw new Error('Failed to fetch price');
 
+    if (!value) throw new Error('Failed to fetch price');
     const previousPrice = value.price.toNumber() * 10 ** -value.exponent;
 
     return new BN(previousPrice.toString());

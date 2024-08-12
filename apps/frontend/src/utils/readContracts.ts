@@ -1,5 +1,6 @@
 import type { IContractsConfig } from '@src/constants';
-import { MarketAbi__factory, OracleAbi__factory } from '@src/contract-types';
+import { MarketAbi__factory } from '@src/contract-types';
+import { PYTH_CONTRACT_ABI } from '@pythnetwork/pyth-fuel-js';
 import { Contract, type Provider, type WalletUnlocked } from 'fuels';
 
 export const getMarketContract = (
@@ -16,5 +17,5 @@ export const getOracleContract = (
   currentVersionConfig: IContractsConfig
 ) => {
   const { priceOracle } = currentVersionConfig;
-  return new Contract(priceOracle, OracleAbi__factory.abi, provider);
+  return new Contract(priceOracle, PYTH_CONTRACT_ABI, provider);
 };
