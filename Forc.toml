@@ -4,6 +4,7 @@ members = [
     "abis/market_abi",
     # Contracts
     "contracts/market",
+    "contracts/src-20",
     "contracts/token",
     "contracts/test",
     "contracts/pyth-mock",

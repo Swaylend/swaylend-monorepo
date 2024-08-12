@@ -1,0 +1,16 @@
+[package]
+name = "src-20"
+description = "A cargo-generate template for Rust + Sway integration testing."
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+
+[[bin]]
+name = "deploy"
+path = "scripts/deploy.rs"
+
+[dependencies]
+fuels = { workspace = true }
+dotenv = { workspace = true }
+tokio = { workspace = true }
+rand = { workspace = true }

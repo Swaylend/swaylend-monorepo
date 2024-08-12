@@ -1174,10 +1174,10 @@ fn accrue_internal() {
 
         // Calculate rewards and update tracking indices
         if market_basic.total_supply_base >= storage.market_configuration.read().base_min_for_rewards {
-            market_basic.tracking_supply_index += storage.market_configuration.read().base_tracking_supply_speed * time_elapsed * base_scale / market_basic.total_supply_base; // decimals: 18
+            market_basic.tracking_supply_index += storage.market_configuration.read().base_tracking_supply_speed * time_elapsed * base_scale / market_basic.total_supply_base; // decimals: 15
         }
         if market_basic.total_borrow_base >= storage.market_configuration.read().base_min_for_rewards {
-            market_basic.tracking_borrow_index += storage.market_configuration.read().base_tracking_borrow_speed * time_elapsed * base_scale / market_basic.total_borrow_base; // decimals: 18
+            market_basic.tracking_borrow_index += storage.market_configuration.read().base_tracking_borrow_speed * time_elapsed * base_scale / market_basic.total_borrow_base; // decimals: 15
         }
 
         // Update last_accrual_time
