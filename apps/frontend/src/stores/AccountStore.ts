@@ -1,9 +1,3 @@
-import {
-  FuelWalletConnector,
-  FuelWalletDevelopmentConnector,
-  FueletWalletConnector,
-  // defaultConnectors,
-} from '@fuels/connectors';
 import { type IToken, NODE_URL, TOKENS_LIST } from '@src/constants';
 import Balance from '@src/entities/Balance';
 import BN from '@src/utils/BN';
@@ -11,7 +5,7 @@ import type RootStore from '@stores/RootStore';
 import {
   Address,
   CoinQuantity,
-  Fuel,
+  type Fuel,
   Mnemonic,
   Provider,
   Wallet,
@@ -19,13 +13,13 @@ import {
   type WalletUnlocked,
   // FuelConnectorEventTypes,
 } from 'fuels';
-import { makeAutoObservable, reaction, when } from 'mobx';
+import { makeAutoObservable, reaction, runInAction, when } from 'mobx';
 
 export enum LOGIN_TYPE {
   FUEL_WALLET = 'Fuel Wallet',
-  FUEL_DEV = 'Fuel Wallet Development',
   FUELET = 'Fuelet Wallet',
   GENERATE_SEED = 'Generate seed',
+  WALLET_CONNECT = 'Ethereum Wallets',
 }
 
 export interface ISerializedAccountStore {
@@ -56,8 +50,6 @@ class AccountStore {
       this.setSeed(initState.seed);
     }
 
-    this.initFuel();
-    this.initProvider();
     when(() => this.provider != null, this.updateAccountBalances);
     setInterval(this.updateAccountBalances, 15 * 1000);
     reaction(
@@ -71,14 +63,7 @@ class AccountStore {
     this.seed = seed;
   };
 
-  initFuel = () => {
-    const fuel = new Fuel({
-      connectors: [
-        new FuelWalletConnector(),
-        new FueletWalletConnector(),
-        new FuelWalletDevelopmentConnector(),
-      ],
-    });
+  initFuel = (fuel: Fuel) => {
     this.setFuel(fuel);
     fuel.on(
       fuel.events.connectors,
@@ -103,10 +88,20 @@ class AccountStore {
     this.fuel = fuel;
   };
 
-  initProvider = async () => {
-    Provider.create(NODE_URL)
-      .then((provider) => this.setProvider(provider))
-      .catch(console.error);
+  initProvider = async (provider: Provider | null) => {
+    if (provider) {
+      this.setProvider(provider);
+      return;
+    }
+
+    try {
+      const provider = await Provider.create(NODE_URL);
+      runInAction(() => {
+        this.setProvider(provider);
+      });
+    } catch (error) {
+      console.error('Failed to create provider', error);
+    }
   };
 
   public assetBalances: Balance[] | null = null;
