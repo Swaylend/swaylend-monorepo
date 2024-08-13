@@ -34,7 +34,7 @@ async fn mint() {
 
         let asset = assets.get(asset).unwrap();
         let asset = TokenAsset::new(wallet.clone(), token_contract_id, &asset.symbol);
-        println!("{}: {}", asset.symbol, asset.asset_id);
+        println!("{}: 0x{}", asset.symbol, asset.asset_id);
         asset.mint(wallet.address().into(), 100000).await.unwrap();
     }
 }

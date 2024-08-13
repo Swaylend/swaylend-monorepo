@@ -1,10 +1,10 @@
 name: Fuel Greeter Indexer
 networks:
   - id: 0
-    start_block: 7208668
+    start_block: 7597567
     contracts:
       - name: Market
-        address: 0xc574a39aba9d9311df8f07b4d4805ab6b19f64d8364ef1498c73509220985f56
+        address: 0xea9d4a55ca16271f42992529bb68de095249ceb8d95176576098bb9b98cd3975
         abi_file_path: ../../contracts/market/out/release/market-abi.json
         handler: ./src/EventHandlers.ts
         events:
