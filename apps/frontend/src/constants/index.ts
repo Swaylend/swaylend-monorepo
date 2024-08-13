@@ -38,9 +38,9 @@ export const FAUCET_URL = 'https://faucet-testnet.fuel.network/';
 export const CONTRACT_ADDRESSES: IContractsConfig = {
   priceOracle:
     '0x73591bf32f010ce4e83d86005c24e7833b397be38014ab670a73f6fde59ad607',
-  market: '0x2a525a334bfd792a1effbc4d72b5b9fcdbaa8eab405bf3d691cb7688e370c81d',
+  market: '0xea9d4a55ca16271f42992529bb68de095249ceb8d95176576098bb9b98cd3975',
   tokenFactory:
-    '0xb2cb14cba2bb4bf4e565d8e0fbd6695df055b4ac25607962a827a72ae8622f5e',
+    '0x36d896016b570d6638029968e6cdf84b9249ad7e5b295848f7140b56b3303532',
 };
 
 export interface IToken {
