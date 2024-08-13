@@ -1,15 +1,15 @@
 [
   {
-    "name": "USDC",
-    "symbol": "USDC",
-    "decimals": 6,
-    "assetId": "0xb5a7ec61506d83f6e4739be2dc57018898b1e08684c097c73b582c9583e191e2"
-  },
-  {
     "name": "Ethereum",
     "symbol": "ETH",
     "decimals": 9,
     "assetId": "0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07"
+  },
+  {
+    "name": "USDC",
+    "symbol": "USDC",
+    "decimals": 6,
+    "assetId": "0xb5a7ec61506d83f6e4739be2dc57018898b1e08684c097c73b582c9583e191e2"
   },
   {
     "name": "Bitcoin",
