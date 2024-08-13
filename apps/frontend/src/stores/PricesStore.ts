@@ -1,5 +1,4 @@
-import { type IToken, TOKENS_LIST } from '@src/constants';
-import { OracleAbi__factory } from '@src/contract-types';
+import type { IToken } from '@src/constants';
 import BN from '@src/utils/BN';
 import type RootStore from '@stores/RootStore';
 import { makeAutoObservable, reaction } from 'mobx';
@@ -43,35 +42,35 @@ class PricesStore {
   updateTokenPrices = async () => {
     const { settingsStore, accountStore } = this.rootStore;
     const { priceOracle } = settingsStore.currentVersionConfig;
-    try {
-      const wallet = accountStore.walletToRead;
-      if (wallet == null) return;
-      const oracleContract = OracleAbi__factory.connect(priceOracle, wallet);
+    // try {
+    //   const wallet = accountStore.walletToRead;
+    //   if (wallet == null) return;
+    //   const oracleContract = OracleAbi__factory.connect(priceOracle, wallet);
 
-      const response = await Promise.all(
-        TOKENS_LIST.map((token) =>
-          oracleContract.functions.get_price(token.assetId).dryRun()
-        )
-      );
-      console.log(response);
+    //   const response = await Promise.all(
+    //     TOKENS_LIST.map((token) =>
+    //       oracleContract.functions.get_price(token.assetId).dryRun()
+    //     )
+    //   );
+    //   console.log(response);
 
-      // TODO[old] change to locked wallet
-      // console.log("response", response);
-      if (response.length > 0) {
-        const v = response.reduce(
-          (acc, { value }) => ({
-            // biome-ignore lint/performance/noAccumulatingSpread: <explanation>
-            ...acc,
-            [value.asset_id]: BN.formatUnits(value.price.toString(), 9),
-          }),
-          {}
-        );
-        this.setTokensPrices(v);
-      }
-    } catch (e) {
-      console.log('updateTokenPrices error');
-      console.log(e);
-    }
+    //   // TODO[old] change to locked wallet
+    //   // console.log("response", response);
+    //   if (response.length > 0) {
+    //     const v = response.reduce(
+    //       (acc, { value }) => ({
+    //         // biome-ignore lint/performance/noAccumulatingSpread: <explanation>
+    //         ...acc,
+    //         [value.asset_id]: BN.formatUnits(value.price.toString(), 9),
+    //       }),
+    //       {}
+    //     );
+    //     this.setTokensPrices(v);
+    //   }
+    // } catch (e) {
+    //   console.log('updateTokenPrices error');
+    //   console.log(e);
+    // }
   };
 }
 

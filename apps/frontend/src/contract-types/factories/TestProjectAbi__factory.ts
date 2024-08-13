@@ -24,50 +24,65 @@ const _abi = {
     },
     {
       "typeId": 1,
-      "type": "bool",
+      "type": "u64",
       "components": null,
-      "typeParameters": null
-    },
-    {
-      "typeId": 2,
-      "type": "enum Error",
-      "components": [
-        {
-          "name": "ZeroDivisor",
-          "type": 0,
-          "typeArguments": null
-        }
-      ],
       "typeParameters": null
     }
   ],
   "functions": [
     {
       "inputs": [],
-      "name": "main",
+      "name": "get",
       "output": {
         "name": "",
         "type": 1,
         "typeArguments": null
       },
-      "attributes": null
-    }
-  ],
-  "loggedTypes": [
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read"
+          ]
+        }
+      ]
+    },
     {
-      "logId": "13928757919242894944",
-      "loggedType": {
+      "inputs": [
+        {
+          "name": "amount",
+          "type": 1,
+          "typeArguments": null
+        }
+      ],
+      "name": "increment",
+      "output": {
         "name": "",
-        "type": 2,
-        "typeArguments": []
-      }
+        "type": 0,
+        "typeArguments": null
+      },
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read",
+            "write"
+          ]
+        }
+      ]
     }
   ],
+  "loggedTypes": [],
   "messagesTypes": [],
   "configurables": []
 };
 
-const _storageSlots: StorageSlot[] = [];
+const _storageSlots: StorageSlot[] = [
+  {
+    "key": "6e3c7b4f69bbff7132c3c3a62883a6868f47b0bc2a7f21605f29038cd9a5e05f",
+    "value": "0000000000000000000000000000000000000000000000000000000000000000"
+  }
+];
 
 export const TestProjectAbi__factory = {
   abi: _abi,

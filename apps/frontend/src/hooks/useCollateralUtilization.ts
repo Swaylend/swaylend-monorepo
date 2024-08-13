@@ -29,7 +29,7 @@ export const useCollateralUtilization = (
       const token = TOKENS_BY_ASSET_ID[assetId];
       const liquidationFactor = BN.formatUnits(
         assetsConfigs![assetId].liquidate_collateral_factor.toString(),
-        4
+        18
       );
       const balance = BN.formatUnits(v, token.decimals);
       const dollBalance = getTokenPrice(assetId).times(balance);
