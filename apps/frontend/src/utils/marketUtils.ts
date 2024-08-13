@@ -1,9 +1,9 @@
 import { PYTH_CONTRACT_ABI } from '@pythnetwork/pyth-fuel-js';
+import { TX_GAS_LIMIT } from '@src/constants';
 import type { MarketAbi } from '@src/contract-types';
 import type { AccountStore, DashboardStore, SettingsStore } from '@src/stores';
 import { Contract } from 'fuels';
 import type BN from './BN';
-import { TX_GAS_LIMIT } from '@src/constants';
 
 export const supplyBase = async (
   market: MarketAbi,
