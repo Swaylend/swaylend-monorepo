@@ -1,26 +1,26 @@
 name: Swaylend Indexer
 ecosystem: fuel
 networks:
-  - id: 0
-    start_block: 7208668
-    contracts:
-      - name: Market
-        address: 0xc574a39aba9d9311df8f07b4d4805ab6b19f64d8364ef1498c73509220985f56
-        abi_file_path: ./abi/market-abi.json
-        handler: ./src/EventHandlers.ts
-        events:
-          - name: CollateralAssetAdded
-          - name: CollateralAssetUpdated
-          - name: CollateralAssetPaused
-          - name: CollateralAssetResumed
-          - name: UserBasicEvent
-          - name: MarketBasicEvent
-          - name: UserSupplyCollateralEvent
-          - name: UserWithdrawCollateralEvent
-          - name: UserSupplyBaseEvent
-          - name: UserWithdrawBaseEvent
-          - name: AbsorbCollateralEvent
-          - name: UserLiquidatedEvent
-          - name: BuyCollateralEvent
-          - name: ReservesWithdrawnEvent
-          - name: PauseConfigurationEvent
+        - id: 0
+          start_block: 7597567
+          contracts:
+                  - name: Market
+                    address: 0xea9d4a55ca16271f42992529bb68de095249ceb8d95176576098bb9b98cd3975
+                    abi_file_path: ./abi/market-abi.json
+                    handler: ./src/EventHandlers.ts
+                    events:
+                            - name: CollateralAssetAdded
+                            - name: CollateralAssetUpdated
+                            - name: CollateralAssetPaused
+                            - name: CollateralAssetResumed
+                            - name: UserBasicEvent
+                            - name: MarketBasicEvent
+                            - name: UserSupplyCollateralEvent
+                            - name: UserWithdrawCollateralEvent
+                            - name: UserSupplyBaseEvent
+                            - name: UserWithdrawBaseEvent
+                            - name: AbsorbCollateralEvent
+                            - name: UserLiquidatedEvent
+                            - name: BuyCollateralEvent
+                            - name: ReservesWithdrawnEvent
+                            - name: PauseConfigurationEvent

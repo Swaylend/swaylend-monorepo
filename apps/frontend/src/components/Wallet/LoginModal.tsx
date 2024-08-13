@@ -42,9 +42,9 @@ const LoginModal: React.FC<IProps> = ({ ...rest }) => {
     },
     { title: 'Create account', type: LOGIN_TYPE.GENERATE_SEED, active: true },
     {
-      title: 'Fuel Wallet Dev',
-      type: LOGIN_TYPE.FUEL_DEV,
-      active: accountStore.listConnectors.includes(LOGIN_TYPE.FUEL_DEV),
+      title: 'Ethereum Wallets',
+      type: LOGIN_TYPE.WALLET_CONNECT,
+      active: accountStore.listConnectors.includes(LOGIN_TYPE.WALLET_CONNECT),
     },
   ];
   return (

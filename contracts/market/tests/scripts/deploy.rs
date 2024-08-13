@@ -68,6 +68,6 @@ async fn deploy() {
         market.add_collateral_asset(&config).await.unwrap();
     }
 
-    println!("Market contract = {}", market.contract_id().hash());
+    println!("Market contract = 0x{}", market.contract_id().hash());
     println!("start_block: {block}",);
 }
