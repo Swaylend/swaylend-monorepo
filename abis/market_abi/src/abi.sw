@@ -41,8 +41,8 @@ abi Market {
     #[payable, storage(read, write)]
     fn supply_collateral(); // Payment is required: any collateral asset
 
-    #[storage(read, write)]
-    fn withdraw_collateral(asset: b256, amount: u256);
+    #[payable, storage(read, write)]
+    fn withdraw_collateral(asset: b256, amount: u256, price_data_update: PriceDataUpdate);
 
     #[storage(read)]
     fn get_user_collateral(address: Address, asset_id: b256) -> u256;
@@ -55,8 +55,8 @@ abi Market {
     #[payable, storage(read, write)]
     fn supply_base(); // Payment is required: base asset (USDC)
 
-    #[storage(read, write)]
-    fn withdraw_base(amount: u256);
+    #[payable, storage(read, write)]
+    fn withdraw_base(amount: u256, price_data_update: PriceDataUpdate);
 
     #[storage(read)]
     fn get_user_supply_borrow(account: Address) -> (u256, u256); 
@@ -66,15 +66,15 @@ abi Market {
 
     // # 5. Liquidation management
     // Liquidates the user if there is insufficient collateral for the borrowing. 
-    #[storage(read, write)]
-    fn absorb(accounts: Vec<Address>);
+    #[payable, storage(read, write)]
+    fn absorb(accounts: Vec<Address>, price_data_update: PriceDataUpdate);
 
     #[storage(read)]
     fn is_liquidatable(account: Address) -> bool;
 
     // # 6. Protocol collateral management
     #[payable, storage(read)]
-    fn buy_collateral(asset_id: b256, min_amount: u256, recipient: Address); // Payment is required: base asset (USDC)
+    fn buy_collateral(asset_id: b256, min_amount: u256, recipient: Address, price_data_update: PriceDataUpdate); // Payment is required: base asset (USDC)
 
     #[storage(read)]
     fn collateral_value_to_sell(asset_id: b256, collateral_amount: u256) -> u256;
@@ -85,6 +85,7 @@ abi Market {
     // ## 7. Reserves management
     #[storage(read)]
     fn get_reserves() -> I256;
+    
     #[storage(read)]
     fn withdraw_reserves(to: Address, amount: u256);
 
@@ -128,8 +129,8 @@ abi Market {
     fn update_fee(update_data: Vec<Bytes>) -> u64;
 
     #[payable, storage(read)]
-    fn update_price_feeds(update_fee: u64, update_data: Vec<Bytes>);
-
+    fn update_price_feeds_if_necessary(price_data_update: PriceDataUpdate);
+        
     // ## 11. Changing market configuration
     #[storage(write, read)]
     fn update_market_configuration(configuration: MarketConfiguration);

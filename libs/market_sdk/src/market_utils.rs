@@ -12,7 +12,8 @@ use fuels::{
     },
     types::{
         bech32::Bech32ContractId, transaction::TxPolicies,
-        transaction_builders::VariableOutputPolicy, Address, AssetId, Bits256, Bytes32, ContractId,
+        transaction_builders::VariableOutputPolicy, Address, AssetId, Bits256, Bytes, Bytes32,
+        ContractId,
     },
 };
 use rand::Rng;
@@ -150,10 +151,20 @@ impl MarketContract {
     }
 
     // Contract methods
-    pub async fn activate_contract(&self, market_configuration: MarketConfiguration) -> anyhow::Result<CallResponse<()>> {
-        Ok(self.instance.methods().activate_contract(market_configuration).call().await?)
+    // # 0. Activate contract
+    pub async fn activate_contract(
+        &self,
+        market_configuration: MarketConfiguration,
+    ) -> anyhow::Result<CallResponse<()>> {
+        Ok(self
+            .instance
+            .methods()
+            .activate_contract(market_configuration)
+            .call()
+            .await?)
     }
 
+    // # 1. Debug functionality (for testing purposes)
     pub async fn debug_increment_timestamp(&self) -> anyhow::Result<CallResponse<()>> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
 
@@ -166,26 +177,7 @@ impl MarketContract {
             .await?)
     }
 
-    pub async fn supply_base(
-        &self,
-        base_asset_id: AssetId,
-        amount: u64,
-    ) -> anyhow::Result<CallResponse<()>> {
-        let tx_policies = TxPolicies::default().with_script_gas_limit(1_000_000);
-        let call_params = CallParameters::default()
-            .with_amount(amount)
-            .with_asset_id(base_asset_id);
-
-        Ok(self
-            .instance
-            .methods()
-            .supply_base()
-            .with_tx_policies(tx_policies)
-            .call_params(call_params)?
-            .call()
-            .await?)
-    }
-
+    // # 2. Collateral asset management
     pub async fn add_collateral_asset(
         &self,
         config: &CollateralConfiguration,
@@ -201,43 +193,67 @@ impl MarketContract {
             .await?)
     }
 
-    pub async fn withdraw_base(
+    pub async fn puase_collateral_asset(
         &self,
-        contract_ids: &[&dyn ContractDependency],
-        amount: u64,
+        asset_id: AssetId,
     ) -> anyhow::Result<CallResponse<()>> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
 
         Ok(self
             .instance
             .methods()
-            .withdraw_base(amount.into())
-            .with_variable_output_policy(VariableOutputPolicy::Exactly(1))
-            .with_contracts(contract_ids)
+            .pause_collateral_asset(asset_id.into())
             .with_tx_policies(tx_policies)
             .call()
             .await?)
     }
 
-    pub async fn withdraw_collateral(
+    pub async fn resume_collateral_asset(
         &self,
-        contract_ids: &[&dyn ContractDependency],
-        asset_id: Bits256,
-        amount: u64,
+        asset_id: AssetId,
     ) -> anyhow::Result<CallResponse<()>> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
 
         Ok(self
             .instance
             .methods()
-            .withdraw_collateral(asset_id, amount.into())
+            .resume_collateral_asset(asset_id.into())
             .with_tx_policies(tx_policies)
-            .with_contracts(contract_ids)
-            .with_variable_output_policy(VariableOutputPolicy::Exactly(1))
             .call()
             .await?)
     }
 
+    pub async fn update_collateral_asset(
+        &self,
+        asset_id: AssetId,
+        config: &CollateralConfiguration,
+    ) -> anyhow::Result<CallResponse<()>> {
+        let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
+
+        Ok(self
+            .instance
+            .methods()
+            .update_collateral_asset(asset_id.into(), config.clone())
+            .with_tx_policies(tx_policies)
+            .call()
+            .await?)
+    }
+
+    pub async fn get_collateral_configurations(
+        &self,
+    ) -> anyhow::Result<CallResponse<Vec<CollateralConfiguration>>> {
+        let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
+
+        Ok(self
+            .instance
+            .methods()
+            .get_collateral_configurations()
+            .with_tx_policies(tx_policies)
+            .call()
+            .await?)
+    }
+
+    // # 3. Collateral asset management (Supply and Withdrawal)
     pub async fn supply_collateral(
         &self,
         asset_id: AssetId,
@@ -255,6 +271,26 @@ impl MarketContract {
             .with_variable_output_policy(VariableOutputPolicy::Exactly(1))
             .with_tx_policies(tx_policies)
             .call_params(call_params)?
+            .call()
+            .await?)
+    }
+
+    pub async fn withdraw_collateral(
+        &self,
+        contract_ids: &[&dyn ContractDependency],
+        asset_id: Bits256,
+        amount: u64,
+        price_data_update: &PriceDataUpdate,
+    ) -> anyhow::Result<CallResponse<()>> {
+        let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
+
+        Ok(self
+            .instance
+            .methods()
+            .withdraw_collateral(asset_id, amount.into(), price_data_update.clone())
+            .with_tx_policies(tx_policies)
+            .with_contracts(contract_ids)
+            .with_variable_output_policy(VariableOutputPolicy::Exactly(1))
             .call()
             .await?)
     }
@@ -278,6 +314,78 @@ impl MarketContract {
         Ok(convert_u256_to_u128(res))
     }
 
+    pub async fn totals_collateral(&self, asset_id: Bits256) -> anyhow::Result<u128> {
+        let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
+
+        let res = self
+            .instance
+            .methods()
+            .totals_collateral(asset_id)
+            .with_tx_policies(tx_policies)
+            .call()
+            .await?
+            .value;
+
+        Ok(convert_u256_to_u128(res))
+    }
+
+    // # 4. Base asset management (Supply and Withdrawal)
+    pub async fn supply_base(
+        &self,
+        base_asset_id: AssetId,
+        amount: u64,
+    ) -> anyhow::Result<CallResponse<()>> {
+        let tx_policies = TxPolicies::default().with_script_gas_limit(1_000_000);
+        let call_params = CallParameters::default()
+            .with_amount(amount)
+            .with_asset_id(base_asset_id);
+
+        Ok(self
+            .instance
+            .methods()
+            .supply_base()
+            .with_tx_policies(tx_policies)
+            .call_params(call_params)?
+            .call()
+            .await?)
+    }
+
+    pub async fn withdraw_base(
+        &self,
+        contract_ids: &[&dyn ContractDependency],
+        amount: u64,
+        price_data_update: &PriceDataUpdate,
+    ) -> anyhow::Result<CallResponse<()>> {
+        let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
+        let call_params = CallParameters::default().with_amount(price_data_update.update_fee);
+
+        Ok(self
+            .instance
+            .methods()
+            .withdraw_base(amount.into(), price_data_update.clone())
+            .with_variable_output_policy(VariableOutputPolicy::Exactly(1))
+            .with_contracts(contract_ids)
+            .with_tx_policies(tx_policies)
+            .call_params(call_params)?
+            .call()
+            .await?)
+    }
+
+    pub async fn get_user_supply_borrow(&self, address: Address) -> anyhow::Result<(u128, u128)> {
+        let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
+
+        let (supply, borrow) = self
+            .instance
+            .methods()
+            .get_user_supply_borrow(address)
+            .with_tx_policies(tx_policies)
+            .call()
+            .await?
+            .value;
+
+        Ok((convert_u256_to_u128(supply), convert_u256_to_u128(borrow)))
+    }
+
     pub async fn available_to_borrow(
         &self,
         contract_ids: &[&dyn ContractDependency],
@@ -298,31 +406,189 @@ impl MarketContract {
         Ok(convert_u256_to_u128(res))
     }
 
-    pub async fn get_user_supply_borrow(&self, address: Address) -> anyhow::Result<(u128, u128)> {
+    // # 5. Liquidation management
+    pub async fn absorb(
+        &self,
+        contract_ids: &[&dyn ContractDependency],
+        addresses: Vec<Address>,
+        price_data_update: &PriceDataUpdate,
+    ) -> anyhow::Result<CallResponse<()>> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
+        let call_params = CallParameters::default().with_amount(price_data_update.update_fee);
 
-        let (supply, borrow) = self
+        Ok(self
             .instance
             .methods()
-            .get_user_supply_borrow(address)
+            .absorb(addresses, price_data_update.clone())
             .with_tx_policies(tx_policies)
+            .with_contracts(contract_ids)
+            .call_params(call_params)?
             .call()
-            .await?
-            .value;
-
-        Ok((convert_u256_to_u128(supply), convert_u256_to_u128(borrow)))
+            .await?)
     }
 
-    pub async fn get_user_basic(
+    pub async fn is_liquidatable(
         &self,
+        contract_ids: &[&dyn ContractDependency],
         address: Address,
-    ) -> anyhow::Result<CallResponse<UserBasic>> {
+    ) -> anyhow::Result<CallResponse<bool>> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
 
         Ok(self
             .instance
             .methods()
-            .get_user_basic(address)
+            .is_liquidatable(address)
+            .with_tx_policies(tx_policies)
+            .with_contracts(contract_ids)
+            .call()
+            .await?)
+    }
+
+    // # 6. Protocol collateral management
+    pub async fn buy_collateral(
+        &self,
+        contract_ids: &[&dyn ContractDependency],
+        base_asset_id: AssetId,
+        amount: u64,
+        asset_id: Bits256,
+        min_amount: u64,
+        recipient: Address,
+        price_data_update: &PriceDataUpdate,
+    ) -> anyhow::Result<CallResponse<()>> {
+        let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
+
+        let call_params_base_asset = CallParameters::default()
+            .with_amount(amount)
+            .with_asset_id(base_asset_id); // Buy collateral with base asset
+
+        let call_params = CallParameters::default().with_amount(price_data_update.update_fee); // Fee for price update
+
+        Ok(self
+            .instance
+            .methods()
+            .buy_collateral(
+                asset_id,
+                min_amount.into(),
+                recipient,
+                price_data_update.clone(),
+            )
+            .with_tx_policies(tx_policies)
+            .with_contracts(contract_ids)
+            .call_params(call_params_base_asset)?
+            .with_variable_output_policy(VariableOutputPolicy::Exactly(2))
+            .call()
+            .await?)
+    }
+
+    pub async fn collateral_value_to_sell(
+        &self,
+        contract_ids: &[&dyn ContractDependency],
+        asset_id: Bits256,
+        collateral_amount: u64,
+    ) -> anyhow::Result<u128> {
+        let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
+
+        let res = self
+            .instance
+            .methods()
+            .collateral_value_to_sell(asset_id, collateral_amount.into())
+            .with_tx_policies(tx_policies)
+            .with_contracts(contract_ids)
+            .call()
+            .await?
+            .value;
+
+        Ok(convert_u256_to_u128(res))
+    }
+
+    pub async fn quote_collateral(
+        &self,
+        contract_ids: &[&dyn ContractDependency],
+        asset_id: AssetId,
+        base_amount: u64,
+    ) -> anyhow::Result<u128> {
+        let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
+
+        let res = self
+            .instance
+            .methods()
+            .quote_collateral(asset_id.into(), base_amount.into())
+            .with_tx_policies(tx_policies)
+            .with_contracts(contract_ids)
+            .call()
+            .await?
+            .value;
+
+        Ok(convert_u256_to_u128(res))
+    }
+
+    // # 7. Reserves management
+    pub async fn get_reserves(&self) -> anyhow::Result<CallResponse<I256>> {
+        let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
+
+        Ok(self
+            .instance
+            .methods()
+            .get_reserves()
+            .with_tx_policies(tx_policies)
+            .call()
+            .await?)
+    }
+
+    pub async fn withdraw_reserves(
+        &self,
+        to: Address,
+        amount: u64,
+    ) -> anyhow::Result<CallResponse<()>> {
+        let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
+
+        Ok(self
+            .instance
+            .methods()
+            .withdraw_reserves(to, amount.into())
+            .with_tx_policies(tx_policies)
+            .call()
+            .await?)
+    }
+
+    pub async fn get_collateral_reserves(
+        &self,
+        asset_id: Bits256,
+    ) -> anyhow::Result<CallResponse<I256>> {
+        let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
+
+        Ok(self
+            .instance
+            .methods()
+            .get_collateral_reserves(asset_id)
+            .with_tx_policies(tx_policies)
+            .call()
+            .await?)
+    }
+
+    // # 9. Pause management
+    pub async fn pause(&self, config: &PauseConfiguration) -> anyhow::Result<CallResponse<()>> {
+        let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
+
+        Ok(self
+            .instance
+            .methods()
+            .pause(config.clone())
+            .with_tx_policies(tx_policies)
+            .call()
+            .await?)
+    }
+
+    // # 10. Getters
+    pub async fn get_market_configuration(
+        &self,
+    ) -> anyhow::Result<CallResponse<MarketConfiguration>> {
+        let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
+
+        Ok(self
+            .instance
+            .methods()
+            .get_market_configuration()
             .with_tx_policies(tx_policies)
             .call()
             .await?)
@@ -340,19 +606,19 @@ impl MarketContract {
             .await?)
     }
 
-    pub async fn totals_collateral(&self, bits256: Bits256) -> anyhow::Result<u128> {
+    pub async fn get_user_basic(
+        &self,
+        address: Address,
+    ) -> anyhow::Result<CallResponse<UserBasic>> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
 
-        let res = self
+        Ok(self
             .instance
             .methods()
-            .totals_collateral(bits256)
+            .get_user_basic(address)
             .with_tx_policies(tx_policies)
             .call()
-            .await?
-            .value;
-
-        Ok(convert_u256_to_u128(res))
+            .await?)
     }
 
     pub async fn get_utilization(&self) -> anyhow::Result<u128> {
@@ -381,127 +647,37 @@ impl MarketContract {
             .await?)
     }
 
-    pub async fn pause(&self, config: &PauseConfiguration) -> anyhow::Result<CallResponse<()>> {
+    pub async fn get_supply_rate(&self, utilization: u64) -> anyhow::Result<u128> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
 
-        Ok(self
+        let value = self
             .instance
             .methods()
-            .pause(config.clone())
+            .get_supply_rate(utilization.into())
             .with_tx_policies(tx_policies)
-            .call()
-            .await?)
-    }
-
-    pub async fn collateral_value_to_sell(
-        &self,
-        contract_ids: &[&dyn ContractDependency],
-        asset_id: Bits256,
-        collateral_amount: u64,
-    ) -> anyhow::Result<u128> {
-        let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
-
-        let res = self
-            .instance
-            .methods()
-            .collateral_value_to_sell(asset_id, collateral_amount.into())
-            .with_tx_policies(tx_policies)
-            .with_contracts(contract_ids)
             .call()
             .await?
             .value;
 
-        Ok(convert_u256_to_u128(res))
+        Ok(convert_u256_to_u128(value))
     }
 
-    pub async fn buy_collateral(
-        &self,
-        contract_ids: &[&dyn ContractDependency],
-        base_asset_id: AssetId,
-        amount: u64,
-        asset_id: Bits256,
-        min_amount: u64,
-        recipient: Address,
-    ) -> anyhow::Result<CallResponse<()>> {
+    pub async fn get_borrow_rate(&self, utilization: u64) -> anyhow::Result<u128> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
 
-        let call_params = CallParameters::default()
-            .with_amount(amount)
-            .with_asset_id(base_asset_id);
-
-        Ok(self
+        let value = self
             .instance
             .methods()
-            .buy_collateral(asset_id, min_amount.into(), recipient)
-            .with_tx_policies(tx_policies)
-            .with_contracts(contract_ids)
-            .call_params(call_params)?
-            .with_variable_output_policy(VariableOutputPolicy::Exactly(2))
-            .call()
-            .await?)
-    }
-
-    pub async fn absorb(
-        &self,
-        contract_ids: &[&dyn ContractDependency],
-        addresses: Vec<Address>,
-    ) -> anyhow::Result<CallResponse<()>> {
-        let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
-
-        Ok(self
-            .instance
-            .methods()
-            .absorb(addresses)
-            .with_tx_policies(tx_policies)
-            .with_contracts(contract_ids)
-            .call()
-            .await?)
-    }
-
-    pub async fn is_liquidatable(
-        &self,
-        contract_ids: &[&dyn ContractDependency],
-        address: Address,
-    ) -> anyhow::Result<CallResponse<bool>> {
-        let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
-
-        Ok(self
-            .instance
-            .methods()
-            .is_liquidatable(address)
-            .with_tx_policies(tx_policies)
-            .with_contracts(contract_ids)
-            .call()
-            .await?)
-    }
-
-    pub async fn get_collateral_reserves(
-        &self,
-        asset_id: Bits256,
-    ) -> anyhow::Result<CallResponse<I256>> {
-        let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
-
-        Ok(self
-            .instance
-            .methods()
-            .get_collateral_reserves(asset_id)
+            .get_borrow_rate(utilization.into())
             .with_tx_policies(tx_policies)
             .call()
-            .await?)
+            .await?
+            .value;
+
+        Ok(convert_u256_to_u128(value))
     }
 
-    pub async fn get_reserves(&self) -> anyhow::Result<CallResponse<I256>> {
-        let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
-
-        Ok(self
-            .instance
-            .methods()
-            .get_reserves()
-            .with_tx_policies(tx_policies)
-            .call()
-            .await?)
-    }
-
+    // # 10. Pyth Oracle management
     pub async fn set_pyth_contract_id(
         &self,
         contract_id: ContractId,
@@ -516,6 +692,66 @@ impl MarketContract {
             .call()
             .await?)
     }
+
+    pub async fn get_price(
+        &self,
+        contract_ids: &[&dyn ContractDependency],
+        price_feed_id: Bits256,
+    ) -> anyhow::Result<Price> {
+        let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
+
+        let price = self
+            .instance
+            .methods()
+            .get_price(price_feed_id)
+            .with_contracts(contract_ids)
+            .with_tx_policies(tx_policies)
+            .call()
+            .await?
+            .value;
+
+        Ok(price)
+    }
+
+    pub async fn update_fee(
+        &self,
+        contract_ids: &[&dyn ContractDependency],
+        update_data: Vec<Bytes>,
+    ) -> anyhow::Result<u64> {
+        let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
+
+        let value = self
+            .instance
+            .methods()
+            .update_fee(update_data)
+            .with_contracts(contract_ids)
+            .with_tx_policies(tx_policies)
+            .call()
+            .await?
+            .value;
+
+        Ok(value)
+    }
+
+    pub async fn update_price_feeds_if_necessary(
+        &self,
+        contract_ids: &[&dyn ContractDependency],
+        price_data_update: &PriceDataUpdate,
+    ) -> anyhow::Result<()> {
+        let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
+
+        self.instance
+            .methods()
+            .update_price_feeds_if_necessary(price_data_update.clone())
+            .with_contracts(contract_ids)
+            .with_tx_policies(tx_policies)
+            .call()
+            .await?;
+
+        Ok(())
+    }
+
+    // # 11. Changing market configuration
 
     pub async fn print_debug_state(
         &self,

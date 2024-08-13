@@ -2,6 +2,8 @@ library;
 
 use i256::I256;
 use std::constants::ZERO_B256;
+use std::bytes::Bytes;
+use pyth_interface::{data_structures::price::{PriceFeedId}};
 
 pub const BASE_ACCRUAL_SCALE: u256 = 1_000_000; // 1e6
 pub const BASE_INDEX_SCALE_15: u256 = 1_000_000_000_000_000; // 1e15
@@ -124,6 +126,13 @@ impl MarketBasics {
             last_accrual_time: 0,
         }
     }
+}
+
+pub struct PriceDataUpdate {
+    pub update_fee: u64,
+    pub publish_times: Vec<u64>,
+    pub price_feed_ids: Vec<PriceFeedId>,
+    pub update_data: Vec<Bytes>
 }
 
 pub enum Error {
