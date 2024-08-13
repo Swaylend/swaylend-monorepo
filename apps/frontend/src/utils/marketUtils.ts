@@ -1,5 +1,5 @@
-import type { MarketAbi } from '@src/contract-types';
 import { PYTH_CONTRACT_ABI } from '@pythnetwork/pyth-fuel-js';
+import type { MarketAbi } from '@src/contract-types';
 import type { AccountStore, DashboardStore, SettingsStore } from '@src/stores';
 import { Contract } from 'fuels';
 import type BN from './BN';

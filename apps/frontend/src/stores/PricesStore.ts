@@ -1,5 +1,4 @@
-import { type IToken, TOKENS_LIST } from '@src/constants';
-import { PYTH_CONTRACT_ABI } from '@pythnetwork/pyth-fuel-js';
+import type { IToken } from '@src/constants';
 import BN from '@src/utils/BN';
 import type RootStore from '@stores/RootStore';
 import { makeAutoObservable, reaction } from 'mobx';

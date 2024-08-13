@@ -1,6 +1,6 @@
+import { PYTH_CONTRACT_ABI } from '@pythnetwork/pyth-fuel-js';
 import type { IContractsConfig } from '@src/constants';
 import { MarketAbi__factory } from '@src/contract-types';
-import { PYTH_CONTRACT_ABI } from '@pythnetwork/pyth-fuel-js';
 import { Contract, type Provider, type WalletUnlocked } from 'fuels';
 
 export const getMarketContract = (
