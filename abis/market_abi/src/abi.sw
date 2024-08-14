@@ -74,7 +74,7 @@ abi Market {
 
     // # 6. Protocol collateral management
     #[payable, storage(read)]
-    fn buy_collateral(asset_id: b256, min_amount: u256, recipient: Address, price_data_update: PriceDataUpdate); // Payment is required: base asset (USDC)
+    fn buy_collateral(asset_id: b256, min_amount: u256, recipient: Address); // Payment is required: base asset (USDC)
 
     #[storage(read)]
     fn collateral_value_to_sell(asset_id: b256, collateral_amount: u256) -> u256;

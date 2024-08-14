@@ -530,13 +530,13 @@ impl Market for Contract {
     // ## 6.1 Buying collateral
     // ### Description:
     // - Buy collateral from the protocol
+    // - Prices are not updated here as it is expected that the caller updates them in the same transaction by using a multicall handler
     // ### Parameters:
     // - `asset_id`: The asset ID of the collateral asset to be bought
     // - `min_amount`: The minimum amount of collateral to be bought
     // - `recipient`: The address of the recipient of the collateral
-    // - `price_data_update`: The price data update struct to be used for updating the price feeds
     #[payable, storage(read)]
-    fn buy_collateral(asset_id: b256, min_amount: u256, recipient: Address, price_data_update: PriceDataUpdate) {
+    fn buy_collateral(asset_id: b256, min_amount: u256, recipient: Address) {
         // Only allow buying collateral if paused flag is not set
         require(!storage.pause_config.buy_paused.read(), Error::Paused);
         let payment_amount: u256 = msg_amount().into();
@@ -559,10 +559,6 @@ impl Market for Contract {
         // TODO[Martin]: Checkout what these 2 notes do/mean and if we need a re-entrancy guard
         // Note: Re-entrancy can skip the reserves check above on a second buyCollateral call.
         let reserves = get_collateral_reserves_internal(asset_id);
-
-        // Update price data
-        // FIXME[Martin]: After Fuel responds either remove this or adapt
-        // update_price_feeds_if_necessary_internal(price_data_update);
 
         // Calculate the quote for a collateral asset in exchange for an amount of the base asset
         let collateral_amount = quote_collateral_internal(asset_id, payment_amount);
