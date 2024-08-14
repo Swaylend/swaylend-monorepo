@@ -1,11 +1,8 @@
-import {
-  PYTH_CONTRACT_ABI,
-  PYTH_CONTRACT_ADDRESS_SEPOLIA,
-} from '@pythnetwork/pyth-fuel-js';
+import { HermesClient, PriceUpdate } from '@pythnetwork/hermes-client';
 import BN from '@src/utils/BN';
 import { initProvider, walletToRead } from '@src/utils/walletToRead';
 import { useQueries } from '@tanstack/react-query';
-import { Contract, type Provider, type WalletUnlocked } from 'fuels';
+import type { Provider, WalletUnlocked } from 'fuels';
 import { useEffect, useState } from 'react';
 
 const PRICE_FEEDS = {
@@ -36,19 +33,17 @@ export const usePrice = (assetIds: string[]) => {
     initProvider().then((p) => setProvider(p));
   }, []);
 
-  const oracleContract = new Contract(
-    PYTH_CONTRACT_ADDRESS_SEPOLIA,
-    PYTH_CONTRACT_ABI,
-    wallet!
-  );
+  const hermesClient = new HermesClient('https://hermes.pyth.network');
 
   const fetchPrice = async (assetId: string) => {
-    const { value } = await oracleContract.functions
-      .price_unsafe(PRICE_FEEDS[assetId].id)
-      .get();
+    const priceUpdates = await hermesClient.getLatestPriceUpdates([
+      PRICE_FEEDS[assetId].id,
+    ]);
 
-    if (!value) throw new Error('Failed to fetch price');
-    const previousPrice = value.price.toNumber() * 10 ** -value.exponent;
+    if (!priceUpdates) throw new Error('Failed to fetch price');
+    const previousPrice =
+      Number(priceUpdates.parsed?.[0].price.price) *
+      10 ** Number(priceUpdates.parsed?.[0].price.expo);
 
     return new BN(previousPrice.toString());
   };
