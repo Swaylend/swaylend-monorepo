@@ -459,6 +459,7 @@ async fn main_test_no_debug() {
     // Prepare calls for multi_call_handler
     let tx_policies = TxPolicies::default().with_script_gas_limit(1_000_000);
 
+    // Params for update_price_feeds_if_necessary
     let call_params_update_price =
         CallParameters::default().with_amount(price_data_update.update_fee);
 
@@ -472,9 +473,10 @@ async fn main_test_no_debug() {
         .call_params(call_params_update_price)
         .unwrap();
 
+    // Params for buy_collateral
     let call_params_base_asset = CallParameters::default()
         .with_amount(amount as u64)
-        .with_asset_id(usdc.asset_id); // Buy collateral with base asset
+        .with_asset_id(usdc.asset_id);
 
     // Buy collateral with base asset
     let buy_collateral_call = market

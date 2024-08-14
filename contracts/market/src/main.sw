@@ -530,7 +530,7 @@ impl Market for Contract {
     // ## 6.1 Buying collateral
     // ### Description:
     // - Buy collateral from the protocol
-    // - Prices are not updated here as it is expected that caller does with using a multicall handler
+    // - Prices are not updated here as it is expected that the caller updates them in the same transaction by using a multicall handler
     // ### Parameters:
     // - `asset_id`: The asset ID of the collateral asset to be bought
     // - `min_amount`: The minimum amount of collateral to be bought
