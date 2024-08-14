@@ -530,6 +530,13 @@ const InputCard: React.FC<IProps> = () => {
     }
   };
 
+  const on50BtnClick = () => {
+    onMaxBtnClick();
+    if (dashboardStore.tokenAmount == null || dashboardStore.tokenAmount.eq(0))
+      return;
+    dashboardStore.setTokenAmount(dashboardStore.tokenAmount.div(2));
+  };
+
   return (
     <div>
       <div {...getCollapseProps()}>
@@ -545,6 +552,7 @@ const InputCard: React.FC<IProps> = () => {
             setAmount={dashboardStore.setTokenAmount}
             assetId={dashboardStore.actionToken.assetId}
             onMaxClick={() => onMaxBtnClick()}
+            on50Click={() => on50BtnClick()}
             balance={tokenInputBalance()}
             error={tokenInputError()}
           />
