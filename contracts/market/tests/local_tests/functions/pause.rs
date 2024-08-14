@@ -307,7 +307,6 @@ async fn pause_test() {
             uni.bits256,
             1,
             bob_address,
-            &price_data_update,
         )
         .await
         .unwrap();
@@ -479,7 +478,6 @@ async fn pause_test() {
             uni.bits256,
             1,
             bob_address,
-            &price_data_update,
         )
         .await
         .is_err();

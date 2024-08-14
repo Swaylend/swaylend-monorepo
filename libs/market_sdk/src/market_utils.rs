@@ -453,7 +453,6 @@ impl MarketContract {
         asset_id: Bits256,
         min_amount: u64,
         recipient: Address,
-        price_data_update: &PriceDataUpdate,
     ) -> anyhow::Result<CallResponse<()>> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
 
@@ -461,17 +460,10 @@ impl MarketContract {
             .with_amount(amount)
             .with_asset_id(base_asset_id); // Buy collateral with base asset
 
-        let call_params = CallParameters::default().with_amount(price_data_update.update_fee); // Fee for price update
-
         Ok(self
             .instance
             .methods()
-            .buy_collateral(
-                asset_id,
-                min_amount.into(),
-                recipient,
-                price_data_update.clone(),
-            )
+            .buy_collateral(asset_id, min_amount.into(), recipient)
             .with_tx_policies(tx_policies)
             .with_contracts(contract_ids)
             .call_params(call_params_base_asset)?
@@ -740,11 +732,14 @@ impl MarketContract {
     ) -> anyhow::Result<()> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
 
+        let call_params = CallParameters::default().with_amount(price_data_update.update_fee);
+
         self.instance
             .methods()
             .update_price_feeds_if_necessary(price_data_update.clone())
             .with_contracts(contract_ids)
             .with_tx_policies(tx_policies)
+            .call_params(call_params)?
             .call()
             .await?;
 
