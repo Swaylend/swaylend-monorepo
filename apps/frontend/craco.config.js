@@ -24,7 +24,7 @@ module.exports = {
       config.resolve.fallback = {
         crypto: false,
         http: require.resolve('stream-http'),
-        url: require.resolve('url/'),
+        url: false,
         https: require.resolve('https-browserify'),
       };
 
