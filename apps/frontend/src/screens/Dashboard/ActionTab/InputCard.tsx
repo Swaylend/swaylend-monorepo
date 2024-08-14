@@ -2,8 +2,8 @@ import Button from '@components/Button';
 import useCollapse from '@components/Collapse';
 import Notification from '@components/Notification';
 import SizedBox from '@components/SizedBox';
-import TokenInput from '@components/TokenInput/TokenInput';
 import Spinner from '@components/Spinner';
+import TokenInput from '@components/TokenInput/TokenInput';
 import {
   PYTH_CONTRACT_ABI,
   PYTH_CONTRACT_ADDRESS_SEPOLIA,
