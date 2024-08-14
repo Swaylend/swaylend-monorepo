@@ -1,12 +1,8 @@
-use market::PauseConfiguration;
-use token_sdk::{TokenAsset, TokenContract};
-
 use crate::utils::{print_case_title, setup, TestData};
 use chrono::Utc;
 use fuels::prelude::ViewOnlyAccount;
-use fuels::types::{Address, Bits256, ContractId};
-use market_sdk::{get_market_config, parse_units, MarketContract};
-use pyth_mock_sdk::PythMockContract;
+use market::PriceDataUpdate;
+use market_sdk::parse_units;
 
 const AMOUNT_COEFFICIENT: u64 = 10u64.pow(0);
 const SCALE_6: f64 = 10u64.pow(6) as f64;
@@ -20,13 +16,27 @@ async fn base_asset_test() {
         alice_address,
         bob,
         bob_address,
+        chad,
+        chad_address,
         usdc_contract,
-        market,
         usdc,
+        market,
         uni,
+        uni_contract,
         oracle,
+        price_feed_ids,
+        assets,
+        publish_time,
+        prices,
         ..
     } = setup().await;
+
+    let price_data_update = PriceDataUpdate {
+        update_fee: 1,
+        price_feed_ids,
+        publish_times: vec![publish_time; assets.len()],
+        update_data: oracle.create_update_data(&prices).await.unwrap(),
+    };
 
     // =================================================
     // ==================== Step #0 ====================
@@ -75,7 +85,11 @@ async fn base_asset_test() {
         .with_account(&alice)
         .await
         .unwrap()
-        .withdraw_base(&[&oracle.instance], (supply_amount + 1).try_into().unwrap())
+        .withdraw_base(
+            &[&oracle.instance],
+            (supply_amount + 1).try_into().unwrap(),
+            &price_data_update,
+        )
         .await;
     // make sure withdraw_base was reverted
     assert!(res.is_err());
@@ -89,7 +103,11 @@ async fn base_asset_test() {
         .with_account(&alice)
         .await
         .unwrap()
-        .withdraw_base(&[&oracle.instance], withdraw_amount.try_into().unwrap())
+        .withdraw_base(
+            &[&oracle.instance],
+            withdraw_amount.try_into().unwrap(),
+            &price_data_update,
+        )
         .await;
     // make sure withdraw_base was ok
     assert!(res.is_ok());

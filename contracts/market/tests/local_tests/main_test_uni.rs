@@ -1,6 +1,14 @@
 use crate::utils::{print_case_title, setup, TestData};
-
-use fuels::prelude::ViewOnlyAccount;
+use chrono::Utc;
+use fuels::{
+    prelude::ViewOnlyAccount,
+    programs::{
+        calls::{CallHandler, CallParameters},
+        responses::CallResponse,
+    },
+    types::{transaction::TxPolicies, transaction_builders::VariableOutputPolicy},
+};
+use market::PriceDataUpdate;
 use market_sdk::parse_units;
 
 // Multiplies all values by this number
@@ -26,6 +34,10 @@ async fn main_test() {
         uni,
         uni_contract,
         oracle,
+        price_feed_ids,
+        assets,
+        publish_time,
+        prices,
         ..
     } = setup().await;
 
@@ -403,17 +415,6 @@ async fn main_test() {
     // Reset prices back to old values
     // This is used to test that multi_call_handler works correctly
     market
-        .with_account(&bob)
-        .await
-        .unwrap()
-        .buy_collateral(
-            &[&oracle.instance],
-            usdc.asset_id,
-            amount as u64,
-            uni.bits256,
-            1,
-            bob_address,
-        )
         .update_price_feeds_if_necessary(&[&oracle.instance], &price_data_update_old)
         .await
         .unwrap();

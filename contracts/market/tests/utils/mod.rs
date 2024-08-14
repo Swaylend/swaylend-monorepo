@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use chrono::Utc;
 use fuels::accounts::wallet::WalletUnlocked;
 use fuels::test_helpers::{
@@ -49,6 +51,10 @@ pub struct TestData {
     pub uni: Asset,
     pub uni_contract: TokenAsset,
     pub wallets: Vec<WalletUnlocked>,
+    pub price_feed_ids: Vec<Bits256>,
+    pub publish_time: u64,
+    pub assets: HashMap<String, Asset>,
+    pub prices: Vec<(Bits256, (u64, u32, u64, u64))>,
 }
 
 pub async fn setup() -> TestData {
@@ -114,6 +120,7 @@ pub async fn setup() -> TestData {
 
     // ==================== Set oracle prices ====================
     let mut prices = Vec::new();
+    let mut price_feed_ids = Vec::new();
     let publish_time: u64 = Utc::now().timestamp().try_into().unwrap();
     let confidence = 0;
 
@@ -126,10 +133,12 @@ pub async fn setup() -> TestData {
         ))
     }
 
-    oracle.update_prices(prices).await.unwrap();
+    oracle.update_prices(&prices).await.unwrap();
 
     for asset in &assets {
         let price = oracle.price(asset.1.price_feed_id).await.unwrap().value;
+
+        price_feed_ids.push(asset.1.price_feed_id);
 
         println!(
             "Price for {} = {}",
@@ -154,5 +163,9 @@ pub async fn setup() -> TestData {
         usdc_contract,
         uni: uni.clone(),
         uni_contract,
+        price_feed_ids,
+        publish_time,
+        assets,
+        prices,
     }
 }

@@ -1,7 +1,8 @@
 use crate::utils::{setup, TestData};
-
+use chrono::Utc;
 use fuels::prelude::ViewOnlyAccount;
 use market::PauseConfiguration;
+use market::PriceDataUpdate;
 use market_sdk::parse_units;
 
 #[tokio::test]
@@ -18,6 +19,10 @@ async fn pause_test() {
         uni,
         uni_contract,
         oracle,
+        price_feed_ids,
+        assets,
+        publish_time,
+        prices,
         ..
     } = setup().await;
 
