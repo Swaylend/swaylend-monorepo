@@ -28,12 +28,12 @@ const _abi = {
       "components": [
         {
           "name": "__tuple_element",
-          "type": 19,
+          "type": 35,
           "typeArguments": null
         },
         {
           "name": "__tuple_element",
-          "type": 19,
+          "type": 35,
           "typeArguments": null
         }
       ],
@@ -124,6 +124,21 @@ const _abi = {
           "name": "DebuggingDisabled",
           "type": 0,
           "typeArguments": null
+        },
+        {
+          "name": "NotYetActive",
+          "type": 0,
+          "typeArguments": null
+        },
+        {
+          "name": "AlreadyActive",
+          "type": 0,
+          "typeArguments": null
+        },
+        {
+          "name": "OracleContractIdNotSet",
+          "type": 0,
+          "typeArguments": null
         }
       ],
       "typeParameters": null
@@ -142,6 +157,38 @@ const _abi = {
     },
     {
       "typeId": 7,
+      "type": "struct AbsorbCollateralEvent",
+      "components": [
+        {
+          "name": "address",
+          "type": 8,
+          "typeArguments": null
+        },
+        {
+          "name": "asset_id",
+          "type": 2,
+          "typeArguments": null
+        },
+        {
+          "name": "amount",
+          "type": 35,
+          "typeArguments": null
+        },
+        {
+          "name": "seize_value",
+          "type": 35,
+          "typeArguments": null
+        },
+        {
+          "name": "decimals",
+          "type": 36,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 8,
       "type": "struct Address",
       "components": [
         {
@@ -153,7 +200,114 @@ const _abi = {
       "typeParameters": null
     },
     {
-      "typeId": 8,
+      "typeId": 9,
+      "type": "struct BuyCollateralEvent",
+      "components": [
+        {
+          "name": "caller",
+          "type": 8,
+          "typeArguments": null
+        },
+        {
+          "name": "recipient",
+          "type": 8,
+          "typeArguments": null
+        },
+        {
+          "name": "asset_id",
+          "type": 2,
+          "typeArguments": null
+        },
+        {
+          "name": "amount",
+          "type": 35,
+          "typeArguments": null
+        },
+        {
+          "name": "price",
+          "type": 35,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 10,
+      "type": "struct Bytes",
+      "components": [
+        {
+          "name": "buf",
+          "type": 24,
+          "typeArguments": null
+        },
+        {
+          "name": "len",
+          "type": 37,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 11,
+      "type": "struct CollateralAssetAdded",
+      "components": [
+        {
+          "name": "asset_id",
+          "type": 2,
+          "typeArguments": null
+        },
+        {
+          "name": "configuration",
+          "type": 15,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 12,
+      "type": "struct CollateralAssetPaused",
+      "components": [
+        {
+          "name": "asset_id",
+          "type": 2,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 13,
+      "type": "struct CollateralAssetResumed",
+      "components": [
+        {
+          "name": "asset_id",
+          "type": 2,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 14,
+      "type": "struct CollateralAssetUpdated",
+      "components": [
+        {
+          "name": "asset_id",
+          "type": 2,
+          "typeArguments": null
+        },
+        {
+          "name": "configuration",
+          "type": 15,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 15,
       "type": "struct CollateralConfiguration",
       "components": [
         {
@@ -162,33 +316,33 @@ const _abi = {
           "typeArguments": null
         },
         {
-          "name": "price_feed",
-          "type": 10,
+          "name": "price_feed_id",
+          "type": 2,
           "typeArguments": null
         },
         {
           "name": "decimals",
-          "type": 20,
+          "type": 36,
           "typeArguments": null
         },
         {
           "name": "borrow_collateral_factor",
-          "type": 21,
+          "type": 35,
           "typeArguments": null
         },
         {
           "name": "liquidate_collateral_factor",
-          "type": 21,
+          "type": 35,
           "typeArguments": null
         },
         {
           "name": "liquidation_penalty",
-          "type": 21,
+          "type": 35,
           "typeArguments": null
         },
         {
           "name": "supply_cap",
-          "type": 21,
+          "type": 35,
           "typeArguments": null
         },
         {
@@ -200,19 +354,7 @@ const _abi = {
       "typeParameters": null
     },
     {
-      "typeId": 9,
-      "type": "struct CollateralConfigurationEvent",
-      "components": [
-        {
-          "name": "configuration",
-          "type": 8,
-          "typeArguments": null
-        }
-      ],
-      "typeParameters": null
-    },
-    {
-      "typeId": 10,
+      "typeId": 16,
       "type": "struct ContractId",
       "components": [
         {
@@ -224,12 +366,12 @@ const _abi = {
       "typeParameters": null
     },
     {
-      "typeId": 11,
+      "typeId": 17,
       "type": "struct I256",
       "components": [
         {
           "name": "value",
-          "type": 19,
+          "type": 35,
           "typeArguments": null
         },
         {
@@ -241,49 +383,178 @@ const _abi = {
       "typeParameters": null
     },
     {
-      "typeId": 12,
-      "type": "struct MarketBasics",
+      "typeId": 18,
+      "type": "struct MarketBasicEvent",
       "components": [
         {
-          "name": "base_supply_index",
-          "type": 21,
-          "typeArguments": null
-        },
-        {
-          "name": "base_borrow_index",
-          "type": 21,
-          "typeArguments": null
-        },
-        {
-          "name": "tracking_supply_index",
-          "type": 21,
-          "typeArguments": null
-        },
-        {
-          "name": "tracking_borrow_index",
-          "type": 21,
-          "typeArguments": null
-        },
-        {
-          "name": "total_supply_base",
-          "type": 21,
-          "typeArguments": null
-        },
-        {
-          "name": "total_borrow_base",
-          "type": 21,
-          "typeArguments": null
-        },
-        {
-          "name": "last_accrual_time",
-          "type": 21,
+          "name": "market_basic",
+          "type": 19,
           "typeArguments": null
         }
       ],
       "typeParameters": null
     },
     {
-      "typeId": 13,
+      "typeId": 19,
+      "type": "struct MarketBasics",
+      "components": [
+        {
+          "name": "base_supply_index",
+          "type": 35,
+          "typeArguments": null
+        },
+        {
+          "name": "base_borrow_index",
+          "type": 35,
+          "typeArguments": null
+        },
+        {
+          "name": "tracking_supply_index",
+          "type": 35,
+          "typeArguments": null
+        },
+        {
+          "name": "tracking_borrow_index",
+          "type": 35,
+          "typeArguments": null
+        },
+        {
+          "name": "total_supply_base",
+          "type": 35,
+          "typeArguments": null
+        },
+        {
+          "name": "total_borrow_base",
+          "type": 35,
+          "typeArguments": null
+        },
+        {
+          "name": "last_accrual_time",
+          "type": 35,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 20,
+      "type": "struct MarketConfiguration",
+      "components": [
+        {
+          "name": "governor",
+          "type": 8,
+          "typeArguments": null
+        },
+        {
+          "name": "pause_guardian",
+          "type": 8,
+          "typeArguments": null
+        },
+        {
+          "name": "base_token",
+          "type": 2,
+          "typeArguments": null
+        },
+        {
+          "name": "base_token_decimals",
+          "type": 36,
+          "typeArguments": null
+        },
+        {
+          "name": "base_token_price_feed_id",
+          "type": 2,
+          "typeArguments": null
+        },
+        {
+          "name": "supply_kink",
+          "type": 35,
+          "typeArguments": null
+        },
+        {
+          "name": "borrow_kink",
+          "type": 35,
+          "typeArguments": null
+        },
+        {
+          "name": "supply_per_second_interest_rate_slope_low",
+          "type": 35,
+          "typeArguments": null
+        },
+        {
+          "name": "supply_per_second_interest_rate_slope_high",
+          "type": 35,
+          "typeArguments": null
+        },
+        {
+          "name": "supply_per_second_interest_rate_base",
+          "type": 35,
+          "typeArguments": null
+        },
+        {
+          "name": "borrow_per_second_interest_rate_slope_low",
+          "type": 35,
+          "typeArguments": null
+        },
+        {
+          "name": "borrow_per_second_interest_rate_slope_high",
+          "type": 35,
+          "typeArguments": null
+        },
+        {
+          "name": "borrow_per_second_interest_rate_base",
+          "type": 35,
+          "typeArguments": null
+        },
+        {
+          "name": "store_front_price_factor",
+          "type": 35,
+          "typeArguments": null
+        },
+        {
+          "name": "base_tracking_index_scale",
+          "type": 35,
+          "typeArguments": null
+        },
+        {
+          "name": "base_tracking_supply_speed",
+          "type": 35,
+          "typeArguments": null
+        },
+        {
+          "name": "base_tracking_borrow_speed",
+          "type": 35,
+          "typeArguments": null
+        },
+        {
+          "name": "base_min_for_rewards",
+          "type": 35,
+          "typeArguments": null
+        },
+        {
+          "name": "base_borrow_min",
+          "type": 35,
+          "typeArguments": null
+        },
+        {
+          "name": "target_reserves",
+          "type": 35,
+          "typeArguments": null
+        },
+        {
+          "name": "debug_step",
+          "type": 37,
+          "typeArguments": null
+        },
+        {
+          "name": "fuel_eth_base_asset_id",
+          "type": 2,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 21,
       "type": "struct PauseConfiguration",
       "components": [
         {
@@ -305,17 +576,68 @@ const _abi = {
           "name": "buy_paused",
           "type": 3,
           "typeArguments": null
-        },
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 22,
+      "type": "struct PauseConfigurationEvent",
+      "components": [
         {
-          "name": "claim_paused",
-          "type": 3,
+          "name": "pause_config",
+          "type": 21,
           "typeArguments": null
         }
       ],
       "typeParameters": null
     },
     {
-      "typeId": 14,
+      "typeId": 23,
+      "type": "struct Price",
+      "components": [
+        {
+          "name": "confidence",
+          "type": 37,
+          "typeArguments": null
+        },
+        {
+          "name": "exponent",
+          "type": 36,
+          "typeArguments": null
+        },
+        {
+          "name": "price",
+          "type": 37,
+          "typeArguments": null
+        },
+        {
+          "name": "publish_time",
+          "type": 37,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 24,
+      "type": "struct RawBytes",
+      "components": [
+        {
+          "name": "ptr",
+          "type": 6,
+          "typeArguments": null
+        },
+        {
+          "name": "cap",
+          "type": 37,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 25,
       "type": "struct RawVec",
       "components": [
         {
@@ -325,7 +647,7 @@ const _abi = {
         },
         {
           "name": "cap",
-          "type": 21,
+          "type": 37,
           "typeArguments": null
         }
       ],
@@ -334,56 +656,132 @@ const _abi = {
       ]
     },
     {
-      "typeId": 15,
+      "typeId": 26,
+      "type": "struct ReservesWithdrawnEvent",
+      "components": [
+        {
+          "name": "address",
+          "type": 8,
+          "typeArguments": null
+        },
+        {
+          "name": "amount",
+          "type": 35,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 27,
       "type": "struct UserBasic",
       "components": [
         {
           "name": "principal",
-          "type": 11,
+          "type": 17,
           "typeArguments": null
         },
         {
           "name": "base_tracking_index",
-          "type": 21,
+          "type": 35,
           "typeArguments": null
         },
         {
           "name": "base_tracking_accrued",
-          "type": 21,
-          "typeArguments": null
-        },
-        {
-          "name": "reward_claimed",
-          "type": 21,
+          "type": 35,
           "typeArguments": null
         }
       ],
       "typeParameters": null
     },
     {
-      "typeId": 16,
+      "typeId": 28,
       "type": "struct UserBasicEvent",
       "components": [
         {
-          "name": "user_basic",
-          "type": 15,
+          "name": "address",
+          "type": 8,
           "typeArguments": null
         },
         {
-          "name": "address",
-          "type": 7,
+          "name": "user_basic",
+          "type": 27,
           "typeArguments": null
         }
       ],
       "typeParameters": null
     },
     {
-      "typeId": 17,
-      "type": "struct UserCollateralEvent",
+      "typeId": 29,
+      "type": "struct UserLiquidatedEvent",
       "components": [
         {
           "name": "address",
-          "type": 7,
+          "type": 8,
+          "typeArguments": null
+        },
+        {
+          "name": "liquidator",
+          "type": 8,
+          "typeArguments": null
+        },
+        {
+          "name": "base_paid_out",
+          "type": 35,
+          "typeArguments": null
+        },
+        {
+          "name": "base_paid_out_value",
+          "type": 35,
+          "typeArguments": null
+        },
+        {
+          "name": "total_base",
+          "type": 35,
+          "typeArguments": null
+        },
+        {
+          "name": "total_base_value",
+          "type": 35,
+          "typeArguments": null
+        },
+        {
+          "name": "decimals",
+          "type": 36,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 30,
+      "type": "struct UserSupplyBaseEvent",
+      "components": [
+        {
+          "name": "address",
+          "type": 8,
+          "typeArguments": null
+        },
+        {
+          "name": "supply_amount",
+          "type": 35,
+          "typeArguments": null
+        },
+        {
+          "name": "repay_amount",
+          "type": 35,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 31,
+      "type": "struct UserSupplyCollateralEvent",
+      "components": [
+        {
+          "name": "address",
+          "type": 8,
           "typeArguments": null
         },
         {
@@ -393,19 +791,63 @@ const _abi = {
         },
         {
           "name": "amount",
-          "type": 21,
+          "type": 35,
           "typeArguments": null
         }
       ],
       "typeParameters": null
     },
     {
-      "typeId": 18,
+      "typeId": 32,
+      "type": "struct UserWithdrawBaseEvent",
+      "components": [
+        {
+          "name": "address",
+          "type": 8,
+          "typeArguments": null
+        },
+        {
+          "name": "withdraw_amount",
+          "type": 35,
+          "typeArguments": null
+        },
+        {
+          "name": "borrow_amount",
+          "type": 35,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 33,
+      "type": "struct UserWithdrawCollateralEvent",
+      "components": [
+        {
+          "name": "address",
+          "type": 8,
+          "typeArguments": null
+        },
+        {
+          "name": "asset_id",
+          "type": 2,
+          "typeArguments": null
+        },
+        {
+          "name": "amount",
+          "type": 35,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 34,
       "type": "struct Vec",
       "components": [
         {
           "name": "buf",
-          "type": 14,
+          "type": 25,
           "typeArguments": [
             {
               "name": "",
@@ -416,7 +858,7 @@ const _abi = {
         },
         {
           "name": "len",
-          "type": 21,
+          "type": 37,
           "typeArguments": null
         }
       ],
@@ -425,19 +867,19 @@ const _abi = {
       ]
     },
     {
-      "typeId": 19,
+      "typeId": 35,
       "type": "u256",
       "components": null,
       "typeParameters": null
     },
     {
-      "typeId": 20,
+      "typeId": 36,
       "type": "u32",
       "components": null,
       "typeParameters": null
     },
     {
-      "typeId": 21,
+      "typeId": 37,
       "type": "u64",
       "components": null,
       "typeParameters": null
@@ -448,11 +890,11 @@ const _abi = {
       "inputs": [
         {
           "name": "accounts",
-          "type": 18,
+          "type": 34,
           "typeArguments": [
             {
               "name": "",
-              "type": 7,
+              "type": 8,
               "typeArguments": null
             }
           ]
@@ -475,10 +917,28 @@ const _abi = {
       ]
     },
     {
+      "inputs": [],
+      "name": "activate_contract",
+      "output": {
+        "name": "",
+        "type": 0,
+        "typeArguments": null
+      },
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read",
+            "write"
+          ]
+        }
+      ]
+    },
+    {
       "inputs": [
         {
           "name": "configuration",
-          "type": 8,
+          "type": 15,
           "typeArguments": null
         }
       ],
@@ -502,14 +962,14 @@ const _abi = {
       "inputs": [
         {
           "name": "account",
-          "type": 7,
+          "type": 8,
           "typeArguments": null
         }
       ],
       "name": "available_to_borrow",
       "output": {
         "name": "",
-        "type": 19,
+        "type": 35,
         "typeArguments": null
       },
       "attributes": [
@@ -532,7 +992,7 @@ const _abi = {
       "name": "balance_of",
       "output": {
         "name": "",
-        "type": 21,
+        "type": 37,
         "typeArguments": null
       },
       "attributes": null
@@ -546,12 +1006,12 @@ const _abi = {
         },
         {
           "name": "min_amount",
-          "type": 21,
+          "type": 35,
           "typeArguments": null
         },
         {
           "name": "recipient",
-          "type": 7,
+          "type": 8,
           "typeArguments": null
         }
       ],
@@ -575,24 +1035,6 @@ const _abi = {
       ]
     },
     {
-      "inputs": [],
-      "name": "claim",
-      "output": {
-        "name": "",
-        "type": 0,
-        "typeArguments": null
-      },
-      "attributes": [
-        {
-          "name": "storage",
-          "arguments": [
-            "read",
-            "write"
-          ]
-        }
-      ]
-    },
-    {
       "inputs": [
         {
           "name": "asset_id",
@@ -601,14 +1043,14 @@ const _abi = {
         },
         {
           "name": "collateral_amount",
-          "type": 21,
+          "type": 35,
           "typeArguments": null
         }
       ],
       "name": "collateral_value_to_sell",
       "output": {
         "name": "",
-        "type": 19,
+        "type": 35,
         "typeArguments": null
       },
       "attributes": [
@@ -642,14 +1084,14 @@ const _abi = {
       "inputs": [
         {
           "name": "utilization",
-          "type": 21,
+          "type": 35,
           "typeArguments": null
         }
       ],
       "name": "get_borrow_rate",
       "output": {
         "name": "",
-        "type": 21,
+        "type": 35,
         "typeArguments": null
       },
       "attributes": null
@@ -659,11 +1101,11 @@ const _abi = {
       "name": "get_collateral_configurations",
       "output": {
         "name": "",
-        "type": 18,
+        "type": 34,
         "typeArguments": [
           {
             "name": "",
-            "type": 8,
+            "type": 15,
             "typeArguments": null
           }
         ]
@@ -688,7 +1130,7 @@ const _abi = {
       "name": "get_collateral_reserves",
       "output": {
         "name": "",
-        "type": 11,
+        "type": 17,
         "typeArguments": null
       },
       "attributes": [
@@ -702,10 +1144,43 @@ const _abi = {
     },
     {
       "inputs": [],
+      "name": "get_configuration",
+      "output": {
+        "name": "",
+        "type": 20,
+        "typeArguments": null
+      },
+      "attributes": null
+    },
+    {
+      "inputs": [],
       "name": "get_market_basics",
       "output": {
         "name": "",
-        "type": 12,
+        "type": 19,
+        "typeArguments": null
+      },
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read"
+          ]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "price_feed_id",
+          "type": 2,
+          "typeArguments": null
+        }
+      ],
+      "name": "get_price",
+      "output": {
+        "name": "",
+        "type": 23,
         "typeArguments": null
       },
       "attributes": [
@@ -722,7 +1197,7 @@ const _abi = {
       "name": "get_reserves",
       "output": {
         "name": "",
-        "type": 11,
+        "type": 17,
         "typeArguments": null
       },
       "attributes": [
@@ -737,49 +1212,15 @@ const _abi = {
     {
       "inputs": [
         {
-          "name": "account",
-          "type": 7,
-          "typeArguments": null
-        }
-      ],
-      "name": "get_reward_owed",
-      "output": {
-        "name": "",
-        "type": 21,
-        "typeArguments": null
-      },
-      "attributes": [
-        {
-          "name": "storage",
-          "arguments": [
-            "read",
-            "write"
-          ]
-        }
-      ]
-    },
-    {
-      "inputs": [],
-      "name": "get_reward_token_asset_id",
-      "output": {
-        "name": "",
-        "type": 2,
-        "typeArguments": null
-      },
-      "attributes": null
-    },
-    {
-      "inputs": [
-        {
           "name": "utilization",
-          "type": 21,
+          "type": 35,
           "typeArguments": null
         }
       ],
       "name": "get_supply_rate",
       "output": {
         "name": "",
-        "type": 21,
+        "type": 35,
         "typeArguments": null
       },
       "attributes": null
@@ -788,14 +1229,14 @@ const _abi = {
       "inputs": [
         {
           "name": "account",
-          "type": 7,
+          "type": 8,
           "typeArguments": null
         }
       ],
       "name": "get_user_basic",
       "output": {
         "name": "",
-        "type": 15,
+        "type": 27,
         "typeArguments": null
       },
       "attributes": [
@@ -811,7 +1252,7 @@ const _abi = {
       "inputs": [
         {
           "name": "address",
-          "type": 7,
+          "type": 8,
           "typeArguments": null
         },
         {
@@ -823,7 +1264,7 @@ const _abi = {
       "name": "get_user_collateral",
       "output": {
         "name": "",
-        "type": 21,
+        "type": 35,
         "typeArguments": null
       },
       "attributes": [
@@ -839,7 +1280,7 @@ const _abi = {
       "inputs": [
         {
           "name": "account",
-          "type": 7,
+          "type": 8,
           "typeArguments": null
         }
       ],
@@ -863,7 +1304,7 @@ const _abi = {
       "name": "get_utilization",
       "output": {
         "name": "",
-        "type": 21,
+        "type": 35,
         "typeArguments": null
       },
       "attributes": [
@@ -879,7 +1320,7 @@ const _abi = {
       "inputs": [
         {
           "name": "account",
-          "type": 7,
+          "type": 8,
           "typeArguments": null
         }
       ],
@@ -902,7 +1343,7 @@ const _abi = {
       "inputs": [
         {
           "name": "pause_config",
-          "type": 13,
+          "type": 21,
           "typeArguments": null
         }
       ],
@@ -955,14 +1396,14 @@ const _abi = {
         },
         {
           "name": "base_amount",
-          "type": 21,
+          "type": 35,
           "typeArguments": null
         }
       ],
       "name": "quote_collateral",
       "output": {
         "name": "",
-        "type": 19,
+        "type": 35,
         "typeArguments": null
       },
       "attributes": [
@@ -983,6 +1424,30 @@ const _abi = {
         }
       ],
       "name": "resume_collateral_asset",
+      "output": {
+        "name": "",
+        "type": 0,
+        "typeArguments": null
+      },
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read",
+            "write"
+          ]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "contract_id",
+          "type": 16,
+          "typeArguments": null
+        }
+      ],
+      "name": "set_pyth_contract_id",
       "output": {
         "name": "",
         "type": 0,
@@ -1053,7 +1518,7 @@ const _abi = {
       "name": "totals_collateral",
       "output": {
         "name": "",
-        "type": 21,
+        "type": 35,
         "typeArguments": null
       },
       "attributes": [
@@ -1068,8 +1533,104 @@ const _abi = {
     {
       "inputs": [
         {
+          "name": "asset_id",
+          "type": 2,
+          "typeArguments": null
+        },
+        {
+          "name": "configuration",
+          "type": 15,
+          "typeArguments": null
+        }
+      ],
+      "name": "update_collateral_asset",
+      "output": {
+        "name": "",
+        "type": 0,
+        "typeArguments": null
+      },
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read",
+            "write"
+          ]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "update_data",
+          "type": 34,
+          "typeArguments": [
+            {
+              "name": "",
+              "type": 10,
+              "typeArguments": null
+            }
+          ]
+        }
+      ],
+      "name": "update_fee",
+      "output": {
+        "name": "",
+        "type": 37,
+        "typeArguments": null
+      },
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read"
+          ]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "update_fee",
+          "type": 37,
+          "typeArguments": null
+        },
+        {
+          "name": "update_data",
+          "type": 34,
+          "typeArguments": [
+            {
+              "name": "",
+              "type": 10,
+              "typeArguments": null
+            }
+          ]
+        }
+      ],
+      "name": "update_price_feeds",
+      "output": {
+        "name": "",
+        "type": 0,
+        "typeArguments": null
+      },
+      "attributes": [
+        {
+          "name": "payable",
+          "arguments": []
+        },
+        {
+          "name": "storage",
+          "arguments": [
+            "read"
+          ]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
           "name": "amount",
-          "type": 21,
+          "type": 35,
           "typeArguments": null
         }
       ],
@@ -1098,7 +1659,7 @@ const _abi = {
         },
         {
           "name": "amount",
-          "type": 21,
+          "type": 35,
           "typeArguments": null
         }
       ],
@@ -1122,12 +1683,12 @@ const _abi = {
       "inputs": [
         {
           "name": "to",
-          "type": 7,
+          "type": 8,
           "typeArguments": null
         },
         {
           "name": "amount",
-          "type": 21,
+          "type": 35,
           "typeArguments": null
         }
       ],
@@ -1145,27 +1706,6 @@ const _abi = {
           ]
         }
       ]
-    },
-    {
-      "inputs": [
-        {
-          "name": "recipient",
-          "type": 7,
-          "typeArguments": null
-        },
-        {
-          "name": "amount",
-          "type": 21,
-          "typeArguments": null
-        }
-      ],
-      "name": "withdraw_reward_token",
-      "output": {
-        "name": "",
-        "type": 0,
-        "typeArguments": null
-      },
-      "attributes": null
     }
   ],
   "loggedTypes": [
@@ -1178,10 +1718,18 @@ const _abi = {
       }
     },
     {
-      "logId": "1614313653983208680",
+      "logId": "7659206549590130669",
       "loggedType": {
         "name": "",
-        "type": 17,
+        "type": 18,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": "3591203286967623281",
+      "loggedType": {
+        "name": "",
+        "type": 7,
         "typeArguments": []
       }
     },
@@ -1189,15 +1737,103 @@ const _abi = {
       "logId": "5291237237808257645",
       "loggedType": {
         "name": "",
-        "type": 16,
+        "type": 28,
         "typeArguments": []
       }
     },
     {
-      "logId": "14495007494132595508",
+      "logId": "10580804319558431108",
+      "loggedType": {
+        "name": "",
+        "type": 29,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": "17075205356227152605",
+      "loggedType": {
+        "name": "",
+        "type": 22,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": "16873461032230770227",
+      "loggedType": {
+        "name": "",
+        "type": 11,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": "12201150593867749328",
       "loggedType": {
         "name": "",
         "type": 9,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": "5007089152005991246",
+      "loggedType": {
+        "name": "",
+        "type": 12,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": "9366109880057078281",
+      "loggedType": {
+        "name": "",
+        "type": 13,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": "1940341185534100254",
+      "loggedType": {
+        "name": "",
+        "type": 30,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": "7026281871582427040",
+      "loggedType": {
+        "name": "",
+        "type": 31,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": "7739866021742362880",
+      "loggedType": {
+        "name": "",
+        "type": 14,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": "4305272899477449480",
+      "loggedType": {
+        "name": "",
+        "type": 32,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": "8551298967468744576",
+      "loggedType": {
+        "name": "",
+        "type": 33,
+        "typeArguments": []
+      }
+    },
+    {
+      "logId": "2861643217579627023",
+      "loggedType": {
+        "name": "",
+        "type": 26,
         "typeArguments": []
       }
     }
@@ -1208,19 +1844,19 @@ const _abi = {
       "name": "GOVERNOR",
       "configurableType": {
         "name": "",
-        "type": 7,
+        "type": 8,
         "typeArguments": []
       },
-      "offset": 83088
+      "offset": 93240
     },
     {
       "name": "PAUSE_GUARDIAN",
       "configurableType": {
         "name": "",
-        "type": 7,
+        "type": 8,
         "typeArguments": []
       },
-      "offset": 83128
+      "offset": 93272
     },
     {
       "name": "BASE_TOKEN",
@@ -1229,142 +1865,178 @@ const _abi = {
         "type": 2,
         "typeArguments": null
       },
-      "offset": 82968
+      "offset": 92904
     },
     {
       "name": "BASE_TOKEN_DECIMALS",
       "configurableType": {
         "name": "",
-        "type": 20,
+        "type": 36,
         "typeArguments": null
       },
-      "offset": 83000
+      "offset": 92936
     },
     {
-      "name": "BASE_TOKEN_PRICE_FEED",
+      "name": "BASE_TOKEN_PRICE_FEED_ID",
       "configurableType": {
         "name": "",
-        "type": 10,
-        "typeArguments": []
-      },
-      "offset": 83008
-    },
-    {
-      "name": "KINK",
-      "configurableType": {
-        "name": "",
-        "type": 21,
+        "type": 2,
         "typeArguments": null
       },
-      "offset": 83120
+      "offset": 92944
+    },
+    {
+      "name": "SUPPLY_KINK",
+      "configurableType": {
+        "name": "",
+        "type": 35,
+        "typeArguments": null
+      },
+      "offset": 93336
+    },
+    {
+      "name": "BORROW_KINK",
+      "configurableType": {
+        "name": "",
+        "type": 35,
+        "typeArguments": null
+      },
+      "offset": 93072
     },
     {
       "name": "SUPPLY_PER_SECOND_INTEREST_RATE_SLOPE_LOW",
       "configurableType": {
         "name": "",
-        "type": 21,
+        "type": 35,
         "typeArguments": null
       },
-      "offset": 83176
+      "offset": 93432
     },
     {
       "name": "SUPPLY_PER_SECOND_INTEREST_RATE_SLOPE_HIGH",
       "configurableType": {
         "name": "",
-        "type": 21,
+        "type": 35,
         "typeArguments": null
       },
-      "offset": 83168
+      "offset": 93400
+    },
+    {
+      "name": "SUPPLY_PER_SECOND_INTEREST_RATE_BASE",
+      "configurableType": {
+        "name": "",
+        "type": 35,
+        "typeArguments": null
+      },
+      "offset": 93368
     },
     {
       "name": "BORROW_PER_SECOND_INTEREST_RATE_SLOPE_LOW",
       "configurableType": {
         "name": "",
-        "type": 21,
+        "type": 35,
         "typeArguments": null
       },
-      "offset": 83072
+      "offset": 93168
     },
     {
       "name": "BORROW_PER_SECOND_INTEREST_RATE_SLOPE_HIGH",
       "configurableType": {
         "name": "",
-        "type": 21,
+        "type": 35,
         "typeArguments": null
       },
-      "offset": 83064
+      "offset": 93136
     },
     {
       "name": "BORROW_PER_SECOND_INTEREST_RATE_BASE",
       "configurableType": {
         "name": "",
-        "type": 21,
+        "type": 35,
         "typeArguments": null
       },
-      "offset": 83056
+      "offset": 93104
     },
     {
       "name": "STORE_FRONT_PRICE_FACTOR",
       "configurableType": {
         "name": "",
-        "type": 21,
+        "type": 35,
         "typeArguments": null
       },
-      "offset": 83160
+      "offset": 93304
+    },
+    {
+      "name": "BASE_TRACKING_INDEX_SCALE",
+      "configurableType": {
+        "name": "",
+        "type": 35,
+        "typeArguments": null
+      },
+      "offset": 93008
     },
     {
       "name": "BASE_TRACKING_SUPPLY_SPEED",
       "configurableType": {
         "name": "",
-        "type": 21,
+        "type": 35,
         "typeArguments": null
       },
-      "offset": 83048
+      "offset": 93040
     },
     {
       "name": "BASE_TRACKING_BORROW_SPEED",
       "configurableType": {
         "name": "",
-        "type": 21,
+        "type": 35,
         "typeArguments": null
       },
-      "offset": 83040
+      "offset": 92976
     },
     {
       "name": "BASE_MIN_FOR_REWARDS",
       "configurableType": {
         "name": "",
-        "type": 21,
+        "type": 35,
         "typeArguments": null
       },
-      "offset": 82960
+      "offset": 92872
     },
     {
       "name": "BASE_BORROW_MIN",
       "configurableType": {
         "name": "",
-        "type": 21,
+        "type": 35,
         "typeArguments": null
       },
-      "offset": 82952
+      "offset": 92840
     },
     {
       "name": "TARGET_RESERVES",
       "configurableType": {
         "name": "",
-        "type": 21,
+        "type": 35,
         "typeArguments": null
       },
-      "offset": 83184
+      "offset": 93464
     },
     {
       "name": "DEBUG_STEP",
       "configurableType": {
         "name": "",
-        "type": 21,
+        "type": 37,
         "typeArguments": null
       },
-      "offset": 83080
+      "offset": 93200
+    },
+    {
+      "name": "FUEL_ETH_BASE_ASSET_ID",
+      "configurableType": {
+        "name": "",
+        "type": 2,
+        "typeArguments": null
+      },
+      "offset": 93208
     }
   ]
 };
@@ -1372,10 +2044,30 @@ const _abi = {
 const _storageSlots: StorageSlot[] = [
   {
     "key": "411f67b1bf136f1748de53161729ada89f0b6972b8783bcd860925d7cfddceba",
-    "value": "0de0b6b3a76400000de0b6b3a76400000de0b6b3a76400000de0b6b3a7640000"
+    "value": "00000000000000000000000000000000000000000000000000038d7ea4c68000"
   },
   {
     "key": "411f67b1bf136f1748de53161729ada89f0b6972b8783bcd860925d7cfddcebb",
+    "value": "00000000000000000000000000000000000000000000000000038d7ea4c68000"
+  },
+  {
+    "key": "411f67b1bf136f1748de53161729ada89f0b6972b8783bcd860925d7cfddcebc",
+    "value": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  {
+    "key": "411f67b1bf136f1748de53161729ada89f0b6972b8783bcd860925d7cfddcebd",
+    "value": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  {
+    "key": "411f67b1bf136f1748de53161729ada89f0b6972b8783bcd860925d7cfddcebe",
+    "value": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  {
+    "key": "411f67b1bf136f1748de53161729ada89f0b6972b8783bcd860925d7cfddcebf",
+    "value": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  {
+    "key": "411f67b1bf136f1748de53161729ada89f0b6972b8783bcd860925d7cfddcec0",
     "value": "0000000000000000000000000000000000000000000000000000000000000000"
   },
   {
@@ -1383,12 +2075,12 @@ const _storageSlots: StorageSlot[] = [
     "value": "0000000000000000000000000000000000000000000000000000000000000000"
   },
   {
-    "key": "e4e26847100238d6956b2dc2c3f81418d1c06748ea6e7f97bc1c1adb91925ecc",
+    "key": "c9f05e40a03436c822e78a416687947db653880f61c7e4a00ec4059ee20c3cbd",
     "value": "0000000000000000000000000000000000000000000000000000000000000000"
   },
   {
-    "key": "e4e26847100238d6956b2dc2c3f81418d1c06748ea6e7f97bc1c1adb91925ecd",
-    "value": "0000000000000000000000000000000000000000000000000000000000000000"
+    "key": "e4e26847100238d6956b2dc2c3f81418d1c06748ea6e7f97bc1c1adb91925ecc",
+    "value": "0100000000000000010000000000000001000000000000000100000000000000"
   }
 ];
 

@@ -10,6 +10,8 @@
 */
 
 import type {
+  BigNumberish,
+  BN,
   BytesLike,
   Contract,
   DecodedValue,
@@ -18,20 +20,17 @@ import type {
   InvokeFunction,
 } from 'fuels';
 
-import type { Enum } from "./common";
-
-export enum ErrorInput { ZeroDivisor = 'ZeroDivisor' };
-export enum ErrorOutput { ZeroDivisor = 'ZeroDivisor' };
-
 interface TestProjectAbiInterface extends Interface {
   functions: {
-    main: FunctionFragment;
+    get: FunctionFragment;
+    increment: FunctionFragment;
   };
 }
 
 export class TestProjectAbi extends Contract {
   interface: TestProjectAbiInterface;
   functions: {
-    main: InvokeFunction<[], boolean>;
+    get: InvokeFunction<[], BN>;
+    increment: InvokeFunction<[amount: BigNumberish], void>;
   };
 }
