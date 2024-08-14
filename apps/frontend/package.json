@@ -101,8 +101,8 @@
     "workbox-webpack-plugin": "^6.4.1"
   },
   "scripts": {
-    "start": "craco start",
-    "build": "node scripts/build.js",
+    "start": "GENERATE_SOURCEMAP=false craco start",
+    "build": "craco build",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "generate:types": "rimraf ./src/contract-types && fuels typegen -i ../../contracts/**/*-abi.json -o ./src/contract-types",

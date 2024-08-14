@@ -2,6 +2,7 @@ import Button from '@components/Button';
 import useCollapse from '@components/Collapse';
 import Notification from '@components/Notification';
 import SizedBox from '@components/SizedBox';
+import Spinner from '@components/Spinner';
 import TokenInput from '@components/TokenInput/TokenInput';
 import {
   PYTH_CONTRACT_ABI,
@@ -38,6 +39,7 @@ import { Contract, type Provider, type WalletUnlocked } from 'fuels';
 import { observer } from 'mobx-react-lite';
 import type React from 'react';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
 type IProps = any;
 
@@ -333,15 +335,37 @@ const InputCard: React.FC<IProps> = () => {
       if (dashboardStore.action === ACTION_TYPE.REPAY) {
         tx = await supplyBase(marketContract, dashboardStore);
       }
-      const txResult = await tx.waitForResult();
-      console.log('txResult', txResult);
+      const txResult = (await toast.promise(tx.waitForResult(), {
+        pending: {
+          render: (
+            <Row>
+              <Spinner />
+              <Text
+                size="small"
+                type="secondary"
+                className="notifications-text"
+                weight={500}
+                style={{ marginTop: 2, width: '100%', wordBreak: 'break-word' }}
+              >
+                Transaction is pending...
+              </Text>
+            </Row>
+          ),
+        },
+      })) as any;
       if (txResult == null) {
-        // TX failed
+        notificationStore.toast('Transaction Failed', {
+          type: 'error',
+          title: 'Transaction Failed',
+        });
       }
       if (txResult.transactionResult.isStatusSuccess)
         notifyThatActionIsSuccessful(tx.transactionId ?? '');
       else {
-        // TX failed
+        notificationStore.toast('Transaction Failed', {
+          type: 'error',
+          title: 'Transaction Failed',
+        });
       }
       hideAll();
       await accountStore.updateAccountBalances();
@@ -534,7 +558,7 @@ const InputCard: React.FC<IProps> = () => {
     onMaxBtnClick();
     if (dashboardStore.tokenAmount == null || dashboardStore.tokenAmount.eq(0))
       return;
-    dashboardStore.setTokenAmount(dashboardStore.tokenAmount.div(2));
+    dashboardStore.setTokenAmount(dashboardStore.tokenAmount.div(new BN(2)));
   };
 
   return (

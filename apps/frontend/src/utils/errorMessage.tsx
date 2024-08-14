@@ -7,6 +7,7 @@ const ERRORS = {
     'Execution ran out of gas.',
   'FuelError: The transaction reverted because a "require" statement has thrown "NotCollateralized".':
     'Cannot withdraw more than collateralized. Try lowering the amount.',
+  'Error: User rejected the transaction!': 'User rejected the transaction.',
 } as Record<string, string>;
 
 export const errorToMessage = (error: string) => {
