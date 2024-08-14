@@ -23,6 +23,7 @@ import { ACTION_TYPE } from '@src/stores/DashboardStore';
 import BN from '@src/utils/BN';
 import centerEllipsis from '@src/utils/centerEllipsis';
 import { currentAssetCollateralCapacityLeft } from '@src/utils/dashboardUtils';
+import { errorToMessage } from '@src/utils/errorMessage';
 import {
   borrowBase,
   supplyBase,
@@ -346,7 +347,6 @@ const InputCard: React.FC<IProps> = () => {
       await accountStore.updateAccountBalances();
       refetchData();
     } catch (e) {
-      console.log('err', e);
       const { addErrorToLog } = settingsStore;
       const err = {
         fuelAddress: accountStore.address,
@@ -355,19 +355,19 @@ const InputCard: React.FC<IProps> = () => {
         action: dashboardStore.action,
         errorMessage: e?.toString() ?? '',
       };
-      console.log(e);
+      console.log(err);
       addErrorToLog(err);
       const error = JSON.parse(JSON.stringify(e)).toString();
       notificationStore.toast(error.error, {
         type: 'error',
-        title: 'Oops..',
+        title: errorToMessage(e?.toString() ?? ''),
       });
     } finally {
       dashboardStore.setLoading(false);
     }
   };
 
-  const marketActionMainBtnState = () => {
+  const marketActionMainBtnState = (): boolean => {
     //if (!this.initialized) return false;
 
     if (
@@ -390,7 +390,7 @@ const InputCard: React.FC<IProps> = () => {
         );
 
         if (balance == null) return false;
-        return balance.balance?.gte(dashboardStore.tokenAmount);
+        return balance.balance?.gte(dashboardStore.tokenAmount) ?? false;
       }
       //collateral
 
@@ -416,7 +416,7 @@ const InputCard: React.FC<IProps> = () => {
         )
       )
         return false;
-      return balance.balance?.gte(dashboardStore.tokenAmount);
+      return balance.balance?.gte(dashboardStore.tokenAmount) ?? false;
     }
     //if withdraw
     if (dashboardStore.action === ACTION_TYPE.WITHDRAW) {
@@ -522,7 +522,7 @@ const InputCard: React.FC<IProps> = () => {
         const balance1 = accountStore.findBalanceByAssetId(
           dashboardStore.baseToken.assetId
         );
-        balance1?.balance?.gte(maxBorrowAmount)
+        balance1?.balance?.gte(userSupplyBorrow[1])
           ? dashboardStore.setTokenAmount(userSupplyBorrow[1])
           : dashboardStore.setTokenAmount(balance1?.balance ?? BN.ZERO);
         break;
@@ -570,7 +570,9 @@ const InputCard: React.FC<IProps> = () => {
               <Button
                 fixed
                 onClick={marketAction} //Main function
-                disabled={!marketActionMainBtnState}
+                disabled={
+                  !marketActionMainBtnState() || tokenInputError() != null
+                }
               >
                 {dashboardStore.operationName}
               </Button>

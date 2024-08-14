@@ -1,4 +1,5 @@
 import { PYTH_CONTRACT_ABI } from '@pythnetwork/pyth-fuel-js';
+import { TX_GAS_LIMIT } from '@src/constants';
 import type { MarketAbi } from '@src/contract-types';
 import type { AccountStore, DashboardStore, SettingsStore } from '@src/stores';
 import { Contract } from 'fuels';
@@ -18,6 +19,9 @@ export const supplyBase = async (
         assetId: dashboardStore.baseToken.assetId,
       },
     })
+    .txParams({
+      gasLimit: TX_GAS_LIMIT,
+    })
     .call();
 };
 export const withdrawBase = async (
@@ -29,6 +33,9 @@ export const withdrawBase = async (
 
   return market.functions
     .withdraw_base(dashboardStore.tokenAmount.toString())
+    .txParams({
+      gasLimit: TX_GAS_LIMIT,
+    })
     .call();
 };
 
@@ -50,6 +57,9 @@ export const supplyCollateral = async (
         assetId: dashboardStore.actionTokenAssetId,
         amount: dashboardStore.tokenAmount.toString(),
       },
+    })
+    .txParams({
+      gasLimit: TX_GAS_LIMIT,
     })
     .call();
 };
@@ -80,6 +90,9 @@ export const withdrawCollateral = async (
       dashboardStore.tokenAmount.toString()
     )
     .addContracts([oracle])
+    .txParams({
+      gasLimit: TX_GAS_LIMIT,
+    })
     .call();
 };
 
@@ -106,5 +119,8 @@ export const borrowBase = async (
   return market.functions
     .withdraw_base(dashboardStore.tokenAmount.toFixed(0))
     .addContracts([oracle])
+    .txParams({
+      gasLimit: TX_GAS_LIMIT,
+    })
     .call();
 };
