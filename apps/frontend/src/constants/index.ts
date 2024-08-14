@@ -8,6 +8,7 @@ export const ROUTES = {
   TUTORIAL: '/tutorials/:tutorialId',
   DASHBOARD: '/dashboard',
   WALLET: '/wallet',
+  MARKET: '/market',
 };
 
 export const TOKENS_LIST: Array<IToken> = Object.values(tokens).map(
