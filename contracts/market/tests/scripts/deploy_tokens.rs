@@ -18,7 +18,7 @@ async fn deploy() {
     token_contract.deploy_tokens(&wallet).await;
 
     println!(
-        "The tokens have been deployed at {}",
+        "The tokens have been deployed at 0x{}",
         token_contract.contract_id().hash
     );
 }

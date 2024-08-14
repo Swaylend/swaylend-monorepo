@@ -21,6 +21,13 @@ async fn pause_test() {
         ..
     } = setup().await;
 
+    let price_data_update = PriceDataUpdate {
+        update_fee: 1,
+        price_feed_ids: price_feed_ids,
+        publish_times: vec![publish_time; assets.len()],
+        update_data: oracle.create_update_data(&prices).await.unwrap(),
+    };
+
     // =================================================
     // ==================== Step #0 ====================
     // 👛 Wallet: Bob 🧛
@@ -96,7 +103,7 @@ async fn pause_test() {
         .with_account(&alice)
         .await
         .unwrap()
-        .withdraw_base(&[&oracle.instance], amount)
+        .withdraw_base(&[&oracle.instance], amount, &price_data_update)
         .await
         .unwrap();
 
@@ -123,7 +130,15 @@ async fn pause_test() {
             res.confidence,
         ),
     )]);
-    oracle.update_prices(prices).await.unwrap();
+    oracle.update_prices(&prices).await.unwrap();
+
+    // New `price_data_update` that will be used in the next steps
+    let price_data_update = PriceDataUpdate {
+        update_fee: 1,
+        price_feed_ids: vec![uni.price_feed_id],
+        publish_times: vec![Utc::now().timestamp().try_into().unwrap()],
+        update_data: oracle.create_update_data(&prices).await.unwrap(),
+    };
 
     let res = oracle.price(uni.price_feed_id).await.unwrap().value;
     assert!(new_price == res.price);
@@ -148,7 +163,7 @@ async fn pause_test() {
         .with_account(&bob)
         .await
         .unwrap()
-        .absorb(&[&oracle.instance], vec![alice_address])
+        .absorb(&[&oracle.instance], vec![alice_address], &price_data_update)
         .await
         .unwrap();
 
@@ -217,8 +232,6 @@ async fn pause_test() {
 
     market.debug_increment_timestamp().await.unwrap();
 
-    // TODO claim_paused
-
     // =================================================
     // ==================== Step #6 ====================
     // 👛 Wallet: Admin 🗿
@@ -227,7 +240,7 @@ async fn pause_test() {
     let price = oracle.price(uni.price_feed_id).await.unwrap().value;
     let amount = parse_units(5, uni.price_feed_decimals.into()); // 1 UNI = $5
     oracle
-        .update_prices(Vec::from([(
+        .update_prices(&Vec::from([(
             uni.price_feed_id,
             (
                 amount,
@@ -327,7 +340,7 @@ async fn pause_test() {
         .with_account(&alice)
         .await
         .unwrap()
-        .withdraw_base(&[&oracle.instance], amount)
+        .withdraw_base(&[&oracle.instance], amount, &price_data_update)
         .await
         .is_err();
     assert!(res);
@@ -342,7 +355,7 @@ async fn pause_test() {
         .with_account(&bob)
         .await
         .unwrap()
-        .absorb(&[&oracle.instance], vec![alice_address])
+        .absorb(&[&oracle.instance], vec![alice_address], &price_data_update)
         .await
         .is_err();
     assert!(res);

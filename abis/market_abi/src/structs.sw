@@ -2,6 +2,8 @@ library;
 
 use i256::I256;
 use std::constants::ZERO_B256;
+use std::bytes::Bytes;
+use pyth_interface::{data_structures::price::{PriceFeedId}};
 
 pub const BASE_ACCRUAL_SCALE: u256 = 1_000_000; // 1e6
 pub const BASE_INDEX_SCALE_15: u256 = 1_000_000_000_000_000; // 1e15
@@ -33,9 +35,9 @@ pub struct MarketConfiguration {
     pub borrow_per_second_interest_rate_slope_high: u256, // decimals: 18
     pub borrow_per_second_interest_rate_base: u256, // decimals: 18
     pub store_front_price_factor: u256, // decimals: 18
-    pub base_tracking_index_scale: u256, // decimals: 18
-    pub base_tracking_supply_speed: u256, // decimals: 18
-    pub base_tracking_borrow_speed: u256, // decimals: 18
+    pub base_tracking_index_scale: u256, // decimals: 15
+    pub base_tracking_supply_speed: u256, // decimals: 15
+    pub base_tracking_borrow_speed: u256, // decimals: 15
     pub base_min_for_rewards: u256, // decimals: base_token_decimals
     pub base_borrow_min: u256, // decimals: base_token_decimals
     pub target_reserves: u256, // decimals: base_token_decimals
@@ -88,7 +90,7 @@ impl PauseConfiguration {
 
 pub struct UserBasic {
     pub principal: I256, // decimals: base_asset_decimal
-    pub base_tracking_index: u256, // decimals: 18
+    pub base_tracking_index: u256, // decimals: 15
     pub base_tracking_accrued: u256, // decimals: base_accrual_scale
 }
 
@@ -105,8 +107,8 @@ impl UserBasic {
 pub struct MarketBasics {
     pub base_supply_index: u256, // decimals: 15
     pub base_borrow_index: u256, // decimals: 15
-    pub tracking_supply_index: u256, // decimals: 18
-    pub tracking_borrow_index: u256, // decimals: 18
+    pub tracking_supply_index: u256, // decimals: 15
+    pub tracking_borrow_index: u256, // decimals: 15
     pub total_supply_base: u256, // decimals: base_asset_decimal
     pub total_borrow_base: u256, // decimals: base_asset_decimal
     pub last_accrual_time: u256,
@@ -124,6 +126,13 @@ impl MarketBasics {
             last_accrual_time: 0,
         }
     }
+}
+
+pub struct PriceDataUpdate {
+    pub update_fee: u64,
+    pub publish_times: Vec<u64>,
+    pub price_feed_ids: Vec<PriceFeedId>,
+    pub update_data: Vec<Bytes>
 }
 
 pub enum Error {

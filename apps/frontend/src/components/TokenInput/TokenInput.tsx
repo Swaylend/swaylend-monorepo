@@ -14,6 +14,7 @@ interface IProps {
   setAssetId?: (assetId: string) => void;
 
   onMaxClick?: () => void;
+  on50Click?: () => void;
   balance?: string;
 
   disabled?: boolean;
@@ -64,6 +65,7 @@ const MaxButton = styled.div`
   font-size: 13px;
   line-height: 24px;
   padding: 4px 16px;
+  margin-left: 8px;
   border-radius: 4px;
   cursor: pointer;
   background: ${({ theme }) => theme.colors.button.secondaryBackground};
@@ -115,6 +117,17 @@ const TokenInput: React.FC<IProps> = (props) => {
           placeholder="0.00"
           readOnly={!props.setAmount}
         />
+        {props.on50Click && (
+          <MaxButton
+            onClick={() => {
+              if (props.disabled) return;
+              setFocused(true);
+              props.on50Click?.();
+            }}
+          >
+            50%
+          </MaxButton>
+        )}
         {props.onMaxClick && (
           <MaxButton
             onClick={() => {

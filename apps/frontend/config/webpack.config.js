@@ -25,6 +25,7 @@ const ForkTsCheckerWebpackPlugin =
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
 const createEnvironmentHash = require('./webpack/persistentCache/createEnvironmentHash');
+const { url } = require('node:inspector');
 
 // Source maps are resource heavy and can cause out of memory issue for large source files.
 const shouldUseSourceMap = process.env.GENERATE_SOURCEMAP !== 'false';
@@ -301,6 +302,9 @@ module.exports = (webpackEnv) => {
       ),
       fallback: {
         crypto: false,
+        http: require.resolve('stream-http'),
+        url: require.resolve('url/'),
+        https: require.resolve('https-browserify'),
       },
       // These are the reasonable defaults supported by the Node ecosystem.
       // We also include JSX as a common component filename extension to support
@@ -348,7 +352,8 @@ module.exports = (webpackEnv) => {
         // Handle node_modules packages that contain sourcemaps
         shouldUseSourceMap && {
           enforce: 'pre',
-          exclude: /@babel(?:\/|\\{1,2})runtime/,
+          exclude: /(@babel(?:\/|\\{1,2})runtime|node_modules)/,
+          // exclude: /@babel(?:\/|\\{1,2})runtime/,
           test: /\.(js|mjs|jsx|ts|tsx|css)$/,
           loader: require.resolve('source-map-loader'),
         },
@@ -559,7 +564,12 @@ module.exports = (webpackEnv) => {
               // its runtime that would otherwise be processed through "file" loader.
               // Also exclude `html` and `json` extensions so they get processed
               // by webpacks internal loaders.
-              exclude: [/^$/, /\.(js|mjs|jsx|ts|tsx)$/, /\.html$/, /\.json$/],
+              exclude: [
+                /^$/,
+                /\.(js|mjs|jsx|ts|tsx|cjs)$/,
+                /\.html$/,
+                /\.json$/,
+              ],
               type: 'asset/resource',
             },
             // ** STOP ** Are you adding a new loader?

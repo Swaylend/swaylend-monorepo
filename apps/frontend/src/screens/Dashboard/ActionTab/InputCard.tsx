@@ -3,6 +3,10 @@ import useCollapse from '@components/Collapse';
 import Notification from '@components/Notification';
 import SizedBox from '@components/SizedBox';
 import TokenInput from '@components/TokenInput/TokenInput';
+import {
+  PYTH_CONTRACT_ABI,
+  PYTH_CONTRACT_ADDRESS_SEPOLIA,
+} from '@pythnetwork/pyth-fuel-js';
 import SummaryCard from '@screens/Dashboard/SummaryCard';
 import Card from '@src/components/Card';
 import { Row } from '@src/components/Flex';
@@ -19,6 +23,7 @@ import { ACTION_TYPE } from '@src/stores/DashboardStore';
 import BN from '@src/utils/BN';
 import centerEllipsis from '@src/utils/centerEllipsis';
 import { currentAssetCollateralCapacityLeft } from '@src/utils/dashboardUtils';
+import { errorToMessage } from '@src/utils/errorMessage';
 import {
   borrowBase,
   supplyBase,
@@ -29,7 +34,7 @@ import {
 import { getMarketContract, getOracleContract } from '@src/utils/readContracts';
 import { initProvider, walletToRead } from '@src/utils/walletToRead';
 import { useStores } from '@stores';
-import type { Provider, WalletUnlocked } from 'fuels';
+import { Contract, type Provider, type WalletUnlocked } from 'fuels';
 import { observer } from 'mobx-react-lite';
 import type React from 'react';
 import { useEffect, useState } from 'react';
@@ -51,10 +56,10 @@ const InputCard: React.FC<IProps> = () => {
     wallet!,
     settingsStore.currentVersionConfig
   );
-  const oracleContract = getOracleContract(
-    wallet!,
-    provider!,
-    settingsStore.currentVersionConfig
+  const oracleContract = new Contract(
+    PYTH_CONTRACT_ADDRESS_SEPOLIA,
+    PYTH_CONTRACT_ABI,
+    wallet!
   );
 
   const {
@@ -342,7 +347,6 @@ const InputCard: React.FC<IProps> = () => {
       await accountStore.updateAccountBalances();
       refetchData();
     } catch (e) {
-      console.log('err', e);
       const { addErrorToLog } = settingsStore;
       const err = {
         fuelAddress: accountStore.address,
@@ -351,19 +355,19 @@ const InputCard: React.FC<IProps> = () => {
         action: dashboardStore.action,
         errorMessage: e?.toString() ?? '',
       };
-      console.log(e);
+      console.log(err);
       addErrorToLog(err);
       const error = JSON.parse(JSON.stringify(e)).toString();
       notificationStore.toast(error.error, {
         type: 'error',
-        title: 'Oops..',
+        title: errorToMessage(e?.toString() ?? ''),
       });
     } finally {
       dashboardStore.setLoading(false);
     }
   };
 
-  const marketActionMainBtnState = () => {
+  const marketActionMainBtnState = (): boolean => {
     //if (!this.initialized) return false;
 
     if (
@@ -386,7 +390,7 @@ const InputCard: React.FC<IProps> = () => {
         );
 
         if (balance == null) return false;
-        return balance.balance?.gte(dashboardStore.tokenAmount);
+        return balance.balance?.gte(dashboardStore.tokenAmount) ?? false;
       }
       //collateral
 
@@ -412,7 +416,7 @@ const InputCard: React.FC<IProps> = () => {
         )
       )
         return false;
-      return balance.balance?.gte(dashboardStore.tokenAmount);
+      return balance.balance?.gte(dashboardStore.tokenAmount) ?? false;
     }
     //if withdraw
     if (dashboardStore.action === ACTION_TYPE.WITHDRAW) {
@@ -518,12 +522,19 @@ const InputCard: React.FC<IProps> = () => {
         const balance1 = accountStore.findBalanceByAssetId(
           dashboardStore.baseToken.assetId
         );
-        balance1?.balance?.gte(maxBorrowAmount)
+        balance1?.balance?.gte(userSupplyBorrow[1])
           ? dashboardStore.setTokenAmount(userSupplyBorrow[1])
           : dashboardStore.setTokenAmount(balance1?.balance ?? BN.ZERO);
         break;
       }
     }
+  };
+
+  const on50BtnClick = () => {
+    onMaxBtnClick();
+    if (dashboardStore.tokenAmount == null || dashboardStore.tokenAmount.eq(0))
+      return;
+    dashboardStore.setTokenAmount(dashboardStore.tokenAmount.div(2));
   };
 
   return (
@@ -541,6 +552,7 @@ const InputCard: React.FC<IProps> = () => {
             setAmount={dashboardStore.setTokenAmount}
             assetId={dashboardStore.actionToken.assetId}
             onMaxClick={() => onMaxBtnClick()}
+            on50Click={() => on50BtnClick()}
             balance={tokenInputBalance()}
             error={tokenInputError()}
           />
@@ -558,7 +570,9 @@ const InputCard: React.FC<IProps> = () => {
               <Button
                 fixed
                 onClick={marketAction} //Main function
-                disabled={!marketActionMainBtnState}
+                disabled={
+                  !marketActionMainBtnState() || tokenInputError() != null
+                }
               >
                 {dashboardStore.operationName}
               </Button>

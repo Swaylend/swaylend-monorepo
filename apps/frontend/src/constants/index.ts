@@ -27,6 +27,9 @@ export const TOKENS_BY_ASSET_ID: Record<string, IToken> = TOKENS_LIST.reduce(
   (acc, t) => ({ ...acc, [t.assetId]: t }),
   {}
 );
+
+export const TX_GAS_LIMIT = 1000000;
+
 export const INDEXER_URL =
   'https://spark-indexer.spark-defi.com/api/sql/composabilitylabs/spark_indexer';
 
@@ -37,10 +40,10 @@ export const EXPLORER_URL = 'https://app.fuel.network';
 export const FAUCET_URL = 'https://faucet-testnet.fuel.network/';
 export const CONTRACT_ADDRESSES: IContractsConfig = {
   priceOracle:
-    '0x1f6a416e814dd5adf97b994f1eb5b6d694f91bfafdc75686f1f7ed64b760332c',
-  market: '0x91240c4837da1d27b4fc4d3f498fd4b92b1e782ace1c6e22622a27ae635c3a76',
+    '0x73591bf32f010ce4e83d86005c24e7833b397be38014ab670a73f6fde59ad607',
+  market: '0xea9d4a55ca16271f42992529bb68de095249ceb8d95176576098bb9b98cd3975',
   tokenFactory:
-    '0x4069ff37aa31cc75849c78c6e92a92d01499c22e2ae922cfa9c311a845c7de63',
+    '0x36d896016b570d6638029968e6cdf84b9249ad7e5b295848f7140b56b3303532',
 };
 
 export interface IToken {

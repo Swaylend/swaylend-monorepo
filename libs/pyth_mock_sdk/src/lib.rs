@@ -62,11 +62,10 @@ impl PythMockContract {
             .await?)
     }
 
-    // Vec<(PriceFeedId, Price)>
-    pub async fn update_prices(
+    pub async fn create_update_data(
         &self,
-        prices: Vec<(Bits256, (u64, u32, u64, u64))>,
-    ) -> anyhow::Result<CallResponse<()>> {
+        prices: &Vec<(Bits256, (u64, u32, u64, u64))>,
+    ) -> anyhow::Result<Vec<Bytes>> {
         let mut update_data: Vec<Bytes> = Vec::new();
 
         for (price_feed_id, (price, exponent, publish_time, confidence)) in prices {
@@ -87,6 +86,16 @@ impl PythMockContract {
                 0: current_update_data,
             });
         }
+
+        Ok(update_data)
+    }
+
+    // Vec<(PriceFeedId, Price)>
+    pub async fn update_prices(
+        &self,
+        prices: &Vec<(Bits256, (u64, u32, u64, u64))>,
+    ) -> anyhow::Result<CallResponse<()>> {
+        let update_data: Vec<Bytes> = self.create_update_data(prices).await?;
 
         Ok(self
             .instance

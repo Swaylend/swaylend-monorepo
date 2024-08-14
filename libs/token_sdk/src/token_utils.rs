@@ -1,4 +1,5 @@
 use market::*;
+use rand::Rng;
 use token::*;
 
 use fuels::accounts::wallet::WalletUnlocked;
@@ -51,7 +52,11 @@ impl TokenContract {
         let bin_path = root.join("contracts/token/out/release/token.bin");
         let config = LoadConfiguration::default().with_configurables(configurables);
 
+        let mut rng = rand::thread_rng();
+        let salt = rng.gen::<[u8; 32]>();
+
         let id = Contract::load_from(bin_path, config)?
+            .with_salt(salt)
             .deploy(wallet, TxPolicies::default())
             .await?;
         let instance = Token::new(id.clone(), wallet.clone());

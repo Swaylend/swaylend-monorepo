@@ -124,12 +124,9 @@ class DashboardStore {
   }
 
   collaterals: IToken[] = [
-    // TOKENS_BY_SYMBOL.SWAY,
     TOKENS_BY_SYMBOL.ETH,
-    // TOKENS_BY_SYMBOL.COMP,
     TOKENS_BY_SYMBOL.BTC,
-    // TOKENS_BY_SYMBOL.LINK,
-    // TOKENS_BY_SYMBOL.UNI,
+    TOKENS_BY_SYMBOL.UNI,
   ];
 }
 

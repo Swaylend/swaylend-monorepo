@@ -27,11 +27,11 @@ async function main() {
     '0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07';
 
   const contract = MarketAbi__factory.connect(
-    '0xd76074d2ca35cae2cca4af30671c0a2f2a4043ccca1540b2fd76d5e4700ce2a5',
+    '0x2a525a334bfd792a1effbc4d72b5b9fcdbaa8eab405bf3d691cb7688e370c81d',
     wallet
   );
   const { value } = (await contract.functions
-    .balance_of(assetIdUSDC)
+    .get_collateral_configurations()
     // .get_user_collateral({ bits: address }, assetIdETH)
     //.get_configuration()
     .get()) as any;
