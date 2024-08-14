@@ -2,25 +2,18 @@ import Layout from '@components/Layout';
 import SizedBox from '@components/SizedBox';
 import Text from '@components/Text';
 import styled from '@emotion/styled';
-import { ROUTES, TOKENS_BY_ASSET_ID } from '@src/constants';
-import tutorials from '@src/constants/tutorials';
-import useWindowSize from '@src/hooks/useWindowSize';
-import type React from 'react';
-import { Observer } from 'mobx-react-lite';
-import { useNavigate } from 'react-router-dom';
+import { TOKENS_BY_ASSET_ID } from '@src/constants';
 import { useBalanceOf } from '@src/hooks/useBalanceOf';
+import { useMarketBasics } from '@src/hooks/useMarketBasics';
+import { usePrice } from '@src/hooks/usePrice';
+import { useTotalsCollateral } from '@src/hooks/useTotalsCollateral';
+import { useStores } from '@src/stores';
+import BN from '@src/utils/BN';
 import { getMarketContract } from '@src/utils/readContracts';
 import { initProvider, walletToRead } from '@src/utils/walletToRead';
-import { useEffect, useMemo, useState } from 'react';
 import type { Provider, WalletUnlocked } from 'fuels';
-import { useStores } from '@src/stores';
-import { usePrice } from '@src/hooks/usePrice';
-import BN from '@src/utils/BN';
-import { get } from 'lodash';
-import { useTotalsCollateral } from '@src/hooks/useTotalsCollateral';
-import { useMarketBasics } from '@src/hooks/useMarketBasics';
-
-type IProps = any;
+import { Observer } from 'mobx-react-lite';
+import { useEffect, useMemo, useState } from 'react';
 
 const Root = styled.div`
   display: flex;
