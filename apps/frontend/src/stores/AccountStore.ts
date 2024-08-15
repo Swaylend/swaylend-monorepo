@@ -4,21 +4,19 @@ import BN from '@src/utils/BN';
 import type RootStore from '@stores/RootStore';
 import {
   Address,
-  CoinQuantity,
   type Fuel,
   Mnemonic,
   Provider,
   Wallet,
   type WalletLocked,
   type WalletUnlocked,
-  // FuelConnectorEventTypes,
 } from 'fuels';
 import { makeAutoObservable, reaction, runInAction, when } from 'mobx';
 
 export enum LOGIN_TYPE {
   FUEL_WALLET = 'Fuel Wallet',
   FUELET = 'Fuelet Wallet',
-  GENERATE_SEED = 'Generate seed',
+  // GENERATE_SEED = 'Generate seed',
   WALLET_CONNECT = 'Ethereum Wallets',
 }
 
@@ -191,20 +189,20 @@ class AccountStore {
 
   login = async (loginType: LOGIN_TYPE) => {
     this.setLoginType(loginType);
-    if (loginType === LOGIN_TYPE.GENERATE_SEED) {
-      this.loginWithMnemonicPhrase();
-      return;
-    }
+    // if (loginType === LOGIN_TYPE.GENERATE_SEED) {
+    //   this.loginWithMnemonicPhrase();
+    //   return;
+    // }
     await this.loginWithWallet(loginType);
   };
 
   disconnect = async () => {
     try {
-      if (this.loginType === LOGIN_TYPE.GENERATE_SEED) {
-        this.setSeed(null);
-        this.setAddress(null);
-        return;
-      }
+      // if (this.loginType === LOGIN_TYPE.GENERATE_SEED) {
+      //   this.setSeed(null);
+      //   this.setAddress(null);
+      //   return;
+      // }
       this.fuel?.disconnect();
     } catch (e) {
       this.setAddress(null);
@@ -251,42 +249,42 @@ class AccountStore {
     }
   };
 
-  loginWithMnemonicPhrase = () => {
-    const mnemonic = Mnemonic.generate(16);
-    this.setSeed(mnemonic);
-    const seed = Mnemonic.mnemonicToSeed(mnemonic);
-    if (this.provider == null) return;
-    const wallet = Wallet.fromSeed(seed, undefined, this.provider);
-    this.setAddress(wallet.address.toAddress());
-    this.rootStore.notificationStore.toast(
-      'You can copy your seed in account section',
-      { type: 'info' }
-    );
-  };
+  // loginWithMnemonicPhrase = () => {
+  //   const mnemonic = Mnemonic.generate(16);
+  //   this.setSeed(mnemonic);
+  //   const seed = Mnemonic.mnemonicToSeed(mnemonic);
+  //   if (this.provider == null) return;
+  //   const wallet = Wallet.fromSeed(seed, undefined, this.provider);
+  //   this.setAddress(wallet.address.toAddress());
+  //   this.rootStore.notificationStore.toast(
+  //     'You can copy your seed in account section',
+  //     { type: 'info' }
+  //   );
+  // };
 
   get isLoggedIn() {
     return this.address != null;
   }
 
   getWallet = async (): Promise<WalletLocked | WalletUnlocked | null> => {
-    if (this.loginType === LOGIN_TYPE.GENERATE_SEED) {
-      if (this.seed == null) return null;
-      const seed = Mnemonic.mnemonicToSeed(this.seed);
-      const provider = await Provider.create(NODE_URL);
-      return Wallet.fromPrivateKey(seed, provider);
-    }
+    // if (this.loginType === LOGIN_TYPE.GENERATE_SEED) {
+    //   if (this.seed == null) return null;
+    //   const seed = Mnemonic.mnemonicToSeed(this.seed);
+    //   const provider = await Provider.create(NODE_URL);
+    //   return Wallet.fromPrivateKey(seed, provider);
+    // }
     if (this.address == null || this.fuel == null) return null;
     return this.fuel.getWallet(this.address);
   };
 
-  get walletToRead(): WalletUnlocked | null {
-    return this.provider == null
-      ? null
-      : Wallet.fromPrivateKey(
-          '0x737439a8dc69c0adc72501ae4becb0c7c39981914d3b664bd511b48af7333661',
-          this.provider ?? ''
-        );
-  }
+  // get walletToRead(): WalletUnlocked | null {
+  //   return this.provider == null
+  //     ? null
+  //     : Wallet.fromPrivateKey(
+  //         '0x737439a8dc69c0adc72501ae4becb0c7c39981914d3b664bd511b48af7333661',
+  //         this.provider ?? ''
+  //       );
+  // }
 
   get addressInput(): null | { value: string } {
     if (this.address == null) return null;

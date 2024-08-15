@@ -3,6 +3,7 @@ import Divider from '@components/Divider';
 import { Row } from '@components/Flex';
 import SizedBox from '@components/SizedBox';
 import Text from '@components/Text';
+import { useAccount } from '@fuels/react';
 import {
   PYTH_CONTRACT_ABI,
   PYTH_CONTRACT_ADDRESS_SEPOLIA,
@@ -19,6 +20,7 @@ import { useUserSupplyBorrow } from '@src/hooks/useUserSupplyBorrow';
 import { useStores } from '@src/stores';
 import { ACTION_TYPE } from '@src/stores/DashboardStore';
 import BN from '@src/utils/BN';
+import getAddressB256 from '@src/utils/address';
 import {
   getTotalCollateralBalance,
   getTotalSuppliedBalance,
@@ -35,12 +37,12 @@ import Skeleton from 'react-loading-skeleton';
 type IProps = any;
 
 const SummaryCard: React.FC<IProps> = () => {
+  const { account } = useAccount();
   const rootStore = useStores();
-  const { accountStore, settingsStore, dashboardStore } = rootStore;
+  const { settingsStore, dashboardStore } = rootStore;
   const { data: priceData, getPrice } = usePrice(dashboardStore.allTokens);
 
   const [wallet, setWallet] = useState<WalletUnlocked | null>(null);
-  const [provider, setProvider] = useState<Provider | null>(null);
   const [possibleCollateralValue, setPossibleCollateralValue] =
     useState<BN | null>(null);
   const [possibleBorrowCapacity, setPossibleBorrowCapacity] =
@@ -52,7 +54,6 @@ const SummaryCard: React.FC<IProps> = () => {
 
   useEffect(() => {
     walletToRead().then((w) => setWallet(w));
-    initProvider().then((p) => setProvider(p));
   }, []);
   const marketContract = getMarketContract(
     wallet!,
@@ -68,7 +69,7 @@ const SummaryCard: React.FC<IProps> = () => {
   const { data: maxBorrowAmount } = useAvailableToBorrow(
     marketContract,
     oracleContract,
-    accountStore.addressInput?.value ?? ''
+    getAddressB256(account)
   );
   const { data: balanceOfBaseAsset } = useBalanceOf(
     marketContract,
@@ -76,12 +77,12 @@ const SummaryCard: React.FC<IProps> = () => {
   );
   const { data: userSupplyBorrow } = useUserSupplyBorrow(
     marketContract,
-    accountStore.addressInput?.value ?? ''
+    getAddressB256(account)
   );
   const { data: collateralBalances } = useUserCollateral(
     marketContract,
     dashboardStore.collaterals,
-    accountStore.addressInput?.value ?? ''
+    getAddressB256(account)
   );
   const { data: collateralConfigurations } =
     useCollateralConfigurations(marketContract);

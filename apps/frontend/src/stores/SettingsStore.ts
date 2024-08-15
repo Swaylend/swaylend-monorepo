@@ -76,11 +76,6 @@ class SettingsStore {
     log: this.log,
   });
 
-  walletModalOpened = false;
-  setWalletModalOpened = (s: boolean) => {
-    this.walletModalOpened = s;
-  };
-
   network: string = NODE_URL;
   setNetwork = (s: string) => {
     this.network = s;
@@ -113,11 +108,6 @@ class SettingsStore {
           ? tokenAddress
           : tokens?.concat(',').concat(tokenAddress),
     });
-  };
-
-  loginModalOpened = false;
-  setLoginModalOpened = (s: boolean) => {
-    this.loginModalOpened = s;
   };
 
   get currentVersionConfig(): IContractsConfig {

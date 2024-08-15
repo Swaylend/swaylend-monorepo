@@ -4,6 +4,7 @@ import Text from '@components/Text';
 import TokenIcon from '@components/TokenIcon';
 import Tooltip from '@components/Tooltip';
 import styled from '@emotion/styled';
+import { useAccount, useBalance, useIsConnected } from '@fuels/react';
 import TokenInfo from '@screens/Dashboard/TokenInfo';
 import attention from '@src/assets/icons/attention.svg';
 import { Column, Row } from '@src/components/Flex';
@@ -13,6 +14,7 @@ import { useTotalsCollateral } from '@src/hooks/useTotalsCollateral';
 import { useUserCollateral } from '@src/hooks/useUserCollateral';
 import { ACTION_TYPE } from '@src/stores/DashboardStore';
 import BN from '@src/utils/BN';
+import getAddressB256 from '@src/utils/address';
 import { getMarketContract } from '@src/utils/readContracts';
 import { walletToRead } from '@src/utils/walletToRead';
 import { useStores } from '@stores';
@@ -71,6 +73,8 @@ const TokenRowSkeleton = () => (
 const AssetsTable: React.FC<IProps> = () => {
   const { accountStore, settingsStore, dashboardStore } = useStores();
   const [wallet, setWallet] = useState<WalletUnlocked | null>(null);
+  const { account } = useAccount();
+  const { isConnected } = useIsConnected();
 
   useEffect(() => {
     walletToRead().then((w) => setWallet(w));
@@ -84,7 +88,7 @@ const AssetsTable: React.FC<IProps> = () => {
   const { data: collateralBalances, isLoading } = useUserCollateral(
     marketContract,
     dashboardStore.collaterals,
-    accountStore.addressInput?.value ?? ''
+    getAddressB256(account)
   );
   const { data: collateralConfigurations } =
     useCollateralConfigurations(marketContract);
@@ -123,6 +127,7 @@ const AssetsTable: React.FC<IProps> = () => {
           totalCollateralInfo == null
             ? BN.ZERO
             : totalCollateralInfo[token.assetId];
+        // const { balance: userBalance } = useBalance({address: account, assetId: token.assetId});
         const userBalance = accountStore.getBalance(token);
         const walletBalance = accountStore.getFormattedBalance(token);
         const protocolBalance =
@@ -148,14 +153,14 @@ const AssetsTable: React.FC<IProps> = () => {
                       {token.name}
                     </Text>
                     <SizedBox width={4} />
-                    {accountStore.address != null &&
+                    {account != null &&
                       collateralBalances != null &&
                       collateralCapacityLeft.eq(0) && (
                         <img alt="att" src={attention} />
                       )}
                   </Row>
                   <Text size="small" weight={600} type="secondary">
-                    {accountStore.isLoggedIn
+                    {isConnected
                       ? `${token.symbol} • ${walletBalance} in wallet`
                       : `${token.symbol}`}
                   </Text>

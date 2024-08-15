@@ -1,7 +1,9 @@
+import { useAccount } from '@fuels/react';
 import { TOKENS_BY_ASSET_ID } from '@src/constants';
 import type { MarketAbi } from '@src/contract-types';
 import type { RootStore } from '@src/stores';
 import BN from '@src/utils/BN';
+import getAddressB256 from '@src/utils/address';
 import { useMemo } from 'react';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
 import { useUserCollateral } from './useUserCollateral';
@@ -12,15 +14,16 @@ export const useCollateralUtilization = (
   getTokenPrice: (a: string) => any,
   rootStore: RootStore
 ) => {
+  const { account } = useAccount();
   const { data: userSupplyBorrow } = useUserSupplyBorrow(
     marketContract,
-    rootStore.accountStore.addressInput?.value ?? ''
+    getAddressB256(account)
   );
   const { data: assetsConfigs } = useCollateralConfigurations(marketContract);
-  const { data: collateralBalances, isLoading } = useUserCollateral(
+  const { data: collateralBalances } = useUserCollateral(
     marketContract,
     rootStore.dashboardStore.collaterals,
-    rootStore.accountStore.addressInput?.value ?? ''
+    getAddressB256(account)
   );
 
   const trueCollateralsValue = useMemo(() => {
