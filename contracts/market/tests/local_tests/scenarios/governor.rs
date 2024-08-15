@@ -6,12 +6,14 @@
 // 	5.	✅ withdraw_reserves(to: Address, amount: u256)
 // 	6.	✅ pause(pause_config: PauseConfiguration)
 // 	7.	✅ set_pyth_contract_id(contract_id: ContractId)
+// 	8.	✅ update_market_configuration(configuration: MarketConfiguration)
 
 use std::str::FromStr;
 
 use crate::utils::{setup, TestData};
 use fuels::types::{ContractId, U256};
 use market::{CollateralConfiguration, PauseConfiguration};
+use market_sdk::get_market_config;
 
 #[tokio::test]
 async fn governor_test() {
@@ -22,6 +24,7 @@ async fn governor_test() {
         alice_address,
         market,
         assets,
+        usdc,
         ..
     } = setup().await;
 
@@ -161,4 +164,29 @@ async fn governor_test() {
     // make sure set_pyth_contract_id was ok
     assert!(admin_set_pyth_contract_id_res.is_ok());
     assert!(!alice_set_pyth_contract_id_res.is_ok());
+
+    let market_config = get_market_config(
+        alice_address,
+        alice_address,
+        usdc.bits256,
+        usdc.decimals as u32,
+        assets["USDC"].price_feed_id,
+    )
+    .unwrap();
+
+    let alice_update_market_configuration_res = market
+        .with_account(&alice)
+        .await
+        .unwrap()
+        .update_market_configuration(&market_config)
+        .await;
+    let admin_update_market_configuration_res = market
+        .with_account(&admin)
+        .await
+        .unwrap()
+        .update_market_configuration(&market_config)
+        .await;
+    // make sure update_market_configuration was ok
+    assert!(!alice_update_market_configuration_res.is_ok());
+    assert!(admin_update_market_configuration_res.is_ok());
 }
