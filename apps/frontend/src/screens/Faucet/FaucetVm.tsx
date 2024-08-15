@@ -1,5 +1,6 @@
 import { Row } from '@src/components/Flex';
 import Spinner from '@src/components/Spinner';
+import Text from '@src/components/Text';
 import {
   EXPLORER_URL,
   TOKENS_BY_ASSET_ID,
@@ -10,13 +11,12 @@ import { TokenAbi__factory } from '@src/contract-types';
 import { useVM } from '@src/hooks/useVM';
 import BN from '@src/utils/BN';
 import centerEllipsis from '@src/utils/centerEllipsis';
+import { errorToMessage } from '@src/utils/errorMessage';
 import { type RootStore, useStores } from '@stores';
 import { hashMessage } from 'fuels';
 import { makeAutoObservable } from 'mobx';
 import React, { useMemo } from 'react';
 import { toast } from 'react-toastify';
-import Text from '@src/components/Text';
-import { errorToMessage } from '@src/utils/errorMessage';
 
 const ctx = React.createContext<FaucetVM | null>(null);
 
