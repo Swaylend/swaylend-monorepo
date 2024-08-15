@@ -9,7 +9,7 @@ const SCALE_6: f64 = 10u64.pow(6) as f64;
 const SCALE_9: f64 = 10u64.pow(9) as f64;
 
 #[tokio::test]
-async fn base_asset_test() {
+async fn supply_withdraw_test() {
     let TestData {
         wallets,
         alice,

@@ -193,7 +193,7 @@ impl MarketContract {
             .await?)
     }
 
-    pub async fn puase_collateral_asset(
+    pub async fn pause_collateral_asset(
         &self,
         asset_id: AssetId,
     ) -> anyhow::Result<CallResponse<()>> {
