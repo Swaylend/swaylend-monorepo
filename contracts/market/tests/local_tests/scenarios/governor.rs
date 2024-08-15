@@ -1,68 +1,29 @@
-// **Scenario #10 - Change governor**
-
-// Description: Change governor of smart contract and then try to call only governor methods.
-
-// Code: <insert link to the test file>
-
 // methods callable by governor:
-//  1.	activate_contract(market_configuration: MarketConfiguration)
-// 	2.	✅ add_collateral_asset(configuration: CollateralConfiguration)
-// 	3.	✅ pause_collateral_asset(asset_id: b256)
-// 	4.	✅ resume_collateral_asset(asset_id: b256)
-// 	5.	✅ update_collateral_asset(asset_id: b256, configuration: CollateralConfiguration)
-// 	6.	✅ withdraw_reserves(to: Address, amount: u256)
-// 	7.	✅ pause(pause_config: PauseConfiguration)
-// 	8.	set_pyth_contract_id(contract_id: ContractId)
-// 	9.	update_market_configuration(configuration: MarketConfiguration)
-
-// Steps:
+// 	1.	✅ add_collateral_asset(configuration: CollateralConfiguration)
+// 	2.	✅ pause_collateral_asset(asset_id: b256)
+// 	3.	✅ resume_collateral_asset(asset_id: b256)
+// 	4.	✅ update_collateral_asset(asset_id: b256, configuration: CollateralConfiguration)
+// 	5.	✅ withdraw_reserves(to: Address, amount: u256)
+// 	6.	✅ pause(pause_config: PauseConfiguration)
+// 	7.	✅ set_pyth_contract_id(contract_id: ContractId)
 
 use std::str::FromStr;
 
-use crate::utils::{print_case_title, setup, TestData};
-use chrono::Utc;
-use fuels::{
-    prelude::ViewOnlyAccount,
-    types::{AssetId, Bits256, U256},
-};
-use market::{CollateralConfiguration, PauseConfiguration, PriceDataUpdate};
-use market_sdk::parse_units;
-
-const AMOUNT_COEFFICIENT: u64 = 10u64.pow(0);
-const SCALE_6: f64 = 10u64.pow(6) as f64;
-const SCALE_9: f64 = 10u64.pow(9) as f64;
+use crate::utils::{setup, TestData};
+use fuels::types::{ContractId, U256};
+use market::{CollateralConfiguration, PauseConfiguration};
 
 #[tokio::test]
 async fn governor_test() {
     let TestData {
-        wallets,
         admin,
         admin_address,
         alice,
         alice_address,
-        bob,
-        bob_address,
-        chad,
-        chad_address,
-        usdc_contract,
-        usdc,
         market,
-        uni,
-        uni_contract,
-        oracle,
-        price_feed_ids,
         assets,
-        publish_time,
-        prices,
         ..
     } = setup().await;
-
-    let price_data_update = PriceDataUpdate {
-        update_fee: 1,
-        price_feed_ids,
-        publish_times: vec![publish_time; assets.len()],
-        update_data: oracle.create_update_data(&prices).await.unwrap(),
-    };
 
     let asset_id = assets["ETH"].asset_id;
 
@@ -147,7 +108,7 @@ async fn governor_test() {
         .unwrap()
         .withdraw_reserves(alice_address, 100_000_000)
         .await;
-    let admin_withdraw_reserves_res = market
+    let _admin_withdraw_reserves_res = market
         .with_account(&admin)
         .await
         .unwrap()
@@ -180,4 +141,24 @@ async fn governor_test() {
     // make sure pause_collateral_asset was ok
     assert!(admin_pause_collat_res.is_ok());
     assert!(!alice_pause_collat_res.is_ok());
+
+    let contract_id =
+        ContractId::from_str("0x0000000000000000000000000000000000000000000000000000000000000000")
+            .unwrap();
+
+    let admin_set_pyth_contract_id_res = market
+        .with_account(&admin)
+        .await
+        .unwrap()
+        .set_pyth_contract_id(contract_id)
+        .await;
+    let alice_set_pyth_contract_id_res = market
+        .with_account(&alice)
+        .await
+        .unwrap()
+        .set_pyth_contract_id(contract_id)
+        .await;
+    // make sure set_pyth_contract_id was ok
+    assert!(admin_set_pyth_contract_id_res.is_ok());
+    assert!(!alice_set_pyth_contract_id_res.is_ok());
 }
