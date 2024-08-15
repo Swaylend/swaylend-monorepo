@@ -37,7 +37,7 @@ const TokensFaucetTable: React.FC<IProps> = () => {
                 type="secondary"
                 size="small"
               >
-                $ {t.price.toFormat(2)}
+                Testnet
               </Text>
             </Column>
           </Row>
@@ -47,29 +47,26 @@ const TokensFaucetTable: React.FC<IProps> = () => {
             <Text fitContent style={{ whiteSpace: 'nowrap' }} weight={500}>
               {`${t.mintAmount.toFormat()} ${t.symbol}`}
             </Text>
-            <Text fitContent style={{ whiteSpace: 'nowrap' }} type="secondary">
+            {/* <Text fitContent style={{ whiteSpace: 'nowrap' }} type="secondary">
               $ {t.mintAmountDollar.toFormat(2)}
-            </Text>
+            </Text> */}
           </Column>
         ),
         balance: (
           <Column crossAxisSize="max">
             <Text fitContent style={{ whiteSpace: 'nowrap' }} weight={500}>
-              {`${t.formatBalance?.toFormat(2)} ${t.symbol}`}
+              {`${t.formatBalance?.toFormat(4)} ${t.symbol}`}
             </Text>
-            <Text fitContent style={{ whiteSpace: 'nowrap' }} type="secondary">
+            {/* <Text fitContent style={{ whiteSpace: 'nowrap' }} type="secondary">
               $ {t.balanceDollar.toFormat(2)}
-            </Text>
+            </Text> */}
           </Column>
         ),
         btn: (() => {
           if (!accountStore.isLoggedIn)
             return (
-              <Button
-                fixed
-                onClick={() => settingsStore.setLoginModalOpened(true)}
-              >
-                Connect wallet
+              <Button fixed disabled>
+                Mint
               </Button>
             );
           if (!vm.initialized)
@@ -87,7 +84,10 @@ const TokensFaucetTable: React.FC<IProps> = () => {
           if (t.symbol !== 'ETH')
             return (
               <Button
-                disabled={ethBalance?.eq(0)}
+                disabled={
+                  ethBalance?.eq(0) ||
+                  (vm.loading && vm.actionTokenAssetId !== t.assetId)
+                }
                 fixed
                 onClick={() => vm.mint(t.assetId)}
               >
@@ -116,7 +116,31 @@ const TokensFaucetTable: React.FC<IProps> = () => {
               {vm.loading && vm.actionTokenAssetId === t.assetId ? (
                 <Loading />
               ) : (
-                'Mint'
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 4,
+                  }}
+                >
+                  Mint
+                  {/* biome-ignore lint/a11y/noSvgWithoutTitle: <explanation> */}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 30 30"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    style={{ width: 16, height: 16 }}
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
+                    />
+                  </svg>
+                </div>
               )}
             </Button>
           );

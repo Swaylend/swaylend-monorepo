@@ -201,7 +201,11 @@ const SummaryCard: React.FC<IProps> = () => {
       const userPositionLiquidationPoint = (collateralValue ?? BN.ZERO).times(
         collateralUtilization
       );
-      setPossibleLiquidationPoint(userPositionLiquidationPoint);
+      if (userPositionLiquidationPoint.lt(BN.ZERO)) {
+        setPossibleLiquidationPoint(BN.ZERO);
+      } else {
+        setPossibleLiquidationPoint(userPositionLiquidationPoint);
+      }
 
       const availableToBorrowChange = BN.formatUnits(
         availableToBorrow.minus(dashboardStore.tokenAmount ?? BN.ZERO),
@@ -227,7 +231,11 @@ const SummaryCard: React.FC<IProps> = () => {
       const userPositionLiquidationPoint = (collateralValue ?? BN.ZERO).times(
         collateralUtilization
       );
-      setPossibleLiquidationPoint(userPositionLiquidationPoint);
+      if (userPositionLiquidationPoint.lt(BN.ZERO)) {
+        setPossibleLiquidationPoint(BN.ZERO);
+      } else {
+        setPossibleLiquidationPoint(userPositionLiquidationPoint);
+      }
 
       const availableToBorrowChange = BN.formatUnits(
         availableToBorrow.plus(dashboardStore.tokenAmount ?? BN.ZERO),
