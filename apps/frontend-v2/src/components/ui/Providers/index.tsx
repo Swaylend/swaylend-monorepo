@@ -10,14 +10,14 @@ import { ThemeProvider } from 'next-themes';
 import type { ReactNode } from 'react';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import CloseIcon from '@/assets/icons/close.svg';
 import {
   FuelWalletConnector,
   FueletWalletConnector,
   WalletConnectConnector,
 } from '@fuels/connectors';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import Image from 'next/image';
+import CloseIcon from '/public/assets/icons/close.svg';
 
 function makeQueryClient() {
   return new QueryClient({

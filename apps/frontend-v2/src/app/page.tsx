@@ -1,16 +1,16 @@
 'use client';
 import { Button } from '@/components/ui/button';
 import {
-  useConnectUI,
-  useFuel,
-  useDisconnect,
-  useIsConnected,
-  useWallet,
   useAccount,
   useAccounts,
+  useConnectUI,
+  useDisconnect,
+  useFuel,
+  useIsConnected,
+  useWallet,
 } from '@fuels/react';
-import { toast } from 'react-toastify';
 import { bn } from 'fuels';
+import { toast } from 'react-toastify';
 
 export default function Home() {
   const notify = () => toast('Wow so easy !');
