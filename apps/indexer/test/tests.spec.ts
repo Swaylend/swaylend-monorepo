@@ -408,26 +408,6 @@ describe('Market contract event tests', () => {
 
       const userAddress = ALICE_ADDRESS;
 
-      // We first need to initialize a mock user entity
-      const mockUserBasicEvent = Market.UserBasicEvent.mockData({
-        address: {
-          bits: userAddress,
-        },
-        user_basic: {
-          principal: {
-            negative: false,
-            value: BigInt(0),
-          },
-          base_tracking_index: BigInt(0),
-          base_tracking_accrued: BigInt(0),
-        },
-      });
-
-      let updatedMockDb = await Market.UserBasicEvent.processEvent({
-        event: mockUserBasicEvent,
-        mockDb: mockDbInitial,
-      });
-
       // Create a mock user collateral event
       const mockUserSupplyCollateralEvent =
         Market.UserSupplyCollateralEvent.mockData({
@@ -439,7 +419,7 @@ describe('Market contract event tests', () => {
         });
 
       // Processing the mock event on the mock database
-      updatedMockDb = await Market.UserSupplyCollateralEvent.processEvent({
+      let updatedMockDb = await Market.UserSupplyCollateralEvent.processEvent({
         event: mockUserSupplyCollateralEvent,
         mockDb: mockDbInitial,
       });

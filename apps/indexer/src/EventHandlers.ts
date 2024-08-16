@@ -153,10 +153,28 @@ Market.UserSupplyCollateralEvent.loader(({ event, context }) => {
     loadCollateralAsset: false,
     loadUser: false,
   });
+
+  const address = event.data.address;
+  context.User.load(address.bits);
 });
 
 Market.UserSupplyCollateralEvent.handler(async ({ event, context }) => {
   const id = `${event.transactionId}_${event.receiptIndex}`;
+
+  // Create user if it doesn't exist
+  const user = await context.User.get(event.data.address.bits);
+
+  if (!user) {
+    context.User.set({
+      id: event.data.address.bits,
+      address: event.data.address.bits,
+      principal: BigInt(0),
+      baseTrackingIndex: BigInt(0),
+      baseTrackingAccrued: BigInt(0),
+      totalCollateralBought: BigInt(0),
+      totalValueLiquidated: BigInt(0),
+    });
+  }
 
   context.UserCollateralEvent.set({
     id,
