@@ -341,12 +341,6 @@ async fn collateral_borrow_timeskip_test() {
         .await
         .unwrap();
 
-    let balances = bob.get_balances().await.unwrap();
-    println!(
-        "Bob balances======================================: {:?}",
-        balances.get("ETH")
-    );
-
     for _ in 0..100 {
         market.debug_increment_timestamp().await.unwrap();
     }
