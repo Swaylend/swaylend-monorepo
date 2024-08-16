@@ -68,14 +68,14 @@ const ActionTab: React.FC<IProps> = () => {
   });
   return (
     <Root>
-      {!accountStore.isLoggedIn && (
+      {/* {!accountStore.isLoggedIn && (
         <>
           <Button fixed onClick={() => settingsStore.setLoginModalOpened(true)}>
             Connect wallet
           </Button>
           <SizedBox height={10} />
         </>
-      )}
+      )} */}
       <div {...getCollapseProps()}>
         {dashboardStore.mode === 0 ? (
           <Row>
