@@ -7,7 +7,6 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "biome check --write .",
     "generate:types": "rimraf ./src/contract-types && fuels typegen -i ../../contracts/**/*-abi.json -o ./src/contract-types"
   },
   "dependencies": {
@@ -23,10 +22,8 @@
     "@wagmi/core": "^2.13.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "encoding": "^0.1.13",
     "fuels": "^0.93.0",
-    "dotenv": "^10.0.0",
-    "dotenv-expand": "^5.1.0",
-    "https-browserify": "^1.0.0",
     "lucide-react": "^0.428.0",
     "next": "14.2.5",
     "next-themes": "^0.3.0",
@@ -34,7 +31,6 @@
     "react": "^18",
     "react-dom": "^18",
     "react-toastify": "^9.1.1",
-    "stream-http": "^3.2.0",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
     "zustand": "^4.5.5"

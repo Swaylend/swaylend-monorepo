@@ -1,23 +1,22 @@
 'use client';
 
+import 'react-toastify/dist/ReactToastify.css';
+
+import {
+  FuelWalletConnector,
+  FueletWalletConnector,
+  WalletConnectConnector,
+} from '@fuels/connectors';
 import { FuelProvider } from '@fuels/react';
 import {
   QueryClient,
   QueryClientProvider,
   isServer,
 } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { ThemeProvider } from 'next-themes';
 import type { ReactNode } from 'react';
 import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import {
-  FuelWalletConnector,
-  FueletWalletConnector,
-  WalletConnectConnector,
-} from '@fuels/connectors';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import Image from 'next/image';
-import CloseIcon from '/public/assets/icons/close.svg';
 
 function makeQueryClient() {
   return new QueryClient({
@@ -72,22 +71,12 @@ export const Providers = ({ children }: { children: ReactNode }) => {
             ],
           }}
         >
-          <div>
+          <>
             {children}
             <ToastContainer
-              icon={<div />}
+              icon={false}
               position="bottom-right"
               autoClose={5000}
-              closeButton={({ closeToast }) => (
-                // <CloseIcon onClick={(e: any) => closeToast(e)} />
-                <Image
-                  src={CloseIcon}
-                  alt="close"
-                  width={24}
-                  height={24}
-                  onClick={(e) => closeToast(e as any)}
-                />
-              )}
               progressStyle={{ background: 'hsl(var(--primary))' }}
               hideProgressBar={false}
               newestOnTop={true}
@@ -98,7 +87,7 @@ export const Providers = ({ children }: { children: ReactNode }) => {
               pauseOnHover
               theme="dark"
             />
-          </div>
+          </>
         </FuelProvider>
         <ReactQueryDevtools initialIsOpen />
       </QueryClientProvider>
