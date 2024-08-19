@@ -26,16 +26,13 @@ module.exports = {
     // Modify the file loader rule to ignore *.svg, since we have it handled now.
     fileLoaderRule.exclude = /\.svg$/i;
 
-    return config;
-    // webpack(config) {
+    config.resolve.fallback = {
+      crypto: false,
+      http: false,
+      url: false,
+      https: false,
+    };
 
-    //   // config.resolve.fallback = {
-    //   //   crypto: false,
-    //   //   http: false,
-    //   //   url: false,
-    //   //   https: false,
-    //   // };
-    //   return config;
-    // },
+    return config;
   },
 };
