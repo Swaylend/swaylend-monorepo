@@ -1,12 +1,9 @@
 use crate::utils::{print_case_title, setup, TestData};
-use chrono::Utc;
 use fuels::prelude::ViewOnlyAccount;
 use market::PriceDataUpdate;
 use market_sdk::parse_units;
 
-const AMOUNT_COEFFICIENT: u64 = 10u64.pow(0);
 const SCALE_6: f64 = 10u64.pow(6) as f64;
-const SCALE_9: f64 = 10u64.pow(9) as f64;
 
 #[tokio::test]
 async fn supply_withdraw_test() {
@@ -14,15 +11,10 @@ async fn supply_withdraw_test() {
         wallets,
         alice,
         alice_address,
-        bob,
-        bob_address,
-        chad,
-        chad_address,
         usdc_contract,
         usdc,
         market,
         uni,
-        uni_contract,
         oracle,
         price_feed_ids,
         assets,
