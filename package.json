@@ -8,7 +8,11 @@
     "lint:fix": "biome check --write ."
   },
   "devDependencies": {
-    "@biomejs/biome": "1.8.3"
+    "@biomejs/biome": "1.8.3",
+    "@graphql-codegen/cli": "^5.0.2",
+    "@graphql-codegen/client-preset": "^4.3.3",
+    "@graphql-typed-document-node/core": "^3.2.0",
+    "graphql": "^16.9.0"
   },
   "packageManager": "pnpm@9.0.6",
   "engines": {

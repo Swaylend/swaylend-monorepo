@@ -263,22 +263,22 @@ Market.UserSupplyBaseEvent.loader(({ event, context }) => {
 Market.UserSupplyBaseEvent.handler(async ({ event, context }) => {
   const id = `${event.transactionId}_${event.receiptIndex}`;
 
-  if (event.data.supply_amount > 0) {
+  if (event.data.repay_amount > 0) {
     context.UserBaseEvent.set({
-      id: `${id}_supply`,
+      id: `${id}_1`,
       user_id: event.data.address.bits,
-      amount: event.data.supply_amount,
-      actionType: 'Supply',
+      amount: event.data.repay_amount,
+      actionType: 'Repay',
       timestamp: event.time,
     });
   }
 
-  if (event.data.repay_amount > 0) {
+  if (event.data.supply_amount > 0) {
     context.UserBaseEvent.set({
-      id: `${id}_repay`,
+      id: `${id}_2`,
       user_id: event.data.address.bits,
-      amount: event.data.repay_amount,
-      actionType: 'Repay',
+      amount: event.data.supply_amount,
+      actionType: 'Supply',
       timestamp: event.time,
     });
   }
@@ -294,7 +294,7 @@ Market.UserWithdrawBaseEvent.handler(async ({ event, context }) => {
 
   if (event.data.withdraw_amount > 0) {
     context.UserBaseEvent.set({
-      id: `${id}_withdraw`,
+      id: `${id}_1`,
       user_id: event.data.address.bits,
       amount: event.data.withdraw_amount,
       actionType: 'Withdraw',
@@ -304,7 +304,7 @@ Market.UserWithdrawBaseEvent.handler(async ({ event, context }) => {
 
   if (event.data.borrow_amount > 0) {
     context.UserBaseEvent.set({
-      id: `${id}_borrow`,
+      id: `${id}_2`,
       user_id: event.data.address.bits,
       amount: event.data.borrow_amount,
       actionType: 'Borrow',
