@@ -1,13 +1,15 @@
-use std::collections::HashMap;
-
 use chrono::Utc;
 use fuels::accounts::wallet::WalletUnlocked;
+use fuels::accounts::ViewOnlyAccount;
 use fuels::test_helpers::{
     launch_custom_provider_and_get_wallets, NodeConfig, Trigger, WalletsConfig,
 };
 use fuels::types::{Address, Bits256, ContractId};
 use market_sdk::{get_market_config, MarketContract};
 use pyth_mock_sdk::PythMockContract;
+use std::collections::HashMap;
+use std::result::Result::Ok;
+use std::str::FromStr;
 use token_sdk::{Asset, TokenAsset, TokenContract};
 
 pub fn print_case_title(num: u8, name: &str, call: &str, amount: &str) {
@@ -22,16 +24,19 @@ pub fn print_case_title(num: u8, name: &str, call: &str, amount: &str) {
 }
 
 pub async fn init_wallets() -> Vec<WalletUnlocked> {
-    let wallets_config = WalletsConfig::new(Some(5), Some(1), Some(1_000_000_000));
+    let wallets_config = WalletsConfig::new(Some(5), Some(10), Some(1_000_000_000));
 
     let provider_config = NodeConfig {
         block_production: Trigger::Instant,
         ..NodeConfig::default()
     };
 
-    launch_custom_provider_and_get_wallets(wallets_config, Some(provider_config), None)
+    return match launch_custom_provider_and_get_wallets(wallets_config, Some(provider_config), None)
         .await
-        .unwrap()
+    {
+        Ok(wallets) => wallets,
+        Err(e) => panic!("wallets init error: {}", e),
+    };
 }
 
 pub struct TestData {
@@ -50,6 +55,8 @@ pub struct TestData {
     pub usdc_contract: TokenAsset,
     pub uni: Asset,
     pub uni_contract: TokenAsset,
+    pub eth: Asset,
+    pub eth_contract: TokenAsset,
     pub wallets: Vec<WalletUnlocked>,
     pub price_feed_ids: Vec<Bits256>,
     pub publish_time: u64,
@@ -58,6 +65,8 @@ pub struct TestData {
 }
 
 pub async fn setup() -> TestData {
+    const BASE_ASSET_ID: &str =
+        "0x0000000000000000000000000000000000000000000000000000000000000000";
     //--------------- WALLETS ---------------
     let wallets = init_wallets().await;
     let admin = &wallets[0];
@@ -65,14 +74,16 @@ pub async fn setup() -> TestData {
     let bob = &wallets[2];
     let chad = &wallets[3];
 
+    println!("admin: {:?}", admin.get_balances().await.unwrap());
+
     //--------------- ORACLE ---------------
     let oracle = PythMockContract::deploy(&admin).await.unwrap();
     let oracle_contract_id = ContractId::from(oracle.instance.contract_id());
 
     //--------------- TOKENS ---------------
     let token_contract = TokenContract::deploy(&admin).await.unwrap();
-    let (assets, asset_configs) = token_contract.deploy_tokens(&admin).await;
-
+    let (assets, asset_configs) = token_contract.deploy_tokens(&admin, Some(true)).await;
+    println!("Deployed tokens: {:?}", assets["ETH"].asset_id);
     let usdc = assets.get("USDC").unwrap();
     let usdc_contract = TokenAsset::new(
         admin.clone(),
@@ -85,9 +96,15 @@ pub async fn setup() -> TestData {
         token_contract.contract_id().into(),
         &uni.symbol,
     );
+    let eth = assets.get("ETH").unwrap().clone();
+    let eth_contract = TokenAsset::new(
+        admin.clone(),
+        ContractId::from_str(BASE_ASSET_ID).unwrap(),
+        &eth.symbol,
+    );
 
     //--------------- MARKET ---------------
-    let fuel_eth_base_asset_id = Bits256::zeroed();
+    let fuel_eth_base_asset_id = Bits256::from_hex_str(BASE_ASSET_ID).unwrap();
 
     let market_config = get_market_config(
         admin.address().into(),
@@ -115,6 +132,7 @@ pub async fn setup() -> TestData {
 
     //--------------- SETUP COLLATERALS ---------------
     for config in &asset_configs {
+        println!("Adding {:?} as collateral: {:?}", config.asset_id, config);
         market.add_collateral_asset(&config).await.unwrap();
     }
 
@@ -163,6 +181,8 @@ pub async fn setup() -> TestData {
         usdc_contract,
         uni: uni.clone(),
         uni_contract,
+        eth: eth.clone(),
+        eth_contract,
         price_feed_ids,
         publish_time,
         assets,
