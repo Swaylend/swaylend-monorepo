@@ -4,6 +4,7 @@ import {
   type BuyCollateralEvent,
   type CollateralAsset,
   type LiquidationEvent,
+  type MarketConfiguartion,
   type MarketState,
   type PauseConfiguration,
   type ReservesWithdrawnEvent,
@@ -17,6 +18,7 @@ const { MockDb, Market, Addresses } = TestHelpers;
 
 const MARKET_ID = 'MARKET_ID';
 const PUASE_CONFIGURATION_ID = 'PUASE_CONFIGURATION_ID';
+const MARKET_CONFIGURATION_ID = 'MARKET_CONFIGURATION_ID';
 
 const TEST_ASSET_ID =
   '0x17c2876b5dd4cec132ba8c7b5ea1b38d0522c6c3ca697471242f52f4ab3adbf5';
@@ -556,7 +558,7 @@ describe('Market contract event tests', () => {
 
       // Expected entity that should be created (supply)
       const expectedBaseEventSupply: UserBaseEvent = {
-        id: `${mockUserSupplyBaseEvent.transactionId}_${mockUserSupplyBaseEvent.receiptIndex}_supply`,
+        id: `${mockUserSupplyBaseEvent.transactionId}_${mockUserSupplyBaseEvent.receiptIndex}_2`,
         actionType: 'Supply',
         amount: BigInt(66),
         timestamp: mockUserSupplyBaseEvent.time,
@@ -573,7 +575,7 @@ describe('Market contract event tests', () => {
 
       // Expected entity that should be created (repay)
       const expectedBaseEventRepay: UserBaseEvent = {
-        id: `${mockUserSupplyBaseEvent.transactionId}_${mockUserSupplyBaseEvent.receiptIndex}_repay`,
+        id: `${mockUserSupplyBaseEvent.transactionId}_${mockUserSupplyBaseEvent.receiptIndex}_1`,
         actionType: 'Repay',
         amount: BigInt(33),
         timestamp: mockUserSupplyBaseEvent.time,
@@ -605,7 +607,7 @@ describe('Market contract event tests', () => {
 
       // Expected entity that should be created (withdraw)
       const expectedBaseEventWithdraw: UserBaseEvent = {
-        id: `${mockUserWithdrawBaseEvent.transactionId}_${mockUserWithdrawBaseEvent.receiptIndex}_withdraw`,
+        id: `${mockUserWithdrawBaseEvent.transactionId}_${mockUserWithdrawBaseEvent.receiptIndex}_1`,
         actionType: 'Withdraw',
         amount: BigInt(55),
         timestamp: mockUserWithdrawBaseEvent.time,
@@ -622,7 +624,7 @@ describe('Market contract event tests', () => {
 
       // Expected entity that should be created (borrow)
       const expectedBaseEventBorrow: UserBaseEvent = {
-        id: `${mockUserWithdrawBaseEvent.transactionId}_${mockUserWithdrawBaseEvent.receiptIndex}_borrow`,
+        id: `${mockUserWithdrawBaseEvent.transactionId}_${mockUserWithdrawBaseEvent.receiptIndex}_2`,
         actionType: 'Borrow',
         amount: BigInt(44),
         timestamp: mockUserWithdrawBaseEvent.time,
@@ -1140,6 +1142,81 @@ describe('Market contract event tests', () => {
       assert.deepEqual(
         expectedPauseConfigurationEvent,
         actualPauseConfigurationEvent
+      );
+    });
+  });
+
+  describe('Market configuration event', async () => {
+    it('Create a MarketConfigurationEvent entity', async () => {
+      // Initializing the mock database
+      const mockDbInitial = MockDb.createMockDb();
+
+      // Create a mock market configuration event
+      const mockMarketConfigurationEvent =
+        Market.MarketConfigurationEvent.mockData({
+          market_config: {
+            governor: { bits: ALICE_ADDRESS },
+            pause_guardian: { bits: BOB_ADDRESS },
+            base_token_decimals: 6,
+            base_token: TEST_ASSET_ID,
+            base_token_price_feed_id: TEST_PRICE_FEED_ID,
+            supply_kink: BigInt('850000000000000000'),
+            borrow_kink: BigInt('850000000000000000'),
+            supply_per_second_interest_rate_slope_low: BigInt(1141552511),
+            supply_per_second_interest_rate_slope_high: BigInt(50735667174),
+            supply_per_second_interest_rate_base: BigInt(0),
+            borrow_per_second_interest_rate_slope_low: BigInt(1585489599),
+            borrow_per_second_interest_rate_slope_high: BigInt(57077625570),
+            borrow_per_second_interest_rate_base: BigInt(475646879),
+            store_front_price_factor: BigInt('600000000000000000'),
+            base_tracking_index_scale: BigInt(1000000000000000),
+            base_tracking_supply_speed: BigInt(0),
+            base_tracking_borrow_speed: BigInt(0),
+            base_min_for_rewards: BigInt(1000000000),
+            base_borrow_min: BigInt(1000),
+            target_reserves: BigInt(1000000000000),
+          },
+        });
+
+      // Processing the mock event on the mock database
+      const updatedMockDb = await Market.MarketConfigurationEvent.processEvent({
+        event: mockMarketConfigurationEvent,
+        mockDb: mockDbInitial,
+      });
+
+      // Expected entity that should be created
+      const expectedMarketConfigurationEvent: MarketConfiguartion = {
+        id: MARKET_CONFIGURATION_ID,
+        governor: ALICE_ADDRESS,
+        pause_guardian: BOB_ADDRESS,
+        baseToken: TEST_ASSET_ID,
+        baseTokenDecimals: 6,
+        baseTokenPriceFeedId: TEST_PRICE_FEED_ID,
+        supplyKink: BigInt('850000000000000000'),
+        borrowKink: BigInt('850000000000000000'),
+        supplyPerSecondInterestRateSlopeLow: BigInt(1141552511),
+        supplyPerSecondInterestRateSlopeHigh: BigInt(50735667174),
+        supplyPerSecondInterestRateBase: BigInt(0),
+        borrowPerSecondInterestRateSlopeLow: BigInt(1585489599),
+        borrowPerSecondInterestRateSlopeHigh: BigInt(57077625570),
+        borrowPerSecondInterestRateBase: BigInt(475646879),
+        storeFrontPriceFactor: BigInt('600000000000000000'),
+        baseTrackingIndexScale: BigInt(1000000000000000),
+        baseTrackingSupplySpeed: BigInt(0),
+        baseTrackingBorrowSpeed: BigInt(0),
+        baseMinForRewards: BigInt(1000000000),
+        baseBorrowMin: BigInt(1000),
+        targetReserves: BigInt(1000000000000),
+      };
+
+      // Getting the entity from the mock database
+      const actualMarketConfigurationEvent =
+        updatedMockDb.entities.MarketConfiguartion.get(MARKET_CONFIGURATION_ID);
+
+      // Asserting that the entity in the mock database is the same as the expected entity
+      assert.deepEqual(
+        expectedMarketConfigurationEvent,
+        actualMarketConfigurationEvent
       );
     });
   });
