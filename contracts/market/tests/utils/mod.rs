@@ -74,8 +74,6 @@ pub async fn setup() -> TestData {
     let bob = &wallets[2];
     let chad = &wallets[3];
 
-    println!("admin: {:?}", admin.get_balances().await.unwrap());
-
     //--------------- ORACLE ---------------
     let oracle = PythMockContract::deploy(&admin).await.unwrap();
     let oracle_contract_id = ContractId::from(oracle.instance.contract_id());
@@ -83,7 +81,7 @@ pub async fn setup() -> TestData {
     //--------------- TOKENS ---------------
     let token_contract = TokenContract::deploy(&admin).await.unwrap();
     let (assets, asset_configs) = token_contract.deploy_tokens(&admin, Some(true)).await;
-    println!("Deployed tokens: {:?}", assets["ETH"].asset_id);
+
     let usdc = assets.get("USDC").unwrap();
     let usdc_contract = TokenAsset::new(
         admin.clone(),
@@ -132,7 +130,6 @@ pub async fn setup() -> TestData {
 
     //--------------- SETUP COLLATERALS ---------------
     for config in &asset_configs {
-        println!("Adding {:?} as collateral: {:?}", config.asset_id, config);
         market.add_collateral_asset(&config).await.unwrap();
     }
 
