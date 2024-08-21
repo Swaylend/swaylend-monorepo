@@ -1,5 +1,4 @@
 'use client';
-import React from 'react';
 import { Button } from '@/components/ui/button';
 import {
   useAccount,
@@ -10,9 +9,10 @@ import {
   useIsConnected,
   useWallet,
 } from '@fuels/react';
-import Link from 'next/link';
-import Logo from '/public/icons/dark-logo.svg?url';
 import Image from 'next/image';
+import Link from 'next/link';
+import React from 'react';
+import Logo from '/public/icons/dark-logo.svg?url';
 
 export const Navbar = () => {
   const { connect, error, isError, theme, isConnecting } = useConnectUI();

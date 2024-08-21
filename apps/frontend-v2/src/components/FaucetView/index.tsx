@@ -1,8 +1,3 @@
-import { useIsConnected, useWallet, useAccount } from '@fuels/react';
-import React, { useState } from 'react';
-import { Button } from '../ui/button';
-import useBalances from '@/hooks/useBalances';
-import { BN, hashMessage } from 'fuels';
 import {
   CONTRACT_ADDRESSES,
   FAUCET_AMOUNTS,
@@ -10,7 +5,12 @@ import {
   FAUCET_URL,
 } from '@/constants';
 import { TokenAbi__factory } from '@/contract-types';
+import useBalances from '@/hooks/useBalances';
+import { useAccount, useIsConnected, useWallet } from '@fuels/react';
+import { BN, hashMessage } from 'fuels';
+import React, { useState } from 'react';
 import { toast } from 'react-toastify';
+import { Button } from '../ui/button';
 
 export const FaucetView = () => {
   const [isMinting, setIsMinting] = useState(false);
