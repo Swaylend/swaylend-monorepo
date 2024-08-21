@@ -42,12 +42,7 @@ impl PythMockContract {
     }
 
     pub async fn price(&self, price_feed_id: Bits256) -> anyhow::Result<CallResponse<Price>> {
-        Ok(self
-            .instance
-            .methods()
-            .price(price_feed_id)
-            .simulate()
-            .await?)
+        Ok(self.instance.methods().price(price_feed_id).call().await?)
     }
 
     pub async fn update_price_feeds(
