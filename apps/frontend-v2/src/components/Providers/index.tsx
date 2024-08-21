@@ -7,7 +7,7 @@ import {
   FueletWalletConnector,
   WalletConnectConnector,
 } from '@fuels/connectors';
-import { FuelProvider } from '@fuels/react';
+import { FuelProvider, useIsConnected } from '@fuels/react';
 import {
   QueryClient,
   QueryClientProvider,
@@ -15,7 +15,7 @@ import {
 } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { ThemeProvider } from 'next-themes';
-import type { ReactNode } from 'react';
+import { useMemo, type ReactNode } from 'react';
 import { ToastContainer } from 'react-toastify';
 
 function makeQueryClient() {
@@ -25,6 +25,7 @@ function makeQueryClient() {
         // With SSR, we usually want to set some default staleTime
         // above 0 to avoid refetching immediately on the client
         staleTime: 15 * 1000,
+        refetchInterval: 10 * 1000,
       },
     },
   });
@@ -32,7 +33,7 @@ function makeQueryClient() {
 
 let browserQueryClient: QueryClient | undefined = undefined;
 
-function getQueryClient() {
+export function getQueryClient() {
   if (isServer) {
     // Server: always make a new query client
     return makeQueryClient();
