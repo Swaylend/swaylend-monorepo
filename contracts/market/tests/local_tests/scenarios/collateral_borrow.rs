@@ -1,9 +1,6 @@
 use crate::utils::{print_case_title, setup, TestData};
-use fuels::{
-    accounts::ViewOnlyAccount,
-    types::{ContractId, U256},
-};
-use market::{CollateralConfiguration, PauseConfiguration, PriceDataUpdate};
+use fuels::accounts::ViewOnlyAccount;
+use market::PriceDataUpdate;
 use market_sdk::parse_units;
 
 const AMOUNT_COEFFICIENT: u64 = 10u64.pow(0);
@@ -14,8 +11,6 @@ const SCALE_9: f64 = 10u64.pow(9) as f64;
 async fn collateral_borrow_test() {
     let TestData {
         wallets,
-        admin,
-        admin_address,
         bob,
         bob_address,
         alice,
