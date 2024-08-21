@@ -516,9 +516,11 @@ const InputCard: React.FC<IProps> = () => {
         if (
           dashboardStore.actionTokenAssetId === dashboardStore.baseToken.assetId
         ) {
-          balance = balance.minus(new BN(1));
+          //balance = balance.minus(new BN(1));
         }
-        dashboardStore.setTokenAmount(balance);
+        if (balance.gt(BN.ZERO)) {
+          dashboardStore.setTokenAmount(balance);
+        }
         break;
       }
       case ACTION_TYPE.WITHDRAW:
@@ -545,8 +547,8 @@ const InputCard: React.FC<IProps> = () => {
         const balance1 = accountStore.findBalanceByAssetId(
           dashboardStore.baseToken.assetId
         );
-        balance1?.balance?.gte(userSupplyBorrow[1])
-          ? dashboardStore.setTokenAmount(userSupplyBorrow[1])
+        balance1?.balance?.gte(userSupplyBorrow[1].plus(new BN(10)))
+          ? dashboardStore.setTokenAmount(userSupplyBorrow[1].plus(new BN(10)))
           : dashboardStore.setTokenAmount(balance1?.balance ?? BN.ZERO);
         break;
       }
@@ -557,7 +559,9 @@ const InputCard: React.FC<IProps> = () => {
     onMaxBtnClick();
     if (dashboardStore.tokenAmount == null || dashboardStore.tokenAmount.eq(0))
       return;
-    dashboardStore.setTokenAmount(dashboardStore.tokenAmount.div(new BN(2)));
+    const newTokenAmount = dashboardStore.tokenAmount.div(new BN(2));
+
+    if (newTokenAmount.gt(0)) dashboardStore.setTokenAmount(newTokenAmount);
   };
 
   return (

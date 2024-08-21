@@ -1,3 +1,6 @@
+import { Row } from '@src/components/Flex';
+import Spinner from '@src/components/Spinner';
+import Text from '@src/components/Text';
 import {
   EXPLORER_URL,
   TOKENS_BY_ASSET_ID,
@@ -8,10 +11,12 @@ import { TokenAbi__factory } from '@src/contract-types';
 import { useVM } from '@src/hooks/useVM';
 import BN from '@src/utils/BN';
 import centerEllipsis from '@src/utils/centerEllipsis';
+import { errorToMessage } from '@src/utils/errorMessage';
 import { type RootStore, useStores } from '@stores';
 import { hashMessage } from 'fuels';
 import { makeAutoObservable } from 'mobx';
 import React, { useMemo } from 'react';
+import { toast } from 'react-toastify';
 
 const ctx = React.createContext<FaucetVM | null>(null);
 
@@ -109,9 +114,29 @@ class FaucetVM {
       const hash = hashMessage(token.symbol);
       const userAddress = wallet.address.toB256();
 
-      const { transactionResult } = (await tokenFactoryContract.functions
+      const tx = (await tokenFactoryContract.functions
         .mint({ Address: { bits: userAddress } }, hash, amount.toString())
         .call()) as any;
+
+      const transactionResult = (await toast.promise(tx.waitForResult(), {
+        pending: {
+          render: (
+            <Row>
+              <Spinner />
+              <Text
+                size="small"
+                type="secondary"
+                className="notifications-text"
+                weight={500}
+                style={{ marginTop: 2, width: '100%', wordBreak: 'break-word' }}
+              >
+                Transaction is pending...
+              </Text>
+            </Row>
+          ),
+        },
+      })) as any;
+
       if (transactionResult != null) {
         const token = TOKENS_BY_ASSET_ID[assetId];
         if (token !== TOKENS_BY_SYMBOL.ETH) {
@@ -129,12 +154,20 @@ class FaucetVM {
             title: 'Transaction is completed!',
           }
         );
+      } else {
+        notificationStore.toast('Transaction Failed', {
+          type: 'error',
+          title: 'Transaction Failed',
+        });
       }
       await this.rootStore.accountStore.updateAccountBalances();
     } catch (e) {
       const errorText = e?.toString();
       console.log(errorText);
-      notificationStore.toast(errorText ?? '', { type: 'error' });
+      notificationStore.toast(errorText!, {
+        type: 'error',
+        title: errorToMessage(errorText ?? ''),
+      });
     } finally {
       this.setActionTokenAssetId(null);
       this._setLoading(false);
