@@ -1,35 +1,13 @@
-// **Scenario #7 - Change collateral configuration**
-
-// Description: Change collateral configuration values (maybe not necessary to test all variables) and test borrowing, absorb, and liquidation.
-
-// Code: <insert link to the test file>
-
-// Steps:
-
-// **Scenario #9 - Change market configuration**
-
-// Description: Change each market configuration variable (maybe not necessary to test all variables) and call the functions that should change behavior.
-
-// Code: <insert link to the test file>
-
-// Steps:
 use crate::utils::{setup, TestData};
-use fuels::{
-    accounts::ViewOnlyAccount,
-    types::{bech32, AssetId, Bits256, U256},
-};
+use fuels::types::U256;
 use market::{CollateralConfiguration, MarketConfiguration, PriceDataUpdate};
-use market_sdk::{format_units, get_market_config, parse_units, MarketContract};
-use serde::de::IntoDeserializer;
-
-const SCALE_6: f64 = 10u64.pow(6) as f64;
+use market_sdk::parse_units;
 
 #[tokio::test]
 async fn collateral_configuration_test() {
     let TestData {
         wallets,
         admin,
-        admin_address,
         bob,
         bob_address,
         alice,
@@ -179,4 +157,49 @@ async fn collateral_configuration_test() {
 }
 
 #[tokio::test]
-async fn market_configuration_test() {}
+async fn market_configuration_test() {
+    let TestData {
+        admin,
+        admin_address,
+        market,
+        usdc,
+        ..
+    } = setup().await;
+
+    let old_market_config = market.get_market_configuration().await.unwrap().value;
+    let new_market_config = MarketConfiguration {
+        supply_kink: 900000000000000000u64.into(),
+        borrow_kink: 900000000000000000u64.into(),
+        supply_per_second_interest_rate_slope_low: 1141552514.into(),
+        supply_per_second_interest_rate_slope_high: 50735667178u64.into(),
+        supply_per_second_interest_rate_base: 1.into(),
+        borrow_per_second_interest_rate_slope_low: 1585489600.into(),
+        borrow_per_second_interest_rate_slope_high: 57077625573u64.into(),
+        borrow_per_second_interest_rate_base: 475646880.into(),
+        store_front_price_factor: 700000000000000000u64.into(),
+        base_tracking_index_scale: 1000000000000000u64.into(),
+        base_tracking_supply_speed: 1.into(),
+        base_tracking_borrow_speed: 1.into(),
+        base_min_for_rewards: 2000000000.into(),
+        base_borrow_min: 2000.into(),
+        target_reserves: 2000000000000u64.into(),
+        governor: admin_address,
+        pause_guardian: admin_address,
+        base_token: usdc.bits256,
+        base_token_decimals: usdc.decimals.try_into().unwrap(),
+        base_token_price_feed_id: usdc.price_feed_id,
+    };
+
+    let res = market
+        .with_account(&admin)
+        .await
+        .unwrap()
+        .update_market_configuration(&new_market_config)
+        .await;
+
+    assert!(res.is_ok());
+
+    let market_config = market.get_market_configuration().await.unwrap().value;
+    assert!(market_config == new_market_config);
+    assert!(market_config != old_market_config);
+}
