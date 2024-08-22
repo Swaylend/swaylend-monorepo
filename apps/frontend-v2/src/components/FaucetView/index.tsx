@@ -1,27 +1,13 @@
 'use client';
-import { TokenAbi__factory } from '@/contract-types';
-import {
-  CONTRACT_ADDRESSES,
-  FAUCET_AMOUNTS,
-  FAUCET_TOKENS,
-  FAUCET_URL,
-} from '@/utils';
-import {
-  useAccount,
-  useBalance,
-  useIsConnected,
-  useWallet,
-} from '@fuels/react';
-import { BN, hashMessage, toFixed } from 'fuels';
-import React, { useState } from 'react';
-import { toast } from 'react-toastify';
+import { FAUCET_TOKENS, FAUCET_URL } from '@/utils';
+import { useAccount, useBalance, useIsConnected } from '@fuels/react';
+import { BN, toFixed } from 'fuels';
+import React, { useMemo } from 'react';
 import { Button } from '../ui/button';
+import { useMintToken } from '@/hooks';
 
 export const FaucetView = () => {
-  const [isMinting, setIsMinting] = useState(false);
-  const [mintingToken, setMintingToken] = useState<string>('');
   const { isConnected } = useIsConnected();
-  const { wallet } = useWallet();
   const { account } = useAccount();
 
   const { balance: etherBalance } = useBalance({
@@ -41,50 +27,25 @@ export const FaucetView = () => {
     assetId: FAUCET_TOKENS.Uniswap.assetId,
   });
 
-  console.log(etherBalance);
-  const mint = async (assetId: string, decimals: any, symbol: string) => {
-    if (!wallet || !isConnected) return;
-    setIsMinting(true);
-    setMintingToken(assetId);
-    const amount = new BN(FAUCET_AMOUNTS[symbol]).mul(10 ** decimals);
-    console.log(amount.toString());
-    try {
-      const tokenFactoryContract = TokenAbi__factory.connect(
-        CONTRACT_ADDRESSES.tokenFactory,
-        wallet
-      );
-      const hash = hashMessage(symbol);
-      const tx = (await tokenFactoryContract.functions
-        .mint(
-          { Address: { bits: wallet.address.toB256() } },
-          hash,
-          amount.toString()
-        )
-        .call()) as any;
+  const { mutate: mintTokenBTC, isPending: isMintingBTC } = useMintToken(
+    'BTC',
+    FAUCET_TOKENS.Bitcoin.decimals
+  );
 
-      const transactionResult = (await toast.promise(tx.waitForResult(), {
-        pending: {
-          render: <div>TX is pending...</div>,
-        },
-      })) as any;
+  const { mutate: mintTokenUSDC, isPending: isMintingUSDC } = useMintToken(
+    'USDC',
+    FAUCET_TOKENS.USDC.decimals
+  );
 
-      if (transactionResult != null) {
-        const txId = transactionResult.id ?? '';
-        toast('Done');
-        // Force update balances
-      } else {
-        toast('Error');
-      }
-    } catch (e) {
-      console.log('error');
-      toast('Error');
-      setIsMinting(false);
-      setMintingToken('');
-    }
+  const { mutate: mintTokenUNI, isPending: isMintingUNI } = useMintToken(
+    'UNI',
+    FAUCET_TOKENS.Uniswap.decimals
+  );
 
-    setIsMinting(false);
-    setMintingToken('');
-  };
+  const isMintingInProgress = useMemo(
+    () => isMintingBTC || isMintingUSDC || isMintingUNI,
+    [isMintingBTC, isMintingUSDC, isMintingUNI]
+  );
 
   return (
     <div>
@@ -119,14 +80,26 @@ export const FaucetView = () => {
             <Button
               disabled={
                 !isConnected ||
-                (isMinting && mintingToken !== token.assetId) ||
-                ((etherBalance ?? new BN(0)).eq(0) && token.symbol !== 'ETH')
+                isMintingInProgress ||
+                ((etherBalance ? etherBalance.eq(0) : false) &&
+                  token.symbol !== 'ETH')
               }
               onClick={() => {
-                if (token.symbol === 'ETH') {
-                  window.open(`${FAUCET_URL}/?address=${account}`, 'blank');
-                } else {
-                  mint(token.assetId, token.decimals, token.symbol);
+                switch (token.symbol) {
+                  case 'ETH':
+                    window.open(`${FAUCET_URL}/?address=${account}`, 'blank');
+                    break;
+                  case 'BTC':
+                    mintTokenBTC();
+                    break;
+                  case 'USDC':
+                    mintTokenUSDC();
+                    break;
+                  case 'UNI':
+                    mintTokenUNI();
+                    break;
+                  default:
+                    break;
                 }
               }}
             >

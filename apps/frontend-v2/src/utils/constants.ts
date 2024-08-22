@@ -1,4 +1,7 @@
+// Indexer URL
 export const GRAPHQL_URL = process.env.NEXT_PUBLIC_GRAPHQL_URL!;
+
+// Contract addresses
 export interface IContractsConfig {
   priceOracle: string;
   market: string;
@@ -13,6 +16,10 @@ export const CONTRACT_ADDRESSES: IContractsConfig = {
     '0x36d896016b570d6638029968e6cdf84b9249ad7e5b295848f7140b56b3303532',
 };
 
+// Explorer URL
+export const EXPLORER_URL = 'https://app.fuel.network/tx';
+
+// Faucet configuration
 export const FAUCET_URL = 'https://faucet-testnet.fuel.network/';
 export const FAUCET_TOKENS = {
   Ethereum: {

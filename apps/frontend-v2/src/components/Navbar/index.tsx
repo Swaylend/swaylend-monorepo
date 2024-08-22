@@ -10,7 +10,6 @@ export const Navbar = () => {
       <Link href="https://swaylend.com">
         <Image src={Logo} alt="logo" />
       </Link>
-
       <div>
         <Link href="/"> Dashboard </Link>
         <Link href="/faucet"> Faucet </Link>
