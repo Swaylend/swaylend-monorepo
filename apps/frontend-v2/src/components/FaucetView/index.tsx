@@ -1,10 +1,10 @@
 'use client';
+import { useMintToken } from '@/hooks';
 import { FAUCET_TOKENS, FAUCET_URL } from '@/utils';
 import { useAccount, useBalance, useIsConnected } from '@fuels/react';
 import { BN, toFixed } from 'fuels';
 import React, { useMemo } from 'react';
 import { Button } from '../ui/button';
-import { useMintToken } from '@/hooks';
 
 export const FaucetView = () => {
   const { isConnected } = useIsConnected();

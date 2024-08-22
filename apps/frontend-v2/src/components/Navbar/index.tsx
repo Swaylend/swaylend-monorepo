@@ -1,8 +1,8 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
-import { ConnectButton } from './ConnectButton';
 import Logo from '/public/icons/dark-logo.svg?url';
+import { ConnectButton } from './ConnectButton';
 
 export const Navbar = () => {
   return (
