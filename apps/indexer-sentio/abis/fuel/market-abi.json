@@ -638,9 +638,7 @@
           "typeArguments": null
         }
       ],
-      "typeParameters": [
-        5
-      ]
+      "typeParameters": [5]
     },
     {
       "typeId": 27,
@@ -849,9 +847,7 @@
           "typeArguments": null
         }
       ],
-      "typeParameters": [
-        5
-      ]
+      "typeParameters": [5]
     },
     {
       "typeId": 36,
@@ -896,10 +892,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read",
-            "write"
-          ]
+          "arguments": ["read", "write"]
         }
       ]
     },
@@ -920,10 +913,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read",
-            "write"
-          ]
+          "arguments": ["read", "write"]
         }
       ]
     },
@@ -944,10 +934,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "write",
-            "read"
-          ]
+          "arguments": ["write", "read"]
         }
       ]
     },
@@ -968,9 +955,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read"
-          ]
+          "arguments": ["read"]
         }
       ]
     },
@@ -1021,9 +1006,7 @@
         },
         {
           "name": "storage",
-          "arguments": [
-            "read"
-          ]
+          "arguments": ["read"]
         }
       ]
     },
@@ -1049,9 +1032,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read"
-          ]
+          "arguments": ["read"]
         }
       ]
     },
@@ -1066,10 +1047,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read",
-            "write"
-          ]
+          "arguments": ["read", "write"]
         }
       ]
     },
@@ -1090,9 +1068,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read"
-          ]
+          "arguments": ["read"]
         }
       ]
     },
@@ -1113,9 +1089,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read"
-          ]
+          "arguments": ["read"]
         }
       ]
     },
@@ -1136,9 +1110,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read"
-          ]
+          "arguments": ["read"]
         }
       ]
     },
@@ -1153,9 +1125,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read"
-          ]
+          "arguments": ["read"]
         }
       ]
     },
@@ -1170,9 +1140,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read"
-          ]
+          "arguments": ["read"]
         }
       ]
     },
@@ -1193,9 +1161,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read"
-          ]
+          "arguments": ["read"]
         }
       ]
     },
@@ -1210,9 +1176,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read"
-          ]
+          "arguments": ["read"]
         }
       ]
     },
@@ -1233,9 +1197,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read"
-          ]
+          "arguments": ["read"]
         }
       ]
     },
@@ -1256,9 +1218,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read"
-          ]
+          "arguments": ["read"]
         }
       ]
     },
@@ -1284,9 +1244,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read"
-          ]
+          "arguments": ["read"]
         }
       ]
     },
@@ -1307,9 +1265,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read"
-          ]
+          "arguments": ["read"]
         }
       ]
     },
@@ -1324,9 +1280,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read"
-          ]
+          "arguments": ["read"]
         }
       ]
     },
@@ -1347,9 +1301,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read"
-          ]
+          "arguments": ["read"]
         }
       ]
     },
@@ -1370,10 +1322,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "write",
-            "read"
-          ]
+          "arguments": ["write", "read"]
         }
       ]
     },
@@ -1394,10 +1343,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read",
-            "write"
-          ]
+          "arguments": ["read", "write"]
         }
       ]
     },
@@ -1423,9 +1369,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read"
-          ]
+          "arguments": ["read"]
         }
       ]
     },
@@ -1446,10 +1390,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read",
-            "write"
-          ]
+          "arguments": ["read", "write"]
         }
       ]
     },
@@ -1470,10 +1411,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read",
-            "write"
-          ]
+          "arguments": ["read", "write"]
         }
       ]
     },
@@ -1492,10 +1430,7 @@
         },
         {
           "name": "storage",
-          "arguments": [
-            "read",
-            "write"
-          ]
+          "arguments": ["read", "write"]
         }
       ]
     },
@@ -1514,10 +1449,7 @@
         },
         {
           "name": "storage",
-          "arguments": [
-            "read",
-            "write"
-          ]
+          "arguments": ["read", "write"]
         }
       ]
     },
@@ -1538,9 +1470,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read"
-          ]
+          "arguments": ["read"]
         }
       ]
     },
@@ -1566,10 +1496,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read",
-            "write"
-          ]
+          "arguments": ["read", "write"]
         }
       ]
     },
@@ -1596,9 +1523,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read"
-          ]
+          "arguments": ["read"]
         }
       ]
     },
@@ -1619,10 +1544,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read",
-            "write"
-          ]
+          "arguments": ["read", "write"]
         }
       ]
     },
@@ -1658,9 +1580,7 @@
         },
         {
           "name": "storage",
-          "arguments": [
-            "read"
-          ]
+          "arguments": ["read"]
         }
       ]
     },
@@ -1681,10 +1601,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read",
-            "write"
-          ]
+          "arguments": ["read", "write"]
         }
       ]
     },
@@ -1710,10 +1627,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read",
-            "write"
-          ]
+          "arguments": ["read", "write"]
         }
       ]
     },
@@ -1739,9 +1653,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read"
-          ]
+          "arguments": ["read"]
         }
       ]
     }

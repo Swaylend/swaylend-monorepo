@@ -1,6 +1,6 @@
+import { BigDecimal } from '@sentio/sdk/core';
 import { FuelNetwork } from '@sentio/sdk/fuel';
 import { MarketProcessor } from './types/fuel/MarketProcessor.js';
-import { BigDecimal } from '@sentio/sdk/core';
 
 MarketProcessor.bind({
   chainId: FuelNetwork.TEST_NET,
