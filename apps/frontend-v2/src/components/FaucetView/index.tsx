@@ -1,11 +1,11 @@
 'use client';
+import { TokenAbi__factory } from '@/contract-types';
 import {
   CONTRACT_ADDRESSES,
   FAUCET_AMOUNTS,
   FAUCET_TOKENS,
   FAUCET_URL,
 } from '@/utils';
-import { TokenAbi__factory } from '@/contract-types';
 import {
   useAccount,
   useBalance,
