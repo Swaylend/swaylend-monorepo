@@ -11,8 +11,6 @@ members = [
     "libs/market_sdk",
     "libs/token_sdk",
     "libs/pyth_mock_sdk",
-    # Test
-    "contracts/test",
 ]
 resolver = "2"
 
