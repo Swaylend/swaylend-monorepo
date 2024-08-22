@@ -1,6 +1,5 @@
 use chrono::Utc;
 use fuels::accounts::wallet::WalletUnlocked;
-use fuels::accounts::ViewOnlyAccount;
 use fuels::test_helpers::{
     launch_custom_provider_and_get_wallets, NodeConfig, Trigger, WalletsConfig,
 };
@@ -9,7 +8,6 @@ use market_sdk::{get_market_config, MarketContract};
 use pyth_mock_sdk::PythMockContract;
 use std::collections::HashMap;
 use std::result::Result::Ok;
-use std::str::FromStr;
 use token_sdk::{Asset, TokenAsset, TokenContract};
 
 pub fn print_case_title(num: u8, name: &str, call: &str, amount: &str) {
@@ -49,14 +47,12 @@ pub struct TestData {
     pub chad: WalletUnlocked,
     pub chad_address: Address,
     pub oracle: PythMockContract,
-    pub token_contract: TokenContract,
     pub market: MarketContract,
     pub usdc: Asset,
     pub usdc_contract: TokenAsset,
     pub uni: Asset,
     pub uni_contract: TokenAsset,
     pub eth: Asset,
-    pub eth_contract: TokenAsset,
     pub wallets: Vec<WalletUnlocked>,
     pub price_feed_ids: Vec<Bits256>,
     pub publish_time: u64,
@@ -95,11 +91,6 @@ pub async fn setup() -> TestData {
         &uni.symbol,
     );
     let eth = assets.get("ETH").unwrap().clone();
-    let eth_contract = TokenAsset::new(
-        admin.clone(),
-        ContractId::from_str(BASE_ASSET_ID).unwrap(),
-        &eth.symbol,
-    );
 
     //--------------- MARKET ---------------
     let fuel_eth_base_asset_id = Bits256::from_hex_str(BASE_ASSET_ID).unwrap();
@@ -172,14 +163,12 @@ pub async fn setup() -> TestData {
         chad: chad.clone(),
         chad_address: Address::from(chad.address()),
         oracle,
-        token_contract,
         market,
         usdc: usdc.clone(),
         usdc_contract,
         uni: uni.clone(),
         uni_contract,
         eth: eth.clone(),
-        eth_contract,
         price_feed_ids,
         publish_time,
         assets,

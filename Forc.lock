@@ -57,11 +57,6 @@ dependencies = ["std"]
 
 [[package]]
 name = "standards"
-source = "git+https://github.com/FuelLabs/sway-standards?tag=v0.5.0#348f7175df4c012b23c86cdb18aab79025ca1f18"
-dependencies = ["std"]
-
-[[package]]
-name = "standards"
 source = "git+https://github.com/FuelLabs/sway-standards?tag=v0.5.1#e2d5ac40a1d11a9e38e0a662d35141076515319f"
 dependencies = ["std"]
 
@@ -74,22 +69,6 @@ dependencies = ["std"]
 name = "std"
 source = "git+https://github.com/fuellabs/sway?tag=v0.62.0#efda0397c7bee77de73bd726ec0b732d57614973"
 dependencies = ["core"]
-
-[[package]]
-name = "sway_libs"
-source = "git+https://github.com/FuelLabs/sway-libs?tag=v0.22.0#172adbbcc36e561a56c5820209445f86f0856bfc"
-dependencies = [
-    "standards git+https://github.com/FuelLabs/sway-standards?tag=v0.5.0#348f7175df4c012b23c86cdb18aab79025ca1f18",
-    "std",
-]
-
-[[package]]
-name = "test_project"
-source = "member"
-dependencies = [
-    "std",
-    "sway_libs",
-]
 
 [[package]]
 name = "token"

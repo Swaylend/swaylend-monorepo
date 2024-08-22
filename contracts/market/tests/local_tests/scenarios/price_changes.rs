@@ -9,7 +9,6 @@ use market_sdk::parse_units;
 
 const AMOUNT_COEFFICIENT: u64 = 10u64.pow(0);
 const SCALE_6: f64 = 10u64.pow(6) as f64;
-const SCALE_9: f64 = 10u64.pow(9) as f64;
 
 #[tokio::test]
 async fn price_changes() {
@@ -28,7 +27,6 @@ async fn price_changes() {
         publish_time,
         prices,
         usdc_contract,
-        eth_contract,
         ..
     } = setup().await;
 
