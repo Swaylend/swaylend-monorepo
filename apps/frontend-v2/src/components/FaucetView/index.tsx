@@ -1,13 +1,18 @@
+'use client';
 import {
   CONTRACT_ADDRESSES,
   FAUCET_AMOUNTS,
   FAUCET_TOKENS,
   FAUCET_URL,
-} from '@/constants';
+} from '@/utils';
 import { TokenAbi__factory } from '@/contract-types';
-import useBalances from '@/hooks/useBalances';
-import { useAccount, useIsConnected, useWallet } from '@fuels/react';
-import { BN, hashMessage } from 'fuels';
+import {
+  useAccount,
+  useBalance,
+  useIsConnected,
+  useWallet,
+} from '@fuels/react';
+import { BN, hashMessage, toFixed } from 'fuels';
 import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { Button } from '../ui/button';
@@ -19,9 +24,24 @@ export const FaucetView = () => {
   const { wallet } = useWallet();
   const { account } = useAccount();
 
-  const { getBalance } = useBalances(FAUCET_TOKENS.map((t) => t.assetId));
-  const etherBalance = getBalance(FAUCET_TOKENS[0].assetId);
+  const { balance: etherBalance } = useBalance({
+    address: account as string,
+    assetId: FAUCET_TOKENS.Ethereum.assetId,
+  });
+  const { balance: usdcBalance } = useBalance({
+    address: account as string,
+    assetId: FAUCET_TOKENS.USDC.assetId,
+  });
+  const { balance: btcBalance } = useBalance({
+    address: account as string,
+    assetId: FAUCET_TOKENS.Bitcoin.assetId,
+  });
+  const { balance: uniBalance } = useBalance({
+    address: account as string,
+    assetId: FAUCET_TOKENS.Uniswap.assetId,
+  });
 
+  console.log(etherBalance);
   const mint = async (assetId: string, decimals: any, symbol: string) => {
     if (!wallet || !isConnected) return;
     setIsMinting(true);
@@ -68,19 +88,39 @@ export const FaucetView = () => {
 
   return (
     <div>
-      {FAUCET_TOKENS.map((token) => {
+      {Object.values(FAUCET_TOKENS).map((token) => {
+        let balance = new BN(0);
+        switch (token.symbol) {
+          case 'ETH':
+            balance = etherBalance ?? new BN(0);
+            break;
+          case 'BTC':
+            balance = btcBalance ?? new BN(0);
+            break;
+          case 'USDC':
+            balance = usdcBalance ?? new BN(0);
+            break;
+          case 'UNI':
+            balance = uniBalance ?? new BN(0);
+            break;
+          default:
+            break;
+        }
+
         return (
           <div key={token.assetId} className="flex gap-x-4">
             <div>{token.name}</div>
             <div>
-              {getBalance(token.assetId).formatUnits(token.decimals).toString()}{' '}
+              {toFixed(balance.formatUnits(token.decimals).toString(), {
+                precision: 4,
+              })}
               {token.symbol}
             </div>
             <Button
               disabled={
                 !isConnected ||
                 (isMinting && mintingToken !== token.assetId) ||
-                (etherBalance.eq(0) && token.symbol !== 'ETH')
+                ((etherBalance ?? new BN(0)).eq(0) && token.symbol !== 'ETH')
               }
               onClick={() => {
                 if (token.symbol === 'ETH') {
