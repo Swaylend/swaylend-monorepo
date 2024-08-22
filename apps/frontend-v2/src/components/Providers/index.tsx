@@ -7,7 +7,7 @@ import {
   FueletWalletConnector,
   WalletConnectConnector,
 } from '@fuels/connectors';
-import { FuelProvider, useIsConnected } from '@fuels/react';
+import { FuelProvider } from '@fuels/react';
 import {
   QueryClient,
   QueryClientProvider,
@@ -15,7 +15,7 @@ import {
 } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { ThemeProvider } from 'next-themes';
-import { type ReactNode, useMemo } from 'react';
+import type { ReactNode } from 'react';
 import { ToastContainer } from 'react-toastify';
 
 function makeQueryClient() {
@@ -33,7 +33,7 @@ function makeQueryClient() {
 
 let browserQueryClient: QueryClient | undefined = undefined;
 
-export function getQueryClient() {
+function getQueryClient() {
   if (isServer) {
     // Server: always make a new query client
     return makeQueryClient();
