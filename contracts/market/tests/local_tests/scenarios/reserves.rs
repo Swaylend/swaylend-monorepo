@@ -61,7 +61,7 @@ async fn reserves_test() {
         assert!(res.is_ok());
         market.debug_increment_timestamp().await.unwrap();
 
-        // Step 2: Bob borrows 1000 USDC
+        // Step 2: Bob borrows 4000 USDC
         let borrow_amount = parse_units(4000 * AMOUNT_COEFFICIENT, usdc.decimals);
         let res = market
             .with_account(&bob)
@@ -74,8 +74,8 @@ async fn reserves_test() {
         // Simulate time passing to accrue interest
         market.debug_increment_timestamp().await.unwrap();
 
-        // Step 3: Bob repays 1000 USDC
-        let repay_amount = parse_units(10030 * AMOUNT_COEFFICIENT, usdc.decimals);
+        // Step 3: Bob repays 4000 USDC
+        let repay_amount = parse_units(4010 * AMOUNT_COEFFICIENT, usdc.decimals);
         usdc_contract.mint(bob_address, repay_amount).await.unwrap();
         let res = market
             .with_account(&bob)

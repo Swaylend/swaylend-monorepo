@@ -114,7 +114,7 @@ pub async fn setup() -> TestData {
     .unwrap();
 
     // debug step
-    let debug_step: u64 = 10_000_000;
+    let debug_step: u64 = 10_000;
     let market = MarketContract::deploy(&admin, debug_step, fuel_eth_base_asset_id, false)
         .await
         .unwrap();
