@@ -281,9 +281,6 @@ async fn absorb_and_liquidate() {
     // Wait for response
     let _: CallResponse<((), ())> = submitted_tx.response().await.unwrap();
 
-    // Check asset balance
-    let balance = alice.get_asset_balance(&eth.asset_id).await.unwrap();
-
     market
         .print_debug_state(&wallets, &usdc, &eth)
         .await
