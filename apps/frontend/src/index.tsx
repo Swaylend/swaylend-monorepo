@@ -58,7 +58,7 @@ root.render(
             new FueletWalletConnector(),
             new WalletConnectConnector({
               // TODO: setup walletconnect project and add project id
-              projectId: '',
+              projectId: '972bec1eae519664815444d4b7a7578a',
             }),
           ],
         }}

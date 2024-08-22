@@ -3657,6 +3657,7 @@ dependencies = [
  "anyhow",
  "fuels",
  "market",
+ "pyth_sdk",
  "rand",
  "serde",
  "serde_json",

@@ -3,6 +3,10 @@ import Divider from '@components/Divider';
 import { Row } from '@components/Flex';
 import SizedBox from '@components/SizedBox';
 import Text from '@components/Text';
+import {
+  PYTH_CONTRACT_ABI,
+  PYTH_CONTRACT_ADDRESS_SEPOLIA,
+} from '@pythnetwork/pyth-fuel-js';
 import { TOKENS_BY_ASSET_ID } from '@src/constants';
 import { useAvailableToBorrow } from '@src/hooks/useAvailableToBorrow';
 import { useBalanceOf } from '@src/hooks/useBalanceOf';
@@ -22,7 +26,7 @@ import {
 } from '@src/utils/dashboardUtils';
 import { getMarketContract, getOracleContract } from '@src/utils/readContracts';
 import { initProvider, walletToRead } from '@src/utils/walletToRead';
-import type { Provider, WalletUnlocked } from 'fuels';
+import { Contract, type Provider, type WalletUnlocked } from 'fuels';
 import { observer } from 'mobx-react-lite';
 import type React from 'react';
 import { useEffect, useMemo, useState } from 'react';
@@ -50,15 +54,15 @@ const SummaryCard: React.FC<IProps> = () => {
     walletToRead().then((w) => setWallet(w));
     initProvider().then((p) => setProvider(p));
   }, []);
-
-  const oracleContract = getOracleContract(
-    wallet!,
-    provider!,
-    settingsStore.currentVersionConfig
-  );
   const marketContract = getMarketContract(
     wallet!,
     settingsStore.currentVersionConfig
+  );
+
+  const oracleContract = new Contract(
+    PYTH_CONTRACT_ADDRESS_SEPOLIA,
+    PYTH_CONTRACT_ABI,
+    wallet!
   );
 
   const { data: maxBorrowAmount } = useAvailableToBorrow(
@@ -197,7 +201,11 @@ const SummaryCard: React.FC<IProps> = () => {
       const userPositionLiquidationPoint = (collateralValue ?? BN.ZERO).times(
         collateralUtilization
       );
-      setPossibleLiquidationPoint(userPositionLiquidationPoint);
+      if (userPositionLiquidationPoint.lt(BN.ZERO)) {
+        setPossibleLiquidationPoint(BN.ZERO);
+      } else {
+        setPossibleLiquidationPoint(userPositionLiquidationPoint);
+      }
 
       const availableToBorrowChange = BN.formatUnits(
         availableToBorrow.minus(dashboardStore.tokenAmount ?? BN.ZERO),
@@ -223,7 +231,11 @@ const SummaryCard: React.FC<IProps> = () => {
       const userPositionLiquidationPoint = (collateralValue ?? BN.ZERO).times(
         collateralUtilization
       );
-      setPossibleLiquidationPoint(userPositionLiquidationPoint);
+      if (userPositionLiquidationPoint.lt(BN.ZERO)) {
+        setPossibleLiquidationPoint(BN.ZERO);
+      } else {
+        setPossibleLiquidationPoint(userPositionLiquidationPoint);
+      }
 
       const availableToBorrowChange = BN.formatUnits(
         availableToBorrow.plus(dashboardStore.tokenAmount ?? BN.ZERO),
@@ -265,7 +277,7 @@ const SummaryCard: React.FC<IProps> = () => {
               collateralConfigurations![
                 assetId
               ].borrow_collateral_factor.toString(),
-              4
+              18
             );
             let balance = v;
             if (assetId === dashboardStore.actionTokenAssetId) {
@@ -325,7 +337,7 @@ const SummaryCard: React.FC<IProps> = () => {
               collateralConfigurations![
                 assetId
               ].borrow_collateral_factor.toString(),
-              4
+              18
             );
             let balance = v;
             if (assetId === dashboardStore.actionTokenAssetId) {

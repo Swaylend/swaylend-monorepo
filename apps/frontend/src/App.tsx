@@ -5,6 +5,7 @@ import styled from '@emotion/styled';
 import { useFuel, useProvider } from '@fuels/react';
 import Dashboard from '@screens/Dashboard';
 import Faucet from '@screens/Faucet';
+import Market from '@screens/Market';
 // import Tutorial from '@screens/Tutorial';
 // import Tutorials from '@screens/Tutorials';
 import { ROUTES } from '@src/constants';
@@ -36,6 +37,7 @@ const App: React.FC = () => {
       <Routes>
         <Route path={ROUTES.DASHBOARD} element={<Dashboard />} />
         <Route path={ROUTES.FAUCET} element={<Faucet />} />
+        <Route path={ROUTES.MARKET} element={<Market />} />
         {/* <Route path={ROUTES.TUTORIALS} element={<Tutorials />} />
         <Route path={ROUTES.TUTORIAL} element={<Tutorial />} /> */}
         <Route path="*" element={<Navigate to={ROUTES.DASHBOARD} />} />

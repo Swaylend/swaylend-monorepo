@@ -99,7 +99,22 @@ impl PythCore for Contract {
         publish_times: Vec<u64>,
         update_data: Vec<Bytes>,
     ) {
+        // Currently implementation is the same as `update_price_feeds`
         let mut index = 0;
+
+        // Bytes structure
+        // 0: price_feed_id -> b256
+        // 1: price -> u64
+        // 2: exponent -> u32
+        // 3: publish_time -> u64
+        // 4: confidence -> u64
+
+        while index < update_data.len() {
+            let payload = update_data.get(index).unwrap();
+            let (price_feed_id, price) = decode_bytes(payload);
+            storage.latest_price_feed.insert(price_feed_id, price);
+            index += 1;
+        }
     }
 
     #[storage(read)]

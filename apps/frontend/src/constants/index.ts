@@ -8,6 +8,7 @@ export const ROUTES = {
   TUTORIAL: '/tutorials/:tutorialId',
   DASHBOARD: '/dashboard',
   WALLET: '/wallet',
+  MARKET: '/market',
 };
 
 export const TOKENS_LIST: Array<IToken> = Object.values(tokens).map(
@@ -27,6 +28,9 @@ export const TOKENS_BY_ASSET_ID: Record<string, IToken> = TOKENS_LIST.reduce(
   (acc, t) => ({ ...acc, [t.assetId]: t }),
   {}
 );
+
+export const TX_GAS_LIMIT = 1000000;
+
 export const INDEXER_URL =
   'https://spark-indexer.spark-defi.com/api/sql/composabilitylabs/spark_indexer';
 
