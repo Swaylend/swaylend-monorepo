@@ -14,8 +14,7 @@
     "editor.defaultFormatter": "tamasfe.even-better-toml"
   },
   "editor.codeActionsOnSave": {
-    "source.fixAll": "always",
-    "source.organizeImports": "never"
+    "source.fixAll": "always"
   },
   "[yaml]": {
     "editor.defaultFormatter": "redhat.vscode-yaml"
