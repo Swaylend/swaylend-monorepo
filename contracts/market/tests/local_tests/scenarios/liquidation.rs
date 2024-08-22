@@ -74,11 +74,7 @@ async fn absorb_and_liquidate() {
     // 👛 Wallet: Bob 🧛
     // 🤙 Call: supply_collateral
     // 💰 Amount: 1.00 ETH
-    let bob_mint_amount = parse_units(1 * AMOUNT_COEFFICIENT, eth.decimals);
     let bob_supply_amount = parse_units(1 * AMOUNT_COEFFICIENT, eth.decimals);
-    let bob_mint_log_amount = format!("{} ETH", bob_mint_amount as f64 / SCALE_9);
-    print_case_title(1, "Bob", "supply_collateral", bob_mint_log_amount.as_str());
-    println!("💸 Bob + {bob_mint_log_amount}");
     let bob_supply_res = market
         .with_account(&bob)
         .await
