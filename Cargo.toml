@@ -31,7 +31,7 @@ market = { path = "contracts/market" }
 token = { path = "contracts/token" }
 
 # External
-pyth_sdk = { git = "https://github.com/pyth-network/pyth-crosschain", rev = "f41782f005f4bf99b8f765214b91b1397bc7c39b" }
+pyth_sdk = { git = "https://github.com/martines3000/pyth-crosschain", rev = "9226ccc018d45ef89d5c6de9ec8cd782d31f5225" }
 tokio = { version = "1.12", features = ["full"] }
 fuels = { version = "0.66.2", features = ["fuel-core-lib"] }
 dotenv = "0.15.0"
