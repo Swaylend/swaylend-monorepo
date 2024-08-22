@@ -61,8 +61,6 @@ impl Market for Contract {
     // # 0. Activate contract
     #[storage(read, write)]
     fn activate_contract(market_configuration: MarketConfiguration) {
-        // No need to do this check
-        // require(msg_sender_address() == storage.market_configuration.read().governor, Error::Unauthorized);
         require(
             storage
                 .market_basic
