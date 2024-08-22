@@ -21,7 +21,6 @@ async fn rewards_test() {
         publish_time,
         prices,
         eth,
-        eth_contract,
         ..
     } = setup().await;
 
