@@ -41,6 +41,7 @@ async fn collateral_configuration_test() {
         .await
         .unwrap();
 
+    // Bob supplies 1 ETH
     let res = market
         .with_account(&bob)
         .await
@@ -72,7 +73,7 @@ async fn collateral_configuration_test() {
         .await
         .unwrap();
 
-    // change collat config for eth
+    // Change collateral configuration for eth
     let config = collateral_config
         .iter_mut()
         .find(|config: &&mut CollateralConfiguration| config.asset_id == eth.bits256);
@@ -82,7 +83,7 @@ async fn collateral_configuration_test() {
         None => panic!("Collateral configuration not found"),
     };
 
-    // alice supplies 7000 USDC to the market
+    // Alice supplies 7000 USDC
     let res = market
         .with_account(&alice)
         .await
@@ -102,7 +103,7 @@ async fn collateral_configuration_test() {
             .unwrap()
     );
 
-    // bob withdraws 2800 USDC, and tries to withdraw another 1 USDC but cant because of the collateral factor
+    // Bob withdraws 2800 USDC, and tries to withdraw another 1 USDC but cant because of the collateral factor
     let amount = parse_units(2800, usdc.decimals);
     // Bob calls withdraw_base
     let res = market
@@ -128,7 +129,7 @@ async fn collateral_configuration_test() {
             &price_data_update,
         )
         .await;
-    // fails because bob cant borrow anymore
+    // Fails because Bob cant borrow anymore
     assert!(res.is_err());
 
     market
@@ -152,7 +153,7 @@ async fn collateral_configuration_test() {
         .available_to_borrow(&[&oracle.instance], bob_address)
         .await
         .unwrap();
-    // res should equal 350 USDC because of the new collateral factor
+    // Res should equal 350 USDC because of the new collateral factor
     assert!(res == parse_units(350, usdc.decimals) as u128);
 }
 
