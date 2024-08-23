@@ -28,7 +28,7 @@ async fn pause_test() {
 
     let price_data_update = PriceDataUpdate {
         update_fee: 1,
-        price_feed_ids: price_feed_ids,
+        price_feed_ids,
         publish_times: vec![publish_time; assets.len()],
         update_data: oracle.create_update_data(&prices).await.unwrap(),
     };

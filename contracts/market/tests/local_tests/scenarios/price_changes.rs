@@ -41,7 +41,7 @@ async fn price_changes() {
     // ==================== Step #0 ====================
     // 👛 Wallet: Alice 🧛
     // 🤙 Call: supply_base
-    // 💰 Amount: 1000.00 USDC
+    // 💰 Amount: 30000.00 USDC
     let alice_supply_amount = parse_units(30000 * AMOUNT_COEFFICIENT, usdc.decimals);
     let alice_mint_amount = parse_units(31000 * AMOUNT_COEFFICIENT, usdc.decimals);
     let alice_supply_log_amount = format!("{} USDC", alice_supply_amount as f64 / SCALE_6);
@@ -100,7 +100,7 @@ async fn price_changes() {
         .unwrap();
     let log_amount_before = format!("{} USDC", max_borrow_amount_before as f64 / SCALE_6);
     print_case_title(2, "Bob", "withdraw_base", &log_amount_before.as_str());
-    market
+    let bob_withdraw_res = market
         .with_account(&bob)
         .await
         .unwrap()
@@ -109,8 +109,9 @@ async fn price_changes() {
             max_borrow_amount_before.try_into().unwrap(),
             &price_data_update,
         )
-        .await
-        .unwrap();
+        .await;
+    assert!(bob_withdraw_res.is_ok());
+
     let balance = bob.get_asset_balance(&usdc.asset_id).await.unwrap();
     assert!(balance == max_borrow_amount_before as u64);
     market
@@ -168,7 +169,7 @@ async fn price_changes() {
         .unwrap();
     let log_amount_after = format!("{} USDC", max_borrow_amount_after as f64 / SCALE_6);
     print_case_title(4, "Bob", "withdraw_base", &log_amount_after.as_str());
-    market
+    let bob_withdraw_res = market
         .with_account(&bob)
         .await
         .unwrap()
@@ -177,8 +178,9 @@ async fn price_changes() {
             max_borrow_amount_after.try_into().unwrap(),
             &price_data_update,
         )
-        .await
-        .unwrap();
+        .await;
+    assert!(bob_withdraw_res.is_ok());
+
     let balance = bob.get_asset_balance(&usdc.asset_id).await.unwrap();
     assert!(balance == (max_borrow_amount_before + max_borrow_amount_after) as u64);
     market
