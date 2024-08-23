@@ -1,0 +1,10 @@
+query GetCollateralAssets($account: String) {
+  User(
+    where: {address: {_eq: $account}}
+  ) {
+    collateralAssets {
+      amount
+      collateralAsset_id
+    }
+  }
+}
