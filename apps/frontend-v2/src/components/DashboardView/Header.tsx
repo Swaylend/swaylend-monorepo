@@ -18,9 +18,7 @@ export const Header = () => {
   const { data: supplyRate } = useSupplyRate();
   const { data: userSupplyBorrow } = useUserSupplyBorrow();
   const { data: userCollateralAssets } = useUserCollateralAssets();
-  const { data: priceData, getPrice } = usePrice(
-    TOKENS_LIST.map((i) => i.assetId)
-  );
+  const { data: priceData } = usePrice(TOKENS_LIST.map((i) => i.assetId));
 
   const borrowedBalance = useMemo(() => {
     if (userSupplyBorrow == null) return new BigNumber(0);
@@ -34,8 +32,8 @@ export const Header = () => {
   const totalSuppliedBalance = useMemo(() => {
     return getTotalSuppliedBalance(
       suppliedBalance,
-      userCollateralAssets ?? [],
-      getPrice
+      userCollateralAssets ?? {},
+      priceData ?? {}
     );
   }, [userSupplyBorrow, userCollateralAssets, priceData]);
 

@@ -2,16 +2,16 @@ import { MarketAbi__factory } from '@/contract-types';
 import { CONTRACT_ADDRESSES, collaterals } from '@/utils';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
-import { useWalletToRead } from './useWalletToRead';
+import { useProvider } from './useProvider';
 
-export const useTotalCollateral = () => {
-  const wallet = useWalletToRead();
+export const useTotalCollateral = async () => {
+  const provider = useProvider();
 
   const fetchTotalCollateral = async () => {
-    if (!wallet) return;
+    if (!provider) return;
     const marketContract = MarketAbi__factory.connect(
       CONTRACT_ADDRESSES.market,
-      wallet
+      provider
     );
 
     const functions = collaterals.map((b) =>
@@ -20,11 +20,11 @@ export const useTotalCollateral = () => {
 
     const data = await Promise.all(functions);
     if (data.length > 0) {
-      const v = data.reduce((acc, res, index) => {
+      const v = data.reduce((acc: Record<string, BigNumber>, res, index) => {
         if (res == null) return acc;
         const assetId = collaterals[index].assetId;
-        // biome-ignore lint/performance/noAccumulatingSpread: <explanation>
-        return { ...acc, [assetId]: new BigNumber(res.value.toString()) };
+        acc[assetId] = new BigNumber(res.value.toString());
+        return acc;
       }, {});
       return v as Record<string, BigNumber>;
     }
@@ -34,6 +34,6 @@ export const useTotalCollateral = () => {
   return useQuery({
     queryKey: ['totalCollateral'],
     queryFn: () => fetchTotalCollateral(),
-    enabled: !!wallet,
+    enabled: !!provider,
   });
 };

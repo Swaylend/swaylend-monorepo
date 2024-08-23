@@ -40,13 +40,18 @@ export const TOKENS_LIST: Array<IToken> = Object.values(tokens).map(
     }) as IToken
 );
 export const TOKENS_BY_SYMBOL: Record<string, IToken> = TOKENS_LIST.reduce(
-  // biome-ignore lint/performance/noAccumulatingSpread: <explanation>
-  (acc, t) => ({ ...acc, [t.symbol]: t }),
+  (acc: Record<string, IToken>, t) => {
+    acc[t.symbol] = t;
+    return acc;
+  },
   {}
 );
+
 export const TOKENS_BY_ASSET_ID: Record<string, IToken> = TOKENS_LIST.reduce(
-  // biome-ignore lint/performance/noAccumulatingSpread: <explanation>
-  (acc, t) => ({ ...acc, [t.assetId]: t }),
+  (acc: Record<string, IToken>, t) => {
+    acc[t.assetId] = t;
+    return acc;
+  },
   {}
 );
 export const FAUCET_AMOUNTS: Record<string, number> = {

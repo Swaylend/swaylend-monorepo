@@ -1,16 +1,16 @@
 import { MarketAbi__factory } from '@/contract-types';
-import { CONTRACT_ADDRESSES } from '@/utils';
 import { useQuery } from '@tanstack/react-query';
-import { useWalletToRead } from './useWalletToRead';
+import { CONTRACT_ADDRESSES } from '@/utils';
+import { useProvider } from './useProvider';
 
 export const useUtilization = () => {
-  const wallet = useWalletToRead();
+  const provider = useProvider();
 
   const fetchUtilization = async () => {
-    if (!wallet) return;
+    if (!provider) return;
     const marketContract = MarketAbi__factory.connect(
       CONTRACT_ADDRESSES.market,
-      wallet
+      provider
     );
     const { value } = await marketContract.functions.get_utilization().get();
     if (!value) throw new Error('Failed to fetch utilization');
@@ -19,6 +19,6 @@ export const useUtilization = () => {
   return useQuery({
     queryKey: ['utilization'],
     queryFn: fetchUtilization,
-    enabled: !!wallet,
+    enabled: !!provider,
   });
 };

@@ -51,14 +51,14 @@ export function getSupplyApr(supplyRate: BigNumber | null | undefined) {
 
 export function getTotalCollateralBalance(
   collateralBalances: Record<string, BigNumber>,
-  getTokenPrice: (assetId: string) => BigNumber
+  prices: Record<string, BigNumber>
 ) {
   if (collateralBalances == null) return new BigNumber(0);
   const totalCollateralBalance = Object.entries(collateralBalances).reduce(
     (acc, [assetId, v]) => {
       const token = TOKENS_BY_ASSET_ID[assetId];
       const balance = formatUnits(v, token.decimals);
-      const dollBalance = getTokenPrice(assetId).times(balance);
+      const dollBalance = (prices[assetId] ?? new BigNumber(0)).times(balance);
       return acc.plus(dollBalance);
     },
     new BigNumber(0)
@@ -69,16 +69,17 @@ export function getTotalCollateralBalance(
 export function getTotalSuppliedBalance(
   suppliedBalance: BigNumber | null,
   collateralBalances: Record<string, BigNumber>,
-  getTokenPrice: (assetId: string) => BigNumber
+  prices: Record<string, BigNumber>
 ) {
   const baseTokenBalance = formatUnits(
     suppliedBalance ?? new BigNumber(0),
     TOKENS_BY_SYMBOL.USDC.decimals
   );
-  const baseTokenPrice = getTokenPrice(TOKENS_BY_SYMBOL.USDC.assetId);
+  const baseTokenPrice =
+    prices[TOKENS_BY_SYMBOL.USDC.assetId] ?? new BigNumber(0);
   const totalCollBalance = getTotalCollateralBalance(
     collateralBalances,
-    getTokenPrice
+    prices
   );
   return baseTokenBalance
     .times(baseTokenPrice)

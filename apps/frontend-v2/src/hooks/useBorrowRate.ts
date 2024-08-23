@@ -4,17 +4,17 @@ import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import type { BigNumberish } from 'fuels';
 import { useUtilization } from './useUtilization';
-import { useWalletToRead } from './useWalletToRead';
+import { useProvider } from './useProvider';
 
 export const useBorrowRate = () => {
+  const provider = useProvider();
   const { data: utilization } = useUtilization();
-  const wallet = useWalletToRead();
 
   const fetchBorrowRate = async (utilization: BigNumber) => {
-    if (!wallet) return;
+    if (!provider) return;
     const marketContract = MarketAbi__factory.connect(
       CONTRACT_ADDRESSES.market,
-      wallet
+      provider
     );
     const { value } = await marketContract.functions
       .get_borrow_rate(utilization as unknown as BigNumberish)
@@ -23,7 +23,7 @@ export const useBorrowRate = () => {
     return new BigNumber(value.toString());
   };
   return useQuery({
-    queryKey: ['borrowRate'],
+    queryKey: ['borrowRate', utilization],
     queryFn: () => fetchBorrowRate(utilization as unknown as BigNumber),
     enabled: !!utilization,
   });
