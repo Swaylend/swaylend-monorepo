@@ -32,9 +32,8 @@ async fn reserves_test() {
         update_data: oracle.create_update_data(&prices).await.unwrap(),
     };
 
+    // Scenario #4 Steps repeated multiple times
     for _ in 0..3 {
-        // Scenario #4 Steps
-
         // Step 0: Alice supplies 4000 USDC
         let alice_supply_amount = parse_units(4000 * AMOUNT_COEFFICIENT, usdc.decimals);
         usdc_contract
