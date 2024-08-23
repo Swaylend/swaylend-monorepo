@@ -114,13 +114,13 @@ async fn collateral_borrow_test() {
     let amount = parse_units(150 * AMOUNT_COEFFICIENT, usdc.decimals);
     let log_amount = format!("{} USDC", amount as f64 / SCALE_6);
     print_case_title(2, "Bob", "withdraw_base", &log_amount.as_str());
-    market
+    let bob_withdraw_res = market
         .with_account(&bob)
         .await
         .unwrap()
         .withdraw_base(&[&oracle.instance], amount, &price_data_update)
-        .await
-        .unwrap();
+        .await;
+    assert!(bob_withdraw_res.is_ok());
     let balance = bob.get_asset_balance(&usdc.asset_id).await.unwrap();
     assert!(balance == amount);
     market
@@ -129,7 +129,7 @@ async fn collateral_borrow_test() {
         .unwrap();
 
     // =================================================
-    // ==================== Step #2 ====================
+    // ==================== Step #3 ====================
     // 👛 Wallet: Bob 🧛
     // 🤙 Call: supply_base
     // 💰 Amount: 150.00 USDC
@@ -160,7 +160,7 @@ async fn collateral_borrow_test() {
             &price_data_update,
         )
         .await;
-    // it shouldnt be ok because bob hasnt repayed everything yet
+    // it should fail because bob has not repayed everything yet
     assert!(withdraw_collateral_res.is_err());
 
     // repay the remaining 50 USDC
@@ -175,7 +175,7 @@ async fn collateral_borrow_test() {
 
     market.debug_increment_timestamp().await.unwrap();
     // =================================================
-    // ==================== Step #3 ====================
+    // ==================== Step #4 ====================
     // 👛 Wallet: Bob 🧛
     // 🤙 Call: withdraw_collateral
     // 💰 Amount: 40.00 UNI
@@ -341,7 +341,7 @@ async fn collateral_borrow_timeskip_test() {
     }
 
     // =================================================
-    // ==================== Step #2 ====================
+    // ==================== Step #3 ====================
     // 👛 Wallet: Bob 🧛
     // 🤙 Call: supply_base
     // 💰 Amount: 150.00 USDC
@@ -370,7 +370,7 @@ async fn collateral_borrow_timeskip_test() {
 
     market.debug_increment_timestamp().await.unwrap();
     // =================================================
-    // ==================== Step #3 ====================
+    // ==================== Step #4 ====================
     // 👛 Wallet: Bob 🧛
     // 🤙 Call: withdraw_collateral
     // 💰 Amount: 40.00 UNI
