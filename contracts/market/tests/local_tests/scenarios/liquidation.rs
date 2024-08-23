@@ -47,7 +47,7 @@ async fn absorb_and_liquidate() {
     // ==================== Step #0 ====================
     // 👛 Wallet: Alice 🧛
     // 🤙 Call: supply_base
-    // 💰 Amount: 1000.00 USDC
+    // 💰 Amount: 3000.00 USDC
     let alice_supply_amount = parse_units(3000 * AMOUNT_COEFFICIENT, usdc.decimals);
     let alice_mint_amount = parse_units(4000 * AMOUNT_COEFFICIENT, usdc.decimals);
     let alice_supply_log_amount = format!("{} USDC", alice_supply_amount as f64 / SCALE_6);
@@ -106,7 +106,7 @@ async fn absorb_and_liquidate() {
         .unwrap();
     let log_amount = format!("{} USDC", max_borrow_amount as f64 / SCALE_6);
     print_case_title(2, "Bob", "withdraw_base", &log_amount.as_str());
-    market
+    let bob_borrow_res = market
         .with_account(&bob)
         .await
         .unwrap()
@@ -115,8 +115,9 @@ async fn absorb_and_liquidate() {
             max_borrow_amount.try_into().unwrap(),
             &price_data_update,
         )
-        .await
-        .unwrap();
+        .await;
+    assert!(bob_borrow_res.is_ok());
+
     let balance = bob.get_asset_balance(&usdc.asset_id).await.unwrap();
     assert!(balance == max_borrow_amount as u64);
     market
@@ -178,13 +179,13 @@ async fn absorb_and_liquidate() {
             .value
     );
 
-    market
+    let chad_absorb_bob_res = market
         .with_account(&chad)
         .await
         .unwrap()
         .absorb(&[&oracle.instance], vec![bob_address], &price_data_update)
-        .await
-        .unwrap();
+        .await;
+    assert!(chad_absorb_bob_res.is_ok());
 
     // Check if absorb was ok
     let (_, borrow) = market.get_user_supply_borrow(bob_address).await.unwrap();
@@ -251,7 +252,6 @@ async fn absorb_and_liquidate() {
         .with_asset_id(usdc.asset_id);
 
     // Buy collateral with base asset
-    let amount = parse_units(10000 * AMOUNT_COEFFICIENT, usdc.decimals);
     usdc_contract
         .mint(alice_address, amount.try_into().unwrap())
         .await
@@ -315,7 +315,7 @@ async fn all_assets_liquidated() {
     // ==================== Step #0 ====================
     // 👛 Wallet: Alice 🧛
     // 🤙 Call: supply_base
-    // 💰 Amount: 1000.00 USDC
+    // 💰 Amount: 3000.00 USDC
     let alice_supply_amount = parse_units(3000 * AMOUNT_COEFFICIENT, usdc.decimals);
     let alice_mint_amount = parse_units(20000 * AMOUNT_COEFFICIENT, usdc.decimals);
     let alice_supply_log_amount = format!("{} USDC", alice_supply_amount as f64 / SCALE_6);
@@ -378,7 +378,7 @@ async fn all_assets_liquidated() {
     println!("Bob can borrow {max_borrow_amount} USDC");
     let log_amount = format!("{} USDC", max_borrow_amount as f64 / SCALE_6);
     print_case_title(2, "Bob", "withdraw_base", &log_amount.as_str());
-    market
+    let bob_withdraw_res = market
         .with_account(&bob)
         .await
         .unwrap()
@@ -387,8 +387,9 @@ async fn all_assets_liquidated() {
             max_borrow_amount.try_into().unwrap(),
             &price_data_update,
         )
-        .await
-        .unwrap();
+        .await;
+    assert!(bob_withdraw_res.is_ok());
+
     let balance = bob.get_asset_balance(&usdc.asset_id).await.unwrap();
     assert!(balance == max_borrow_amount as u64);
     market
@@ -450,13 +451,13 @@ async fn all_assets_liquidated() {
             .value
     );
 
-    market
+    let chad_absorb_bob_res = market
         .with_account(&chad)
         .await
         .unwrap()
         .absorb(&[&oracle.instance], vec![bob_address], &price_data_update)
-        .await
-        .unwrap();
+        .await;
+    assert!(chad_absorb_bob_res.is_ok());
 
     // Check if absorb was ok
     let (_, borrow) = market.get_user_supply_borrow(bob_address).await.unwrap();

@@ -322,13 +322,14 @@ async fn collateral_borrow_timeskip_test() {
     let amount = parse_units(150 * AMOUNT_COEFFICIENT, usdc.decimals);
     let log_amount = format!("{} USDC", amount as f64 / SCALE_6);
     print_case_title(2, "Bob", "withdraw_base", &log_amount.as_str());
-    market
+    let bob_withdraw_res = market
         .with_account(&bob)
         .await
         .unwrap()
         .withdraw_base(&[&oracle.instance], amount, &price_data_update)
-        .await
-        .unwrap();
+        .await;
+    assert!(bob_withdraw_res.is_ok());
+
     let balance = bob.get_asset_balance(&usdc.asset_id).await.unwrap();
     assert!(balance == amount);
     market
