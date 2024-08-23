@@ -4820,7 +4820,7 @@ dependencies = [
 [[package]]
 name = "pyth_sdk"
 version = "0.1.0"
-source = "git+https://github.com/martines3000/pyth-crosschain?rev=9226ccc018d45ef89d5c6de9ec8cd782d31f5225#9226ccc018d45ef89d5c6de9ec8cd782d31f5225"
+source = "git+https://github.com/pyth-network/pyth-crosschain?rev=aa9509ccd37cf5dc73fee891a5730c351d15235f#aa9509ccd37cf5dc73fee891a5730c351d15235f"
 dependencies = [
  "base64 0.22.1",
  "dotenv",
@@ -4841,7 +4841,7 @@ dependencies = [
 [[package]]
 name = "pythnet-sdk"
 version = "2.3.0"
-source = "git+https://github.com/martines3000/pyth-crosschain?rev=9226ccc018d45ef89d5c6de9ec8cd782d31f5225#9226ccc018d45ef89d5c6de9ec8cd782d31f5225"
+source = "git+https://github.com/pyth-network/pyth-crosschain?rev=aa9509ccd37cf5dc73fee891a5730c351d15235f#aa9509ccd37cf5dc73fee891a5730c351d15235f"
 dependencies = [
  "bincode",
  "borsh",
