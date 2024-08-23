@@ -70,33 +70,4 @@ export const usePrice = (assetIds: string[]) => {
     queryKey: ['priceOf', assetIds],
     queryFn: () => fetchPrice(assetIds),
   });
-
-  // const data = results.reduce((acc: Record<string, BigNumber>, res, index) => {
-  //   if (!res.data) return acc;
-  //   acc[assetIds[index]] = res.data;
-  //   return acc;
-  // }, {}) as Record<string, BigNumber>;
-
-  // const refetch = () => {
-  //   results.forEach((res) => res.refetch());
-  // };
-
-  // const getPrice = (assetId: string) => {
-  //   return data[assetId] ?? new BigNumber(0);
-  // };
-
-  // const getFormattedPrice = (assetId: string): string => {
-  //   if (!data[assetId]) return '$ 0.00';
-  //   const price = data[assetId];
-  //   return `$${toFixed(price.toString(), { precision: 2 })}`;
-  // };
-
-  // return {
-  //   data,
-  //   isLoading: results.some((res) => res.isLoading),
-  //   isError: results.some((res) => res.isError),
-  //   refetch,
-  //   getPrice,
-  //   getFormattedPrice,
-  // };
 };
