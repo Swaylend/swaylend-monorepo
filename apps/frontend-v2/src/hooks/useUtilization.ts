@@ -1,6 +1,6 @@
 import { MarketAbi__factory } from '@/contract-types';
-import { useQuery } from '@tanstack/react-query';
 import { CONTRACT_ADDRESSES } from '@/utils';
+import { useQuery } from '@tanstack/react-query';
 import { useProvider } from './useProvider';
 
 export const useUtilization = () => {

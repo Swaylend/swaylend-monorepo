@@ -3,8 +3,8 @@ import { CONTRACT_ADDRESSES } from '@/utils';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import type { BigNumberish } from 'fuels';
-import { useUtilization } from './useUtilization';
 import { useProvider } from './useProvider';
+import { useUtilization } from './useUtilization';
 
 export const useBorrowRate = () => {
   const provider = useProvider();
