@@ -77,7 +77,7 @@ async fn rewards_test() {
         .await
         .unwrap();
 
-    // Step 3: Bob repays 1000 USDC
+    // Step 3: Bob repays 4000 USDC
     let repay_amount = parse_units(4000 * AMOUNT_COEFFICIENT, usdc.decimals);
     usdc_contract.mint(bob_address, repay_amount).await.unwrap();
     let res = market
