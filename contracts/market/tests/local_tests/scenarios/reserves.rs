@@ -35,7 +35,7 @@ async fn reserves_test() {
     for _ in 0..3 {
         // Scenario #4 Steps
 
-        // Step 0: Alice supplies 5000 USDC
+        // Step 0: Alice supplies 4000 USDC
         let alice_supply_amount = parse_units(4000 * AMOUNT_COEFFICIENT, usdc.decimals);
         usdc_contract
             .mint(alice_address, alice_supply_amount)
