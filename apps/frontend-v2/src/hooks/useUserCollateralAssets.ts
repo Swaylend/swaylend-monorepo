@@ -1,4 +1,4 @@
-import { getCollateralAssets } from '@/lib/queries/getCollateralAssets';
+import { getCollateralAssets } from '@/lib/queries';
 import { useWallet } from '@fuels/react';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';

@@ -1,6 +1,4 @@
-import type { GetCollateralAssetsQuery } from '@/__generated__/swaylend/graphql';
 import BigNumber from 'bignumber.js';
-import { toFixed } from 'fuels';
 import { formatUnits } from './BigNumber';
 import { TOKENS_BY_ASSET_ID, TOKENS_BY_SYMBOL } from './constants';
 

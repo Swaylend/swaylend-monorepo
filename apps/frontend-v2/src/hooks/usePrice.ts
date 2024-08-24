@@ -55,14 +55,15 @@ export const usePrice = (assetIds: string[]) => {
       !priceUpdates ||
       !priceUpdates.parsed ||
       priceUpdates.parsed.length === 0
-    )
+    ) {
       throw new Error('Failed to fetch price');
+    }
     const previousPrices: Record<string, BigNumber> = {};
     priceUpdates.parsed.forEach((current) => {
       const currentAssetId = PRICE_FEEDS_BY_PRICE_FEED_ID[current.id].assetId;
-      const currentPreviousPrice =
-        Number(current.price.price) * 10 ** Number(current.price.expo);
-      previousPrices[currentAssetId] = BigNumber(currentPreviousPrice);
+      previousPrices[currentAssetId] = BigNumber(current.price.price).times(
+        BigNumber(10).pow(BigNumber(current.price.expo))
+      );
     });
     return previousPrices;
   };

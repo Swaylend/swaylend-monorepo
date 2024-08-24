@@ -1,15 +1,14 @@
-import { GetCollateralAssetsQuery } from '@/__generated__/swaylend/graphql';
 import { useBorrowRate, useSupplyRate, useUserSupplyBorrow } from '@/hooks';
-import { usePrice } from '@/hooks/usePrice';
-import { useUserCollateralAssets } from '@/hooks/useUserCollateralAssets';
-import { getCollateralAssets } from '@/lib/queries/getCollateralAssets';
-import { TOKENS_BY_SYMBOL, TOKENS_LIST } from '@/utils';
-import { formatUnits } from '@/utils/BigNumber';
+import { usePrice } from '@/hooks';
+import { useUserCollateralAssets } from '@/hooks';
 import {
+  TOKENS_BY_SYMBOL,
+  TOKENS_LIST,
+  formatUnits,
   getBorrowApr,
   getSupplyApr,
   getTotalSuppliedBalance,
-} from '@/utils/market';
+} from '@/utils';
 import BigNumber from 'bignumber.js';
 import React, { useMemo } from 'react';
 
@@ -20,6 +19,7 @@ export const Header = () => {
   const { data: userCollateralAssets } = useUserCollateralAssets();
   const { data: priceData } = usePrice(TOKENS_LIST.map((i) => i.assetId));
 
+  // TODO[Martin]: Later implement this using loading and error states.
   const borrowedBalance = useMemo(() => {
     if (userSupplyBorrow == null) return new BigNumber(0);
     return userSupplyBorrow[1];

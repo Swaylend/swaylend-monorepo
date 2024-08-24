@@ -1,8 +1,10 @@
-import { useTotalCollateral, useUserCollateralAssets } from '@/hooks';
-import { useCollateralConfigurations } from '@/hooks/useCollateralConfigurations';
+import {
+  useCollateralConfigurations,
+  useTotalCollateral,
+  useUserCollateralAssets,
+} from '@/hooks';
 import { ACTION_TYPE, useMarketStore } from '@/stores';
-import { TOKENS_BY_SYMBOL, collaterals } from '@/utils';
-import { formatUnits } from '@/utils/BigNumber';
+import { TOKENS_BY_SYMBOL, collaterals, formatUnits } from '@/utils';
 import { useAccount, useBalance } from '@fuels/react';
 import BigNumber from 'bignumber.js';
 import React from 'react';

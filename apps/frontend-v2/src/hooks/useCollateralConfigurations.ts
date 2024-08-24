@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 export const useCollateralConfigurations = () => {
   const fetchCollateralConfigurations = async () => {
     const configurations = await getCollateralConfigurations();
+
     const formattedConfigurations: Record<
       string,
       CollateralConfigurationOutput

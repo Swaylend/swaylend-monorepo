@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { useProvider } from './useProvider';
 
-export const useTotalCollateral = async () => {
+export const useTotalCollateral = () => {
   const provider = useProvider();
 
   const fetchTotalCollateral = async () => {
@@ -14,21 +14,24 @@ export const useTotalCollateral = async () => {
       provider
     );
 
-    const functions = collaterals.map((b) =>
+    const promises = collaterals.map((b) =>
       marketContract.functions.totals_collateral(b.assetId).get()
     );
 
-    const data = await Promise.all(functions);
-    if (data.length > 0) {
-      const v = data.reduce((acc: Record<string, BigNumber>, res, index) => {
-        if (res == null) return acc;
-        const assetId = collaterals[index].assetId;
-        acc[assetId] = new BigNumber(res.value.toString());
-        return acc;
-      }, {});
-      return v as Record<string, BigNumber>;
+    const data = await Promise.all(promises);
+
+    if (data.length === 0) {
+      throw new Error('Failed to fetch totalsCollateral');
     }
-    throw new Error('Failed to fetch totalsCollateral');
+
+    const v = data.reduce((acc: Record<string, BigNumber>, res, index) => {
+      if (res == null) return acc;
+      const assetId = collaterals[index].assetId;
+      acc[assetId] = new BigNumber(res.value.toString());
+      return acc;
+    }, {});
+
+    return v;
   };
 
   return useQuery({

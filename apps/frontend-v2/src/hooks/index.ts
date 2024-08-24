@@ -7,3 +7,4 @@ export * from './usePrice';
 export * from './useUserCollateralAssets';
 export * from './useTotalCollateral';
 export * from './useCollateralConfigurations';
+export * from './useProvider';
