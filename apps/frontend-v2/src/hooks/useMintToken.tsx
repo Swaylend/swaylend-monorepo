@@ -2,7 +2,8 @@ import { TokenAbi__factory } from '@/contract-types';
 import { CONTRACT_ADDRESSES, EXPLORER_URL, FAUCET_AMOUNTS } from '@/utils';
 import { useAccount, useConnect, useWallet } from '@fuels/react';
 import { useMutation } from '@tanstack/react-query';
-import { BN, hashMessage } from 'fuels';
+import BigNumber from 'bignumber.js';
+import { hashMessage } from 'fuels';
 import { toast } from 'react-toastify';
 
 export const useMintToken = (symbol: string, decimals: number) => {
@@ -18,7 +19,9 @@ export const useMintToken = (symbol: string, decimals: number) => {
         wallet
       );
 
-      const amount = new BN(FAUCET_AMOUNTS[symbol]).mul(10 ** decimals);
+      const amount = new BigNumber(FAUCET_AMOUNTS[symbol]).times(
+        10 ** decimals
+      );
       const hash = hashMessage(symbol);
 
       const tx = await tokenFactoryContract.functions
