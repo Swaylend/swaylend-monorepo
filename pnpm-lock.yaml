@@ -360,6 +360,9 @@ importers:
       '@wagmi/core':
         specifier: ^2.13.3
         version: 2.13.4(@tanstack/query-core@5.52.0)(@types/react@18.3.4)(immer@9.0.21)(react@18.3.1)(typescript@5.2.2)(viem@2.10.2(bufferutil@4.0.8)(typescript@5.2.2)(utf-8-validate@5.0.10)(zod@3.23.8))
+      bignumber.js:
+        specifier: ^9.1.1
+        version: 9.1.2
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
