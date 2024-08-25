@@ -14,7 +14,7 @@ name = "integration_tests"
 path = "tests/harness.rs"
 
 [dependencies]
-fuels = { workspace = true, features = ["fuel-core-lib"] }
+fuels = { workspace = true }
 
 [dev-dependencies]
 pyth_mock_sdk = { workspace = true }
