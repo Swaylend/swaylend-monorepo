@@ -80,10 +80,15 @@ const MobileMenu: React.FC<IProps> = ({ opened, onClose }) => {
       link: ROUTES.FAUCET,
       icon: theme.images.icons.coins,
     },
+    // {
+    //   name: 'Tutorials',
+    //   link: ROUTES.FAUCET,
+    //   icon: theme.images.icons.coins,
+    // },
     {
-      name: 'Tutorials',
-      link: ROUTES.FAUCET,
-      icon: theme.images.icons.coins,
+      name: 'Market',
+      link: ROUTES.MARKET,
+      icon: theme.images.icons.moon,
     },
   ];
   return (

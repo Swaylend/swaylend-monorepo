@@ -56,6 +56,31 @@ type MarketState {
   lastAccrualTime: BigInt!
 }
 
+# MarketConfiguration Schema
+type MarketConfiguartion {
+  id: ID!
+  governor: String!
+  pause_guardian: String!
+  baseToken: String!
+  baseTokenDecimals: Int!
+  baseTokenPriceFeedId: String!
+  supplyKink: BigInt!
+  borrowKink: BigInt!
+  supplyPerSecondInterestRateSlopeLow: BigInt!
+  supplyPerSecondInterestRateSlopeHigh: BigInt!
+  supplyPerSecondInterestRateBase: BigInt!
+  borrowPerSecondInterestRateSlopeLow: BigInt!
+  borrowPerSecondInterestRateSlopeHigh: BigInt!
+  borrowPerSecondInterestRateBase: BigInt!
+  storeFrontPriceFactor: BigInt!
+  baseTrackingIndexScale: BigInt!
+  baseTrackingSupplySpeed: BigInt!
+  baseTrackingBorrowSpeed: BigInt!
+  baseMinForRewards: BigInt!
+  baseBorrowMin: BigInt!
+  targetReserves: BigInt!
+} 
+
 # User - Collateral Schema
 type UserCollateral {
   id: ID! # `user.id-collateralAsset.id`

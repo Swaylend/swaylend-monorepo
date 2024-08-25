@@ -1,6 +1,6 @@
 [[package]]
 name = "core"
-source = "path+from-root-2AB5BCE55EAAEFF4"
+source = "path+from-root-D19F39D92CA9923C"
 
 [[package]]
 name = "i256"
@@ -28,7 +28,7 @@ dependencies = [
 
 [[package]]
 name = "pyth_interface"
-source = "git+https://github.com/pyth-network/pyth-crosschain?tag=pyth-fuel-contract-v0.5.0#8bec01505fafd7b53df7858a6a87ede20dc5e730"
+source = "git+https://github.com/pyth-network/pyth-crosschain?rev#aa9509ccd37cf5dc73fee891a5730c351d15235f"
 dependencies = [
     "standards git+https://github.com/FuelLabs/sway-standards?tag=v0.4.4#a001d3c248595112aae67e5633a06ef9bc0536ae",
     "std",
@@ -67,7 +67,7 @@ dependencies = ["std"]
 
 [[package]]
 name = "std"
-source = "git+https://github.com/fuellabs/sway?tag=v0.62.0#efda0397c7bee77de73bd726ec0b732d57614973"
+source = "git+https://github.com/fuellabs/sway?tag=v0.63.1#169f91ae0a6a698bd1cb459c4c203bab646a38ec"
 dependencies = ["core"]
 
 [[package]]

@@ -2,6 +2,7 @@ import { Market } from 'generated';
 
 const MARKET_ID = 'MARKET_ID';
 const PUASE_CONFIGURATION_ID = 'PUASE_CONFIGURATION_ID';
+const MARKET_CONFIGURATION_ID = 'MARKET_CONFIGURATION_ID';
 
 // Add Collateral Asset
 Market.CollateralAssetAdded.loader(({ event, context }) => {
@@ -153,10 +154,28 @@ Market.UserSupplyCollateralEvent.loader(({ event, context }) => {
     loadCollateralAsset: false,
     loadUser: false,
   });
+
+  const address = event.data.address;
+  context.User.load(address.bits);
 });
 
 Market.UserSupplyCollateralEvent.handler(async ({ event, context }) => {
   const id = `${event.transactionId}_${event.receiptIndex}`;
+
+  // Create user if it doesn't exist
+  const user = await context.User.get(event.data.address.bits);
+
+  if (!user) {
+    context.User.set({
+      id: event.data.address.bits,
+      address: event.data.address.bits,
+      principal: BigInt(0),
+      baseTrackingIndex: BigInt(0),
+      baseTrackingAccrued: BigInt(0),
+      totalCollateralBought: BigInt(0),
+      totalValueLiquidated: BigInt(0),
+    });
+  }
 
   context.UserCollateralEvent.set({
     id,
@@ -245,22 +264,22 @@ Market.UserSupplyBaseEvent.loader(({ event, context }) => {
 Market.UserSupplyBaseEvent.handler(async ({ event, context }) => {
   const id = `${event.transactionId}_${event.receiptIndex}`;
 
-  if (event.data.supply_amount > 0) {
+  if (event.data.repay_amount > 0) {
     context.UserBaseEvent.set({
-      id: `${id}_supply`,
+      id: `${id}_1`,
       user_id: event.data.address.bits,
-      amount: event.data.supply_amount,
-      actionType: 'Supply',
+      amount: event.data.repay_amount,
+      actionType: 'Repay',
       timestamp: event.time,
     });
   }
 
-  if (event.data.repay_amount > 0) {
+  if (event.data.supply_amount > 0) {
     context.UserBaseEvent.set({
-      id: `${id}_repay`,
+      id: `${id}_2`,
       user_id: event.data.address.bits,
-      amount: event.data.repay_amount,
-      actionType: 'Repay',
+      amount: event.data.supply_amount,
+      actionType: 'Supply',
       timestamp: event.time,
     });
   }
@@ -276,7 +295,7 @@ Market.UserWithdrawBaseEvent.handler(async ({ event, context }) => {
 
   if (event.data.withdraw_amount > 0) {
     context.UserBaseEvent.set({
-      id: `${id}_withdraw`,
+      id: `${id}_1`,
       user_id: event.data.address.bits,
       amount: event.data.withdraw_amount,
       actionType: 'Withdraw',
@@ -286,7 +305,7 @@ Market.UserWithdrawBaseEvent.handler(async ({ event, context }) => {
 
   if (event.data.borrow_amount > 0) {
     context.UserBaseEvent.set({
-      id: `${id}_borrow`,
+      id: `${id}_2`,
       user_id: event.data.address.bits,
       amount: event.data.borrow_amount,
       actionType: 'Borrow',
@@ -450,5 +469,44 @@ Market.PauseConfigurationEvent.handler(async ({ event, context }) => {
     withdrawPaused: pauseConfiguration.withdraw_paused,
     absorbPaused: pauseConfiguration.absorb_paused,
     buyPaused: pauseConfiguration.buy_paused,
+  });
+});
+
+// Market Configuration Event
+Market.MarketConfigurationEvent.loader(({ context }) => {
+  context.MarketConfiguartion.load(MARKET_CONFIGURATION_ID);
+});
+
+Market.MarketConfigurationEvent.handler(async ({ event, context }) => {
+  const marketConfiguration = event.data.market_config;
+
+  context.MarketConfiguartion.set({
+    id: MARKET_CONFIGURATION_ID,
+    governor: marketConfiguration.governor.bits,
+    pause_guardian: marketConfiguration.pause_guardian.bits,
+    baseToken: marketConfiguration.base_token,
+    baseTokenDecimals: marketConfiguration.base_token_decimals,
+    baseTokenPriceFeedId: marketConfiguration.base_token_price_feed_id,
+    supplyKink: marketConfiguration.supply_kink,
+    borrowKink: marketConfiguration.borrow_kink,
+    supplyPerSecondInterestRateSlopeLow:
+      marketConfiguration.supply_per_second_interest_rate_slope_low,
+    supplyPerSecondInterestRateSlopeHigh:
+      marketConfiguration.supply_per_second_interest_rate_slope_high,
+    supplyPerSecondInterestRateBase:
+      marketConfiguration.supply_per_second_interest_rate_base,
+    borrowPerSecondInterestRateSlopeLow:
+      marketConfiguration.borrow_per_second_interest_rate_slope_low,
+    borrowPerSecondInterestRateSlopeHigh:
+      marketConfiguration.borrow_per_second_interest_rate_slope_high,
+    borrowPerSecondInterestRateBase:
+      marketConfiguration.borrow_per_second_interest_rate_base,
+    storeFrontPriceFactor: marketConfiguration.store_front_price_factor,
+    baseTrackingIndexScale: marketConfiguration.base_tracking_index_scale,
+    baseTrackingSupplySpeed: marketConfiguration.base_tracking_supply_speed,
+    baseTrackingBorrowSpeed: marketConfiguration.base_tracking_borrow_speed,
+    baseMinForRewards: marketConfiguration.base_min_for_rewards,
+    baseBorrowMin: marketConfiguration.base_borrow_min,
+    targetReserves: marketConfiguration.target_reserves,
   });
 });

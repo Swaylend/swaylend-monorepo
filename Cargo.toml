@@ -14,6 +14,9 @@ members = [
 ]
 resolver = "2"
 
+[workspace.package]
+rust-version = "1.79.0"
+
 [workspace.dependencies]
 # Local SDKs
 market_sdk = { path = "libs/market_sdk" }
@@ -26,9 +29,9 @@ market = { path = "contracts/market" }
 token = { path = "contracts/token" }
 
 # External
-pyth_sdk = { git = "https://github.com/pyth-network/pyth-crosschain", rev = "f41782f005f4bf99b8f765214b91b1397bc7c39b" }
+pyth_sdk = { git = "https://github.com/pyth-network/pyth-crosschain", rev = "aa9509ccd37cf5dc73fee891a5730c351d15235f" }
 tokio = { version = "1.12", features = ["full"] }
-fuels = { version = "0.65.1", features = ["fuel-core-lib"] }
+fuels = { version = "0.66.2", features = ["fuel-core-lib"] }
 dotenv = "0.15.0"
 serde = "1.0.197"
 serde_json = "1.0.114"

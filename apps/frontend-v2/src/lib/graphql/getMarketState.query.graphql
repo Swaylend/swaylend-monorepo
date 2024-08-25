@@ -1,0 +1,6 @@
+query GetMarketState {
+  MarketState {
+    totalBorrowBase
+    totalSupplyBase
+  }
+}

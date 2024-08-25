@@ -21,6 +21,9 @@ jobs:
           ~/.fuelup/bin/fuelup toolchain install nightly-2024-07-24
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: 1.79.0
+          targets: wasm32-unknown-unknown
       - name: Rust Cache
         uses: Swatinem/rust-cache@v2.7.3
       - name: Build contracts
