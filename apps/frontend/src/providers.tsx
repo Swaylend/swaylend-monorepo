@@ -1,6 +1,7 @@
 import {
   FuelWalletConnector,
   FueletWalletConnector,
+  SolanaConnector,
   WalletConnectConnector,
 } from '@fuels/connectors';
 import { FuelProvider } from '@fuels/react';
@@ -52,6 +53,9 @@ export default function Providers({ children }: { children: React.ReactNode }) {
               new FueletWalletConnector(),
               new WalletConnectConnector({
                 // TODO: setup walletconnect project and add project id
+                projectId: '972bec1eae519664815444d4b7a7578a',
+              }),
+              new SolanaConnector({
                 projectId: '972bec1eae519664815444d4b7a7578a',
               }),
             ],
