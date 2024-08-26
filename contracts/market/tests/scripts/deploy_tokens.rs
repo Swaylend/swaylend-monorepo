@@ -15,7 +15,7 @@ async fn deploy() {
 
     let token_contract = TokenContract::deploy(&wallet).await.unwrap();
 
-    token_contract.deploy_tokens(&wallet).await;
+    token_contract.deploy_tokens(&wallet, None).await;
 
     println!(
         "The tokens have been deployed at 0x{}",
