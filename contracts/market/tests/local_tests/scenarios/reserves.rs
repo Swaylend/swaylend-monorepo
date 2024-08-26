@@ -74,7 +74,10 @@ async fn reserves_test() {
         market.debug_increment_timestamp().await.unwrap();
 
         // Step 3: Bob repays 4000 USDC
-        let repay_amount = parse_units(4010 * AMOUNT_COEFFICIENT, usdc.decimals);
+        let res = market.get_user_basic(bob_address).await.unwrap();
+        let principal_value: u64 = res.value.principal.value.try_into().unwrap();
+        let repay_amount: u64 = principal_value + parse_units(10, usdc.decimals);
+
         usdc_contract.mint(bob_address, repay_amount).await.unwrap();
         let res = market
             .with_account(&bob)
@@ -97,7 +100,7 @@ async fn reserves_test() {
                 &price_data_update,
             )
             .await;
-        assert!(res.is_ok());
+        assert!(res.is_ok(), "{:?}", res.err());
         market.debug_increment_timestamp().await.unwrap();
 
         market
@@ -109,8 +112,7 @@ async fn reserves_test() {
     // Check reserves
     let reserves = market.get_reserves().await.unwrap().value;
     let normalized_reserves: u64 = convert_i256_to_i128(reserves).try_into().unwrap();
-    assert!(normalized_reserves == 71589);
-    println!("Reserves: {:?}", normalized_reserves);
+    assert!(normalized_reserves == 71628);
 
     // Governor withdraws reserves;
     let res = market

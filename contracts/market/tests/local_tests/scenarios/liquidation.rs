@@ -270,14 +270,6 @@ async fn absorb_and_liquidate() {
         .add_call(update_balance_call)
         .add_call(buy_collateral_call)
         .with_variable_output_policy(VariableOutputPolicy::Exactly(2));
-    let reserves = market
-        .with_account(&alice)
-        .await
-        .unwrap()
-        .get_collateral_reserves(eth.bits256)
-        .await
-        .unwrap()
-        .value;
 
     // Sumbit tx
     let submitted_tx = mutli_call_handler.submit().await.unwrap();
