@@ -2,7 +2,7 @@ name: Swaylend Indexer
 ecosystem: fuel
 networks:
   - id: 0
-    start_block: 8727800
+    start_block: 8727500
     contracts:
       - name: Market
         address: 0xbf34c6700c05967b73a55db770cb7e0e9106c84a6afc61a5cddbc2cc3834e062
