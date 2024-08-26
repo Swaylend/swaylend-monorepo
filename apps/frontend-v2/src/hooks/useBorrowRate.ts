@@ -1,4 +1,4 @@
-import { MarketAbi__factory } from '@/contract-types';
+import { Market } from '@/contract-types';
 import { CONTRACT_ADDRESSES } from '@/utils';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
@@ -12,10 +12,7 @@ export const useBorrowRate = () => {
 
   const fetchBorrowRate = async (utilization: BN | undefined) => {
     if (!provider || !utilization) return;
-    const marketContract = MarketAbi__factory.connect(
-      CONTRACT_ADDRESSES.market,
-      provider
-    );
+    const marketContract = new Market(CONTRACT_ADDRESSES.market, provider);
     const { value } = await marketContract.functions
       .get_borrow_rate(utilization)
       .get();
