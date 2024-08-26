@@ -345,7 +345,7 @@ async fn collateral_borrow_timeskip_test() {
     // ==================== Step #3 ====================
     // 👛 Wallet: Bob 🧛
     // 🤙 Call: supply_base
-    // 💰 Amount: 150.00 USDC
+    // 💰 Amount: 151.00 USDC
     usdc_contract
         .mint(
             bob_address,

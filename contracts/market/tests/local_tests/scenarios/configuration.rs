@@ -137,6 +137,16 @@ async fn collateral_configuration_test() {
         .await
         .unwrap();
 
+    // change collat config for eth
+    let config = collateral_config
+        .iter_mut()
+        .find(|config: &&mut CollateralConfiguration| config.asset_id == eth.bits256);
+
+    let config = match config {
+        Some(config) => config,
+        None => panic!("Collateral configuration not found"),
+    };
+
     config.borrow_collateral_factor = U256::from(parse_units(9, 17));
     config.liquidate_collateral_factor = U256::from(parse_units(8, 17));
     config.liquidation_penalty = U256::from(parse_units(9, 17));
