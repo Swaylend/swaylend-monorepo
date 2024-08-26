@@ -1,6 +1,6 @@
 'use client';
 import { useMintToken } from '@/hooks';
-import { FAUCET_TOKENS, FAUCET_URL } from '@/utils';
+import { FAUCET_URL, TOKENS_BY_SYMBOL } from '@/utils';
 import { useAccount, useBalance, useIsConnected } from '@fuels/react';
 import { BN, toFixed } from 'fuels';
 import React, { useMemo } from 'react';
@@ -12,34 +12,34 @@ export const FaucetView = () => {
 
   const { balance: etherBalance } = useBalance({
     address: account as string,
-    assetId: FAUCET_TOKENS.Ethereum.assetId,
+    assetId: TOKENS_BY_SYMBOL.ETH.assetId,
   });
   const { balance: usdcBalance } = useBalance({
     address: account as string,
-    assetId: FAUCET_TOKENS.USDC.assetId,
+    assetId: TOKENS_BY_SYMBOL.USDC.assetId,
   });
   const { balance: btcBalance } = useBalance({
     address: account as string,
-    assetId: FAUCET_TOKENS.Bitcoin.assetId,
+    assetId: TOKENS_BY_SYMBOL.BTC.assetId,
   });
   const { balance: uniBalance } = useBalance({
     address: account as string,
-    assetId: FAUCET_TOKENS.Uniswap.assetId,
+    assetId: TOKENS_BY_SYMBOL.UNI.assetId,
   });
 
   const { mutate: mintTokenBTC, isPending: isMintingBTC } = useMintToken(
     'BTC',
-    FAUCET_TOKENS.Bitcoin.decimals
+    TOKENS_BY_SYMBOL.BTC.decimals
   );
 
   const { mutate: mintTokenUSDC, isPending: isMintingUSDC } = useMintToken(
     'USDC',
-    FAUCET_TOKENS.USDC.decimals
+    TOKENS_BY_SYMBOL.USDC.decimals
   );
 
   const { mutate: mintTokenUNI, isPending: isMintingUNI } = useMintToken(
     'UNI',
-    FAUCET_TOKENS.Uniswap.decimals
+    TOKENS_BY_SYMBOL.UNI.decimals
   );
 
   const isMintingInProgress = useMemo(
@@ -49,7 +49,7 @@ export const FaucetView = () => {
 
   return (
     <div>
-      {Object.values(FAUCET_TOKENS).map((token) => {
+      {Object.values(TOKENS_BY_SYMBOL).map((token) => {
         let balance = new BN(0);
         switch (token.symbol) {
           case 'ETH':

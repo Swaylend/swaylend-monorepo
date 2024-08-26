@@ -1,6 +1,17 @@
+import tokenLogos from './tokenLogos';
+import tokens from './tokens.testnet.json';
+
+export interface IToken {
+  logo: string;
+  assetId: string;
+  name: string;
+  symbol: string;
+  decimals: number;
+}
+
 // Indexer URL
 export const GRAPHQL_URL = process.env.NEXT_PUBLIC_GRAPHQL_URL!;
-
+export const NODE_URL = 'https://testnet.fuel.network/v1/graphql';
 // Contract addresses
 export interface IContractsConfig {
   priceOracle: string;
@@ -21,38 +32,36 @@ export const EXPLORER_URL = 'https://app.fuel.network/tx';
 
 // Faucet configuration
 export const FAUCET_URL = 'https://faucet-testnet.fuel.network/';
-export const FAUCET_TOKENS = {
-  Ethereum: {
-    name: 'Ethereum',
-    symbol: 'ETH',
-    decimals: 9,
-    assetId:
-      '0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07',
+export const TOKENS_LIST: Array<IToken> = Object.values(tokens).map(
+  (t) =>
+    ({
+      ...t,
+      logo: tokenLogos[t.symbol],
+    }) as IToken
+);
+export const TOKENS_BY_SYMBOL: Record<string, IToken> = TOKENS_LIST.reduce(
+  (acc: Record<string, IToken>, t) => {
+    acc[t.symbol] = t;
+    return acc;
   },
-  USDC: {
-    name: 'USDC',
-    symbol: 'USDC',
-    decimals: 6,
-    assetId:
-      '0xb5a7ec61506d83f6e4739be2dc57018898b1e08684c097c73b582c9583e191e2',
+  {}
+);
+
+export const TOKENS_BY_ASSET_ID: Record<string, IToken> = TOKENS_LIST.reduce(
+  (acc: Record<string, IToken>, t) => {
+    acc[t.assetId] = t;
+    return acc;
   },
-  Bitcoin: {
-    name: 'Bitcoin',
-    symbol: 'BTC',
-    decimals: 8,
-    assetId:
-      '0x00dc5cda67b6a53b60fa53f95570fdaabb5b916c0e6d614a3f5d9de68f832e61',
-  },
-  Uniswap: {
-    name: 'Uniswap',
-    symbol: 'UNI',
-    decimals: 9,
-    assetId:
-      '0xf7c5f807c40573b5db88e467eb9aabc42332483493f7697442e1edbd59e020ad',
-  },
-};
+  {}
+);
 export const FAUCET_AMOUNTS: Record<string, number> = {
   UNI: 50,
   BTC: 1,
   USDC: 300,
 };
+
+export const collaterals: IToken[] = [
+  TOKENS_BY_SYMBOL.ETH,
+  TOKENS_BY_SYMBOL.BTC,
+  TOKENS_BY_SYMBOL.UNI,
+];

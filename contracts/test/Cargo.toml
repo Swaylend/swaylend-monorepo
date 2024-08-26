@@ -11,7 +11,7 @@ name = "integration_tests"
 path = "tests/harness.rs"
 
 [dependencies]
-fuels = { workspace = true, features = ["fuel-core-lib"] }
+fuels = { workspace = true }
 tokio = { workspace = true }
 dotenv = { workspace = true }
 reqwest = { workspace = true }

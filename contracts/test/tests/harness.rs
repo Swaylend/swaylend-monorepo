@@ -79,7 +79,7 @@ impl TestContract {
     }
 
     pub async fn get(&self) -> anyhow::Result<CallResponse<u64>> {
-        Ok(self.instance.methods().get().simulate().await?)
+        Ok(self.instance.methods().get().call().await?)
     }
 }
 
