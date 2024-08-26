@@ -1,4 +1,4 @@
-import { type MarketAbi, MarketAbi__factory } from '@/contract-types';
+import { MarketAbi__factory } from '@/contract-types';
 import { CONTRACT_ADDRESSES } from '@/utils';
 import { useWallet } from '@fuels/react';
 import { useQuery } from '@tanstack/react-query';
@@ -24,7 +24,7 @@ export const useUserSupplyBorrow = () => {
   };
 
   return useQuery({
-    queryKey: ['userSupplyBorrow', wallet?.address.toString()],
+    queryKey: ['userSupplyBorrow', wallet?.address.toHexString()],
     queryFn: () => fetchUserSupplyBorrow(),
     enabled: !!wallet,
   });
