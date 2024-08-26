@@ -5,14 +5,14 @@
   "type": "module",
   "scripts": {
     "build": "sentio build --skip-deps --skip-gen",
-    "gen": "sentio gen --skip-deps ",
+    "gen": "sentio gen --skip-deps",
     "upload": "sentio upload --skip-deps --skip-gen"
   },
   "dependencies": {
-    "@sentio/sdk": "^2.41.2"
+    "@sentio/sdk": "2.41.3-rc.3"
   },
   "devDependencies": {
-    "@sentio/cli": "^2.20.1",
+    "@sentio/cli": "2.20.2-rc.3",
     "typescript": "^5.5.2"
   }
 }
