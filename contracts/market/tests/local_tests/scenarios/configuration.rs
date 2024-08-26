@@ -73,16 +73,6 @@ async fn collateral_configuration_test() {
         .await
         .unwrap();
 
-    // Change collateral configuration for eth
-    let config = collateral_config
-        .iter_mut()
-        .find(|config: &&mut CollateralConfiguration| config.asset_id == eth.bits256);
-
-    let config = match config {
-        Some(config) => config,
-        None => panic!("Collateral configuration not found"),
-    };
-
     // Alice supplies 7000 USDC
     let res = market
         .with_account(&alice)

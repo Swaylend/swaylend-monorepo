@@ -9,7 +9,7 @@ use fuels::{
     types::{transaction::TxPolicies, transaction_builders::VariableOutputPolicy},
 };
 use market::PriceDataUpdate;
-use market_sdk::parse_units;
+use market_sdk::{convert_i256_to_i128, parse_units};
 
 const AMOUNT_COEFFICIENT: u64 = 10u64.pow(0);
 const SCALE_6: f64 = 10u64.pow(6) as f64;
@@ -270,12 +270,34 @@ async fn absorb_and_liquidate() {
         .add_call(update_balance_call)
         .add_call(buy_collateral_call)
         .with_variable_output_policy(VariableOutputPolicy::Exactly(2));
+    let reserves = market
+        .with_account(&alice)
+        .await
+        .unwrap()
+        .get_collateral_reserves(eth.bits256)
+        .await
+        .unwrap()
+        .value;
 
     // Sumbit tx
     let submitted_tx = mutli_call_handler.submit().await.unwrap();
 
     // Wait for response
     let _: CallResponse<((), ())> = submitted_tx.response().await.unwrap();
+    let alice_balance = alice.get_asset_balance(&eth.asset_id).await.unwrap();
+    assert!(alice_balance == 10_999_999_996 * AMOUNT_COEFFICIENT);
+
+    // check reserves
+    let reserves = market
+        .with_account(&alice)
+        .await
+        .unwrap()
+        .get_collateral_reserves(eth.bits256)
+        .await
+        .unwrap()
+        .value;
+    let normalized_reserves: u64 = convert_i256_to_i128(reserves).try_into().unwrap();
+    assert!(normalized_reserves == 0);
 
     market
         .print_debug_state(&wallets, &usdc, &eth)

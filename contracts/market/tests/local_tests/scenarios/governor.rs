@@ -111,16 +111,20 @@ async fn governor_test() {
         .unwrap()
         .withdraw_reserves(alice_address, 100_000_000)
         .await;
-    let _admin_withdraw_reserves_res = market
+    let admin_withdraw_reserves_res = market
         .with_account(&admin)
         .await
         .unwrap()
         .withdraw_reserves(admin_address, 0)
         .await;
+
     // make sure withdraw_reserves was ok
-    assert!(!alice_withdraw_reserves_res.is_ok());
-    // FIXME[urban]: assertion below should not fail, accrue reserves to actually withdraw them
-    // assert!(admin_withdraw_reserves_res.is_ok());
+    let err = alice_withdraw_reserves_res.unwrap_err();
+    let err_str = format!("{:?}", err);
+    assert!(err_str.contains("Unauthorized"));
+    let err = admin_withdraw_reserves_res.unwrap_err();
+    let err_str = format!("{:?}", err);
+    assert!(err_str.contains("TransferZeroCoins"));
 
     let pause_config = PauseConfiguration {
         supply_paused: true,
