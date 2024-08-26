@@ -21,25 +21,30 @@ import type {
 } from 'fuels';
 
 const abi = {
-  "programType": "contract",
-  "specVersion": "1",
-  "encodingVersion": "1",
-  "concreteTypes": [
+  "encoding": "1",
+  "types": [
     {
+      "typeId": 0,
       "type": "()",
-      "concreteTypeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+      "components": [],
+      "typeParameters": null
     },
     {
+      "typeId": 1,
       "type": "u64",
-      "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+      "components": null,
+      "typeParameters": null
     }
   ],
-  "metadataTypes": [],
   "functions": [
     {
       "inputs": [],
       "name": "get",
-      "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
+      "output": {
+        "name": "",
+        "type": 1,
+        "typeArguments": null
+      },
       "attributes": [
         {
           "name": "storage",
@@ -53,11 +58,16 @@ const abi = {
       "inputs": [
         {
           "name": "amount",
-          "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+          "type": 1,
+          "typeArguments": null
         }
       ],
       "name": "increment",
-      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "output": {
+        "name": "",
+        "type": 0,
+        "typeArguments": null
+      },
       "attributes": [
         {
           "name": "storage",

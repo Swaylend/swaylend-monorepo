@@ -36,177 +36,167 @@ export type ContractIdInput = { bits: string };
 export type ContractIdOutput = ContractIdInput;
 
 const abi = {
-  "programType": "contract",
-  "specVersion": "1",
-  "encodingVersion": "1",
-  "concreteTypes": [
+  "encoding": "1",
+  "types": [
     {
+      "typeId": 0,
       "type": "()",
-      "concreteTypeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+      "components": [],
+      "typeParameters": null
     },
     {
+      "typeId": 1,
       "type": "b256",
-      "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+      "components": null,
+      "typeParameters": null
     },
     {
-      "type": "enum std::identity::Identity",
-      "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335",
-      "metadataTypeId": 0
-    },
-    {
-      "type": "enum std::option::Option<struct std::string::String>",
-      "concreteTypeId": "7c06d929390a9aeeb8ffccf8173ac0d101a9976d99dda01cce74541a81e75ac0",
-      "metadataTypeId": 1,
-      "typeArguments": [
-        "9a7f1d3e963c10e0a4ea70a8e20a4813d1dc5682e28f74cb102ae50d32f7f98c"
-      ]
-    },
-    {
-      "type": "enum std::option::Option<u64>",
-      "concreteTypeId": "d852149004cc9ec0bbe7dc4e37bffea1d41469b759512b6136f2e865a4c06e7d",
-      "metadataTypeId": 1,
-      "typeArguments": [
-        "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
-      ]
-    },
-    {
-      "type": "enum std::option::Option<u8>",
-      "concreteTypeId": "2da102c46c7263beeed95818cd7bee801716ba8303dddafdcd0f6c9efda4a0f1",
-      "metadataTypeId": 1,
-      "typeArguments": [
-        "c89951a24c6ca28c13fd1cfdc646b2b656d69e61a92b91023be7eb58eb914b6b"
-      ]
-    },
-    {
-      "type": "str",
-      "concreteTypeId": "8c25cb3686462e9a86d2883c5688a22fe738b0bbc85f458d2d2b5f3f667c6d5a"
-    },
-    {
-      "type": "struct std::asset_id::AssetId",
-      "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974",
-      "metadataTypeId": 5
-    },
-    {
-      "type": "struct std::string::String",
-      "concreteTypeId": "9a7f1d3e963c10e0a4ea70a8e20a4813d1dc5682e28f74cb102ae50d32f7f98c",
-      "metadataTypeId": 9
-    },
-    {
-      "type": "u64",
-      "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
-    },
-    {
-      "type": "u8",
-      "concreteTypeId": "c89951a24c6ca28c13fd1cfdc646b2b656d69e61a92b91023be7eb58eb914b6b"
-    }
-  ],
-  "metadataTypes": [
-    {
-      "type": "enum std::identity::Identity",
-      "metadataTypeId": 0,
+      "typeId": 2,
+      "type": "enum Identity",
       "components": [
         {
           "name": "Address",
-          "typeId": 4
+          "type": 7,
+          "typeArguments": null
         },
         {
           "name": "ContractId",
-          "typeId": 8
+          "type": 10,
+          "typeArguments": null
         }
-      ]
+      ],
+      "typeParameters": null
     },
     {
-      "type": "enum std::option::Option",
-      "metadataTypeId": 1,
+      "typeId": 3,
+      "type": "enum Option",
       "components": [
         {
           "name": "None",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "type": 0,
+          "typeArguments": null
         },
         {
           "name": "Some",
-          "typeId": 2
+          "type": 4,
+          "typeArguments": null
         }
       ],
       "typeParameters": [
-        2
+        4
       ]
     },
     {
+      "typeId": 4,
       "type": "generic T",
-      "metadataTypeId": 2
+      "components": null,
+      "typeParameters": null
     },
     {
+      "typeId": 5,
       "type": "raw untyped ptr",
-      "metadataTypeId": 3
+      "components": null,
+      "typeParameters": null
     },
     {
-      "type": "struct std::address::Address",
-      "metadataTypeId": 4,
+      "typeId": 6,
+      "type": "str",
+      "components": null,
+      "typeParameters": null
+    },
+    {
+      "typeId": 7,
+      "type": "struct Address",
       "components": [
         {
           "name": "bits",
-          "typeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+          "type": 1,
+          "typeArguments": null
         }
-      ]
+      ],
+      "typeParameters": null
     },
     {
-      "type": "struct std::asset_id::AssetId",
-      "metadataTypeId": 5,
+      "typeId": 8,
+      "type": "struct AssetId",
       "components": [
         {
           "name": "bits",
-          "typeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+          "type": 1,
+          "typeArguments": null
         }
-      ]
+      ],
+      "typeParameters": null
     },
     {
-      "type": "struct std::bytes::Bytes",
-      "metadataTypeId": 6,
+      "typeId": 9,
+      "type": "struct Bytes",
       "components": [
         {
           "name": "buf",
-          "typeId": 7
+          "type": 11,
+          "typeArguments": null
         },
         {
           "name": "len",
-          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+          "type": 13,
+          "typeArguments": null
         }
-      ]
+      ],
+      "typeParameters": null
     },
     {
-      "type": "struct std::bytes::RawBytes",
-      "metadataTypeId": 7,
-      "components": [
-        {
-          "name": "ptr",
-          "typeId": 3
-        },
-        {
-          "name": "cap",
-          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
-        }
-      ]
-    },
-    {
-      "type": "struct std::contract_id::ContractId",
-      "metadataTypeId": 8,
+      "typeId": 10,
+      "type": "struct ContractId",
       "components": [
         {
           "name": "bits",
-          "typeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+          "type": 1,
+          "typeArguments": null
         }
-      ]
+      ],
+      "typeParameters": null
     },
     {
-      "type": "struct std::string::String",
-      "metadataTypeId": 9,
+      "typeId": 11,
+      "type": "struct RawBytes",
+      "components": [
+        {
+          "name": "ptr",
+          "type": 5,
+          "typeArguments": null
+        },
+        {
+          "name": "cap",
+          "type": 13,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 12,
+      "type": "struct String",
       "components": [
         {
           "name": "bytes",
-          "typeId": 6
+          "type": 9,
+          "typeArguments": null
         }
-      ]
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 13,
+      "type": "u64",
+      "components": null,
+      "typeParameters": null
+    },
+    {
+      "typeId": 14,
+      "type": "u8",
+      "components": null,
+      "typeParameters": null
     }
   ],
   "functions": [
@@ -214,11 +204,22 @@ const abi = {
       "inputs": [
         {
           "name": "asset",
-          "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
+          "type": 8,
+          "typeArguments": null
         }
       ],
       "name": "decimals",
-      "output": "2da102c46c7263beeed95818cd7bee801716ba8303dddafdcd0f6c9efda4a0f1",
+      "output": {
+        "name": "",
+        "type": 3,
+        "typeArguments": [
+          {
+            "name": "",
+            "type": 14,
+            "typeArguments": null
+          }
+        ]
+      },
       "attributes": [
         {
           "name": "doc-comment",
@@ -388,11 +389,22 @@ const abi = {
       "inputs": [
         {
           "name": "asset",
-          "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
+          "type": 8,
+          "typeArguments": null
         }
       ],
       "name": "name",
-      "output": "7c06d929390a9aeeb8ffccf8173ac0d101a9976d99dda01cce74541a81e75ac0",
+      "output": {
+        "name": "",
+        "type": 3,
+        "typeArguments": [
+          {
+            "name": "",
+            "type": 12,
+            "typeArguments": null
+          }
+        ]
+      },
       "attributes": [
         {
           "name": "doc-comment",
@@ -562,11 +574,22 @@ const abi = {
       "inputs": [
         {
           "name": "asset",
-          "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
+          "type": 8,
+          "typeArguments": null
         }
       ],
       "name": "symbol",
-      "output": "7c06d929390a9aeeb8ffccf8173ac0d101a9976d99dda01cce74541a81e75ac0",
+      "output": {
+        "name": "",
+        "type": 3,
+        "typeArguments": [
+          {
+            "name": "",
+            "type": 12,
+            "typeArguments": null
+          }
+        ]
+      },
       "attributes": [
         {
           "name": "doc-comment",
@@ -735,7 +758,11 @@ const abi = {
     {
       "inputs": [],
       "name": "total_assets",
-      "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
+      "output": {
+        "name": "",
+        "type": 13,
+        "typeArguments": null
+      },
       "attributes": [
         {
           "name": "doc-comment",
@@ -899,11 +926,22 @@ const abi = {
       "inputs": [
         {
           "name": "asset",
-          "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
+          "type": 8,
+          "typeArguments": null
         }
       ],
       "name": "total_supply",
-      "output": "d852149004cc9ec0bbe7dc4e37bffea1d41469b759512b6136f2e865a4c06e7d",
+      "output": {
+        "name": "",
+        "type": 3,
+        "typeArguments": [
+          {
+            "name": "",
+            "type": 13,
+            "typeArguments": null
+          }
+        ]
+      },
       "attributes": [
         {
           "name": "doc-comment",
@@ -1073,15 +1111,21 @@ const abi = {
       "inputs": [
         {
           "name": "sub_id",
-          "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+          "type": 1,
+          "typeArguments": null
         },
         {
           "name": "amount",
-          "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+          "type": 13,
+          "typeArguments": null
         }
       ],
       "name": "burn",
-      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "output": {
+        "name": "",
+        "type": 0,
+        "typeArguments": null
+      },
       "attributes": [
         {
           "name": "doc-comment",
@@ -1292,19 +1336,26 @@ const abi = {
       "inputs": [
         {
           "name": "recipient",
-          "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
+          "type": 2,
+          "typeArguments": null
         },
         {
           "name": "sub_id",
-          "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+          "type": 1,
+          "typeArguments": null
         },
         {
           "name": "amount",
-          "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+          "type": 13,
+          "typeArguments": null
         }
       ],
       "name": "mint",
-      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "output": {
+        "name": "",
+        "type": 0,
+        "typeArguments": null
+      },
       "attributes": [
         {
           "name": "doc-comment",
@@ -1463,7 +1514,11 @@ const abi = {
   "loggedTypes": [
     {
       "logId": "10098701174489624218",
-      "concreteTypeId": "8c25cb3686462e9a86d2883c5688a22fe738b0bbc85f458d2d2b5f3f667c6d5a"
+      "loggedType": {
+        "name": "",
+        "type": 6,
+        "typeArguments": null
+      }
     }
   ],
   "messagesTypes": [],

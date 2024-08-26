@@ -32,341 +32,352 @@ export type PriceFeedInput = { ema_price: PriceInput, id: string, price: PriceIn
 export type PriceFeedOutput = { ema_price: PriceOutput, id: string, price: PriceOutput };
 
 const abi = {
-  "programType": "contract",
-  "specVersion": "1",
-  "encodingVersion": "1",
-  "concreteTypes": [
+  "encoding": "1",
+  "types": [
     {
+      "typeId": 0,
       "type": "()",
-      "concreteTypeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+      "components": [],
+      "typeParameters": null
     },
     {
+      "typeId": 1,
       "type": "b256",
-      "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+      "components": null,
+      "typeParameters": null
     },
     {
-      "type": "enum pyth_interface::errors::PythError",
-      "concreteTypeId": "ef9531eda675e74905aeb0648d5f0289c85f8506754060ccaae49f3e657d2946",
-      "metadataTypeId": 0
-    },
-    {
-      "type": "struct pyth_interface::data_structures::price::Price",
-      "concreteTypeId": "8aba92fff7345309d4313706ed7db3a811609f62da8f0d2859819db43d461ff8",
-      "metadataTypeId": 3
-    },
-    {
-      "type": "struct pyth_interface::data_structures::price::PriceFeed",
-      "concreteTypeId": "13eb7054501f8758f39326623a86e36908793ac7123adf2c5eddd0634d9c0809",
-      "metadataTypeId": 4
-    },
-    {
-      "type": "struct std::bytes::Bytes",
-      "concreteTypeId": "cdd87b7d12fe505416570c294c884bca819364863efe3bf539245fa18515fbbb",
-      "metadataTypeId": 5
-    },
-    {
-      "type": "struct std::vec::Vec<b256>",
-      "concreteTypeId": "32559685d0c9845f059bf9d472a0a38cf77d36c23dfcffe5489e86a65cdd9198",
-      "metadataTypeId": 8,
-      "typeArguments": [
-        "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
-      ]
-    },
-    {
-      "type": "struct std::vec::Vec<struct pyth_interface::data_structures::price::PriceFeed>",
-      "concreteTypeId": "7445e418358e558eaf1fb04dc2ee316739df0bce65fd8359c879b0dc9ffd3487",
-      "metadataTypeId": 8,
-      "typeArguments": [
-        "13eb7054501f8758f39326623a86e36908793ac7123adf2c5eddd0634d9c0809"
-      ]
-    },
-    {
-      "type": "struct std::vec::Vec<struct std::bytes::Bytes>",
-      "concreteTypeId": "2601885b27af3627b8910876fc176d900cec2b16ec78c538f5f312e785d915f5",
-      "metadataTypeId": 8,
-      "typeArguments": [
-        "cdd87b7d12fe505416570c294c884bca819364863efe3bf539245fa18515fbbb"
-      ]
-    },
-    {
-      "type": "struct std::vec::Vec<u64>",
-      "concreteTypeId": "d5bfe1d4e1ace20166c9b50cadd47e862020561bde24f5189cfc2723f5ed76f4",
-      "metadataTypeId": 8,
-      "typeArguments": [
-        "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
-      ]
-    },
-    {
-      "type": "u64",
-      "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
-    }
-  ],
-  "metadataTypes": [
-    {
-      "type": "enum pyth_interface::errors::PythError",
-      "metadataTypeId": 0,
+      "typeId": 2,
+      "type": "enum PythError",
       "components": [
         {
           "name": "FeesCanOnlyBePaidInTheBaseAsset",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "type": 0,
+          "typeArguments": null
         },
         {
           "name": "FuturePriceNotAllowed",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "type": 0,
+          "typeArguments": null
         },
         {
           "name": "GuardianSetNotFound",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "type": 0,
+          "typeArguments": null
         },
         {
           "name": "IncorrectMessageType",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "type": 0,
+          "typeArguments": null
         },
         {
           "name": "InsufficientFee",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "type": 0,
+          "typeArguments": null
         },
         {
           "name": "InvalidArgument",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "type": 0,
+          "typeArguments": null
         },
         {
           "name": "InvalidAttestationSize",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "type": 0,
+          "typeArguments": null
         },
         {
           "name": "InvalidDataSourcesLength",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "type": 0,
+          "typeArguments": null
         },
         {
           "name": "InvalidExponent",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "type": 0,
+          "typeArguments": null
         },
         {
           "name": "InvalidGovernanceDataSource",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "type": 0,
+          "typeArguments": null
         },
         {
           "name": "InvalidGovernanceAction",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "type": 0,
+          "typeArguments": null
         },
         {
           "name": "InvalidGovernanceMessage",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "type": 0,
+          "typeArguments": null
         },
         {
           "name": "InvalidGovernanceModule",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "type": 0,
+          "typeArguments": null
         },
         {
           "name": "InvalidGovernanceTarget",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "type": 0,
+          "typeArguments": null
         },
         {
           "name": "InvalidHeaderSize",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "type": 0,
+          "typeArguments": null
         },
         {
           "name": "InvalidMagic",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "type": 0,
+          "typeArguments": null
         },
         {
           "name": "InvalidMajorVersion",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "type": 0,
+          "typeArguments": null
         },
         {
           "name": "InvalidMinorVersion",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "type": 0,
+          "typeArguments": null
         },
         {
           "name": "InvalidPayloadId",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "type": 0,
+          "typeArguments": null
         },
         {
           "name": "InvalidPayloadLength",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "type": 0,
+          "typeArguments": null
         },
         {
           "name": "InvalidPriceFeedDataLength",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "type": 0,
+          "typeArguments": null
         },
         {
           "name": "InvalidProof",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "type": 0,
+          "typeArguments": null
         },
         {
           "name": "InvalidUpdateData",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "type": 0,
+          "typeArguments": null
         },
         {
           "name": "InvalidUpdateDataLength",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "type": 0,
+          "typeArguments": null
         },
         {
           "name": "InvalidUpdateDataSource",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "type": 0,
+          "typeArguments": null
         },
         {
           "name": "InvalidUpgradeModule",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "type": 0,
+          "typeArguments": null
         },
         {
           "name": "InvalidWormholeAddressToSet",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "type": 0,
+          "typeArguments": null
         },
         {
           "name": "LengthOfPriceFeedIdsAndPublishTimesMustMatch",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "type": 0,
+          "typeArguments": null
         },
         {
           "name": "NewGuardianSetIsEmpty",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "type": 0,
+          "typeArguments": null
         },
         {
           "name": "NumberOfUpdatesIrretrievable",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "type": 0,
+          "typeArguments": null
         },
         {
           "name": "OldGovernanceMessage",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "type": 0,
+          "typeArguments": null
         },
         {
           "name": "OutdatedPrice",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "type": 0,
+          "typeArguments": null
         },
         {
           "name": "PriceFeedNotFound",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "type": 0,
+          "typeArguments": null
         },
         {
           "name": "PriceFeedNotFoundWithinRange",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "type": 0,
+          "typeArguments": null
         },
         {
           "name": "WormholeGovernanceActionNotFound",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "type": 0,
+          "typeArguments": null
         }
-      ]
+      ],
+      "typeParameters": null
     },
     {
+      "typeId": 3,
       "type": "generic T",
-      "metadataTypeId": 1
+      "components": null,
+      "typeParameters": null
     },
     {
+      "typeId": 4,
       "type": "raw untyped ptr",
-      "metadataTypeId": 2
+      "components": null,
+      "typeParameters": null
     },
     {
-      "type": "struct pyth_interface::data_structures::price::Price",
-      "metadataTypeId": 3,
-      "components": [
-        {
-          "name": "confidence",
-          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
-        },
-        {
-          "name": "exponent",
-          "typeId": 9
-        },
-        {
-          "name": "price",
-          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
-        },
-        {
-          "name": "publish_time",
-          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
-        }
-      ]
-    },
-    {
-      "type": "struct pyth_interface::data_structures::price::PriceFeed",
-      "metadataTypeId": 4,
-      "components": [
-        {
-          "name": "ema_price",
-          "typeId": 3
-        },
-        {
-          "name": "id",
-          "typeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
-        },
-        {
-          "name": "price",
-          "typeId": 3
-        }
-      ]
-    },
-    {
-      "type": "struct std::bytes::Bytes",
-      "metadataTypeId": 5,
+      "typeId": 5,
+      "type": "struct Bytes",
       "components": [
         {
           "name": "buf",
-          "typeId": 6
+          "type": 8,
+          "typeArguments": null
         },
         {
           "name": "len",
-          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+          "type": 12,
+          "typeArguments": null
         }
-      ]
+      ],
+      "typeParameters": null
     },
     {
-      "type": "struct std::bytes::RawBytes",
-      "metadataTypeId": 6,
+      "typeId": 6,
+      "type": "struct Price",
+      "components": [
+        {
+          "name": "confidence",
+          "type": 12,
+          "typeArguments": null
+        },
+        {
+          "name": "exponent",
+          "type": 11,
+          "typeArguments": null
+        },
+        {
+          "name": "price",
+          "type": 12,
+          "typeArguments": null
+        },
+        {
+          "name": "publish_time",
+          "type": 12,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 7,
+      "type": "struct PriceFeed",
+      "components": [
+        {
+          "name": "ema_price",
+          "type": 6,
+          "typeArguments": null
+        },
+        {
+          "name": "id",
+          "type": 1,
+          "typeArguments": null
+        },
+        {
+          "name": "price",
+          "type": 6,
+          "typeArguments": null
+        }
+      ],
+      "typeParameters": null
+    },
+    {
+      "typeId": 8,
+      "type": "struct RawBytes",
       "components": [
         {
           "name": "ptr",
-          "typeId": 2
+          "type": 4,
+          "typeArguments": null
         },
         {
           "name": "cap",
-          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+          "type": 12,
+          "typeArguments": null
         }
-      ]
+      ],
+      "typeParameters": null
     },
     {
-      "type": "struct std::vec::RawVec",
-      "metadataTypeId": 7,
+      "typeId": 9,
+      "type": "struct RawVec",
       "components": [
         {
           "name": "ptr",
-          "typeId": 2
+          "type": 4,
+          "typeArguments": null
         },
         {
           "name": "cap",
-          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+          "type": 12,
+          "typeArguments": null
         }
       ],
       "typeParameters": [
-        1
+        3
       ]
     },
     {
-      "type": "struct std::vec::Vec",
-      "metadataTypeId": 8,
+      "typeId": 10,
+      "type": "struct Vec",
       "components": [
         {
           "name": "buf",
-          "typeId": 7,
+          "type": 9,
           "typeArguments": [
             {
               "name": "",
-              "typeId": 1
+              "type": 3,
+              "typeArguments": null
             }
           ]
         },
         {
           "name": "len",
-          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+          "type": 12,
+          "typeArguments": null
         }
       ],
       "typeParameters": [
-        1
+        3
       ]
     },
     {
+      "typeId": 11,
       "type": "u32",
-      "metadataTypeId": 9
+      "components": null,
+      "typeParameters": null
+    },
+    {
+      "typeId": 12,
+      "type": "u64",
+      "components": null,
+      "typeParameters": null
     }
   ],
   "functions": [
@@ -374,11 +385,16 @@ const abi = {
       "inputs": [
         {
           "name": "price_feed_id",
-          "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+          "type": 1,
+          "typeArguments": null
         }
       ],
       "name": "ema_price",
-      "output": "8aba92fff7345309d4313706ed7db3a811609f62da8f0d2859819db43d461ff8",
+      "output": {
+        "name": "",
+        "type": 6,
+        "typeArguments": null
+      },
       "attributes": [
         {
           "name": "storage",
@@ -392,15 +408,21 @@ const abi = {
       "inputs": [
         {
           "name": "time_period",
-          "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+          "type": 12,
+          "typeArguments": null
         },
         {
           "name": "price_feed_id",
-          "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+          "type": 1,
+          "typeArguments": null
         }
       ],
       "name": "ema_price_no_older_than",
-      "output": "8aba92fff7345309d4313706ed7db3a811609f62da8f0d2859819db43d461ff8",
+      "output": {
+        "name": "",
+        "type": 6,
+        "typeArguments": null
+      },
       "attributes": [
         {
           "name": "storage",
@@ -414,11 +436,16 @@ const abi = {
       "inputs": [
         {
           "name": "price_feed_id",
-          "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+          "type": 1,
+          "typeArguments": null
         }
       ],
       "name": "ema_price_unsafe",
-      "output": "8aba92fff7345309d4313706ed7db3a811609f62da8f0d2859819db43d461ff8",
+      "output": {
+        "name": "",
+        "type": 6,
+        "typeArguments": null
+      },
       "attributes": [
         {
           "name": "storage",
@@ -432,23 +459,49 @@ const abi = {
       "inputs": [
         {
           "name": "max_publish_time",
-          "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+          "type": 12,
+          "typeArguments": null
         },
         {
           "name": "min_publish_time",
-          "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+          "type": 12,
+          "typeArguments": null
         },
         {
           "name": "price_feed_ids",
-          "concreteTypeId": "32559685d0c9845f059bf9d472a0a38cf77d36c23dfcffe5489e86a65cdd9198"
+          "type": 10,
+          "typeArguments": [
+            {
+              "name": "",
+              "type": 1,
+              "typeArguments": null
+            }
+          ]
         },
         {
           "name": "update_data",
-          "concreteTypeId": "2601885b27af3627b8910876fc176d900cec2b16ec78c538f5f312e785d915f5"
+          "type": 10,
+          "typeArguments": [
+            {
+              "name": "",
+              "type": 5,
+              "typeArguments": null
+            }
+          ]
         }
       ],
       "name": "parse_price_feed_updates",
-      "output": "7445e418358e558eaf1fb04dc2ee316739df0bce65fd8359c879b0dc9ffd3487",
+      "output": {
+        "name": "",
+        "type": 10,
+        "typeArguments": [
+          {
+            "name": "",
+            "type": 7,
+            "typeArguments": null
+          }
+        ]
+      },
       "attributes": [
         {
           "name": "storage",
@@ -466,11 +519,16 @@ const abi = {
       "inputs": [
         {
           "name": "price_feed_id",
-          "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+          "type": 1,
+          "typeArguments": null
         }
       ],
       "name": "price",
-      "output": "8aba92fff7345309d4313706ed7db3a811609f62da8f0d2859819db43d461ff8",
+      "output": {
+        "name": "",
+        "type": 6,
+        "typeArguments": null
+      },
       "attributes": [
         {
           "name": "storage",
@@ -484,15 +542,21 @@ const abi = {
       "inputs": [
         {
           "name": "time_period",
-          "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+          "type": 12,
+          "typeArguments": null
         },
         {
           "name": "price_feed_id",
-          "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+          "type": 1,
+          "typeArguments": null
         }
       ],
       "name": "price_no_older_than",
-      "output": "8aba92fff7345309d4313706ed7db3a811609f62da8f0d2859819db43d461ff8",
+      "output": {
+        "name": "",
+        "type": 6,
+        "typeArguments": null
+      },
       "attributes": [
         {
           "name": "storage",
@@ -506,11 +570,16 @@ const abi = {
       "inputs": [
         {
           "name": "price_feed_id",
-          "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+          "type": 1,
+          "typeArguments": null
         }
       ],
       "name": "price_unsafe",
-      "output": "8aba92fff7345309d4313706ed7db3a811609f62da8f0d2859819db43d461ff8",
+      "output": {
+        "name": "",
+        "type": 6,
+        "typeArguments": null
+      },
       "attributes": [
         {
           "name": "storage",
@@ -524,11 +593,22 @@ const abi = {
       "inputs": [
         {
           "name": "update_data",
-          "concreteTypeId": "2601885b27af3627b8910876fc176d900cec2b16ec78c538f5f312e785d915f5"
+          "type": 10,
+          "typeArguments": [
+            {
+              "name": "",
+              "type": 5,
+              "typeArguments": null
+            }
+          ]
         }
       ],
       "name": "update_fee",
-      "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
+      "output": {
+        "name": "",
+        "type": 12,
+        "typeArguments": null
+      },
       "attributes": [
         {
           "name": "storage",
@@ -542,11 +622,22 @@ const abi = {
       "inputs": [
         {
           "name": "update_data",
-          "concreteTypeId": "2601885b27af3627b8910876fc176d900cec2b16ec78c538f5f312e785d915f5"
+          "type": 10,
+          "typeArguments": [
+            {
+              "name": "",
+              "type": 5,
+              "typeArguments": null
+            }
+          ]
         }
       ],
       "name": "update_price_feeds",
-      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "output": {
+        "name": "",
+        "type": 0,
+        "typeArguments": null
+      },
       "attributes": [
         {
           "name": "storage",
@@ -565,19 +656,44 @@ const abi = {
       "inputs": [
         {
           "name": "price_feed_ids",
-          "concreteTypeId": "32559685d0c9845f059bf9d472a0a38cf77d36c23dfcffe5489e86a65cdd9198"
+          "type": 10,
+          "typeArguments": [
+            {
+              "name": "",
+              "type": 1,
+              "typeArguments": null
+            }
+          ]
         },
         {
           "name": "publish_times",
-          "concreteTypeId": "d5bfe1d4e1ace20166c9b50cadd47e862020561bde24f5189cfc2723f5ed76f4"
+          "type": 10,
+          "typeArguments": [
+            {
+              "name": "",
+              "type": 12,
+              "typeArguments": null
+            }
+          ]
         },
         {
           "name": "update_data",
-          "concreteTypeId": "2601885b27af3627b8910876fc176d900cec2b16ec78c538f5f312e785d915f5"
+          "type": 10,
+          "typeArguments": [
+            {
+              "name": "",
+              "type": 5,
+              "typeArguments": null
+            }
+          ]
         }
       ],
       "name": "update_price_feeds_if_necessary",
-      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "output": {
+        "name": "",
+        "type": 0,
+        "typeArguments": null
+      },
       "attributes": [
         {
           "name": "storage",
@@ -595,7 +711,11 @@ const abi = {
     {
       "inputs": [],
       "name": "valid_time_period",
-      "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
+      "output": {
+        "name": "",
+        "type": 12,
+        "typeArguments": null
+      },
       "attributes": [
         {
           "name": "storage",
@@ -609,7 +729,11 @@ const abi = {
   "loggedTypes": [
     {
       "logId": "17263759643364419401",
-      "concreteTypeId": "ef9531eda675e74905aeb0648d5f0289c85f8506754060ccaae49f3e657d2946"
+      "loggedType": {
+        "name": "",
+        "type": 2,
+        "typeArguments": []
+      }
     }
   ],
   "messagesTypes": [],
