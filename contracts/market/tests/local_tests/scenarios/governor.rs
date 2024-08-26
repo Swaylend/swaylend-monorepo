@@ -55,7 +55,7 @@ async fn governor_test() {
         .await;
     // make sure add_collateral_asset was ok
     assert!(admin_add_collat_res.is_ok());
-    assert!(!alice_add_collat_res.is_ok());
+    assert!(alice_add_collat_res.is_err());
 
     let admin_pause_collat_res = market
         .with_account(&admin)
@@ -71,7 +71,7 @@ async fn governor_test() {
         .await;
     // make sure pause_collateral_asset was ok
     assert!(admin_pause_collat_res.is_ok());
-    assert!(!alice_pause_collat_res.is_ok());
+    assert!(alice_pause_collat_res.is_err());
 
     let admin_resume_collat_res = market
         .with_account(&admin)
@@ -87,7 +87,7 @@ async fn governor_test() {
         .await;
     // make sure resume_collateral_asset was ok
     assert!(admin_resume_collat_res.is_ok());
-    assert!(!alice_resume_collat_res.is_ok());
+    assert!(alice_resume_collat_res.is_err());
 
     let admin_update_collat_res = market
         .with_account(&admin)
@@ -103,7 +103,7 @@ async fn governor_test() {
         .await;
     // make sure update_collateral_asset was ok
     assert!(admin_update_collat_res.is_ok());
-    assert!(!alice_update_collat_res.is_ok());
+    assert!(alice_update_collat_res.is_err());
 
     let alice_withdraw_reserves_res = market
         .with_account(&alice)
@@ -147,7 +147,7 @@ async fn governor_test() {
         .await;
     // make sure pause_collateral_asset was ok
     assert!(admin_pause_collat_res.is_ok());
-    assert!(!alice_pause_collat_res.is_ok());
+    assert!(alice_pause_collat_res.is_err());
 
     let contract_id =
         ContractId::from_str("0x0000000000000000000000000000000000000000000000000000000000000000")
@@ -167,7 +167,7 @@ async fn governor_test() {
         .await;
     // make sure set_pyth_contract_id was ok
     assert!(admin_set_pyth_contract_id_res.is_ok());
-    assert!(!alice_set_pyth_contract_id_res.is_ok());
+    assert!(alice_set_pyth_contract_id_res.is_err());
 
     let market_config = get_market_config(
         alice_address,
@@ -191,6 +191,6 @@ async fn governor_test() {
         .update_market_configuration(&market_config)
         .await;
     // make sure update_market_configuration was ok
-    assert!(!alice_update_market_configuration_res.is_ok());
+    assert!(alice_update_market_configuration_res.is_err());
     assert!(admin_update_market_configuration_res.is_ok());
 }
