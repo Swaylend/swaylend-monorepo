@@ -1,6 +1,6 @@
-import { TokenAbi__factory } from '@/contract-types';
+import { Token } from '@/contract-types';
 import { CONTRACT_ADDRESSES, EXPLORER_URL, FAUCET_AMOUNTS } from '@/utils';
-import { useAccount, useConnect, useWallet } from '@fuels/react';
+import { useAccount, useWallet } from '@fuels/react';
 import { useMutation } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { hashMessage } from 'fuels';
@@ -14,7 +14,7 @@ export const useMintToken = (symbol: string, decimals: number) => {
     mutationKey: ['mintToken', symbol, account],
     mutationFn: async () => {
       if (!wallet || !account) return;
-      const tokenFactoryContract = TokenAbi__factory.connect(
+      const tokenFactoryContract = new Token(
         CONTRACT_ADDRESSES.tokenFactory,
         wallet
       );
