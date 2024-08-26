@@ -1,10 +1,10 @@
+import { useSupplyCollateral } from '@/hooks';
 import { ACTION_TYPE, useMarketStore } from '@/stores';
 import { TOKENS_BY_ASSET_ID, TOKENS_BY_SYMBOL } from '@/utils';
 import BigNumber from 'bignumber.js';
 import React from 'react';
 import { Button } from '../ui/button';
 import { InputField } from './InputField';
-import { useSupplyCollateral } from '@/hooks';
 
 export const Input = () => {
   const {
