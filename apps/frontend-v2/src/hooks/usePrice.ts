@@ -7,15 +7,15 @@ const PRICE_FEEDS = {
     symbol: 'Crypto.ETH/USD',
     id: '0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace',
   },
-  '0x00dc5cda67b6a53b60fa53f95570fdaabb5b916c0e6d614a3f5d9de68f832e61': {
+  '0xc09edcb7cce3902a392d7845b5cca7b100dcabf6067c0c4f42f2d75c46e98c99': {
     symbol: 'Crypto.BTC/USD',
     id: '0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43',
   },
-  '0xb5a7ec61506d83f6e4739be2dc57018898b1e08684c097c73b582c9583e191e2': {
+  '0xfd0c9669e733932810b34b6f2e5910daf36d8680069b7ed0ce0a69120b5f11c5': {
     symbol: 'Crypto.USDC/USD',
     id: '0xeaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a',
   },
-  '0xf7c5f807c40573b5db88e467eb9aabc42332483493f7697442e1edbd59e020ad': {
+  '0x3fa0c42a7f6cdf27bb0b6bbde20011e0e53155437b3da5773d92649a5f9f84af': {
     symbol: 'Crypto.UNI/USD',
     id: '0x78d185a741d07edb3412b09008b7c5cfb9bbbd7d568bf00ba737b456ba171501',
   },
@@ -30,17 +30,17 @@ const PRICE_FEEDS_BY_PRICE_FEED_ID = {
   e62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43: {
     symbol: 'Crypto.BTC/USD',
     assetId:
-      '0x00dc5cda67b6a53b60fa53f95570fdaabb5b916c0e6d614a3f5d9de68f832e61',
+      '0xc09edcb7cce3902a392d7845b5cca7b100dcabf6067c0c4f42f2d75c46e98c99',
   },
   eaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a: {
     symbol: 'Crypto.USDC/USD',
     assetId:
-      '0xb5a7ec61506d83f6e4739be2dc57018898b1e08684c097c73b582c9583e191e2',
+      '0xfd0c9669e733932810b34b6f2e5910daf36d8680069b7ed0ce0a69120b5f11c5',
   },
   '78d185a741d07edb3412b09008b7c5cfb9bbbd7d568bf00ba737b456ba171501': {
     symbol: 'Crypto.UNI/USD',
     assetId:
-      '0xf7c5f807c40573b5db88e467eb9aabc42332483493f7697442e1edbd59e020ad',
+      '0x3fa0c42a7f6cdf27bb0b6bbde20011e0e53155437b3da5773d92649a5f9f84af',
   },
 } as Record<string, any>;
 

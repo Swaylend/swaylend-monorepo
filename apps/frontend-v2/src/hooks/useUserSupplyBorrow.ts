@@ -1,4 +1,4 @@
-import { MarketAbi__factory } from '@/contract-types';
+import { Market } from '@/contract-types';
 import { CONTRACT_ADDRESSES } from '@/utils';
 import { useWallet } from '@fuels/react';
 import { useQuery } from '@tanstack/react-query';
@@ -9,10 +9,7 @@ export const useUserSupplyBorrow = () => {
 
   const fetchUserSupplyBorrow = async () => {
     if (!wallet) return;
-    const marketContract = MarketAbi__factory.connect(
-      CONTRACT_ADDRESSES.market,
-      wallet
-    );
+    const marketContract = new Market(CONTRACT_ADDRESSES.market, wallet);
 
     const { value } = await marketContract.functions
       .get_user_supply_borrow({ bits: wallet.address.toB256() })
