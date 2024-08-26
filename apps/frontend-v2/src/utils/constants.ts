@@ -22,9 +22,9 @@ export interface IContractsConfig {
 export const CONTRACT_ADDRESSES: IContractsConfig = {
   priceOracle:
     '0x73591bf32f010ce4e83d86005c24e7833b397be38014ab670a73f6fde59ad607',
-  market: '0xa31be85925a6031182aff87e9b41509050f17eeaea20311493e1e2753a6a1798',
+  market: '0xbf34c6700c05967b73a55db770cb7e0e9106c84a6afc61a5cddbc2cc3834e062',
   tokenFactory:
-    '0x375745fb68ab9faf2f6754e4419148bd7d2c4a7b9be4eb2d1b25973da24bb995',
+    '0xca639b4aea76654009edb6ef8214a8645ecc2cd6820e39782db887fa0909e685',
 };
 
 // Explorer URL
