@@ -3427,6 +3427,18 @@ export type Timestamptz_Comparison_Exp = {
   _nin?: InputMaybe<Array<Scalars['timestamptz']['input']>>;
 };
 
+export type GetCollateralAssetsQueryVariables = Exact<{
+  account?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type GetCollateralAssetsQuery = { __typename?: 'query_root', User: Array<{ __typename?: 'User', collateralAssets: Array<{ __typename?: 'UserCollateral', amount: any, collateralAsset_id: string }> }> };
+
+export type GetCollateralConfigurationsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetCollateralConfigurationsQuery = { __typename?: 'query_root', CollateralAsset: Array<{ __typename?: 'CollateralAsset', supplyCap: any, priceFeedId: string, id: string, paused: boolean, liquidationPenalty: any, liquidateCollateralFactor: any, decimals: number, borrowCollateralFactor: any }> };
+
 export type GetMarketStateQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -3447,6 +3459,30 @@ export class TypedDocumentString<TResult, TVariables>
   }
 }
 
+export const GetCollateralAssetsDocument = new TypedDocumentString(`
+    query GetCollateralAssets($account: String) {
+  User(where: {address: {_eq: $account}}) {
+    collateralAssets {
+      amount
+      collateralAsset_id
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<GetCollateralAssetsQuery, GetCollateralAssetsQueryVariables>;
+export const GetCollateralConfigurationsDocument = new TypedDocumentString(`
+    query GetCollateralConfigurations {
+  CollateralAsset {
+    supplyCap
+    priceFeedId
+    id
+    paused
+    liquidationPenalty
+    liquidateCollateralFactor
+    decimals
+    borrowCollateralFactor
+  }
+}
+    `) as unknown as TypedDocumentString<GetCollateralConfigurationsQuery, GetCollateralConfigurationsQueryVariables>;
 export const GetMarketStateDocument = new TypedDocumentString(`
     query GetMarketState {
   MarketState {

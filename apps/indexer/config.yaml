@@ -1,26 +1,27 @@
 name: Swaylend Indexer
 ecosystem: fuel
 networks:
-        - id: 0
-          start_block: 7597567
-          contracts:
-                  - name: Market
-                    address: 0xea9d4a55ca16271f42992529bb68de095249ceb8d95176576098bb9b98cd3975
-                    abi_file_path: ./abi/market-abi.json
-                    handler: ./src/EventHandlers.ts
-                    events:
-                            - name: CollateralAssetAdded
-                            - name: CollateralAssetUpdated
-                            - name: CollateralAssetPaused
-                            - name: CollateralAssetResumed
-                            - name: UserBasicEvent
-                            - name: MarketBasicEvent
-                            - name: UserSupplyCollateralEvent
-                            - name: UserWithdrawCollateralEvent
-                            - name: UserSupplyBaseEvent
-                            - name: UserWithdrawBaseEvent
-                            - name: AbsorbCollateralEvent
-                            - name: UserLiquidatedEvent
-                            - name: BuyCollateralEvent
-                            - name: ReservesWithdrawnEvent
-                            - name: PauseConfigurationEvent
+  - id: 0
+    start_block: 8386611
+    contracts:
+      - name: Market
+        address: 0xa31be85925a6031182aff87e9b41509050f17eeaea20311493e1e2753a6a1798
+        abi_file_path: ./abi/market-abi.json
+        handler: ./src/EventHandlers.ts
+        events:
+          - name: CollateralAssetAdded
+          - name: CollateralAssetUpdated
+          - name: CollateralAssetPaused
+          - name: CollateralAssetResumed
+          - name: UserBasicEvent
+          - name: MarketBasicEvent
+          - name: UserSupplyCollateralEvent
+          - name: UserWithdrawCollateralEvent
+          - name: UserSupplyBaseEvent
+          - name: UserWithdrawBaseEvent
+          - name: AbsorbCollateralEvent
+          - name: UserLiquidatedEvent
+          - name: BuyCollateralEvent
+          - name: ReservesWithdrawnEvent
+          - name: PauseConfigurationEvent
+          - name: MarketConfigurationEvent

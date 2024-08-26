@@ -35,8 +35,8 @@ importers:
         specifier: 20.8.8
         version: 20.8.8
       envio:
-        specifier: 2.1.4-fuel
-        version: 2.1.4-fuel
+        specifier: 2.2.1-fuel
+        version: 2.2.1-fuel
       mocha:
         specifier: 10.2.0
         version: 10.2.0
@@ -56,23 +56,23 @@ importers:
         specifier: 1.1.0
         version: 1.1.0
       '@fuel-ts/address':
-        specifier: 0.89.1
-        version: 0.89.1
+        specifier: 0.94.1
+        version: 0.94.1
       '@fuel-ts/crypto':
-        specifier: 0.89.1
-        version: 0.89.1
+        specifier: 0.94.1
+        version: 0.94.1
       '@fuel-ts/errors':
-        specifier: 0.89.1
-        version: 0.89.1
+        specifier: 0.94.1
+        version: 0.94.1
       '@fuel-ts/hasher':
-        specifier: 0.89.1
-        version: 0.89.1
+        specifier: 0.94.1
+        version: 0.94.1
       '@fuel-ts/math':
-        specifier: 0.89.1
-        version: 0.89.1
+        specifier: 0.94.1
+        version: 0.94.1
       '@fuel-ts/utils':
-        specifier: 0.89.1
-        version: 0.89.1
+        specifier: 0.94.1
+        version: 0.94.1
       '@glennsl/rescript-fetch':
         specifier: 0.2.0
         version: 0.2.0
@@ -244,41 +244,37 @@ packages:
     resolution: {integrity: sha512-XyCpqGevwJAjP7jMUvAJT7qRoFZmJ6j0GAwt6aRcyxRbUO+3yULKWOP/5wFgRs6tjgdhLdtxbdA7x7mj5ZrmbQ==}
     engines: {node: '>= 10'}
 
-  '@fuel-ts/address@0.89.1':
-    resolution: {integrity: sha512-muP+leUrBgNyeEfstEwnGK7QE+7ovsT9Ic+kU+VL4TRITmaeL91m2WAq2radnK60AbYw3/Ya7Zg42k9yW8+wsQ==}
-    engines: {node: ^18.18.2 || ^20.0.0}
+  '@fuel-ts/address@0.94.1':
+    resolution: {integrity: sha512-8Z3pii3fHSslqXACd5EpBcaxOmdoEtdp3W7WasGrwgID+BqrIWk6yzH07Jghqc9WmCGVI+DZRedthVmnJurJiQ==}
+    engines: {node: ^18.20.3 || ^20.0.0 || ^22.0.0}
 
-  '@fuel-ts/crypto@0.89.1':
-    resolution: {integrity: sha512-CyLj2hiBoF1+1MZ+B7L9+bWbu+RdkxbMfU9WuXYIgky/b7XmOSPELaB2ExkPxdxEV1bT28bIlZsAMS4Z+fSpLg==}
-    engines: {node: ^18.18.2 || ^20.0.0}
+  '@fuel-ts/crypto@0.94.1':
+    resolution: {integrity: sha512-+Ga41iXUxulw6o6mI86/gj3iyXDC0MP03+X7O6XTnOL1WIX1qiOWUnxaupouKhZuNq52k5nVTfH8nTLd9ek/Gg==}
+    engines: {node: ^18.20.3 || ^20.0.0 || ^22.0.0}
 
-  '@fuel-ts/errors@0.89.1':
-    resolution: {integrity: sha512-DRfA7Q0OdSGOZv2SAaT926jERmMicwxENxqL3SbCV7VLK4V+Pcp6Ppb3gPqdJsDofdRN+sKGk+wyPsMyeAhjRQ==}
-    engines: {node: ^18.18.2 || ^20.0.0}
+  '@fuel-ts/errors@0.94.1':
+    resolution: {integrity: sha512-eKNBFIlB1xPc13899R0FdhGwiykbkBdBlgAinbjDLm8RSWHYMAFjgRpho6HELcYpLYFqf6uY9ms/J3BBosSFEA==}
+    engines: {node: ^18.20.3 || ^20.0.0 || ^22.0.0}
 
-  '@fuel-ts/hasher@0.89.1':
-    resolution: {integrity: sha512-dEQpQy0/q4//a8ZI69oLCbcLKmPg4os/p0wgp5n98YXRNVN1ezrWju6RRLBUPT/3OT8NBzwZ+a0K8UyK9imD/Q==}
-    engines: {node: ^18.18.2 || ^20.0.0}
+  '@fuel-ts/hasher@0.94.1':
+    resolution: {integrity: sha512-EiaLTk3TwiJOo78O47blhrntEMG4zx1HqjfNcwcOASq11Rd3IdzWjtxQqdnWqTm+bvvaVd2NkoUgd42EtMlR2A==}
+    engines: {node: ^18.20.3 || ^20.0.0 || ^22.0.0}
 
-  '@fuel-ts/interfaces@0.89.1':
-    resolution: {integrity: sha512-tYbs7YpEhtjtLOBr9gvVdxo7po+Dg5kbkhB+ropZPF5VLkaAlmrbsRXkbrK6NM+fSTsCYgxfTI6JkXeGkWXqFA==}
-    engines: {node: ^18.18.2 || ^20.0.0}
+  '@fuel-ts/interfaces@0.94.1':
+    resolution: {integrity: sha512-ygw6wZoXQr2/AU91VuJporo68ySgVsmSRkNiJ+lP9Rq5WLie2TXTR4REyD4UGgTGKvjkwMl5YOVfGNFP6hRX4g==}
+    engines: {node: ^18.20.3 || ^20.0.0 || ^22.0.0}
 
-  '@fuel-ts/interfaces@0.89.2':
-    resolution: {integrity: sha512-SPorsch3bmnDgjhsDY+f94tpOwNOWM/SfHEggZS+v6B7mcnUm5PqmVERY/4EP+zsKTETZpys5npcAg0onauwzA==}
-    engines: {node: ^18.18.2 || ^20.0.0}
+  '@fuel-ts/math@0.94.1':
+    resolution: {integrity: sha512-FzNmIPBTV4KbLi4D+2G0YdIjfC5sC9HTGyd93WITd5DHcqRlHXqTUMENyIa5tenouBXl9g8mNGfc8AJ/6UQIuQ==}
+    engines: {node: ^18.20.3 || ^20.0.0 || ^22.0.0}
 
-  '@fuel-ts/math@0.89.1':
-    resolution: {integrity: sha512-Aq34K6bkpre12Z9PZTtSwMOkZjjT67uLRnKCNV7Q2vtaDgRbWyQkA2kssZ61EZlEnFkI/ZqSKc4S+m/LAQCqGQ==}
-    engines: {node: ^18.18.2 || ^20.0.0}
+  '@fuel-ts/utils@0.94.1':
+    resolution: {integrity: sha512-rRcg67TQGeaPyhzgmRL43E7+fwEibpcFy/YZTlXQ7wS3uRuUnJd6EjnVUtOjPJLV6w5tTJ50puSF24iLNc38FA==}
+    engines: {node: ^18.20.3 || ^20.0.0 || ^22.0.0}
 
-  '@fuel-ts/utils@0.89.1':
-    resolution: {integrity: sha512-xxtuu05Syf3jHS+rOWE4tRSZ8J3SH1MkmuOKzDpXU/IpTFX6k0sTJRmWYd5tKtmIqgKIZcCQAZq/zd031sK5Ig==}
-    engines: {node: ^18.18.2 || ^20.0.0}
-
-  '@fuel-ts/versions@0.89.1':
-    resolution: {integrity: sha512-TzTMmKs1TTFnIwN9nj4MVvGFmDFSpzFWiO4gnA0OuTOcZc98kleVteXcV5dF9BX19xCxmFcybm3oMqPZy0S5Hg==}
-    engines: {node: ^18.18.2 || ^20.0.0}
+  '@fuel-ts/versions@0.94.1':
+    resolution: {integrity: sha512-Da0X6oTgeic7T6bTmHa0crK+ccFvHEkC8h2SxeE3ptWYqC7osoNRoJTk5O7JO2LD0NKFIYJU9BghooOomXFXNw==}
+    engines: {node: ^18.20.3 || ^20.0.0 || ^22.0.0}
     hasBin: true
 
   '@glennsl/rescript-fetch@0.2.0':
@@ -645,28 +641,28 @@ packages:
   end-of-stream@1.4.4:
     resolution: {integrity: sha512-+uw1inIHVPQoaVuHzRyXd21icM+cnt4CzD5rW+NC1wjOUSTOs+Te7FOv7AhN7vS9x/oIyhLP5PR1H+phQAHu5Q==}
 
-  envio-darwin-arm64@2.1.4-fuel:
-    resolution: {integrity: sha512-W0Lnd7lnYB4vF4Og13iYFUEo9s6n5tU0MRWc9zNN8Sx2Q3KtEGztNYoKyFSLmwv3dUu84Z2f/iofY2pvLme8AA==}
+  envio-darwin-arm64@2.2.1-fuel:
+    resolution: {integrity: sha512-n5iyT2HisGq3b358ooyUQBjSqbSYq5peQnsXWfeNOURlpQ78g/+GCeusdzoM2Ci7E+rNm7xNP67ELOT0b5K+SQ==}
     cpu: [arm64]
     os: [darwin]
 
-  envio-darwin-x64@2.1.4-fuel:
-    resolution: {integrity: sha512-HlSxe/JoJJQOJ+nsgKWQf8ByzdiiuVziIS0IpMAYrGPwKhYcTtEtfrUsIXdH/fiA6XSMKWlFJfMTEkoOckfUbQ==}
+  envio-darwin-x64@2.2.1-fuel:
+    resolution: {integrity: sha512-dYHuuX4uEzdfaNfvBTd8Sk7s4j43SFboMKm+sWyhYlg9zGWUJ2UOIWV9aYxoeA53s/p6SllwFOtE0Z6/TjtbbQ==}
     cpu: [x64]
     os: [darwin]
 
-  envio-linux-arm64@2.1.4-fuel:
-    resolution: {integrity: sha512-PtY87N8sjiOMADD5LNvVokqdG+WBVovCfLTI5MUshC3cAgy7lobKwoltHhZQPwQvCzc9D9MEvn9m8RxZQObmFA==}
+  envio-linux-arm64@2.2.1-fuel:
+    resolution: {integrity: sha512-a0F6bnS9VsslEbfW+TXyVx9SBI+J9t0cJJexF1qOH2z0SGkbOPeqy6nN0daojOxC3xwqRpsPefzmJZEbDnTotA==}
     cpu: [arm64]
     os: [linux]
 
-  envio-linux-x64@2.1.4-fuel:
-    resolution: {integrity: sha512-2m0ORUbEjsZfibmvmRkNlRFM8k0L+601QC0NNO9h6vKA/xlh4kPuMuckDKpznpGsaJfdC86o+f29wasTnAXipA==}
+  envio-linux-x64@2.2.1-fuel:
+    resolution: {integrity: sha512-7vGidsWG5IyeLkp07ckmJoz/bUDHb5jqNvpambHIUAIXn4XL4NZtn6G4nqiACxj/iz+heb2uQLxg++2m5lUO1Q==}
     cpu: [x64]
     os: [linux]
 
-  envio@2.1.4-fuel:
-    resolution: {integrity: sha512-6eGzuQ3aEbCI9gub4yVl9LX7/hrpYyIbN8mwJaosHVKilAZwLhB7gwpU4/0PeFbW8WuUn5BOL5KDBrA91E34Ew==}
+  envio@2.2.1-fuel:
+    resolution: {integrity: sha512-YHderj2e+Gtmw8AOa7TOIy8MJ44kxQfjgmeS7a3nDVQ2Ife3qB81CxDR5ZjT70FHgHec2+LvYMPpNBYwsUDVlA==}
     hasBin: true
 
   es-define-property@1.0.0:
@@ -731,6 +727,9 @@ packages:
 
   fast-safe-stringify@2.1.1:
     resolution: {integrity: sha512-W+KJc2dmILlPplD/H4K9l9LcAHAfPtP6BY84uVLXQ6Evcz9Lcg33Y2z1IVblT6xdY54PXYVHEv+0Wpq8Io6zkA==}
+
+  fflate@0.8.2:
+    resolution: {integrity: sha512-cPJU47OaAoCbg0pBvzsgpTPhmhqI5eJjh/JIu8tPj5q+T7iLvW/JAYUqmE7KOB4R1ZyEhzBaIQpQpardBF5z8A==}
 
   fill-range@7.1.1:
     resolution: {integrity: sha512-YsGpe3WHLK8ZYi4tWDg2Jy3ebRz2rXowDxnld4bkQB00cc/1Zw9AWnC0i9ztDJitivtQvaI9KaLyKrc+hBW0yg==}
@@ -1002,10 +1001,6 @@ packages:
     resolution: {integrity: sha512-nLDxIFRyhDblz3qMuq+SoRZED4+miJ/G+tdDrjkkkRnjAsBexeGpgjLEQ0blJy7rHhR2b93rhQY4SvyWu9v03g==}
     engines: {node: '>=10'}
 
-  minimatch@5.1.6:
-    resolution: {integrity: sha512-lKwV/1brpG6mBUFHtb7NUmtABCb2WZZmm2wNiOA5hAb8VdCS4B3dtMWyvcoViccwAW/COERjXLt0zP1zXUN26g==}
-    engines: {node: '>=10'}
-
   minimist@1.2.8:
     resolution: {integrity: sha512-2yyAR8qBkN3YuheJanUpWC5U3bb5osDywNB8RzDVlDwDHbocAJveqqj1u8+SVD7jkWT4yvsHCpWqqWqAxb0zCA==}
 
@@ -1242,8 +1237,8 @@ packages:
   safe-buffer@5.2.1:
     resolution: {integrity: sha512-rp3So07KcdmmKbGvgaNxQSJr7bGVSVk5S9Eq1F+ppbRo70+YeaDxkw5Dd8NPN+GD6bjnYm2VuPuCXmpuYvmCXQ==}
 
-  safe-stable-stringify@2.4.3:
-    resolution: {integrity: sha512-e2bDA2WJT0wxseVd4lsDP4+3ONX6HpMXQa1ZhFQ7SU+GjvORCmShbCMltrtIDfkYhVHrOcPtj+KhmDBdPdZD1g==}
+  safe-stable-stringify@2.5.0:
+    resolution: {integrity: sha512-b3rppTKm9T+PsVCBEOUR46GWI7fdOs00VKZ1+9c1EWDaDMvjQc6tUwuFyIprgGgTcWoVHSKrU8H31ZHA2e0RHA==}
     engines: {node: '>=10'}
 
   safer-buffer@2.1.2:
@@ -1604,52 +1599,51 @@ snapshots:
       '@envio-dev/hyperfuel-client-linux-x64-musl': 1.1.0
       '@envio-dev/hyperfuel-client-win32-x64-msvc': 1.1.0
 
-  '@fuel-ts/address@0.89.1':
+  '@fuel-ts/address@0.94.1':
     dependencies:
-      '@fuel-ts/crypto': 0.89.1
-      '@fuel-ts/errors': 0.89.1
-      '@fuel-ts/interfaces': 0.89.1
-      '@fuel-ts/utils': 0.89.1
+      '@fuel-ts/crypto': 0.94.1
+      '@fuel-ts/errors': 0.94.1
+      '@fuel-ts/interfaces': 0.94.1
+      '@fuel-ts/utils': 0.94.1
       '@noble/hashes': 1.4.0
       bech32: 2.0.0
 
-  '@fuel-ts/crypto@0.89.1':
+  '@fuel-ts/crypto@0.94.1':
     dependencies:
-      '@fuel-ts/errors': 0.89.1
-      '@fuel-ts/interfaces': 0.89.1
-      '@fuel-ts/math': 0.89.1
-      '@fuel-ts/utils': 0.89.1
+      '@fuel-ts/errors': 0.94.1
+      '@fuel-ts/interfaces': 0.94.1
+      '@fuel-ts/math': 0.94.1
+      '@fuel-ts/utils': 0.94.1
       '@noble/hashes': 1.4.0
 
-  '@fuel-ts/errors@0.89.1':
+  '@fuel-ts/errors@0.94.1':
     dependencies:
-      '@fuel-ts/versions': 0.89.1
+      '@fuel-ts/versions': 0.94.1
 
-  '@fuel-ts/hasher@0.89.1':
+  '@fuel-ts/hasher@0.94.1':
     dependencies:
-      '@fuel-ts/crypto': 0.89.1
-      '@fuel-ts/interfaces': 0.89.2
-      '@fuel-ts/utils': 0.89.1
+      '@fuel-ts/crypto': 0.94.1
+      '@fuel-ts/interfaces': 0.94.1
+      '@fuel-ts/utils': 0.94.1
       '@noble/hashes': 1.4.0
 
-  '@fuel-ts/interfaces@0.89.1': {}
+  '@fuel-ts/interfaces@0.94.1': {}
 
-  '@fuel-ts/interfaces@0.89.2': {}
-
-  '@fuel-ts/math@0.89.1':
+  '@fuel-ts/math@0.94.1':
     dependencies:
-      '@fuel-ts/errors': 0.89.1
+      '@fuel-ts/errors': 0.94.1
       '@types/bn.js': 5.1.5
       bn.js: 5.2.1
 
-  '@fuel-ts/utils@0.89.1':
+  '@fuel-ts/utils@0.94.1':
     dependencies:
-      '@fuel-ts/errors': 0.89.1
-      '@fuel-ts/interfaces': 0.89.1
-      '@fuel-ts/math': 0.89.1
-      '@fuel-ts/versions': 0.89.1
+      '@fuel-ts/errors': 0.94.1
+      '@fuel-ts/interfaces': 0.94.1
+      '@fuel-ts/math': 0.94.1
+      '@fuel-ts/versions': 0.94.1
+      fflate: 0.8.2
 
-  '@fuel-ts/versions@0.89.1':
+  '@fuel-ts/versions@0.94.1':
     dependencies:
       chalk: 4.1.2
       cli-table: 0.3.11
@@ -1978,24 +1972,24 @@ snapshots:
     dependencies:
       once: 1.4.0
 
-  envio-darwin-arm64@2.1.4-fuel:
+  envio-darwin-arm64@2.2.1-fuel:
     optional: true
 
-  envio-darwin-x64@2.1.4-fuel:
+  envio-darwin-x64@2.2.1-fuel:
     optional: true
 
-  envio-linux-arm64@2.1.4-fuel:
+  envio-linux-arm64@2.2.1-fuel:
     optional: true
 
-  envio-linux-x64@2.1.4-fuel:
+  envio-linux-x64@2.2.1-fuel:
     optional: true
 
-  envio@2.1.4-fuel:
+  envio@2.2.1-fuel:
     optionalDependencies:
-      envio-darwin-arm64: 2.1.4-fuel
-      envio-darwin-x64: 2.1.4-fuel
-      envio-linux-arm64: 2.1.4-fuel
-      envio-linux-x64: 2.1.4-fuel
+      envio-darwin-arm64: 2.2.1-fuel
+      envio-darwin-x64: 2.2.1-fuel
+      envio-linux-arm64: 2.2.1-fuel
+      envio-linux-x64: 2.2.1-fuel
 
   es-define-property@1.0.0:
     dependencies:
@@ -2083,6 +2077,8 @@ snapshots:
 
   fast-safe-stringify@2.1.1: {}
 
+  fflate@0.8.2: {}
+
   fill-range@7.1.1:
     dependencies:
       to-regex-range: 5.0.1
@@ -2147,7 +2143,7 @@ snapshots:
       fs.realpath: 1.0.0
       inflight: 1.0.6
       inherits: 2.0.4
-      minimatch: 5.1.6
+      minimatch: 5.0.1
       once: 1.4.0
 
   gopd@1.0.1:
@@ -2350,10 +2346,6 @@ snapshots:
     dependencies:
       brace-expansion: 2.0.1
 
-  minimatch@5.1.6:
-    dependencies:
-      brace-expansion: 2.0.1
-
   minimist@1.2.8: {}
 
   mkdirp@0.5.6:
@@ -2479,7 +2471,7 @@ snapshots:
       process-warning: 2.3.2
       quick-format-unescaped: 4.0.4
       real-require: 0.2.0
-      safe-stable-stringify: 2.4.3
+      safe-stable-stringify: 2.5.0
       sonic-boom: 3.8.1
       thread-stream: 2.7.0
 
@@ -2604,7 +2596,7 @@ snapshots:
 
   safe-buffer@5.2.1: {}
 
-  safe-stable-stringify@2.4.3: {}
+  safe-stable-stringify@2.5.0: {}
 
   safer-buffer@2.1.2: {}
 

@@ -1,0 +1,12 @@
+query GetCollateralConfigurations {
+  CollateralAsset {
+    supplyCap
+    priceFeedId
+    id
+    paused
+    liquidationPenalty
+    liquidateCollateralFactor
+    decimals
+    borrowCollateralFactor
+  }
+}
