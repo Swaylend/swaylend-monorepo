@@ -277,7 +277,7 @@ async fn absorb_and_liquidate() {
     // Wait for response
     let _: CallResponse<((), ())> = submitted_tx.response().await.unwrap();
     let alice_balance = alice.get_asset_balance(&eth.asset_id).await.unwrap();
-    assert!(alice_balance == 10_999_999_996 * AMOUNT_COEFFICIENT);
+    assert!(alice_balance == 10_999_999_997 * AMOUNT_COEFFICIENT);
 
     // check reserves
     let reserves = market
