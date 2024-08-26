@@ -48,7 +48,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     println!("Token deployed at: 0x{}", instance.contract_id().hash());
 
-    let asset_id = instance.methods().asset_id().simulate().await?.value;
+    let asset_id = instance.methods().asset_id().call().await?.value;
     println!("Asset id: 0x{}", asset_id);
 
     // mint the whole supply to the deployer
@@ -57,7 +57,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let max_supply = instance
         .methods()
         .max_supply(asset_id)
-        .simulate()
+        .call()
         .await?
         .value
         .unwrap();

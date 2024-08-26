@@ -3,3 +3,5 @@ out
 node_modules
 types
 build
+.env
+.DS_Store
