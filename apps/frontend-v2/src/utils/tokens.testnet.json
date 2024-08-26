@@ -9,18 +9,18 @@
     "name": "USDC",
     "symbol": "USDC",
     "decimals": 6,
-    "assetId": "0xb5a7ec61506d83f6e4739be2dc57018898b1e08684c097c73b582c9583e191e2"
+    "assetId": "0x1fed57ac1893dd2cd46f2218a1b76d9c40eac08b5df6ad897ecebf5069ee47c7"
   },
   {
     "name": "Bitcoin",
     "symbol": "BTC",
     "decimals": 8,
-    "assetId": "0x00dc5cda67b6a53b60fa53f95570fdaabb5b916c0e6d614a3f5d9de68f832e61"
+    "assetId": "0x644611b73c3e5cab9b00908782de052f8bf4f02b986733a2acf06d62bf532bc6"
   },
   {
     "name": "Uniswap",
     "symbol": "UNI",
     "decimals": 9,
-    "assetId": "0xf7c5f807c40573b5db88e467eb9aabc42332483493f7697442e1edbd59e020ad"
+    "assetId": "0x9e67cc8cb2d7962a3cfc6335859befd896a2e7d96ae27c1b9d0dd149c43d7ff8"
   }
 ]

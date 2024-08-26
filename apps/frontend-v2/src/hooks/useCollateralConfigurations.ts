@@ -1,4 +1,4 @@
-import type { CollateralConfigurationOutput } from '@/contract-types/MarketAbi';
+import type { CollateralConfigurationOutput } from '@/contract-types/Market';
 import { getCollateralConfigurations } from '@/lib/queries';
 import { useQuery } from '@tanstack/react-query';
 

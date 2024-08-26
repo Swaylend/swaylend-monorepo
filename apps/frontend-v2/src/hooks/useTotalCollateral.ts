@@ -1,4 +1,4 @@
-import { MarketAbi__factory } from '@/contract-types';
+import { Market } from '@/contract-types';
 import { CONTRACT_ADDRESSES, collaterals } from '@/utils';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
@@ -9,10 +9,7 @@ export const useTotalCollateral = () => {
 
   const fetchTotalCollateral = async () => {
     if (!provider) return;
-    const marketContract = MarketAbi__factory.connect(
-      CONTRACT_ADDRESSES.market,
-      provider
-    );
+    const marketContract = new Market(CONTRACT_ADDRESSES.market, provider);
 
     const promises = collaterals.map((b) =>
       marketContract.functions.totals_collateral(b.assetId).get()

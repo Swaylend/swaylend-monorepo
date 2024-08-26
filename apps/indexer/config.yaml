@@ -2,10 +2,10 @@ name: Swaylend Indexer
 ecosystem: fuel
 networks:
   - id: 0
-    start_block: 8386611
+    start_block: 8727812
     contracts:
       - name: Market
-        address: 0xa31be85925a6031182aff87e9b41509050f17eeaea20311493e1e2753a6a1798
+        address: 0xbf34c6700c05967b73a55db770cb7e0e9106c84a6afc61a5cddbc2cc3834e062
         abi_file_path: ./abi/market-abi.json
         handler: ./src/EventHandlers.ts
         events:
