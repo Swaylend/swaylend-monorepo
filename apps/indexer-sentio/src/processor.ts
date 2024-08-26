@@ -4,8 +4,8 @@ import { MarketProcessor } from './types/fuel/MarketProcessor.js';
 
 MarketProcessor.bind({
   chainId: FuelNetwork.TEST_NET,
-  address: '0xea9d4a55ca16271f42992529bb68de095249ceb8d95176576098bb9b98cd3975',
-  startBlock: BigInt(7597567),
+  address: '0xa31be85925a6031182aff87e9b41509050f17eeaea20311493e1e2753a6a1798',
+  startBlock: BigInt(8386611),
 })
 
   .onLogUserSupplyBaseEvent(async (event, ctx) => {
