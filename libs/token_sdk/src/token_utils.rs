@@ -18,6 +18,7 @@ pub struct TokenContract {
     pub instance: Token<WalletUnlocked>,
 }
 
+#[derive(Clone)]
 pub struct Asset {
     pub asset_id: AssetId,
     pub decimals: u64,
@@ -86,7 +87,9 @@ impl TokenContract {
     pub async fn deploy_tokens(
         &self,
         wallet: &WalletUnlocked,
+        is_local_tests: Option<bool>,
     ) -> (HashMap<String, Asset>, Vec<CollateralConfiguration>) {
+        let local_tests = is_local_tests.unwrap_or(false);
         let tokens_json_path =
             PathBuf::from(env!("CARGO_WORKSPACE_DIR")).join("libs/token_sdk/tokens.json");
         let tokens_json = std::fs::read_to_string(tokens_json_path).unwrap();
@@ -101,7 +104,12 @@ impl TokenContract {
             let token =
                 TokenAsset::new(wallet.clone(), self.instance.contract_id().into(), &symbol);
 
-            let asset_id = if symbol == "ETH" {
+            let asset_id = if symbol == "ETH" && local_tests {
+                AssetId::from_str(
+                    "0x0000000000000000000000000000000000000000000000000000000000000000",
+                )
+                .unwrap()
+            } else if symbol == "ETH" {
                 AssetId::from_str(&config.asset_id).unwrap()
             } else {
                 token.asset_id

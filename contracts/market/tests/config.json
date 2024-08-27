@@ -9,8 +9,8 @@
   "borrow_per_second_interest_rate_base": 475646879,
   "store_front_price_factor": 600000000000000000,
   "base_tracking_index_scale": 1000000000000000,
-  "base_tracking_supply_speed": 0,
-  "base_tracking_borrow_speed": 0,
+  "base_tracking_supply_speed": 810185185185,
+  "base_tracking_borrow_speed": 821759259259,
   "base_min_for_rewards": 1000000000,
   "base_borrow_min": 1000,
   "target_reserves": 1000000000000
