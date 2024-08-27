@@ -1,13 +1,29 @@
-import { BigDecimal } from '@sentio/sdk/core';
 import { FuelNetwork } from '@sentio/sdk/fuel';
 import { MarketProcessor } from './types/fuel/MarketProcessor.js';
 
 MarketProcessor.bind({
   chainId: FuelNetwork.TEST_NET,
-  address: '0xa31be85925a6031182aff87e9b41509050f17eeaea20311493e1e2753a6a1798',
+  address: '0x40306bb23caad2dceb3907d62f50d75a0d8cd5e7a01b2f3e4189d3a54be42e40',
   startBlock: BigInt(8386611),
 })
+  .onLogMarketConfigurationEvent(async (event, ctx) => {
+    const { logId, receiptIndex, data } = event;
 
+    ctx.eventLogger.emit('MarketConfiguration', {
+      logId,
+      receiptIndex,
+      data,
+    });
+  })
+  .onLogMarketBasicEvent(async (event, ctx) => {
+    const { logId, receiptIndex, data } = event;
+
+    ctx.eventLogger.emit('MarketBasic', {
+      logId,
+      receiptIndex,
+      data,
+    });
+  })
   .onLogUserSupplyBaseEvent(async (event, ctx) => {
     const { logId, receiptIndex, data } = event;
 
@@ -15,11 +31,7 @@ MarketProcessor.bind({
       distinctId: ctx.transaction?.sender,
       logId,
       receiptIndex,
-      data: {
-        ...data,
-        supply_amount: BigDecimal(data.supply_amount.toString()),
-        repay_amount: BigDecimal(data.repay_amount.toString()),
-      },
+      data,
     });
   })
   .onLogUserSupplyCollateralEvent(async (event, ctx) => {
@@ -29,10 +41,7 @@ MarketProcessor.bind({
       distinctId: ctx.transaction?.sender,
       logId,
       receiptIndex,
-      data: {
-        ...data,
-        amount: BigDecimal(data.amount.toString()),
-      },
+      data,
     });
   })
   .onLogUserWithdrawBaseEvent(async (event, ctx) => {
@@ -42,11 +51,7 @@ MarketProcessor.bind({
       distinctId: ctx.transaction?.sender,
       logId,
       receiptIndex,
-      data: {
-        ...data,
-        withdraw_amount: BigDecimal(data.withdraw_amount.toString()),
-        borrow_amount: BigDecimal(data.borrow_amount.toString()),
-      },
+      data,
     });
   })
   .onLogUserWithdrawCollateralEvent(async (event, ctx) => {
@@ -56,9 +61,6 @@ MarketProcessor.bind({
       distinctId: ctx.transaction?.sender,
       logId,
       receiptIndex,
-      data: {
-        ...data,
-        amount: BigDecimal(data.amount.toString()),
-      },
+      data,
     });
   });
