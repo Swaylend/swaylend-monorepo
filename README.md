@@ -20,16 +20,16 @@ The Sway Lend alive on [https://swaylend.com](https://swaylend.com)
 ```                                                            
 FUEL TESTNET
 
-Pyth Oracle contract = 0x73591bf32f010ce4e83d86005c24e7833b397be38014ab670a73f6fde59ad607
+Pyth Oracle contract = 0xc3c47cdeaec412778fc86842b44fb061b350db57f9d52def4f73036156f71506
 
-Token factory contract = 0xca639b4aea76654009edb6ef8214a8645ecc2cd6820e39782db887fa0909e685
+Token factory contract = 0xcbfa9f158e1ef6ba2f7c6696a47dea7f42e9c229f96dd9184a318f9bb5610665
 
-Market contract = 0xbf34c6700c05967b73a55db770cb7e0e9106c84a6afc61a5cddbc2cc3834e062
+Market contract = 0x40306bb23caad2dceb3907d62f50d75a0d8cd5e7a01b2f3e4189d3a54be42e40
 
 ETH  = 0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07
-USDC = 0x1fed57ac1893dd2cd46f2218a1b76d9c40eac08b5df6ad897ecebf5069ee47c7
-UNI  = 0x9e67cc8cb2d7962a3cfc6335859befd896a2e7d96ae27c1b9d0dd149c43d7ff8
-BTC  = 0x644611b73c3e5cab9b00908782de052f8bf4f02b986733a2acf06d62bf532bc6
+USDC = 0x02f373b67576faf604dceb27675e88a3eb414f4bef5dea6cd3b143eeadd9401a
+UNI  = 0xb5efb423f3a4a10fed5e349d0096c4cd75ffb97c6a3e21bb59a685092698b0cf
+BTC  = 0x2df61e167accc18479e13d9564261b22d1bf1be5f200cd80139138c83c10e9bc
 ```
 
 ---
