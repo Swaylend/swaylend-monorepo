@@ -378,7 +378,7 @@ const InputCard: React.FC<IProps> = () => {
         action: dashboardStore.action,
         errorMessage: e?.toString() ?? '',
       };
-      console.log(err);
+      console.error(err);
       addErrorToLog(err);
       const error = JSON.parse(JSON.stringify(e)).toString();
       notificationStore.toast(error.error, {

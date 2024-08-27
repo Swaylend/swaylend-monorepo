@@ -2,7 +2,7 @@ import { Column } from '@components/Flex';
 import Footer from '@components/Footer';
 import Header from '@components/Header/Header';
 import styled from '@emotion/styled';
-import { useAccount, useBalance, useFuel, useProvider } from '@fuels/react';
+import { useFuel, useProvider } from '@fuels/react';
 import Dashboard from '@screens/Dashboard';
 import Faucet from '@screens/Faucet';
 import Market from '@screens/Market';
@@ -25,22 +25,11 @@ const App: React.FC = () => {
   const { accountStore } = useStores();
   const { provider } = useProvider();
   const { fuel } = useFuel();
-  const { account } = useAccount();
 
   useEffect(() => {
-    accountStore.initFuel(fuel);
+    accountStore.setFuel(fuel);
     accountStore.initProvider(provider);
   });
-
-  const { balance } = useBalance({
-    address: account ?? undefined,
-    assetId: TOKENS_BY_SYMBOL.ETH.assetId,
-  });
-
-  console.log(
-    '󰊠 ~ file: App.tsx:34 ~ balance:',
-    balance?.format({ precision: 4, units: TOKENS_BY_SYMBOL.ETH.decimals })
-  );
 
   return (
     <Root>

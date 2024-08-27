@@ -95,7 +95,6 @@ class FaucetVM {
   }
 
   mint = async (assetId?: string) => {
-    console.log('minting', assetId);
     if (assetId == null) return;
     this._setLoading(true);
     this.setActionTokenAssetId(assetId);
@@ -163,7 +162,7 @@ class FaucetVM {
       await this.rootStore.accountStore.updateAccountBalances();
     } catch (e) {
       const errorText = e?.toString();
-      console.log(errorText);
+      console.error(errorText);
       notificationStore.toast(errorText!, {
         type: 'error',
         title: errorToMessage(errorText ?? ''),
