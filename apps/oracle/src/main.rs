@@ -12,6 +12,7 @@ use std::{str::FromStr, thread::sleep, time::Duration};
 
 #[derive(Deserialize)]
 struct BinaryData {
+    #[allow(dead_code)]
     encoding: String,
     data: Vec<String>,
 }
@@ -19,6 +20,7 @@ struct BinaryData {
 #[derive(Deserialize)]
 struct PriceUpdate {
     binary: BinaryData,
+    #[allow(dead_code)]
     parsed: serde_json::Value,
 }
 

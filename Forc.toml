@@ -6,7 +6,6 @@ members = [
     "contracts/market",
     "contracts/src-20",
     "contracts/token",
-    "contracts/test",
     "contracts/pyth-mock",
     # Libs
     "libs/i256",

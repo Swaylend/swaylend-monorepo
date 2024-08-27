@@ -50,14 +50,18 @@ export type MarketBasicEventInput = { market_basic: MarketBasicsInput };
 export type MarketBasicEventOutput = { market_basic: MarketBasicsOutput };
 export type MarketBasicsInput = { base_supply_index: BigNumberish, base_borrow_index: BigNumberish, tracking_supply_index: BigNumberish, tracking_borrow_index: BigNumberish, total_supply_base: BigNumberish, total_borrow_base: BigNumberish, last_accrual_time: BigNumberish };
 export type MarketBasicsOutput = { base_supply_index: BN, base_borrow_index: BN, tracking_supply_index: BN, tracking_borrow_index: BN, total_supply_base: BN, total_borrow_base: BN, last_accrual_time: BN };
-export type MarketConfigurationInput = { governor: AddressInput, pause_guardian: AddressInput, base_token: string, base_token_decimals: BigNumberish, base_token_price_feed_id: string, supply_kink: BigNumberish, borrow_kink: BigNumberish, supply_per_second_interest_rate_slope_low: BigNumberish, supply_per_second_interest_rate_slope_high: BigNumberish, supply_per_second_interest_rate_base: BigNumberish, borrow_per_second_interest_rate_slope_low: BigNumberish, borrow_per_second_interest_rate_slope_high: BigNumberish, borrow_per_second_interest_rate_base: BigNumberish, store_front_price_factor: BigNumberish, base_tracking_index_scale: BigNumberish, base_tracking_supply_speed: BigNumberish, base_tracking_borrow_speed: BigNumberish, base_min_for_rewards: BigNumberish, base_borrow_min: BigNumberish, target_reserves: BigNumberish, debug_step: BigNumberish, fuel_eth_base_asset_id: string };
-export type MarketConfigurationOutput = { governor: AddressOutput, pause_guardian: AddressOutput, base_token: string, base_token_decimals: number, base_token_price_feed_id: string, supply_kink: BN, borrow_kink: BN, supply_per_second_interest_rate_slope_low: BN, supply_per_second_interest_rate_slope_high: BN, supply_per_second_interest_rate_base: BN, borrow_per_second_interest_rate_slope_low: BN, borrow_per_second_interest_rate_slope_high: BN, borrow_per_second_interest_rate_base: BN, store_front_price_factor: BN, base_tracking_index_scale: BN, base_tracking_supply_speed: BN, base_tracking_borrow_speed: BN, base_min_for_rewards: BN, base_borrow_min: BN, target_reserves: BN, debug_step: BN, fuel_eth_base_asset_id: string };
+export type MarketConfigurationInput = { governor: AddressInput, pause_guardian: AddressInput, base_token: string, base_token_decimals: BigNumberish, base_token_price_feed_id: string, supply_kink: BigNumberish, borrow_kink: BigNumberish, supply_per_second_interest_rate_slope_low: BigNumberish, supply_per_second_interest_rate_slope_high: BigNumberish, supply_per_second_interest_rate_base: BigNumberish, borrow_per_second_interest_rate_slope_low: BigNumberish, borrow_per_second_interest_rate_slope_high: BigNumberish, borrow_per_second_interest_rate_base: BigNumberish, store_front_price_factor: BigNumberish, base_tracking_index_scale: BigNumberish, base_tracking_supply_speed: BigNumberish, base_tracking_borrow_speed: BigNumberish, base_min_for_rewards: BigNumberish, base_borrow_min: BigNumberish, target_reserves: BigNumberish };
+export type MarketConfigurationOutput = { governor: AddressOutput, pause_guardian: AddressOutput, base_token: string, base_token_decimals: number, base_token_price_feed_id: string, supply_kink: BN, borrow_kink: BN, supply_per_second_interest_rate_slope_low: BN, supply_per_second_interest_rate_slope_high: BN, supply_per_second_interest_rate_base: BN, borrow_per_second_interest_rate_slope_low: BN, borrow_per_second_interest_rate_slope_high: BN, borrow_per_second_interest_rate_base: BN, store_front_price_factor: BN, base_tracking_index_scale: BN, base_tracking_supply_speed: BN, base_tracking_borrow_speed: BN, base_min_for_rewards: BN, base_borrow_min: BN, target_reserves: BN };
+export type MarketConfigurationEventInput = { market_config: MarketConfigurationInput };
+export type MarketConfigurationEventOutput = { market_config: MarketConfigurationOutput };
 export type PauseConfigurationInput = { supply_paused: boolean, withdraw_paused: boolean, absorb_paused: boolean, buy_paused: boolean };
 export type PauseConfigurationOutput = PauseConfigurationInput;
 export type PauseConfigurationEventInput = { pause_config: PauseConfigurationInput };
 export type PauseConfigurationEventOutput = { pause_config: PauseConfigurationOutput };
 export type PriceInput = { confidence: BigNumberish, exponent: BigNumberish, price: BigNumberish, publish_time: BigNumberish };
 export type PriceOutput = { confidence: BN, exponent: number, price: BN, publish_time: BN };
+export type PriceDataUpdateInput = { update_fee: BigNumberish, publish_times: Vec<BigNumberish>, price_feed_ids: Vec<string>, update_data: Vec<Bytes> };
+export type PriceDataUpdateOutput = { update_fee: BN, publish_times: Vec<BN>, price_feed_ids: Vec<string>, update_data: Vec<Bytes> };
 export type ReservesWithdrawnEventInput = { address: AddressInput, amount: BigNumberish };
 export type ReservesWithdrawnEventOutput = { address: AddressOutput, amount: BN };
 export type UserBasicInput = { principal: I256Input, base_tracking_index: BigNumberish, base_tracking_accrued: BigNumberish };
@@ -76,900 +80,931 @@ export type UserWithdrawCollateralEventInput = { address: AddressInput, asset_id
 export type UserWithdrawCollateralEventOutput = { address: AddressOutput, asset_id: string, amount: BN };
 
 export type MarketConfigurables = Partial<{
-  GOVERNOR: AddressInput;
-  PAUSE_GUARDIAN: AddressInput;
-  BASE_TOKEN: string;
-  BASE_TOKEN_DECIMALS: BigNumberish;
-  BASE_TOKEN_PRICE_FEED_ID: string;
-  SUPPLY_KINK: BigNumberish;
-  BORROW_KINK: BigNumberish;
-  SUPPLY_PER_SECOND_INTEREST_RATE_SLOPE_LOW: BigNumberish;
-  SUPPLY_PER_SECOND_INTEREST_RATE_SLOPE_HIGH: BigNumberish;
-  SUPPLY_PER_SECOND_INTEREST_RATE_BASE: BigNumberish;
-  BORROW_PER_SECOND_INTEREST_RATE_SLOPE_LOW: BigNumberish;
-  BORROW_PER_SECOND_INTEREST_RATE_SLOPE_HIGH: BigNumberish;
-  BORROW_PER_SECOND_INTEREST_RATE_BASE: BigNumberish;
-  STORE_FRONT_PRICE_FACTOR: BigNumberish;
-  BASE_TRACKING_INDEX_SCALE: BigNumberish;
-  BASE_TRACKING_SUPPLY_SPEED: BigNumberish;
-  BASE_TRACKING_BORROW_SPEED: BigNumberish;
-  BASE_MIN_FOR_REWARDS: BigNumberish;
-  BASE_BORROW_MIN: BigNumberish;
-  TARGET_RESERVES: BigNumberish;
   DEBUG_STEP: BigNumberish;
   FUEL_ETH_BASE_ASSET_ID: string;
 }>;
 
 const abi = {
-  "encoding": "1",
-  "types": [
+  "programType": "contract",
+  "specVersion": "1",
+  "encodingVersion": "1",
+  "concreteTypes": [
     {
-      "typeId": 0,
       "type": "()",
-      "components": [],
-      "typeParameters": null
+      "concreteTypeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
     },
     {
-      "typeId": 1,
-      "type": "(_, _)",
-      "components": [
-        {
-          "name": "__tuple_element",
-          "type": 35,
-          "typeArguments": null
-        },
-        {
-          "name": "__tuple_element",
-          "type": 35,
-          "typeArguments": null
-        }
-      ],
-      "typeParameters": null
+      "type": "(u256, u256)",
+      "concreteTypeId": "2770d9f762bf8ec295d5c253193cd2897c893401f1f438769f92d212641ec779",
+      "metadataTypeId": 0
     },
     {
-      "typeId": 2,
       "type": "b256",
-      "components": null,
-      "typeParameters": null
+      "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
     },
     {
-      "typeId": 3,
       "type": "bool",
-      "components": null,
-      "typeParameters": null
+      "concreteTypeId": "b760f44fa5965c2474a3b471467a22c43185152129295af588b022ae50b50903"
     },
     {
-      "typeId": 4,
-      "type": "enum Error",
-      "components": [
-        {
-          "name": "AlreadyInitialized",
-          "type": 0,
-          "typeArguments": null
-        },
-        {
-          "name": "Paused",
-          "type": 0,
-          "typeArguments": null
-        },
-        {
-          "name": "Unauthorized",
-          "type": 0,
-          "typeArguments": null
-        },
-        {
-          "name": "InsufficientReserves",
-          "type": 0,
-          "typeArguments": null
-        },
-        {
-          "name": "NotLiquidatable",
-          "type": 0,
-          "typeArguments": null
-        },
-        {
-          "name": "NotForSale",
-          "type": 0,
-          "typeArguments": null
-        },
-        {
-          "name": "TooMuchSlippage",
-          "type": 0,
-          "typeArguments": null
-        },
-        {
-          "name": "SupplyCapExceeded",
-          "type": 0,
-          "typeArguments": null
-        },
-        {
-          "name": "NotCollateralized",
-          "type": 0,
-          "typeArguments": null
-        },
-        {
-          "name": "BorrowTooSmall",
-          "type": 0,
-          "typeArguments": null
-        },
-        {
-          "name": "NotPermitted",
-          "type": 0,
-          "typeArguments": null
-        },
-        {
-          "name": "InvalidPayment",
-          "type": 0,
-          "typeArguments": null
-        },
-        {
-          "name": "UnknownAsset",
-          "type": 0,
-          "typeArguments": null
-        },
-        {
-          "name": "DebuggingDisabled",
-          "type": 0,
-          "typeArguments": null
-        },
-        {
-          "name": "NotYetActive",
-          "type": 0,
-          "typeArguments": null
-        },
-        {
-          "name": "AlreadyActive",
-          "type": 0,
-          "typeArguments": null
-        },
-        {
-          "name": "OracleContractIdNotSet",
-          "type": 0,
-          "typeArguments": null
-        }
-      ],
-      "typeParameters": null
+      "type": "enum market_abi::structs::Error",
+      "concreteTypeId": "4e6aabd209068d31558291cfd07cff9366801b052a1767bd0a9eb34bf55e8a0e",
+      "metadataTypeId": 1
     },
     {
-      "typeId": 5,
-      "type": "generic T",
-      "components": null,
-      "typeParameters": null
+      "type": "struct events::AbsorbCollateralEvent",
+      "concreteTypeId": "31d6845ccbeb9e71f30bf07140659072ce92db76041efd6861d6895dace9e658",
+      "metadataTypeId": 4
     },
     {
-      "typeId": 6,
-      "type": "raw untyped ptr",
-      "components": null,
-      "typeParameters": null
+      "type": "struct events::BuyCollateralEvent",
+      "concreteTypeId": "a95331d2168897d0f550d1c4f7fc582926a79b3e825866ecf8c11ef8dfb692c6",
+      "metadataTypeId": 5
     },
     {
-      "typeId": 7,
-      "type": "struct AbsorbCollateralEvent",
-      "components": [
-        {
-          "name": "address",
-          "type": 8,
-          "typeArguments": null
-        },
-        {
-          "name": "asset_id",
-          "type": 2,
-          "typeArguments": null
-        },
-        {
-          "name": "amount",
-          "type": 35,
-          "typeArguments": null
-        },
-        {
-          "name": "seize_value",
-          "type": 35,
-          "typeArguments": null
-        },
-        {
-          "name": "decimals",
-          "type": 36,
-          "typeArguments": null
-        }
-      ],
-      "typeParameters": null
+      "type": "struct events::CollateralAssetAdded",
+      "concreteTypeId": "ea2a9368cd82d633fcc3411dbff6c25a78c7ccf550034427221102b74d7926db",
+      "metadataTypeId": 6
     },
     {
-      "typeId": 8,
-      "type": "struct Address",
-      "components": [
-        {
-          "name": "bits",
-          "type": 2,
-          "typeArguments": null
-        }
-      ],
-      "typeParameters": null
+      "type": "struct events::CollateralAssetPaused",
+      "concreteTypeId": "457cc10e18076b4e7a0ccc563fd089b256767bb56a148450f7e58f0d7cbf54ef",
+      "metadataTypeId": 7
     },
     {
-      "typeId": 9,
-      "type": "struct BuyCollateralEvent",
-      "components": [
-        {
-          "name": "caller",
-          "type": 8,
-          "typeArguments": null
-        },
-        {
-          "name": "recipient",
-          "type": 8,
-          "typeArguments": null
-        },
-        {
-          "name": "asset_id",
-          "type": 2,
-          "typeArguments": null
-        },
-        {
-          "name": "amount",
-          "type": 35,
-          "typeArguments": null
-        },
-        {
-          "name": "price",
-          "type": 35,
-          "typeArguments": null
-        }
-      ],
-      "typeParameters": null
+      "type": "struct events::CollateralAssetResumed",
+      "concreteTypeId": "81fb1b4fe81422099de81384a1f433aac8964b267aac0428e6bf423e46b88df9",
+      "metadataTypeId": 8
     },
     {
-      "typeId": 10,
-      "type": "struct Bytes",
-      "components": [
-        {
-          "name": "buf",
-          "type": 24,
-          "typeArguments": null
-        },
-        {
-          "name": "len",
-          "type": 37,
-          "typeArguments": null
-        }
-      ],
-      "typeParameters": null
+      "type": "struct events::CollateralAssetUpdated",
+      "concreteTypeId": "6b698723a311c1005f7846d11d7ce209d68d00c120ee855364c14656ffb5b5a7",
+      "metadataTypeId": 9
     },
     {
-      "typeId": 11,
-      "type": "struct CollateralAssetAdded",
-      "components": [
-        {
-          "name": "asset_id",
-          "type": 2,
-          "typeArguments": null
-        },
-        {
-          "name": "configuration",
-          "type": 15,
-          "typeArguments": null
-        }
-      ],
-      "typeParameters": null
+      "type": "struct events::MarketBasicEvent",
+      "concreteTypeId": "6a4af7c6d1aa3fedf33604a44da789ba359bf8f662a56fbc4de9603b8e732291",
+      "metadataTypeId": 10
     },
     {
-      "typeId": 12,
-      "type": "struct CollateralAssetPaused",
-      "components": [
-        {
-          "name": "asset_id",
-          "type": 2,
-          "typeArguments": null
-        }
-      ],
-      "typeParameters": null
+      "type": "struct events::MarketConfigurationEvent",
+      "concreteTypeId": "61d1473d8ec7f29c9b7f67ec6b840b973400d6af66df556a4fb5ea9884f780b7",
+      "metadataTypeId": 11
     },
     {
-      "typeId": 13,
-      "type": "struct CollateralAssetResumed",
-      "components": [
-        {
-          "name": "asset_id",
-          "type": 2,
-          "typeArguments": null
-        }
-      ],
-      "typeParameters": null
+      "type": "struct events::PauseConfigurationEvent",
+      "concreteTypeId": "ecf750cd9cc44add1b8fc9f1b11bb65d0981711b42c84d20aec21ef32bab7682",
+      "metadataTypeId": 12
     },
     {
-      "typeId": 14,
-      "type": "struct CollateralAssetUpdated",
-      "components": [
-        {
-          "name": "asset_id",
-          "type": 2,
-          "typeArguments": null
-        },
-        {
-          "name": "configuration",
-          "type": 15,
-          "typeArguments": null
-        }
-      ],
-      "typeParameters": null
+      "type": "struct events::ReservesWithdrawnEvent",
+      "concreteTypeId": "27b6995841bd520fff14deec990e8d66c03d8df59a510fa25e505694b0bc6ebe",
+      "metadataTypeId": 13
     },
     {
-      "typeId": 15,
-      "type": "struct CollateralConfiguration",
-      "components": [
-        {
-          "name": "asset_id",
-          "type": 2,
-          "typeArguments": null
-        },
-        {
-          "name": "price_feed_id",
-          "type": 2,
-          "typeArguments": null
-        },
-        {
-          "name": "decimals",
-          "type": 36,
-          "typeArguments": null
-        },
-        {
-          "name": "borrow_collateral_factor",
-          "type": 35,
-          "typeArguments": null
-        },
-        {
-          "name": "liquidate_collateral_factor",
-          "type": 35,
-          "typeArguments": null
-        },
-        {
-          "name": "liquidation_penalty",
-          "type": 35,
-          "typeArguments": null
-        },
-        {
-          "name": "supply_cap",
-          "type": 35,
-          "typeArguments": null
-        },
-        {
-          "name": "paused",
-          "type": 3,
-          "typeArguments": null
-        }
-      ],
-      "typeParameters": null
+      "type": "struct events::UserBasicEvent",
+      "concreteTypeId": "496e403bcde15a6d2d8a6ac3ae964a1db2145d27464fad7ae2b0dd4390c90c19",
+      "metadataTypeId": 14
     },
     {
-      "typeId": 16,
-      "type": "struct ContractId",
-      "components": [
-        {
-          "name": "bits",
-          "type": 2,
-          "typeArguments": null
-        }
-      ],
-      "typeParameters": null
+      "type": "struct events::UserLiquidatedEvent",
+      "concreteTypeId": "92d691781932f1848ba9433a9b1c09a97f985b331d88a1a289fc54569161d639",
+      "metadataTypeId": 15
     },
     {
-      "typeId": 17,
-      "type": "struct I256",
-      "components": [
-        {
-          "name": "value",
-          "type": 35,
-          "typeArguments": null
-        },
-        {
-          "name": "negative",
-          "type": 3,
-          "typeArguments": null
-        }
-      ],
-      "typeParameters": null
+      "type": "struct events::UserSupplyBaseEvent",
+      "concreteTypeId": "1aed7a0722d2031e0bce0b49bb46e0f91a2237480a9d928eb696c7d1a6d7250c",
+      "metadataTypeId": 16
     },
     {
-      "typeId": 18,
-      "type": "struct MarketBasicEvent",
-      "components": [
-        {
-          "name": "market_basic",
-          "type": 19,
-          "typeArguments": null
-        }
-      ],
-      "typeParameters": null
+      "type": "struct events::UserSupplyCollateralEvent",
+      "concreteTypeId": "61825e22a76ff7a0ca3ce1004c7d128c7844a8dde36cf7ea9077f8a57ef1f88a",
+      "metadataTypeId": 17
     },
     {
-      "typeId": 19,
-      "type": "struct MarketBasics",
-      "components": [
-        {
-          "name": "base_supply_index",
-          "type": 35,
-          "typeArguments": null
-        },
-        {
-          "name": "base_borrow_index",
-          "type": 35,
-          "typeArguments": null
-        },
-        {
-          "name": "tracking_supply_index",
-          "type": 35,
-          "typeArguments": null
-        },
-        {
-          "name": "tracking_borrow_index",
-          "type": 35,
-          "typeArguments": null
-        },
-        {
-          "name": "total_supply_base",
-          "type": 35,
-          "typeArguments": null
-        },
-        {
-          "name": "total_borrow_base",
-          "type": 35,
-          "typeArguments": null
-        },
-        {
-          "name": "last_accrual_time",
-          "type": 35,
-          "typeArguments": null
-        }
-      ],
-      "typeParameters": null
+      "type": "struct events::UserWithdrawBaseEvent",
+      "concreteTypeId": "3bbf66e44a782b08497502f3c67b5e181f14ef16755805fd800040f902019de1",
+      "metadataTypeId": 18
     },
     {
-      "typeId": 20,
-      "type": "struct MarketConfiguration",
-      "components": [
-        {
-          "name": "governor",
-          "type": 8,
-          "typeArguments": null
-        },
-        {
-          "name": "pause_guardian",
-          "type": 8,
-          "typeArguments": null
-        },
-        {
-          "name": "base_token",
-          "type": 2,
-          "typeArguments": null
-        },
-        {
-          "name": "base_token_decimals",
-          "type": 36,
-          "typeArguments": null
-        },
-        {
-          "name": "base_token_price_feed_id",
-          "type": 2,
-          "typeArguments": null
-        },
-        {
-          "name": "supply_kink",
-          "type": 35,
-          "typeArguments": null
-        },
-        {
-          "name": "borrow_kink",
-          "type": 35,
-          "typeArguments": null
-        },
-        {
-          "name": "supply_per_second_interest_rate_slope_low",
-          "type": 35,
-          "typeArguments": null
-        },
-        {
-          "name": "supply_per_second_interest_rate_slope_high",
-          "type": 35,
-          "typeArguments": null
-        },
-        {
-          "name": "supply_per_second_interest_rate_base",
-          "type": 35,
-          "typeArguments": null
-        },
-        {
-          "name": "borrow_per_second_interest_rate_slope_low",
-          "type": 35,
-          "typeArguments": null
-        },
-        {
-          "name": "borrow_per_second_interest_rate_slope_high",
-          "type": 35,
-          "typeArguments": null
-        },
-        {
-          "name": "borrow_per_second_interest_rate_base",
-          "type": 35,
-          "typeArguments": null
-        },
-        {
-          "name": "store_front_price_factor",
-          "type": 35,
-          "typeArguments": null
-        },
-        {
-          "name": "base_tracking_index_scale",
-          "type": 35,
-          "typeArguments": null
-        },
-        {
-          "name": "base_tracking_supply_speed",
-          "type": 35,
-          "typeArguments": null
-        },
-        {
-          "name": "base_tracking_borrow_speed",
-          "type": 35,
-          "typeArguments": null
-        },
-        {
-          "name": "base_min_for_rewards",
-          "type": 35,
-          "typeArguments": null
-        },
-        {
-          "name": "base_borrow_min",
-          "type": 35,
-          "typeArguments": null
-        },
-        {
-          "name": "target_reserves",
-          "type": 35,
-          "typeArguments": null
-        },
-        {
-          "name": "debug_step",
-          "type": 37,
-          "typeArguments": null
-        },
-        {
-          "name": "fuel_eth_base_asset_id",
-          "type": 2,
-          "typeArguments": null
-        }
-      ],
-      "typeParameters": null
+      "type": "struct events::UserWithdrawCollateralEvent",
+      "concreteTypeId": "76ac511aac239f80b30e11716c2a730f0a814ea3acc85a13abb1777519465a4a",
+      "metadataTypeId": 19
     },
     {
-      "typeId": 21,
-      "type": "struct PauseConfiguration",
-      "components": [
-        {
-          "name": "supply_paused",
-          "type": 3,
-          "typeArguments": null
-        },
-        {
-          "name": "withdraw_paused",
-          "type": 3,
-          "typeArguments": null
-        },
-        {
-          "name": "absorb_paused",
-          "type": 3,
-          "typeArguments": null
-        },
-        {
-          "name": "buy_paused",
-          "type": 3,
-          "typeArguments": null
-        }
-      ],
-      "typeParameters": null
+      "type": "struct i256::I256",
+      "concreteTypeId": "2c1b573de37da8020776e36206aa54a3020ad03063bf219d626b6c1cdd82c65d",
+      "metadataTypeId": 20
     },
     {
-      "typeId": 22,
-      "type": "struct PauseConfigurationEvent",
-      "components": [
-        {
-          "name": "pause_config",
-          "type": 21,
-          "typeArguments": null
-        }
-      ],
-      "typeParameters": null
+      "type": "struct market_abi::structs::CollateralConfiguration",
+      "concreteTypeId": "027212d4a883f4144f8043ef93fee6aa9d766041c7735fa37fae71d45ab6d92d",
+      "metadataTypeId": 21
     },
     {
-      "typeId": 23,
-      "type": "struct Price",
-      "components": [
-        {
-          "name": "confidence",
-          "type": 37,
-          "typeArguments": null
-        },
-        {
-          "name": "exponent",
-          "type": 36,
-          "typeArguments": null
-        },
-        {
-          "name": "price",
-          "type": 37,
-          "typeArguments": null
-        },
-        {
-          "name": "publish_time",
-          "type": 37,
-          "typeArguments": null
-        }
-      ],
-      "typeParameters": null
+      "type": "struct market_abi::structs::MarketBasics",
+      "concreteTypeId": "8f0ca9732dda82407f3d36328a5e4b89421c5f1c404a9568afa856df6efb5802",
+      "metadataTypeId": 22
     },
     {
-      "typeId": 24,
-      "type": "struct RawBytes",
-      "components": [
-        {
-          "name": "ptr",
-          "type": 6,
-          "typeArguments": null
-        },
-        {
-          "name": "cap",
-          "type": 37,
-          "typeArguments": null
-        }
-      ],
-      "typeParameters": null
+      "type": "struct market_abi::structs::MarketConfiguration",
+      "concreteTypeId": "788c494dd193488709eb7174a5299c17819b0c2e68089b18e0474d616080cc9c",
+      "metadataTypeId": 23
     },
     {
-      "typeId": 25,
-      "type": "struct RawVec",
-      "components": [
-        {
-          "name": "ptr",
-          "type": 6,
-          "typeArguments": null
-        },
-        {
-          "name": "cap",
-          "type": 37,
-          "typeArguments": null
-        }
-      ],
-      "typeParameters": [
-        5
+      "type": "struct market_abi::structs::PauseConfiguration",
+      "concreteTypeId": "8ec71ec402ef77ffda0627839b31dd1444fad8b4a95507e86bfa89f0517dbc3d",
+      "metadataTypeId": 24
+    },
+    {
+      "type": "struct market_abi::structs::PriceDataUpdate",
+      "concreteTypeId": "60b16a7d7d88977a17d1cbc5d1d741c4872c833abbe5cd6eaa5e2d741cd8bf19",
+      "metadataTypeId": 25
+    },
+    {
+      "type": "struct market_abi::structs::UserBasic",
+      "concreteTypeId": "2878312d8fe9af45fe59b9252d6afa651128c8f755ca8f26ae4d67ede06b8ea1",
+      "metadataTypeId": 26
+    },
+    {
+      "type": "struct pyth_interface::data_structures::price::Price",
+      "concreteTypeId": "8aba92fff7345309d4313706ed7db3a811609f62da8f0d2859819db43d461ff8",
+      "metadataTypeId": 27
+    },
+    {
+      "type": "struct std::address::Address",
+      "concreteTypeId": "f597b637c3b0f588fb8d7086c6f4735caa3122b85f0423b82e489f9bb58e2308",
+      "metadataTypeId": 28
+    },
+    {
+      "type": "struct std::bytes::Bytes",
+      "concreteTypeId": "cdd87b7d12fe505416570c294c884bca819364863efe3bf539245fa18515fbbb",
+      "metadataTypeId": 29
+    },
+    {
+      "type": "struct std::contract_id::ContractId",
+      "concreteTypeId": "29c10735d33b5159f0c71ee1dbd17b36a3e69e41f00fab0d42e1bd9f428d8a54",
+      "metadataTypeId": 31
+    },
+    {
+      "type": "struct std::vec::Vec<struct market_abi::structs::CollateralConfiguration>",
+      "concreteTypeId": "135bedc713ecdc7e568f13811c40a9df6a62b44f54789c3f87066e7ccaedcc14",
+      "metadataTypeId": 33,
+      "typeArguments": [
+        "027212d4a883f4144f8043ef93fee6aa9d766041c7735fa37fae71d45ab6d92d"
       ]
     },
     {
-      "typeId": 26,
-      "type": "struct ReservesWithdrawnEvent",
+      "type": "struct std::vec::Vec<struct std::address::Address>",
+      "concreteTypeId": "fc4d04749f58f5bf7fd11c9ed9065b555ad48afcaa1172aaefa952a3a7712160",
+      "metadataTypeId": 33,
+      "typeArguments": [
+        "f597b637c3b0f588fb8d7086c6f4735caa3122b85f0423b82e489f9bb58e2308"
+      ]
+    },
+    {
+      "type": "struct std::vec::Vec<struct std::bytes::Bytes>",
+      "concreteTypeId": "2601885b27af3627b8910876fc176d900cec2b16ec78c538f5f312e785d915f5",
+      "metadataTypeId": 33,
+      "typeArguments": [
+        "cdd87b7d12fe505416570c294c884bca819364863efe3bf539245fa18515fbbb"
+      ]
+    },
+    {
+      "type": "u256",
+      "concreteTypeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+    },
+    {
+      "type": "u64",
+      "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+    }
+  ],
+  "metadataTypes": [
+    {
+      "type": "(_, _)",
+      "metadataTypeId": 0,
+      "components": [
+        {
+          "name": "__tuple_element",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "__tuple_element",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        }
+      ]
+    },
+    {
+      "type": "enum market_abi::structs::Error",
+      "metadataTypeId": 1,
+      "components": [
+        {
+          "name": "AlreadyInitialized",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "Paused",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "Unauthorized",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "InsufficientReserves",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "NotLiquidatable",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "NotForSale",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "TooMuchSlippage",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "SupplyCapExceeded",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "NotCollateralized",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "BorrowTooSmall",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "NotPermitted",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "InvalidPayment",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "UnknownAsset",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "DebuggingDisabled",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "NotYetActive",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "AlreadyActive",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "OracleContractIdNotSet",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        }
+      ]
+    },
+    {
+      "type": "generic T",
+      "metadataTypeId": 2
+    },
+    {
+      "type": "raw untyped ptr",
+      "metadataTypeId": 3
+    },
+    {
+      "type": "struct events::AbsorbCollateralEvent",
+      "metadataTypeId": 4,
       "components": [
         {
           "name": "address",
-          "type": 8,
-          "typeArguments": null
+          "typeId": 28
+        },
+        {
+          "name": "asset_id",
+          "typeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
         },
         {
           "name": "amount",
-          "type": 35,
-          "typeArguments": null
-        }
-      ],
-      "typeParameters": null
-    },
-    {
-      "typeId": 27,
-      "type": "struct UserBasic",
-      "components": [
-        {
-          "name": "principal",
-          "type": 17,
-          "typeArguments": null
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
         },
         {
-          "name": "base_tracking_index",
-          "type": 35,
-          "typeArguments": null
-        },
-        {
-          "name": "base_tracking_accrued",
-          "type": 35,
-          "typeArguments": null
-        }
-      ],
-      "typeParameters": null
-    },
-    {
-      "typeId": 28,
-      "type": "struct UserBasicEvent",
-      "components": [
-        {
-          "name": "address",
-          "type": 8,
-          "typeArguments": null
-        },
-        {
-          "name": "user_basic",
-          "type": 27,
-          "typeArguments": null
-        }
-      ],
-      "typeParameters": null
-    },
-    {
-      "typeId": 29,
-      "type": "struct UserLiquidatedEvent",
-      "components": [
-        {
-          "name": "address",
-          "type": 8,
-          "typeArguments": null
-        },
-        {
-          "name": "liquidator",
-          "type": 8,
-          "typeArguments": null
-        },
-        {
-          "name": "base_paid_out",
-          "type": 35,
-          "typeArguments": null
-        },
-        {
-          "name": "base_paid_out_value",
-          "type": 35,
-          "typeArguments": null
-        },
-        {
-          "name": "total_base",
-          "type": 35,
-          "typeArguments": null
-        },
-        {
-          "name": "total_base_value",
-          "type": 35,
-          "typeArguments": null
+          "name": "seize_value",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
         },
         {
           "name": "decimals",
-          "type": 36,
-          "typeArguments": null
+          "typeId": 34
         }
-      ],
-      "typeParameters": null
+      ]
     },
     {
-      "typeId": 30,
-      "type": "struct UserSupplyBaseEvent",
+      "type": "struct events::BuyCollateralEvent",
+      "metadataTypeId": 5,
+      "components": [
+        {
+          "name": "caller",
+          "typeId": 28
+        },
+        {
+          "name": "recipient",
+          "typeId": 28
+        },
+        {
+          "name": "asset_id",
+          "typeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+        },
+        {
+          "name": "amount",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "price",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        }
+      ]
+    },
+    {
+      "type": "struct events::CollateralAssetAdded",
+      "metadataTypeId": 6,
+      "components": [
+        {
+          "name": "asset_id",
+          "typeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+        },
+        {
+          "name": "configuration",
+          "typeId": 21
+        }
+      ]
+    },
+    {
+      "type": "struct events::CollateralAssetPaused",
+      "metadataTypeId": 7,
+      "components": [
+        {
+          "name": "asset_id",
+          "typeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+        }
+      ]
+    },
+    {
+      "type": "struct events::CollateralAssetResumed",
+      "metadataTypeId": 8,
+      "components": [
+        {
+          "name": "asset_id",
+          "typeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+        }
+      ]
+    },
+    {
+      "type": "struct events::CollateralAssetUpdated",
+      "metadataTypeId": 9,
+      "components": [
+        {
+          "name": "asset_id",
+          "typeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+        },
+        {
+          "name": "configuration",
+          "typeId": 21
+        }
+      ]
+    },
+    {
+      "type": "struct events::MarketBasicEvent",
+      "metadataTypeId": 10,
+      "components": [
+        {
+          "name": "market_basic",
+          "typeId": 22
+        }
+      ]
+    },
+    {
+      "type": "struct events::MarketConfigurationEvent",
+      "metadataTypeId": 11,
+      "components": [
+        {
+          "name": "market_config",
+          "typeId": 23
+        }
+      ]
+    },
+    {
+      "type": "struct events::PauseConfigurationEvent",
+      "metadataTypeId": 12,
+      "components": [
+        {
+          "name": "pause_config",
+          "typeId": 24
+        }
+      ]
+    },
+    {
+      "type": "struct events::ReservesWithdrawnEvent",
+      "metadataTypeId": 13,
       "components": [
         {
           "name": "address",
-          "type": 8,
-          "typeArguments": null
+          "typeId": 28
+        },
+        {
+          "name": "amount",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        }
+      ]
+    },
+    {
+      "type": "struct events::UserBasicEvent",
+      "metadataTypeId": 14,
+      "components": [
+        {
+          "name": "address",
+          "typeId": 28
+        },
+        {
+          "name": "user_basic",
+          "typeId": 26
+        }
+      ]
+    },
+    {
+      "type": "struct events::UserLiquidatedEvent",
+      "metadataTypeId": 15,
+      "components": [
+        {
+          "name": "address",
+          "typeId": 28
+        },
+        {
+          "name": "liquidator",
+          "typeId": 28
+        },
+        {
+          "name": "base_paid_out",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "base_paid_out_value",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "total_base",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "total_base_value",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "decimals",
+          "typeId": 34
+        }
+      ]
+    },
+    {
+      "type": "struct events::UserSupplyBaseEvent",
+      "metadataTypeId": 16,
+      "components": [
+        {
+          "name": "address",
+          "typeId": 28
         },
         {
           "name": "supply_amount",
-          "type": 35,
-          "typeArguments": null
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
         },
         {
           "name": "repay_amount",
-          "type": 35,
-          "typeArguments": null
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
         }
-      ],
-      "typeParameters": null
+      ]
     },
     {
-      "typeId": 31,
-      "type": "struct UserSupplyCollateralEvent",
+      "type": "struct events::UserSupplyCollateralEvent",
+      "metadataTypeId": 17,
       "components": [
         {
           "name": "address",
-          "type": 8,
-          "typeArguments": null
+          "typeId": 28
         },
         {
           "name": "asset_id",
-          "type": 2,
-          "typeArguments": null
+          "typeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
         },
         {
           "name": "amount",
-          "type": 35,
-          "typeArguments": null
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
         }
-      ],
-      "typeParameters": null
+      ]
     },
     {
-      "typeId": 32,
-      "type": "struct UserWithdrawBaseEvent",
+      "type": "struct events::UserWithdrawBaseEvent",
+      "metadataTypeId": 18,
       "components": [
         {
           "name": "address",
-          "type": 8,
-          "typeArguments": null
+          "typeId": 28
         },
         {
           "name": "withdraw_amount",
-          "type": 35,
-          "typeArguments": null
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
         },
         {
           "name": "borrow_amount",
-          "type": 35,
-          "typeArguments": null
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
         }
-      ],
-      "typeParameters": null
+      ]
     },
     {
-      "typeId": 33,
-      "type": "struct UserWithdrawCollateralEvent",
+      "type": "struct events::UserWithdrawCollateralEvent",
+      "metadataTypeId": 19,
       "components": [
         {
           "name": "address",
-          "type": 8,
-          "typeArguments": null
+          "typeId": 28
         },
         {
           "name": "asset_id",
-          "type": 2,
-          "typeArguments": null
+          "typeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
         },
         {
           "name": "amount",
-          "type": 35,
-          "typeArguments": null
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
         }
-      ],
-      "typeParameters": null
+      ]
     },
     {
-      "typeId": 34,
-      "type": "struct Vec",
+      "type": "struct i256::I256",
+      "metadataTypeId": 20,
       "components": [
         {
-          "name": "buf",
-          "type": 25,
+          "name": "value",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "negative",
+          "typeId": "b760f44fa5965c2474a3b471467a22c43185152129295af588b022ae50b50903"
+        }
+      ]
+    },
+    {
+      "type": "struct market_abi::structs::CollateralConfiguration",
+      "metadataTypeId": 21,
+      "components": [
+        {
+          "name": "asset_id",
+          "typeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+        },
+        {
+          "name": "price_feed_id",
+          "typeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+        },
+        {
+          "name": "decimals",
+          "typeId": 34
+        },
+        {
+          "name": "borrow_collateral_factor",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "liquidate_collateral_factor",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "liquidation_penalty",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "supply_cap",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "paused",
+          "typeId": "b760f44fa5965c2474a3b471467a22c43185152129295af588b022ae50b50903"
+        }
+      ]
+    },
+    {
+      "type": "struct market_abi::structs::MarketBasics",
+      "metadataTypeId": 22,
+      "components": [
+        {
+          "name": "base_supply_index",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "base_borrow_index",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "tracking_supply_index",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "tracking_borrow_index",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "total_supply_base",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "total_borrow_base",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "last_accrual_time",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        }
+      ]
+    },
+    {
+      "type": "struct market_abi::structs::MarketConfiguration",
+      "metadataTypeId": 23,
+      "components": [
+        {
+          "name": "governor",
+          "typeId": 28
+        },
+        {
+          "name": "pause_guardian",
+          "typeId": 28
+        },
+        {
+          "name": "base_token",
+          "typeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+        },
+        {
+          "name": "base_token_decimals",
+          "typeId": 34
+        },
+        {
+          "name": "base_token_price_feed_id",
+          "typeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+        },
+        {
+          "name": "supply_kink",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "borrow_kink",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "supply_per_second_interest_rate_slope_low",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "supply_per_second_interest_rate_slope_high",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "supply_per_second_interest_rate_base",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "borrow_per_second_interest_rate_slope_low",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "borrow_per_second_interest_rate_slope_high",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "borrow_per_second_interest_rate_base",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "store_front_price_factor",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "base_tracking_index_scale",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "base_tracking_supply_speed",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "base_tracking_borrow_speed",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "base_min_for_rewards",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "base_borrow_min",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "target_reserves",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        }
+      ]
+    },
+    {
+      "type": "struct market_abi::structs::PauseConfiguration",
+      "metadataTypeId": 24,
+      "components": [
+        {
+          "name": "supply_paused",
+          "typeId": "b760f44fa5965c2474a3b471467a22c43185152129295af588b022ae50b50903"
+        },
+        {
+          "name": "withdraw_paused",
+          "typeId": "b760f44fa5965c2474a3b471467a22c43185152129295af588b022ae50b50903"
+        },
+        {
+          "name": "absorb_paused",
+          "typeId": "b760f44fa5965c2474a3b471467a22c43185152129295af588b022ae50b50903"
+        },
+        {
+          "name": "buy_paused",
+          "typeId": "b760f44fa5965c2474a3b471467a22c43185152129295af588b022ae50b50903"
+        }
+      ]
+    },
+    {
+      "type": "struct market_abi::structs::PriceDataUpdate",
+      "metadataTypeId": 25,
+      "components": [
+        {
+          "name": "update_fee",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        },
+        {
+          "name": "publish_times",
+          "typeId": 33,
           "typeArguments": [
             {
               "name": "",
-              "type": 5,
-              "typeArguments": null
+              "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+            }
+          ]
+        },
+        {
+          "name": "price_feed_ids",
+          "typeId": 33,
+          "typeArguments": [
+            {
+              "name": "",
+              "typeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+            }
+          ]
+        },
+        {
+          "name": "update_data",
+          "typeId": 33,
+          "typeArguments": [
+            {
+              "name": "",
+              "typeId": 29
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "struct market_abi::structs::UserBasic",
+      "metadataTypeId": 26,
+      "components": [
+        {
+          "name": "principal",
+          "typeId": 20
+        },
+        {
+          "name": "base_tracking_index",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "base_tracking_accrued",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        }
+      ]
+    },
+    {
+      "type": "struct pyth_interface::data_structures::price::Price",
+      "metadataTypeId": 27,
+      "components": [
+        {
+          "name": "confidence",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        },
+        {
+          "name": "exponent",
+          "typeId": 34
+        },
+        {
+          "name": "price",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        },
+        {
+          "name": "publish_time",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        }
+      ]
+    },
+    {
+      "type": "struct std::address::Address",
+      "metadataTypeId": 28,
+      "components": [
+        {
+          "name": "bits",
+          "typeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+        }
+      ]
+    },
+    {
+      "type": "struct std::bytes::Bytes",
+      "metadataTypeId": 29,
+      "components": [
+        {
+          "name": "buf",
+          "typeId": 30
+        },
+        {
+          "name": "len",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        }
+      ]
+    },
+    {
+      "type": "struct std::bytes::RawBytes",
+      "metadataTypeId": 30,
+      "components": [
+        {
+          "name": "ptr",
+          "typeId": 3
+        },
+        {
+          "name": "cap",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        }
+      ]
+    },
+    {
+      "type": "struct std::contract_id::ContractId",
+      "metadataTypeId": 31,
+      "components": [
+        {
+          "name": "bits",
+          "typeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+        }
+      ]
+    },
+    {
+      "type": "struct std::vec::RawVec",
+      "metadataTypeId": 32,
+      "components": [
+        {
+          "name": "ptr",
+          "typeId": 3
+        },
+        {
+          "name": "cap",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        }
+      ],
+      "typeParameters": [
+        2
+      ]
+    },
+    {
+      "type": "struct std::vec::Vec",
+      "metadataTypeId": 33,
+      "components": [
+        {
+          "name": "buf",
+          "typeId": 32,
+          "typeArguments": [
+            {
+              "name": "",
+              "typeId": 2
             }
           ]
         },
         {
           "name": "len",
-          "type": 37,
-          "typeArguments": null
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
         }
       ],
       "typeParameters": [
-        5
+        2
       ]
     },
     {
-      "typeId": 35,
-      "type": "u256",
-      "components": null,
-      "typeParameters": null
-    },
-    {
-      "typeId": 36,
       "type": "u32",
-      "components": null,
-      "typeParameters": null
-    },
-    {
-      "typeId": 37,
-      "type": "u64",
-      "components": null,
-      "typeParameters": null
+      "metadataTypeId": 34
     }
   ],
   "functions": [
@@ -977,23 +1012,20 @@ const abi = {
       "inputs": [
         {
           "name": "accounts",
-          "type": 34,
-          "typeArguments": [
-            {
-              "name": "",
-              "type": 8,
-              "typeArguments": null
-            }
-          ]
+          "concreteTypeId": "fc4d04749f58f5bf7fd11c9ed9065b555ad48afcaa1172aaefa952a3a7712160"
+        },
+        {
+          "name": "price_data_update",
+          "concreteTypeId": "60b16a7d7d88977a17d1cbc5d1d741c4872c833abbe5cd6eaa5e2d741cd8bf19"
         }
       ],
       "name": "absorb",
-      "output": {
-        "name": "",
-        "type": 0,
-        "typeArguments": null
-      },
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
+        {
+          "name": "payable",
+          "arguments": []
+        },
         {
           "name": "storage",
           "arguments": [
@@ -1004,13 +1036,14 @@ const abi = {
       ]
     },
     {
-      "inputs": [],
+      "inputs": [
+        {
+          "name": "market_configuration",
+          "concreteTypeId": "788c494dd193488709eb7174a5299c17819b0c2e68089b18e0474d616080cc9c"
+        }
+      ],
       "name": "activate_contract",
-      "output": {
-        "name": "",
-        "type": 0,
-        "typeArguments": null
-      },
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
           "name": "storage",
@@ -1025,16 +1058,11 @@ const abi = {
       "inputs": [
         {
           "name": "configuration",
-          "type": 15,
-          "typeArguments": null
+          "concreteTypeId": "027212d4a883f4144f8043ef93fee6aa9d766041c7735fa37fae71d45ab6d92d"
         }
       ],
       "name": "add_collateral_asset",
-      "output": {
-        "name": "",
-        "type": 0,
-        "typeArguments": null
-      },
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
           "name": "storage",
@@ -1049,16 +1077,11 @@ const abi = {
       "inputs": [
         {
           "name": "account",
-          "type": 8,
-          "typeArguments": null
+          "concreteTypeId": "f597b637c3b0f588fb8d7086c6f4735caa3122b85f0423b82e489f9bb58e2308"
         }
       ],
       "name": "available_to_borrow",
-      "output": {
-        "name": "",
-        "type": 35,
-        "typeArguments": null
-      },
+      "output": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e",
       "attributes": [
         {
           "name": "storage",
@@ -1072,42 +1095,30 @@ const abi = {
       "inputs": [
         {
           "name": "asset",
-          "type": 2,
-          "typeArguments": null
+          "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
         }
       ],
       "name": "balance_of",
-      "output": {
-        "name": "",
-        "type": 37,
-        "typeArguments": null
-      },
+      "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
       "attributes": null
     },
     {
       "inputs": [
         {
           "name": "asset_id",
-          "type": 2,
-          "typeArguments": null
+          "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
         },
         {
           "name": "min_amount",
-          "type": 35,
-          "typeArguments": null
+          "concreteTypeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
         },
         {
           "name": "recipient",
-          "type": 8,
-          "typeArguments": null
+          "concreteTypeId": "f597b637c3b0f588fb8d7086c6f4735caa3122b85f0423b82e489f9bb58e2308"
         }
       ],
       "name": "buy_collateral",
-      "output": {
-        "name": "",
-        "type": 0,
-        "typeArguments": null
-      },
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
           "name": "payable",
@@ -1125,21 +1136,15 @@ const abi = {
       "inputs": [
         {
           "name": "asset_id",
-          "type": 2,
-          "typeArguments": null
+          "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
         },
         {
           "name": "collateral_amount",
-          "type": 35,
-          "typeArguments": null
+          "concreteTypeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
         }
       ],
       "name": "collateral_value_to_sell",
-      "output": {
-        "name": "",
-        "type": 35,
-        "typeArguments": null
-      },
+      "output": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e",
       "attributes": [
         {
           "name": "storage",
@@ -1152,11 +1157,7 @@ const abi = {
     {
       "inputs": [],
       "name": "debug_increment_timestamp",
-      "output": {
-        "name": "",
-        "type": 0,
-        "typeArguments": null
-      },
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
           "name": "storage",
@@ -1171,32 +1172,24 @@ const abi = {
       "inputs": [
         {
           "name": "utilization",
-          "type": 35,
-          "typeArguments": null
+          "concreteTypeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
         }
       ],
       "name": "get_borrow_rate",
-      "output": {
-        "name": "",
-        "type": 35,
-        "typeArguments": null
-      },
-      "attributes": null
+      "output": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read"
+          ]
+        }
+      ]
     },
     {
       "inputs": [],
       "name": "get_collateral_configurations",
-      "output": {
-        "name": "",
-        "type": 34,
-        "typeArguments": [
-          {
-            "name": "",
-            "type": 15,
-            "typeArguments": null
-          }
-        ]
-      },
+      "output": "135bedc713ecdc7e568f13811c40a9df6a62b44f54789c3f87066e7ccaedcc14",
       "attributes": [
         {
           "name": "storage",
@@ -1210,16 +1203,11 @@ const abi = {
       "inputs": [
         {
           "name": "asset_id",
-          "type": 2,
-          "typeArguments": null
+          "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
         }
       ],
       "name": "get_collateral_reserves",
-      "output": {
-        "name": "",
-        "type": 17,
-        "typeArguments": null
-      },
+      "output": "2c1b573de37da8020776e36206aa54a3020ad03063bf219d626b6c1cdd82c65d",
       "attributes": [
         {
           "name": "storage",
@@ -1231,22 +1219,21 @@ const abi = {
     },
     {
       "inputs": [],
-      "name": "get_configuration",
-      "output": {
-        "name": "",
-        "type": 20,
-        "typeArguments": null
-      },
-      "attributes": null
+      "name": "get_market_basics",
+      "output": "8f0ca9732dda82407f3d36328a5e4b89421c5f1c404a9568afa856df6efb5802",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read"
+          ]
+        }
+      ]
     },
     {
       "inputs": [],
-      "name": "get_market_basics",
-      "output": {
-        "name": "",
-        "type": 19,
-        "typeArguments": null
-      },
+      "name": "get_market_configuration",
+      "output": "788c494dd193488709eb7174a5299c17819b0c2e68089b18e0474d616080cc9c",
       "attributes": [
         {
           "name": "storage",
@@ -1260,16 +1247,11 @@ const abi = {
       "inputs": [
         {
           "name": "price_feed_id",
-          "type": 2,
-          "typeArguments": null
+          "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
         }
       ],
       "name": "get_price",
-      "output": {
-        "name": "",
-        "type": 23,
-        "typeArguments": null
-      },
+      "output": "8aba92fff7345309d4313706ed7db3a811609f62da8f0d2859819db43d461ff8",
       "attributes": [
         {
           "name": "storage",
@@ -1282,11 +1264,7 @@ const abi = {
     {
       "inputs": [],
       "name": "get_reserves",
-      "output": {
-        "name": "",
-        "type": 17,
-        "typeArguments": null
-      },
+      "output": "2c1b573de37da8020776e36206aa54a3020ad03063bf219d626b6c1cdd82c65d",
       "attributes": [
         {
           "name": "storage",
@@ -1300,32 +1278,29 @@ const abi = {
       "inputs": [
         {
           "name": "utilization",
-          "type": 35,
-          "typeArguments": null
+          "concreteTypeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
         }
       ],
       "name": "get_supply_rate",
-      "output": {
-        "name": "",
-        "type": 35,
-        "typeArguments": null
-      },
-      "attributes": null
+      "output": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read"
+          ]
+        }
+      ]
     },
     {
       "inputs": [
         {
           "name": "account",
-          "type": 8,
-          "typeArguments": null
+          "concreteTypeId": "f597b637c3b0f588fb8d7086c6f4735caa3122b85f0423b82e489f9bb58e2308"
         }
       ],
       "name": "get_user_basic",
-      "output": {
-        "name": "",
-        "type": 27,
-        "typeArguments": null
-      },
+      "output": "2878312d8fe9af45fe59b9252d6afa651128c8f755ca8f26ae4d67ede06b8ea1",
       "attributes": [
         {
           "name": "storage",
@@ -1339,21 +1314,15 @@ const abi = {
       "inputs": [
         {
           "name": "address",
-          "type": 8,
-          "typeArguments": null
+          "concreteTypeId": "f597b637c3b0f588fb8d7086c6f4735caa3122b85f0423b82e489f9bb58e2308"
         },
         {
           "name": "asset_id",
-          "type": 2,
-          "typeArguments": null
+          "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
         }
       ],
       "name": "get_user_collateral",
-      "output": {
-        "name": "",
-        "type": 35,
-        "typeArguments": null
-      },
+      "output": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e",
       "attributes": [
         {
           "name": "storage",
@@ -1367,16 +1336,11 @@ const abi = {
       "inputs": [
         {
           "name": "account",
-          "type": 8,
-          "typeArguments": null
+          "concreteTypeId": "f597b637c3b0f588fb8d7086c6f4735caa3122b85f0423b82e489f9bb58e2308"
         }
       ],
       "name": "get_user_supply_borrow",
-      "output": {
-        "name": "",
-        "type": 1,
-        "typeArguments": null
-      },
+      "output": "2770d9f762bf8ec295d5c253193cd2897c893401f1f438769f92d212641ec779",
       "attributes": [
         {
           "name": "storage",
@@ -1389,11 +1353,7 @@ const abi = {
     {
       "inputs": [],
       "name": "get_utilization",
-      "output": {
-        "name": "",
-        "type": 35,
-        "typeArguments": null
-      },
+      "output": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e",
       "attributes": [
         {
           "name": "storage",
@@ -1407,16 +1367,11 @@ const abi = {
       "inputs": [
         {
           "name": "account",
-          "type": 8,
-          "typeArguments": null
+          "concreteTypeId": "f597b637c3b0f588fb8d7086c6f4735caa3122b85f0423b82e489f9bb58e2308"
         }
       ],
       "name": "is_liquidatable",
-      "output": {
-        "name": "",
-        "type": 3,
-        "typeArguments": null
-      },
+      "output": "b760f44fa5965c2474a3b471467a22c43185152129295af588b022ae50b50903",
       "attributes": [
         {
           "name": "storage",
@@ -1430,16 +1385,11 @@ const abi = {
       "inputs": [
         {
           "name": "pause_config",
-          "type": 21,
-          "typeArguments": null
+          "concreteTypeId": "8ec71ec402ef77ffda0627839b31dd1444fad8b4a95507e86bfa89f0517dbc3d"
         }
       ],
       "name": "pause",
-      "output": {
-        "name": "",
-        "type": 0,
-        "typeArguments": null
-      },
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
           "name": "storage",
@@ -1454,16 +1404,11 @@ const abi = {
       "inputs": [
         {
           "name": "asset_id",
-          "type": 2,
-          "typeArguments": null
+          "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
         }
       ],
       "name": "pause_collateral_asset",
-      "output": {
-        "name": "",
-        "type": 0,
-        "typeArguments": null
-      },
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
           "name": "storage",
@@ -1478,21 +1423,15 @@ const abi = {
       "inputs": [
         {
           "name": "asset_id",
-          "type": 2,
-          "typeArguments": null
+          "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
         },
         {
           "name": "base_amount",
-          "type": 35,
-          "typeArguments": null
+          "concreteTypeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
         }
       ],
       "name": "quote_collateral",
-      "output": {
-        "name": "",
-        "type": 35,
-        "typeArguments": null
-      },
+      "output": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e",
       "attributes": [
         {
           "name": "storage",
@@ -1506,16 +1445,11 @@ const abi = {
       "inputs": [
         {
           "name": "asset_id",
-          "type": 2,
-          "typeArguments": null
+          "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
         }
       ],
       "name": "resume_collateral_asset",
-      "output": {
-        "name": "",
-        "type": 0,
-        "typeArguments": null
-      },
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
           "name": "storage",
@@ -1530,16 +1464,11 @@ const abi = {
       "inputs": [
         {
           "name": "contract_id",
-          "type": 16,
-          "typeArguments": null
+          "concreteTypeId": "29c10735d33b5159f0c71ee1dbd17b36a3e69e41f00fab0d42e1bd9f428d8a54"
         }
       ],
       "name": "set_pyth_contract_id",
-      "output": {
-        "name": "",
-        "type": 0,
-        "typeArguments": null
-      },
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
           "name": "storage",
@@ -1553,11 +1482,7 @@ const abi = {
     {
       "inputs": [],
       "name": "supply_base",
-      "output": {
-        "name": "",
-        "type": 0,
-        "typeArguments": null
-      },
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
           "name": "payable",
@@ -1575,11 +1500,7 @@ const abi = {
     {
       "inputs": [],
       "name": "supply_collateral",
-      "output": {
-        "name": "",
-        "type": 0,
-        "typeArguments": null
-      },
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
           "name": "payable",
@@ -1598,16 +1519,11 @@ const abi = {
       "inputs": [
         {
           "name": "asset_id",
-          "type": 2,
-          "typeArguments": null
+          "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
         }
       ],
       "name": "totals_collateral",
-      "output": {
-        "name": "",
-        "type": 35,
-        "typeArguments": null
-      },
+      "output": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e",
       "attributes": [
         {
           "name": "storage",
@@ -1621,21 +1537,15 @@ const abi = {
       "inputs": [
         {
           "name": "asset_id",
-          "type": 2,
-          "typeArguments": null
+          "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
         },
         {
           "name": "configuration",
-          "type": 15,
-          "typeArguments": null
+          "concreteTypeId": "027212d4a883f4144f8043ef93fee6aa9d766041c7735fa37fae71d45ab6d92d"
         }
       ],
       "name": "update_collateral_asset",
-      "output": {
-        "name": "",
-        "type": 0,
-        "typeArguments": null
-      },
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
           "name": "storage",
@@ -1650,22 +1560,11 @@ const abi = {
       "inputs": [
         {
           "name": "update_data",
-          "type": 34,
-          "typeArguments": [
-            {
-              "name": "",
-              "type": 10,
-              "typeArguments": null
-            }
-          ]
+          "concreteTypeId": "2601885b27af3627b8910876fc176d900cec2b16ec78c538f5f312e785d915f5"
         }
       ],
       "name": "update_fee",
-      "output": {
-        "name": "",
-        "type": 37,
-        "typeArguments": null
-      },
+      "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
       "attributes": [
         {
           "name": "storage",
@@ -1678,28 +1577,31 @@ const abi = {
     {
       "inputs": [
         {
-          "name": "update_fee",
-          "type": 37,
-          "typeArguments": null
-        },
-        {
-          "name": "update_data",
-          "type": 34,
-          "typeArguments": [
-            {
-              "name": "",
-              "type": 10,
-              "typeArguments": null
-            }
-          ]
+          "name": "configuration",
+          "concreteTypeId": "788c494dd193488709eb7174a5299c17819b0c2e68089b18e0474d616080cc9c"
         }
       ],
-      "name": "update_price_feeds",
-      "output": {
-        "name": "",
-        "type": 0,
-        "typeArguments": null
-      },
+      "name": "update_market_configuration",
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read",
+            "write"
+          ]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "price_data_update",
+          "concreteTypeId": "60b16a7d7d88977a17d1cbc5d1d741c4872c833abbe5cd6eaa5e2d741cd8bf19"
+        }
+      ],
+      "name": "update_price_feeds_if_necessary",
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
           "name": "payable",
@@ -1717,17 +1619,20 @@ const abi = {
       "inputs": [
         {
           "name": "amount",
-          "type": 35,
-          "typeArguments": null
+          "concreteTypeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "price_data_update",
+          "concreteTypeId": "60b16a7d7d88977a17d1cbc5d1d741c4872c833abbe5cd6eaa5e2d741cd8bf19"
         }
       ],
       "name": "withdraw_base",
-      "output": {
-        "name": "",
-        "type": 0,
-        "typeArguments": null
-      },
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
+        {
+          "name": "payable",
+          "arguments": []
+        },
         {
           "name": "storage",
           "arguments": [
@@ -1741,22 +1646,24 @@ const abi = {
       "inputs": [
         {
           "name": "asset_id",
-          "type": 2,
-          "typeArguments": null
+          "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
         },
         {
           "name": "amount",
-          "type": 35,
-          "typeArguments": null
+          "concreteTypeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "price_data_update",
+          "concreteTypeId": "60b16a7d7d88977a17d1cbc5d1d741c4872c833abbe5cd6eaa5e2d741cd8bf19"
         }
       ],
       "name": "withdraw_collateral",
-      "output": {
-        "name": "",
-        "type": 0,
-        "typeArguments": null
-      },
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
+        {
+          "name": "payable",
+          "arguments": []
+        },
         {
           "name": "storage",
           "arguments": [
@@ -1770,21 +1677,15 @@ const abi = {
       "inputs": [
         {
           "name": "to",
-          "type": 8,
-          "typeArguments": null
+          "concreteTypeId": "f597b637c3b0f588fb8d7086c6f4735caa3122b85f0423b82e489f9bb58e2308"
         },
         {
           "name": "amount",
-          "type": 35,
-          "typeArguments": null
+          "concreteTypeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
         }
       ],
       "name": "withdraw_reserves",
-      "output": {
-        "name": "",
-        "type": 0,
-        "typeArguments": null
-      },
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
           "name": "storage",
@@ -1798,332 +1699,84 @@ const abi = {
   "loggedTypes": [
     {
       "logId": "5650517601072614705",
-      "loggedType": {
-        "name": "",
-        "type": 4,
-        "typeArguments": []
-      }
+      "concreteTypeId": "4e6aabd209068d31558291cfd07cff9366801b052a1767bd0a9eb34bf55e8a0e"
     },
     {
       "logId": "7659206549590130669",
-      "loggedType": {
-        "name": "",
-        "type": 18,
-        "typeArguments": []
-      }
+      "concreteTypeId": "6a4af7c6d1aa3fedf33604a44da789ba359bf8f662a56fbc4de9603b8e732291"
     },
     {
       "logId": "3591203286967623281",
-      "loggedType": {
-        "name": "",
-        "type": 7,
-        "typeArguments": []
-      }
+      "concreteTypeId": "31d6845ccbeb9e71f30bf07140659072ce92db76041efd6861d6895dace9e658"
     },
     {
       "logId": "5291237237808257645",
-      "loggedType": {
-        "name": "",
-        "type": 28,
-        "typeArguments": []
-      }
+      "concreteTypeId": "496e403bcde15a6d2d8a6ac3ae964a1db2145d27464fad7ae2b0dd4390c90c19"
     },
     {
       "logId": "10580804319558431108",
-      "loggedType": {
-        "name": "",
-        "type": 29,
-        "typeArguments": []
-      }
+      "concreteTypeId": "92d691781932f1848ba9433a9b1c09a97f985b331d88a1a289fc54569161d639"
     },
     {
       "logId": "17075205356227152605",
-      "loggedType": {
-        "name": "",
-        "type": 22,
-        "typeArguments": []
-      }
+      "concreteTypeId": "ecf750cd9cc44add1b8fc9f1b11bb65d0981711b42c84d20aec21ef32bab7682"
+    },
+    {
+      "logId": "7048493221525582492",
+      "concreteTypeId": "61d1473d8ec7f29c9b7f67ec6b840b973400d6af66df556a4fb5ea9884f780b7"
     },
     {
       "logId": "16873461032230770227",
-      "loggedType": {
-        "name": "",
-        "type": 11,
-        "typeArguments": []
-      }
+      "concreteTypeId": "ea2a9368cd82d633fcc3411dbff6c25a78c7ccf550034427221102b74d7926db"
     },
     {
       "logId": "12201150593867749328",
-      "loggedType": {
-        "name": "",
-        "type": 9,
-        "typeArguments": []
-      }
+      "concreteTypeId": "a95331d2168897d0f550d1c4f7fc582926a79b3e825866ecf8c11ef8dfb692c6"
     },
     {
       "logId": "5007089152005991246",
-      "loggedType": {
-        "name": "",
-        "type": 12,
-        "typeArguments": []
-      }
+      "concreteTypeId": "457cc10e18076b4e7a0ccc563fd089b256767bb56a148450f7e58f0d7cbf54ef"
     },
     {
       "logId": "9366109880057078281",
-      "loggedType": {
-        "name": "",
-        "type": 13,
-        "typeArguments": []
-      }
+      "concreteTypeId": "81fb1b4fe81422099de81384a1f433aac8964b267aac0428e6bf423e46b88df9"
     },
     {
       "logId": "1940341185534100254",
-      "loggedType": {
-        "name": "",
-        "type": 30,
-        "typeArguments": []
-      }
+      "concreteTypeId": "1aed7a0722d2031e0bce0b49bb46e0f91a2237480a9d928eb696c7d1a6d7250c"
     },
     {
       "logId": "7026281871582427040",
-      "loggedType": {
-        "name": "",
-        "type": 31,
-        "typeArguments": []
-      }
+      "concreteTypeId": "61825e22a76ff7a0ca3ce1004c7d128c7844a8dde36cf7ea9077f8a57ef1f88a"
     },
     {
       "logId": "7739866021742362880",
-      "loggedType": {
-        "name": "",
-        "type": 14,
-        "typeArguments": []
-      }
+      "concreteTypeId": "6b698723a311c1005f7846d11d7ce209d68d00c120ee855364c14656ffb5b5a7"
     },
     {
       "logId": "4305272899477449480",
-      "loggedType": {
-        "name": "",
-        "type": 32,
-        "typeArguments": []
-      }
+      "concreteTypeId": "3bbf66e44a782b08497502f3c67b5e181f14ef16755805fd800040f902019de1"
     },
     {
       "logId": "8551298967468744576",
-      "loggedType": {
-        "name": "",
-        "type": 33,
-        "typeArguments": []
-      }
+      "concreteTypeId": "76ac511aac239f80b30e11716c2a730f0a814ea3acc85a13abb1777519465a4a"
     },
     {
       "logId": "2861643217579627023",
-      "loggedType": {
-        "name": "",
-        "type": 26,
-        "typeArguments": []
-      }
+      "concreteTypeId": "27b6995841bd520fff14deec990e8d66c03d8df59a510fa25e505694b0bc6ebe"
     }
   ],
   "messagesTypes": [],
   "configurables": [
     {
-      "name": "GOVERNOR",
-      "configurableType": {
-        "name": "",
-        "type": 8,
-        "typeArguments": []
-      },
-      "offset": 93240
-    },
-    {
-      "name": "PAUSE_GUARDIAN",
-      "configurableType": {
-        "name": "",
-        "type": 8,
-        "typeArguments": []
-      },
-      "offset": 93272
-    },
-    {
-      "name": "BASE_TOKEN",
-      "configurableType": {
-        "name": "",
-        "type": 2,
-        "typeArguments": null
-      },
-      "offset": 92904
-    },
-    {
-      "name": "BASE_TOKEN_DECIMALS",
-      "configurableType": {
-        "name": "",
-        "type": 36,
-        "typeArguments": null
-      },
-      "offset": 92936
-    },
-    {
-      "name": "BASE_TOKEN_PRICE_FEED_ID",
-      "configurableType": {
-        "name": "",
-        "type": 2,
-        "typeArguments": null
-      },
-      "offset": 92944
-    },
-    {
-      "name": "SUPPLY_KINK",
-      "configurableType": {
-        "name": "",
-        "type": 35,
-        "typeArguments": null
-      },
-      "offset": 93336
-    },
-    {
-      "name": "BORROW_KINK",
-      "configurableType": {
-        "name": "",
-        "type": 35,
-        "typeArguments": null
-      },
-      "offset": 93072
-    },
-    {
-      "name": "SUPPLY_PER_SECOND_INTEREST_RATE_SLOPE_LOW",
-      "configurableType": {
-        "name": "",
-        "type": 35,
-        "typeArguments": null
-      },
-      "offset": 93432
-    },
-    {
-      "name": "SUPPLY_PER_SECOND_INTEREST_RATE_SLOPE_HIGH",
-      "configurableType": {
-        "name": "",
-        "type": 35,
-        "typeArguments": null
-      },
-      "offset": 93400
-    },
-    {
-      "name": "SUPPLY_PER_SECOND_INTEREST_RATE_BASE",
-      "configurableType": {
-        "name": "",
-        "type": 35,
-        "typeArguments": null
-      },
-      "offset": 93368
-    },
-    {
-      "name": "BORROW_PER_SECOND_INTEREST_RATE_SLOPE_LOW",
-      "configurableType": {
-        "name": "",
-        "type": 35,
-        "typeArguments": null
-      },
-      "offset": 93168
-    },
-    {
-      "name": "BORROW_PER_SECOND_INTEREST_RATE_SLOPE_HIGH",
-      "configurableType": {
-        "name": "",
-        "type": 35,
-        "typeArguments": null
-      },
-      "offset": 93136
-    },
-    {
-      "name": "BORROW_PER_SECOND_INTEREST_RATE_BASE",
-      "configurableType": {
-        "name": "",
-        "type": 35,
-        "typeArguments": null
-      },
-      "offset": 93104
-    },
-    {
-      "name": "STORE_FRONT_PRICE_FACTOR",
-      "configurableType": {
-        "name": "",
-        "type": 35,
-        "typeArguments": null
-      },
-      "offset": 93304
-    },
-    {
-      "name": "BASE_TRACKING_INDEX_SCALE",
-      "configurableType": {
-        "name": "",
-        "type": 35,
-        "typeArguments": null
-      },
-      "offset": 93008
-    },
-    {
-      "name": "BASE_TRACKING_SUPPLY_SPEED",
-      "configurableType": {
-        "name": "",
-        "type": 35,
-        "typeArguments": null
-      },
-      "offset": 93040
-    },
-    {
-      "name": "BASE_TRACKING_BORROW_SPEED",
-      "configurableType": {
-        "name": "",
-        "type": 35,
-        "typeArguments": null
-      },
-      "offset": 92976
-    },
-    {
-      "name": "BASE_MIN_FOR_REWARDS",
-      "configurableType": {
-        "name": "",
-        "type": 35,
-        "typeArguments": null
-      },
-      "offset": 92872
-    },
-    {
-      "name": "BASE_BORROW_MIN",
-      "configurableType": {
-        "name": "",
-        "type": 35,
-        "typeArguments": null
-      },
-      "offset": 92840
-    },
-    {
-      "name": "TARGET_RESERVES",
-      "configurableType": {
-        "name": "",
-        "type": 35,
-        "typeArguments": null
-      },
-      "offset": 93464
-    },
-    {
       "name": "DEBUG_STEP",
-      "configurableType": {
-        "name": "",
-        "type": 37,
-        "typeArguments": null
-      },
-      "offset": 93200
+      "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
+      "offset": 117312
     },
     {
       "name": "FUEL_ETH_BASE_ASSET_ID",
-      "configurableType": {
-        "name": "",
-        "type": 2,
-        "typeArguments": null
-      },
-      "offset": 93208
+      "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b",
+      "offset": 117320
     }
   ]
 };
@@ -2158,6 +1811,86 @@ const storageSlots: StorageSlot[] = [
     "value": "0000000000000000000000000000000000000000000000000000000000000000"
   },
   {
+    "key": "7b867e531e60dfad72c6b3543afcdc72cf783abc1c4f59c0c55ab5aec5f9d432",
+    "value": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  {
+    "key": "7b867e531e60dfad72c6b3543afcdc72cf783abc1c4f59c0c55ab5aec5f9d433",
+    "value": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  {
+    "key": "7b867e531e60dfad72c6b3543afcdc72cf783abc1c4f59c0c55ab5aec5f9d434",
+    "value": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  {
+    "key": "7b867e531e60dfad72c6b3543afcdc72cf783abc1c4f59c0c55ab5aec5f9d435",
+    "value": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  {
+    "key": "7b867e531e60dfad72c6b3543afcdc72cf783abc1c4f59c0c55ab5aec5f9d436",
+    "value": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  {
+    "key": "7b867e531e60dfad72c6b3543afcdc72cf783abc1c4f59c0c55ab5aec5f9d437",
+    "value": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  {
+    "key": "7b867e531e60dfad72c6b3543afcdc72cf783abc1c4f59c0c55ab5aec5f9d438",
+    "value": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  {
+    "key": "7b867e531e60dfad72c6b3543afcdc72cf783abc1c4f59c0c55ab5aec5f9d439",
+    "value": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  {
+    "key": "7b867e531e60dfad72c6b3543afcdc72cf783abc1c4f59c0c55ab5aec5f9d43a",
+    "value": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  {
+    "key": "7b867e531e60dfad72c6b3543afcdc72cf783abc1c4f59c0c55ab5aec5f9d43b",
+    "value": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  {
+    "key": "7b867e531e60dfad72c6b3543afcdc72cf783abc1c4f59c0c55ab5aec5f9d43c",
+    "value": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  {
+    "key": "7b867e531e60dfad72c6b3543afcdc72cf783abc1c4f59c0c55ab5aec5f9d43d",
+    "value": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  {
+    "key": "7b867e531e60dfad72c6b3543afcdc72cf783abc1c4f59c0c55ab5aec5f9d43e",
+    "value": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  {
+    "key": "7b867e531e60dfad72c6b3543afcdc72cf783abc1c4f59c0c55ab5aec5f9d43f",
+    "value": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  {
+    "key": "7b867e531e60dfad72c6b3543afcdc72cf783abc1c4f59c0c55ab5aec5f9d440",
+    "value": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  {
+    "key": "7b867e531e60dfad72c6b3543afcdc72cf783abc1c4f59c0c55ab5aec5f9d441",
+    "value": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  {
+    "key": "7b867e531e60dfad72c6b3543afcdc72cf783abc1c4f59c0c55ab5aec5f9d442",
+    "value": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  {
+    "key": "7b867e531e60dfad72c6b3543afcdc72cf783abc1c4f59c0c55ab5aec5f9d443",
+    "value": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  {
+    "key": "7b867e531e60dfad72c6b3543afcdc72cf783abc1c4f59c0c55ab5aec5f9d444",
+    "value": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  {
+    "key": "7b867e531e60dfad72c6b3543afcdc72cf783abc1c4f59c0c55ab5aec5f9d445",
+    "value": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  {
     "key": "9e39cce573e16c4eb034ec33f6641ef797822070b45760ef0edafbb57a145b1d",
     "value": "0000000000000000000000000000000000000000000000000000000000000000"
   },
@@ -2188,8 +1921,8 @@ export class MarketInterface extends Interface {
     get_borrow_rate: FunctionFragment;
     get_collateral_configurations: FunctionFragment;
     get_collateral_reserves: FunctionFragment;
-    get_configuration: FunctionFragment;
     get_market_basics: FunctionFragment;
+    get_market_configuration: FunctionFragment;
     get_price: FunctionFragment;
     get_reserves: FunctionFragment;
     get_supply_rate: FunctionFragment;
@@ -2208,7 +1941,8 @@ export class MarketInterface extends Interface {
     totals_collateral: FunctionFragment;
     update_collateral_asset: FunctionFragment;
     update_fee: FunctionFragment;
-    update_price_feeds: FunctionFragment;
+    update_market_configuration: FunctionFragment;
+    update_price_feeds_if_necessary: FunctionFragment;
     withdraw_base: FunctionFragment;
     withdraw_collateral: FunctionFragment;
     withdraw_reserves: FunctionFragment;
@@ -2221,8 +1955,8 @@ export class Market extends Contract {
 
   declare interface: MarketInterface;
   declare functions: {
-    absorb: InvokeFunction<[accounts: Vec<AddressInput>], void>;
-    activate_contract: InvokeFunction<[], void>;
+    absorb: InvokeFunction<[accounts: Vec<AddressInput>, price_data_update: PriceDataUpdateInput], void>;
+    activate_contract: InvokeFunction<[market_configuration: MarketConfigurationInput], void>;
     add_collateral_asset: InvokeFunction<[configuration: CollateralConfigurationInput], void>;
     available_to_borrow: InvokeFunction<[account: AddressInput], BN>;
     balance_of: InvokeFunction<[asset: string], BN>;
@@ -2232,8 +1966,8 @@ export class Market extends Contract {
     get_borrow_rate: InvokeFunction<[utilization: BigNumberish], BN>;
     get_collateral_configurations: InvokeFunction<[], Vec<CollateralConfigurationOutput>>;
     get_collateral_reserves: InvokeFunction<[asset_id: string], I256Output>;
-    get_configuration: InvokeFunction<[], MarketConfigurationOutput>;
     get_market_basics: InvokeFunction<[], MarketBasicsOutput>;
+    get_market_configuration: InvokeFunction<[], MarketConfigurationOutput>;
     get_price: InvokeFunction<[price_feed_id: string], PriceOutput>;
     get_reserves: InvokeFunction<[], I256Output>;
     get_supply_rate: InvokeFunction<[utilization: BigNumberish], BN>;
@@ -2252,9 +1986,10 @@ export class Market extends Contract {
     totals_collateral: InvokeFunction<[asset_id: string], BN>;
     update_collateral_asset: InvokeFunction<[asset_id: string, configuration: CollateralConfigurationInput], void>;
     update_fee: InvokeFunction<[update_data: Vec<Bytes>], BN>;
-    update_price_feeds: InvokeFunction<[update_fee: BigNumberish, update_data: Vec<Bytes>], void>;
-    withdraw_base: InvokeFunction<[amount: BigNumberish], void>;
-    withdraw_collateral: InvokeFunction<[asset_id: string, amount: BigNumberish], void>;
+    update_market_configuration: InvokeFunction<[configuration: MarketConfigurationInput], void>;
+    update_price_feeds_if_necessary: InvokeFunction<[price_data_update: PriceDataUpdateInput], void>;
+    withdraw_base: InvokeFunction<[amount: BigNumberish, price_data_update: PriceDataUpdateInput], void>;
+    withdraw_collateral: InvokeFunction<[asset_id: string, amount: BigNumberish, price_data_update: PriceDataUpdateInput], void>;
     withdraw_reserves: InvokeFunction<[to: AddressInput, amount: BigNumberish], void>;
   };
 

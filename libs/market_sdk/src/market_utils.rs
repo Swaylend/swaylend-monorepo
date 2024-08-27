@@ -193,7 +193,7 @@ impl MarketContract {
             .await?)
     }
 
-    pub async fn puase_collateral_asset(
+    pub async fn pause_collateral_asset(
         &self,
         asset_id: AssetId,
     ) -> anyhow::Result<CallResponse<()>> {
@@ -539,6 +539,7 @@ impl MarketContract {
             .methods()
             .withdraw_reserves(to, amount.into())
             .with_tx_policies(tx_policies)
+            .with_variable_output_policy(VariableOutputPolicy::Exactly(2))
             .call()
             .await?)
     }
@@ -747,6 +748,21 @@ impl MarketContract {
     }
 
     // # 11. Changing market configuration
+
+    pub async fn update_market_configuration(
+        &self,
+        configuration: &MarketConfiguration,
+    ) -> anyhow::Result<CallResponse<()>> {
+        let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
+
+        Ok(self
+            .instance
+            .methods()
+            .update_market_configuration(configuration.clone())
+            .with_tx_policies(tx_policies)
+            .call()
+            .await?)
+    }
 
     pub async fn print_debug_state(
         &self,

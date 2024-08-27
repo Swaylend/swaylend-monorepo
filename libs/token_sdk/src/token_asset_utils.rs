@@ -12,7 +12,9 @@ use crate::get_symbol_hash;
 
 #[derive(Deserialize)]
 pub struct TokenConfig {
+    #[allow(dead_code)]
     pub asset_id: String,
+    #[allow(dead_code)]
     pub name: String,
     pub symbol: String,
     pub decimals: u64,

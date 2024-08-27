@@ -1,15 +1,12 @@
-use crate::utils::{init_wallets, print_case_title};
+use crate::utils::{print_case_title, setup, TestData};
 use chrono::Utc;
 use fuels::prelude::ViewOnlyAccount;
 use fuels::programs::calls::{CallHandler, CallParameters};
 use fuels::programs::responses::CallResponse;
 use fuels::types::transaction::TxPolicies;
 use fuels::types::transaction_builders::VariableOutputPolicy;
-use fuels::types::{Address, Bits256, ContractId};
 use market::PriceDataUpdate;
-use market_sdk::{get_market_config, parse_units, MarketContract};
-use pyth_mock_sdk::PythMockContract;
-use token_sdk::{TokenAsset, TokenContract};
+use market_sdk::parse_units;
 
 // Multiplies all values by this number
 // It is necessary in order to test how the protocol works with large amounts
@@ -19,101 +16,30 @@ const AMOUNT_COEFFICIENT: u64 = 10u64.pow(0);
 async fn main_test_no_debug() {
     let scale_6 = 10u64.pow(6) as f64;
     let scale_9 = 10u64.pow(9) as f64;
-
-    //--------------- WALLETS ---------------
-    let wallets = init_wallets().await;
-    let admin = &wallets[0];
-    let alice = &wallets[1];
-    let bob = &wallets[2];
-    let chad = &wallets[3];
-
-    let alice_address = Address::from(alice.address());
-    let bob_address = Address::from(bob.address());
-    let chad_address = Address::from(chad.address());
-
-    //--------------- ORACLE ---------------
-    let oracle = PythMockContract::deploy(admin).await.unwrap();
-    let oracle_contract_id = ContractId::from(oracle.instance.contract_id());
-
-    //--------------- TOKENS ---------------
-    let token_contract = TokenContract::deploy(&admin).await.unwrap();
-    let (assets, asset_configs) = token_contract.deploy_tokens(&admin).await;
-
-    let usdc = assets.get("USDC").unwrap();
-    let usdc_contract = TokenAsset::new(
-        admin.clone(),
-        token_contract.contract_id().into(),
-        &usdc.symbol,
-    );
-    let uni = assets.get("UNI").unwrap();
-    let uni_contract = TokenAsset::new(
-        admin.clone(),
-        token_contract.contract_id().into(),
-        &uni.symbol,
-    );
-
-    //--------------- MARKET ---------------
-    let fuel_eth_base_asset_id = Bits256::zeroed();
-
-    let market_config = get_market_config(
-        admin.address().into(),
-        admin.address().into(),
-        usdc.bits256,
-        usdc.decimals as u32,
-        usdc.price_feed_id,
-    )
-    .unwrap();
-
-    let market = MarketContract::deploy(&admin, 0, fuel_eth_base_asset_id, false)
-        .await
-        .unwrap();
-
-    // Activate contract
-    market.activate_contract(market_config).await.unwrap();
-
-    // Set Pyth contract ID
-    market
-        .set_pyth_contract_id(oracle_contract_id)
-        .await
-        .unwrap();
-
-    //--------------- SETUP COLLATERALS ---------------
-    for config in &asset_configs {
-        market.add_collateral_asset(&config).await.unwrap();
-    }
-
-    // ==================== Set oracle prices ====================
-    let mut prices = Vec::new();
-    let mut price_feed_ids = Vec::new();
-    let publish_time: u64 = Utc::now().timestamp().try_into().unwrap();
-    let confidence = 0;
-
-    for asset in &assets {
-        let price = asset.1.default_price * 10u64.pow(asset.1.price_feed_decimals);
-
-        prices.push((
-            asset.1.price_feed_id,
-            (price, asset.1.price_feed_decimals, publish_time, confidence),
-        ))
-    }
-
-    oracle.update_prices(&prices).await.unwrap();
-
-    for asset in &assets {
-        let price = oracle.price(asset.1.price_feed_id).await.unwrap().value;
-
-        price_feed_ids.push(asset.1.price_feed_id);
-
-        println!(
-            "Price for {} = {}",
-            asset.1.symbol,
-            price.price as f64 / 10u64.pow(asset.1.price_feed_decimals as u32) as f64
-        );
-    }
+    let TestData {
+        wallets,
+        alice,
+        alice_address,
+        bob,
+        bob_address,
+        chad,
+        chad_address,
+        usdc_contract,
+        usdc,
+        market,
+        uni,
+        uni_contract,
+        oracle,
+        price_feed_ids,
+        assets,
+        publish_time,
+        prices,
+        ..
+    } = setup().await;
 
     let price_data_update = PriceDataUpdate {
         update_fee: 1,
-        price_feed_ids: price_feed_ids,
+        price_feed_ids,
         publish_times: vec![publish_time; assets.len()],
         update_data: oracle.create_update_data(&prices).await.unwrap(),
     };
@@ -149,7 +75,10 @@ async fn main_test_no_debug() {
 
     assert!(supply_balance == (amount as u128));
 
-    market.print_debug_state(&wallets, usdc, uni).await.unwrap();
+    market
+        .print_debug_state(&wallets, &usdc, &uni)
+        .await
+        .unwrap();
 
     // =================================================
     // ==================== Step #1 ====================
@@ -184,7 +113,10 @@ async fn main_test_no_debug() {
         .unwrap();
     assert!(res == amount as u128);
 
-    market.print_debug_state(&wallets, usdc, uni).await.unwrap();
+    market
+        .print_debug_state(&wallets, &usdc, &uni)
+        .await
+        .unwrap();
 
     // =================================================
     // ==================== Step #2 ====================
@@ -209,7 +141,10 @@ async fn main_test_no_debug() {
     let balance = alice.get_asset_balance(&usdc.asset_id).await.unwrap();
     assert!(balance == amount);
 
-    market.print_debug_state(&wallets, usdc, uni).await.unwrap();
+    market
+        .print_debug_state(&wallets, &usdc, &uni)
+        .await
+        .unwrap();
 
     // =================================================
     // ==================== Step #3 ====================
@@ -244,7 +179,10 @@ async fn main_test_no_debug() {
         .unwrap();
     assert!(res == amount as u128);
 
-    market.print_debug_state(&wallets, usdc, uni).await.unwrap();
+    market
+        .print_debug_state(&wallets, &usdc, &uni)
+        .await
+        .unwrap();
 
     // =================================================
     // ==================== Step #4 ====================
@@ -276,7 +214,10 @@ async fn main_test_no_debug() {
     let (supply_balance, _) = market.get_user_supply_borrow(chad_address).await.unwrap();
     assert!((amount as u128) - 5 < supply_balance);
 
-    market.print_debug_state(&wallets, usdc, uni).await.unwrap();
+    market
+        .print_debug_state(&wallets, &usdc, &uni)
+        .await
+        .unwrap();
 
     // =================================================
     // ==================== Step #5 ====================
@@ -292,7 +233,7 @@ async fn main_test_no_debug() {
 
     // Alice calls withdraw_base
     market
-        .with_account(alice)
+        .with_account(&alice)
         .await
         .unwrap()
         .withdraw_base(
@@ -314,7 +255,7 @@ async fn main_test_no_debug() {
 
     // Withdrawing more than available should fail (2 USDC)
     let res = market
-        .with_account(alice)
+        .with_account(&alice)
         .await
         .unwrap()
         .withdraw_base(
@@ -334,7 +275,10 @@ async fn main_test_no_debug() {
                 + parse_units(50 * AMOUNT_COEFFICIENT, usdc.decimals)
     );
 
-    market.print_debug_state(&wallets, usdc, uni).await.unwrap();
+    market
+        .print_debug_state(&wallets, &usdc, &uni)
+        .await
+        .unwrap();
 
     // =================================================
     // ==================== Step #6 ====================
@@ -374,7 +318,10 @@ async fn main_test_no_debug() {
     let res = oracle.price(uni.price_feed_id).await.unwrap().value;
     assert!(new_price == res.price);
 
-    market.print_debug_state(&wallets, usdc, uni).await.unwrap();
+    market
+        .print_debug_state(&wallets, &usdc, &uni)
+        .await
+        .unwrap();
     // =================================================
     // ==================== Step #7 ====================
     // 👛 Wallet: Bob 🦹
@@ -392,7 +339,7 @@ async fn main_test_no_debug() {
     );
 
     market
-        .with_account(bob)
+        .with_account(&bob)
         .await
         .unwrap()
         .absorb(&[&oracle.instance], vec![alice_address], &price_data_update)
@@ -409,7 +356,10 @@ async fn main_test_no_debug() {
         .unwrap();
     assert!(amount == 0);
 
-    market.print_debug_state(&wallets, usdc, uni).await.unwrap();
+    market
+        .print_debug_state(&wallets, &usdc, &uni)
+        .await
+        .unwrap();
 
     // =================================================
     // ==================== Step #8 ====================
@@ -418,7 +368,7 @@ async fn main_test_no_debug() {
     // 💰 Amount: 172.44 USDC
 
     let reserves = market
-        .with_account(bob)
+        .with_account(&bob)
         .await
         .unwrap()
         .get_collateral_reserves(uni.bits256)
@@ -503,7 +453,10 @@ async fn main_test_no_debug() {
     let balance = bob.get_asset_balance(&uni.asset_id).await.unwrap();
     assert!(balance == 40_000_000_000 * AMOUNT_COEFFICIENT);
 
-    market.print_debug_state(&wallets, usdc, uni).await.unwrap();
+    market
+        .print_debug_state(&wallets, &usdc, &uni)
+        .await
+        .unwrap();
 
     // =================================================
     // ==================== Step #9 ====================
@@ -517,7 +470,7 @@ async fn main_test_no_debug() {
 
     // Bob calls withdraw_base
     market
-        .with_account(bob)
+        .with_account(&bob)
         .await
         .unwrap()
         .withdraw_base(
@@ -535,7 +488,10 @@ async fn main_test_no_debug() {
     // USDC balance check
     assert!(bob.get_asset_balance(&usdc.asset_id).await.unwrap() == amount as u64);
 
-    market.print_debug_state(&wallets, usdc, uni).await.unwrap();
+    market
+        .print_debug_state(&wallets, &usdc, &uni)
+        .await
+        .unwrap();
 
     // =================================================
     // ==================== Step #10 ====================
@@ -549,7 +505,7 @@ async fn main_test_no_debug() {
 
     // Chad calls withdraw_base
     market
-        .with_account(chad)
+        .with_account(&chad)
         .await
         .unwrap()
         .withdraw_base(
@@ -567,7 +523,10 @@ async fn main_test_no_debug() {
     // USDC balance check
     assert!(chad.get_asset_balance(&usdc.asset_id).await.unwrap() == amount as u64);
 
-    market.print_debug_state(&wallets, usdc, uni).await.unwrap();
+    market
+        .print_debug_state(&wallets, &usdc, &uni)
+        .await
+        .unwrap();
 
     // =================================================
     // ==================== Step #11 ====================
@@ -581,7 +540,7 @@ async fn main_test_no_debug() {
 
     // Alice calls withdraw_base
     market
-        .with_account(alice)
+        .with_account(&alice)
         .await
         .unwrap()
         .withdraw_base(
@@ -596,7 +555,10 @@ async fn main_test_no_debug() {
     let (supplied, _) = market.get_user_supply_borrow(alice_address).await.unwrap();
     assert!(supplied == 0);
 
-    market.print_debug_state(&wallets, usdc, uni).await.unwrap();
+    market
+        .print_debug_state(&wallets, &usdc, &uni)
+        .await
+        .unwrap();
 
     // =================================================
     // ==================== Step #12 ====================
@@ -613,7 +575,7 @@ async fn main_test_no_debug() {
 
     // Chad calls withdraw_collateral
     market
-        .with_account(chad)
+        .with_account(&chad)
         .await
         .unwrap()
         .withdraw_collateral(
@@ -629,5 +591,8 @@ async fn main_test_no_debug() {
     let balance = chad.get_asset_balance(&uni.asset_id).await.unwrap();
     assert!(balance as u128 == amount);
 
-    market.print_debug_state(&wallets, usdc, uni).await.unwrap();
+    market
+        .print_debug_state(&wallets, &usdc, &uni)
+        .await
+        .unwrap();
 }
