@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  '@pythnetwork/pyth-fuel-js@1.0.4':
+    hash: 2axibxbrvgqzmbqnnvedvktk2a
+    path: patches/@pythnetwork__pyth-fuel-js@1.0.4.patch
+
 importers:
 
   .:
@@ -58,7 +63,7 @@ importers:
         version: 1.0.4(axios@1.7.4)
       '@pythnetwork/pyth-fuel-js':
         specifier: ^1.0.4
-        version: 1.0.4(encoding@0.1.13)
+        version: 1.0.4(patch_hash=2axibxbrvgqzmbqnnvedvktk2a)(encoding@0.1.13)
       '@svgr/webpack':
         specifier: ^6.5.1
         version: 6.5.1
@@ -344,7 +349,7 @@ importers:
         version: 1.0.4(axios@1.7.4)
       '@pythnetwork/pyth-fuel-js':
         specifier: ^1.0.4
-        version: 1.0.4(encoding@0.1.13)
+        version: 1.0.4(patch_hash=2axibxbrvgqzmbqnnvedvktk2a)(encoding@0.1.13)
       '@radix-ui/react-slot':
         specifier: ^1.1.0
         version: 1.1.0(@types/react@18.3.4)(react@18.3.1)
@@ -14372,7 +14377,7 @@ snapshots:
     transitivePeerDependencies:
       - axios
 
-  '@pythnetwork/pyth-fuel-js@1.0.4(encoding@0.1.13)':
+  '@pythnetwork/pyth-fuel-js@1.0.4(patch_hash=2axibxbrvgqzmbqnnvedvktk2a)(encoding@0.1.13)':
     dependencies:
       fuels: 0.92.1(encoding@0.1.13)
     transitivePeerDependencies:
