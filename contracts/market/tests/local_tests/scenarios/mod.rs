@@ -2,6 +2,7 @@ mod collateral_borrow;
 mod configuration;
 mod governor;
 mod liquidation;
+mod negative_reserves;
 mod pause;
 mod price_changes;
 mod reserves;
