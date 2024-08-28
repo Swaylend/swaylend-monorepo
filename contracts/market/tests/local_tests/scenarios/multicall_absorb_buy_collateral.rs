@@ -172,13 +172,6 @@ async fn multicall_absorb_buy_collateral_test() {
         .call_params(CallParameters::default())
         .unwrap();
 
-    //     .with_account(&bob)
-    //     .await
-    //     .unwrap()
-    //     .absorb(&[&oracle.instance], vec![bob_address], &price_data_update)
-    //     .await
-    //     .unwrap();
-
     // Check reserves are not negative
     let reserves = market
         .with_account(&chad)
@@ -190,14 +183,6 @@ async fn multicall_absorb_buy_collateral_test() {
         .value;
     assert!(!reserves.negative);
 
-    // let amount = market
-    //     .collateral_value_to_sell(
-    //         &[&oracle.instance],
-    //         eth.bits256,
-    //         reserves.value.try_into().unwrap(),
-    //     )
-    //     .await
-    //     .unwrap();
     let amount = parse_units(986 * AMOUNT_COEFFICIENT, usdc.decimals);
 
     let log_amount = format!("{} USDC", amount as f64 / SCALE_6);
