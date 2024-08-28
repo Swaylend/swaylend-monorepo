@@ -1,0 +1,56 @@
+type Pool @entity {
+    id: ID! # Constructed as `chainId_poolAddress_underlyingTokenAddress`
+    chainId: String!
+    creationBlockNumber: Int!
+    creationTimestamp: Int!
+    underlyingTokenAddress: String! # Address of the underlying token (collateral, base)
+    underlyingTokenSymbol: String!
+    receiptTokenAddress: String!
+    receiptTokenSymbol: String!
+    poolAddress: String! # Contract address of the pool (market)
+    poolType: String! # `collteral_only` or `supply_only`
+}
+
+
+type PositionSnapshot @entity {
+    id: ID!
+    timestamp: Int!
+    chainId: String!
+    poolAddress: String!
+    underlyingTokenAddress: String!
+    underlyingTokenSymbol: String!
+    userAddress: String!
+    suppliedAmount: Int!
+    suppliedAmountUsd: Int
+    borrowedAmount: Int!
+    borrowedAmountUsd: Int
+    collateralAmount: Int
+    collateralAmountUsd: Int
+}
+
+type PoolSnapshot @entity {
+    id: ID!
+    timestamp: Int!
+    chainId: String!
+    poolAddress: String!
+    underlyingTokenAddress: String!
+    underlyingTokenSymbol: String!
+    underlyingTokenPriceUsd: Int
+    availableAmount: Int!
+    availableAmountUsd: Int
+    suppliedAmount: Int!
+    suppliedAmountUsd: Int
+    nonRecursiveSuppliedAmount: Int
+    collateralAmount: Int
+    collateralAmountUsd: Int
+    collateralFactor: Int!
+    supplyIndex: Int!
+    supplyApr: Int!
+    borrowedAmount: Int!
+    borrowedAmountUsd: Int
+    borrowIndex: Int!
+    borrowApr: Int!
+    totalFeesUsd: Int
+    userFeesUsd: Int
+    protocolFeesUsd: Int
+}
