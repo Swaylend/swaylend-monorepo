@@ -172,7 +172,6 @@ async fn multicall_absorb_buy_collateral_test() {
         .call_params(CallParameters::default())
         .unwrap();
 
-    // market
     //     .with_account(&bob)
     //     .await
     //     .unwrap()
@@ -180,7 +179,7 @@ async fn multicall_absorb_buy_collateral_test() {
     //     .await
     //     .unwrap();
 
-    // Buy collateral
+    // Check reserves are not negative
     let reserves = market
         .with_account(&chad)
         .await

@@ -109,7 +109,7 @@ async fn negative_reserves_test() {
     // ==================== Step #3 ====================
     // 👛 Wallet: Admin 🗿
     // 🤙 Drop of ETH price
-    // 💰 Amount: -50%
+    // 💰 Amount: -70%
     print_case_title(3, "Admin", "Drop of ETH price", "-70%");
     let res = oracle.price(eth.price_feed_id).await.unwrap().value;
     let new_price = (res.price as f64 * 0.3) as u64;
