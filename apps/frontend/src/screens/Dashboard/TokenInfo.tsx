@@ -1,6 +1,7 @@
 import SizedBox from '@components/SizedBox';
 import Text from '@components/Text';
 import styled from '@emotion/styled';
+import { useAccount, useBalance } from '@fuels/react';
 import { Column, Row } from '@src/components/Flex';
 import { TOKENS_BY_ASSET_ID } from '@src/constants';
 import { useCollateralConfigurations } from '@src/hooks/useCollateralConfigurations';
@@ -34,12 +35,18 @@ const Container = styled(Column)`
 `;
 
 const TokenInfo: React.FC<IProps> = ({ assetId }) => {
+  const { account } = useAccount();
+  const { balance: walletBalance } = useBalance({
+    address: account ?? undefined,
+    assetId,
+  });
+
   const [wallet, setWallet] = useState<WalletUnlocked | null>(null);
 
   useEffect(() => {
     walletToRead().then((w) => setWallet(w));
   }, []);
-  const { accountStore, dashboardStore, settingsStore } = useStores();
+  const { dashboardStore, settingsStore } = useStores();
 
   const { getFormattedPrice: getFormattedTokenPrice } = usePrice(
     dashboardStore.allTokens
@@ -91,7 +98,10 @@ const TokenInfo: React.FC<IProps> = ({ assetId }) => {
     },
     {
       title: 'Wallet balance',
-      value: `${accountStore.getFormattedBalance(token)}  ${token.symbol}`,
+      value: `${BN.formatUnits(
+        new BN(walletBalance?.toString() ?? '0'),
+        token.decimals
+      ).toFormat(4)}  ${token.symbol}`,
     },
   ];
   return (

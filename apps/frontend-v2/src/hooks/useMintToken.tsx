@@ -41,7 +41,6 @@ export const useMintToken = (symbol: string, decimals: number) => {
       return transactionResult;
     },
     onSuccess: (data) => {
-      console.log('Success minting token:', data);
       if (data) {
         toast(
           <div>

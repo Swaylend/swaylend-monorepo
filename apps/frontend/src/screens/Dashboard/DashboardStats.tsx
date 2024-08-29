@@ -1,5 +1,6 @@
 import SizedBox from '@components/SizedBox';
 import styled from '@emotion/styled';
+import { useAccount } from '@fuels/react';
 import Divider from '@src/components/Divider';
 import { Column, Row } from '@src/components/Flex';
 import Text from '@src/components/Text';
@@ -11,6 +12,7 @@ import { useUserSupplyBorrow } from '@src/hooks/useUserSupplyBorrow';
 import useWindowSize from '@src/hooks/useWindowSize';
 import { useStores } from '@src/stores';
 import BN from '@src/utils/BN';
+import getAddressB256 from '@src/utils/address';
 import {
   getBorrowApr,
   getSupplyApr,
@@ -63,6 +65,7 @@ const Root = styled.div`
   }
 `;
 const DashboardStats: React.FC = () => {
+  const { account } = useAccount();
   const [wallet, setWallet] = useState<WalletUnlocked | null>(null);
 
   useEffect(() => {
@@ -84,12 +87,12 @@ const DashboardStats: React.FC = () => {
   const { data: supplyRate } = useSupplyRate(marketContract);
   const { data: userSupplyBorrow } = useUserSupplyBorrow(
     marketContract,
-    rootStore.accountStore.addressInput?.value ?? ''
+    getAddressB256(account)
   );
   const { data: collateralBalances, isLoading } = useUserCollateral(
     marketContract,
     rootStore.dashboardStore.collaterals,
-    rootStore.accountStore.addressInput?.value ?? ''
+    getAddressB256(account)
   );
 
   const borrowApr = useMemo(() => getBorrowApr(borrowRate), [borrowRate]);

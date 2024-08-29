@@ -4,6 +4,7 @@ import Notification from '@components/Notification';
 import SizedBox from '@components/SizedBox';
 import Spinner from '@components/Spinner';
 import TokenInput from '@components/TokenInput/TokenInput';
+import { useAccount, useIsConnected, useWallet } from '@fuels/react';
 import {
   PYTH_CONTRACT_ABI,
   PYTH_CONTRACT_ADDRESS_SEPOLIA,
@@ -22,6 +23,7 @@ import { useUserCollateral } from '@src/hooks/useUserCollateral';
 import { useUserSupplyBorrow } from '@src/hooks/useUserSupplyBorrow';
 import { ACTION_TYPE } from '@src/stores/DashboardStore';
 import BN from '@src/utils/BN';
+import getAddressB256 from '@src/utils/address';
 import centerEllipsis from '@src/utils/centerEllipsis';
 import { currentAssetCollateralCapacityLeft } from '@src/utils/dashboardUtils';
 import { errorToMessage } from '@src/utils/errorMessage';
@@ -32,10 +34,10 @@ import {
   withdrawBase,
   withdrawCollateral,
 } from '@src/utils/marketUtils';
-import { getMarketContract, getOracleContract } from '@src/utils/readContracts';
-import { initProvider, walletToRead } from '@src/utils/walletToRead';
+import { getMarketContract } from '@src/utils/readContracts';
+import { walletToRead } from '@src/utils/walletToRead';
 import { useStores } from '@stores';
-import { Contract, type Provider, type WalletUnlocked } from 'fuels';
+import { Contract, type WalletUnlocked } from 'fuels';
 import { observer } from 'mobx-react-lite';
 import type React from 'react';
 import { useEffect, useState } from 'react';
@@ -46,12 +48,13 @@ type IProps = any;
 const InputCard: React.FC<IProps> = () => {
   const { accountStore, settingsStore, dashboardStore, notificationStore } =
     useStores();
+  const { account } = useAccount();
+  const { wallet: userWallet } = useWallet();
+  const { isConnected } = useIsConnected();
   const [wallet, setWallet] = useState<WalletUnlocked | null>(null);
-  const [provider, setProvider] = useState<Provider | null>(null);
 
   useEffect(() => {
     walletToRead().then((w) => setWallet(w));
-    initProvider().then((p) => setProvider(p));
   }, []);
 
   const marketContract = getMarketContract(
@@ -81,7 +84,7 @@ const InputCard: React.FC<IProps> = () => {
   } = useAvailableToBorrow(
     marketContract,
     oracleContract,
-    accountStore.addressInput?.value ?? ''
+    getAddressB256(account)
   );
   const {
     data: balanceOfBaseAsset,
@@ -95,16 +98,13 @@ const InputCard: React.FC<IProps> = () => {
   } = useUserCollateral(
     marketContract,
     dashboardStore.collaterals,
-    accountStore.addressInput?.value ?? ''
+    getAddressB256(account)
   );
   const {
     data: userSupplyBorrow,
     refetch: userSupplyBorrowRefetch,
     isSuccess: isSuccessUserSupplyBorrow,
-  } = useUserSupplyBorrow(
-    marketContract,
-    accountStore.addressInput?.value ?? ''
-  );
+  } = useUserSupplyBorrow(marketContract, getAddressB256(account));
 
   const refetchData = () => {
     collateralConfigRefetch();
@@ -119,7 +119,7 @@ const InputCard: React.FC<IProps> = () => {
     isExpanded: dashboardStore.action != null,
     duration: 500,
   });
-  if (!accountStore.isLoggedIn) return null;
+  if (!isConnected) return null;
 
   const handleCancelClick = () => {
     dashboardStore.setAction(null);
@@ -291,11 +291,10 @@ const InputCard: React.FC<IProps> = () => {
   const marketAction = async () => {
     dashboardStore.setLoading(true);
     let marketContract = null;
-    if (accountStore.address == null) return;
-    const wallet = await accountStore.getWallet();
+    if (account == null) return;
     const { market } = settingsStore.currentVersionConfig;
-    if (wallet != null) {
-      marketContract = MarketAbi__factory.connect(market, wallet);
+    if (userWallet != null) {
+      marketContract = MarketAbi__factory.connect(market, userWallet);
     }
     if (marketContract == null) return;
     let tx = null;
@@ -373,13 +372,13 @@ const InputCard: React.FC<IProps> = () => {
     } catch (e) {
       const { addErrorToLog } = settingsStore;
       const err = {
-        fuelAddress: accountStore.address,
-        address: accountStore.addressB256,
+        fuelAddress: account,
+        address: getAddressB256(account),
         timestamp: new Date().getTime().toString(),
         action: dashboardStore.action,
         errorMessage: e?.toString() ?? '',
       };
-      console.log(err);
+      console.error(err);
       addErrorToLog(err);
       const error = JSON.parse(JSON.stringify(e)).toString();
       notificationStore.toast(error.error, {
