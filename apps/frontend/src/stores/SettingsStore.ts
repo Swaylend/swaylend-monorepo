@@ -126,7 +126,7 @@ class SettingsStore {
   };
   exportLogData = () => {
     if (this.log == null) {
-      console.log('your log file is empty');
+      console.error('your log file is empty');
       return;
     }
     const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
