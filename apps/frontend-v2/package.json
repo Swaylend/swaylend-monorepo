@@ -15,7 +15,7 @@
     "@fuels/connectors": "^0.25.0",
     "@fuels/react": "^0.25.0",
     "@pythnetwork/hermes-client": "^1.0.4",
-    "@pythnetwork/pyth-fuel-js": "^1.0.4",
+    "@pythnetwork/pyth-fuel-js": "^1.0.5",
     "@radix-ui/react-slot": "^1.1.0",
     "@svgr/webpack": "^6.5.1",
     "@tanstack/react-query": "^5.51.21",
