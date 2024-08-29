@@ -10,13 +10,6 @@ import {
 } from 'fuels';
 import { makeAutoObservable, reaction, runInAction, when } from 'mobx';
 
-export enum LOGIN_TYPE {
-  FUEL_WALLET = 'Fuel Wallet',
-  FUELET = 'Fuelet Wallet',
-  // GENERATE_SEED = 'Generate seed',
-  WALLET_CONNECT = 'Ethereum Wallets',
-}
-
 export interface ISerializedAccountStore {
   address: string | null;
 }

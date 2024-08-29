@@ -6,7 +6,6 @@ import { useAccount, useDisconnect } from '@fuels/react';
 import { EXPLORER_URL } from '@src/constants';
 import getAddressB256 from '@src/utils/address';
 import { useStores } from '@stores';
-// import { LOGIN_TYPE } from '@stores/AccountStore';
 import copy from 'copy-to-clipboard';
 import { observer } from 'mobx-react-lite';
 import type React from 'react';
