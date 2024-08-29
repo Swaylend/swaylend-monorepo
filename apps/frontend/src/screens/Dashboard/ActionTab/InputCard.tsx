@@ -492,7 +492,8 @@ const InputCard: React.FC<IProps> = () => {
         if (
           dashboardStore.actionTokenAssetId === TOKENS_BY_SYMBOL.ETH.assetId
         ) {
-          balance = balance.minus(500);
+          const newBalance = balance.minus(100000);
+          balance = newBalance.lte(BN.ZERO) ? BN.ZERO : newBalance;
         }
 
         if (

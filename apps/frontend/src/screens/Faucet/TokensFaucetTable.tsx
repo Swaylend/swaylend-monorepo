@@ -28,8 +28,10 @@ const TokensFaucetTable: React.FC<IProps> = () => {
   const vm = useFaucetVM();
   const [tokens, setTokens] = useState<any>([]);
   const { balance: ethBalance } = useBalance({
+    address: account || undefined,
     assetId: TOKENS_BY_SYMBOL.ETH.assetId,
   });
+
   const mintedTokens = settingsStore.mintedTokensForCurrentAccount?.split(',');
   useMemo(() => {
     setTokens(
