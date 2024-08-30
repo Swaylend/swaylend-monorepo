@@ -201,9 +201,63 @@ export class PoolSnapshot extends AbstractEntity  {
   constructor(data: Partial<PoolSnapshot>) {super()}
 }
 
+@Entity("UserBasePosition")
+export class UserBasePosition extends AbstractEntity  {
+
+	@Required
+	@Column("ID")
+	id: ID
+
+	@Required
+	@Column("String")
+	chainId: String
+
+	@Required
+	@Column("String")
+	poolAddress: String
+
+	@Required
+	@Column("String")
+	userAddress: String
+
+	@Required
+	@Column("BigInt")
+	baseAmount: BigInt
+  constructor(data: Partial<UserBasePosition>) {super()}
+}
+
+@Entity("UserCollateralPosition")
+export class UserCollateralPosition extends AbstractEntity  {
+
+	@Required
+	@Column("ID")
+	id: ID
+
+	@Required
+	@Column("String")
+	chainId: String
+
+	@Required
+	@Column("String")
+	poolAddress: String
+
+	@Required
+	@Column("String")
+	userAddress: String
+
+	@Required
+	@Column("String")
+	collateralAssetAddress: String
+
+	@Required
+	@Column("BigInt")
+	collateralAmount: BigInt
+  constructor(data: Partial<UserCollateralPosition>) {super()}
+}
+
 
 const source = `type Pool @entity {
-    id: ID! # Constructed as `chainId_poolAddress_underlyingTokenAddress`
+    id: ID! # Constructed as chainId_poolAddress_underlyingTokenAddress
     chainId: String!
     creationBlockNumber: Int!
     creationTimestamp: Int!
@@ -212,9 +266,8 @@ const source = `type Pool @entity {
     receiptTokenAddress: String!
     receiptTokenSymbol: String!
     poolAddress: String! # Contract address of the pool (market)
-    poolType: String! # `collteral_only` or `supply_only`
+    poolType: String! # collteral_only or supply_only
 }
-
 
 type PositionSnapshot @entity {
     id: ID!
@@ -257,12 +310,31 @@ type PoolSnapshot @entity {
     totalFeesUsd: Int
     userFeesUsd: Int
     protocolFeesUsd: Int
+}
+
+type UserBasePosition @entity {
+    id: ID!
+    chainId: String!
+    poolAddress: String!
+    userAddress: String!
+    baseAmount: BigInt!
+}
+
+type UserCollateralPosition @entity {
+    id: ID!
+    chainId: String!
+    poolAddress: String!
+    userAddress: String!
+    collateralAssetAddress: String!
+    collateralAmount: BigInt!
 }`
 DatabaseSchema.register({
   source,
   entities: {
     "Pool": Pool,
 		"PositionSnapshot": PositionSnapshot,
-		"PoolSnapshot": PoolSnapshot
+		"PoolSnapshot": PoolSnapshot,
+		"UserBasePosition": UserBasePosition,
+		"UserCollateralPosition": UserCollateralPosition
   }
 })

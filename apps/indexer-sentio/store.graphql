@@ -1,5 +1,5 @@
 type Pool @entity {
-    id: ID! # Constructed as `chainId_poolAddress_underlyingTokenAddress`
+    id: ID! # Constructed as chainId_poolAddress_underlyingTokenAddress
     chainId: String!
     creationBlockNumber: Int!
     creationTimestamp: Int!
@@ -8,9 +8,8 @@ type Pool @entity {
     receiptTokenAddress: String!
     receiptTokenSymbol: String!
     poolAddress: String! # Contract address of the pool (market)
-    poolType: String! # `collteral_only` or `supply_only`
+    poolType: String! # collteral_only or supply_only
 }
-
 
 type PositionSnapshot @entity {
     id: ID!
@@ -53,4 +52,21 @@ type PoolSnapshot @entity {
     totalFeesUsd: Int
     userFeesUsd: Int
     protocolFeesUsd: Int
+}
+
+type UserBasePosition @entity {
+    id: ID!
+    chainId: String!
+    poolAddress: String!
+    userAddress: String!
+    baseAmount: BigInt!
+}
+
+type UserCollateralPosition @entity {
+    id: ID!
+    chainId: String!
+    poolAddress: String!
+    userAddress: String!
+    collateralAssetAddress: String!
+    collateralAmount: BigInt!
 }

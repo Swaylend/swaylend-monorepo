@@ -9,10 +9,11 @@
     "upload": "sentio upload --skip-deps --skip-gen"
   },
   "dependencies": {
-    "@sentio/sdk": "2.41.3-rc.3"
+    "@sentio/sdk": "2.41.1",
+    "fuels": "0.93.0"
   },
   "devDependencies": {
-    "@sentio/cli": "2.20.2-rc.3",
+    "@sentio/cli": "2.20.1",
     "typescript": "^5.5.2"
   }
 }
