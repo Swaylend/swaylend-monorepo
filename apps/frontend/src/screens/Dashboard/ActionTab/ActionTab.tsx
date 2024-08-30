@@ -14,10 +14,10 @@ import { useAvailableToBorrow } from '@src/hooks/useAvailableToBorrow';
 import { useUserSupplyBorrow } from '@src/hooks/useUserSupplyBorrow';
 import { ACTION_TYPE } from '@src/stores/DashboardStore';
 import getAddressB256 from '@src/utils/address';
-import { getMarketContract, getOracleContract } from '@src/utils/readContracts';
-import { initProvider, walletToRead } from '@src/utils/walletToRead';
+import { getMarketContract } from '@src/utils/readContracts';
+import { walletToRead } from '@src/utils/walletToRead';
 import { useStores } from '@stores';
-import { Contract, type Provider, type WalletUnlocked } from 'fuels';
+import { Contract, type WalletUnlocked } from 'fuels';
 import { observer } from 'mobx-react-lite';
 import type React from 'react';
 import { useEffect, useState } from 'react';
@@ -31,8 +31,8 @@ const Root = styled.div`
 `;
 
 const ActionTab: React.FC<IProps> = () => {
-  const { settingsStore, dashboardStore, notificationStore } = useStores();
-  const { connect, error } = useConnectUI();
+  const { settingsStore, dashboardStore } = useStores();
+  const { connect } = useConnectUI();
   const { isConnected } = useIsConnected();
   const { account } = useAccount();
   const [wallet, setWallet] = useState<WalletUnlocked | null>(null);
@@ -42,19 +42,6 @@ const ActionTab: React.FC<IProps> = () => {
     walletToRead().then((w) => setWallet(w));
     // initProvider().then((p) => setProvider(p));
   }, []);
-
-  useEffect(
-    () => {
-      if (error) {
-        notificationStore.toast(error.message, {
-          type: 'error',
-          title: 'Oops..',
-        });
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [error]
-  );
 
   const marketContract = getMarketContract(
     wallet!,
