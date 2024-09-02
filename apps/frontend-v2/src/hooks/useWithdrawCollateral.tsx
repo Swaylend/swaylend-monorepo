@@ -1,7 +1,8 @@
 import { Market } from '@/contract-types';
 import type { PriceDataUpdateInput } from '@/contract-types/Market';
+import { useMarketStore } from '@/stores';
 import {
-  CONTRACT_ADDRESSES,
+  DEPLOYED_MARKETS,
   EXPLORER_URL,
   FUEL_ETH_BASE_ASSET_ID,
   TOKENS_BY_ASSET_ID,
@@ -24,9 +25,10 @@ export const useWithdrawCollateral = ({
 }: useWithdrawCollateralProps) => {
   const { wallet } = useWallet();
   const { account } = useAccount();
+  const { market } = useMarketStore();
 
   return useMutation({
-    mutationKey: ['withdrawCollateral', actionTokenAssetId, account],
+    mutationKey: ['withdrawCollateral', actionTokenAssetId, account, market],
     mutationFn: async ({
       tokenAmount,
       priceUpdateData,
@@ -42,7 +44,10 @@ export const useWithdrawCollateral = ({
         wallet
       );
 
-      const marketContract = new Market(CONTRACT_ADDRESSES.market, wallet);
+      const marketContract = new Market(
+        DEPLOYED_MARKETS[market].marketAddress,
+        wallet
+      );
 
       const amount = new BigNumber(tokenAmount).times(
         10 ** TOKENS_BY_ASSET_ID[actionTokenAssetId].decimals

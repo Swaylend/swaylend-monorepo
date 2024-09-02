@@ -1,25 +1,29 @@
 import { getCollateralAssets } from '@/lib/queries';
+import { useMarketStore } from '@/stores';
 import { useAccount } from '@fuels/react';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 
 export const useUserCollateralAssets = () => {
   const { account } = useAccount();
+  const { market } = useMarketStore();
 
   return useQuery({
-    queryKey: ['collateralAssets', account],
+    queryKey: ['collateralAssets', account, market],
     queryFn: async () => {
       if (!account) return;
 
-      const assets = await getCollateralAssets(account);
-      if (assets.length < 1) throw Error('Cant get user assets');
+      const assets = await getCollateralAssets(account, market);
 
       const formattedCollaterals: Record<string, BigNumber> = {};
-      assets[0].collateralAssets.forEach((asset) => {
-        formattedCollaterals[asset.collateralAsset_id] = new BigNumber(
-          asset.amount
-        );
-      });
+
+      if (assets.length > 0) {
+        assets[0].collateralAssets.forEach((asset) => {
+          formattedCollaterals[asset.collateralAsset_id] = new BigNumber(
+            asset.amount
+          );
+        });
+      }
 
       return formattedCollaterals;
     },

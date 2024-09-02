@@ -3,6 +3,7 @@ import Link from 'next/link';
 import React from 'react';
 import Logo from '/public/icons/dark-logo.svg?url';
 import { ConnectButton } from './ConnectButton';
+import { MarketSwitcher } from './MarketSwitcher';
 
 export const Navbar = () => {
   return (
@@ -16,6 +17,7 @@ export const Navbar = () => {
         <Link href="/market"> Market </Link>
       </div>
       <div>
+        <MarketSwitcher />
         <ConnectButton />
       </div>
     </div>

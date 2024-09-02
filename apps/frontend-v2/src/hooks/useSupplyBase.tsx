@@ -1,5 +1,6 @@
 import { Market } from '@/contract-types';
-import { CONTRACT_ADDRESSES, EXPLORER_URL, TOKENS_BY_SYMBOL } from '@/utils';
+import { useMarketStore } from '@/stores';
+import { DEPLOYED_MARKETS, EXPLORER_URL, TOKENS_BY_SYMBOL } from '@/utils';
 import { useAccount, useWallet } from '@fuels/react';
 import { useMutation } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
@@ -8,15 +9,19 @@ import { toast } from 'react-toastify';
 export const useSupplyBase = () => {
   const { wallet } = useWallet();
   const { account } = useAccount();
+  const { market } = useMarketStore();
 
   return useMutation({
-    mutationKey: ['supplyBase', account],
+    mutationKey: ['supplyBase', account, market],
     mutationFn: async (tokenAmount: BigNumber) => {
       if (!wallet || !account) {
         return;
       }
 
-      const marketContract = new Market(CONTRACT_ADDRESSES.market, wallet);
+      const marketContract = new Market(
+        DEPLOYED_MARKETS[market].marketAddress,
+        wallet
+      );
 
       const amount = new BigNumber(tokenAmount).times(
         10 ** TOKENS_BY_SYMBOL.USDC.decimals

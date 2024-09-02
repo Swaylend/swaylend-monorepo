@@ -1,5 +1,6 @@
 import { Token } from '@/contract-types';
-import { CONTRACT_ADDRESSES, EXPLORER_URL, FAUCET_AMOUNTS } from '@/utils';
+import { useMarketStore } from '@/stores';
+import { DEPLOYED_MARKETS, EXPLORER_URL, FAUCET_AMOUNTS } from '@/utils';
 import { useAccount, useWallet } from '@fuels/react';
 import { useMutation } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
@@ -9,13 +10,15 @@ import { toast } from 'react-toastify';
 export const useMintToken = (symbol: string, decimals: number) => {
   const { wallet } = useWallet();
   const { account } = useAccount();
+  const { market } = useMarketStore();
 
   return useMutation({
-    mutationKey: ['mintToken', symbol, account],
+    mutationKey: ['mintToken', symbol, account, market],
     mutationFn: async () => {
       if (!wallet || !account) return;
+
       const tokenFactoryContract = new Token(
-        CONTRACT_ADDRESSES.tokenFactory,
+        DEPLOYED_MARKETS[market].tokenFactoryAddress,
         wallet
       );
 

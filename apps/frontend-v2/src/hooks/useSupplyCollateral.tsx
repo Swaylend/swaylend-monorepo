@@ -1,5 +1,6 @@
 import { Market } from '@/contract-types';
-import { CONTRACT_ADDRESSES, EXPLORER_URL, TOKENS_BY_ASSET_ID } from '@/utils';
+import { useMarketStore } from '@/stores';
+import { DEPLOYED_MARKETS, EXPLORER_URL, TOKENS_BY_ASSET_ID } from '@/utils';
 import { useAccount, useWallet } from '@fuels/react';
 import { useMutation } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
@@ -14,15 +15,19 @@ export const useSupplyCollateral = ({
 }: useSupplyCollateralProps) => {
   const { wallet } = useWallet();
   const { account } = useAccount();
+  const { market } = useMarketStore();
 
   return useMutation({
-    mutationKey: ['supplyCollateral', actionTokenAssetId, account],
+    mutationKey: ['supplyCollateral', actionTokenAssetId, account, market],
     mutationFn: async (tokenAmount: BigNumber) => {
       if (!wallet || !account || !actionTokenAssetId) {
         return;
       }
 
-      const marketContract = new Market(CONTRACT_ADDRESSES.market, wallet);
+      const marketContract = new Market(
+        DEPLOYED_MARKETS[market].marketAddress,
+        wallet
+      );
 
       const amount = new BigNumber(tokenAmount).times(
         10 ** TOKENS_BY_ASSET_ID[actionTokenAssetId].decimals

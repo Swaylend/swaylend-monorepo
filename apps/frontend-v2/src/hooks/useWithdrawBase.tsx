@@ -1,7 +1,8 @@
 import { Market } from '@/contract-types';
 import type { PriceDataUpdateInput } from '@/contract-types/Market';
+import { useMarketStore } from '@/stores';
 import {
-  CONTRACT_ADDRESSES,
+  DEPLOYED_MARKETS,
   EXPLORER_URL,
   FUEL_ETH_BASE_ASSET_ID,
   TOKENS_BY_SYMBOL,
@@ -18,9 +19,10 @@ import { toast } from 'react-toastify';
 export const useWithdrawBase = () => {
   const { wallet } = useWallet();
   const { account } = useAccount();
+  const { market } = useMarketStore();
 
   return useMutation({
-    mutationKey: ['withdrawBase', account],
+    mutationKey: ['withdrawBase', account, market],
     mutationFn: async ({
       tokenAmount,
       priceUpdateData,
@@ -36,7 +38,10 @@ export const useWithdrawBase = () => {
         wallet
       );
 
-      const marketContract = new Market(CONTRACT_ADDRESSES.market, wallet);
+      const marketContract = new Market(
+        DEPLOYED_MARKETS[market].marketAddress,
+        wallet
+      );
 
       const amount = new BigNumber(tokenAmount).times(
         10 ** TOKENS_BY_SYMBOL.USDC.decimals

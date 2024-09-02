@@ -1,17 +1,23 @@
 import { Market } from '@/contract-types';
-import { CONTRACT_ADDRESSES, collaterals } from '@/utils';
+import { DEPLOYED_MARKETS, collaterals } from '@/utils';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { useProvider } from './useProvider';
+import { useMarketStore } from '@/stores';
 
 export const useTotalCollateral = () => {
   const provider = useProvider();
+  const { market } = useMarketStore();
 
   return useQuery({
-    queryKey: ['totalCollateral'],
+    queryKey: ['totalCollateral', market],
     queryFn: async () => {
       if (!provider) return;
-      const marketContract = new Market(CONTRACT_ADDRESSES.market, provider);
+
+      const marketContract = new Market(
+        DEPLOYED_MARKETS[market].marketAddress,
+        provider
+      );
 
       const promises = collaterals.map((b) =>
         marketContract.functions.totals_collateral(b.assetId).get()

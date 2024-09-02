@@ -1,6 +1,6 @@
 import { Market, type PriceDataUpdateInput } from '@/contract-types/Market';
 import {
-  CONTRACT_ADDRESSES,
+  DEPLOYED_MARKETS,
   TOKENS_BY_ASSET_ID,
   TOKENS_BY_PRICE_FEED,
 } from '@/utils';
@@ -13,14 +13,15 @@ import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { arrayify } from 'fuels';
 import { useProvider } from './useProvider';
+import { useMarketStore } from '@/stores';
 
 export const usePrice = (assetIds: string[]) => {
   const hermesClient = new HermesClient('https://hermes.pyth.network');
-
+  const { market } = useMarketStore();
   const provider = useProvider();
 
   return useQuery({
-    queryKey: ['pythPrices', assetIds],
+    queryKey: ['pythPrices', assetIds, market],
     queryFn: async () => {
       if (!provider) return;
 
@@ -45,7 +46,10 @@ export const usePrice = (assetIds: string[]) => {
         PYTH_CONTRACT_ADDRESS_SEPOLIA,
         provider
       );
-      const marketContract = new Market(CONTRACT_ADDRESSES.market, provider);
+      const marketContract = new Market(
+        DEPLOYED_MARKETS[market].marketAddress,
+        provider
+      );
 
       const buffer = Buffer.from(priceUpdates.binary.data[0], 'hex');
       const updateData = [arrayify(buffer)];
