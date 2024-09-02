@@ -4,13 +4,15 @@ import { useMarketConfiguration } from '@/hooks/useMarketConfiguration';
 import {
   ASSET_ID_TO_SYMBOL,
   FAUCET_URL,
+  formatUnits,
   FUEL_ETH_BASE_ASSET_ID,
 } from '@/utils';
-import { useAccount, useBalance, useIsConnected } from '@fuels/react';
+import { useAccount, useBalance } from '@fuels/react';
 import { BN, toFixed } from 'fuels';
 import React, { useMemo } from 'react';
 import { Button } from '../ui/button';
 import { useIsMutating } from '@tanstack/react-query';
+import BigNumber from 'bignumber.js';
 
 type FaucetRowProps = {
   account: string | undefined;
@@ -36,14 +38,18 @@ const FaucetRow = ({
 
   const { mutate: mint, isPending: isMinting } = useMintToken(symbol, decimals);
 
-  if (!balance) return <div>Loading...</div>;
-
   return (
     <div key={assetId} className="flex gap-x-4">
       <div>
-        {toFixed(balance.formatUnits(decimals).toString(), {
-          precision: 4,
-        })}
+        {toFixed(
+          formatUnits(
+            BigNumber(balance ? balance.toString() : '0'),
+            decimals
+          ).toString(),
+          {
+            precision: 4,
+          }
+        )}
         {symbol}
       </div>
       <Button
