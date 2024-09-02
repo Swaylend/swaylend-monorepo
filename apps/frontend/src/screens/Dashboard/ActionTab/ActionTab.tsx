@@ -1,6 +1,7 @@
 import Button from '@components/Button';
 import SizedBox from '@components/SizedBox';
 import styled from '@emotion/styled';
+import { useAccount, useConnectUI, useIsConnected } from '@fuels/react';
 import {
   PYTH_CONTRACT_ABI,
   PYTH_CONTRACT_ADDRESS_SEPOLIA,
@@ -12,10 +13,11 @@ import { TOKENS_BY_SYMBOL } from '@src/constants';
 import { useAvailableToBorrow } from '@src/hooks/useAvailableToBorrow';
 import { useUserSupplyBorrow } from '@src/hooks/useUserSupplyBorrow';
 import { ACTION_TYPE } from '@src/stores/DashboardStore';
-import { getMarketContract, getOracleContract } from '@src/utils/readContracts';
-import { initProvider, walletToRead } from '@src/utils/walletToRead';
+import getAddressB256 from '@src/utils/address';
+import { getMarketContract } from '@src/utils/readContracts';
+import { walletToRead } from '@src/utils/walletToRead';
 import { useStores } from '@stores';
-import { Contract, type Provider, type WalletUnlocked } from 'fuels';
+import { Contract, type WalletUnlocked } from 'fuels';
 import { observer } from 'mobx-react-lite';
 import type React from 'react';
 import { useEffect, useState } from 'react';
@@ -29,13 +31,16 @@ const Root = styled.div`
 `;
 
 const ActionTab: React.FC<IProps> = () => {
-  const { accountStore, settingsStore, dashboardStore } = useStores();
+  const { settingsStore, dashboardStore } = useStores();
+  const { connect } = useConnectUI();
+  const { isConnected } = useIsConnected();
+  const { account } = useAccount();
   const [wallet, setWallet] = useState<WalletUnlocked | null>(null);
-  const [provider, setProvider] = useState<Provider | null>(null);
+  // const [provider, setProvider] = useState<Provider | null>(null);
 
   useEffect(() => {
     walletToRead().then((w) => setWallet(w));
-    initProvider().then((p) => setProvider(p));
+    // initProvider().then((p) => setProvider(p));
   }, []);
 
   const marketContract = getMarketContract(
@@ -48,12 +53,12 @@ const ActionTab: React.FC<IProps> = () => {
     wallet!
   );
   const { data: userSupplyBorrow, isSuccess: isSuccessUserSupplyBorrow } =
-    useUserSupplyBorrow(marketContract, accountStore.addressInput?.value ?? '');
+    useUserSupplyBorrow(marketContract, getAddressB256(account));
   const { data: maxBorrowAmount, isSuccess: isSuccessMaxBorrowAmount } =
     useAvailableToBorrow(
       marketContract,
       oracleContract,
-      accountStore.addressInput?.value ?? ''
+      getAddressB256(account)
     );
 
   const handleBaseTokenClick = (action: ACTION_TYPE) => {
@@ -66,23 +71,24 @@ const ActionTab: React.FC<IProps> = () => {
     isExpanded: dashboardStore.action == null,
     duration: 300,
   });
+
   return (
     <Root>
-      {/* {!accountStore.isLoggedIn && (
+      {!isConnected && (
         <>
-          <Button fixed onClick={() => settingsStore.setLoginModalOpened(true)}>
+          <Button fixed onClick={() => connect()}>
             Connect wallet
           </Button>
           <SizedBox height={10} />
         </>
-      )} */}
+      )}
       <div {...getCollapseProps()}>
         {dashboardStore.mode === 0 ? (
           <Row>
             <Button
               fixed
               onClick={() => handleBaseTokenClick(ACTION_TYPE.SUPPLY)}
-              disabled={!accountStore.isLoggedIn}
+              disabled={!isConnected}
             >
               Supply {dashboardStore.baseToken.symbol}
             </Button>
@@ -92,7 +98,7 @@ const ActionTab: React.FC<IProps> = () => {
               onClick={() => handleBaseTokenClick(ACTION_TYPE.WITHDRAW)}
               disabled={
                 !isSuccessUserSupplyBorrow ||
-                !accountStore.isLoggedIn ||
+                !isConnected ||
                 !userSupplyBorrow ||
                 userSupplyBorrow[0].eq(0)
               }
@@ -107,7 +113,7 @@ const ActionTab: React.FC<IProps> = () => {
               onClick={() => handleBaseTokenClick(ACTION_TYPE.BORROW)}
               disabled={
                 !isSuccessMaxBorrowAmount ||
-                !accountStore.isLoggedIn ||
+                !isConnected ||
                 !maxBorrowAmount ||
                 maxBorrowAmount.eq(0)
               }
@@ -120,7 +126,7 @@ const ActionTab: React.FC<IProps> = () => {
               onClick={() => handleBaseTokenClick(ACTION_TYPE.REPAY)}
               disabled={
                 !isSuccessUserSupplyBorrow ||
-                !accountStore.isLoggedIn ||
+                !isConnected ||
                 !userSupplyBorrow ||
                 userSupplyBorrow[1].eq(0)
               }

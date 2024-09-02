@@ -2,9 +2,10 @@ import { Column } from '@components/Flex';
 import SizedBox from '@components/SizedBox';
 import Text from '@components/Text';
 import styled from '@emotion/styled';
+import { useAccount, useDisconnect } from '@fuels/react';
 import { EXPLORER_URL } from '@src/constants';
+import getAddressB256 from '@src/utils/address';
 import { useStores } from '@stores';
-import { LOGIN_TYPE } from '@stores/AccountStore';
 import copy from 'copy-to-clipboard';
 import { observer } from 'mobx-react-lite';
 import type React from 'react';
@@ -26,21 +27,20 @@ const Root = styled(Column)`
 `;
 
 const WalletActionsTooltip: React.FC<IProps> = () => {
-  const { notificationStore, accountStore, settingsStore } = useStores();
-
-  const handleCopy = (object: string) => {
-    object === 'address'
-      ? accountStore.address && copy(accountStore.address)
-      : accountStore.seed && copy(accountStore.seed);
-    notificationStore.toast(`Your ${object} was copied`, { type: 'info' });
-  };
-  const handleLogout = () => accountStore.disconnect();
+  const { notificationStore, settingsStore } = useStores();
+  const { disconnect } = useDisconnect();
+  const { account } = useAccount();
 
   return (
     <Root alignItems="center">
       <Text
         weight={700}
-        onClick={() => handleCopy('address')}
+        onClick={() => {
+          copy(getAddressB256(account));
+          notificationStore.toast('Your address was copied', {
+            type: 'info',
+          });
+        }}
         className="menu-item"
       >
         Copy address
@@ -49,7 +49,7 @@ const WalletActionsTooltip: React.FC<IProps> = () => {
       <Text
         className="menu-item"
         onClick={() =>
-          window.open(`${EXPLORER_URL}/account/${accountStore.address}`)
+          window.open(`${EXPLORER_URL}/account/${getAddressB256(account)}`)
         }
         weight={700}
       >
@@ -64,19 +64,7 @@ const WalletActionsTooltip: React.FC<IProps> = () => {
         Export log file
       </Text>
       <SizedBox height={10} />
-      {accountStore.loginType === LOGIN_TYPE.GENERATE_SEED && (
-        <>
-          <Text
-            weight={700}
-            onClick={() => handleCopy('seed')}
-            className="menu-item"
-          >
-            Copy seed
-          </Text>
-          <SizedBox height={10} />
-        </>
-      )}
-      <Text weight={700} onClick={handleLogout} className="menu-item">
+      <Text weight={700} onClick={() => disconnect()} className="menu-item">
         Disconnect
       </Text>
     </Root>

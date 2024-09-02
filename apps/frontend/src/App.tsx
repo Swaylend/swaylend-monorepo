@@ -2,13 +2,13 @@ import { Column } from '@components/Flex';
 import Footer from '@components/Footer';
 import Header from '@components/Header/Header';
 import styled from '@emotion/styled';
-import { useFuel, useProvider } from '@fuels/react';
+import { useAccount, useFuel, useProvider } from '@fuels/react';
 import Dashboard from '@screens/Dashboard';
 import Faucet from '@screens/Faucet';
 import Market from '@screens/Market';
 // import Tutorial from '@screens/Tutorial';
 // import Tutorials from '@screens/Tutorials';
-import { ROUTES } from '@src/constants';
+import { ROUTES, TOKENS_BY_SYMBOL } from '@src/constants';
 import { observer } from 'mobx-react-lite';
 import type React from 'react';
 import { useEffect } from 'react';
@@ -24,12 +24,17 @@ const Root = styled(Column)`
 const App: React.FC = () => {
   const { accountStore } = useStores();
   const { provider } = useProvider();
+  const { account } = useAccount();
   const { fuel } = useFuel();
 
   useEffect(() => {
-    accountStore.initFuel(fuel);
+    accountStore.setFuel(fuel);
     accountStore.initProvider(provider);
   });
+
+  useEffect(() => {
+    accountStore.setAddress(account);
+  }, [account]);
 
   return (
     <Root>

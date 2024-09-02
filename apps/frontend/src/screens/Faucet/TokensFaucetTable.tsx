@@ -6,6 +6,12 @@ import SizedBox from '@components/SizedBox';
 import Table from '@components/Table';
 import Text from '@components/Text';
 import TokenIcon from '@components/TokenIcon';
+import {
+  useAccount,
+  useBalance,
+  useConnectUI,
+  useIsConnected,
+} from '@fuels/react';
 import { useFaucetVM } from '@screens/Faucet/FaucetVm';
 import { FAUCET_URL, TOKENS_BY_SYMBOL } from '@src/constants';
 import { useStores } from '@stores';
@@ -16,9 +22,16 @@ type IProps = any;
 
 const TokensFaucetTable: React.FC<IProps> = () => {
   const { accountStore, settingsStore, pricesStore } = useStores();
+  const { connect } = useConnectUI();
+  const { account } = useAccount();
+  const { isConnected } = useIsConnected();
   const vm = useFaucetVM();
   const [tokens, setTokens] = useState<any>([]);
-  const ethBalance = accountStore.getBalance(TOKENS_BY_SYMBOL.ETH);
+  const { balance: ethBalance } = useBalance({
+    address: account || undefined,
+    assetId: TOKENS_BY_SYMBOL.ETH.assetId,
+  });
+
   const mintedTokens = settingsStore.mintedTokensForCurrentAccount?.split(',');
   useMemo(() => {
     setTokens(
@@ -63,10 +76,10 @@ const TokensFaucetTable: React.FC<IProps> = () => {
           </Column>
         ),
         btn: (() => {
-          if (!accountStore.isLoggedIn)
+          if (!isConnected)
             return (
-              <Button fixed disabled>
-                Mint
+              <Button fixed onClick={() => connect()}>
+                Connect wallet
               </Button>
             );
           if (!vm.initialized)
@@ -104,10 +117,7 @@ const TokensFaucetTable: React.FC<IProps> = () => {
               disabled={vm.loading || !vm.initialized}
               onClick={() => {
                 if (t.symbol === 'ETH') {
-                  window.open(
-                    `${FAUCET_URL}/?address=${accountStore.address}`,
-                    'blank'
-                  );
+                  window.open(`${FAUCET_URL}/?address=${account}`, 'blank');
                 } else {
                   vm.mint(t.assetId);
                 }
@@ -149,9 +159,9 @@ const TokensFaucetTable: React.FC<IProps> = () => {
     );
     /* eslint-disable */
   }, [
-    accountStore.address,
+    account,
     accountStore.balances,
-    accountStore.isLoggedIn,
+    isConnected,
     settingsStore,
     vm.loading,
     pricesStore.tokensPrices,

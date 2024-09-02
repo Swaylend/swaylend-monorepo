@@ -748,6 +748,170 @@ export type LiquidationEvent_Variance_Order_By = {
   totalBaseValue?: InputMaybe<Order_By>;
 };
 
+/** columns and relationships of "MarketConfiguartion" */
+export type MarketConfiguartion = {
+  __typename?: 'MarketConfiguartion';
+  baseBorrowMin: Scalars['numeric']['output'];
+  baseMinForRewards: Scalars['numeric']['output'];
+  baseToken: Scalars['String']['output'];
+  baseTokenDecimals: Scalars['Int']['output'];
+  baseTokenPriceFeedId: Scalars['String']['output'];
+  baseTrackingBorrowSpeed: Scalars['numeric']['output'];
+  baseTrackingIndexScale: Scalars['numeric']['output'];
+  baseTrackingSupplySpeed: Scalars['numeric']['output'];
+  borrowKink: Scalars['numeric']['output'];
+  borrowPerSecondInterestRateBase: Scalars['numeric']['output'];
+  borrowPerSecondInterestRateSlopeHigh: Scalars['numeric']['output'];
+  borrowPerSecondInterestRateSlopeLow: Scalars['numeric']['output'];
+  db_write_timestamp?: Maybe<Scalars['timestamp']['output']>;
+  governor: Scalars['String']['output'];
+  id: Scalars['String']['output'];
+  pause_guardian: Scalars['String']['output'];
+  storeFrontPriceFactor: Scalars['numeric']['output'];
+  supplyKink: Scalars['numeric']['output'];
+  supplyPerSecondInterestRateBase: Scalars['numeric']['output'];
+  supplyPerSecondInterestRateSlopeHigh: Scalars['numeric']['output'];
+  supplyPerSecondInterestRateSlopeLow: Scalars['numeric']['output'];
+  targetReserves: Scalars['numeric']['output'];
+};
+
+/** Boolean expression to filter rows from the table "MarketConfiguartion". All fields are combined with a logical 'AND'. */
+export type MarketConfiguartion_Bool_Exp = {
+  _and?: InputMaybe<Array<MarketConfiguartion_Bool_Exp>>;
+  _not?: InputMaybe<MarketConfiguartion_Bool_Exp>;
+  _or?: InputMaybe<Array<MarketConfiguartion_Bool_Exp>>;
+  baseBorrowMin?: InputMaybe<Numeric_Comparison_Exp>;
+  baseMinForRewards?: InputMaybe<Numeric_Comparison_Exp>;
+  baseToken?: InputMaybe<String_Comparison_Exp>;
+  baseTokenDecimals?: InputMaybe<Int_Comparison_Exp>;
+  baseTokenPriceFeedId?: InputMaybe<String_Comparison_Exp>;
+  baseTrackingBorrowSpeed?: InputMaybe<Numeric_Comparison_Exp>;
+  baseTrackingIndexScale?: InputMaybe<Numeric_Comparison_Exp>;
+  baseTrackingSupplySpeed?: InputMaybe<Numeric_Comparison_Exp>;
+  borrowKink?: InputMaybe<Numeric_Comparison_Exp>;
+  borrowPerSecondInterestRateBase?: InputMaybe<Numeric_Comparison_Exp>;
+  borrowPerSecondInterestRateSlopeHigh?: InputMaybe<Numeric_Comparison_Exp>;
+  borrowPerSecondInterestRateSlopeLow?: InputMaybe<Numeric_Comparison_Exp>;
+  db_write_timestamp?: InputMaybe<Timestamp_Comparison_Exp>;
+  governor?: InputMaybe<String_Comparison_Exp>;
+  id?: InputMaybe<String_Comparison_Exp>;
+  pause_guardian?: InputMaybe<String_Comparison_Exp>;
+  storeFrontPriceFactor?: InputMaybe<Numeric_Comparison_Exp>;
+  supplyKink?: InputMaybe<Numeric_Comparison_Exp>;
+  supplyPerSecondInterestRateBase?: InputMaybe<Numeric_Comparison_Exp>;
+  supplyPerSecondInterestRateSlopeHigh?: InputMaybe<Numeric_Comparison_Exp>;
+  supplyPerSecondInterestRateSlopeLow?: InputMaybe<Numeric_Comparison_Exp>;
+  targetReserves?: InputMaybe<Numeric_Comparison_Exp>;
+};
+
+/** Ordering options when selecting data from "MarketConfiguartion". */
+export type MarketConfiguartion_Order_By = {
+  baseBorrowMin?: InputMaybe<Order_By>;
+  baseMinForRewards?: InputMaybe<Order_By>;
+  baseToken?: InputMaybe<Order_By>;
+  baseTokenDecimals?: InputMaybe<Order_By>;
+  baseTokenPriceFeedId?: InputMaybe<Order_By>;
+  baseTrackingBorrowSpeed?: InputMaybe<Order_By>;
+  baseTrackingIndexScale?: InputMaybe<Order_By>;
+  baseTrackingSupplySpeed?: InputMaybe<Order_By>;
+  borrowKink?: InputMaybe<Order_By>;
+  borrowPerSecondInterestRateBase?: InputMaybe<Order_By>;
+  borrowPerSecondInterestRateSlopeHigh?: InputMaybe<Order_By>;
+  borrowPerSecondInterestRateSlopeLow?: InputMaybe<Order_By>;
+  db_write_timestamp?: InputMaybe<Order_By>;
+  governor?: InputMaybe<Order_By>;
+  id?: InputMaybe<Order_By>;
+  pause_guardian?: InputMaybe<Order_By>;
+  storeFrontPriceFactor?: InputMaybe<Order_By>;
+  supplyKink?: InputMaybe<Order_By>;
+  supplyPerSecondInterestRateBase?: InputMaybe<Order_By>;
+  supplyPerSecondInterestRateSlopeHigh?: InputMaybe<Order_By>;
+  supplyPerSecondInterestRateSlopeLow?: InputMaybe<Order_By>;
+  targetReserves?: InputMaybe<Order_By>;
+};
+
+/** select columns of table "MarketConfiguartion" */
+export enum MarketConfiguartion_Select_Column {
+  /** column name */
+  BaseBorrowMin = 'baseBorrowMin',
+  /** column name */
+  BaseMinForRewards = 'baseMinForRewards',
+  /** column name */
+  BaseToken = 'baseToken',
+  /** column name */
+  BaseTokenDecimals = 'baseTokenDecimals',
+  /** column name */
+  BaseTokenPriceFeedId = 'baseTokenPriceFeedId',
+  /** column name */
+  BaseTrackingBorrowSpeed = 'baseTrackingBorrowSpeed',
+  /** column name */
+  BaseTrackingIndexScale = 'baseTrackingIndexScale',
+  /** column name */
+  BaseTrackingSupplySpeed = 'baseTrackingSupplySpeed',
+  /** column name */
+  BorrowKink = 'borrowKink',
+  /** column name */
+  BorrowPerSecondInterestRateBase = 'borrowPerSecondInterestRateBase',
+  /** column name */
+  BorrowPerSecondInterestRateSlopeHigh = 'borrowPerSecondInterestRateSlopeHigh',
+  /** column name */
+  BorrowPerSecondInterestRateSlopeLow = 'borrowPerSecondInterestRateSlopeLow',
+  /** column name */
+  DbWriteTimestamp = 'db_write_timestamp',
+  /** column name */
+  Governor = 'governor',
+  /** column name */
+  Id = 'id',
+  /** column name */
+  PauseGuardian = 'pause_guardian',
+  /** column name */
+  StoreFrontPriceFactor = 'storeFrontPriceFactor',
+  /** column name */
+  SupplyKink = 'supplyKink',
+  /** column name */
+  SupplyPerSecondInterestRateBase = 'supplyPerSecondInterestRateBase',
+  /** column name */
+  SupplyPerSecondInterestRateSlopeHigh = 'supplyPerSecondInterestRateSlopeHigh',
+  /** column name */
+  SupplyPerSecondInterestRateSlopeLow = 'supplyPerSecondInterestRateSlopeLow',
+  /** column name */
+  TargetReserves = 'targetReserves'
+}
+
+/** Streaming cursor of the table "MarketConfiguartion" */
+export type MarketConfiguartion_Stream_Cursor_Input = {
+  /** Stream column input with initial value */
+  initial_value: MarketConfiguartion_Stream_Cursor_Value_Input;
+  /** cursor ordering */
+  ordering?: InputMaybe<Cursor_Ordering>;
+};
+
+/** Initial value of the column from where the streaming should start */
+export type MarketConfiguartion_Stream_Cursor_Value_Input = {
+  baseBorrowMin?: InputMaybe<Scalars['numeric']['input']>;
+  baseMinForRewards?: InputMaybe<Scalars['numeric']['input']>;
+  baseToken?: InputMaybe<Scalars['String']['input']>;
+  baseTokenDecimals?: InputMaybe<Scalars['Int']['input']>;
+  baseTokenPriceFeedId?: InputMaybe<Scalars['String']['input']>;
+  baseTrackingBorrowSpeed?: InputMaybe<Scalars['numeric']['input']>;
+  baseTrackingIndexScale?: InputMaybe<Scalars['numeric']['input']>;
+  baseTrackingSupplySpeed?: InputMaybe<Scalars['numeric']['input']>;
+  borrowKink?: InputMaybe<Scalars['numeric']['input']>;
+  borrowPerSecondInterestRateBase?: InputMaybe<Scalars['numeric']['input']>;
+  borrowPerSecondInterestRateSlopeHigh?: InputMaybe<Scalars['numeric']['input']>;
+  borrowPerSecondInterestRateSlopeLow?: InputMaybe<Scalars['numeric']['input']>;
+  db_write_timestamp?: InputMaybe<Scalars['timestamp']['input']>;
+  governor?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['String']['input']>;
+  pause_guardian?: InputMaybe<Scalars['String']['input']>;
+  storeFrontPriceFactor?: InputMaybe<Scalars['numeric']['input']>;
+  supplyKink?: InputMaybe<Scalars['numeric']['input']>;
+  supplyPerSecondInterestRateBase?: InputMaybe<Scalars['numeric']['input']>;
+  supplyPerSecondInterestRateSlopeHigh?: InputMaybe<Scalars['numeric']['input']>;
+  supplyPerSecondInterestRateSlopeLow?: InputMaybe<Scalars['numeric']['input']>;
+  targetReserves?: InputMaybe<Scalars['numeric']['input']>;
+};
+
 /** columns and relationships of "MarketState" */
 export type MarketState = {
   __typename?: 'MarketState';
@@ -2429,6 +2593,10 @@ export type Query_Root = {
   LiquidationEvent: Array<LiquidationEvent>;
   /** fetch data from the table: "LiquidationEvent" using primary key columns */
   LiquidationEvent_by_pk?: Maybe<LiquidationEvent>;
+  /** fetch data from the table: "MarketConfiguartion" */
+  MarketConfiguartion: Array<MarketConfiguartion>;
+  /** fetch data from the table: "MarketConfiguartion" using primary key columns */
+  MarketConfiguartion_by_pk?: Maybe<MarketConfiguartion>;
   /** fetch data from the table: "MarketState" */
   MarketState: Array<MarketState>;
   /** fetch data from the table: "MarketState" using primary key columns */
@@ -2542,6 +2710,20 @@ export type Query_RootLiquidationEventArgs = {
 
 
 export type Query_RootLiquidationEvent_By_PkArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type Query_RootMarketConfiguartionArgs = {
+  distinct_on?: InputMaybe<Array<MarketConfiguartion_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<MarketConfiguartion_Order_By>>;
+  where?: InputMaybe<MarketConfiguartion_Bool_Exp>;
+};
+
+
+export type Query_RootMarketConfiguartion_By_PkArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -2913,6 +3095,12 @@ export type Subscription_Root = {
   LiquidationEvent_by_pk?: Maybe<LiquidationEvent>;
   /** fetch data from the table in a streaming manner: "LiquidationEvent" */
   LiquidationEvent_stream: Array<LiquidationEvent>;
+  /** fetch data from the table: "MarketConfiguartion" */
+  MarketConfiguartion: Array<MarketConfiguartion>;
+  /** fetch data from the table: "MarketConfiguartion" using primary key columns */
+  MarketConfiguartion_by_pk?: Maybe<MarketConfiguartion>;
+  /** fetch data from the table in a streaming manner: "MarketConfiguartion" */
+  MarketConfiguartion_stream: Array<MarketConfiguartion>;
   /** fetch data from the table: "MarketState" */
   MarketState: Array<MarketState>;
   /** fetch data from the table: "MarketState" using primary key columns */
@@ -3083,6 +3271,27 @@ export type Subscription_RootLiquidationEvent_StreamArgs = {
   batch_size: Scalars['Int']['input'];
   cursor: Array<InputMaybe<LiquidationEvent_Stream_Cursor_Input>>;
   where?: InputMaybe<LiquidationEvent_Bool_Exp>;
+};
+
+
+export type Subscription_RootMarketConfiguartionArgs = {
+  distinct_on?: InputMaybe<Array<MarketConfiguartion_Select_Column>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<MarketConfiguartion_Order_By>>;
+  where?: InputMaybe<MarketConfiguartion_Bool_Exp>;
+};
+
+
+export type Subscription_RootMarketConfiguartion_By_PkArgs = {
+  id: Scalars['String']['input'];
+};
+
+
+export type Subscription_RootMarketConfiguartion_StreamArgs = {
+  batch_size: Scalars['Int']['input'];
+  cursor: Array<InputMaybe<MarketConfiguartion_Stream_Cursor_Input>>;
+  where?: InputMaybe<MarketConfiguartion_Bool_Exp>;
 };
 
 

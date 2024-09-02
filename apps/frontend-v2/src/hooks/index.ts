@@ -8,3 +8,4 @@ export * from './useUserCollateralAssets';
 export * from './useTotalCollateral';
 export * from './useCollateralConfigurations';
 export * from './useProvider';
+export * from './useSupplyCollateral';
