@@ -7,9 +7,9 @@ import { ACTION_TYPE, useMarketStore } from '@/stores';
 import { type IToken, formatUnits } from '@/utils';
 import { useAccount, useBalance } from '@fuels/react';
 import BigNumber from 'bignumber.js';
+import clsx from 'clsx';
 import React, { useMemo } from 'react';
 import { Button } from '../ui/button';
-import clsx from 'clsx';
 
 type TableRowProps = {
   account: string | undefined;

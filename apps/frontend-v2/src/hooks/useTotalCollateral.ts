@@ -1,9 +1,9 @@
 import { Market } from '@/contract-types';
+import { useMarketStore } from '@/stores';
 import { DEPLOYED_MARKETS, collaterals } from '@/utils';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { useProvider } from './useProvider';
-import { useMarketStore } from '@/stores';
 
 export const useTotalCollateral = () => {
   const provider = useProvider();

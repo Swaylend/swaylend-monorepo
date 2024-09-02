@@ -1,4 +1,5 @@
 import { usePrice, useSupplyCollateral } from '@/hooks';
+import { useMarketConfiguration } from '@/hooks/useMarketConfiguration';
 import { useSupplyBase } from '@/hooks/useSupplyBase';
 import { useWithdrawBase } from '@/hooks/useWithdrawBase';
 import { useWithdrawCollateral } from '@/hooks/useWithdrawCollateral';
@@ -7,7 +8,6 @@ import BigNumber from 'bignumber.js';
 import React from 'react';
 import { Button } from '../ui/button';
 import { InputField } from './InputField';
-import { useMarketConfiguration } from '@/hooks/useMarketConfiguration';
 
 export const Input = () => {
   const {

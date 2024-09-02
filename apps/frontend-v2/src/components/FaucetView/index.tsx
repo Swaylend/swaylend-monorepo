@@ -1,11 +1,11 @@
 'use client';
 import { useCollateralConfigurations, useMintToken } from '@/hooks';
+import { useMarketConfiguration } from '@/hooks/useMarketConfiguration';
 import { FAUCET_URL } from '@/utils';
 import { useAccount, useBalance, useIsConnected } from '@fuels/react';
 import { BN, toFixed } from 'fuels';
 import React, { useMemo } from 'react';
 import { Button } from '../ui/button';
-import { useMarketConfiguration } from '@/hooks/useMarketConfiguration';
 
 type FaucetRowProps = {
   account: string | undefined;

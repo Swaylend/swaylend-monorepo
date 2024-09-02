@@ -1,7 +1,7 @@
 'use client';
 import { useMarketStore } from '@/stores';
-import { Button } from '../ui/button';
 import { DeployedMarket } from '@/utils';
+import { Button } from '../ui/button';
 
 export const MarketSwitcher = () => {
   const { market, changeMarket } = useMarketStore();
