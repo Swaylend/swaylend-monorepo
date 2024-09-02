@@ -1,10 +1,11 @@
-import { useSupplyCollateral } from '@/hooks';
+import { usePrice, useSupplyCollateral } from '@/hooks';
 import { ACTION_TYPE, useMarketStore } from '@/stores';
-import { TOKENS_BY_SYMBOL } from '@/utils';
+import { TOKENS_BY_SYMBOL, TOKENS_LIST } from '@/utils';
 import BigNumber from 'bignumber.js';
 import React from 'react';
 import { Button } from '../ui/button';
 import { InputField } from './InputField';
+import { useWithdrawCollateral } from '@/hooks/useWithdrawCollateral';
 
 export const Input = () => {
   const {
@@ -23,7 +24,13 @@ export const Input = () => {
     changeActionTokenAssetId(TOKENS_BY_SYMBOL.USDC.assetId);
   };
 
+  const { data: priceData } = usePrice(TOKENS_LIST.map((i) => i.assetId));
+
   const { mutate: supplyCollateral } = useSupplyCollateral({
+    actionTokenAssetId,
+  });
+
+  const { mutate: withdrawCollateral } = useWithdrawCollateral({
     actionTokenAssetId,
   });
 
@@ -36,8 +43,18 @@ export const Input = () => {
         }
         break;
       }
-      case ACTION_TYPE.WITHDRAW:
+      case ACTION_TYPE.WITHDRAW: {
+        if (actionTokenAssetId === TOKENS_BY_SYMBOL.USDC.assetId) {
+        } else {
+          if (!priceData) return;
+
+          withdrawCollateral({
+            tokenAmount,
+            priceUpdateData: priceData.priceUpdateData,
+          });
+        }
         break;
+      }
       case ACTION_TYPE.BORROW:
         break;
       case ACTION_TYPE.REPAY:
