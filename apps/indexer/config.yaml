@@ -5,7 +5,7 @@ networks:
     start_block: 9000000
     contracts:
       - name: Market
-        address: 0xc697c3c7ae51f67e9cd87046e5c26f08bc01533bcd46ca9663537d914bfe6317
+        address: 0x38c3c36bbb5f95256539cb5a315720815eb9623cf2de2561f5594d2699aa0b22
         abi_file_path: ./abi/market-abi.json
         handler: ./src/EventHandlers.ts
         events:
