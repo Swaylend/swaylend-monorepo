@@ -53,36 +53,36 @@ export const EXPLORER_URL = 'https://app.fuel.network/tx';
 
 // Faucet configuration
 export const FAUCET_URL = 'https://faucet-testnet.fuel.network/';
-export const TOKENS_LIST: Array<IToken> = Object.values(tokens).map(
-  (t) =>
-    ({
-      ...t,
-      logo: tokenLogos[t.symbol],
-    }) as IToken
-);
-export const TOKENS_BY_SYMBOL: Record<string, IToken> = TOKENS_LIST.reduce(
-  (acc: Record<string, IToken>, t) => {
-    acc[t.symbol] = { ...t, priceFeed: `0x${t.priceFeed}` };
-    return acc;
-  },
-  {}
-);
+// export const TOKENS_LIST: Array<IToken> = Object.values(tokens).map(
+//   (t) =>
+//     ({
+//       ...t,
+//       logo: tokenLogos[t.symbol],
+//     }) as IToken
+// );
+// export const TOKENS_BY_SYMBOL: Record<string, IToken> = TOKENS_LIST.reduce(
+//   (acc: Record<string, IToken>, t) => {
+//     acc[t.symbol] = { ...t, priceFeed: `0x${t.priceFeed}` };
+//     return acc;
+//   },
+//   {}
+// );
 
-export const TOKENS_BY_ASSET_ID: Record<string, IToken> = TOKENS_LIST.reduce(
-  (acc: Record<string, IToken>, t) => {
-    acc[t.assetId] = { ...t, priceFeed: `0x${t.priceFeed}` };
-    return acc;
-  },
-  {}
-);
+// export const TOKENS_BY_ASSET_ID: Record<string, IToken> = TOKENS_LIST.reduce(
+//   (acc: Record<string, IToken>, t) => {
+//     acc[t.assetId] = { ...t, priceFeed: `0x${t.priceFeed}` };
+//     return acc;
+//   },
+//   {}
+// );
 
-export const TOKENS_BY_PRICE_FEED: Record<string, IToken> = TOKENS_LIST.reduce(
-  (acc: Record<string, IToken>, t) => {
-    acc[t.priceFeed] = { ...t, priceFeed: `0x${t.priceFeed}` };
-    return acc;
-  },
-  {}
-);
+// export const TOKENS_BY_PRICE_FEED: Record<string, IToken> = TOKENS_LIST.reduce(
+//   (acc: Record<string, IToken>, t) => {
+//     acc[t.priceFeed] = { ...t, priceFeed: `0x${t.priceFeed}` };
+//     return acc;
+//   },
+//   {}
+// );
 
 export const FAUCET_AMOUNTS: Record<string, number> = {
   UNI: 50,
@@ -90,11 +90,11 @@ export const FAUCET_AMOUNTS: Record<string, number> = {
   USDC: 300,
 };
 
-export const collaterals: IToken[] = [
-  TOKENS_BY_SYMBOL.ETH,
-  TOKENS_BY_SYMBOL.BTC,
-  TOKENS_BY_SYMBOL.UNI,
-];
+// export const collaterals: IToken[] = [
+//   TOKENS_BY_SYMBOL.ETH,
+//   TOKENS_BY_SYMBOL.BTC,
+//   TOKENS_BY_SYMBOL.UNI,
+// ];
 
 export const FUEL_ETH_BASE_ASSET_ID =
   '0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07';

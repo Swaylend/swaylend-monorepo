@@ -5,7 +5,6 @@ import {
   DEPLOYED_MARKETS,
   EXPLORER_URL,
   FUEL_ETH_BASE_ASSET_ID,
-  TOKENS_BY_SYMBOL,
 } from '@/utils';
 import { useAccount, useWallet } from '@fuels/react';
 import {
@@ -15,14 +14,16 @@ import {
 import { useMutation } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { toast } from 'react-toastify';
+import { useMarketConfiguration } from './useMarketConfiguration';
 
 export const useWithdrawBase = () => {
   const { wallet } = useWallet();
   const { account } = useAccount();
   const { market } = useMarketStore();
+  const { data: marketConfiguration } = useMarketConfiguration();
 
   return useMutation({
-    mutationKey: ['withdrawBase', account, market],
+    mutationKey: ['withdrawBase', account, market, marketConfiguration],
     mutationFn: async ({
       tokenAmount,
       priceUpdateData,
@@ -30,9 +31,10 @@ export const useWithdrawBase = () => {
       tokenAmount: BigNumber;
       priceUpdateData: PriceDataUpdateInput;
     }) => {
-      if (!wallet || !account) {
+      if (!wallet || !account || !marketConfiguration) {
         return;
       }
+
       const pythContract = new PythContract(
         PYTH_CONTRACT_ADDRESS_SEPOLIA,
         wallet
@@ -44,7 +46,7 @@ export const useWithdrawBase = () => {
       );
 
       const amount = new BigNumber(tokenAmount).times(
-        10 ** TOKENS_BY_SYMBOL.USDC.decimals
+        10 ** marketConfiguration.baseTokenDecimals
       );
 
       const { waitForResult } = await marketContract.functions

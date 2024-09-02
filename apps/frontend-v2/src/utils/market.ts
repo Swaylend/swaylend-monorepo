@@ -1,6 +1,5 @@
 import BigNumber from 'bignumber.js';
 import { formatUnits } from './BigNumber';
-import { TOKENS_BY_ASSET_ID, TOKENS_BY_SYMBOL } from './constants';
 
 export function getBorrowApr(borrowRate: BigNumber | null | undefined) {
   if (borrowRate == null) return '0.00';
@@ -54,8 +53,11 @@ export function getTotalCollateralBalance(
   if (collateralBalances == null) return new BigNumber(0);
   const totalCollateralBalance = Object.entries(collateralBalances).reduce(
     (acc, [assetId, v]) => {
-      const token = TOKENS_BY_ASSET_ID[assetId];
-      const balance = formatUnits(v, token.decimals);
+      // FIXME: Improve and remove hardcoded values
+      // const token = TOKENS_BY_ASSET_ID[assetId];
+      const decimals = 7;
+      // const balance = formatUnits(v, token.decimals);
+      const balance = formatUnits(v, decimals);
       const dollBalance = (prices[assetId] ?? new BigNumber(0)).times(balance);
       return acc.plus(dollBalance);
     },
@@ -64,17 +66,19 @@ export function getTotalCollateralBalance(
   return totalCollateralBalance;
 }
 
+// TODO: Can be improved (less parameters)
 export function getTotalSuppliedBalance(
+  assetId: string,
+  assetDecimals: number,
   suppliedBalance: BigNumber | null,
   collateralBalances: Record<string, BigNumber>,
   prices: Record<string, BigNumber>
 ) {
   const baseTokenBalance = formatUnits(
     suppliedBalance ?? new BigNumber(0),
-    TOKENS_BY_SYMBOL.USDC.decimals
+    assetDecimals
   );
-  const baseTokenPrice =
-    prices[TOKENS_BY_SYMBOL.USDC.assetId] ?? new BigNumber(0);
+  const baseTokenPrice = prices[assetId] ?? new BigNumber(0);
   const totalCollBalance = getTotalCollateralBalance(
     collateralBalances,
     prices

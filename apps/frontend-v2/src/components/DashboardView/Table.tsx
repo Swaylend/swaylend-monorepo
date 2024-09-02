@@ -4,21 +4,18 @@ import {
   useUserCollateralAssets,
 } from '@/hooks';
 import { ACTION_TYPE, useMarketStore } from '@/stores';
-import {
-  type IToken,
-  TOKENS_BY_SYMBOL,
-  collaterals,
-  formatUnits,
-} from '@/utils';
+import { type IToken, formatUnits } from '@/utils';
 import { useAccount, useBalance } from '@fuels/react';
 import BigNumber from 'bignumber.js';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Button } from '../ui/button';
 import clsx from 'clsx';
 
 type TableRowProps = {
   account: string | undefined;
-  token: IToken;
+  assetId: string;
+  symbol: string;
+  decimals: number;
   protocolBalance: BigNumber;
   protocolBalancePending: boolean;
   handleAssetClick: (action: ACTION_TYPE, assetId: string) => void;
@@ -26,19 +23,21 @@ type TableRowProps = {
 
 const TableRow = ({
   account,
-  token,
+  assetId,
+  symbol,
+  decimals,
   protocolBalance,
   protocolBalancePending,
   handleAssetClick,
 }: TableRowProps) => {
   const { balance } = useBalance({
     address: account,
-    assetId: token.assetId,
+    assetId: assetId,
   });
 
   const formattedBalance = formatUnits(
     BigNumber(balance ? balance.toString() : '0'),
-    token.decimals
+    decimals
   ).toFormat(6);
 
   const canSupply = balance?.gt(0);
@@ -46,20 +45,20 @@ const TableRow = ({
 
   return (
     <div className="flex gap-x-2">
-      {token.symbol}
+      {symbol}
       <div className={clsx(balance === null && 'animate-pulse')}>
         Bal:
         {formattedBalance}
-        {token.symbol}
+        {symbol}
       </div>
       <div className={clsx(protocolBalancePending && 'animate-pulse')}>
-        Deposited:{formatUnits(protocolBalance, token.decimals).toFormat(4)}
-        {token.symbol}
+        Deposited:{formatUnits(protocolBalance, decimals).toFormat(4)}
+        {symbol}
       </div>
       <Button
         disabled={!canSupply}
         onClick={() =>
-          canSupply && handleAssetClick(ACTION_TYPE.SUPPLY, token.assetId)
+          canSupply && handleAssetClick(ACTION_TYPE.SUPPLY, assetId)
         }
       >
         +
@@ -67,7 +66,7 @@ const TableRow = ({
       <Button
         disabled={!canWithdraw}
         onClick={() =>
-          canWithdraw && handleAssetClick(ACTION_TYPE.WITHDRAW, token.assetId)
+          canWithdraw && handleAssetClick(ACTION_TYPE.WITHDRAW, assetId)
         }
       >
         -
@@ -85,7 +84,11 @@ export const Table = () => {
   } = useMarketStore();
   const { data: userCollateralAssets, isPending: userCollateralAssetsPending } =
     useUserCollateralAssets();
-  // const { data: collateralConfigurations } = useCollateralConfigurations();
+  const {
+    data: collateralConfigurations,
+    isPending: collateralConfigurationsPending,
+    error: collateralConfigurationsError,
+  } = useCollateralConfigurations();
   // const { data: totalCollateralInfo } = useTotalCollateral();
 
   const { account } = useAccount();
@@ -97,15 +100,31 @@ export const Table = () => {
     changeActionTokenAssetId(assetId);
   };
 
+  const collaterals = useMemo(() => {
+    if (!collateralConfigurations) return [];
+
+    return Object.values(collateralConfigurations);
+  }, [collateralConfigurations]);
+
+  if (collateralConfigurationsPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (!collateralConfigurations || collateralConfigurationsError) {
+    return <div>Failed to load collateral configurations</div>;
+  }
+
   return (
     <div>
-      {collaterals.map((token) => (
+      {collaterals.map((collateral) => (
         <TableRow
-          key={token.assetId}
+          key={collateral.asset_id}
           account={account ?? undefined}
-          token={token}
+          assetId={collateral.asset_id}
+          symbol={'TODO'}
+          decimals={collateral.decimals}
           protocolBalance={
-            userCollateralAssets?.[token.assetId] ?? new BigNumber(0)
+            userCollateralAssets?.[collateral.asset_id] ?? new BigNumber(0)
           }
           protocolBalancePending={userCollateralAssetsPending}
           handleAssetClick={handleAssetClick}

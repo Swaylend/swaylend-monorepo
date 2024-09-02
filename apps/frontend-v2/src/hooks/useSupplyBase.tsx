@@ -1,20 +1,22 @@
 import { Market } from '@/contract-types';
 import { useMarketStore } from '@/stores';
-import { DEPLOYED_MARKETS, EXPLORER_URL, TOKENS_BY_SYMBOL } from '@/utils';
+import { DEPLOYED_MARKETS, EXPLORER_URL } from '@/utils';
 import { useAccount, useWallet } from '@fuels/react';
 import { useMutation } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { toast } from 'react-toastify';
+import { useMarketConfiguration } from './useMarketConfiguration';
 
 export const useSupplyBase = () => {
   const { wallet } = useWallet();
   const { account } = useAccount();
   const { market } = useMarketStore();
+  const { data: marketConfiguration } = useMarketConfiguration();
 
   return useMutation({
-    mutationKey: ['supplyBase', account, market],
+    mutationKey: ['supplyBase', account, market, marketConfiguration],
     mutationFn: async (tokenAmount: BigNumber) => {
-      if (!wallet || !account) {
+      if (!wallet || !account || !marketConfiguration) {
         return;
       }
 
@@ -24,14 +26,14 @@ export const useSupplyBase = () => {
       );
 
       const amount = new BigNumber(tokenAmount).times(
-        10 ** TOKENS_BY_SYMBOL.USDC.decimals
+        10 ** marketConfiguration.baseTokenDecimals
       );
 
       const { waitForResult } = await marketContract.functions
         .supply_base()
         .callParams({
           forward: {
-            assetId: TOKENS_BY_SYMBOL.USDC.assetId,
+            assetId: marketConfiguration.baseToken,
             amount: amount.toString(),
           },
         })

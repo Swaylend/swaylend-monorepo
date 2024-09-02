@@ -1,9 +1,5 @@
 import { Market, type PriceDataUpdateInput } from '@/contract-types/Market';
-import {
-  DEPLOYED_MARKETS,
-  TOKENS_BY_ASSET_ID,
-  TOKENS_BY_PRICE_FEED,
-} from '@/utils';
+import { DEPLOYED_MARKETS } from '@/utils';
 import { HermesClient } from '@pythnetwork/hermes-client';
 import {
   PYTH_CONTRACT_ADDRESS_SEPOLIA,
@@ -14,20 +10,45 @@ import BigNumber from 'bignumber.js';
 import { arrayify } from 'fuels';
 import { useProvider } from './useProvider';
 import { useMarketStore } from '@/stores';
+import { useMarketConfiguration } from './useMarketConfiguration';
+import { useCollateralConfigurations } from './useCollateralConfigurations';
+import { useMemo } from 'react';
 
-export const usePrice = (assetIds: string[]) => {
+export const usePrice = () => {
   const hermesClient = new HermesClient('https://hermes.pyth.network');
-  const { market } = useMarketStore();
   const provider = useProvider();
 
-  return useQuery({
-    queryKey: ['pythPrices', assetIds, market],
-    queryFn: async () => {
-      if (!provider) return;
+  const { market } = useMarketStore();
 
-      const priceFeedIds = assetIds.map(
-        (assetId) => TOKENS_BY_ASSET_ID[assetId].priceFeed
-      );
+  const { data: marketConfiguration } = useMarketConfiguration();
+  const { data: collateralConfigurations } = useCollateralConfigurations();
+
+  // Create a map of priceFeedId to assetId
+  const priceFeedIdToAssetId = useMemo(() => {
+    if (!marketConfiguration || !collateralConfigurations) return null;
+
+    const assets: Map<string, string> = new Map();
+
+    assets.set(
+      marketConfiguration.baseTokenPriceFeedId,
+      marketConfiguration.baseToken
+    );
+
+    for (const [assetId, collateralConfiguration] of Object.entries(
+      collateralConfigurations
+    )) {
+      assets.set(collateralConfiguration.price_feed_id, assetId);
+    }
+
+    return assets;
+  }, [marketConfiguration, collateralConfigurations]);
+
+  return useQuery({
+    queryKey: ['pythPrices', priceFeedIdToAssetId, market],
+    queryFn: async () => {
+      if (!provider || !priceFeedIdToAssetId) return;
+
+      const priceFeedIds = Array.from(priceFeedIdToAssetId.keys());
 
       // Fetch price udpates from Hermes client
       const priceUpdates =
@@ -70,14 +91,14 @@ export const usePrice = (assetIds: string[]) => {
       };
 
       // Format prices to BigNumber
-      const prices: Record<string, BigNumber> = {};
-
-      priceUpdates.parsed.forEach((parsedPrice) => {
-        const currentAssetId = TOKENS_BY_PRICE_FEED[parsedPrice.id].assetId;
-        prices[currentAssetId] = BigNumber(parsedPrice.price.price).times(
-          BigNumber(10).pow(BigNumber(parsedPrice.price.expo))
-        );
-      });
+      const prices = Object.fromEntries(
+        priceUpdates.parsed.map((parsedPrice) => [
+          priceFeedIdToAssetId.get(parsedPrice.id)!,
+          BigNumber(parsedPrice.price.price).times(
+            BigNumber(10).pow(BigNumber(parsedPrice.price.expo))
+          ),
+        ])
+      );
 
       return {
         prices,

@@ -3648,6 +3648,11 @@ export type GetCollateralConfigurationsQueryVariables = Exact<{ [key: string]: n
 
 export type GetCollateralConfigurationsQuery = { __typename?: 'query_root', CollateralAsset: Array<{ __typename?: 'CollateralAsset', supplyCap: any, priceFeedId: string, id: string, paused: boolean, liquidationPenalty: any, liquidateCollateralFactor: any, decimals: number, borrowCollateralFactor: any }> };
 
+export type GetMarketConfigurationQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetMarketConfigurationQuery = { __typename?: 'query_root', MarketConfiguartion: Array<{ __typename?: 'MarketConfiguartion', baseToken: string, baseTokenDecimals: number, baseTokenPriceFeedId: string, baseBorrowMin: any }> };
+
 export type GetMarketStateQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -3692,6 +3697,16 @@ export const GetCollateralConfigurationsDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<GetCollateralConfigurationsQuery, GetCollateralConfigurationsQueryVariables>;
+export const GetMarketConfigurationDocument = new TypedDocumentString(`
+    query GetMarketConfiguration {
+  MarketConfiguartion {
+    baseToken
+    baseTokenDecimals
+    baseTokenPriceFeedId
+    baseBorrowMin
+  }
+}
+    `) as unknown as TypedDocumentString<GetMarketConfigurationQuery, GetMarketConfigurationQueryVariables>;
 export const GetMarketStateDocument = new TypedDocumentString(`
     query GetMarketState {
   MarketState {

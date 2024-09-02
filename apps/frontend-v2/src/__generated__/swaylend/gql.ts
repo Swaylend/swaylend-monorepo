@@ -16,6 +16,7 @@ import * as types from './graphql';
 const documents = {
     "query GetCollateralAssets($account: String) {\n  User(where: {address: {_eq: $account}}) {\n    collateralAssets {\n      amount\n      collateralAsset_id\n    }\n  }\n}": types.GetCollateralAssetsDocument,
     "query GetCollateralConfigurations {\n  CollateralAsset {\n    supplyCap\n    priceFeedId\n    id\n    paused\n    liquidationPenalty\n    liquidateCollateralFactor\n    decimals\n    borrowCollateralFactor\n  }\n}": types.GetCollateralConfigurationsDocument,
+    "query GetMarketConfiguration {\n  MarketConfiguartion {\n    baseToken\n    baseTokenDecimals\n    baseTokenPriceFeedId\n    baseBorrowMin\n  }\n}": types.GetMarketConfigurationDocument,
     "query GetMarketState {\n  MarketState {\n    totalBorrowBase\n    totalSupplyBase\n  }\n}": types.GetMarketStateDocument,
 };
 
@@ -27,6 +28,10 @@ export function graphql(source: "query GetCollateralAssets($account: String) {\n
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "query GetCollateralConfigurations {\n  CollateralAsset {\n    supplyCap\n    priceFeedId\n    id\n    paused\n    liquidationPenalty\n    liquidateCollateralFactor\n    decimals\n    borrowCollateralFactor\n  }\n}"): typeof import('./graphql').GetCollateralConfigurationsDocument;
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "query GetMarketConfiguration {\n  MarketConfiguartion {\n    baseToken\n    baseTokenDecimals\n    baseTokenPriceFeedId\n    baseBorrowMin\n  }\n}"): typeof import('./graphql').GetMarketConfigurationDocument;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

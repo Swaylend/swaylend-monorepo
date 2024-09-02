@@ -5,7 +5,6 @@ import {
   DEPLOYED_MARKETS,
   EXPLORER_URL,
   FUEL_ETH_BASE_ASSET_ID,
-  TOKENS_BY_ASSET_ID,
 } from '@/utils';
 import { useAccount, useWallet } from '@fuels/react';
 import {
@@ -15,9 +14,10 @@ import {
 import { useMutation } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { toast } from 'react-toastify';
+import { useCollateralConfigurations } from './useCollateralConfigurations';
 
 type useWithdrawCollateralProps = {
-  actionTokenAssetId: string | null;
+  actionTokenAssetId: string | null | undefined;
 };
 
 export const useWithdrawCollateral = ({
@@ -26,6 +26,7 @@ export const useWithdrawCollateral = ({
   const { wallet } = useWallet();
   const { account } = useAccount();
   const { market } = useMarketStore();
+  const { data: collateralConfigurations } = useCollateralConfigurations();
 
   return useMutation({
     mutationKey: ['withdrawCollateral', actionTokenAssetId, account, market],
@@ -36,9 +37,15 @@ export const useWithdrawCollateral = ({
       tokenAmount: BigNumber;
       priceUpdateData: PriceDataUpdateInput;
     }) => {
-      if (!wallet || !account || !actionTokenAssetId) {
+      if (
+        !wallet ||
+        !account ||
+        !actionTokenAssetId ||
+        !collateralConfigurations
+      ) {
         return;
       }
+
       const pythContract = new PythContract(
         PYTH_CONTRACT_ADDRESS_SEPOLIA,
         wallet
@@ -50,7 +57,7 @@ export const useWithdrawCollateral = ({
       );
 
       const amount = new BigNumber(tokenAmount).times(
-        10 ** TOKENS_BY_ASSET_ID[actionTokenAssetId].decimals
+        10 ** collateralConfigurations[actionTokenAssetId].decimals
       );
 
       const { waitForResult } = await marketContract.functions

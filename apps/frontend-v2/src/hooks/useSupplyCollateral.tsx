@@ -1,13 +1,14 @@
 import { Market } from '@/contract-types';
 import { useMarketStore } from '@/stores';
-import { DEPLOYED_MARKETS, EXPLORER_URL, TOKENS_BY_ASSET_ID } from '@/utils';
+import { DEPLOYED_MARKETS, EXPLORER_URL } from '@/utils';
 import { useAccount, useWallet } from '@fuels/react';
 import { useMutation } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { toast } from 'react-toastify';
+import { useCollateralConfigurations } from './useCollateralConfigurations';
 
 type useSupplyCollateralProps = {
-  actionTokenAssetId: string | null;
+  actionTokenAssetId: string | null | undefined;
 };
 
 export const useSupplyCollateral = ({
@@ -16,11 +17,23 @@ export const useSupplyCollateral = ({
   const { wallet } = useWallet();
   const { account } = useAccount();
   const { market } = useMarketStore();
+  const { data: collateralConfigurations } = useCollateralConfigurations();
 
   return useMutation({
-    mutationKey: ['supplyCollateral', actionTokenAssetId, account, market],
+    mutationKey: [
+      'supplyCollateral',
+      actionTokenAssetId,
+      account,
+      market,
+      collateralConfigurations,
+    ],
     mutationFn: async (tokenAmount: BigNumber) => {
-      if (!wallet || !account || !actionTokenAssetId) {
+      if (
+        !wallet ||
+        !account ||
+        !actionTokenAssetId ||
+        !collateralConfigurations
+      ) {
         return;
       }
 
@@ -30,7 +43,7 @@ export const useSupplyCollateral = ({
       );
 
       const amount = new BigNumber(tokenAmount).times(
-        10 ** TOKENS_BY_ASSET_ID[actionTokenAssetId].decimals
+        10 ** collateralConfigurations[actionTokenAssetId].decimals
       );
 
       const { waitForResult } = await marketContract.functions

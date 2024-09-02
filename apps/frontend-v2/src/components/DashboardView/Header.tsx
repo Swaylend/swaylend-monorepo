@@ -1,9 +1,8 @@
 import { useBorrowRate, useSupplyRate, useUserSupplyBorrow } from '@/hooks';
 import { usePrice } from '@/hooks';
 import { useUserCollateralAssets } from '@/hooks';
+import { useMarketConfiguration } from '@/hooks/useMarketConfiguration';
 import {
-  TOKENS_BY_SYMBOL,
-  TOKENS_LIST,
   formatUnits,
   getBorrowApr,
   getSupplyApr,
@@ -17,7 +16,8 @@ export const Header = () => {
   const { data: supplyRate } = useSupplyRate();
   const { data: userSupplyBorrow } = useUserSupplyBorrow();
   const { data: userCollateralAssets } = useUserCollateralAssets();
-  const { data: priceData } = usePrice(TOKENS_LIST.map((i) => i.assetId));
+  const { data: priceData } = usePrice();
+  const { data: marketConfiguration } = useMarketConfiguration();
 
   // TODO[Martin]: Later implement this using loading and error states.
   const borrowedBalance = useMemo(() => {
@@ -30,21 +30,22 @@ export const Header = () => {
   }, [userSupplyBorrow]);
 
   const totalSuppliedBalance = useMemo(() => {
+    if (!marketConfiguration) return '0';
+
     return getTotalSuppliedBalance(
+      marketConfiguration.baseToken,
+      marketConfiguration.baseTokenDecimals,
       suppliedBalance,
       userCollateralAssets ?? {},
       priceData?.prices ?? {}
     );
-  }, [userSupplyBorrow, userCollateralAssets, priceData]);
-
-  const borrowed = formatUnits(
-    borrowedBalance ?? new BigNumber(0),
-    TOKENS_BY_SYMBOL.USDC.decimals
-  ).toFormat(2);
+  }, [userSupplyBorrow, userCollateralAssets, priceData, marketConfiguration]);
 
   const borrowApr = useMemo(() => getBorrowApr(borrowRate), [borrowRate]);
 
   const supplyApr = useMemo(() => getSupplyApr(supplyRate), [supplyRate]);
+
+  if (!marketConfiguration) return <div>Loading...</div>;
 
   return (
     <div className="flex justify-between">
@@ -52,7 +53,14 @@ export const Header = () => {
       <div>
         Supply{supplyApr}/borrow APR{borrowApr}
       </div>
-      <div>Borrowed balance: {borrowed}$</div>
+      <div>
+        Borrowed balance:{' '}
+        {formatUnits(
+          borrowedBalance ?? new BigNumber(0),
+          marketConfiguration.baseTokenDecimals
+        ).toFormat(2)}
+        $
+      </div>
     </div>
   );
 };

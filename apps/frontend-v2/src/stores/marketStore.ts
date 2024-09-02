@@ -19,15 +19,15 @@ interface MarketStore {
   market: DeployedMarket;
 
   mode: ACTION_MODE;
-  action: ACTION_TYPE | null;
+  action: ACTION_TYPE | null | undefined;
   tokenAmount: BigNumber;
-  actionTokenAssetId: string | null;
+  actionTokenAssetId: string | null | undefined;
 
   changeMarket: (market: DeployedMarket) => void;
   changeMode: (mode: ACTION_MODE) => void;
-  changeAction: (action: ACTION_TYPE | null) => void;
+  changeAction: (action: ACTION_TYPE | null | undefined) => void;
   changeTokenAmount: (tokenAmount: BigNumber) => void;
-  changeActionTokenAssetId: (assetId: string | null) => void;
+  changeActionTokenAssetId: (assetId: string | null | undefined) => void;
 }
 
 export const marketStoreInitialState = {
@@ -44,9 +44,9 @@ export const useMarketStore = createWithEqualityFn<MarketStore>()(
 
     changeMarket: (market: DeployedMarket) => set({ market }),
     changeMode: (mode: ACTION_MODE) => set({ mode }),
-    changeAction: (action: ACTION_TYPE | null) => set({ action }),
+    changeAction: (action: ACTION_TYPE | null | undefined) => set({ action }),
     changeTokenAmount: (tokenAmount: BigNumber) => set({ tokenAmount }),
-    changeActionTokenAssetId: (assetId: string | null) =>
+    changeActionTokenAssetId: (assetId: string | null | undefined) =>
       set({ actionTokenAssetId: assetId }),
   }),
   shallow
