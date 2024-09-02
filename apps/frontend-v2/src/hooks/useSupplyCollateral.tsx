@@ -1,40 +1,34 @@
-import { Market, Token } from '@/contract-types';
-import { useMarketStore } from '@/stores';
-import {
-  CONTRACT_ADDRESSES,
-  EXPLORER_URL,
-  FAUCET_AMOUNTS,
-  TOKENS_BY_ASSET_ID,
-} from '@/utils';
+import { Market } from '@/contract-types';
+import { CONTRACT_ADDRESSES, EXPLORER_URL, TOKENS_BY_ASSET_ID } from '@/utils';
 import { useAccount, useWallet } from '@fuels/react';
 import { useMutation } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { toast } from 'react-toastify';
 
-export const useSupplyCollateral = () => {
+type useSupplyCollateralProps = {
+  actionTokenAssetId: string | null;
+};
+
+export const useSupplyCollateral = ({
+  actionTokenAssetId,
+}: useSupplyCollateralProps) => {
   const { wallet } = useWallet();
   const { account } = useAccount();
-  const { actionTokenAssetId, tokenAmount, changeLoading } = useMarketStore();
 
   return useMutation({
-    mutationKey: ['supplyCollateral', actionTokenAssetId, tokenAmount, account],
-    mutationFn: async () => {
-      if (
-        !wallet ||
-        !account ||
-        !actionTokenAssetId ||
-        actionTokenAssetId === '' ||
-        !tokenAmount
-      )
+    mutationKey: ['supplyCollateral', actionTokenAssetId, account],
+    mutationFn: async (tokenAmount: BigNumber) => {
+      if (!wallet || !account || !actionTokenAssetId) {
         return;
-      changeLoading(true);
+      }
+
       const marketContract = new Market(CONTRACT_ADDRESSES.market, wallet);
 
       const amount = new BigNumber(tokenAmount).times(
         10 ** TOKENS_BY_ASSET_ID[actionTokenAssetId].decimals
       );
 
-      const tx = await marketContract.functions
+      const { waitForResult } = await marketContract.functions
         .supply_collateral()
         .callParams({
           forward: {
@@ -44,16 +38,15 @@ export const useSupplyCollateral = () => {
         })
         .call();
 
-      const transactionResult = await toast.promise(tx.waitForResult(), {
+      const transactionResult = await toast.promise(waitForResult(), {
         pending: {
-          render: 'TX is pending...',
+          render: 'Transaction is pending...',
         },
       });
-      changeLoading(false);
-      return transactionResult;
+
+      return transactionResult.transactionId;
     },
     onSuccess: (data) => {
-      console.log('Success supplying token:', data);
       if (data) {
         toast(
           <div>
@@ -62,19 +55,17 @@ export const useSupplyCollateral = () => {
               target="_blank"
               rel="noreferrer"
               className="underline cursor-pointer text-blue-500"
-              href={`${EXPLORER_URL}/${data.transactionId}`}
+              href={`${EXPLORER_URL}/${data}`}
             >
-              {data.transactionId}
+              {data}
             </a>
           </div>
         );
       }
-      changeLoading(false);
     },
     onError: (error) => {
-      console.error('Error minting token:', error);
+      console.log(error);
       toast('Error');
-      changeLoading(false);
     },
   });
 };

@@ -1,4 +1,4 @@
-import type BigNumber from 'bignumber.js';
+import BigNumber from 'bignumber.js';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 
@@ -17,22 +17,19 @@ export enum ACTION_MODE {
 interface MarketStore {
   mode: ACTION_MODE;
   action: ACTION_TYPE | null;
-  loading: boolean;
-  tokenAmount: BigNumber | null;
+  tokenAmount: BigNumber;
   actionTokenAssetId: string | null;
 
   changeMode: (mode: ACTION_MODE) => void;
   changeAction: (action: ACTION_TYPE | null) => void;
-  changeLoading: (loading: boolean) => void;
-  changeTokenAmount: (tokenAmount: BigNumber | null) => void;
+  changeTokenAmount: (tokenAmount: BigNumber) => void;
   changeActionTokenAssetId: (assetId: string | null) => void;
 }
 
 export const marketStoreInitialState = {
   mode: 0,
   action: null,
-  loading: false,
-  tokenAmount: null,
+  tokenAmount: new BigNumber(0),
   actionTokenAssetId: null,
 };
 
@@ -42,8 +39,7 @@ export const useMarketStore = createWithEqualityFn<MarketStore>()(
 
     changeMode: (mode: ACTION_MODE) => set({ mode }),
     changeAction: (action: ACTION_TYPE | null) => set({ action }),
-    changeLoading: (loading: boolean) => set({ loading }),
-    changeTokenAmount: (tokenAmount: BigNumber | null) => set({ tokenAmount }),
+    changeTokenAmount: (tokenAmount: BigNumber) => set({ tokenAmount }),
     changeActionTokenAssetId: (assetId: string | null) =>
       set({ actionTokenAssetId: assetId }),
   }),

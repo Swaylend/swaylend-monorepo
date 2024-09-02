@@ -1,6 +1,6 @@
 import { useSupplyCollateral } from '@/hooks';
 import { ACTION_TYPE, useMarketStore } from '@/stores';
-import { TOKENS_BY_ASSET_ID, TOKENS_BY_SYMBOL } from '@/utils';
+import { TOKENS_BY_SYMBOL } from '@/utils';
 import BigNumber from 'bignumber.js';
 import React from 'react';
 import { Button } from '../ui/button';
@@ -12,33 +12,39 @@ export const Input = () => {
     actionTokenAssetId,
     tokenAmount,
     action,
-    loading,
     changeAction,
     changeTokenAmount,
     changeActionTokenAssetId,
-    changeLoading,
   } = useMarketStore();
 
   const handleBaseTokenClick = (action: ACTION_TYPE) => {
     changeAction(action);
-    changeTokenAmount(null);
+    changeTokenAmount(BigNumber(0));
     changeActionTokenAssetId(TOKENS_BY_SYMBOL.USDC.assetId);
   };
 
-  const { mutate: supplyCollateral } = useSupplyCollateral();
+  const { mutate: supplyCollateral } = useSupplyCollateral({
+    actionTokenAssetId,
+  });
 
   const handleSubmit = () => {
-    console.log('hello wenda');
-    if (action === ACTION_TYPE.SUPPLY) {
-      if (actionTokenAssetId === TOKENS_BY_SYMBOL.USDC.assetId) {
-        console.log('supply usdc');
-      } else {
-        console.log(
-          'supply',
-          TOKENS_BY_ASSET_ID[actionTokenAssetId ?? ''].symbol
-        );
-        supplyCollateral();
+    switch (action) {
+      case ACTION_TYPE.SUPPLY: {
+        if (actionTokenAssetId === TOKENS_BY_SYMBOL.USDC.assetId) {
+        } else {
+          supplyCollateral(tokenAmount);
+        }
+        break;
       }
+      case ACTION_TYPE.WITHDRAW:
+        break;
+      case ACTION_TYPE.BORROW:
+        break;
+      case ACTION_TYPE.REPAY:
+        break;
+
+      default:
+        break;
     }
   };
 
@@ -79,11 +85,8 @@ export const Input = () => {
         </div>
       </div>
       <div>
-        <InputField
-          amount={tokenAmount ?? BigNumber(0)}
-          setAmount={changeTokenAmount}
-        />
-        <Button onClick={handleSubmit}>LFG</Button>
+        <InputField amount={tokenAmount} setAmount={changeTokenAmount} />
+        <Button onClick={handleSubmit}>Confirm</Button>
       </div>
     </div>
   );
