@@ -41,10 +41,10 @@ export const DEPLOYED_MARKETS: Record<DeployedMarket, MarketConfiguration> = {
     oracleAddress:
       '0xc3c47cdeaec412778fc86842b44fb061b350db57f9d52def4f73036156f71506',
     marketAddress:
-      '0xc697c3c7ae51f67e9cd87046e5c26f08bc01533bcd46ca9663537d914bfe6317',
+      '0x38c3c36bbb5f95256539cb5a315720815eb9623cf2de2561f5594d2699aa0b22',
     tokenFactoryAddress:
-      '0x469751fe5370326e33d8873ac5a9a883815c75fa75477538551f2067ec5f97f2',
-    graphqlUrl: 'https://indexer.bigdevenergy.link/c772021/v1/graphql',
+      '0xb0bad135fde037b08223aa4216f401d33f5fdd9e495fcaae3b4ea60b629c2fd0',
+    graphqlUrl: 'https://indexer.bigdevenergy.link/274bd87/v1/graphql',
   },
 };
 
@@ -98,3 +98,13 @@ export const FAUCET_AMOUNTS: Record<string, number> = {
 
 export const FUEL_ETH_BASE_ASSET_ID =
   '0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07';
+
+export const ASSET_ID_TO_SYMBOL: Record<string, string> = {
+  '0x02f373b67576faf604dceb27675e88a3eb414f4bef5dea6cd3b143eeadd9401a': 'USDC',
+  '0x17341c3312f4e7e6a6b2fd907b3396733c97f57fb531c841cbf3c1eac2b7ad40': 'USDT',
+  '0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07': 'ETH',
+  '0x2df61e167accc18479e13d9564261b22d1bf1be5f200cd80139138c83c10e9bc': 'BTC',
+  '0xb5efb423f3a4a10fed5e349d0096c4cd75ffb97c6a3e21bb59a685092698b0cf': 'UNI',
+  '0x1479f7a4805cce7b79676b5668b21e32f68a1354e79669d94a600d03c55c5c4e': 'BTC',
+  '0x750a24d292eb779670df1536b14e0b4fcc4ea4aef390d6858de65b1b919c0e54': 'BNB',
+};

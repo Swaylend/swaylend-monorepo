@@ -1,7 +1,7 @@
 'use client';
 import { useCollateralConfigurations, useMintToken } from '@/hooks';
 import { useMarketConfiguration } from '@/hooks/useMarketConfiguration';
-import { FAUCET_URL } from '@/utils';
+import { ASSET_ID_TO_SYMBOL, FAUCET_URL } from '@/utils';
 import { useAccount, useBalance, useIsConnected } from '@fuels/react';
 import { BN, toFixed } from 'fuels';
 import React, { useMemo } from 'react';
@@ -66,22 +66,30 @@ export const FaucetView = () => {
   //   [isMintingBTC, isMintingUSDC, isMintingUNI]
   // );
 
-  if (isPendingMarketConfiguration || isPendingCollateralConfigurations)
-    return <div>Loading...</div>;
-
   const assets = useMemo(() => {
     if (!marketConfiguration || !collateralConfigurations) return [];
 
-    return Object.values(collateralConfigurations).map(
-      (collateralConfiguration) => {
-        return {
-          assetId: collateralConfiguration.asset_id,
-          symbol: 'TODO',
-          decimals: marketConfiguration.baseTokenDecimals,
-        };
-      }
-    );
+    return [
+      ...Object.values(collateralConfigurations).map(
+        (collateralConfiguration) => {
+          return {
+            assetId: collateralConfiguration.asset_id,
+            symbol: ASSET_ID_TO_SYMBOL[collateralConfiguration.asset_id],
+            decimals: marketConfiguration.baseTokenDecimals,
+          };
+        }
+      ),
+      {
+        assetId: marketConfiguration.baseToken,
+        symbol: ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken],
+        decimals: marketConfiguration.baseTokenDecimals,
+      },
+    ];
   }, [marketConfiguration, collateralConfigurations]);
+
+  if (isPendingMarketConfiguration || isPendingCollateralConfigurations) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>

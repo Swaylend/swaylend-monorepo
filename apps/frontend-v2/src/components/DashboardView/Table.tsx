@@ -46,7 +46,7 @@ const TableRow = ({
   return (
     <div className="flex gap-x-2">
       {symbol}
-      <div className={clsx(balance === null && 'animate-pulse')}>
+      <div>
         Bal:
         {formattedBalance}
         {symbol}
@@ -82,14 +82,14 @@ export const Table = () => {
     changeTokenAmount,
     changeActionTokenAssetId,
   } = useMarketStore();
-  const { data: userCollateralAssets, isPending: userCollateralAssetsPending } =
+  const { data: userCollateralAssets, isLoading: userCollateralAssetsLoading } =
     useUserCollateralAssets();
   const {
     data: collateralConfigurations,
     isPending: collateralConfigurationsPending,
     error: collateralConfigurationsError,
   } = useCollateralConfigurations();
-  // const { data: totalCollateralInfo } = useTotalCollateral();
+  const { data: totalCollateralInfo } = useTotalCollateral();
 
   const { account } = useAccount();
 
@@ -126,7 +126,7 @@ export const Table = () => {
           protocolBalance={
             userCollateralAssets?.[collateral.asset_id] ?? new BigNumber(0)
           }
-          protocolBalancePending={userCollateralAssetsPending}
+          protocolBalancePending={userCollateralAssetsLoading}
           handleAssetClick={handleAssetClick}
         />
       ))}
