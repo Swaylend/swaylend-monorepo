@@ -3,8 +3,8 @@ import { useMarketStore } from '@/stores';
 import { DEPLOYED_MARKETS } from '@/utils';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
-import { useProvider } from './useProvider';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
+import { useProvider } from './useProvider';
 
 export const useTotalCollateral = () => {
   const provider = useProvider();

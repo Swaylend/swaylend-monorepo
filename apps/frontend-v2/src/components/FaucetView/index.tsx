@@ -4,15 +4,15 @@ import { useMarketConfiguration } from '@/hooks/useMarketConfiguration';
 import {
   ASSET_ID_TO_SYMBOL,
   FAUCET_URL,
-  formatUnits,
   FUEL_ETH_BASE_ASSET_ID,
+  formatUnits,
 } from '@/utils';
 import { useAccount, useBalance } from '@fuels/react';
+import { useIsMutating } from '@tanstack/react-query';
+import BigNumber from 'bignumber.js';
 import { BN, toFixed } from 'fuels';
 import React, { useMemo } from 'react';
 import { Button } from '../ui/button';
-import { useIsMutating } from '@tanstack/react-query';
-import BigNumber from 'bignumber.js';
 
 type FaucetRowProps = {
   account: string | undefined;
