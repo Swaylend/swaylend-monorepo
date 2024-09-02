@@ -76,3 +76,6 @@ export const collaterals: IToken[] = [
   TOKENS_BY_SYMBOL.BTC,
   TOKENS_BY_SYMBOL.UNI,
 ];
+
+export const FUEL_ETH_BASE_ASSET_ID =
+  '0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07';

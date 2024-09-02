@@ -33,7 +33,7 @@ export const Header = () => {
     return getTotalSuppliedBalance(
       suppliedBalance,
       userCollateralAssets ?? {},
-      priceData ?? {}
+      priceData?.prices ?? {}
     );
   }, [userSupplyBorrow, userCollateralAssets, priceData]);
 
