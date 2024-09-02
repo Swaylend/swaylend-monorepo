@@ -1,20 +1,34 @@
 'use client';
 import { useCollateralConfigurations, useMintToken } from '@/hooks';
 import { useMarketConfiguration } from '@/hooks/useMarketConfiguration';
-import { ASSET_ID_TO_SYMBOL, FAUCET_URL } from '@/utils';
+import {
+  ASSET_ID_TO_SYMBOL,
+  FAUCET_URL,
+  FUEL_ETH_BASE_ASSET_ID,
+} from '@/utils';
 import { useAccount, useBalance, useIsConnected } from '@fuels/react';
 import { BN, toFixed } from 'fuels';
 import React, { useMemo } from 'react';
 import { Button } from '../ui/button';
+import { useIsMutating } from '@tanstack/react-query';
 
 type FaucetRowProps = {
   account: string | undefined;
   assetId: string;
   symbol: string;
   decimals: number;
+  mintPending: boolean;
+  ethBalance: BN;
 };
 
-const FaucetRow = ({ account, assetId, symbol, decimals }: FaucetRowProps) => {
+const FaucetRow = ({
+  account,
+  assetId,
+  symbol,
+  decimals,
+  mintPending,
+  ethBalance,
+}: FaucetRowProps) => {
   const { balance } = useBalance({
     address: account,
     assetId: assetId,
@@ -34,13 +48,15 @@ const FaucetRow = ({ account, assetId, symbol, decimals }: FaucetRowProps) => {
       </div>
       <Button
         disabled={
-          // !isConnected ||
-          // isMintingInProgress ||
-          // ((etherBalance ? etherBalance.eq(0) : false) &&
-          //   token.symbol !== 'ETH')
-          false
+          !account || mintPending || (symbol !== 'ETH' && ethBalance.eq(0))
         }
-        onMouseDown={() => mint()}
+        onMouseDown={() => {
+          if (symbol === 'ETH') {
+            window.open(`${FAUCET_URL}/?address=${account}`, 'blank');
+            return;
+          }
+          mint();
+        }}
       >
         Mint
       </Button>
@@ -49,7 +65,6 @@ const FaucetRow = ({ account, assetId, symbol, decimals }: FaucetRowProps) => {
 };
 
 export const FaucetView = () => {
-  const { isConnected } = useIsConnected();
   const { account } = useAccount();
 
   const { data: marketConfiguration, isPending: isPendingMarketConfiguration } =
@@ -60,11 +75,10 @@ export const FaucetView = () => {
     isPending: isPendingCollateralConfigurations,
   } = useCollateralConfigurations();
 
-  // TODO: Add this back
-  // const isMintingInProgress = useMemo(
-  //   () => isMintingBTC || isMintingUSDC || isMintingUNI,
-  //   [isMintingBTC, isMintingUSDC, isMintingUNI]
-  // );
+  const { balance: ethBalance } = useBalance({
+    address: account ?? undefined,
+    assetId: FUEL_ETH_BASE_ASSET_ID,
+  });
 
   const assets = useMemo(() => {
     if (!marketConfiguration || !collateralConfigurations) return [];
@@ -87,6 +101,8 @@ export const FaucetView = () => {
     ];
   }, [marketConfiguration, collateralConfigurations]);
 
+  const numberOfMintsPending = useIsMutating({ mutationKey: ['mintToken'] });
+
   if (isPendingMarketConfiguration || isPendingCollateralConfigurations) {
     return <div>Loading...</div>;
   }
@@ -100,6 +116,8 @@ export const FaucetView = () => {
           symbol={asset.symbol}
           decimals={asset.decimals}
           account={account ?? undefined}
+          mintPending={numberOfMintsPending > 0}
+          ethBalance={ethBalance ?? new BN(0)}
         />
       ))}
     </div>
