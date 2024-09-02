@@ -5,13 +5,13 @@ import {
   TOKENS_BY_PRICE_FEED,
 } from '@/utils';
 import { HermesClient } from '@pythnetwork/hermes-client';
-import { useQuery } from '@tanstack/react-query';
-import BigNumber from 'bignumber.js';
-import { arrayify } from 'fuels';
 import {
   PYTH_CONTRACT_ADDRESS_SEPOLIA,
   PythContract,
 } from '@pythnetwork/pyth-fuel-js';
+import { useQuery } from '@tanstack/react-query';
+import BigNumber from 'bignumber.js';
+import { arrayify } from 'fuels';
 import { useProvider } from './useProvider';
 
 export const usePrice = (assetIds: string[]) => {
