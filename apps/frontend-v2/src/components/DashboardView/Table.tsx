@@ -20,7 +20,9 @@ export const Table = () => {
   const { data: userCollateralAssets } = useUserCollateralAssets();
   const { data: collateralConfigurations } = useCollateralConfigurations();
   const { data: totalCollateralInfo } = useTotalCollateral();
+
   const { account } = useAccount();
+
   const { balance: etherBalance } = useBalance({
     address: account as string,
     assetId: TOKENS_BY_SYMBOL.ETH.assetId,
@@ -35,7 +37,7 @@ export const Table = () => {
   });
 
   const handleAssetClick = (action: ACTION_TYPE, assetId: string) => {
-    changeTokenAmount(null);
+    changeTokenAmount(new BigNumber(0));
     changeAction(action);
     changeMode(0);
     changeActionTokenAssetId(assetId);
@@ -79,11 +81,12 @@ export const Table = () => {
         ).toFormat(4);
         const collateralCapacityLeft = supplyCap.minus(collateralReserve);
         const canSupply = userBalance?.gt(0);
+
         return (
           <div key={token.symbol} className="flex gap-x-2">
             {token.symbol}
             <div>
-              Bal:{userBalance.toString()}
+              Bal:{formatUnits(userBalance, token.decimals).toFormat(6)}
               {token.symbol}
             </div>
             <div>
