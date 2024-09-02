@@ -1,10 +1,11 @@
 import type { BigNumber as EthersBigNumber } from '@ethersproject/bignumber';
 import BigNumber from 'bignumber.js';
+import type * as fuels from 'fuels';
 import type { Undefinable } from 'tsdef';
 
 BigNumber.config({ EXPONENTIAL_AT: [-100, 100] });
 
-type TValue = BN | EthersBigNumber | BigNumber.Value;
+type TValue = BN | EthersBigNumber | BigNumber.Value | fuels.BN;
 
 const bigNumberify = (n: any): string | number => {
   if (n?.toString) {

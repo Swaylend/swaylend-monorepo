@@ -95,17 +95,7 @@ class FaucetVM {
   }
 
   mint = async (assetId?: string) => {
-    console.log('minting', assetId);
     if (assetId == null) return;
-    // if (this.rootStore.accountStore.loginType === LOGIN_TYPE.FUEL_WALLET) {
-    //   const addedAssets: Array<any> = await window?.fuel.assets();
-    //   if (
-    //     addedAssets != null &&
-    //     !addedAssets.some((v) => v.assetId === assetId)
-    //   ) {
-    //     await this.addAsset(assetId);
-    //   }
-    // }
     this._setLoading(true);
     this.setActionTokenAssetId(assetId);
     const { accountStore, notificationStore } = this.rootStore;
@@ -172,7 +162,7 @@ class FaucetVM {
       await this.rootStore.accountStore.updateAccountBalances();
     } catch (e) {
       const errorText = e?.toString();
-      console.log(errorText);
+      console.error(errorText);
       notificationStore.toast(errorText!, {
         type: 'error',
         title: errorToMessage(errorText ?? ''),

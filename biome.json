@@ -91,24 +91,15 @@
   },
   "overrides": [
     {
-      "include": ["**/subgraphs/**"],
+      "include": ["**/apps/frontend/**"],
       "linter": {
         "rules": {
+          "correctness": { "useExhaustiveDependencies": "off" },
           "style": {
             "useImportType": "off"
           },
           "suspicious": {
             "noShadowRestrictedNames": "off"
-          }
-        }
-      }
-    },
-    {
-      "include": ["**/dapp/src/app/api/frame/**"],
-      "linter": {
-        "rules": {
-          "correctness": {
-            "useJsxKeyInIterable": "off"
           }
         }
       }

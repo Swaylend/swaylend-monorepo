@@ -5,10 +5,10 @@ import TokenIcon from '@components/TokenIcon';
 import Tooltip from '@components/Tooltip';
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
+import { useAccount, useBalance } from '@fuels/react';
 import { TOKENS_BY_SYMBOL } from '@src/constants';
-import BN from '@src/utils/BN';
+import getAddressB256 from '@src/utils/address';
 import centerEllipsis from '@src/utils/centerEllipsis';
-import { useStores } from '@stores';
 import { observer } from 'mobx-react-lite';
 import type React from 'react';
 import { useState } from 'react';
@@ -68,15 +68,13 @@ const AddressContainer = styled.div<{ expanded: boolean }>`
 `;
 
 const LoggedInAccountInfo: React.FC<IProps> = () => {
-  const { accountStore } = useStores();
-  const address = accountStore.addressB256;
+  const { account } = useAccount();
   const theme = useTheme();
   const eth = TOKENS_BY_SYMBOL.ETH;
-  const balance = accountStore.findBalanceByAssetId(eth.assetId);
-  const formattedBalance = BN.formatUnits(
-    balance?.balance ?? BN.ZERO,
-    eth?.decimals
-  );
+  const { balance } = useBalance({
+    address: account ?? undefined,
+    assetId: eth.assetId,
+  });
   const [accountOpened, setAccountOpened] = useState<boolean>(false);
   return (
     <Root>
@@ -86,7 +84,7 @@ const LoggedInAccountInfo: React.FC<IProps> = () => {
           <TokenIcon size="tiny" src={eth.logo} alt="token" />
           <SizedBox width={4} />
           <Text size="small" weight={700}>
-            {formattedBalance.toFormat(4)}
+            {balance?.format({ units: eth.decimals, precision: 4 })}
           </Text>
         </BalanceContainer>
         <Tooltip
@@ -99,7 +97,7 @@ const LoggedInAccountInfo: React.FC<IProps> = () => {
         >
           <AddressContainer expanded={accountOpened}>
             <Text size="small" weight={700}>
-              {centerEllipsis(address ?? '', 10)}
+              {centerEllipsis(getAddressB256(account) ?? '', 10)}
             </Text>
             <SizedBox width={4} />
             <img

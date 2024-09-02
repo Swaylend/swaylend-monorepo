@@ -76,11 +76,6 @@ class SettingsStore {
     log: this.log,
   });
 
-  walletModalOpened = false;
-  setWalletModalOpened = (s: boolean) => {
-    this.walletModalOpened = s;
-  };
-
   network: string = NODE_URL;
   setNetwork = (s: string) => {
     this.network = s;
@@ -115,11 +110,6 @@ class SettingsStore {
     });
   };
 
-  loginModalOpened = false;
-  setLoginModalOpened = (s: boolean) => {
-    this.loginModalOpened = s;
-  };
-
   get currentVersionConfig(): IContractsConfig {
     return CONTRACT_ADDRESSES;
   }
@@ -136,7 +126,7 @@ class SettingsStore {
   };
   exportLogData = () => {
     if (this.log == null) {
-      console.log('your log file is empty');
+      console.error('your log file is empty');
       return;
     }
     const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
