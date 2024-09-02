@@ -6,6 +6,8 @@ import React from 'react';
 import { Button } from '../ui/button';
 import { InputField } from './InputField';
 import { useWithdrawCollateral } from '@/hooks/useWithdrawCollateral';
+import { useSupplyBase } from '@/hooks/useSupplyBase';
+import { useWithdrawBase } from '@/hooks/useWithdrawBase';
 
 export const Input = () => {
   const {
@@ -34,20 +36,29 @@ export const Input = () => {
     actionTokenAssetId,
   });
 
+  const { mutate: supplyBase } = useSupplyBase();
+
+  const { mutate: withdrawBase } = useWithdrawBase();
+
   const handleSubmit = () => {
     switch (action) {
       case ACTION_TYPE.SUPPLY: {
         if (actionTokenAssetId === TOKENS_BY_SYMBOL.USDC.assetId) {
+          supplyBase(tokenAmount);
         } else {
           supplyCollateral(tokenAmount);
         }
         break;
       }
       case ACTION_TYPE.WITHDRAW: {
-        if (actionTokenAssetId === TOKENS_BY_SYMBOL.USDC.assetId) {
-        } else {
-          if (!priceData) return;
+        if (!priceData) return;
 
+        if (actionTokenAssetId === TOKENS_BY_SYMBOL.USDC.assetId) {
+          withdrawBase({
+            tokenAmount,
+            priceUpdateData: priceData.priceUpdateData,
+          });
+        } else {
           withdrawCollateral({
             tokenAmount,
             priceUpdateData: priceData.priceUpdateData,
