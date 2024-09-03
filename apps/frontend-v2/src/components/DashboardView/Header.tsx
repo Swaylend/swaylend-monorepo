@@ -1,13 +1,13 @@
-import { useBorrowRate, useSupplyRate, useUserSupplyBorrow } from '@/hooks';
+import {
+  useBorrowRate,
+  useCollateralConfigurations,
+  useSupplyRate,
+  useUserSupplyBorrow,
+} from '@/hooks';
 import { usePrice } from '@/hooks';
 import { useUserCollateralAssets } from '@/hooks';
 import { useMarketConfiguration } from '@/hooks/useMarketConfiguration';
-import {
-  formatUnits,
-  getBorrowApr,
-  getSupplyApr,
-  getTotalSuppliedBalance,
-} from '@/utils';
+import { formatUnits, getBorrowApr, getSupplyApr } from '@/utils';
 import BigNumber from 'bignumber.js';
 import React, { useMemo } from 'react';
 
@@ -18,28 +18,45 @@ export const Header = () => {
   const { data: userCollateralAssets } = useUserCollateralAssets();
   const { data: priceData } = usePrice();
   const { data: marketConfiguration } = useMarketConfiguration();
-
-  // TODO[Martin]: Later implement this using loading and error states.
-  const borrowedBalance = useMemo(() => {
-    if (userSupplyBorrow == null) return new BigNumber(0);
-    return userSupplyBorrow[1];
-  }, [userSupplyBorrow]);
-  const suppliedBalance = useMemo(() => {
-    if (userSupplyBorrow == null) return new BigNumber(0);
-    return userSupplyBorrow[0];
-  }, [userSupplyBorrow]);
+  const { data: colateralConfigurations } = useCollateralConfigurations();
 
   const totalSuppliedBalance = useMemo(() => {
-    if (!marketConfiguration) return '0';
+    if (
+      !marketConfiguration ||
+      !userSupplyBorrow ||
+      !priceData ||
+      !userCollateralAssets ||
+      !colateralConfigurations
+    ) {
+      return '0';
+    }
 
-    return getTotalSuppliedBalance(
-      marketConfiguration.baseToken,
-      marketConfiguration.baseTokenDecimals,
-      suppliedBalance,
-      userCollateralAssets ?? {},
-      priceData?.prices ?? {}
+    const baseTokenSupliedBalance = formatUnits(
+      userSupplyBorrow.supplied.times(
+        priceData.prices[marketConfiguration.baseToken]
+      ),
+      marketConfiguration.baseTokenDecimals
     );
-  }, [userSupplyBorrow, userCollateralAssets, priceData, marketConfiguration]);
+
+    const collateralSuppiedBalance = Object.entries(
+      userCollateralAssets
+    ).reduce((acc, [key, value]) => {
+      return acc.plus(
+        formatUnits(
+          value.times(priceData.prices[key]),
+          colateralConfigurations[key].decimals
+        )
+      );
+    }, new BigNumber(0));
+
+    return baseTokenSupliedBalance.plus(collateralSuppiedBalance).toFormat(2);
+  }, [
+    userSupplyBorrow,
+    userCollateralAssets,
+    priceData,
+    marketConfiguration,
+    colateralConfigurations,
+  ]);
 
   const borrowApr = useMemo(() => getBorrowApr(borrowRate), [borrowRate]);
 
@@ -56,7 +73,7 @@ export const Header = () => {
       <div>
         Borrowed balance:{' '}
         {formatUnits(
-          borrowedBalance ?? new BigNumber(0),
+          userSupplyBorrow?.borrowed ?? new BigNumber(0),
           marketConfiguration.baseTokenDecimals
         ).toFormat(2)}
         $

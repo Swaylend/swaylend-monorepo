@@ -93,7 +93,7 @@ export const usePrice = () => {
       // Format prices to BigNumber
       const prices = Object.fromEntries(
         priceUpdates.parsed.map((parsedPrice) => [
-          priceFeedIdToAssetId.get(parsedPrice.id)!,
+          priceFeedIdToAssetId.get(`0x${parsedPrice.id}`)!,
           BigNumber(parsedPrice.price.price).times(
             BigNumber(10).pow(BigNumber(parsedPrice.price.expo))
           ),

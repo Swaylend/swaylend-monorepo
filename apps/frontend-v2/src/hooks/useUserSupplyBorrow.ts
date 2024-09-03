@@ -24,10 +24,10 @@ export const useUserSupplyBorrow = () => {
         .get_user_supply_borrow({ bits: wallet.address.toB256() })
         .get();
 
-      return [
-        new BigNumber(value[0].toString()),
-        new BigNumber(value[1].toString()),
-      ];
+      return {
+        supplied: new BigNumber(value[0].toString()),
+        borrowed: new BigNumber(value[1].toString()),
+      };
     },
     enabled: !!wallet,
   });
