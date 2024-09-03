@@ -20,13 +20,13 @@ export const useBorrowCapacity = () => {
 
   return useQuery({
     queryKey: [
-      'borrowRate',
+      'borrowCapacity',
       account,
       supplyBorrow,
       collateralConfigurations,
       market,
       userCollateralAssets,
-      priceData,
+      priceData?.prices,
       marketConfiguration,
     ],
     queryFn: async () => {

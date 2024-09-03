@@ -46,8 +46,6 @@ export const useWithdrawBase = () => {
         10 ** marketConfiguration.baseTokenDecimals
       );
 
-      console.log(amount.toString());
-
       const { waitForResult } = await marketContract.functions
         .withdraw_base(amount.toString(), priceUpdateData)
         .callParams({

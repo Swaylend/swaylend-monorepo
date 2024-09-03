@@ -12,7 +12,7 @@ export const useBorrowRate = () => {
   const { market } = useMarketStore();
 
   return useQuery({
-    queryKey: ['borrowRate', utilization, market],
+    queryKey: ['borrowRate', utilization?.toString(), market],
     queryFn: async () => {
       if (!provider || !utilization) return null;
 

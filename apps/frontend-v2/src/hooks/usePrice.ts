@@ -44,7 +44,7 @@ export const usePrice = () => {
   }, [marketConfiguration, collateralConfigurations]);
 
   return useQuery({
-    queryKey: ['pythPrices', priceFeedIdToAssetId],
+    queryKey: ['pythPrices', priceFeedIdToAssetId, market],
     queryFn: async () => {
       if (!provider || !priceFeedIdToAssetId) return null;
 

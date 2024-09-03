@@ -8,6 +8,7 @@ type TransactionSuccessToastProps = {
 export const TransactionSuccessToast = ({
   transactionId,
 }: TransactionSuccessToastProps) => {
+  console.log(transactionId);
   return toast(
     <div>
       Transaction successful:{' '}

@@ -31,5 +31,6 @@ export const useCollateralConfigurations = () => {
 
       return formattedConfigurations;
     },
+    refetchInterval: 1000 * 100,
   });
 };

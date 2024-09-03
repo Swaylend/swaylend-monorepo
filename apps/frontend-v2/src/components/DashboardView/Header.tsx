@@ -31,7 +31,7 @@ export const Header = () => {
       !userCollateralAssets ||
       !colateralConfigurations
     ) {
-      return '0';
+      return BigNumber(0).toFormat(2);
     }
 
     const baseTokenSupliedBalance = formatUnits(
