@@ -9,11 +9,11 @@ import {
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { arrayify } from 'fuels';
+import { DateTime } from 'fuels';
 import { useMemo } from 'react';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
 import { useMarketConfiguration } from './useMarketConfiguration';
 import { useProvider } from './useProvider';
-import { DateTime } from 'fuels';
 
 export const usePrice = () => {
   const hermesClient = new HermesClient('https://hermes.pyth.network');
