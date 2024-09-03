@@ -1,11 +1,12 @@
 import { Market } from '@/contract-types';
 import { useMarketStore } from '@/stores';
-import { DEPLOYED_MARKETS, EXPLORER_URL } from '@/utils';
+import { DEPLOYED_MARKETS } from '@/utils';
 import { useAccount, useWallet } from '@fuels/react';
 import { useMutation } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { toast } from 'react-toastify';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
+import { ErrorToast, TransactionSuccessToast } from '@/components/Toasts';
 
 type useSupplyCollateralProps = {
   actionTokenAssetId: string | null | undefined;
@@ -34,7 +35,7 @@ export const useSupplyCollateral = ({
         !actionTokenAssetId ||
         !collateralConfigurations
       ) {
-        return;
+        return null;
       }
 
       const marketContract = new Market(
@@ -66,24 +67,11 @@ export const useSupplyCollateral = ({
     },
     onSuccess: (data) => {
       if (data) {
-        toast(
-          <div>
-            Transaction successful:{' '}
-            <a
-              target="_blank"
-              rel="noreferrer"
-              className="underline cursor-pointer text-blue-500"
-              href={`${EXPLORER_URL}/${data}`}
-            >
-              {data}
-            </a>
-          </div>
-        );
+        TransactionSuccessToast({ transactionId: data });
       }
     },
     onError: (error) => {
-      console.log(error);
-      toast('Error');
+      ErrorToast({ error: error.message });
     },
   });
 };

@@ -13,7 +13,7 @@ export const useUserSupplyBorrow = () => {
   return useQuery({
     queryKey: ['userSupplyBorrow', account, market],
     queryFn: async () => {
-      if (!wallet || !account) return;
+      if (!wallet || !account) return null;
 
       const marketContract = new Market(
         DEPLOYED_MARKETS[market].marketAddress,
@@ -29,6 +29,6 @@ export const useUserSupplyBorrow = () => {
         borrowed: new BigNumber(value[1].toString()),
       };
     },
-    enabled: !!wallet,
+    enabled: !!wallet && !!account,
   });
 };

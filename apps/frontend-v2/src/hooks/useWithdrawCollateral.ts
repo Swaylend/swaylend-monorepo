@@ -1,11 +1,7 @@
 import { Market } from '@/contract-types';
 import type { PriceDataUpdateInput } from '@/contract-types/Market';
 import { useMarketStore } from '@/stores';
-import {
-  DEPLOYED_MARKETS,
-  EXPLORER_URL,
-  FUEL_ETH_BASE_ASSET_ID,
-} from '@/utils';
+import { DEPLOYED_MARKETS, FUEL_ETH_BASE_ASSET_ID } from '@/utils';
 import { useAccount, useWallet } from '@fuels/react';
 import {
   PYTH_CONTRACT_ADDRESS_SEPOLIA,
@@ -15,6 +11,7 @@ import { useMutation } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { toast } from 'react-toastify';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
+import { ErrorToast, TransactionSuccessToast } from '@/components/Toasts';
 
 type useWithdrawCollateralProps = {
   actionTokenAssetId: string | null | undefined;
@@ -43,7 +40,7 @@ export const useWithdrawCollateral = ({
         !actionTokenAssetId ||
         !collateralConfigurations
       ) {
-        return;
+        return null;
       }
 
       const pythContract = new PythContract(
@@ -85,24 +82,11 @@ export const useWithdrawCollateral = ({
     },
     onSuccess: (data) => {
       if (data) {
-        toast(
-          <div>
-            Transaction successful:{' '}
-            <a
-              target="_blank"
-              rel="noreferrer"
-              className="underline cursor-pointer text-blue-500"
-              href={`${EXPLORER_URL}/${data}`}
-            >
-              {data}
-            </a>
-          </div>
-        );
+        TransactionSuccessToast({ transactionId: data });
       }
     },
     onError: (error) => {
-      console.log(error);
-      toast('Error');
+      ErrorToast({ error: error.message });
     },
   });
 };

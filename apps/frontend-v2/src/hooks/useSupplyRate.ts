@@ -14,7 +14,7 @@ export const useSupplyRate = () => {
   return useQuery({
     queryKey: ['supplyRate', utilization, market],
     queryFn: async () => {
-      if (!provider || !utilization) return;
+      if (!provider || !utilization) return null;
 
       const marketContract = new Market(
         DEPLOYED_MARKETS[market].marketAddress,
@@ -28,6 +28,6 @@ export const useSupplyRate = () => {
       if (!value) throw new Error('Failed to fetch supplyRate');
       return new BigNumber(value.toString());
     },
-    enabled: !!utilization,
+    enabled: !!utilization && !!provider,
   });
 };

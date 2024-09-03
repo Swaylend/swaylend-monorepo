@@ -14,7 +14,7 @@ export const useTotalCollateral = () => {
   return useQuery({
     queryKey: ['totalCollateral', market, collateralConfigurations],
     queryFn: async () => {
-      if (!provider || !collateralConfigurations) return;
+      if (!provider || !collateralConfigurations) return null;
 
       const marketContract = new Market(
         DEPLOYED_MARKETS[market].marketAddress,
@@ -45,6 +45,6 @@ export const useTotalCollateral = () => {
 
       return totals;
     },
-    enabled: !!provider,
+    enabled: !!provider && !!collateralConfigurations,
   });
 };

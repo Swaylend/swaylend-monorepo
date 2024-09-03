@@ -44,9 +44,9 @@ export const usePrice = () => {
   }, [marketConfiguration, collateralConfigurations]);
 
   return useQuery({
-    queryKey: ['pythPrices', priceFeedIdToAssetId, market],
+    queryKey: ['pythPrices', priceFeedIdToAssetId],
     queryFn: async () => {
-      if (!provider || !priceFeedIdToAssetId) return;
+      if (!provider || !priceFeedIdToAssetId) return null;
 
       const priceFeedIds = Array.from(priceFeedIdToAssetId.keys());
 
@@ -106,6 +106,6 @@ export const usePrice = () => {
       };
     },
     refetchInterval: 5000,
-    enabled: !!provider,
+    enabled: !!provider && !!priceFeedIdToAssetId,
   });
 };

@@ -11,7 +11,7 @@ export const useUserCollateralAssets = () => {
   return useQuery({
     queryKey: ['collateralAssets', account, market],
     queryFn: async () => {
-      if (!account) return;
+      if (!account) return null;
 
       const assets = await getCollateralAssets(account, market);
 

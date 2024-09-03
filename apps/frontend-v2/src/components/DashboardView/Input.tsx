@@ -1,8 +1,11 @@
-import { usePrice, useSupplyCollateral } from '@/hooks';
-import { useMarketConfiguration } from '@/hooks/useMarketConfiguration';
-import { useSupplyBase } from '@/hooks/useSupplyBase';
-import { useWithdrawBase } from '@/hooks/useWithdrawBase';
-import { useWithdrawCollateral } from '@/hooks/useWithdrawCollateral';
+import {
+  usePrice,
+  useSupplyCollateral,
+  useMarketConfiguration,
+  useSupplyBase,
+  useWithdrawBase,
+  useWithdrawCollateral,
+} from '@/hooks';
 import { ACTION_TYPE, useMarketStore } from '@/stores';
 import BigNumber from 'bignumber.js';
 import React from 'react';

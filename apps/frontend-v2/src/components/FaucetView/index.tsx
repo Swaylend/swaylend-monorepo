@@ -1,6 +1,10 @@
 'use client';
-import { useCollateralConfigurations, useMintToken } from '@/hooks';
-import { useMarketConfiguration } from '@/hooks/useMarketConfiguration';
+import React, { useMemo } from 'react';
+import {
+  useCollateralConfigurations,
+  useMarketConfiguration,
+  useMintToken,
+} from '@/hooks';
 import {
   ASSET_ID_TO_SYMBOL,
   FAUCET_URL,
@@ -11,7 +15,6 @@ import { useAccount, useBalance } from '@fuels/react';
 import { useIsMutating } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { BN, toFixed } from 'fuels';
-import React, { useMemo } from 'react';
 import { Button } from '../ui/button';
 
 type FaucetRowProps = {
@@ -36,7 +39,7 @@ const FaucetRow = ({
     assetId: assetId,
   });
 
-  const { mutate: mint, isPending: isMinting } = useMintToken(symbol, decimals);
+  const { mutate: mint } = useMintToken(symbol, decimals);
 
   return (
     <div key={assetId} className="flex gap-x-4">
@@ -59,7 +62,7 @@ const FaucetRow = ({
         onMouseDown={() => {
           if (symbol === 'ETH') {
             window.open(`${FAUCET_URL}/?address=${account}`, 'blank');
-            return;
+            return null;
           }
           mint();
         }}
@@ -95,7 +98,9 @@ export const FaucetView = () => {
           return {
             assetId: collateralConfiguration.asset_id,
             symbol: ASSET_ID_TO_SYMBOL[collateralConfiguration.asset_id],
-            decimals: marketConfiguration.baseTokenDecimals,
+            decimals:
+              collateralConfigurations[collateralConfiguration.asset_id]
+                .decimals,
           };
         }
       ),

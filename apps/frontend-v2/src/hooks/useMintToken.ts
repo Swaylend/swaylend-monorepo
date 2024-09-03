@@ -1,6 +1,7 @@
+import { ErrorToast, TransactionSuccessToast } from '@/components/Toasts';
 import { Token } from '@/contract-types';
 import { useMarketStore } from '@/stores';
-import { DEPLOYED_MARKETS, EXPLORER_URL, FAUCET_AMOUNTS } from '@/utils';
+import { DEPLOYED_MARKETS, FAUCET_AMOUNTS } from '@/utils';
 import { useAccount, useWallet } from '@fuels/react';
 import { useMutation } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
@@ -15,7 +16,7 @@ export const useMintToken = (symbol: string, decimals: number) => {
   return useMutation({
     mutationKey: ['mintToken', symbol, account, market],
     mutationFn: async () => {
-      if (!wallet || !account) return;
+      if (!wallet || !account) return null;
 
       const tokenFactoryContract = new Token(
         DEPLOYED_MARKETS[market].tokenFactoryAddress,
@@ -41,28 +42,15 @@ export const useMintToken = (symbol: string, decimals: number) => {
         },
       });
 
-      return transactionResult;
+      return transactionResult.transactionId;
     },
     onSuccess: (data) => {
       if (data) {
-        toast(
-          <div>
-            Transaction successful:{' '}
-            <a
-              target="_blank"
-              rel="noreferrer"
-              className="underline cursor-pointer text-blue-500"
-              href={`${EXPLORER_URL}/${data.transactionId}`}
-            >
-              {data.transactionId}
-            </a>
-          </div>
-        );
+        TransactionSuccessToast({ transactionId: data });
       }
     },
     onError: (error) => {
-      console.error('Error minting token:', error);
-      toast('Error');
+      ErrorToast({ error: error.message });
     },
   });
 };

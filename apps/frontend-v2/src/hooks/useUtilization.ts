@@ -12,7 +12,7 @@ export const useUtilization = () => {
   return useQuery({
     queryKey: ['utilization', market],
     queryFn: async () => {
-      if (!provider) return;
+      if (!provider) return null;
 
       const marketContract = new Market(
         DEPLOYED_MARKETS[market].marketAddress,

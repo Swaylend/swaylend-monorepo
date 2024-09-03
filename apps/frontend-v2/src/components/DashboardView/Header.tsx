@@ -3,10 +3,12 @@ import {
   useCollateralConfigurations,
   useSupplyRate,
   useUserSupplyBorrow,
+  useUserCollateralAssets,
+  useBorrowCapacity,
+  useMarketConfiguration,
+  usePrice,
 } from '@/hooks';
-import { usePrice } from '@/hooks';
-import { useUserCollateralAssets } from '@/hooks';
-import { useMarketConfiguration } from '@/hooks/useMarketConfiguration';
+
 import { formatUnits, getBorrowApr, getSupplyApr } from '@/utils';
 import BigNumber from 'bignumber.js';
 import React, { useMemo } from 'react';
@@ -19,6 +21,7 @@ export const Header = () => {
   const { data: priceData } = usePrice();
   const { data: marketConfiguration } = useMarketConfiguration();
   const { data: colateralConfigurations } = useCollateralConfigurations();
+  const { data: borrowCapacity } = useBorrowCapacity();
 
   const totalSuppliedBalance = useMemo(() => {
     if (
@@ -78,6 +81,7 @@ export const Header = () => {
         ).toFormat(2)}
         $
       </div>
+      <div>Borrow capacity: {borrowCapacity?.toFormat(2)}</div>
     </div>
   );
 };

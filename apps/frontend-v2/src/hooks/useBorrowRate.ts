@@ -14,7 +14,7 @@ export const useBorrowRate = () => {
   return useQuery({
     queryKey: ['borrowRate', utilization, market],
     queryFn: async () => {
-      if (!provider || !utilization) return;
+      if (!provider || !utilization) return null;
 
       const marketContract = new Market(
         DEPLOYED_MARKETS[market].marketAddress,
@@ -28,6 +28,6 @@ export const useBorrowRate = () => {
       if (!value) throw new Error('Failed to fetch borrowRate');
       return new BigNumber(value.toString());
     },
-    enabled: !!utilization,
+    enabled: !!utilization && !!provider,
   });
 };

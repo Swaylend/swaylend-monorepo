@@ -1,6 +1,3 @@
-import tokenLogos from './tokenLogos';
-import tokens from './tokens.testnet.json';
-
 export interface IToken {
   logo: string;
   assetId: string;
