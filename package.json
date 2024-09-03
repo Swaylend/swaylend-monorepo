@@ -2,9 +2,7 @@
   "name": "@lutralabs/sway-lend-monorepo",
   "private": true,
   "license": "MIT",
-  "workspaces": [
-    "apps/**/*"
-  ],
+  "workspaces": ["apps/**/*"],
   "scripts": {
     "lint": "biome check .",
     "lint:fix": "biome check --write ."
