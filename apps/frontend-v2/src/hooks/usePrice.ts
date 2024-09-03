@@ -13,6 +13,7 @@ import { useMemo } from 'react';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
 import { useMarketConfiguration } from './useMarketConfiguration';
 import { useProvider } from './useProvider';
+import { DateTime } from 'fuels';
 
 export const usePrice = () => {
   const hermesClient = new HermesClient('https://hermes.pyth.network');
@@ -67,6 +68,7 @@ export const usePrice = () => {
         PYTH_CONTRACT_ADDRESS_SEPOLIA,
         provider
       );
+
       const marketContract = new Market(
         DEPLOYED_MARKETS[market].marketAddress,
         provider
@@ -83,8 +85,8 @@ export const usePrice = () => {
       // Prepare the PriceDateUpdateInput object
       const priceUpdateData: PriceDataUpdateInput = {
         update_fee: fee,
-        publish_times: priceUpdates.parsed.map(
-          (parsedPrice) => parsedPrice.price.publish_time
+        publish_times: priceUpdates.parsed.map((parsedPrice) =>
+          DateTime.fromUnixSeconds(parsedPrice.price.publish_time).toTai64()
         ),
         price_feed_ids: priceFeedIds,
         update_data: updateData,
