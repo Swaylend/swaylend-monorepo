@@ -29,15 +29,17 @@ async fn deploy() {
 
     //--------------- Tokens ---------------
     let tokens_json_path =
-        PathBuf::from(env!("CARGO_WORKSPACE_DIR")).join("libs/token_sdk/tokens.testnet.json");
+        PathBuf::from(env!("CARGO_WORKSPACE_DIR")).join("libs/token_sdk/tokens.2.json");
     let tokens_path_str = tokens_json_path.to_str().unwrap();
 
     let token_contract = TokenContract::new(token_id, wallet.clone()).await;
     let (assets, asset_configs) = token_contract.load_tokens(tokens_path_str, &wallet).await;
-    let usdc = assets.get("USDC").unwrap();
+    let usdc = assets.get("USDT").unwrap();
 
     //--------------- MARKET ---------------
-    let usdc_price_feed = Bits256::from_hex_str(USDC_USD_PRICE_FEED_ID).unwrap();
+    let usdc_price_feed =
+        Bits256::from_hex_str("0x2b89b9dc8fdf9f34709a5b106b472f0f39bb6ca9ce04b0fd7f2e971688e2e53b")
+            .unwrap();
     let fuel_eth_base_asset_id =
         Bits256::from_hex_str("0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07")
             .unwrap();

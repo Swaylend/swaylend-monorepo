@@ -91,7 +91,7 @@ impl TokenContract {
     ) -> (HashMap<String, Asset>, Vec<CollateralConfiguration>) {
         let local_tests = is_local_tests.unwrap_or(false);
         let tokens_json_path =
-            PathBuf::from(env!("CARGO_WORKSPACE_DIR")).join("libs/token_sdk/tokens.json");
+            PathBuf::from(env!("CARGO_WORKSPACE_DIR")).join("libs/token_sdk/tokens.2.json");
         let tokens_json = std::fs::read_to_string(tokens_json_path).unwrap();
         let token_configs: Vec<TokenConfig> = serde_json::from_str(&tokens_json).unwrap();
 
@@ -116,7 +116,7 @@ impl TokenContract {
             };
 
             // Everything except USDC is collateral
-            if symbol != "USDC" {
+            if symbol != "USDC" && symbol != "USDT" {
                 asset_configs.push(CollateralConfiguration {
                     asset_id: asset_id.into(),
                     price_feed_id: Bits256::from_hex_str(config.price_feed_id.as_str()).unwrap(),
@@ -183,7 +183,7 @@ impl TokenContract {
             );
 
             // everything except USDC is collateral
-            if symbol != "USDC" {
+            if symbol != "USDC" && symbol != "USDT" {
                 asset_configs.push(CollateralConfiguration {
                     asset_id: asset_id.into(),
                     decimals: config.decimals,
