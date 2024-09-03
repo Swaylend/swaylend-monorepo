@@ -2,7 +2,9 @@
   "name": "@lutralabs/sway-lend-monorepo",
   "private": true,
   "license": "MIT",
-  "workspaces": ["apps/**/*"],
+  "workspaces": [
+    "apps/**/*"
+  ],
   "scripts": {
     "lint": "biome check .",
     "lint:fix": "biome check --write ."
@@ -23,6 +25,8 @@
     "pnpm": "9.1.1"
   },
   "pnpm": {
-    "patchedDependencies": {}
+    "patchedDependencies": {
+      "@fuel-ts/account@0.94.3": "patches/@fuel-ts__account@0.94.3.patch"
+    }
   }
 }

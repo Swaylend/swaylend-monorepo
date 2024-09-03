@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  '@fuel-ts/account@0.94.3':
+    hash: ehqly2kbszritzxealzee2drjm
+    path: patches/@fuel-ts__account@0.94.3.patch
+
 importers:
 
   .:
@@ -12793,7 +12798,7 @@ snapshots:
       - encoding
       - supports-color
 
-  '@fuel-ts/account@0.94.3(encoding@0.1.13)':
+  '@fuel-ts/account@0.94.3(patch_hash=ehqly2kbszritzxealzee2drjm)(encoding@0.1.13)':
     dependencies:
       '@fuel-ts/abi-coder': 0.94.3
       '@fuel-ts/address': 0.94.3
@@ -12893,7 +12898,7 @@ snapshots:
   '@fuel-ts/contract@0.94.3(encoding@0.1.13)':
     dependencies:
       '@fuel-ts/abi-coder': 0.94.3
-      '@fuel-ts/account': 0.94.3(encoding@0.1.13)
+      '@fuel-ts/account': 0.94.3(patch_hash=ehqly2kbszritzxealzee2drjm)(encoding@0.1.13)
       '@fuel-ts/crypto': 0.94.3
       '@fuel-ts/errors': 0.94.3
       '@fuel-ts/hasher': 0.94.3
@@ -13068,7 +13073,7 @@ snapshots:
   '@fuel-ts/program@0.94.3(encoding@0.1.13)':
     dependencies:
       '@fuel-ts/abi-coder': 0.94.3
-      '@fuel-ts/account': 0.94.3(encoding@0.1.13)
+      '@fuel-ts/account': 0.94.3(patch_hash=ehqly2kbszritzxealzee2drjm)(encoding@0.1.13)
       '@fuel-ts/address': 0.94.3
       '@fuel-ts/errors': 0.94.3
       '@fuel-ts/interfaces': 0.94.3
@@ -13114,7 +13119,7 @@ snapshots:
   '@fuel-ts/script@0.94.3(encoding@0.1.13)':
     dependencies:
       '@fuel-ts/abi-coder': 0.94.3
-      '@fuel-ts/account': 0.94.3(encoding@0.1.13)
+      '@fuel-ts/account': 0.94.3(patch_hash=ehqly2kbszritzxealzee2drjm)(encoding@0.1.13)
       '@fuel-ts/address': 0.94.3
       '@fuel-ts/errors': 0.94.3
       '@fuel-ts/interfaces': 0.94.3
@@ -19645,7 +19650,7 @@ snapshots:
     dependencies:
       '@fuel-ts/abi-coder': 0.94.3
       '@fuel-ts/abi-typegen': 0.94.3
-      '@fuel-ts/account': 0.94.3(encoding@0.1.13)
+      '@fuel-ts/account': 0.94.3(patch_hash=ehqly2kbszritzxealzee2drjm)(encoding@0.1.13)
       '@fuel-ts/address': 0.94.3
       '@fuel-ts/contract': 0.94.3(encoding@0.1.13)
       '@fuel-ts/crypto': 0.94.3
