@@ -2,10 +2,12 @@ import {
   GetMarketStateDocument,
   type GetMarketStateQuery,
 } from '@/__generated__/swaylend/graphql';
-import { GRAPHQL_URL } from '@/utils';
+import { DEPLOYED_MARKETS, type DeployedMarket } from '@/utils';
 
-export const getMarketState = async () => {
-  const response = await fetch(GRAPHQL_URL, {
+export const getMarketState = async (market: DeployedMarket) => {
+  const url = DEPLOYED_MARKETS[market].graphqlUrl;
+
+  const response = await fetch(url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
