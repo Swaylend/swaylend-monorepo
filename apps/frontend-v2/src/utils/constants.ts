@@ -29,18 +29,18 @@ export const DEPLOYED_MARKETS: Record<DeployedMarket, MarketConfiguration> = {
     oracleAddress:
       '0xc3c47cdeaec412778fc86842b44fb061b350db57f9d52def4f73036156f71506',
     marketAddress:
-      '0x40306bb23caad2dceb3907d62f50d75a0d8cd5e7a01b2f3e4189d3a54be42e40',
+      '0x5cd28d44008ab5f81b6a8bb684ac698c4e350bf99855004769b73097587185ed',
     tokenFactoryAddress:
-      '0xcbfa9f158e1ef6ba2f7c6696a47dea7f42e9c229f96dd9184a318f9bb5610665',
+      '0xc42945559a1d489c02849be67f601d8723f11881a167645ea64417b0306f68e3',
     graphqlUrl: 'https://indexer.bigdevenergy.link/c755070/v1/graphql',
   },
   USDT: {
     oracleAddress:
       '0xc3c47cdeaec412778fc86842b44fb061b350db57f9d52def4f73036156f71506',
     marketAddress:
-      '0x38c3c36bbb5f95256539cb5a315720815eb9623cf2de2561f5594d2699aa0b22',
+      '0xa6ea42b91f28e4937457dd2b74285b81343d517196d0a86e5e91d7247cffe4e0',
     tokenFactoryAddress:
-      '0xb0bad135fde037b08223aa4216f401d33f5fdd9e495fcaae3b4ea60b629c2fd0',
+      '0xf25ccea490d84d013dc660b0cd7b7ea4d8cf525c83df79cddc78264c0f5295cb',
     graphqlUrl: 'https://indexer.bigdevenergy.link/274bd87/v1/graphql',
   },
 };
@@ -63,11 +63,11 @@ export const FUEL_ETH_BASE_ASSET_ID =
   '0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07';
 
 export const ASSET_ID_TO_SYMBOL: Record<string, string> = {
-  '0x02f373b67576faf604dceb27675e88a3eb414f4bef5dea6cd3b143eeadd9401a': 'USDC',
-  '0x17341c3312f4e7e6a6b2fd907b3396733c97f57fb531c841cbf3c1eac2b7ad40': 'USDT',
+  '0x2d52ecf6fa0a222ff796a748b61ef4e3ef844c2078afe4df6399e264a4f993ad': 'USDC',
+  '0x04f9a75b617ff67856b05d96b00d070c2041db5c6563bb7e9ad09f6e12a2d57a': 'USDT',
   '0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07': 'ETH',
-  '0x2df61e167accc18479e13d9564261b22d1bf1be5f200cd80139138c83c10e9bc': 'BTC',
-  '0xb5efb423f3a4a10fed5e349d0096c4cd75ffb97c6a3e21bb59a685092698b0cf': 'UNI',
-  '0x1479f7a4805cce7b79676b5668b21e32f68a1354e79669d94a600d03c55c5c4e': 'BTC',
-  '0x750a24d292eb779670df1536b14e0b4fcc4ea4aef390d6858de65b1b919c0e54': 'BNB',
+  '0xfb5a7c0184ed850bbbdfc73c09b0885603bc81048f2481f3032b6c1398290021': 'BTC',
+  '0x170ae7a2535154a5981db6cd0084689495849ad80a0b0dccdd7c579c9cfb7572': 'UNI',
+  '0x84ebfaf29d43e88f74a1573830c27d06e69112f0f0cb0694a10e3cf94b011cfd': 'BTC',
+  '0xaf0fb56ec3dbc594ea514e36042abdea14630be1569792ef73f09c09beac77cb': 'BNB',
 };
