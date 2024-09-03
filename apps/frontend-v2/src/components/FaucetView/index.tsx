@@ -1,5 +1,4 @@
 'use client';
-import React, { useMemo } from 'react';
 import {
   useCollateralConfigurations,
   useMarketConfiguration,
@@ -15,6 +14,7 @@ import { useAccount, useBalance } from '@fuels/react';
 import { useIsMutating } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { BN, toFixed } from 'fuels';
+import React, { useMemo } from 'react';
 import { Button } from '../ui/button';
 
 type FaucetRowProps = {

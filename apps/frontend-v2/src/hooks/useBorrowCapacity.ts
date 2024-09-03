@@ -1,13 +1,13 @@
 import { useMarketStore } from '@/stores';
-import { useUserSupplyBorrow } from './useUserSupplyBorrow';
-import { useCollateralConfigurations } from './useCollateralConfigurations';
-import { useUserCollateralAssets } from './useUserCollateralAssets';
-import { useQuery } from '@tanstack/react-query';
-import { useAccount } from '@fuels/react';
-import BigNumber from 'bignumber.js';
-import { usePrice } from './usePrice';
 import { formatUnits } from '@/utils';
+import { useAccount } from '@fuels/react';
+import { useQuery } from '@tanstack/react-query';
+import BigNumber from 'bignumber.js';
+import { useCollateralConfigurations } from './useCollateralConfigurations';
 import { useMarketConfiguration } from './useMarketConfiguration';
+import { usePrice } from './usePrice';
+import { useUserCollateralAssets } from './useUserCollateralAssets';
+import { useUserSupplyBorrow } from './useUserSupplyBorrow';
 
 export const useBorrowCapacity = () => {
   const { market } = useMarketStore();

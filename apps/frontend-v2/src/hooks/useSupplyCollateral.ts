@@ -1,3 +1,4 @@
+import { ErrorToast, TransactionSuccessToast } from '@/components/Toasts';
 import { Market } from '@/contract-types';
 import { useMarketStore } from '@/stores';
 import { DEPLOYED_MARKETS } from '@/utils';
@@ -6,7 +7,6 @@ import { useMutation } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { toast } from 'react-toastify';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
-import { ErrorToast, TransactionSuccessToast } from '@/components/Toasts';
 
 type useSupplyCollateralProps = {
   actionTokenAssetId: string | null | undefined;

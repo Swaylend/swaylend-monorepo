@@ -1,12 +1,12 @@
 import {
+  useBorrowCapacity,
   useBorrowRate,
   useCollateralConfigurations,
-  useSupplyRate,
-  useUserSupplyBorrow,
-  useUserCollateralAssets,
-  useBorrowCapacity,
   useMarketConfiguration,
   usePrice,
+  useSupplyRate,
+  useUserCollateralAssets,
+  useUserSupplyBorrow,
 } from '@/hooks';
 
 import { formatUnits, getBorrowApr, getSupplyApr } from '@/utils';

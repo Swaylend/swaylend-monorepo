@@ -1,8 +1,8 @@
 import {
-  usePrice,
-  useSupplyCollateral,
   useMarketConfiguration,
+  usePrice,
   useSupplyBase,
+  useSupplyCollateral,
   useWithdrawBase,
   useWithdrawCollateral,
 } from '@/hooks';

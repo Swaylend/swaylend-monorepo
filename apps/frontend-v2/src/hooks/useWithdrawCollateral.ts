@@ -1,3 +1,4 @@
+import { ErrorToast, TransactionSuccessToast } from '@/components/Toasts';
 import { Market } from '@/contract-types';
 import type { PriceDataUpdateInput } from '@/contract-types/Market';
 import { useMarketStore } from '@/stores';
@@ -11,7 +12,6 @@ import { useMutation } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { toast } from 'react-toastify';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
-import { ErrorToast, TransactionSuccessToast } from '@/components/Toasts';
 
 type useWithdrawCollateralProps = {
   actionTokenAssetId: string | null | undefined;
