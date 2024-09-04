@@ -52,6 +52,45 @@ impl TokenAsset {
         }
     }
 
+    pub async fn set_decimals(
+        &self,
+        decimals: u8,
+    ) -> Result<CallResponse<()>, fuels::types::errors::Error> {
+        let symbol_hash = get_symbol_hash(&self.symbol);
+
+        self.instance
+            .methods()
+            .set_decimals(symbol_hash, decimals)
+            .call()
+            .await
+    }
+
+    pub async fn set_name(
+        &self,
+        name: String,
+    ) -> Result<CallResponse<()>, fuels::types::errors::Error> {
+        let symbol_hash = get_symbol_hash(&self.symbol);
+
+        self.instance
+            .methods()
+            .set_name(symbol_hash, name)
+            .call()
+            .await
+    }
+
+    pub async fn set_symbol(
+        &self,
+        symbol: String,
+    ) -> Result<CallResponse<()>, fuels::types::errors::Error> {
+        let symbol_hash = get_symbol_hash(&self.symbol);
+
+        self.instance
+            .methods()
+            .set_name(symbol_hash, symbol)
+            .call()
+            .await
+    }
+
     pub async fn mint(
         &self,
         recipient: Address,
