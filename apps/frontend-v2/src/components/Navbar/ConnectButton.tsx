@@ -24,7 +24,11 @@ export const ConnectButton = () => {
           disconnect();
         }}
       >
-        {isConnected ? account : isConnecting ? 'Connecting' : 'Connect'}
+        {isConnected
+          ? `${account?.slice(0, 6)}...${account?.slice(-4)}`
+          : isConnecting
+            ? 'Connecting'
+            : 'Connect'}
       </Button>
     </>
   );

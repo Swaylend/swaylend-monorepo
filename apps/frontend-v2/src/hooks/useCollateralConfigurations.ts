@@ -1,12 +1,15 @@
 import type { CollateralConfigurationOutput } from '@/contract-types/Market';
 import { getCollateralConfigurations } from '@/lib/queries';
+import { useMarketStore } from '@/stores';
 import { useQuery } from '@tanstack/react-query';
 
 export const useCollateralConfigurations = () => {
+  const { market } = useMarketStore();
+
   return useQuery({
-    queryKey: ['collateralConfigurations'],
+    queryKey: ['collateralConfigurations', market],
     queryFn: async () => {
-      const configurations = await getCollateralConfigurations();
+      const configurations = await getCollateralConfigurations(market);
 
       const formattedConfigurations: Record<
         string,
@@ -28,5 +31,6 @@ export const useCollateralConfigurations = () => {
 
       return formattedConfigurations;
     },
+    refetchInterval: 1000 * 100,
   });
 };

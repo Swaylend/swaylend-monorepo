@@ -1,0 +1,8 @@
+query GetMarketConfiguration {
+  MarketConfiguartion {
+    baseToken
+    baseTokenDecimals
+    baseTokenPriceFeedId
+    baseBorrowMin
+  }
+}

@@ -1,32 +1,40 @@
+import { ErrorToast, TransactionSuccessToast } from '@/components/Toasts';
 import { Market } from '@/contract-types';
-import { CONTRACT_ADDRESSES, EXPLORER_URL, TOKENS_BY_SYMBOL } from '@/utils';
+import { useMarketStore } from '@/stores';
+import { DEPLOYED_MARKETS } from '@/utils';
 import { useAccount, useWallet } from '@fuels/react';
 import { useMutation } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { toast } from 'react-toastify';
+import { useMarketConfiguration } from './useMarketConfiguration';
 
 export const useSupplyBase = () => {
   const { wallet } = useWallet();
   const { account } = useAccount();
+  const { market } = useMarketStore();
+  const { data: marketConfiguration } = useMarketConfiguration();
 
   return useMutation({
-    mutationKey: ['supplyBase', account],
+    mutationKey: ['supplyBase', account, marketConfiguration, market],
     mutationFn: async (tokenAmount: BigNumber) => {
-      if (!wallet || !account) {
-        return;
+      if (!wallet || !account || !marketConfiguration) {
+        return null;
       }
 
-      const marketContract = new Market(CONTRACT_ADDRESSES.market, wallet);
+      const marketContract = new Market(
+        DEPLOYED_MARKETS[market].marketAddress,
+        wallet
+      );
 
       const amount = new BigNumber(tokenAmount).times(
-        10 ** TOKENS_BY_SYMBOL.USDC.decimals
+        10 ** marketConfiguration.baseTokenDecimals
       );
 
       const { waitForResult } = await marketContract.functions
         .supply_base()
         .callParams({
           forward: {
-            assetId: TOKENS_BY_SYMBOL.USDC.assetId,
+            assetId: marketConfiguration.baseToken,
             amount: amount.toString(),
           },
         })
@@ -42,24 +50,11 @@ export const useSupplyBase = () => {
     },
     onSuccess: (data) => {
       if (data) {
-        toast(
-          <div>
-            Transaction successful:{' '}
-            <a
-              target="_blank"
-              rel="noreferrer"
-              className="underline cursor-pointer text-blue-500"
-              href={`${EXPLORER_URL}/${data}`}
-            >
-              {data}
-            </a>
-          </div>
-        );
+        TransactionSuccessToast({ transactionId: data });
       }
     },
     onError: (error) => {
-      console.log(error);
-      toast('Error');
+      ErrorToast({ error: error.message });
     },
   });
 };

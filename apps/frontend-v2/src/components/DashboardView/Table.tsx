@@ -4,11 +4,76 @@ import {
   useUserCollateralAssets,
 } from '@/hooks';
 import { ACTION_TYPE, useMarketStore } from '@/stores';
-import { TOKENS_BY_SYMBOL, collaterals, formatUnits } from '@/utils';
+import { ASSET_ID_TO_SYMBOL, type IToken, formatUnits } from '@/utils';
 import { useAccount, useBalance } from '@fuels/react';
 import BigNumber from 'bignumber.js';
-import React from 'react';
+import clsx from 'clsx';
+import React, { useMemo } from 'react';
 import { Button } from '../ui/button';
+
+type TableRowProps = {
+  account: string | undefined;
+  assetId: string;
+  symbol: string;
+  decimals: number;
+  protocolBalance: BigNumber;
+  protocolBalancePending: boolean;
+  handleAssetClick: (action: ACTION_TYPE, assetId: string) => void;
+};
+
+const TableRow = ({
+  account,
+  assetId,
+  symbol,
+  decimals,
+  protocolBalance,
+  protocolBalancePending,
+  handleAssetClick,
+}: TableRowProps) => {
+  const { balance } = useBalance({
+    address: account,
+    assetId: assetId,
+  });
+
+  const formattedBalance = formatUnits(
+    BigNumber(balance ? balance.toString() : '0'),
+    decimals
+  ).toFormat(6);
+
+  const canSupply = balance?.gt(0);
+  const canWithdraw = protocolBalance.gt(0);
+
+  return (
+    <div className="flex gap-x-2">
+      {symbol}
+      <div>
+        Bal:
+        {formattedBalance}
+        {symbol}
+      </div>
+      <div className={clsx(protocolBalancePending && 'animate-pulse')}>
+        Deposited:{formatUnits(protocolBalance, decimals).toFormat(4)}
+        {symbol}
+      </div>
+      <Button
+        disabled={!canSupply}
+        onClick={() =>
+          canSupply && handleAssetClick(ACTION_TYPE.SUPPLY, assetId)
+        }
+      >
+        +
+      </Button>
+      <Button
+        disabled={!canWithdraw}
+        onClick={() =>
+          canWithdraw && handleAssetClick(ACTION_TYPE.WITHDRAW, assetId)
+        }
+      >
+        -
+      </Button>
+    </div>
+  );
+};
 
 export const Table = () => {
   const {
@@ -17,24 +82,16 @@ export const Table = () => {
     changeTokenAmount,
     changeActionTokenAssetId,
   } = useMarketStore();
-  const { data: userCollateralAssets } = useUserCollateralAssets();
-  const { data: collateralConfigurations } = useCollateralConfigurations();
+  const { data: userCollateralAssets, isLoading: userCollateralAssetsLoading } =
+    useUserCollateralAssets();
+  const {
+    data: collateralConfigurations,
+    isPending: collateralConfigurationsPending,
+    error: collateralConfigurationsError,
+  } = useCollateralConfigurations();
   const { data: totalCollateralInfo } = useTotalCollateral();
 
   const { account } = useAccount();
-
-  const { balance: etherBalance } = useBalance({
-    address: account as string,
-    assetId: TOKENS_BY_SYMBOL.ETH.assetId,
-  });
-  const { balance: btcBalance } = useBalance({
-    address: account as string,
-    assetId: TOKENS_BY_SYMBOL.BTC.assetId,
-  });
-  const { balance: uniBalance } = useBalance({
-    address: account as string,
-    assetId: TOKENS_BY_SYMBOL.UNI.assetId,
-  });
 
   const handleAssetClick = (action: ACTION_TYPE, assetId: string) => {
     changeTokenAmount(new BigNumber(0));
@@ -43,76 +100,36 @@ export const Table = () => {
     changeActionTokenAssetId(assetId);
   };
 
+  const collaterals = useMemo(() => {
+    if (!collateralConfigurations) return [];
+
+    return Object.values(collateralConfigurations);
+  }, [collateralConfigurations]);
+
+  if (collateralConfigurationsPending) {
+    return <div>Loading...</div>;
+  }
+
+  if (!collateralConfigurations || collateralConfigurationsError) {
+    return <div>Failed to load collateral configurations</div>;
+  }
+
   return (
     <div>
-      {collaterals.map((token) => {
-        const supplyCap =
-          collateralConfigurations == null
-            ? BigNumber(0)
-            : new BigNumber(
-                collateralConfigurations[token.assetId].supply_cap.toString()
-              );
-        const collateralReserve =
-          totalCollateralInfo == null
-            ? BigNumber(0)
-            : totalCollateralInfo[token.assetId];
-        let userBalance = new BigNumber(0);
-        switch (token.symbol) {
-          case 'ETH':
-            userBalance = (etherBalance ?? new BigNumber(0)) as BigNumber;
-            break;
-          case 'BTC':
-            userBalance = (btcBalance ?? new BigNumber(0)) as BigNumber;
-            break;
-          case 'UNI':
-            userBalance = (uniBalance ?? new BigNumber(0)) as BigNumber;
-            break;
-          default:
-            break;
-        }
-        const protocolBalance =
-          userCollateralAssets != null
-            ? userCollateralAssets[token.assetId] ?? BigNumber(0)
-            : BigNumber(0);
-        const canWithdraw = protocolBalance.gt(0);
-        const protocolBalanceFormatted = formatUnits(
-          protocolBalance,
-          token.decimals
-        ).toFormat(4);
-        const collateralCapacityLeft = supplyCap.minus(collateralReserve);
-        const canSupply = userBalance?.gt(0);
-
-        return (
-          <div key={token.symbol} className="flex gap-x-2">
-            {token.symbol}
-            <div>
-              Bal:{formatUnits(userBalance, token.decimals).toFormat(6)}
-              {token.symbol}
-            </div>
-            <div>
-              Deposited:{protocolBalanceFormatted}
-              {token.symbol}
-            </div>
-            <Button
-              disabled={!canSupply}
-              onClick={() =>
-                canSupply && handleAssetClick(ACTION_TYPE.SUPPLY, token.assetId)
-              }
-            >
-              +
-            </Button>
-            <Button
-              disabled={!canWithdraw}
-              onClick={() =>
-                canWithdraw &&
-                handleAssetClick(ACTION_TYPE.WITHDRAW, token.assetId)
-              }
-            >
-              -
-            </Button>
-          </div>
-        );
-      })}
+      {collaterals.map((collateral) => (
+        <TableRow
+          key={collateral.asset_id}
+          account={account ?? undefined}
+          assetId={collateral.asset_id}
+          symbol={ASSET_ID_TO_SYMBOL[collateral.asset_id]}
+          decimals={collateral.decimals}
+          protocolBalance={
+            userCollateralAssets?.[collateral.asset_id] ?? new BigNumber(0)
+          }
+          protocolBalancePending={userCollateralAssetsLoading}
+          handleAssetClick={handleAssetClick}
+        />
+      ))}
     </div>
   );
 };

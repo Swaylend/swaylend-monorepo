@@ -23,6 +23,9 @@
     "pnpm": "9.0.6"
   },
   "pnpm": {
-    "patchedDependencies": {}
+    "allowNonAppliedPatches": true,
+    "patchedDependencies": {
+      "@fuel-ts/account@0.94.3": "patches/@fuel-ts__account@0.94.3.patch"
+    }
   }
 }

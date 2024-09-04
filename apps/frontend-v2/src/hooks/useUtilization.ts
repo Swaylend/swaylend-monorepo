@@ -1,21 +1,29 @@
 import { Market } from '@/contract-types';
-import { CONTRACT_ADDRESSES } from '@/utils';
+import { useMarketStore } from '@/stores';
+import { DEPLOYED_MARKETS } from '@/utils';
 import { useQuery } from '@tanstack/react-query';
 import { useProvider } from './useProvider';
 
 export const useUtilization = () => {
   const provider = useProvider();
 
-  const fetchUtilization = async () => {
-    if (!provider) return;
-    const marketContract = new Market(CONTRACT_ADDRESSES.market, provider);
-    const { value } = await marketContract.functions.get_utilization().get();
-    if (!value) throw new Error('Failed to fetch utilization');
-    return value;
-  };
+  const { market } = useMarketStore();
+
   return useQuery({
-    queryKey: ['utilization'],
-    queryFn: fetchUtilization,
+    queryKey: ['utilization', market],
+    queryFn: async () => {
+      if (!provider) return null;
+
+      const marketContract = new Market(
+        DEPLOYED_MARKETS[market].marketAddress,
+        provider
+      );
+
+      const { value } = await marketContract.functions.get_utilization().get();
+
+      if (!value) throw new Error('Failed to fetch utilization');
+      return value;
+    },
     enabled: !!provider,
   });
 };

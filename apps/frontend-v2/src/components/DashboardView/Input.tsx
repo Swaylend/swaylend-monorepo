@@ -1,9 +1,12 @@
-import { usePrice, useSupplyCollateral } from '@/hooks';
-import { useSupplyBase } from '@/hooks/useSupplyBase';
-import { useWithdrawBase } from '@/hooks/useWithdrawBase';
-import { useWithdrawCollateral } from '@/hooks/useWithdrawCollateral';
+import {
+  useMarketConfiguration,
+  usePrice,
+  useSupplyBase,
+  useSupplyCollateral,
+  useWithdrawBase,
+  useWithdrawCollateral,
+} from '@/hooks';
 import { ACTION_TYPE, useMarketStore } from '@/stores';
-import { TOKENS_BY_SYMBOL, TOKENS_LIST } from '@/utils';
 import BigNumber from 'bignumber.js';
 import React from 'react';
 import { Button } from '../ui/button';
@@ -20,13 +23,15 @@ export const Input = () => {
     changeActionTokenAssetId,
   } = useMarketStore();
 
+  const { data: marketConfiguration } = useMarketConfiguration();
+
   const handleBaseTokenClick = (action: ACTION_TYPE) => {
     changeAction(action);
     changeTokenAmount(BigNumber(0));
-    changeActionTokenAssetId(TOKENS_BY_SYMBOL.USDC.assetId);
+    changeActionTokenAssetId(marketConfiguration?.baseToken);
   };
 
-  const { data: priceData } = usePrice(TOKENS_LIST.map((i) => i.assetId));
+  const { data: priceData } = usePrice();
 
   const { mutate: supplyCollateral } = useSupplyCollateral({
     actionTokenAssetId,
@@ -41,9 +46,11 @@ export const Input = () => {
   const { mutate: withdrawBase } = useWithdrawBase();
 
   const handleSubmit = () => {
+    if (!marketConfiguration) return;
+
     switch (action) {
       case ACTION_TYPE.SUPPLY: {
-        if (actionTokenAssetId === TOKENS_BY_SYMBOL.USDC.assetId) {
+        if (actionTokenAssetId === marketConfiguration.baseToken) {
           supplyBase(tokenAmount);
         } else {
           supplyCollateral(tokenAmount);
@@ -53,7 +60,7 @@ export const Input = () => {
       case ACTION_TYPE.WITHDRAW: {
         if (!priceData) return;
 
-        if (actionTokenAssetId === TOKENS_BY_SYMBOL.USDC.assetId) {
+        if (actionTokenAssetId === marketConfiguration.baseToken) {
           withdrawBase({
             tokenAmount,
             priceUpdateData: priceData.priceUpdateData,
@@ -113,7 +120,7 @@ export const Input = () => {
         </div>
       </div>
       <div>
-        <InputField amount={tokenAmount} setAmount={changeTokenAmount} />
+        <InputField />
         <Button onClick={handleSubmit}>Confirm</Button>
       </div>
     </div>

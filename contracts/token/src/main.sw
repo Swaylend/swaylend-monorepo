@@ -26,6 +26,50 @@ storage {
     /// The decimals of a specific asset minted by this contract.
     decimals: StorageMap<AssetId, u8> = StorageMap {},
 }
+
+abi SetContractStorage {
+    #[storage(read, write)]
+    fn set_decimals(sub_id: SubId, decimals: u8);
+
+    #[storage(read, write)]
+    fn set_name(sub_id: SubId, name: String);
+
+    #[storage(read, write)]
+    fn set_symbol(sub_id: SubId, symbol: String);
+}
+
+impl SetContractStorage for Contract {
+    #[storage(read, write)]
+    fn set_decimals(sub_id: SubId, decimals: u8) {
+        let asset_id = AssetId::new(ContractId::this(), sub_id);
+
+        // Check if decimals is already set
+        require(storage.decimals.get(asset_id).try_read().is_none(), "Already set");
+        storage.decimals.insert(asset_id, decimals);
+    }
+
+    #[storage(read, write)]
+    fn set_name(sub_id: SubId, name: String) {
+        let asset_id = AssetId::new(ContractId::this(), sub_id);
+
+        // Check if name is already set
+        require(storage.name.get(asset_id).try_read().is_none(), "Already set");
+
+        let storage_key = storage.name.get(asset_id);
+        storage_key.write_slice(name);
+    }
+
+    #[storage(read, write)]
+    fn set_symbol(sub_id: SubId, symbol: String) {
+        let asset_id = AssetId::new(ContractId::this(), sub_id);
+
+        // Check if symbol is already set
+        require(storage.symbol.get(asset_id).try_read().is_none(), "Already set");
+
+        let storage_key = storage.symbol.get(asset_id);
+        storage_key.write_slice(symbol);
+    }
+}
  
 impl SRC20 for Contract {
     /// Returns the total number of individual assets minted  by this contract.
