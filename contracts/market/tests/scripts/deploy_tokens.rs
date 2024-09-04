@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::{path::PathBuf, thread::sleep, time::Duration};
 
 use dotenv::dotenv;
 use fuels::accounts::{provider::Provider, wallet::WalletUnlocked};
@@ -37,6 +37,8 @@ async fn deploy() {
             .unwrap();
         asset.set_name(asset.symbol.clone()).await.unwrap();
         asset.set_symbol(asset.symbol.clone()).await.unwrap();
+        sleep(Duration::from_secs(1));
+        println!("Asset {} has been deployed", asset.symbol);
     }
 
     println!(

@@ -61,6 +61,7 @@ impl TokenAsset {
         self.instance
             .methods()
             .set_decimals(symbol_hash, decimals)
+            .with_tx_policies(TxPolicies::default().with_tip(1))
             .call()
             .await
     }
@@ -74,6 +75,7 @@ impl TokenAsset {
         self.instance
             .methods()
             .set_name(symbol_hash, name)
+            .with_tx_policies(TxPolicies::default().with_tip(1))
             .call()
             .await
     }
@@ -87,6 +89,7 @@ impl TokenAsset {
         self.instance
             .methods()
             .set_name(symbol_hash, symbol)
+            .with_tx_policies(TxPolicies::default().with_tip(1))
             .call()
             .await
     }
