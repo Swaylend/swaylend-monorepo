@@ -23,6 +23,8 @@
     "pnpm": "9.1.1"
   },
   "pnpm": {
-    "patchedDependencies": {}
+    "patchedDependencies": {
+      "@fuel-ts/account@0.94.3": "patches/@fuel-ts__account@0.94.3.patch"
+    }
   }
 }

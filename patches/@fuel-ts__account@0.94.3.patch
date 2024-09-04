@@ -1,0 +1,50 @@
+diff --git a/dist/index.js b/dist/index.js
+index 43910974d9634d34b2a296cc6cb7190d3edfadcc..80faba5cebcb69397f3d1b22af12c44c616ad9fe 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -2018,17 +2018,17 @@ var assembleRevertError = (receipts, logs, metadata) => {
+     switch (reasonHex) {
+       case import_configs5.FAILED_REQUIRE_SIGNAL: {
+         reason = "require";
+-        errorMessage = `The transaction reverted because a "require" statement has thrown ${logs.length ? stringify(logs[0]) : "an error."}.`;
++        errorMessage = `The transaction reverted because a "require" statement has thrown ${logs.length ? stringify(logs[logs.length - 1]) : "an error."}.`;
+         break;
+       }
+       case import_configs5.FAILED_ASSERT_EQ_SIGNAL: {
+-        const sufix = logs.length >= 2 ? ` comparing ${stringify(logs[1])} and ${stringify(logs[0])}.` : ".";
++        const sufix = logs.length >= 2 ? ` comparing ${stringify(logs[1])} and ${stringify(logs[logs.length - 1])}.` : ".";
+         reason = "assert_eq";
+         errorMessage = `The transaction reverted because of an "assert_eq" statement${sufix}`;
+         break;
+       }
+       case import_configs5.FAILED_ASSERT_NE_SIGNAL: {
+-        const sufix = logs.length >= 2 ? ` comparing ${stringify(logs[1])} and ${stringify(logs[0])}.` : ".";
++        const sufix = logs.length >= 2 ? ` comparing ${stringify(logs[1])} and ${stringify(logs[logs.length - 1])}.` : ".";
+         reason = "assert_ne";
+         errorMessage = `The transaction reverted because of an "assert_ne" statement${sufix}`;
+         break;
+diff --git a/dist/index.mjs b/dist/index.mjs
+index 92b01116b2c4aef3d503ab78c7008abd83992f18..edcd8ad72daf27a3b96f8f784c7bbbf9924eccd4 100644
+--- a/dist/index.mjs
++++ b/dist/index.mjs
+@@ -1860,17 +1860,17 @@ var assembleRevertError = (receipts, logs, metadata) => {
+     switch (reasonHex) {
+       case FAILED_REQUIRE_SIGNAL: {
+         reason = "require";
+-        errorMessage = `The transaction reverted because a "require" statement has thrown ${logs.length ? stringify(logs[0]) : "an error."}.`;
++        errorMessage = `The transaction reverted because a "require" statement has thrown ${logs.length ? stringify(logs[logs.length - 1]) : "an error."}.`;
+         break;
+       }
+       case FAILED_ASSERT_EQ_SIGNAL: {
+-        const sufix = logs.length >= 2 ? ` comparing ${stringify(logs[1])} and ${stringify(logs[0])}.` : ".";
++        const sufix = logs.length >= 2 ? ` comparing ${stringify(logs[1])} and ${stringify(logs[logs.length - 1])}.` : ".";
+         reason = "assert_eq";
+         errorMessage = `The transaction reverted because of an "assert_eq" statement${sufix}`;
+         break;
+       }
+       case FAILED_ASSERT_NE_SIGNAL: {
+-        const sufix = logs.length >= 2 ? ` comparing ${stringify(logs[1])} and ${stringify(logs[0])}.` : ".";
++        const sufix = logs.length >= 2 ? ` comparing ${stringify(logs[1])} and ${stringify(logs[logs.length - 1])}.` : ".";
+         reason = "assert_ne";
+         errorMessage = `The transaction reverted because of an "assert_ne" statement${sufix}`;
+         break;

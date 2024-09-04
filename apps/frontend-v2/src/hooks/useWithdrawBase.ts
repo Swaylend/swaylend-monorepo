@@ -1,11 +1,8 @@
+import { ErrorToast, TransactionSuccessToast } from '@/components/Toasts';
 import { Market } from '@/contract-types';
 import type { PriceDataUpdateInput } from '@/contract-types/Market';
-import {
-  CONTRACT_ADDRESSES,
-  EXPLORER_URL,
-  FUEL_ETH_BASE_ASSET_ID,
-  TOKENS_BY_SYMBOL,
-} from '@/utils';
+import { useMarketStore } from '@/stores';
+import { DEPLOYED_MARKETS, FUEL_ETH_BASE_ASSET_ID } from '@/utils';
 import { useAccount, useWallet } from '@fuels/react';
 import {
   PYTH_CONTRACT_ADDRESS_SEPOLIA,
@@ -14,13 +11,16 @@ import {
 import { useMutation } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { toast } from 'react-toastify';
+import { useMarketConfiguration } from './useMarketConfiguration';
 
 export const useWithdrawBase = () => {
   const { wallet } = useWallet();
   const { account } = useAccount();
+  const { market } = useMarketStore();
+  const { data: marketConfiguration } = useMarketConfiguration();
 
   return useMutation({
-    mutationKey: ['withdrawBase', account],
+    mutationKey: ['withdrawBase', account, market, marketConfiguration],
     mutationFn: async ({
       tokenAmount,
       priceUpdateData,
@@ -28,18 +28,22 @@ export const useWithdrawBase = () => {
       tokenAmount: BigNumber;
       priceUpdateData: PriceDataUpdateInput;
     }) => {
-      if (!wallet || !account) {
-        return;
+      if (!wallet || !account || !marketConfiguration) {
+        return null;
       }
+
       const pythContract = new PythContract(
         PYTH_CONTRACT_ADDRESS_SEPOLIA,
         wallet
       );
 
-      const marketContract = new Market(CONTRACT_ADDRESSES.market, wallet);
+      const marketContract = new Market(
+        DEPLOYED_MARKETS[market].marketAddress,
+        wallet
+      );
 
       const amount = new BigNumber(tokenAmount).times(
-        10 ** TOKENS_BY_SYMBOL.USDC.decimals
+        10 ** marketConfiguration.baseTokenDecimals
       );
 
       const { waitForResult } = await marketContract.functions
@@ -63,24 +67,11 @@ export const useWithdrawBase = () => {
     },
     onSuccess: (data) => {
       if (data) {
-        toast(
-          <div>
-            Transaction successful:{' '}
-            <a
-              target="_blank"
-              rel="noreferrer"
-              className="underline cursor-pointer text-blue-500"
-              href={`${EXPLORER_URL}/${data}`}
-            >
-              {data}
-            </a>
-          </div>
-        );
+        TransactionSuccessToast({ transactionId: data });
       }
     },
     onError: (error) => {
-      console.log(error);
-      toast('Error');
+      ErrorToast({ error: error.message });
     },
   });
 };

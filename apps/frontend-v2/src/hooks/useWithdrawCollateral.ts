@@ -1,11 +1,8 @@
+import { ErrorToast, TransactionSuccessToast } from '@/components/Toasts';
 import { Market } from '@/contract-types';
 import type { PriceDataUpdateInput } from '@/contract-types/Market';
-import {
-  CONTRACT_ADDRESSES,
-  EXPLORER_URL,
-  FUEL_ETH_BASE_ASSET_ID,
-  TOKENS_BY_ASSET_ID,
-} from '@/utils';
+import { useMarketStore } from '@/stores';
+import { DEPLOYED_MARKETS, FUEL_ETH_BASE_ASSET_ID } from '@/utils';
 import { useAccount, useWallet } from '@fuels/react';
 import {
   PYTH_CONTRACT_ADDRESS_SEPOLIA,
@@ -14,9 +11,10 @@ import {
 import { useMutation } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { toast } from 'react-toastify';
+import { useCollateralConfigurations } from './useCollateralConfigurations';
 
 type useWithdrawCollateralProps = {
-  actionTokenAssetId: string | null;
+  actionTokenAssetId: string | null | undefined;
 };
 
 export const useWithdrawCollateral = ({
@@ -24,9 +22,11 @@ export const useWithdrawCollateral = ({
 }: useWithdrawCollateralProps) => {
   const { wallet } = useWallet();
   const { account } = useAccount();
+  const { market } = useMarketStore();
+  const { data: collateralConfigurations } = useCollateralConfigurations();
 
   return useMutation({
-    mutationKey: ['withdrawCollateral', actionTokenAssetId, account],
+    mutationKey: ['withdrawCollateral', actionTokenAssetId, account, market],
     mutationFn: async ({
       tokenAmount,
       priceUpdateData,
@@ -34,18 +34,27 @@ export const useWithdrawCollateral = ({
       tokenAmount: BigNumber;
       priceUpdateData: PriceDataUpdateInput;
     }) => {
-      if (!wallet || !account || !actionTokenAssetId) {
-        return;
+      if (
+        !wallet ||
+        !account ||
+        !actionTokenAssetId ||
+        !collateralConfigurations
+      ) {
+        return null;
       }
+
       const pythContract = new PythContract(
         PYTH_CONTRACT_ADDRESS_SEPOLIA,
         wallet
       );
 
-      const marketContract = new Market(CONTRACT_ADDRESSES.market, wallet);
+      const marketContract = new Market(
+        DEPLOYED_MARKETS[market].marketAddress,
+        wallet
+      );
 
       const amount = new BigNumber(tokenAmount).times(
-        10 ** TOKENS_BY_ASSET_ID[actionTokenAssetId].decimals
+        10 ** collateralConfigurations[actionTokenAssetId].decimals
       );
 
       const { waitForResult } = await marketContract.functions
@@ -73,24 +82,11 @@ export const useWithdrawCollateral = ({
     },
     onSuccess: (data) => {
       if (data) {
-        toast(
-          <div>
-            Transaction successful:{' '}
-            <a
-              target="_blank"
-              rel="noreferrer"
-              className="underline cursor-pointer text-blue-500"
-              href={`${EXPLORER_URL}/${data}`}
-            >
-              {data}
-            </a>
-          </div>
-        );
+        TransactionSuccessToast({ transactionId: data });
       }
     },
     onError: (error) => {
-      console.log(error);
-      toast('Error');
+      ErrorToast({ error: error.message });
     },
   });
 };
