@@ -7,18 +7,9 @@ import { useDebounceCallback } from 'usehooks-ts';
 export const InputField = () => {
   const { changeTokenAmount } = useMarketStore();
 
-  const [inputValue, _setInputValue] = useState<string>('');
-
-  const inputRef = useRef<HTMLInputElement>(null);
+  const [inputValue, setInputValue] = useState<string>('');
 
   const debounce = useDebounceCallback(changeTokenAmount, 500);
-
-  const setInputValue = (value: string): void => {
-    if (!inputRef.current) {
-      return;
-    }
-    _setInputValue(value);
-  };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     let { value } = event.currentTarget;
@@ -28,13 +19,19 @@ export const InputField = () => {
     // Replace leading zeros
     if (/^0+[^.]/.test(value)) {
       value = value.replace(/^0+/, '');
+      if (value === '') {
+        value = '0';
+      }
     }
 
+    if (value === '.') {
+      value = '0.';
+    }
+    // TODO: use correct decimals
     // Limit the number of decimal places to token decimals
     if (value && !/^\d+(.\d{0,9})?$/.test(value)) {
       return;
     }
-
     if (value === '') {
       setInputValue('');
       debounce(BigNumber(0));
@@ -49,7 +46,6 @@ export const InputField = () => {
   return (
     <input
       type="string"
-      ref={inputRef}
       value={inputValue}
       placeholder="0.00"
       onChange={handleChange}
