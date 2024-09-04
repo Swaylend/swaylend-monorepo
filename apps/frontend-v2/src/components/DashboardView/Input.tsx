@@ -120,7 +120,7 @@ export const Input = () => {
         </div>
       </div>
       <div>
-        <InputField amount={tokenAmount} setAmount={changeTokenAmount} />
+        <InputField />
         <Button onClick={handleSubmit}>Confirm</Button>
       </div>
     </div>
