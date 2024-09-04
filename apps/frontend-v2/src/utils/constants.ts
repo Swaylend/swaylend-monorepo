@@ -29,18 +29,18 @@ export const DEPLOYED_MARKETS: Record<DeployedMarket, MarketConfiguration> = {
     oracleAddress:
       '0xc3c47cdeaec412778fc86842b44fb061b350db57f9d52def4f73036156f71506',
     marketAddress:
-      '0x5cd28d44008ab5f81b6a8bb684ac698c4e350bf99855004769b73097587185ed',
+      '0x13d310c91b06341f1a74b5258f12a84f0f1735269709f4919394579f53ecb717',
     tokenFactoryAddress:
-      '0xc42945559a1d489c02849be67f601d8723f11881a167645ea64417b0306f68e3',
+      '0x94a6fdfe800fe7e6dcb05cb40756b85b52263293245cbd4f9d019e6ac06f024c',
     graphqlUrl: 'https://indexer.bigdevenergy.link/c755070/v1/graphql',
   },
   USDT: {
     oracleAddress:
       '0xc3c47cdeaec412778fc86842b44fb061b350db57f9d52def4f73036156f71506',
     marketAddress:
-      '0xa6ea42b91f28e4937457dd2b74285b81343d517196d0a86e5e91d7247cffe4e0',
+      '0x7c8fb9bb98269f51789c115c251e37a4dab4292e7795396a6a21250d4cec8aff',
     tokenFactoryAddress:
-      '0xf25ccea490d84d013dc660b0cd7b7ea4d8cf525c83df79cddc78264c0f5295cb',
+      '0xb43705648c279371c777d8bc9f8867688f8bb10896e20bd337c590dec5471b29',
     graphqlUrl: 'https://indexer.bigdevenergy.link/8ce655e/v1/graphql',
   },
 };
