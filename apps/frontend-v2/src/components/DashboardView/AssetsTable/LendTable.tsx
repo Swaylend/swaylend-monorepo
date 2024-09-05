@@ -2,30 +2,33 @@ import { Button } from '@/components/ui/button';
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { useMarketConfiguration } from '@/hooks';
+import USDC from '/public/tokens/usdc.svg?url';
+import USDT from '/public/tokens/usdt.svg?url';
+import Image from 'next/image';
+import { useMarketConfiguration, useUserSupplyBorrow } from '@/hooks';
 import { ACTION_TYPE, useMarketStore } from '@/stores';
 import { ASSET_ID_TO_SYMBOL, formatUnits } from '@/utils';
 import { useAccount, useBalance } from '@fuels/react';
 import BigNumber from 'bignumber.js';
 import React from 'react';
+import type { StaticImport } from 'next/dist/shared/lib/get-img-props';
+
+const SYMBOL_TO_LOGO: Record<string, StaticImport> = {
+  USDC: USDC,
+  USDT: USDT,
+};
 
 export const LendTable = () => {
   const { account } = useAccount();
-  const {
-    mode,
-    actionTokenAssetId,
-    tokenAmount,
-    action,
-    changeAction,
-    changeTokenAmount,
-    changeActionTokenAssetId,
-  } = useMarketStore();
+  const { changeAction, changeTokenAmount, changeActionTokenAssetId } =
+    useMarketStore();
+
+  const { data: userSupplyBorrow } = useUserSupplyBorrow();
 
   const { data: marketConfiguration } = useMarketConfiguration();
 
@@ -54,10 +57,45 @@ export const LendTable = () => {
       <TableBody>
         <TableRow>
           <TableCell>
-            {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
+            <div className="flex gap-x-2 items-center">
+              <div>
+                <Image
+                  src={
+                    SYMBOL_TO_LOGO[
+                      ASSET_ID_TO_SYMBOL[
+                        marketConfiguration?.baseToken ?? ''
+                      ] ?? 'USDC'
+                    ]
+                  }
+                  alt={ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
+                  width={32}
+                  height={32}
+                  className={'rounded-full'}
+                />
+              </div>
+              <div>
+                <div className="text-neutral2 font-medium">
+                  {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
+                </div>
+                <div>
+                  {formatUnits(
+                    balance ? BigNumber(balance.toString()) : BigNumber(0),
+                    marketConfiguration?.baseTokenDecimals ?? 9
+                  ).toFixed(2)}{' '}
+                  {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
+                  {' in wallet'}
+                </div>
+              </div>
+            </div>
           </TableCell>
           <TableCell>5%</TableCell>
-          <TableCell>10</TableCell>
+          <TableCell>
+            {formatUnits(
+              userSupplyBorrow?.supplied ?? BigNumber(0),
+              marketConfiguration?.baseTokenDecimals ?? 9
+            ).toFormat(2)}{' '}
+            {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
+          </TableCell>
           <TableCell>100</TableCell>
           <TableCell>
             <div className="flex gap-x-2 w-full">

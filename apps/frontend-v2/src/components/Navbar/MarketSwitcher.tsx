@@ -18,7 +18,7 @@ const MarketItem = ({ market, logo }: { market: string; logo: any }) => {
   return (
     <div className="flex gap-x-2 items-center">
       <div className="flex items-center">
-        <div className="bg-neutral5 min-w-[32px] h-[32px] rounded-full flex items-center justify-center">
+        <div className="bg-neutral6 min-w-[32px] h-[32px] rounded-full flex items-center justify-center">
           <Image
             src={FUEL}
             alt="FUEL"

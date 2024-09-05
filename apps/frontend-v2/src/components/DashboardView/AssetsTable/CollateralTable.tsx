@@ -1,3 +1,4 @@
+import { AssetName } from '@/components/AssetName';
 import { Button } from '@/components/ui/button';
 import {
   Table,
@@ -14,10 +15,23 @@ import {
   useUserCollateralAssets,
 } from '@/hooks';
 import { ACTION_TYPE, useMarketStore } from '@/stores';
-import { ASSET_ID_TO_SYMBOL, formatUnits } from '@/utils';
+import { ASSET_ID_TO_SYMBOL, formatUnits, SYMBOL_TO_NAME } from '@/utils';
 import { useAccount, useBalance } from '@fuels/react';
 import BigNumber from 'bignumber.js';
 import React, { useMemo } from 'react';
+import USDC from '/public/tokens/usdc.svg?url';
+import ETH from '/public/tokens/ethereum.svg?url';
+import BTC from '/public/tokens/bitcoin.svg?url';
+import UNI from '/public/tokens/uni.svg?url';
+import BNB from '/public/tokens/sway.svg?url';
+import type { StaticImport } from 'next/dist/shared/lib/get-img-props';
+
+const SYMBOL_TO_LOGO: Record<string, StaticImport> = {
+  ETH: ETH,
+  BTC: BTC,
+  BNB: BNB,
+  UNI: UNI,
+};
 
 type TableRowProps = {
   account: string | undefined;
@@ -52,7 +66,13 @@ const CollateralTableRow = ({
   const canWithdraw = protocolBalance.gt(0);
   return (
     <TableRow>
-      <TableCell>{symbol}</TableCell>
+      <TableCell>
+        <AssetName
+          symbol={symbol}
+          name={SYMBOL_TO_NAME[symbol]}
+          src={SYMBOL_TO_LOGO[symbol ?? 'ETH']}
+        />
+      </TableCell>
       <TableCell>
         {formattedBalance} {symbol}
       </TableCell>

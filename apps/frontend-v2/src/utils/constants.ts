@@ -71,3 +71,12 @@ export const ASSET_ID_TO_SYMBOL: Record<string, string> = {
   '0x41d27014277db7dbcaf043472455df4bd66c6367dc9cb1d252ab35854d4d5a33': 'BTC',
   '0x18fdaa23cd9b5ad26d535b0c16cf522571cfd89fe3c60ec67d5e1555cf540aef': 'BNB',
 };
+
+export const SYMBOL_TO_NAME: Record<string, string> = {
+  BTC: 'Bitcoin',
+  ETH: 'Ethereum',
+  USDC: 'USD Coin',
+  USDT: 'Tether',
+  UNI: 'Uniswap',
+  BNB: 'Binance Coin',
+};
