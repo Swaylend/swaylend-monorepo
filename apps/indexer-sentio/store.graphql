@@ -1,3 +1,19 @@
+type MarketConfiguration @entity {
+    id: ID!
+    chainId: String!
+    contractAddress: String!
+    baseTokenAddress: String!
+    baseTokenDecimals: Int!
+}
+
+type CollateralConfiguration @entity {
+    id: ID!
+    chainId: String!
+    contractAddress: String!
+    assetAddress: String!
+    decimals: Int!
+}
+
 type Pool @entity {
     id: ID! # Constructed as chainId_poolAddress_underlyingTokenAddress
     chainId: String!
@@ -19,12 +35,12 @@ type PositionSnapshot @entity {
     underlyingTokenAddress: String!
     underlyingTokenSymbol: String!
     userAddress: String!
-    suppliedAmount: Int!
-    suppliedAmountUsd: Int
-    borrowedAmount: Int!
-    borrowedAmountUsd: Int
-    collateralAmount: Int
-    collateralAmountUsd: Int
+    suppliedAmount: BigInt!
+    suppliedAmountUsd: BigInt
+    borrowedAmount: BigInt!
+    borrowedAmountUsd: BigInt
+    collateralAmount: BigInt!
+    collateralAmountUsd: BigInt
 }
 
 type PoolSnapshot @entity {
@@ -34,24 +50,24 @@ type PoolSnapshot @entity {
     poolAddress: String!
     underlyingTokenAddress: String!
     underlyingTokenSymbol: String!
-    underlyingTokenPriceUsd: Int
-    availableAmount: Int!
-    availableAmountUsd: Int
-    suppliedAmount: Int!
-    suppliedAmountUsd: Int
-    nonRecursiveSuppliedAmount: Int
-    collateralAmount: Int
-    collateralAmountUsd: Int
-    collateralFactor: Int!
-    supplyIndex: Int!
-    supplyApr: Int!
-    borrowedAmount: Int!
-    borrowedAmountUsd: Int
-    borrowIndex: Int!
-    borrowApr: Int!
-    totalFeesUsd: Int
-    userFeesUsd: Int
-    protocolFeesUsd: Int
+    underlyingTokenPriceUsd: BigInt
+    availableAmount: BigInt!
+    availableAmountUsd: BigInt
+    suppliedAmount: BigInt!
+    suppliedAmountUsd: BigInt
+    nonRecursiveSuppliedAmount: BigInt
+    collateralAmount: BigInt
+    collateralAmountUsd: BigInt
+    collateralFactor: BigInt!
+    supplyIndex: BigInt!
+    supplyApr: BigInt!
+    borrowedAmount: BigInt!
+    borrowedAmountUsd: BigInt
+    borrowIndex: BigInt!
+    borrowApr: BigInt!
+    totalFeesUsd: BigInt
+    userFeesUsd: BigInt
+    protocolFeesUsd: BigInt
 }
 
 type UserBasePosition @entity {

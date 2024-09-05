@@ -12,6 +12,56 @@ import { DatabaseSchema } from '@sentio/sdk'
 
 
 
+@Entity("MarketConfiguration")
+export class MarketConfiguration extends AbstractEntity  {
+
+	@Required
+	@Column("ID")
+	id: ID
+
+	@Required
+	@Column("String")
+	chainId: String
+
+	@Required
+	@Column("String")
+	contractAddress: String
+
+	@Required
+	@Column("String")
+	baseTokenAddress: String
+
+	@Required
+	@Column("Int")
+	baseTokenDecimals: Int
+  constructor(data: Partial<MarketConfiguration>) {super()}
+}
+
+@Entity("CollateralConfiguration")
+export class CollateralConfiguration extends AbstractEntity  {
+
+	@Required
+	@Column("ID")
+	id: ID
+
+	@Required
+	@Column("String")
+	chainId: String
+
+	@Required
+	@Column("String")
+	contractAddress: String
+
+	@Required
+	@Column("String")
+	assetAddress: String
+
+	@Required
+	@Column("Int")
+	decimals: Int
+  constructor(data: Partial<CollateralConfiguration>) {super()}
+}
+
 @Entity("Pool")
 export class Pool extends AbstractEntity  {
 
@@ -89,24 +139,25 @@ export class PositionSnapshot extends AbstractEntity  {
 	userAddress: String
 
 	@Required
-	@Column("Int")
-	suppliedAmount: Int
+	@Column("BigInt")
+	suppliedAmount: BigInt
 
-	@Column("Int")
-	suppliedAmountUsd?: Int
+	@Column("BigInt")
+	suppliedAmountUsd?: BigInt
 
 	@Required
-	@Column("Int")
-	borrowedAmount: Int
+	@Column("BigInt")
+	borrowedAmount: BigInt
 
-	@Column("Int")
-	borrowedAmountUsd?: Int
+	@Column("BigInt")
+	borrowedAmountUsd?: BigInt
 
-	@Column("Int")
-	collateralAmount?: Int
+	@Required
+	@Column("BigInt")
+	collateralAmount: BigInt
 
-	@Column("Int")
-	collateralAmountUsd?: Int
+	@Column("BigInt")
+	collateralAmountUsd?: BigInt
   constructor(data: Partial<PositionSnapshot>) {super()}
 }
 
@@ -137,67 +188,67 @@ export class PoolSnapshot extends AbstractEntity  {
 	@Column("String")
 	underlyingTokenSymbol: String
 
-	@Column("Int")
-	underlyingTokenPriceUsd?: Int
+	@Column("BigInt")
+	underlyingTokenPriceUsd?: BigInt
 
 	@Required
-	@Column("Int")
-	availableAmount: Int
+	@Column("BigInt")
+	availableAmount: BigInt
 
-	@Column("Int")
-	availableAmountUsd?: Int
-
-	@Required
-	@Column("Int")
-	suppliedAmount: Int
-
-	@Column("Int")
-	suppliedAmountUsd?: Int
-
-	@Column("Int")
-	nonRecursiveSuppliedAmount?: Int
-
-	@Column("Int")
-	collateralAmount?: Int
-
-	@Column("Int")
-	collateralAmountUsd?: Int
+	@Column("BigInt")
+	availableAmountUsd?: BigInt
 
 	@Required
-	@Column("Int")
-	collateralFactor: Int
+	@Column("BigInt")
+	suppliedAmount: BigInt
+
+	@Column("BigInt")
+	suppliedAmountUsd?: BigInt
+
+	@Column("BigInt")
+	nonRecursiveSuppliedAmount?: BigInt
+
+	@Column("BigInt")
+	collateralAmount?: BigInt
+
+	@Column("BigInt")
+	collateralAmountUsd?: BigInt
 
 	@Required
-	@Column("Int")
-	supplyIndex: Int
+	@Column("BigInt")
+	collateralFactor: BigInt
 
 	@Required
-	@Column("Int")
-	supplyApr: Int
+	@Column("BigInt")
+	supplyIndex: BigInt
 
 	@Required
-	@Column("Int")
-	borrowedAmount: Int
-
-	@Column("Int")
-	borrowedAmountUsd?: Int
+	@Column("BigInt")
+	supplyApr: BigInt
 
 	@Required
-	@Column("Int")
-	borrowIndex: Int
+	@Column("BigInt")
+	borrowedAmount: BigInt
+
+	@Column("BigInt")
+	borrowedAmountUsd?: BigInt
 
 	@Required
-	@Column("Int")
-	borrowApr: Int
+	@Column("BigInt")
+	borrowIndex: BigInt
 
-	@Column("Int")
-	totalFeesUsd?: Int
+	@Required
+	@Column("BigInt")
+	borrowApr: BigInt
 
-	@Column("Int")
-	userFeesUsd?: Int
+	@Column("BigInt")
+	totalFeesUsd?: BigInt
 
-	@Column("Int")
-	protocolFeesUsd?: Int
+	@Column("BigInt")
+	userFeesUsd?: BigInt
+
+	@Column("BigInt")
+	protocolFeesUsd?: BigInt
   constructor(data: Partial<PoolSnapshot>) {super()}
 }
 
@@ -256,7 +307,23 @@ export class UserCollateralPosition extends AbstractEntity  {
 }
 
 
-const source = `type Pool @entity {
+const source = `type MarketConfiguration @entity {
+    id: ID!
+    chainId: String!
+    contractAddress: String!
+    baseTokenAddress: String!
+    baseTokenDecimals: Int!
+}
+
+type CollateralConfiguration @entity {
+    id: ID!
+    chainId: String!
+    contractAddress: String!
+    assetAddress: String!
+    decimals: Int!
+}
+
+type Pool @entity {
     id: ID! # Constructed as chainId_poolAddress_underlyingTokenAddress
     chainId: String!
     creationBlockNumber: Int!
@@ -277,12 +344,12 @@ type PositionSnapshot @entity {
     underlyingTokenAddress: String!
     underlyingTokenSymbol: String!
     userAddress: String!
-    suppliedAmount: Int!
-    suppliedAmountUsd: Int
-    borrowedAmount: Int!
-    borrowedAmountUsd: Int
-    collateralAmount: Int
-    collateralAmountUsd: Int
+    suppliedAmount: BigInt!
+    suppliedAmountUsd: BigInt
+    borrowedAmount: BigInt!
+    borrowedAmountUsd: BigInt
+    collateralAmount: BigInt!
+    collateralAmountUsd: BigInt
 }
 
 type PoolSnapshot @entity {
@@ -292,24 +359,24 @@ type PoolSnapshot @entity {
     poolAddress: String!
     underlyingTokenAddress: String!
     underlyingTokenSymbol: String!
-    underlyingTokenPriceUsd: Int
-    availableAmount: Int!
-    availableAmountUsd: Int
-    suppliedAmount: Int!
-    suppliedAmountUsd: Int
-    nonRecursiveSuppliedAmount: Int
-    collateralAmount: Int
-    collateralAmountUsd: Int
-    collateralFactor: Int!
-    supplyIndex: Int!
-    supplyApr: Int!
-    borrowedAmount: Int!
-    borrowedAmountUsd: Int
-    borrowIndex: Int!
-    borrowApr: Int!
-    totalFeesUsd: Int
-    userFeesUsd: Int
-    protocolFeesUsd: Int
+    underlyingTokenPriceUsd: BigInt
+    availableAmount: BigInt!
+    availableAmountUsd: BigInt
+    suppliedAmount: BigInt!
+    suppliedAmountUsd: BigInt
+    nonRecursiveSuppliedAmount: BigInt
+    collateralAmount: BigInt
+    collateralAmountUsd: BigInt
+    collateralFactor: BigInt!
+    supplyIndex: BigInt!
+    supplyApr: BigInt!
+    borrowedAmount: BigInt!
+    borrowedAmountUsd: BigInt
+    borrowIndex: BigInt!
+    borrowApr: BigInt!
+    totalFeesUsd: BigInt
+    userFeesUsd: BigInt
+    protocolFeesUsd: BigInt
 }
 
 type UserBasePosition @entity {
@@ -331,7 +398,9 @@ type UserCollateralPosition @entity {
 DatabaseSchema.register({
   source,
   entities: {
-    "Pool": Pool,
+    "MarketConfiguration": MarketConfiguration,
+		"CollateralConfiguration": CollateralConfiguration,
+		"Pool": Pool,
 		"PositionSnapshot": PositionSnapshot,
 		"PoolSnapshot": PoolSnapshot,
 		"UserBasePosition": UserBasePosition,
