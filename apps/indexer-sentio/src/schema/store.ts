@@ -34,6 +34,10 @@ export class MarketConfiguration extends AbstractEntity  {
 	@Required
 	@Column("Int")
 	baseTokenDecimals: Int
+
+	@Required
+	@Column("BigDecimal")
+	baseTrackingIndexScale: BigDecimal
   constructor(data: Partial<MarketConfiguration>) {super()}
 }
 
@@ -189,11 +193,13 @@ export class PoolSnapshot extends AbstractEntity  {
 	@Column("BigDecimal")
 	suppliedAmountUsd?: BigDecimal
 
+	@Required
 	@Column("BigDecimal")
-	nonRecursiveSuppliedAmount?: BigDecimal
+	nonRecursiveSuppliedAmount: BigDecimal
 
+	@Required
 	@Column("BigDecimal")
-	collateralAmount?: BigDecimal
+	collateralAmount: BigDecimal
 
 	@Column("BigDecimal")
 	collateralAmountUsd?: BigDecimal
@@ -243,6 +249,7 @@ const source = `type MarketConfiguration @entity {
     contractAddress: String!
     baseTokenAddress: String!
     baseTokenDecimals: Int!
+    baseTrackingIndexScale: BigDecimal!
 }
 
 type CollateralConfiguration @entity {
@@ -290,8 +297,8 @@ type PoolSnapshot @entity {
     availableAmountUsd: BigDecimal
     suppliedAmount: BigDecimal!
     suppliedAmountUsd: BigDecimal
-    nonRecursiveSuppliedAmount: BigDecimal
-    collateralAmount: BigDecimal
+    nonRecursiveSuppliedAmount: BigDecimal!
+    collateralAmount: BigDecimal!
     collateralAmountUsd: BigDecimal
     collateralFactor: BigDecimal!
     supplyIndex: BigDecimal!

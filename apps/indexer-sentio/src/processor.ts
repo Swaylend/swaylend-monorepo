@@ -1,12 +1,13 @@
+import { BigDecimal } from '@sentio/sdk';
 import { FuelNetwork } from '@sentio/sdk/fuel';
-import { MarketProcessor } from './types/fuel/MarketProcessor.js';
 import {
   CollateralConfiguration,
   MarketConfiguration,
   Pool,
+  PoolSnapshot,
   PositionSnapshot,
 } from './schema/store.js';
-import { BigDecimal } from '@sentio/sdk';
+import { MarketProcessor } from './types/fuel/MarketProcessor.js';
 
 // TODO: Add liquidation events
 MarketProcessor.bind({
@@ -17,7 +18,11 @@ MarketProcessor.bind({
   .onLogMarketConfigurationEvent(async (event, ctx) => {
     const {
       data: {
-        market_config: { base_token, base_token_decimals },
+        market_config: {
+          base_token,
+          base_token_decimals,
+          base_tracking_index_scale,
+        },
       },
     } = event;
 
@@ -33,12 +38,18 @@ MarketProcessor.bind({
         contractAddress: ctx.contractAddress,
         baseTokenAddress: base_token,
         baseTokenDecimals: base_token_decimals,
+        baseTrackingIndexScale: BigDecimal(
+          base_tracking_index_scale.toString()
+        ),
       });
     } else {
       marketConfiguration.baseTokenAddress = base_token;
       marketConfiguration.baseTokenDecimals = base_token_decimals;
       marketConfiguration.chainId = ctx.chainId;
       marketConfiguration.contractAddress = ctx.contractAddress;
+      marketConfiguration.baseTrackingIndexScale = BigDecimal(
+        base_tracking_index_scale.toString()
+      );
     }
 
     await ctx.store.upsert(marketConfiguration);
@@ -61,12 +72,46 @@ MarketProcessor.bind({
 
       await ctx.store.upsert(pool);
     }
+
+    // Create pool snapshot
+    const poolSnapshotId = `${ctx.chainId}_${ctx.contractAddress}_${base_token}`;
+    const poolSnapshot = await ctx.store.get(PoolSnapshot, poolSnapshotId);
+
+    if (!poolSnapshot) {
+      const poolSnapshot = new PoolSnapshot({
+        id: poolSnapshotId,
+        chainId: ctx.chainId,
+        poolAddress: ctx.contractAddress,
+        underlyingTokenAddress: base_token,
+        underlyingTokenSymbol: 'TODO',
+        underlyingTokenPriceUsd: BigDecimal(0),
+        availableAmount: BigDecimal(0),
+        availableAmountUsd: BigDecimal(0),
+        suppliedAmount: BigDecimal(0),
+        suppliedAmountUsd: BigDecimal(0),
+        nonRecursiveSuppliedAmount: BigDecimal(0),
+        collateralAmount: BigDecimal(0),
+        collateralAmountUsd: BigDecimal(0),
+        collateralFactor: BigDecimal(0),
+        supplyIndex: BigDecimal(0),
+        supplyApr: BigDecimal(0),
+        borrowedAmount: BigDecimal(0),
+        borrowedAmountUsd: BigDecimal(0),
+        borrowIndex: BigDecimal(0),
+        borrowApr: BigDecimal(0),
+        totalFeesUsd: BigDecimal(0),
+        userFeesUsd: BigDecimal(0),
+        protocolFeesUsd: BigDecimal(0),
+      });
+
+      await ctx.store.upsert(poolSnapshot);
+    }
   })
   .onLogCollateralAssetAdded(async (event, ctx) => {
     const {
       data: {
         asset_id,
-        configuration: { decimals },
+        configuration: { decimals, borrow_collateral_factor },
       },
     } = event;
 
@@ -110,6 +155,40 @@ MarketProcessor.bind({
       });
 
       await ctx.store.upsert(pool);
+    }
+
+    // Create pool snapshot
+    const poolSnapshotId = `${ctx.chainId}_${ctx.contractAddress}_${asset_id}`;
+    const poolSnapshot = await ctx.store.get(PoolSnapshot, poolSnapshotId);
+
+    if (!poolSnapshot) {
+      const poolSnapshot = new PoolSnapshot({
+        id: poolSnapshotId,
+        chainId: ctx.chainId,
+        poolAddress: ctx.contractAddress,
+        underlyingTokenAddress: asset_id,
+        underlyingTokenSymbol: 'TODO',
+        underlyingTokenPriceUsd: BigDecimal(0),
+        availableAmount: BigDecimal(0),
+        availableAmountUsd: BigDecimal(0),
+        suppliedAmount: BigDecimal(0),
+        suppliedAmountUsd: BigDecimal(0),
+        nonRecursiveSuppliedAmount: BigDecimal(0),
+        collateralAmount: BigDecimal(0),
+        collateralAmountUsd: BigDecimal(0),
+        collateralFactor: BigDecimal(borrow_collateral_factor.toString()),
+        supplyIndex: BigDecimal(0),
+        supplyApr: BigDecimal(0),
+        borrowedAmount: BigDecimal(0),
+        borrowedAmountUsd: BigDecimal(0),
+        borrowIndex: BigDecimal(0),
+        borrowApr: BigDecimal(0),
+        totalFeesUsd: BigDecimal(0),
+        userFeesUsd: BigDecimal(0),
+        protocolFeesUsd: BigDecimal(0),
+      });
+
+      await ctx.store.upsert(poolSnapshot);
     }
   })
   .onLogCollateralAssetUpdated(async (event, ctx) => {
@@ -307,8 +386,27 @@ MarketProcessor.bind({
     }
 
     await ctx.store.upsert(positionSnapshot);
-  })
 
+    // Pool snapshot
+    const poolSnapshotId = `${ctx.chainId}_${ctx.contractAddress}_${collateralConfiguration.assetAddress}`;
+    const poolSnapshot = await ctx.store.get(PoolSnapshot, poolSnapshotId);
+
+    if (!poolSnapshot) {
+      throw new Error(
+        `Pool snapshot not found for market ${ctx.contractAddress} on chain ${ctx.chainId}`
+      );
+    }
+
+    poolSnapshot.collateralAmount = BigDecimal(
+      poolSnapshot.collateralAmount
+    ).plus(
+      BigDecimal(amount.toString()).dividedBy(
+        BigDecimal(10).pow(collateralConfiguration.decimals)
+      )
+    );
+
+    await ctx.store.upsert(poolSnapshot);
+  })
   .onLogUserWithdrawCollateralEvent(async (event, ctx) => {
     const {
       data: { address, asset_id, amount },
@@ -351,6 +449,26 @@ MarketProcessor.bind({
     }
 
     await ctx.store.upsert(positionSnapshot);
+
+    // Pool snapshot
+    const poolSnapshotId = `${ctx.chainId}_${ctx.contractAddress}_${collateralConfiguration.assetAddress}`;
+    const poolSnapshot = await ctx.store.get(PoolSnapshot, poolSnapshotId);
+
+    if (!poolSnapshot) {
+      throw new Error(
+        `Pool snapshot not found for market ${ctx.contractAddress} on chain ${ctx.chainId}`
+      );
+    }
+
+    poolSnapshot.collateralAmount = BigDecimal(
+      poolSnapshot.collateralAmount
+    ).minus(
+      BigDecimal(amount.toString()).dividedBy(
+        BigDecimal(10).pow(collateralConfiguration.decimals)
+      )
+    );
+
+    await ctx.store.upsert(poolSnapshot);
   })
   .onLogUserLiquidatedEvent(async (event, ctx) => {
     const {
@@ -391,4 +509,53 @@ MarketProcessor.bind({
     }
 
     await ctx.store.upsert(positionSnapshot);
+    // TODO: Pool snapshot
+  })
+  .onLogMarketBasicEvent(async (event, ctx) => {
+    const {
+      data: {
+        market_basic: {
+          tracking_supply_index,
+          total_supply_base,
+          total_borrow_base,
+        },
+      },
+    } = event;
+
+    const marketConfigId = `${ctx.chainId}_${ctx.contractAddress}`;
+    const marketConfiguration = await ctx.store.get(
+      MarketConfiguration,
+      marketConfigId
+    );
+
+    if (!marketConfiguration) {
+      throw new Error(
+        `Market configuration not found for market ${ctx.contractAddress} on chain ${ctx.chainId}`
+      );
+    }
+
+    const poolSnapshotId = `${ctx.chainId}_${ctx.contractAddress}_${marketConfiguration.baseTokenAddress}`;
+    const poolSnapshot = await ctx.store.get(PoolSnapshot, poolSnapshotId);
+
+    if (!poolSnapshot) {
+      throw new Error(
+        `Pool snapshot not found for market ${ctx.contractAddress} on chain ${ctx.chainId}`
+      );
+    }
+
+    poolSnapshot.supplyIndex = BigDecimal(
+      tracking_supply_index.toString()
+    ).dividedBy(marketConfiguration.baseTrackingIndexScale);
+    poolSnapshot.suppliedAmount = BigDecimal(
+      total_supply_base.toString()
+    ).dividedBy(BigDecimal(10).pow(marketConfiguration.baseTokenDecimals));
+    poolSnapshot.nonRecursiveSuppliedAmount = BigDecimal(
+      total_supply_base.toString()
+    ).dividedBy(BigDecimal(10).pow(marketConfiguration.baseTokenDecimals));
+    poolSnapshot.availableAmount = BigDecimal(total_supply_base.toString())
+      .minus(BigDecimal(total_borrow_base.toString()))
+      .dividedBy(BigDecimal(10).pow(marketConfiguration.baseTokenDecimals));
+
+    // TODO: Move `get_borrow_rate` and `get_supply_rate` logic from contract to here
+    // TODO: Move utulization logic from contract to here
   });
