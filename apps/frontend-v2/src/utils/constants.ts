@@ -29,9 +29,9 @@ export const DEPLOYED_MARKETS: Record<DeployedMarket, MarketConfiguration> = {
     oracleAddress:
       '0xc3c47cdeaec412778fc86842b44fb061b350db57f9d52def4f73036156f71506',
     marketAddress:
-      '0x13d310c91b06341f1a74b5258f12a84f0f1735269709f4919394579f53ecb717',
+      '0x8cd0c973a8ab7c15c0a8ee8f5cb4dd04ea3f27411c8eef6e76f3765fe43863fe',
     tokenFactoryAddress:
-      '0x94a6fdfe800fe7e6dcb05cb40756b85b52263293245cbd4f9d019e6ac06f024c',
+      '0xf190b8420458f3fff1149343a60d9fe721a49c9caf7afb54d1bde9d72424bec6',
     graphqlUrl: 'https://indexer.bigdevenergy.link/c755070/v1/graphql',
   },
   USDT: {
@@ -63,13 +63,11 @@ export const FUEL_ETH_BASE_ASSET_ID =
   '0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07';
 
 export const ASSET_ID_TO_SYMBOL: Record<string, string> = {
-  '0x2d52ecf6fa0a222ff796a748b61ef4e3ef844c2078afe4df6399e264a4f993ad': 'USDC',
-  '0x04f9a75b617ff67856b05d96b00d070c2041db5c6563bb7e9ad09f6e12a2d57a': 'USDT',
-  '0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07': 'ETH',
-  '0xfb5a7c0184ed850bbbdfc73c09b0885603bc81048f2481f3032b6c1398290021': 'BTC',
-  '0x170ae7a2535154a5981db6cd0084689495849ad80a0b0dccdd7c579c9cfb7572': 'UNI',
-  '0x84ebfaf29d43e88f74a1573830c27d06e69112f0f0cb0694a10e3cf94b011cfd': 'BTC',
-  '0xaf0fb56ec3dbc594ea514e36042abdea14630be1569792ef73f09c09beac77cb': 'BNB',
   '0xfe744f19db1affff30c628b29d93e330f966ecb649ba83606b1ff49ac9b37f47': 'USDC',
   '0x037ea5d51e94f792554fb14e117cfb5129650d162455febd9a74ab4f85f554e7': 'USDT',
+  '0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07': 'ETH',
+  '0xe71f395845246fd16ddee5317fedaf169c602c13158488979326d5d5e7705719': 'BTC',
+  '0xea49850b5a88ac6291de4be2c11699e65e6a61685da43bef156379ee2764ea94': 'UNI',
+  '0x41d27014277db7dbcaf043472455df4bd66c6367dc9cb1d252ab35854d4d5a33': 'BTC',
+  '0x18fdaa23cd9b5ad26d535b0c16cf522571cfd89fe3c60ec67d5e1555cf540aef': 'BNB',
 };
