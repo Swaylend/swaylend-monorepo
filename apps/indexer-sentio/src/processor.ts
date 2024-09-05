@@ -3,6 +3,7 @@ import { MarketProcessor } from './types/fuel/MarketProcessor.js';
 import {
   CollateralConfiguration,
   MarketConfiguration,
+  Pool,
   PositionSnapshot,
 } from './schema/store.js';
 import { BigDecimal } from '@sentio/sdk';
@@ -41,6 +42,25 @@ MarketProcessor.bind({
     }
 
     await ctx.store.upsert(marketConfiguration);
+
+    // Create pool if it doesn't exist
+    const poolId = `${ctx.chainId}_${ctx.contractAddress}_${base_token}`;
+    const pool = await ctx.store.get(Pool, poolId);
+
+    if (!pool) {
+      const pool = new Pool({
+        id: poolId,
+        chainId: ctx.chainId,
+        underlyingTokenAddress: base_token,
+        underlyingTokenSymbol: 'TODO',
+        receiptTokenAddress: 'TODO',
+        receiptTokenSymbol: 'TODO',
+        poolAddress: ctx.contractAddress,
+        poolType: 'supply_only',
+      });
+
+      await ctx.store.upsert(pool);
+    }
   })
   .onLogCollateralAssetAdded(async (event, ctx) => {
     const {
@@ -72,6 +92,25 @@ MarketProcessor.bind({
     }
 
     await ctx.store.upsert(collateralConfiguration);
+
+    // Create pool if it doesn't exist
+    const poolId = `${ctx.chainId}_${ctx.contractAddress}_${asset_id}`;
+    const pool = await ctx.store.get(Pool, poolId);
+
+    if (!pool) {
+      const pool = new Pool({
+        id: poolId,
+        chainId: ctx.chainId,
+        underlyingTokenAddress: asset_id,
+        underlyingTokenSymbol: 'TODO',
+        receiptTokenAddress: 'TODO',
+        receiptTokenSymbol: 'TODO',
+        poolAddress: ctx.contractAddress,
+        poolType: 'collateral_only',
+      });
+
+      await ctx.store.upsert(pool);
+    }
   })
   .onLogCollateralAssetUpdated(async (event, ctx) => {
     const {

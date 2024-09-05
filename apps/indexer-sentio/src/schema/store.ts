@@ -74,14 +74,6 @@ export class Pool extends AbstractEntity  {
 	chainId: String
 
 	@Required
-	@Column("Int")
-	creationBlockNumber: Int
-
-	@Required
-	@Column("Int")
-	creationTimestamp: Int
-
-	@Required
 	@Column("String")
 	underlyingTokenAddress: String
 
@@ -113,10 +105,6 @@ export class PositionSnapshot extends AbstractEntity  {
 	@Required
 	@Column("ID")
 	id: ID
-
-	@Required
-	@Column("Int")
-	timestamp: Int
 
 	@Required
 	@Column("String")
@@ -167,10 +155,6 @@ export class PoolSnapshot extends AbstractEntity  {
 	@Required
 	@Column("ID")
 	id: ID
-
-	@Required
-	@Column("Int")
-	timestamp: Int
 
 	@Required
 	@Column("String")
@@ -272,8 +256,6 @@ type CollateralConfiguration @entity {
 type Pool @entity {
     id: ID! # Constructed as chainId_poolAddress_underlyingTokenAddress
     chainId: String!
-    creationBlockNumber: Int!
-    creationTimestamp: Int!
     underlyingTokenAddress: String! # Address of the underlying token (collateral, base)
     underlyingTokenSymbol: String!
     receiptTokenAddress: String!
@@ -284,7 +266,6 @@ type Pool @entity {
 
 type PositionSnapshot @entity {
     id: ID!
-    timestamp: Int!
     chainId: String!
     poolAddress: String!
     underlyingTokenAddress: String!
@@ -300,7 +281,6 @@ type PositionSnapshot @entity {
 
 type PoolSnapshot @entity {
     id: ID!
-    timestamp: Int!
     chainId: String!
     poolAddress: String!
     underlyingTokenAddress: String!
