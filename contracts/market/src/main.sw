@@ -1525,7 +1525,7 @@ fn absorb_internal(account: Address) {
         base_paid_out: delta_balance,
         base_paid_out_value: delta_balance_value,
         total_base,
-        total_base_value: delta_balance_value,
+        total_base_value,
         decimals: base_price_exponent,
     });
 }
