@@ -134,30 +134,30 @@ MarketProcessor.bind({
         underlyingTokenAddress: marketConfiguration.baseTokenAddress,
         underlyingTokenSymbol: 'USDC',
         userAddress: address.bits,
-        suppliedAmount: BigInt(supply_amount.toString()),
-        borrowedAmount: BigInt(0),
-        collateralAmount: BigInt(0),
+        suppliedAmount: BigDecimal(supply_amount.toString()).dividedBy(
+          BigDecimal(10).pow(marketConfiguration.baseTokenDecimals)
+        ),
+        borrowedAmount: BigDecimal(0),
+        collateralAmount: BigDecimal(0),
       });
     } else {
       if (supply_amount.gt(0)) {
-        positionSnapshot.suppliedAmount = BigInt(
-          positionSnapshot.suppliedAmount
-            .asBigDecimal()
-            .plus(BigDecimal(supply_amount.toString()))
-            .toString()
+        positionSnapshot.suppliedAmount = positionSnapshot.suppliedAmount.plus(
+          BigDecimal(supply_amount.toString()).dividedBy(
+            BigDecimal(10).pow(marketConfiguration.baseTokenDecimals)
+          )
         );
       }
 
       if (repay_amount.gt(0)) {
-        positionSnapshot.borrowedAmount = BigInt(
-          positionSnapshot.borrowedAmount
-            .asBigDecimal()
-            .minus(BigDecimal(repay_amount.toString()))
-            .toString()
+        positionSnapshot.borrowedAmount = positionSnapshot.borrowedAmount.minus(
+          BigDecimal(repay_amount.toString()).dividedBy(
+            BigDecimal(10).pow(marketConfiguration.baseTokenDecimals)
+          )
         );
 
-        if (positionSnapshot.borrowedAmount.asBigDecimal().lt(0)) {
-          positionSnapshot.borrowedAmount = BigInt(0);
+        if (positionSnapshot.borrowedAmount.lt(0)) {
+          positionSnapshot.borrowedAmount = BigDecimal(0);
         }
       }
     }
@@ -193,30 +193,30 @@ MarketProcessor.bind({
         underlyingTokenAddress: marketConfiguration.baseTokenAddress,
         underlyingTokenSymbol: marketConfiguration.baseTokenAddress,
         userAddress: address.bits,
-        suppliedAmount: BigInt(0),
-        borrowedAmount: BigInt(borrow_amount.toString()),
-        collateralAmount: BigInt(0),
+        suppliedAmount: BigDecimal(0),
+        borrowedAmount: BigDecimal(borrow_amount.toString()).dividedBy(
+          BigDecimal(10).pow(marketConfiguration.baseTokenDecimals)
+        ),
+        collateralAmount: BigDecimal(0),
       });
     } else {
       if (borrow_amount.gt(0)) {
-        positionSnapshot.borrowedAmount = BigInt(
-          positionSnapshot.borrowedAmount
-            .asBigDecimal()
-            .plus(BigDecimal(borrow_amount.toString()))
-            .toString()
+        positionSnapshot.borrowedAmount = positionSnapshot.borrowedAmount.plus(
+          BigDecimal(borrow_amount.toString()).dividedBy(
+            BigDecimal(10).pow(marketConfiguration.baseTokenDecimals)
+          )
         );
       }
 
       if (withdraw_amount.gt(0)) {
-        positionSnapshot.suppliedAmount = BigInt(
-          positionSnapshot.suppliedAmount
-            .asBigDecimal()
-            .minus(BigDecimal(withdraw_amount.toString()))
-            .toString()
+        positionSnapshot.suppliedAmount = positionSnapshot.suppliedAmount.minus(
+          BigDecimal(withdraw_amount.toString()).dividedBy(
+            BigDecimal(10).pow(marketConfiguration.baseTokenDecimals)
+          )
         );
 
-        if (positionSnapshot.suppliedAmount.asBigDecimal().lt(0)) {
-          positionSnapshot.suppliedAmount = BigInt(0);
+        if (positionSnapshot.suppliedAmount.lt(0)) {
+          positionSnapshot.suppliedAmount = BigDecimal(0);
         }
       }
     }
@@ -252,17 +252,19 @@ MarketProcessor.bind({
         underlyingTokenAddress: collateralConfiguration.assetAddress,
         underlyingTokenSymbol: collateralConfiguration.assetAddress,
         userAddress: address.bits,
-        suppliedAmount: BigInt(0),
-        borrowedAmount: BigInt(0),
-        collateralAmount: BigInt(amount.toString()),
+        suppliedAmount: BigDecimal(0),
+        borrowedAmount: BigDecimal(0),
+        collateralAmount: BigDecimal(amount.toString()).dividedBy(
+          BigDecimal(10).pow(collateralConfiguration.decimals)
+        ),
       });
     } else {
-      positionSnapshot.collateralAmount = BigInt(
-        positionSnapshot.collateralAmount
-          .asBigDecimal()
-          .plus(BigDecimal(amount.toString()))
-          .toString()
-      );
+      positionSnapshot.collateralAmount =
+        positionSnapshot.collateralAmount.plus(
+          BigDecimal(amount.toString()).dividedBy(
+            BigDecimal(10).pow(collateralConfiguration.decimals)
+          )
+        );
     }
 
     await ctx.store.upsert(positionSnapshot);
@@ -295,15 +297,18 @@ MarketProcessor.bind({
       );
     }
 
-    positionSnapshot.collateralAmount = BigInt(
+    positionSnapshot.collateralAmount = BigDecimal(
       positionSnapshot.collateralAmount
-        .asBigDecimal()
-        .minus(BigDecimal(amount.toString()))
+        .minus(
+          BigDecimal(amount.toString()).dividedBy(
+            BigDecimal(10).pow(collateralConfiguration.decimals)
+          )
+        )
         .toString()
     );
 
-    if (positionSnapshot.collateralAmount.asBigDecimal().lt(0)) {
-      positionSnapshot.collateralAmount = BigInt(0);
+    if (positionSnapshot.collateralAmount.lt(0)) {
+      positionSnapshot.collateralAmount = BigDecimal(0);
     }
 
     await ctx.store.upsert(positionSnapshot);
@@ -335,16 +340,15 @@ MarketProcessor.bind({
       );
     }
 
-    positionSnapshot.collateralAmount = BigInt(0);
-    positionSnapshot.suppliedAmount = BigInt(
-      BigDecimal(base_paid_out.toString())
-        .minus(positionSnapshot.borrowedAmount.asBigDecimal())
-        .toString()
-    );
-    positionSnapshot.borrowedAmount = BigInt(0);
+    positionSnapshot.collateralAmount = BigDecimal(0);
+    positionSnapshot.suppliedAmount = BigDecimal(base_paid_out.toString())
+      .dividedBy(BigDecimal(10).pow(marketConfiguration.baseTokenDecimals))
+      .minus(positionSnapshot.borrowedAmount);
 
-    if (positionSnapshot.suppliedAmount.asBigDecimal().lt(0)) {
-      positionSnapshot.suppliedAmount = BigInt(0);
+    positionSnapshot.borrowedAmount = BigDecimal(0);
+
+    if (positionSnapshot.suppliedAmount.lt(0)) {
+      positionSnapshot.suppliedAmount = BigDecimal(0);
     }
 
     await ctx.store.upsert(positionSnapshot);

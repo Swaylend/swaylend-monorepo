@@ -139,25 +139,25 @@ export class PositionSnapshot extends AbstractEntity  {
 	userAddress: String
 
 	@Required
-	@Column("BigInt")
-	suppliedAmount: BigInt
+	@Column("BigDecimal")
+	suppliedAmount: BigDecimal
 
-	@Column("BigInt")
-	suppliedAmountUsd?: BigInt
-
-	@Required
-	@Column("BigInt")
-	borrowedAmount: BigInt
-
-	@Column("BigInt")
-	borrowedAmountUsd?: BigInt
+	@Column("BigDecimal")
+	suppliedAmountUsd?: BigDecimal
 
 	@Required
-	@Column("BigInt")
-	collateralAmount: BigInt
+	@Column("BigDecimal")
+	borrowedAmount: BigDecimal
 
-	@Column("BigInt")
-	collateralAmountUsd?: BigInt
+	@Column("BigDecimal")
+	borrowedAmountUsd?: BigDecimal
+
+	@Required
+	@Column("BigDecimal")
+	collateralAmount: BigDecimal
+
+	@Column("BigDecimal")
+	collateralAmountUsd?: BigDecimal
   constructor(data: Partial<PositionSnapshot>) {super()}
 }
 
@@ -188,67 +188,67 @@ export class PoolSnapshot extends AbstractEntity  {
 	@Column("String")
 	underlyingTokenSymbol: String
 
-	@Column("BigInt")
-	underlyingTokenPriceUsd?: BigInt
+	@Column("BigDecimal")
+	underlyingTokenPriceUsd?: BigDecimal
 
 	@Required
-	@Column("BigInt")
-	availableAmount: BigInt
+	@Column("BigDecimal")
+	availableAmount: BigDecimal
 
-	@Column("BigInt")
-	availableAmountUsd?: BigInt
-
-	@Required
-	@Column("BigInt")
-	suppliedAmount: BigInt
-
-	@Column("BigInt")
-	suppliedAmountUsd?: BigInt
-
-	@Column("BigInt")
-	nonRecursiveSuppliedAmount?: BigInt
-
-	@Column("BigInt")
-	collateralAmount?: BigInt
-
-	@Column("BigInt")
-	collateralAmountUsd?: BigInt
+	@Column("BigDecimal")
+	availableAmountUsd?: BigDecimal
 
 	@Required
-	@Column("BigInt")
-	collateralFactor: BigInt
+	@Column("BigDecimal")
+	suppliedAmount: BigDecimal
+
+	@Column("BigDecimal")
+	suppliedAmountUsd?: BigDecimal
+
+	@Column("BigDecimal")
+	nonRecursiveSuppliedAmount?: BigDecimal
+
+	@Column("BigDecimal")
+	collateralAmount?: BigDecimal
+
+	@Column("BigDecimal")
+	collateralAmountUsd?: BigDecimal
 
 	@Required
-	@Column("BigInt")
-	supplyIndex: BigInt
+	@Column("BigDecimal")
+	collateralFactor: BigDecimal
 
 	@Required
-	@Column("BigInt")
-	supplyApr: BigInt
+	@Column("BigDecimal")
+	supplyIndex: BigDecimal
 
 	@Required
-	@Column("BigInt")
-	borrowedAmount: BigInt
-
-	@Column("BigInt")
-	borrowedAmountUsd?: BigInt
+	@Column("BigDecimal")
+	supplyApr: BigDecimal
 
 	@Required
-	@Column("BigInt")
-	borrowIndex: BigInt
+	@Column("BigDecimal")
+	borrowedAmount: BigDecimal
+
+	@Column("BigDecimal")
+	borrowedAmountUsd?: BigDecimal
 
 	@Required
-	@Column("BigInt")
-	borrowApr: BigInt
+	@Column("BigDecimal")
+	borrowIndex: BigDecimal
 
-	@Column("BigInt")
-	totalFeesUsd?: BigInt
+	@Required
+	@Column("BigDecimal")
+	borrowApr: BigDecimal
 
-	@Column("BigInt")
-	userFeesUsd?: BigInt
+	@Column("BigDecimal")
+	totalFeesUsd?: BigDecimal
 
-	@Column("BigInt")
-	protocolFeesUsd?: BigInt
+	@Column("BigDecimal")
+	userFeesUsd?: BigDecimal
+
+	@Column("BigDecimal")
+	protocolFeesUsd?: BigDecimal
   constructor(data: Partial<PoolSnapshot>) {super()}
 }
 
@@ -290,12 +290,12 @@ type PositionSnapshot @entity {
     underlyingTokenAddress: String!
     underlyingTokenSymbol: String!
     userAddress: String!
-    suppliedAmount: BigInt!
-    suppliedAmountUsd: BigInt
-    borrowedAmount: BigInt!
-    borrowedAmountUsd: BigInt
-    collateralAmount: BigInt!
-    collateralAmountUsd: BigInt
+    suppliedAmount: BigDecimal!
+    suppliedAmountUsd: BigDecimal
+    borrowedAmount: BigDecimal!
+    borrowedAmountUsd: BigDecimal
+    collateralAmount: BigDecimal!
+    collateralAmountUsd: BigDecimal
 }
 
 type PoolSnapshot @entity {
@@ -305,24 +305,24 @@ type PoolSnapshot @entity {
     poolAddress: String!
     underlyingTokenAddress: String!
     underlyingTokenSymbol: String!
-    underlyingTokenPriceUsd: BigInt
-    availableAmount: BigInt!
-    availableAmountUsd: BigInt
-    suppliedAmount: BigInt!
-    suppliedAmountUsd: BigInt
-    nonRecursiveSuppliedAmount: BigInt
-    collateralAmount: BigInt
-    collateralAmountUsd: BigInt
-    collateralFactor: BigInt!
-    supplyIndex: BigInt!
-    supplyApr: BigInt!
-    borrowedAmount: BigInt!
-    borrowedAmountUsd: BigInt
-    borrowIndex: BigInt!
-    borrowApr: BigInt!
-    totalFeesUsd: BigInt
-    userFeesUsd: BigInt
-    protocolFeesUsd: BigInt
+    underlyingTokenPriceUsd: BigDecimal
+    availableAmount: BigDecimal!
+    availableAmountUsd: BigDecimal
+    suppliedAmount: BigDecimal!
+    suppliedAmountUsd: BigDecimal
+    nonRecursiveSuppliedAmount: BigDecimal
+    collateralAmount: BigDecimal
+    collateralAmountUsd: BigDecimal
+    collateralFactor: BigDecimal!
+    supplyIndex: BigDecimal!
+    supplyApr: BigDecimal!
+    borrowedAmount: BigDecimal!
+    borrowedAmountUsd: BigDecimal
+    borrowIndex: BigDecimal!
+    borrowApr: BigDecimal!
+    totalFeesUsd: BigDecimal
+    userFeesUsd: BigDecimal
+    protocolFeesUsd: BigDecimal
 }`
 DatabaseSchema.register({
   source,

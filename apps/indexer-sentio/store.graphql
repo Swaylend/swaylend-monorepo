@@ -35,12 +35,12 @@ type PositionSnapshot @entity {
     underlyingTokenAddress: String!
     underlyingTokenSymbol: String!
     userAddress: String!
-    suppliedAmount: BigInt!
-    suppliedAmountUsd: BigInt
-    borrowedAmount: BigInt!
-    borrowedAmountUsd: BigInt
-    collateralAmount: BigInt!
-    collateralAmountUsd: BigInt
+    suppliedAmount: BigDecimal!
+    suppliedAmountUsd: BigDecimal
+    borrowedAmount: BigDecimal!
+    borrowedAmountUsd: BigDecimal
+    collateralAmount: BigDecimal!
+    collateralAmountUsd: BigDecimal
 }
 
 type PoolSnapshot @entity {
@@ -50,22 +50,22 @@ type PoolSnapshot @entity {
     poolAddress: String!
     underlyingTokenAddress: String!
     underlyingTokenSymbol: String!
-    underlyingTokenPriceUsd: BigInt
-    availableAmount: BigInt!
-    availableAmountUsd: BigInt
-    suppliedAmount: BigInt!
-    suppliedAmountUsd: BigInt
-    nonRecursiveSuppliedAmount: BigInt
-    collateralAmount: BigInt
-    collateralAmountUsd: BigInt
-    collateralFactor: BigInt!
-    supplyIndex: BigInt!
-    supplyApr: BigInt!
-    borrowedAmount: BigInt!
-    borrowedAmountUsd: BigInt
-    borrowIndex: BigInt!
-    borrowApr: BigInt!
-    totalFeesUsd: BigInt
-    userFeesUsd: BigInt
-    protocolFeesUsd: BigInt
+    underlyingTokenPriceUsd: BigDecimal
+    availableAmount: BigDecimal!
+    availableAmountUsd: BigDecimal
+    suppliedAmount: BigDecimal!
+    suppliedAmountUsd: BigDecimal
+    nonRecursiveSuppliedAmount: BigDecimal
+    collateralAmount: BigDecimal
+    collateralAmountUsd: BigDecimal
+    collateralFactor: BigDecimal!
+    supplyIndex: BigDecimal!
+    supplyApr: BigDecimal!
+    borrowedAmount: BigDecimal!
+    borrowedAmountUsd: BigDecimal
+    borrowIndex: BigDecimal!
+    borrowApr: BigDecimal!
+    totalFeesUsd: BigDecimal
+    userFeesUsd: BigDecimal
+    protocolFeesUsd: BigDecimal
 }
