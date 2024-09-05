@@ -1,16 +1,16 @@
 'use client';
-import {
-  useAccount,
-  useConnectUI,
-  useDisconnect,
-  useIsConnected,
-} from '@fuels/react';
 import { Button } from '@/components/ui/button';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import {
+  useAccount,
+  useConnectUI,
+  useDisconnect,
+  useIsConnected,
+} from '@fuels/react';
 import { ChevronDown, ClipboardCopyIcon } from 'lucide-react';
 
 export const ConnectButton = () => {

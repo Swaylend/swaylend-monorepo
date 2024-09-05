@@ -1,8 +1,8 @@
 import { useMarketStore } from '@/stores';
 import React from 'react';
-import { LendTable } from './LendTable';
-import { CollateralTable } from './CollateralTable';
 import { BorrowTable } from './BorrowTable';
+import { CollateralTable } from './CollateralTable';
+import { LendTable } from './LendTable';
 
 export const AssetsTable = () => {
   const { market, marketMode } = useMarketStore();

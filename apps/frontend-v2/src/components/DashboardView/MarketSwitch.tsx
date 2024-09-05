@@ -1,6 +1,6 @@
-import React from 'react';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useMarketStore } from '@/stores';
+import React from 'react';
 
 export const MarketSwitch = () => {
   const { marketMode, changeMarketMode } = useMarketStore();

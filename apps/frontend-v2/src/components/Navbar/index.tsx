@@ -1,14 +1,14 @@
 'use client';
+import { cn } from '@/lib/utils';
+import { ChartLine, Coins, LayoutDashboard } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import React from 'react';
 import Logo from '/public/icons/dark-logo.svg?url';
+import { Line } from '../Line';
 import { ConnectButton } from './ConnectButton';
 import { MarketSwitcher } from './MarketSwitcher';
-import { Line } from '../Line';
-import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Coins, ChartLine } from 'lucide-react';
-import { cn } from '@/lib/utils';
 
 const NAVBAR_LINKS = [
   { href: '/', label: 'Dashboard', icon: <LayoutDashboard /> },

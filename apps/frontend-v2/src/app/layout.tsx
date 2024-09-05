@@ -3,10 +3,10 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Inter as FontSans } from 'next/font/google';
 
+import { Footer } from '@/components/Footer';
 import { Navbar } from '@/components/Navbar';
 import { Providers } from '@/components/Providers';
 import { cn } from '@/lib/utils';
-import { Footer } from '@/components/Footer';
 
 const fontSans = FontSans({
   subsets: ['latin'],

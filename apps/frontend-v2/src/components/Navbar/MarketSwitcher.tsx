@@ -1,6 +1,4 @@
 'use client';
-import { useMarketStore } from '@/stores';
-import type { DeployedMarket } from '@/utils';
 import {
   Select,
   SelectContent,
@@ -8,11 +6,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { useMarketStore } from '@/stores';
+import type { DeployedMarket } from '@/utils';
+import { SelectGroup, SelectLabel } from '@radix-ui/react-select';
+import Image from 'next/image';
+import FUEL from '/public/icons/fuel-logo.svg?url';
 import USDC from '/public/tokens/usdc.svg?url';
 import USDT from '/public/tokens/usdt.svg?url';
-import FUEL from '/public/icons/fuel-logo.svg?url';
-import Image from 'next/image';
-import { SelectGroup, SelectLabel } from '@radix-ui/react-select';
 
 const MarketItem = ({ market, logo }: { market: string; logo: any }) => {
   return (

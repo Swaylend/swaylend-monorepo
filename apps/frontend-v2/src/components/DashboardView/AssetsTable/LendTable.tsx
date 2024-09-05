@@ -7,16 +7,16 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import USDC from '/public/tokens/usdc.svg?url';
-import USDT from '/public/tokens/usdt.svg?url';
-import Image from 'next/image';
 import { useMarketConfiguration, useUserSupplyBorrow } from '@/hooks';
 import { ACTION_TYPE, useMarketStore } from '@/stores';
 import { ASSET_ID_TO_SYMBOL, formatUnits } from '@/utils';
 import { useAccount, useBalance } from '@fuels/react';
 import BigNumber from 'bignumber.js';
-import React from 'react';
 import type { StaticImport } from 'next/dist/shared/lib/get-img-props';
+import Image from 'next/image';
+import React from 'react';
+import USDC from '/public/tokens/usdc.svg?url';
+import USDT from '/public/tokens/usdt.svg?url';
 
 const SYMBOL_TO_LOGO: Record<string, StaticImport> = {
   USDC: USDC,
