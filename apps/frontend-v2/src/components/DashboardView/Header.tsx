@@ -68,7 +68,7 @@ export const Header = () => {
   if (!marketConfiguration) return <div>Loading...</div>;
 
   return (
-    <div className="flex justify-between">
+    <div className="flex justify-between w-full">
       <div>Supplied Balance: {totalSuppliedBalance}$</div>
       <div>
         Supply{supplyApr}/borrow APR{borrowApr}

@@ -15,16 +15,23 @@ export enum ACTION_MODE {
   WITHDRAW = 1,
 }
 
+export enum MARKET_MODE {
+  LEND = 'lend',
+  BORROW = 'borrow',
+}
+
 interface MarketStore {
   market: DeployedMarket;
 
   mode: ACTION_MODE;
+  marketMode: MARKET_MODE;
   action: ACTION_TYPE | null | undefined;
   tokenAmount: BigNumber;
   actionTokenAssetId: string | null | undefined;
 
   changeMarket: (market: DeployedMarket) => void;
   changeMode: (mode: ACTION_MODE) => void;
+  changeMarketMode: (mode: MARKET_MODE) => void;
   changeAction: (action: ACTION_TYPE | null | undefined) => void;
   changeTokenAmount: (tokenAmount: BigNumber) => void;
   changeActionTokenAssetId: (assetId: string | null | undefined) => void;
@@ -33,6 +40,7 @@ interface MarketStore {
 export const marketStoreInitialState = {
   market: DeployedMarket.USDC,
   mode: 0,
+  marketMode: MARKET_MODE.LEND,
   action: null,
   tokenAmount: new BigNumber(0),
   actionTokenAssetId: null,
@@ -44,6 +52,7 @@ export const useMarketStore = createWithEqualityFn<MarketStore>()(
 
     changeMarket: (market: DeployedMarket) => set({ market }),
     changeMode: (mode: ACTION_MODE) => set({ mode }),
+    changeMarketMode: (mode: MARKET_MODE) => set({ marketMode: mode }),
     changeAction: (action: ACTION_TYPE | null | undefined) => set({ action }),
     changeTokenAmount: (tokenAmount: BigNumber) => set({ tokenAmount }),
     changeActionTokenAssetId: (assetId: string | null | undefined) =>

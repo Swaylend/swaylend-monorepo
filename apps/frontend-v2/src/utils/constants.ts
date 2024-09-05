@@ -70,4 +70,6 @@ export const ASSET_ID_TO_SYMBOL: Record<string, string> = {
   '0x170ae7a2535154a5981db6cd0084689495849ad80a0b0dccdd7c579c9cfb7572': 'UNI',
   '0x84ebfaf29d43e88f74a1573830c27d06e69112f0f0cb0694a10e3cf94b011cfd': 'BTC',
   '0xaf0fb56ec3dbc594ea514e36042abdea14630be1569792ef73f09c09beac77cb': 'BNB',
+  '0xfe744f19db1affff30c628b29d93e330f966ecb649ba83606b1ff49ac9b37f47': 'USDC',
+  '0x037ea5d51e94f792554fb14e117cfb5129650d162455febd9a74ab4f85f554e7': 'USDT',
 };

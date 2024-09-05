@@ -1,25 +1,57 @@
+'use client';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import Logo from '/public/icons/dark-logo.svg?url';
 import { ConnectButton } from './ConnectButton';
 import { MarketSwitcher } from './MarketSwitcher';
+import { Line } from '../Line';
+import { usePathname } from 'next/navigation';
+import { LayoutDashboard, Coins, ChartLine } from 'lucide-react';
+import { cn } from '@/lib/utils';
+
+const NAVBAR_LINKS = [
+  { href: '/', label: 'Dashboard', icon: <LayoutDashboard /> },
+  { href: '/market', label: 'Market', icon: <ChartLine /> },
+  { href: '/faucet', label: 'Faucet', icon: <Coins /> },
+];
 
 export const Navbar = () => {
+  const pathname = usePathname();
   return (
-    <div className="flex justify-between">
-      <Link href="https://swaylend.com">
-        <Image src={Logo} alt="logo" />
-      </Link>
-      <div>
-        <Link href="/"> Dashboard </Link>
-        <Link href="/faucet"> Faucet </Link>
-        <Link href="/market"> Market </Link>
+    <>
+      <div className="flex justify-between items-center px-16 h-[93px]">
+        <Link href="https://swaylend.com">
+          <Image src={Logo} alt="logo" />
+        </Link>
+        <div className="flex items-center gap-x-8 h-full">
+          {NAVBAR_LINKS.map(({ href, label, icon }) => (
+            <Link key={href} href={href}>
+              <div
+                className={cn(
+                  pathname === href ? 'text-primary' : 'text-neutral2',
+                  pathname === href ? '' : 'hover:text-neutral2/80',
+                  'flex items-center gap-x-1 h-full relative'
+                )}
+              >
+                {icon}
+                {label}
+                <div
+                  className={cn(
+                    pathname === href &&
+                      '-z-10 absolute blur-2xl top-[19px] left-[calc(50%-20px)] w-16 h-10 bg-primary01'
+                  )}
+                />
+              </div>
+            </Link>
+          ))}
+        </div>
+        <div className="flex items-center gap-x-2">
+          <MarketSwitcher />
+          <ConnectButton />
+        </div>
       </div>
-      <div>
-        <MarketSwitcher />
-        <ConnectButton />
-      </div>
-    </div>
+      <Line />
+    </>
   );
 };

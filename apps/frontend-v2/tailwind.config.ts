@@ -21,7 +21,7 @@ const config = {
         neutral0: '#FFFFFF',
         neutral1: '#F0F2FA',
         neutral2: '#E3E9F9',
-        neutral3: '#DFE5FA',
+        neutral3: '#B0B7C3',
         neutral4: '#9A9ABD',
         neutral5: '#313A45',
         neutral6: '#1F262B',

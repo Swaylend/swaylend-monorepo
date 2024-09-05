@@ -45,6 +45,8 @@ export const Input = () => {
 
   const { mutate: withdrawBase } = useWithdrawBase();
 
+  const { market } = useMarketStore();
+
   const handleSubmit = () => {
     if (!marketConfiguration) return;
 
@@ -116,7 +118,8 @@ export const Input = () => {
         </Button>
         <div className=" bg-orange-700">
           MODE: {mode} AssetId: {actionTokenAssetId} Amount:{' '}
-          {(tokenAmount ?? new BigNumber(0)).toFormat(2)} Action: {action}
+          {(tokenAmount ?? new BigNumber(0)).toFormat(2)} Action: {action}{' '}
+          Market: {market}
         </div>
       </div>
       <div>
