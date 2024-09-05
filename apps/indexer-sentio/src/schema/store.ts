@@ -252,60 +252,6 @@ export class PoolSnapshot extends AbstractEntity  {
   constructor(data: Partial<PoolSnapshot>) {super()}
 }
 
-@Entity("UserBasePosition")
-export class UserBasePosition extends AbstractEntity  {
-
-	@Required
-	@Column("ID")
-	id: ID
-
-	@Required
-	@Column("String")
-	chainId: String
-
-	@Required
-	@Column("String")
-	poolAddress: String
-
-	@Required
-	@Column("String")
-	userAddress: String
-
-	@Required
-	@Column("BigInt")
-	baseAmount: BigInt
-  constructor(data: Partial<UserBasePosition>) {super()}
-}
-
-@Entity("UserCollateralPosition")
-export class UserCollateralPosition extends AbstractEntity  {
-
-	@Required
-	@Column("ID")
-	id: ID
-
-	@Required
-	@Column("String")
-	chainId: String
-
-	@Required
-	@Column("String")
-	poolAddress: String
-
-	@Required
-	@Column("String")
-	userAddress: String
-
-	@Required
-	@Column("String")
-	collateralAssetAddress: String
-
-	@Required
-	@Column("BigInt")
-	collateralAmount: BigInt
-  constructor(data: Partial<UserCollateralPosition>) {super()}
-}
-
 
 const source = `type MarketConfiguration @entity {
     id: ID!
@@ -377,23 +323,6 @@ type PoolSnapshot @entity {
     totalFeesUsd: BigInt
     userFeesUsd: BigInt
     protocolFeesUsd: BigInt
-}
-
-type UserBasePosition @entity {
-    id: ID!
-    chainId: String!
-    poolAddress: String!
-    userAddress: String!
-    baseAmount: BigInt!
-}
-
-type UserCollateralPosition @entity {
-    id: ID!
-    chainId: String!
-    poolAddress: String!
-    userAddress: String!
-    collateralAssetAddress: String!
-    collateralAmount: BigInt!
 }`
 DatabaseSchema.register({
   source,
@@ -402,8 +331,6 @@ DatabaseSchema.register({
 		"CollateralConfiguration": CollateralConfiguration,
 		"Pool": Pool,
 		"PositionSnapshot": PositionSnapshot,
-		"PoolSnapshot": PoolSnapshot,
-		"UserBasePosition": UserBasePosition,
-		"UserCollateralPosition": UserCollateralPosition
+		"PoolSnapshot": PoolSnapshot
   }
 })

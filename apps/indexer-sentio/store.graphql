@@ -69,20 +69,3 @@ type PoolSnapshot @entity {
     userFeesUsd: BigInt
     protocolFeesUsd: BigInt
 }
-
-type UserBasePosition @entity {
-    id: ID!
-    chainId: String!
-    poolAddress: String!
-    userAddress: String!
-    baseAmount: BigInt!
-}
-
-type UserCollateralPosition @entity {
-    id: ID!
-    chainId: String!
-    poolAddress: String!
-    userAddress: String!
-    collateralAssetAddress: String!
-    collateralAmount: BigInt!
-}
