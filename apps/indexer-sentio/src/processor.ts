@@ -427,7 +427,8 @@ MarketProcessor.bind({
         chainId: ctx.chainId,
         poolAddress: ctx.contractAddress,
         underlyingTokenAddress: marketConfiguration.baseTokenAddress,
-        underlyingTokenSymbol: marketConfiguration.baseTokenAddress,
+        underlyingTokenSymbol:
+          ASSET_ID_TO_SYMBOL[marketConfiguration.baseTokenAddress],
         userAddress: address.bits,
         suppliedAmount: BigDecimal(0),
         borrowedAmount: BigDecimal(borrow_amount.toString()).dividedBy(
@@ -486,7 +487,8 @@ MarketProcessor.bind({
         chainId: ctx.chainId,
         poolAddress: ctx.contractAddress,
         underlyingTokenAddress: collateralConfiguration.assetAddress,
-        underlyingTokenSymbol: collateralConfiguration.assetAddress,
+        underlyingTokenSymbol:
+          ASSET_ID_TO_SYMBOL[collateralConfiguration.assetAddress],
         userAddress: address.bits,
         suppliedAmount: BigDecimal(0),
         borrowedAmount: BigDecimal(0),
