@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
-import { useUserCollateralValue } from './useUserCollateralValue';
 import { useUserCollateralUtilization } from './useUserCollateralUtilization';
+import { useUserCollateralValue } from './useUserCollateralValue';
 
 export const useUserLiquidationPoint = () => {
   const collateralValue = useUserCollateralValue();

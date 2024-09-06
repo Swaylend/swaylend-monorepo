@@ -1,14 +1,14 @@
+import { formatUnits } from '@/utils';
 import { useAccount } from '@fuels/react';
+import BigNumber from 'bignumber.js';
 import { useMemo } from 'react';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
-import { useUserSupplyBorrow } from './useUserSupplyBorrow';
-import { useUserCollateralAssets } from './useUserCollateralAssets';
-import { usePrice } from './usePrice';
-import BigNumber from 'bignumber.js';
-import { formatUnits } from '@/utils';
 import { useMarketConfiguration } from './useMarketConfiguration';
-import { useUserTrueCollateralValue } from './useUserTrueCollateralValue';
+import { usePrice } from './usePrice';
+import { useUserCollateralAssets } from './useUserCollateralAssets';
 import { useUserCollateralValue } from './useUserCollateralValue';
+import { useUserSupplyBorrow } from './useUserSupplyBorrow';
+import { useUserTrueCollateralValue } from './useUserTrueCollateralValue';
 
 export const useUserCollateralUtilization = () => {
   const { data: userSupplyBorrow } = useUserSupplyBorrow();
