@@ -48,6 +48,7 @@ type PositionSnapshot @entity {
     borrowedAmountUsd: BigDecimal
     collateralAmount: BigDecimal!
     collateralAmountUsd: BigDecimal
+    baseTrackingIndex: BigDecimal!
 }
 
 type PoolSnapshot @entity {

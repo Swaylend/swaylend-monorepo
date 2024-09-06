@@ -65,6 +65,27 @@ const getSupplyRate = (
     );
 };
 
+const getPresentValue = (
+  principal: BigDecimal,
+  baseTrackingIndex: BigDecimal
+): BigDecimal => {
+  return principal.times(baseTrackingIndex).dividedBy(FACTOR_SCALE_15);
+};
+
+const getPrincipalValue = (
+  presentValue: BigDecimal,
+  baseTrackingIndex: BigDecimal
+): BigDecimal => {
+  if (presentValue.gte(0)) {
+    return presentValue.times(FACTOR_SCALE_15).dividedBy(baseTrackingIndex);
+  }
+
+  return presentValue
+    .times(FACTOR_SCALE_15)
+    .plus(baseTrackingIndex.minus(1))
+    .dividedBy(baseTrackingIndex);
+};
+
 MarketProcessor.bind({
   chainId: FuelNetwork.TEST_NET,
   address: '0x8cd0c973a8ab7c15c0a8ee8f5cb4dd04ea3f27411c8eef6e76f3765fe43863fe',
@@ -461,6 +482,107 @@ MarketProcessor.bind({
 
     await ctx.store.upsert(positionSnapshot);
   })
+  // .onLogUserBasicEvent(async (event, ctx) => {
+  //   const {
+  //     data: {
+  //       address,
+  //       user_basic: { principal, base_tracking_index },
+  //     },
+  //   } = event;
+
+  //   const marketConfigId = `${ctx.chainId}_${ctx.contractAddress}`;
+  //   const marketConfiguration = await ctx.store.get(
+  //     MarketConfiguration,
+  //     marketConfigId
+  //   );
+
+  //   if (!marketConfiguration) {
+  //     throw new Error(
+  //       `Market configuration not found for market ${ctx.contractAddress} on chain ${ctx.chainId}`
+  //     );
+  //   }
+
+  //   const id = `${ctx.chainId}_${ctx.contractAddress}_${address.bits}_${marketConfiguration.baseTokenAddress}`;
+
+  //   let positionSnapshot = await ctx.store.get(PositionSnapshot, id);
+
+  //   const presentValue = getPresentValue(
+  //     BigDecimal(principal.value.toString()),
+  //     BigDecimal(base_tracking_index.toString())
+  //   ).times(BigDecimal(principal.negative ? -1 : 1));
+
+  //   let oldSuppliedAmount;
+  //   let oldBorrowedAmount;
+
+  //   if (!positionSnapshot) {
+  //     positionSnapshot = new PositionSnapshot({
+  //       id,
+  //       chainId: ctx.chainId,
+  //       poolAddress: ctx.contractAddress,
+  //       underlyingTokenAddress: marketConfiguration.baseTokenAddress,
+  //       underlyingTokenSymbol:
+  //         ASSET_ID_TO_SYMBOL[marketConfiguration.baseTokenAddress],
+  //       userAddress: address.bits,
+  //       suppliedAmount: BigDecimal(0),
+  //       borrowedAmount: BigDecimal(0),
+  //       collateralAmount: BigDecimal(0),
+  //       baseTrackingIndex: BigDecimal(1),
+  //     });
+
+  //     oldSuppliedAmount = BigDecimal(0);
+  //     oldBorrowedAmount = BigDecimal(0);
+  //   } else {
+  //     oldSuppliedAmount = getPrincipalValue(
+  //       positionSnapshot.suppliedAmount,
+  //       positionSnapshot.baseTrackingIndex
+  //     );
+  //     oldBorrowedAmount = getPrincipalValue(
+  //       positionSnapshot.borrowedAmount.times(-1),
+  //       BigDecimal(base_tracking_index.toString())
+  //     );
+  //   }
+
+  //   positionSnapshot.suppliedAmount = presentValue.lte(0)
+  //     ? BigDecimal(0)
+  //     : presentValue;
+
+  //   positionSnapshot.borrowedAmount = presentValue.lte(0)
+  //     ? presentValue
+  //     : BigDecimal(0);
+
+  //   await ctx.store.upsert(positionSnapshot);
+
+  // // Calculate supply delta and borrow delta
+  // const supplyDelta =
+  //   positionSnapshot.suppliedAmount.minus(oldSuppliedAmount);
+  // const borrowDelta =
+  //   positionSnapshot.borrowedAmount.minus(oldBorrowedAmount);
+
+  // // Pool snapshot
+  // const poolSnapshotId = `${ctx.chainId}_${ctx.contractAddress}_${marketConfiguration.baseTokenAddress}`;
+  // const poolSnapshot = await ctx.store.get(PoolSnapshot, poolSnapshotId);
+
+  // if (!poolSnapshot) {
+  //   throw new Error(
+  //     `Pool snapshot not found for market ${ctx.contractAddress} on chain ${ctx.chainId}`
+  //   );
+  // }
+
+  // poolSnapshot.suppliedAmount = BigDecimal(poolSnapshot.suppliedAmount).plus(
+  //   supplyDelta
+  // );
+  // poolSnapshot.borrowedAmount = BigDecimal(poolSnapshot.borrowedAmount).plus(
+  //   borrowDelta
+  // );
+  // poolSnapshot.nonRecursiveSuppliedAmount = BigDecimal(
+  //   poolSnapshot.nonRecursiveSuppliedAmount
+  // ).plus(supplyDelta);
+  // poolSnapshot.availableAmount = poolSnapshot.suppliedAmount.minus(
+  //   poolSnapshot.borrowedAmount
+  // );
+
+  // await ctx.store.upsert(poolSnapshot);
+  // })
   .onLogUserSupplyCollateralEvent(async (event, ctx) => {
     const {
       data: { address, asset_id, amount },

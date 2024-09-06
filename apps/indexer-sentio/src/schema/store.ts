@@ -186,6 +186,10 @@ export class PositionSnapshot extends AbstractEntity  {
 
 	@Column("BigDecimal")
 	collateralAmountUsd?: BigDecimal
+
+	@Required
+	@Column("BigDecimal")
+	baseTrackingIndex: BigDecimal
   constructor(data: Partial<PositionSnapshot>) {super()}
 }
 
@@ -329,6 +333,7 @@ type PositionSnapshot @entity {
     borrowedAmountUsd: BigDecimal
     collateralAmount: BigDecimal!
     collateralAmountUsd: BigDecimal
+    baseTrackingIndex: BigDecimal!
 }
 
 type PoolSnapshot @entity {
