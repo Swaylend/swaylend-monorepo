@@ -64,8 +64,8 @@ const getSupplyRate = (
 
 MarketProcessor.bind({
   chainId: FuelNetwork.TEST_NET,
-  address: '0xea9d4a55ca16271f42992529bb68de095249ceb8d95176576098bb9b98cd3975',
-  startBlock: BigInt(7597567),
+  address: '0x8cd0c973a8ab7c15c0a8ee8f5cb4dd04ea3f27411c8eef6e76f3765fe43863fe',
+  startBlock: BigInt(9500000),
 })
   .onLogMarketConfigurationEvent(async (event, ctx) => {
     const {
