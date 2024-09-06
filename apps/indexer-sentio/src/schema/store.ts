@@ -38,6 +38,38 @@ export class MarketConfiguration extends AbstractEntity  {
 	@Required
 	@Column("BigDecimal")
 	baseTrackingIndexScale: BigDecimal
+
+	@Required
+	@Column("BigDecimal")
+	supplyKink: BigDecimal
+
+	@Required
+	@Column("BigDecimal")
+	borrowKink: BigDecimal
+
+	@Required
+	@Column("BigDecimal")
+	supplyPerSecondInterestRateSlopeLow: BigDecimal
+
+	@Required
+	@Column("BigDecimal")
+	supplyPerSecondInterestRateSlopeHigh: BigDecimal
+
+	@Required
+	@Column("BigDecimal")
+	supplyPerSecondInterestRateBase: BigDecimal
+
+	@Required
+	@Column("BigDecimal")
+	borrowPerSecondInterestRateSlopeLow: BigDecimal
+
+	@Required
+	@Column("BigDecimal")
+	borrowPerSecondInterestRateSlopeHigh: BigDecimal
+
+	@Required
+	@Column("BigDecimal")
+	borrowPerSecondInterestRateBase: BigDecimal
   constructor(data: Partial<MarketConfiguration>) {super()}
 }
 
@@ -250,6 +282,14 @@ const source = `type MarketConfiguration @entity {
     baseTokenAddress: String!
     baseTokenDecimals: Int!
     baseTrackingIndexScale: BigDecimal!
+    supplyKink: BigDecimal!
+    borrowKink: BigDecimal!
+    supplyPerSecondInterestRateSlopeLow: BigDecimal!
+    supplyPerSecondInterestRateSlopeHigh: BigDecimal!
+    supplyPerSecondInterestRateBase: BigDecimal!
+    borrowPerSecondInterestRateSlopeLow: BigDecimal!
+    borrowPerSecondInterestRateSlopeHigh: BigDecimal!
+    borrowPerSecondInterestRateBase: BigDecimal!    
 }
 
 type CollateralConfiguration @entity {

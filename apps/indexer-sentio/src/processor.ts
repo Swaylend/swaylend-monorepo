@@ -9,7 +9,59 @@ import {
 } from './schema/store.js';
 import { MarketProcessor } from './types/fuel/MarketProcessor.js';
 
-// TODO: Add liquidation events
+const FACTOR_SCALE_18 = BigDecimal(10).pow(18);
+const SECONDS_PER_YEAR = BigDecimal(365).times(24).times(60).times(60);
+
+const geBorrowRate = (
+  marketConfig: MarketConfiguration,
+  utilization: BigDecimal
+): BigDecimal => {
+  if (utilization.lte(marketConfig.borrowKink)) {
+    return marketConfig.borrowPerSecondInterestRateBase.plus(
+      marketConfig.borrowPerSecondInterestRateSlopeLow
+        .times(utilization)
+        .dividedBy(FACTOR_SCALE_18)
+    );
+  }
+
+  return marketConfig.borrowPerSecondInterestRateBase
+    .plus(
+      marketConfig.borrowPerSecondInterestRateSlopeLow
+        .times(marketConfig.borrowKink)
+        .dividedBy(FACTOR_SCALE_18)
+    )
+    .plus(
+      marketConfig.borrowPerSecondInterestRateSlopeHigh
+        .times(utilization.minus(marketConfig.borrowKink))
+        .dividedBy(FACTOR_SCALE_18)
+    );
+};
+
+const getSupplyRate = (
+  marketConfig: MarketConfiguration,
+  utilization: BigDecimal
+): BigDecimal => {
+  if (utilization.lte(marketConfig.supplyKink)) {
+    return marketConfig.supplyPerSecondInterestRateBase.plus(
+      marketConfig.supplyPerSecondInterestRateSlopeLow
+        .times(utilization)
+        .dividedBy(FACTOR_SCALE_18)
+    );
+  }
+
+  return marketConfig.supplyPerSecondInterestRateBase
+    .plus(
+      marketConfig.supplyPerSecondInterestRateSlopeLow
+        .times(marketConfig.supplyKink)
+        .dividedBy(FACTOR_SCALE_18)
+    )
+    .plus(
+      marketConfig.supplyPerSecondInterestRateSlopeHigh
+        .times(utilization.minus(marketConfig.supplyKink))
+        .dividedBy(FACTOR_SCALE_18)
+    );
+};
+
 MarketProcessor.bind({
   chainId: FuelNetwork.TEST_NET,
   address: '0xea9d4a55ca16271f42992529bb68de095249ceb8d95176576098bb9b98cd3975',
@@ -509,13 +561,13 @@ MarketProcessor.bind({
     }
 
     await ctx.store.upsert(positionSnapshot);
-    // TODO: Pool snapshot
   })
   .onLogMarketBasicEvent(async (event, ctx) => {
     const {
       data: {
         market_basic: {
-          tracking_supply_index,
+          base_supply_index,
+          base_borrow_index,
           total_supply_base,
           total_borrow_base,
         },
@@ -543,9 +595,15 @@ MarketProcessor.bind({
       );
     }
 
+    // Indexes
     poolSnapshot.supplyIndex = BigDecimal(
-      tracking_supply_index.toString()
-    ).dividedBy(marketConfiguration.baseTrackingIndexScale);
+      base_supply_index.toString()
+    ).dividedBy(FACTOR_SCALE_18);
+    poolSnapshot.borrowIndex = BigDecimal(
+      base_borrow_index.toString()
+    ).dividedBy(FACTOR_SCALE_18);
+
+    // Supplied amount and available amount
     poolSnapshot.suppliedAmount = BigDecimal(
       total_supply_base.toString()
     ).dividedBy(BigDecimal(10).pow(marketConfiguration.baseTokenDecimals));
@@ -556,6 +614,49 @@ MarketProcessor.bind({
       .minus(BigDecimal(total_borrow_base.toString()))
       .dividedBy(BigDecimal(10).pow(marketConfiguration.baseTokenDecimals));
 
-    // TODO: Move `get_borrow_rate` and `get_supply_rate` logic from contract to here
-    // TODO: Move utulization logic from contract to here
+    // Calculate utilization
+    let utilization = BigDecimal(0);
+    if (poolSnapshot.suppliedAmount.gt(0)) {
+      utilization = poolSnapshot.borrowedAmount.dividedBy(
+        poolSnapshot.suppliedAmount
+      );
+    }
+
+    // Calculate borrow rate and APR
+    const borrowRate = geBorrowRate(marketConfiguration, utilization);
+    const borrowApr = borrowRate
+      .dividedBy(FACTOR_SCALE_18)
+      .times(SECONDS_PER_YEAR)
+      .decimalPlaces(0, BigDecimal.ROUND_FLOOR);
+    poolSnapshot.borrowApr = borrowApr;
+
+    // Calculate supply rate and APR
+    const supplyRate = getSupplyRate(marketConfiguration, utilization);
+    const supplyApr = supplyRate
+      .dividedBy(FACTOR_SCALE_18)
+      .times(SECONDS_PER_YEAR)
+      .decimalPlaces(0, BigDecimal.ROUND_FLOOR);
+    poolSnapshot.supplyApr = supplyApr;
+  })
+  .onLogAbsorbCollateralEvent(async (event, ctx) => {
+    const {
+      data: { asset_id, amount, decimals },
+    } = event;
+
+    const poolSnapshotId = `${ctx.chainId}_${ctx.contractAddress}_${asset_id}`;
+    const poolSnapshot = await ctx.store.get(PoolSnapshot, poolSnapshotId);
+
+    if (!poolSnapshot) {
+      throw new Error(
+        `Pool snapshot not found for market ${ctx.contractAddress} on chain ${ctx.chainId}`
+      );
+    }
+
+    poolSnapshot.collateralAmount = BigDecimal(
+      poolSnapshot.collateralAmount
+    ).minus(
+      BigDecimal(amount.toString()).dividedBy(BigDecimal(10).pow(decimals))
+    );
+
+    await ctx.store.upsert(poolSnapshot);
   });
