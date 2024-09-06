@@ -11,6 +11,7 @@ import { MarketProcessor } from './types/fuel/MarketProcessor.js';
 import { ASSET_ID_TO_SYMBOL } from './constants.js';
 import { DateTime } from 'fuels';
 
+const FACTOR_SCALE_15 = BigDecimal(10).pow(15);
 const FACTOR_SCALE_18 = BigDecimal(10).pow(18);
 const SECONDS_PER_YEAR = BigDecimal(365).times(24).times(60).times(60);
 
@@ -666,10 +667,10 @@ MarketProcessor.bind({
     // Indexes
     poolSnapshot.supplyIndex = BigDecimal(
       base_supply_index.toString()
-    ).dividedBy(FACTOR_SCALE_18);
+    ).dividedBy(FACTOR_SCALE_15);
     poolSnapshot.borrowIndex = BigDecimal(
       base_borrow_index.toString()
-    ).dividedBy(FACTOR_SCALE_18);
+    ).dividedBy(FACTOR_SCALE_15);
 
     // Supplied amount and available amount
     poolSnapshot.suppliedAmount = BigDecimal(
