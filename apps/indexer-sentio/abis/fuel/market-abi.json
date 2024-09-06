@@ -897,9 +897,7 @@
           "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
         }
       ],
-      "typeParameters": [
-        2
-      ]
+      "typeParameters": [2]
     },
     {
       "type": "struct std::vec::Vec",
@@ -920,9 +918,7 @@
           "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
         }
       ],
-      "typeParameters": [
-        2
-      ]
+      "typeParameters": [2]
     },
     {
       "type": "u32",
@@ -950,10 +946,7 @@
         },
         {
           "name": "storage",
-          "arguments": [
-            "read",
-            "write"
-          ]
+          "arguments": ["read", "write"]
         }
       ]
     },
@@ -969,10 +962,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read",
-            "write"
-          ]
+          "arguments": ["read", "write"]
         }
       ]
     },
@@ -988,10 +978,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "write",
-            "read"
-          ]
+          "arguments": ["write", "read"]
         }
       ]
     },
@@ -1007,9 +994,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read"
-          ]
+          "arguments": ["read"]
         }
       ]
     },
@@ -1048,9 +1033,7 @@
         },
         {
           "name": "storage",
-          "arguments": [
-            "read"
-          ]
+          "arguments": ["read"]
         }
       ]
     },
@@ -1070,9 +1053,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read"
-          ]
+          "arguments": ["read"]
         }
       ]
     },
@@ -1083,10 +1064,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read",
-            "write"
-          ]
+          "arguments": ["read", "write"]
         }
       ]
     },
@@ -1102,9 +1080,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read"
-          ]
+          "arguments": ["read"]
         }
       ]
     },
@@ -1115,9 +1091,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read"
-          ]
+          "arguments": ["read"]
         }
       ]
     },
@@ -1133,9 +1107,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read"
-          ]
+          "arguments": ["read"]
         }
       ]
     },
@@ -1146,9 +1118,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read"
-          ]
+          "arguments": ["read"]
         }
       ]
     },
@@ -1159,9 +1129,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read"
-          ]
+          "arguments": ["read"]
         }
       ]
     },
@@ -1177,9 +1145,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read"
-          ]
+          "arguments": ["read"]
         }
       ]
     },
@@ -1190,9 +1156,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read"
-          ]
+          "arguments": ["read"]
         }
       ]
     },
@@ -1208,9 +1172,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read"
-          ]
+          "arguments": ["read"]
         }
       ]
     },
@@ -1226,9 +1188,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read"
-          ]
+          "arguments": ["read"]
         }
       ]
     },
@@ -1248,9 +1208,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read"
-          ]
+          "arguments": ["read"]
         }
       ]
     },
@@ -1266,9 +1224,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read"
-          ]
+          "arguments": ["read"]
         }
       ]
     },
@@ -1279,9 +1235,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read"
-          ]
+          "arguments": ["read"]
         }
       ]
     },
@@ -1297,9 +1251,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read"
-          ]
+          "arguments": ["read"]
         }
       ]
     },
@@ -1315,10 +1267,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "write",
-            "read"
-          ]
+          "arguments": ["write", "read"]
         }
       ]
     },
@@ -1334,10 +1283,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read",
-            "write"
-          ]
+          "arguments": ["read", "write"]
         }
       ]
     },
@@ -1357,9 +1303,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read"
-          ]
+          "arguments": ["read"]
         }
       ]
     },
@@ -1375,10 +1319,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read",
-            "write"
-          ]
+          "arguments": ["read", "write"]
         }
       ]
     },
@@ -1394,10 +1335,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read",
-            "write"
-          ]
+          "arguments": ["read", "write"]
         }
       ]
     },
@@ -1412,10 +1350,7 @@
         },
         {
           "name": "storage",
-          "arguments": [
-            "read",
-            "write"
-          ]
+          "arguments": ["read", "write"]
         }
       ]
     },
@@ -1430,10 +1365,7 @@
         },
         {
           "name": "storage",
-          "arguments": [
-            "read",
-            "write"
-          ]
+          "arguments": ["read", "write"]
         }
       ]
     },
@@ -1449,9 +1381,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read"
-          ]
+          "arguments": ["read"]
         }
       ]
     },
@@ -1471,10 +1401,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read",
-            "write"
-          ]
+          "arguments": ["read", "write"]
         }
       ]
     },
@@ -1490,9 +1417,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read"
-          ]
+          "arguments": ["read"]
         }
       ]
     },
@@ -1508,10 +1433,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read",
-            "write"
-          ]
+          "arguments": ["read", "write"]
         }
       ]
     },
@@ -1531,9 +1453,7 @@
         },
         {
           "name": "storage",
-          "arguments": [
-            "read"
-          ]
+          "arguments": ["read"]
         }
       ]
     },
@@ -1557,10 +1477,7 @@
         },
         {
           "name": "storage",
-          "arguments": [
-            "read",
-            "write"
-          ]
+          "arguments": ["read", "write"]
         }
       ]
     },
@@ -1588,10 +1505,7 @@
         },
         {
           "name": "storage",
-          "arguments": [
-            "read",
-            "write"
-          ]
+          "arguments": ["read", "write"]
         }
       ]
     },
@@ -1611,9 +1525,7 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": [
-            "read"
-          ]
+          "arguments": ["read"]
         }
       ]
     }
