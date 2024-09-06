@@ -60,7 +60,7 @@ export const Stats = () => {
 
   return (
     <div className="w-full px-[203px]">
-      <div className="flex w-full bg-gradient-to-r justify-between from-background to-background via-accent items-center h-[123px] px-[56px]">
+      <div className="flex w-full bg-gradient-to-r justify-between from-background to-background via-accent/40 items-center h-[123px] px-[56px]">
         <div className="w-[300px]">
           <div className="text-neutral3 text-lg font-semibold">
             Supplied Balance
