@@ -118,8 +118,6 @@ export const CollateralTable = () => {
   const { data: userCollateralAssets, isLoading: userCollateralAssetsLoading } =
     useUserCollateralAssets();
 
-  console.log('UCA', userCollateralAssets);
-
   const {
     data: collateralConfigurations,
     isPending: collateralConfigurationsPending,

@@ -13,11 +13,16 @@ export const MarketSwitch = () => {
     <Tabs
       onValueChange={handleChange}
       defaultValue={marketMode}
-      className="my-8"
+      className="mt-[55px]"
     >
       <TabsList className="">
         <TabsTrigger value="lend">Lend</TabsTrigger>
-        <TabsTrigger value="borrow">Borrow</TabsTrigger>
+        <TabsTrigger
+          className="data-[state=active]:bg-purple-600 data-[state=active]:text-neutral2"
+          value="borrow"
+        >
+          Borrow
+        </TabsTrigger>
       </TabsList>
     </Tabs>
   );

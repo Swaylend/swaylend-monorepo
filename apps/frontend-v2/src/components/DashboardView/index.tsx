@@ -1,17 +1,19 @@
 'use client';
 import React from 'react';
 import { AssetsTable } from './AssetsTable';
-import { Header } from './Header';
 import { Input } from './Input';
 import { MarketSwitch } from './MarketSwitch';
+import { Stats } from './Stats';
 
 export const DashboardView = () => {
   return (
-    <div className="pt-[55px] px-[88px] flex flex-col w-full gap-y-8 items-center justify-center">
-      <Header />
+    <div className="pt-[55px] px-[88px] flex flex-col w-full items-center justify-center">
+      <Stats />
       <MarketSwitch />
       <AssetsTable />
-      <Input />
+      <div className="mt-[100px]">
+        <Input />
+      </div>
     </div>
   );
 };

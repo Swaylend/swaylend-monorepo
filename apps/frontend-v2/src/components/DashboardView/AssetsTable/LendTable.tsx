@@ -40,7 +40,7 @@ const POINTS_LEND: Point[] = [
     icon: SWAY,
   },
   {
-    id: '2',
+    id: '3',
     name: 'SwayLend',
     description: 'Earn SwayLend Points by lending assets',
     icon: USDC,
