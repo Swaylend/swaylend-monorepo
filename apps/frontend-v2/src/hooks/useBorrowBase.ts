@@ -1,5 +1,6 @@
 import { ErrorToast, TransactionSuccessToast } from '@/components/Toasts';
 import { Market } from '@/contract-types';
+import type { PriceDataUpdateInput } from '@/contract-types/Market';
 import { useMarketStore } from '@/stores';
 import { DEPLOYED_MARKETS, FUEL_ETH_BASE_ASSET_ID } from '@/utils';
 import { useAccount, useWallet } from '@fuels/react';
@@ -7,7 +8,6 @@ import { useMutation } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { toast } from 'react-toastify';
 import { useMarketConfiguration } from './useMarketConfiguration';
-import type { PriceDataUpdateInput } from '@/contract-types/Market';
 
 export const useBorrowBase = () => {
   const { wallet } = useWallet();

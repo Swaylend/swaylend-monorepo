@@ -1,11 +1,11 @@
-import React from 'react';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { Button } from '../ui/button';
 import { Copy, Sparkle, Trophy } from 'lucide-react';
+import React from 'react';
+import { Button } from '../ui/button';
 
 export const Points = () => {
   return (

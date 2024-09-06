@@ -1,3 +1,4 @@
+import { type Point, PointIcons } from '@/components/PointIcons';
 import { Button } from '@/components/ui/button';
 import {
   Table,
@@ -15,11 +16,10 @@ import BigNumber from 'bignumber.js';
 import type { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import Image from 'next/image';
 import React from 'react';
-import USDC from '/public/tokens/usdc.svg?url';
-import USDT from '/public/tokens/usdt.svg?url';
 import FUEL from '/public/icons/fuel-logo.svg?url';
 import SWAY from '/public/tokens/sway.svg?url';
-import { type Point, PointIcons } from '@/components/PointIcons';
+import USDC from '/public/tokens/usdc.svg?url';
+import USDT from '/public/tokens/usdt.svg?url';
 
 const SYMBOL_TO_LOGO: Record<string, StaticImport> = {
   USDC: USDC,
