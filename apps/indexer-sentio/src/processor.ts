@@ -117,7 +117,7 @@ MarketProcessor.bind({
     if (!marketConfiguration) {
       marketConfiguration = new MarketConfiguration({
         id,
-        chainId: ctx.chainId,
+        chainId: 0,
         contractAddress: ctx.contractAddress,
         baseTokenAddress: base_token,
         baseTokenDecimals: base_token_decimals,
@@ -145,7 +145,7 @@ MarketProcessor.bind({
     } else {
       marketConfiguration.baseTokenAddress = base_token;
       marketConfiguration.baseTokenDecimals = base_token_decimals;
-      marketConfiguration.chainId = ctx.chainId;
+      marketConfiguration.chainId = 0;
       marketConfiguration.contractAddress = ctx.contractAddress;
       marketConfiguration.supplyKink = BigDecimal(supply_kink.toString());
       marketConfiguration.borrowKink = BigDecimal(borrow_kink.toString());
@@ -184,7 +184,7 @@ MarketProcessor.bind({
 
       const pool = new Pool({
         id: poolId,
-        chainId: ctx.chainId,
+        chainId: 0,
         creationBlockNumber: Number(ctx.transaction?.blockNumber),
         creationTimestamp: DateTime.fromTai64(
           ctx.transaction.time
@@ -207,7 +207,7 @@ MarketProcessor.bind({
     if (!poolSnapshot) {
       const poolSnapshot = new PoolSnapshot({
         id: poolSnapshotId,
-        chainId: ctx.chainId,
+        chainId: 0,
         poolAddress: ctx.contractAddress,
         underlyingTokenAddress: base_token,
         underlyingTokenSymbol: ASSET_ID_TO_SYMBOL[base_token],
@@ -252,7 +252,7 @@ MarketProcessor.bind({
     if (!collateralConfiguration) {
       collateralConfiguration = new CollateralConfiguration({
         id,
-        chainId: ctx.chainId,
+        chainId: 0,
         contractAddress: ctx.contractAddress,
         assetAddress: asset_id,
         decimals: decimals,
@@ -278,7 +278,7 @@ MarketProcessor.bind({
 
       const pool = new Pool({
         id: poolId,
-        chainId: ctx.chainId,
+        chainId: 0,
         creationBlockNumber: Number(ctx.transaction?.blockNumber),
         creationTimestamp: DateTime.fromTai64(
           ctx.transaction.time
@@ -301,7 +301,7 @@ MarketProcessor.bind({
     if (!poolSnapshot) {
       const poolSnapshot = new PoolSnapshot({
         id: poolSnapshotId,
-        chainId: ctx.chainId,
+        chainId: 0,
         poolAddress: ctx.contractAddress,
         underlyingTokenAddress: asset_id,
         underlyingTokenSymbol: ASSET_ID_TO_SYMBOL[asset_id],
@@ -353,7 +353,7 @@ MarketProcessor.bind({
 
     collateralConfiguration = new CollateralConfiguration({
       id,
-      chainId: ctx.chainId,
+      chainId: 0,
       contractAddress: ctx.contractAddress,
       assetAddress: asset_id,
       decimals: decimals,
@@ -399,7 +399,7 @@ MarketProcessor.bind({
     if (!positionSnapshot) {
       positionSnapshot = new PositionSnapshot({
         id,
-        chainId: ctx.chainId,
+        chainId: 0,
         poolAddress: ctx.contractAddress,
         underlyingTokenAddress: marketConfiguration.baseTokenAddress,
         underlyingTokenSymbol:
@@ -445,7 +445,7 @@ MarketProcessor.bind({
     if (!positionSnapshot) {
       positionSnapshot = new PositionSnapshot({
         id,
-        chainId: ctx.chainId,
+        chainId: 0,
         poolAddress: ctx.contractAddress,
         underlyingTokenAddress: collateralConfiguration.assetAddress,
         underlyingTokenSymbol:

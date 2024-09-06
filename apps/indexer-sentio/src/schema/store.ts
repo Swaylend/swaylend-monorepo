@@ -20,8 +20,8 @@ export class MarketConfiguration extends AbstractEntity  {
 	id: ID
 
 	@Required
-	@Column("String")
-	chainId: String
+	@Column("Int")
+	chainId: Int
 
 	@Required
 	@Column("String")
@@ -77,8 +77,8 @@ export class CollateralConfiguration extends AbstractEntity  {
 	id: ID
 
 	@Required
-	@Column("String")
-	chainId: String
+	@Column("Int")
+	chainId: Int
 
 	@Required
 	@Column("String")
@@ -102,8 +102,8 @@ export class Pool extends AbstractEntity  {
 	id: ID
 
 	@Required
-	@Column("String")
-	chainId: String
+	@Column("Int")
+	chainId: Int
 
 	@Required
 	@Column("Int")
@@ -147,8 +147,8 @@ export class PositionSnapshot extends AbstractEntity  {
 	id: ID
 
 	@Required
-	@Column("String")
-	chainId: String
+	@Column("Int")
+	chainId: Int
 
 	@Required
 	@Column("String")
@@ -197,8 +197,8 @@ export class PoolSnapshot extends AbstractEntity  {
 	id: ID
 
 	@Required
-	@Column("String")
-	chainId: String
+	@Column("Int")
+	chainId: Int
 
 	@Required
 	@Column("String")
@@ -281,7 +281,7 @@ export class PoolSnapshot extends AbstractEntity  {
 
 const source = `type MarketConfiguration @entity {
     id: ID!
-    chainId: String!
+    chainId: Int!
     contractAddress: String!
     baseTokenAddress: String!
     baseTokenDecimals: Int!
@@ -297,7 +297,7 @@ const source = `type MarketConfiguration @entity {
 
 type CollateralConfiguration @entity {
     id: ID!
-    chainId: String!
+    chainId: Int!
     contractAddress: String!
     assetAddress: String!
     decimals: Int!
@@ -305,7 +305,7 @@ type CollateralConfiguration @entity {
 
 type Pool @entity {
     id: ID! # Constructed as chainId_poolAddress_underlyingTokenAddress
-    chainId: String!
+    chainId: Int!
     creationBlockNumber: Int!
     creationTimestamp: Int!
     underlyingTokenAddress: String! # Address of the underlying token (collateral, base)
@@ -318,7 +318,7 @@ type Pool @entity {
 
 type PositionSnapshot @entity {
     id: ID!
-    chainId: String!
+    chainId: Int!
     poolAddress: String!
     underlyingTokenAddress: String!
     underlyingTokenSymbol: String!
@@ -333,7 +333,7 @@ type PositionSnapshot @entity {
 
 type PoolSnapshot @entity {
     id: ID!
-    chainId: String!
+    chainId: Int!
     poolAddress: String!
     underlyingTokenAddress: String!
     underlyingTokenSymbol: String!
