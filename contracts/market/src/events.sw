@@ -25,6 +25,8 @@ pub struct CollateralAssetResumed {
 pub struct UserBasicEvent {
     pub address: Address,
     pub user_basic: UserBasic,
+    pub base_supply_index: u256, // decimals: 15
+    pub base_borrow_index: u256, // decimals: 15
 }
 
 // Market Basic Event

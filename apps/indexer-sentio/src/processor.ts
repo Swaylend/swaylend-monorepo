@@ -361,133 +361,70 @@ MarketProcessor.bind({
 
     await ctx.store.upsert(collateralConfiguration);
   })
-  .onLogUserSupplyBaseEvent(async (event, ctx) => {
-    const {
-      data: { address, repay_amount, supply_amount },
-    } = event;
-
-    const marketConfigId = `${ctx.chainId}_${ctx.contractAddress}`;
-    const marketConfiguration = await ctx.store.get(
-      MarketConfiguration,
-      marketConfigId
-    );
-
-    if (!marketConfiguration) {
-      throw new Error(
-        `Market configuration not found for market ${ctx.contractAddress} on chain ${ctx.chainId}`
-      );
-    }
-
-    // Chain ID, contract address, user address, token address
-    const id = `${ctx.chainId}_${ctx.contractAddress}_${address.bits}_${marketConfiguration.baseTokenAddress}`;
-
-    let positionSnapshot = await ctx.store.get(PositionSnapshot, id);
-
-    if (!positionSnapshot) {
-      positionSnapshot = new PositionSnapshot({
-        id,
-        chainId: ctx.chainId,
-        poolAddress: ctx.contractAddress,
-        underlyingTokenAddress: marketConfiguration.baseTokenAddress,
-        underlyingTokenSymbol:
-          ASSET_ID_TO_SYMBOL[marketConfiguration.baseTokenAddress],
-        userAddress: address.bits,
-        suppliedAmount: BigDecimal(supply_amount.toString()).dividedBy(
-          BigDecimal(10).pow(marketConfiguration.baseTokenDecimals)
-        ),
-        borrowedAmount: BigDecimal(0),
-        collateralAmount: BigDecimal(0),
-      });
-    } else {
-      if (supply_amount.gt(0)) {
-        positionSnapshot.suppliedAmount = positionSnapshot.suppliedAmount.plus(
-          BigDecimal(supply_amount.toString()).dividedBy(
-            BigDecimal(10).pow(marketConfiguration.baseTokenDecimals)
-          )
-        );
-      }
-
-      if (repay_amount.gt(0)) {
-        positionSnapshot.borrowedAmount = positionSnapshot.borrowedAmount.minus(
-          BigDecimal(repay_amount.toString()).dividedBy(
-            BigDecimal(10).pow(marketConfiguration.baseTokenDecimals)
-          )
-        );
-
-        if (positionSnapshot.borrowedAmount.lt(0)) {
-          positionSnapshot.borrowedAmount = BigDecimal(0);
-        }
-      }
-    }
-
-    await ctx.store.upsert(positionSnapshot);
-  })
-  .onLogUserWithdrawBaseEvent(async (event, ctx) => {
-    const {
-      data: { address, borrow_amount, withdraw_amount },
-    } = event;
-
-    const marketConfigId = `${ctx.chainId}_${ctx.contractAddress}`;
-    const marketConfiguration = await ctx.store.get(
-      MarketConfiguration,
-      marketConfigId
-    );
-
-    if (!marketConfiguration) {
-      throw new Error(
-        `Market configuration not found for market ${ctx.contractAddress} on chain ${ctx.chainId}`
-      );
-    }
-
-    const id = `${ctx.chainId}_${ctx.contractAddress}_${address.bits}_${marketConfiguration.baseTokenAddress}`;
-
-    let positionSnapshot = await ctx.store.get(PositionSnapshot, id);
-
-    if (!positionSnapshot) {
-      positionSnapshot = new PositionSnapshot({
-        id,
-        chainId: ctx.chainId,
-        poolAddress: ctx.contractAddress,
-        underlyingTokenAddress: marketConfiguration.baseTokenAddress,
-        underlyingTokenSymbol:
-          ASSET_ID_TO_SYMBOL[marketConfiguration.baseTokenAddress],
-        userAddress: address.bits,
-        suppliedAmount: BigDecimal(0),
-        borrowedAmount: BigDecimal(borrow_amount.toString()).dividedBy(
-          BigDecimal(10).pow(marketConfiguration.baseTokenDecimals)
-        ),
-        collateralAmount: BigDecimal(0),
-      });
-    } else {
-      if (borrow_amount.gt(0)) {
-        positionSnapshot.borrowedAmount = positionSnapshot.borrowedAmount.plus(
-          BigDecimal(borrow_amount.toString()).dividedBy(
-            BigDecimal(10).pow(marketConfiguration.baseTokenDecimals)
-          )
-        );
-      }
-
-      if (withdraw_amount.gt(0)) {
-        positionSnapshot.suppliedAmount = positionSnapshot.suppliedAmount.minus(
-          BigDecimal(withdraw_amount.toString()).dividedBy(
-            BigDecimal(10).pow(marketConfiguration.baseTokenDecimals)
-          )
-        );
-
-        if (positionSnapshot.suppliedAmount.lt(0)) {
-          positionSnapshot.suppliedAmount = BigDecimal(0);
-        }
-      }
-    }
-
-    await ctx.store.upsert(positionSnapshot);
-  })
-  // .onLogUserBasicEvent(async (event, ctx) => {
+  // .onLogUserSupplyBaseEvent(async (event, ctx) => {
   //   const {
-  //     data: {
-  //       address,
-  //       user_basic: { principal, base_tracking_index },
-  //     },
+  //     data: { address, repay_amount, supply_amount },
+  //   } = event;
+
+  //   const marketConfigId = `${ctx.chainId}_${ctx.contractAddress}`;
+  //   const marketConfiguration = await ctx.store.get(
+  //     MarketConfiguration,
+  //     marketConfigId
+  //   );
+
+  //   if (!marketConfiguration) {
+  //     throw new Error(
+  //       `Market configuration not found for market ${ctx.contractAddress} on chain ${ctx.chainId}`
+  //     );
+  //   }
+
+  //   // Chain ID, contract address, user address, token address
+  //   const id = `${ctx.chainId}_${ctx.contractAddress}_${address.bits}_${marketConfiguration.baseTokenAddress}`;
+
+  //   let positionSnapshot = await ctx.store.get(PositionSnapshot, id);
+
+  //   if (!positionSnapshot) {
+  //     positionSnapshot = new PositionSnapshot({
+  //       id,
+  //       chainId: ctx.chainId,
+  //       poolAddress: ctx.contractAddress,
+  //       underlyingTokenAddress: marketConfiguration.baseTokenAddress,
+  //       underlyingTokenSymbol:
+  //         ASSET_ID_TO_SYMBOL[marketConfiguration.baseTokenAddress],
+  //       userAddress: address.bits,
+  //       suppliedAmount: BigDecimal(supply_amount.toString()).dividedBy(
+  //         BigDecimal(10).pow(marketConfiguration.baseTokenDecimals)
+  //       ),
+  //       borrowedAmount: BigDecimal(0),
+  //       collateralAmount: BigDecimal(0),
+  //     });
+  //   } else {
+  //     if (supply_amount.gt(0)) {
+  //       positionSnapshot.suppliedAmount = positionSnapshot.suppliedAmount.plus(
+  //         BigDecimal(supply_amount.toString()).dividedBy(
+  //           BigDecimal(10).pow(marketConfiguration.baseTokenDecimals)
+  //         )
+  //       );
+  //     }
+
+  //     if (repay_amount.gt(0)) {
+  //       positionSnapshot.borrowedAmount = positionSnapshot.borrowedAmount.minus(
+  //         BigDecimal(repay_amount.toString()).dividedBy(
+  //           BigDecimal(10).pow(marketConfiguration.baseTokenDecimals)
+  //         )
+  //       );
+
+  //       if (positionSnapshot.borrowedAmount.lt(0)) {
+  //         positionSnapshot.borrowedAmount = BigDecimal(0);
+  //       }
+  //     }
+  //   }
+
+  //   await ctx.store.upsert(positionSnapshot);
+  // })
+  // .onLogUserWithdrawBaseEvent(async (event, ctx) => {
+  //   const {
+  //     data: { address, borrow_amount, withdraw_amount },
   //   } = event;
 
   //   const marketConfigId = `${ctx.chainId}_${ctx.contractAddress}`;
@@ -506,14 +443,6 @@ MarketProcessor.bind({
 
   //   let positionSnapshot = await ctx.store.get(PositionSnapshot, id);
 
-  //   const presentValue = getPresentValue(
-  //     BigDecimal(principal.value.toString()),
-  //     BigDecimal(base_tracking_index.toString())
-  //   ).times(BigDecimal(principal.negative ? -1 : 1));
-
-  //   let oldSuppliedAmount;
-  //   let oldBorrowedAmount;
-
   //   if (!positionSnapshot) {
   //     positionSnapshot = new PositionSnapshot({
   //       id,
@@ -524,65 +453,95 @@ MarketProcessor.bind({
   //         ASSET_ID_TO_SYMBOL[marketConfiguration.baseTokenAddress],
   //       userAddress: address.bits,
   //       suppliedAmount: BigDecimal(0),
-  //       borrowedAmount: BigDecimal(0),
+  //       borrowedAmount: BigDecimal(borrow_amount.toString()).dividedBy(
+  //         BigDecimal(10).pow(marketConfiguration.baseTokenDecimals)
+  //       ),
   //       collateralAmount: BigDecimal(0),
-  //       baseTrackingIndex: BigDecimal(1),
   //     });
-
-  //     oldSuppliedAmount = BigDecimal(0);
-  //     oldBorrowedAmount = BigDecimal(0);
   //   } else {
-  //     oldSuppliedAmount = getPrincipalValue(
-  //       positionSnapshot.suppliedAmount,
-  //       positionSnapshot.baseTrackingIndex
-  //     );
-  //     oldBorrowedAmount = getPrincipalValue(
-  //       positionSnapshot.borrowedAmount.times(-1),
-  //       BigDecimal(base_tracking_index.toString())
-  //     );
+  //     if (borrow_amount.gt(0)) {
+  //       positionSnapshot.borrowedAmount = positionSnapshot.borrowedAmount.plus(
+  //         BigDecimal(borrow_amount.toString()).dividedBy(
+  //           BigDecimal(10).pow(marketConfiguration.baseTokenDecimals)
+  //         )
+  //       );
+  //     }
+
+  //     if (withdraw_amount.gt(0)) {
+  //       positionSnapshot.suppliedAmount = positionSnapshot.suppliedAmount.minus(
+  //         BigDecimal(withdraw_amount.toString()).dividedBy(
+  //           BigDecimal(10).pow(marketConfiguration.baseTokenDecimals)
+  //         )
+  //       );
+
+  //       if (positionSnapshot.suppliedAmount.lt(0)) {
+  //         positionSnapshot.suppliedAmount = BigDecimal(0);
+  //       }
+  //     }
   //   }
 
-  //   positionSnapshot.suppliedAmount = presentValue.lte(0)
-  //     ? BigDecimal(0)
-  //     : presentValue;
-
-  //   positionSnapshot.borrowedAmount = presentValue.lte(0)
-  //     ? presentValue
-  //     : BigDecimal(0);
-
   //   await ctx.store.upsert(positionSnapshot);
-
-  // // Calculate supply delta and borrow delta
-  // const supplyDelta =
-  //   positionSnapshot.suppliedAmount.minus(oldSuppliedAmount);
-  // const borrowDelta =
-  //   positionSnapshot.borrowedAmount.minus(oldBorrowedAmount);
-
-  // // Pool snapshot
-  // const poolSnapshotId = `${ctx.chainId}_${ctx.contractAddress}_${marketConfiguration.baseTokenAddress}`;
-  // const poolSnapshot = await ctx.store.get(PoolSnapshot, poolSnapshotId);
-
-  // if (!poolSnapshot) {
-  //   throw new Error(
-  //     `Pool snapshot not found for market ${ctx.contractAddress} on chain ${ctx.chainId}`
-  //   );
-  // }
-
-  // poolSnapshot.suppliedAmount = BigDecimal(poolSnapshot.suppliedAmount).plus(
-  //   supplyDelta
-  // );
-  // poolSnapshot.borrowedAmount = BigDecimal(poolSnapshot.borrowedAmount).plus(
-  //   borrowDelta
-  // );
-  // poolSnapshot.nonRecursiveSuppliedAmount = BigDecimal(
-  //   poolSnapshot.nonRecursiveSuppliedAmount
-  // ).plus(supplyDelta);
-  // poolSnapshot.availableAmount = poolSnapshot.suppliedAmount.minus(
-  //   poolSnapshot.borrowedAmount
-  // );
-
-  // await ctx.store.upsert(poolSnapshot);
   // })
+  .onLogUserBasicEvent(async (event, ctx) => {
+    const {
+      data: {
+        address,
+        user_basic: { principal },
+        base_supply_index,
+        base_borrow_index,
+      },
+    } = event;
+
+    const marketConfigId = `${ctx.chainId}_${ctx.contractAddress}`;
+    const marketConfiguration = await ctx.store.get(
+      MarketConfiguration,
+      marketConfigId
+    );
+
+    if (!marketConfiguration) {
+      throw new Error(
+        `Market configuration not found for market ${ctx.contractAddress} on chain ${ctx.chainId}`
+      );
+    }
+
+    const id = `${ctx.chainId}_${ctx.contractAddress}_${address.bits}_${marketConfiguration.baseTokenAddress}`;
+
+    let positionSnapshot = await ctx.store.get(PositionSnapshot, id);
+
+    const presentValue = getPresentValue(
+      BigDecimal(principal.value.toString()),
+      BigDecimal(
+        principal.negative
+          ? base_borrow_index.toString()
+          : base_supply_index.toString()
+      )
+    ).times(BigDecimal(principal.negative ? -1 : 1));
+
+    if (!positionSnapshot) {
+      positionSnapshot = new PositionSnapshot({
+        id,
+        chainId: ctx.chainId,
+        poolAddress: ctx.contractAddress,
+        underlyingTokenAddress: marketConfiguration.baseTokenAddress,
+        underlyingTokenSymbol:
+          ASSET_ID_TO_SYMBOL[marketConfiguration.baseTokenAddress],
+        userAddress: address.bits,
+        suppliedAmount: BigDecimal(0),
+        borrowedAmount: BigDecimal(0),
+        collateralAmount: BigDecimal(0),
+      });
+    }
+
+    positionSnapshot.suppliedAmount = presentValue.lte(0)
+      ? BigDecimal(0)
+      : presentValue;
+
+    positionSnapshot.borrowedAmount = presentValue.lte(0)
+      ? presentValue
+      : BigDecimal(0);
+
+    await ctx.store.upsert(positionSnapshot);
+  })
   .onLogUserSupplyCollateralEvent(async (event, ctx) => {
     const {
       data: { address, asset_id, amount },
@@ -794,13 +753,21 @@ MarketProcessor.bind({
       base_borrow_index.toString()
     ).dividedBy(FACTOR_SCALE_15);
 
-    // Supplied amount and available amount
-    poolSnapshot.suppliedAmount = BigDecimal(
-      total_supply_base.toString()
-    ).dividedBy(BigDecimal(10).pow(marketConfiguration.baseTokenDecimals));
+    // Supplied amount, borrowed amount and available amount
+    poolSnapshot.suppliedAmount = BigDecimal(total_supply_base.toString())
+      .dividedBy(BigDecimal(10).pow(marketConfiguration.baseTokenDecimals))
+      .times(poolSnapshot.supplyIndex);
+
     poolSnapshot.nonRecursiveSuppliedAmount = BigDecimal(
       total_supply_base.toString()
-    ).dividedBy(BigDecimal(10).pow(marketConfiguration.baseTokenDecimals));
+    )
+      .dividedBy(BigDecimal(10).pow(marketConfiguration.baseTokenDecimals))
+      .times(poolSnapshot.supplyIndex);
+
+    poolSnapshot.borrowedAmount = BigDecimal(total_borrow_base.toString())
+      .dividedBy(BigDecimal(10).pow(marketConfiguration.baseTokenDecimals))
+      .times(poolSnapshot.borrowIndex);
+
     poolSnapshot.availableAmount = BigDecimal(total_supply_base.toString())
       .minus(BigDecimal(total_borrow_base.toString()))
       .dividedBy(BigDecimal(10).pow(marketConfiguration.baseTokenDecimals));

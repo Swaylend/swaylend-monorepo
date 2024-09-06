@@ -1333,6 +1333,8 @@ fn update_base_principal(account: Address, basic: UserBasic, principal_new: I256
     log(UserBasicEvent {
         address: account,
         user_basic: basic,
+        base_supply_index: market_basic.base_supply_index,
+        base_borrow_index: market_basic.base_borrow_index,
     });
 }
 
