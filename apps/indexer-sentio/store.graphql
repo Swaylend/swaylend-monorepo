@@ -4,15 +4,14 @@ type MarketConfiguration @entity {
     contractAddress: String!
     baseTokenAddress: String!
     baseTokenDecimals: Int!
-    baseTrackingIndexScale: BigDecimal!
     supplyKink: BigDecimal!
     borrowKink: BigDecimal!
+    supplyPerSecondInterestRateBase: BigDecimal!
     supplyPerSecondInterestRateSlopeLow: BigDecimal!
     supplyPerSecondInterestRateSlopeHigh: BigDecimal!
-    supplyPerSecondInterestRateBase: BigDecimal!
+    borrowPerSecondInterestRateBase: BigDecimal!
     borrowPerSecondInterestRateSlopeLow: BigDecimal!
     borrowPerSecondInterestRateSlopeHigh: BigDecimal!
-    borrowPerSecondInterestRateBase: BigDecimal!    
 }
 
 type CollateralConfiguration @entity {

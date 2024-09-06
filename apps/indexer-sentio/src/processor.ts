@@ -73,7 +73,14 @@ MarketProcessor.bind({
         market_config: {
           base_token,
           base_token_decimals,
-          base_tracking_index_scale,
+          borrow_kink,
+          supply_kink,
+          supply_per_second_interest_rate_base,
+          supply_per_second_interest_rate_slope_low,
+          supply_per_second_interest_rate_slope_high,
+          borrow_per_second_interest_rate_base,
+          borrow_per_second_interest_rate_slope_low,
+          borrow_per_second_interest_rate_slope_high,
         },
       },
     } = event;
@@ -90,8 +97,25 @@ MarketProcessor.bind({
         contractAddress: ctx.contractAddress,
         baseTokenAddress: base_token,
         baseTokenDecimals: base_token_decimals,
-        baseTrackingIndexScale: BigDecimal(
-          base_tracking_index_scale.toString()
+        supplyKink: BigDecimal(supply_kink.toString()),
+        borrowKink: BigDecimal(borrow_kink.toString()),
+        supplyPerSecondInterestRateBase: BigDecimal(
+          supply_per_second_interest_rate_base.toString()
+        ),
+        supplyPerSecondInterestRateSlopeLow: BigDecimal(
+          supply_per_second_interest_rate_slope_low.toString()
+        ),
+        supplyPerSecondInterestRateSlopeHigh: BigDecimal(
+          supply_per_second_interest_rate_slope_high.toString()
+        ),
+        borrowPerSecondInterestRateBase: BigDecimal(
+          borrow_per_second_interest_rate_base.toString()
+        ),
+        borrowPerSecondInterestRateSlopeLow: BigDecimal(
+          borrow_per_second_interest_rate_slope_low.toString()
+        ),
+        borrowPerSecondInterestRateSlopeHigh: BigDecimal(
+          borrow_per_second_interest_rate_slope_high.toString()
         ),
       });
     } else {
@@ -99,8 +123,25 @@ MarketProcessor.bind({
       marketConfiguration.baseTokenDecimals = base_token_decimals;
       marketConfiguration.chainId = ctx.chainId;
       marketConfiguration.contractAddress = ctx.contractAddress;
-      marketConfiguration.baseTrackingIndexScale = BigDecimal(
-        base_tracking_index_scale.toString()
+      marketConfiguration.supplyKink = BigDecimal(supply_kink.toString());
+      marketConfiguration.borrowKink = BigDecimal(borrow_kink.toString());
+      marketConfiguration.supplyPerSecondInterestRateBase = BigDecimal(
+        supply_per_second_interest_rate_base.toString()
+      );
+      marketConfiguration.supplyPerSecondInterestRateSlopeLow = BigDecimal(
+        supply_per_second_interest_rate_slope_low.toString()
+      );
+      marketConfiguration.supplyPerSecondInterestRateSlopeHigh = BigDecimal(
+        supply_per_second_interest_rate_slope_high.toString()
+      );
+      marketConfiguration.borrowPerSecondInterestRateBase = BigDecimal(
+        borrow_per_second_interest_rate_base.toString()
+      );
+      marketConfiguration.borrowPerSecondInterestRateSlopeLow = BigDecimal(
+        borrow_per_second_interest_rate_slope_low.toString()
+      );
+      marketConfiguration.borrowPerSecondInterestRateSlopeHigh = BigDecimal(
+        borrow_per_second_interest_rate_slope_high.toString()
       );
     }
 
