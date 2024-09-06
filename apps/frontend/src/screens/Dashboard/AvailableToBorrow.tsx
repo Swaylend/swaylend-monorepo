@@ -2,10 +2,12 @@ import { Column, Row } from '@components/Flex';
 import Progressbar from '@components/Progressbar';
 import SizedBox from '@components/SizedBox';
 import Text from '@components/Text';
+import { useAccount, useIsConnected } from '@fuels/react';
 import { useCollateralUtilization } from '@src/hooks/useCollateralUtilization';
 import { usePrice } from '@src/hooks/usePrice';
 import { useUserSupplyBorrow } from '@src/hooks/useUserSupplyBorrow';
 import BN from '@src/utils/BN';
+import getAddressB256 from '@src/utils/address';
 import { getMarketContract } from '@src/utils/readContracts';
 import { walletToRead } from '@src/utils/walletToRead';
 import { useStores } from '@stores';
@@ -17,6 +19,8 @@ import { useEffect, useMemo, useState } from 'react';
 type IProps = any;
 
 const AvailableToBorrow: React.FC<IProps> = observer(() => {
+  const { account } = useAccount();
+  const { isConnected } = useIsConnected();
   const [wallet, setWallet] = useState<WalletUnlocked | null>(null);
 
   useEffect(() => {
@@ -33,7 +37,7 @@ const AvailableToBorrow: React.FC<IProps> = observer(() => {
 
   const { data: userSupplyBorrow } = useUserSupplyBorrow(
     marketContract,
-    rootStore.accountStore.addressInput?.value ?? ''
+    getAddressB256(account)
   );
   const borrowedBalance = useMemo(() => {
     if (userSupplyBorrow == null) return BN.ZERO;
@@ -46,7 +50,7 @@ const AvailableToBorrow: React.FC<IProps> = observer(() => {
     rootStore
   );
 
-  if (!rootStore.accountStore.isLoggedIn) return null;
+  if (!isConnected) return null;
   if (!borrowedBalance || borrowedBalance.isZero()) return null;
   return (
     <Column crossAxisSize="max">

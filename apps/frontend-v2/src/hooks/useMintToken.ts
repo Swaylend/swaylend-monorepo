@@ -1,5 +1,7 @@
+import { ErrorToast, TransactionSuccessToast } from '@/components/Toasts';
 import { Token } from '@/contract-types';
-import { CONTRACT_ADDRESSES, EXPLORER_URL, FAUCET_AMOUNTS } from '@/utils';
+import { useMarketStore } from '@/stores';
+import { DEPLOYED_MARKETS, FAUCET_AMOUNTS } from '@/utils';
 import { useAccount, useWallet } from '@fuels/react';
 import { useMutation } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
@@ -9,13 +11,15 @@ import { toast } from 'react-toastify';
 export const useMintToken = (symbol: string, decimals: number) => {
   const { wallet } = useWallet();
   const { account } = useAccount();
+  const { market } = useMarketStore();
 
   return useMutation({
-    mutationKey: ['mintToken', symbol, account],
+    mutationKey: ['mintToken', symbol, account, market],
     mutationFn: async () => {
-      if (!wallet || !account) return;
+      if (!wallet || !account) return null;
+
       const tokenFactoryContract = new Token(
-        CONTRACT_ADDRESSES.tokenFactory,
+        DEPLOYED_MARKETS[market].tokenFactoryAddress,
         wallet
       );
 
@@ -38,29 +42,15 @@ export const useMintToken = (symbol: string, decimals: number) => {
         },
       });
 
-      return transactionResult;
+      return transactionResult.transactionId;
     },
     onSuccess: (data) => {
-      console.log('Success minting token:', data);
       if (data) {
-        toast(
-          <div>
-            Transaction successful:{' '}
-            <a
-              target="_blank"
-              rel="noreferrer"
-              className="underline cursor-pointer text-blue-500"
-              href={`${EXPLORER_URL}/${data.transactionId}`}
-            >
-              {data.transactionId}
-            </a>
-          </div>
-        );
+        TransactionSuccessToast({ transactionId: data });
       }
     },
     onError: (error) => {
-      console.error('Error minting token:', error);
-      toast('Error');
+      ErrorToast({ error: error.message });
     },
   });
 };

@@ -1,6 +1,8 @@
+use std::{path::PathBuf, thread::sleep, time::Duration};
+
 use dotenv::dotenv;
 use fuels::accounts::{provider::Provider, wallet::WalletUnlocked};
-use token_sdk::TokenContract;
+use token_sdk::{TokenAsset, TokenContract};
 
 #[tokio::test]
 async fn deploy() {
@@ -15,7 +17,29 @@ async fn deploy() {
 
     let token_contract = TokenContract::deploy(&wallet).await.unwrap();
 
-    token_contract.deploy_tokens(&wallet, None).await;
+    let (assets, _) = token_contract.deploy_tokens(&wallet, None).await;
+
+    for asset in assets.keys() {
+        if asset == "ETH" {
+            continue;
+        }
+
+        let asset = assets.get(asset).unwrap();
+        let asset = TokenAsset::new(
+            wallet.clone(),
+            token_contract.contract_id().try_into().unwrap(),
+            &asset.symbol,
+        );
+
+        asset
+            .set_decimals(asset.decimals.try_into().unwrap())
+            .await
+            .unwrap();
+        asset.set_name(asset.symbol.clone()).await.unwrap();
+        asset.set_symbol(asset.symbol.clone()).await.unwrap();
+        sleep(Duration::from_secs(1));
+        println!("Asset {} has been deployed", asset.symbol);
+    }
 
     println!(
         "The tokens have been deployed at 0x{}",

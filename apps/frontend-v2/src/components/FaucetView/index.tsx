@@ -1,113 +1,136 @@
 'use client';
-import { useMintToken } from '@/hooks';
-import { FAUCET_URL, TOKENS_BY_SYMBOL } from '@/utils';
-import { useAccount, useBalance, useIsConnected } from '@fuels/react';
+import {
+  useCollateralConfigurations,
+  useMarketConfiguration,
+  useMintToken,
+} from '@/hooks';
+import {
+  ASSET_ID_TO_SYMBOL,
+  FAUCET_URL,
+  FUEL_ETH_BASE_ASSET_ID,
+  formatUnits,
+} from '@/utils';
+import { useAccount, useBalance } from '@fuels/react';
+import { useIsMutating } from '@tanstack/react-query';
+import BigNumber from 'bignumber.js';
 import { BN, toFixed } from 'fuels';
 import React, { useMemo } from 'react';
 import { Button } from '../ui/button';
 
+type FaucetRowProps = {
+  account: string | undefined;
+  assetId: string;
+  symbol: string;
+  decimals: number;
+  mintPending: boolean;
+  ethBalance: BN;
+};
+
+const FaucetRow = ({
+  account,
+  assetId,
+  symbol,
+  decimals,
+  mintPending,
+  ethBalance,
+}: FaucetRowProps) => {
+  const { balance } = useBalance({
+    address: account,
+    assetId: assetId,
+  });
+
+  const { mutate: mint } = useMintToken(symbol, decimals);
+
+  return (
+    <div key={assetId} className="flex gap-x-4">
+      <div>
+        {toFixed(
+          formatUnits(
+            BigNumber(balance ? balance.toString() : '0'),
+            decimals
+          ).toString(),
+          {
+            precision: 4,
+          }
+        )}
+        {symbol}
+      </div>
+      <Button
+        disabled={
+          !account || mintPending || (symbol !== 'ETH' && ethBalance.eq(0))
+        }
+        onMouseDown={() => {
+          if (symbol === 'ETH') {
+            window.open(`${FAUCET_URL}/?address=${account}`, 'blank');
+            return null;
+          }
+          mint();
+        }}
+      >
+        Mint
+      </Button>
+    </div>
+  );
+};
+
 export const FaucetView = () => {
-  const { isConnected } = useIsConnected();
   const { account } = useAccount();
 
-  const { balance: etherBalance } = useBalance({
-    address: account as string,
-    assetId: TOKENS_BY_SYMBOL.ETH.assetId,
-  });
-  const { balance: usdcBalance } = useBalance({
-    address: account as string,
-    assetId: TOKENS_BY_SYMBOL.USDC.assetId,
-  });
-  const { balance: btcBalance } = useBalance({
-    address: account as string,
-    assetId: TOKENS_BY_SYMBOL.BTC.assetId,
-  });
-  const { balance: uniBalance } = useBalance({
-    address: account as string,
-    assetId: TOKENS_BY_SYMBOL.UNI.assetId,
+  const { data: marketConfiguration, isPending: isPendingMarketConfiguration } =
+    useMarketConfiguration();
+
+  const {
+    data: collateralConfigurations,
+    isPending: isPendingCollateralConfigurations,
+  } = useCollateralConfigurations();
+
+  const { balance: ethBalance } = useBalance({
+    address: account ?? undefined,
+    assetId: FUEL_ETH_BASE_ASSET_ID,
   });
 
-  const { mutate: mintTokenBTC, isPending: isMintingBTC } = useMintToken(
-    'BTC',
-    TOKENS_BY_SYMBOL.BTC.decimals
-  );
+  const assets = useMemo(() => {
+    if (!marketConfiguration || !collateralConfigurations) return [];
 
-  const { mutate: mintTokenUSDC, isPending: isMintingUSDC } = useMintToken(
-    'USDC',
-    TOKENS_BY_SYMBOL.USDC.decimals
-  );
+    return [
+      ...Object.values(collateralConfigurations).map(
+        (collateralConfiguration) => {
+          return {
+            assetId: collateralConfiguration.asset_id,
+            symbol: ASSET_ID_TO_SYMBOL[collateralConfiguration.asset_id],
+            decimals:
+              collateralConfigurations[collateralConfiguration.asset_id]
+                .decimals,
+          };
+        }
+      ),
+      {
+        assetId: marketConfiguration.baseToken,
+        symbol: ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken],
+        decimals: marketConfiguration.baseTokenDecimals,
+      },
+    ];
+  }, [marketConfiguration, collateralConfigurations]);
 
-  const { mutate: mintTokenUNI, isPending: isMintingUNI } = useMintToken(
-    'UNI',
-    TOKENS_BY_SYMBOL.UNI.decimals
-  );
+  const numberOfMintsPending = useIsMutating({ mutationKey: ['mintToken'] });
 
-  const isMintingInProgress = useMemo(
-    () => isMintingBTC || isMintingUSDC || isMintingUNI,
-    [isMintingBTC, isMintingUSDC, isMintingUNI]
-  );
+  if (isPendingMarketConfiguration || isPendingCollateralConfigurations) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>
-      {Object.values(TOKENS_BY_SYMBOL).map((token) => {
-        let balance = new BN(0);
-        switch (token.symbol) {
-          case 'ETH':
-            balance = etherBalance ?? new BN(0);
-            break;
-          case 'BTC':
-            balance = btcBalance ?? new BN(0);
-            break;
-          case 'USDC':
-            balance = usdcBalance ?? new BN(0);
-            break;
-          case 'UNI':
-            balance = uniBalance ?? new BN(0);
-            break;
-          default:
-            break;
-        }
-
-        return (
-          <div key={token.assetId} className="flex gap-x-4">
-            <div>{token.name}</div>
-            <div>
-              {toFixed(balance.formatUnits(token.decimals).toString(), {
-                precision: 4,
-              })}
-              {token.symbol}
-            </div>
-            <Button
-              disabled={
-                !isConnected ||
-                isMintingInProgress ||
-                ((etherBalance ? etherBalance.eq(0) : false) &&
-                  token.symbol !== 'ETH')
-              }
-              onClick={() => {
-                switch (token.symbol) {
-                  case 'ETH':
-                    window.open(`${FAUCET_URL}/?address=${account}`, 'blank');
-                    break;
-                  case 'BTC':
-                    mintTokenBTC();
-                    break;
-                  case 'USDC':
-                    mintTokenUSDC();
-                    break;
-                  case 'UNI':
-                    mintTokenUNI();
-                    break;
-                  default:
-                    break;
-                }
-              }}
-            >
-              Mint
-            </Button>
-          </div>
-        );
-      })}
+      {assets.map((asset) => (
+        <FaucetRow
+          key={asset.assetId}
+          assetId={asset.assetId}
+          symbol={asset.symbol}
+          decimals={asset.decimals}
+          account={account ?? undefined}
+          mintPending={numberOfMintsPending > 0}
+          ethBalance={ethBalance ?? new BN(0)}
+        />
+      ))}
     </div>
   );
 };

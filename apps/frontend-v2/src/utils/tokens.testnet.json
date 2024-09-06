@@ -3,24 +3,32 @@
     "name": "Ethereum",
     "symbol": "ETH",
     "decimals": 9,
-    "assetId": "0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07"
+    "assetId": "0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07",
+    "pythSymbol": "Crypto.ETH/USD",
+    "priceFeed": "ff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace"
   },
   {
     "name": "USDC",
     "symbol": "USDC",
     "decimals": 6,
-    "assetId": "0x02f373b67576faf604dceb27675e88a3eb414f4bef5dea6cd3b143eeadd9401a"
+    "assetId": "0x02f373b67576faf604dceb27675e88a3eb414f4bef5dea6cd3b143eeadd9401a",
+    "pythSymbol": "Crypto.USDC/USD",
+    "priceFeed": "eaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a"
   },
   {
     "name": "Bitcoin",
     "symbol": "BTC",
     "decimals": 8,
-    "assetId": "0x2df61e167accc18479e13d9564261b22d1bf1be5f200cd80139138c83c10e9bc"
+    "assetId": "0x2df61e167accc18479e13d9564261b22d1bf1be5f200cd80139138c83c10e9bc",
+    "pythSymbol": "Crypto.BTC/USD",
+    "priceFeed": "e62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43"
   },
   {
     "name": "Uniswap",
     "symbol": "UNI",
     "decimals": 9,
-    "assetId": "0xb5efb423f3a4a10fed5e349d0096c4cd75ffb97c6a3e21bb59a685092698b0cf"
+    "assetId": "0xb5efb423f3a4a10fed5e349d0096c4cd75ffb97c6a3e21bb59a685092698b0cf",
+    "pythSymbol": "Crypto.UNI/USD",
+    "priceFeed": "78d185a741d07edb3412b09008b7c5cfb9bbbd7d568bf00ba737b456ba171501"
   }
 ]

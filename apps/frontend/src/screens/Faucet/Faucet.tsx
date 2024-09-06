@@ -2,6 +2,7 @@ import Layout from '@components/Layout';
 import SizedBox from '@components/SizedBox';
 import Text from '@components/Text';
 import styled from '@emotion/styled';
+import { useIsConnected } from '@fuels/react';
 import { FaucetVMProvider, useFaucetVM } from '@screens/Faucet/FaucetVm';
 import TokensFaucetTable from '@screens/Faucet/TokensFaucetTable';
 import { useStores } from '@stores';
@@ -27,7 +28,7 @@ const Root = styled.div`
 
 const FaucetImpl: React.FC = () => {
   const vm = useFaucetVM();
-  const { accountStore } = useStores();
+  const { isConnected } = useIsConnected();
   return (
     <Layout>
       <Observer>
@@ -37,7 +38,7 @@ const FaucetImpl: React.FC = () => {
               <Text weight={600} size="big">
                 Faucet for Fuel Network
               </Text>
-              {!accountStore.isLoggedIn && (
+              {!isConnected && (
                 <>
                   <SizedBox height={8} />
                   <Text>Connect wallet to mint tokens</Text>

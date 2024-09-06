@@ -1,0 +1,26 @@
+name: Fuel Greeter Indexer
+networks:
+  - id: 0
+    start_block: 9495000
+    contracts:
+      - name: Market
+        address: 0x7c8fb9bb98269f51789c115c251e37a4dab4292e7795396a6a21250d4cec8aff
+        abi_file_path: ../../contracts/market/out/release/market-abi.json
+        handler: ./src/EventHandlers.ts
+        events:
+          - name: CollateralAssetAdded
+          - name: CollateralAssetUpdated
+          - name: CollateralAssetPaused
+          - name: CollateralAssetResumed
+          - name: UserBasicEvent
+          - name: MarketBasicEvent
+          - name: UserSupplyCollateralEvent
+          - name: UserWithdrawCollateralEvent
+          - name: UserSupplyBaseEvent
+          - name: UserWithdrawBaseEvent
+          - name: AbsorbCollateralEvent
+          - name: UserLiquidatedEvent
+          - name: BuyCollateralEvent
+          - name: ReservesWithdrawnEvent
+          - name: PauseConfigurationEvent
+          - name: MarketConfigurationEvent

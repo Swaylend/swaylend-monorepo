@@ -11,7 +11,7 @@ import { useStores } from '@src/stores';
 import BN from '@src/utils/BN';
 import { getMarketContract } from '@src/utils/readContracts';
 import { initProvider, walletToRead } from '@src/utils/walletToRead';
-import type { Provider, WalletUnlocked } from 'fuels';
+import type { WalletUnlocked } from 'fuels';
 import { Observer } from 'mobx-react-lite';
 import { useEffect, useMemo, useState } from 'react';
 
@@ -47,15 +47,13 @@ const ItemColumn = styled.div`
 
 export const Market = () => {
   const rootStore = useStores();
-  const { accountStore, settingsStore, dashboardStore } = rootStore;
+  const { settingsStore, dashboardStore } = rootStore;
   const { data: priceData, getPrice } = usePrice(dashboardStore.allTokens);
 
   const [wallet, setWallet] = useState<WalletUnlocked | null>(null);
-  const [provider, setProvider] = useState<Provider | null>(null);
 
   useEffect(() => {
     walletToRead().then((w) => setWallet(w));
-    initProvider().then((p) => setProvider(p));
   }, []);
   const marketContract = getMarketContract(
     wallet!,
