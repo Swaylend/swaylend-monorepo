@@ -1,5 +1,7 @@
 import { BigDecimal } from '@sentio/sdk';
 import { FuelNetwork } from '@sentio/sdk/fuel';
+import { DateTime } from 'fuels';
+import { ASSET_ID_TO_SYMBOL } from './constants.js';
 import {
   CollateralConfiguration,
   MarketConfiguration,
@@ -8,8 +10,6 @@ import {
   PositionSnapshot,
 } from './schema/store.js';
 import { MarketProcessor } from './types/fuel/MarketProcessor.js';
-import { ASSET_ID_TO_SYMBOL } from './constants.js';
-import { DateTime } from 'fuels';
 
 const FACTOR_SCALE_15 = BigDecimal(10).pow(15);
 const FACTOR_SCALE_18 = BigDecimal(10).pow(18);
