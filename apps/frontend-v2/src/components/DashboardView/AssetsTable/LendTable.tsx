@@ -135,6 +135,7 @@ export const LendTable = () => {
               </Button>
               <Button
                 className="w-1/2"
+                variant={'tertiary'}
                 onClick={() => {
                   handleBaseTokenClick(ACTION_TYPE.WITHDRAW);
                 }}

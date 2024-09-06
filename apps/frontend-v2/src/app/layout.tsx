@@ -33,7 +33,7 @@ export default function RootLayout({
       >
         <Providers>
           <Navbar />
-          <div className="z-10 bg-background">{children}</div>
+          <div className="bg-background">{children}</div>
           <Footer />
         </Providers>
       </body>

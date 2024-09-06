@@ -117,6 +117,7 @@ export const BorrowTable = () => {
               <Button
                 disabled={!userSupplyBorrow || userSupplyBorrow.borrowed.eq(0)}
                 className="w-1/2"
+                variant={'tertiary'}
                 onClick={() => {
                   handleBaseTokenClick(ACTION_TYPE.REPAY);
                 }}

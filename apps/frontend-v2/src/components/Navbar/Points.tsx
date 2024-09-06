@@ -27,11 +27,11 @@ export const Points = () => {
         <div className="rounded-full bg-white/5 px-4 py-2 text-neutral5">
           Fuel Pts <span className="text-neutral2">27</span>
         </div>
-        <Button className="w-full flex gap-x-2" variant={'tertiary'}>
+        <Button className="w-full flex gap-x-2" variant={'tertiary-card'}>
           <Trophy className="w-5 h-5" />
           Points Leaderboard
         </Button>
-        <Button className="w-full flex gap-x-2" variant={'tertiary'}>
+        <Button className="w-full flex gap-x-2" variant={'tertiary-card'}>
           <Copy className="w-5 h-5" /> Copy referral code
         </Button>
       </PopoverContent>

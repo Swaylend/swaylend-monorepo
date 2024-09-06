@@ -94,6 +94,7 @@ const CollateralTableRow = ({
           <Button
             className="w-1/2"
             disabled={!canWithdraw}
+            variant={'tertiary'}
             onClick={() =>
               canWithdraw && handleAssetClick(ACTION_TYPE.WITHDRAW, assetId)
             }
