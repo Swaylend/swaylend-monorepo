@@ -9,6 +9,7 @@ import Logo from '/public/icons/dark-logo.svg?url';
 import { Line } from '../Line';
 import { ConnectButton } from './ConnectButton';
 import { MarketSwitcher } from './MarketSwitcher';
+import { Points } from './Points';
 
 const NAVBAR_LINKS = [
   { href: '/', label: 'Dashboard', icon: <LayoutDashboard /> },
@@ -47,6 +48,7 @@ export const Navbar = () => {
           ))}
         </div>
         <div className="flex items-center gap-x-2">
+          <Points />
           <MarketSwitcher />
           <ConnectButton />
         </div>

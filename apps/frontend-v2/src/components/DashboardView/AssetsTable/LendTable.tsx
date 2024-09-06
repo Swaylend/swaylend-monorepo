@@ -17,11 +17,35 @@ import Image from 'next/image';
 import React from 'react';
 import USDC from '/public/tokens/usdc.svg?url';
 import USDT from '/public/tokens/usdt.svg?url';
+import FUEL from '/public/icons/fuel-logo.svg?url';
+import SWAY from '/public/tokens/sway.svg?url';
+import { type Point, PointIcons } from '@/components/PointIcons';
 
 const SYMBOL_TO_LOGO: Record<string, StaticImport> = {
   USDC: USDC,
   USDT: USDT,
 };
+
+const POINTS_LEND: Point[] = [
+  {
+    id: '1',
+    name: 'Fuel',
+    description: 'Earn Fuel Points by lending assets',
+    icon: FUEL,
+  },
+  {
+    id: '2',
+    name: 'SwayLend',
+    description: 'Earn SwayLend Points by lending assets',
+    icon: SWAY,
+  },
+  {
+    id: '2',
+    name: 'SwayLend',
+    description: 'Earn SwayLend Points by lending assets',
+    icon: USDC,
+  },
+];
 
 export const LendTable = () => {
   const { account } = useAccount();
@@ -96,7 +120,9 @@ export const LendTable = () => {
             ).toFormat(2)}{' '}
             {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
           </TableCell>
-          <TableCell>100</TableCell>
+          <TableCell>
+            <PointIcons points={POINTS_LEND} />
+          </TableCell>
           <TableCell>
             <div className="flex gap-x-2 w-full">
               <Button

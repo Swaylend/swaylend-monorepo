@@ -1,4 +1,5 @@
 import {
+  useBorrowBase,
   useMarketConfiguration,
   usePrice,
   useSupplyBase,
@@ -45,6 +46,8 @@ export const Input = () => {
 
   const { mutate: withdrawBase } = useWithdrawBase();
 
+  const { mutate: borrowBase } = useBorrowBase();
+
   const { market } = useMarketStore();
 
   const handleSubmit = () => {
@@ -76,10 +79,16 @@ export const Input = () => {
         break;
       }
       case ACTION_TYPE.BORROW:
+        if (!priceData || !tokenAmount.gt(0)) return;
+
+        borrowBase({
+          tokenAmount,
+          priceUpdateData: priceData.priceUpdateData,
+        });
         break;
       case ACTION_TYPE.REPAY:
+        supplyBase(tokenAmount);
         break;
-
       default:
         break;
     }

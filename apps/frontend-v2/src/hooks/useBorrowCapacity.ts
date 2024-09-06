@@ -47,6 +47,15 @@ export const useBorrowCapacity = () => {
             formatUnits(
               value.times(priceData.prices[key]),
               collateralConfigurations[key].decimals
+            ).times(
+              formatUnits(
+                BigNumber(
+                  collateralConfigurations[
+                    key
+                  ].borrow_collateral_factor.toString() ?? 0
+                ),
+                18
+              )
             )
           );
         }, new BigNumber(0))
