@@ -1,6 +1,6 @@
 SELECT
     argMax (toUnixTimestamp(__genBlockTime__), __genBlockTime__) as timestamp,
-    -- TODO: block_date: YYYY-MM-DD HH:00:00
+    argMax (toStartOfHour(__genBlockTime__), __genBlockTime__) as block_date,
     argMax (chainId, __genBlockTime__) as chain_id,
     argMax (poolAddress, __genBlockTime__) as pool_address,
     argMax (underlyingTokenAddress, __genBlockTime__) as underlying_token_address,
@@ -12,9 +12,9 @@ SELECT
     argMax (borrowedAmountUsd, __genBlockTime__) as borrowed_amount_usd,
     argMax (collateralAmount, __genBlockTime__) as collateral_amount,
     argMax (collateralAmountUsd, __genBlockTime__) as collateral_amount_usd
-from
-  `PositionSnapshot_raw`
-where
-  __genBlockTime__ <= '2024-09-06 23:00:00'
-group by
-  id
+FROM
+    `PositionSnapshot_raw`
+WHERE
+    __genBlockTime__ <= '2024-09-06 23:00:00'
+GROUP BY
+    id

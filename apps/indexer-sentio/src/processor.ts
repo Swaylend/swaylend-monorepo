@@ -8,6 +8,8 @@ import {
   PositionSnapshot,
 } from './schema/store.js';
 import { MarketProcessor } from './types/fuel/MarketProcessor.js';
+import { ASSET_ID_TO_SYMBOL } from './constants.js';
+import { DateTime } from 'fuels';
 
 const FACTOR_SCALE_18 = BigDecimal(10).pow(18);
 const SECONDS_PER_YEAR = BigDecimal(365).times(24).times(60).times(60);
@@ -152,11 +154,21 @@ MarketProcessor.bind({
     const pool = await ctx.store.get(Pool, poolId);
 
     if (!pool) {
+      if (!ctx.transaction) throw new Error('No transaction found');
+      if (!ctx.transaction.blockNumber) {
+        throw new Error('Transaction block number missing');
+      }
+      if (!ctx.transaction.time) throw new Error('Transaction time missing');
+
       const pool = new Pool({
         id: poolId,
         chainId: ctx.chainId,
+        creationBlockNumber: Number(ctx.transaction?.blockNumber),
+        creationTimestamp: DateTime.fromTai64(
+          ctx.transaction.time
+        ).toUnixSeconds(),
         underlyingTokenAddress: base_token,
-        underlyingTokenSymbol: 'TODO',
+        underlyingTokenSymbol: ASSET_ID_TO_SYMBOL[base_token],
         receiptTokenAddress: 'TODO',
         receiptTokenSymbol: 'TODO',
         poolAddress: ctx.contractAddress,
@@ -176,7 +188,7 @@ MarketProcessor.bind({
         chainId: ctx.chainId,
         poolAddress: ctx.contractAddress,
         underlyingTokenAddress: base_token,
-        underlyingTokenSymbol: 'TODO',
+        underlyingTokenSymbol: ASSET_ID_TO_SYMBOL[base_token],
         underlyingTokenPriceUsd: BigDecimal(0),
         availableAmount: BigDecimal(0),
         availableAmountUsd: BigDecimal(0),
@@ -236,11 +248,21 @@ MarketProcessor.bind({
     const pool = await ctx.store.get(Pool, poolId);
 
     if (!pool) {
+      if (!ctx.transaction) throw new Error('No transaction found');
+      if (!ctx.transaction.blockNumber) {
+        throw new Error('Transaction block number missing');
+      }
+      if (!ctx.transaction.time) throw new Error('Transaction time missing');
+
       const pool = new Pool({
         id: poolId,
         chainId: ctx.chainId,
+        creationBlockNumber: Number(ctx.transaction?.blockNumber),
+        creationTimestamp: DateTime.fromTai64(
+          ctx.transaction.time
+        ).toUnixSeconds(),
         underlyingTokenAddress: asset_id,
-        underlyingTokenSymbol: 'TODO',
+        underlyingTokenSymbol: ASSET_ID_TO_SYMBOL[asset_id],
         receiptTokenAddress: 'TODO',
         receiptTokenSymbol: 'TODO',
         poolAddress: ctx.contractAddress,
@@ -260,7 +282,7 @@ MarketProcessor.bind({
         chainId: ctx.chainId,
         poolAddress: ctx.contractAddress,
         underlyingTokenAddress: asset_id,
-        underlyingTokenSymbol: 'TODO',
+        underlyingTokenSymbol: ASSET_ID_TO_SYMBOL[asset_id],
         underlyingTokenPriceUsd: BigDecimal(0),
         availableAmount: BigDecimal(0),
         availableAmountUsd: BigDecimal(0),
@@ -269,7 +291,9 @@ MarketProcessor.bind({
         nonRecursiveSuppliedAmount: BigDecimal(0),
         collateralAmount: BigDecimal(0),
         collateralAmountUsd: BigDecimal(0),
-        collateralFactor: BigDecimal(borrow_collateral_factor.toString()),
+        collateralFactor: BigDecimal(
+          borrow_collateral_factor.toString()
+        ).dividedBy(FACTOR_SCALE_18),
         supplyIndex: BigDecimal(0),
         supplyApr: BigDecimal(0),
         borrowedAmount: BigDecimal(0),
@@ -343,7 +367,8 @@ MarketProcessor.bind({
         chainId: ctx.chainId,
         poolAddress: ctx.contractAddress,
         underlyingTokenAddress: marketConfiguration.baseTokenAddress,
-        underlyingTokenSymbol: 'USDC',
+        underlyingTokenSymbol:
+          ASSET_ID_TO_SYMBOL[marketConfiguration.baseTokenAddress],
         userAddress: address.bits,
         suppliedAmount: BigDecimal(supply_amount.toString()).dividedBy(
           BigDecimal(10).pow(marketConfiguration.baseTokenDecimals)
@@ -678,6 +703,8 @@ MarketProcessor.bind({
       .times(SECONDS_PER_YEAR)
       .decimalPlaces(0, BigDecimal.ROUND_FLOOR);
     poolSnapshot.supplyApr = supplyApr;
+
+    await ctx.store.upsert(poolSnapshot);
   })
   .onLogAbsorbCollateralEvent(async (event, ctx) => {
     const {

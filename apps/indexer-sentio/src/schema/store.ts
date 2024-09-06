@@ -106,6 +106,14 @@ export class Pool extends AbstractEntity  {
 	chainId: String
 
 	@Required
+	@Column("Int")
+	creationBlockNumber: Int
+
+	@Required
+	@Column("Int")
+	creationTimestamp: Int
+
+	@Required
 	@Column("String")
 	underlyingTokenAddress: String
 
@@ -298,6 +306,8 @@ type CollateralConfiguration @entity {
 type Pool @entity {
     id: ID! # Constructed as chainId_poolAddress_underlyingTokenAddress
     chainId: String!
+    creationBlockNumber: Int!
+    creationTimestamp: Int!
     underlyingTokenAddress: String! # Address of the underlying token (collateral, base)
     underlyingTokenSymbol: String!
     receiptTokenAddress: String!

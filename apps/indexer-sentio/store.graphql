@@ -25,6 +25,8 @@ type CollateralConfiguration @entity {
 type Pool @entity {
     id: ID! # Constructed as chainId_poolAddress_underlyingTokenAddress
     chainId: String!
+    creationBlockNumber: Int!
+    creationTimestamp: Int!
     underlyingTokenAddress: String! # Address of the underlying token (collateral, base)
     underlyingTokenSymbol: String!
     receiptTokenAddress: String!
