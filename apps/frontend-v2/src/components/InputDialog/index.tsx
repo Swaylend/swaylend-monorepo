@@ -107,6 +107,7 @@ export const InputDialog = () => {
       default:
         break;
     }
+    // setOpen(false);
   };
 
   const handleModeChange = (value: number) => {

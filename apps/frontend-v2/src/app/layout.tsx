@@ -32,9 +32,11 @@ export default function RootLayout({
         )}
       >
         <Providers>
-          <Navbar />
-          <div className="bg-background">{children}</div>
-          <Footer />
+          <div className="h-screen flex flex-col">
+            <Navbar />
+            <div className="bg-background mb-auto">{children}</div>
+            <Footer />
+          </div>
         </Providers>
       </body>
     </html>
