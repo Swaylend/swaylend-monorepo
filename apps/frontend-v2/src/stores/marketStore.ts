@@ -28,6 +28,7 @@ interface MarketStore {
   action: ACTION_TYPE | null | undefined;
   tokenAmount: BigNumber;
   actionTokenAssetId: string | null | undefined;
+  inputDialogOpen: boolean;
 
   changeMarket: (market: DeployedMarket) => void;
   changeMode: (mode: ACTION_MODE) => void;
@@ -35,6 +36,7 @@ interface MarketStore {
   changeAction: (action: ACTION_TYPE | null | undefined) => void;
   changeTokenAmount: (tokenAmount: BigNumber) => void;
   changeActionTokenAssetId: (assetId: string | null | undefined) => void;
+  changeInputDialogOpen: (open: boolean) => void;
 }
 
 export const marketStoreInitialState = {
@@ -44,6 +46,7 @@ export const marketStoreInitialState = {
   action: null,
   tokenAmount: new BigNumber(0),
   actionTokenAssetId: null,
+  inputDialogOpen: false,
 };
 
 export const useMarketStore = createWithEqualityFn<MarketStore>()(
@@ -51,6 +54,7 @@ export const useMarketStore = createWithEqualityFn<MarketStore>()(
     ...marketStoreInitialState,
 
     changeMarket: (market: DeployedMarket) => set({ market }),
+    changeInputDialogOpen: (open: boolean) => set({ inputDialogOpen: open }),
     changeMode: (mode: ACTION_MODE) => set({ mode }),
     changeMarketMode: (mode: MARKET_MODE) => set({ marketMode: mode }),
     changeAction: (action: ACTION_TYPE | null | undefined) => set({ action }),

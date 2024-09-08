@@ -49,8 +49,12 @@ const POINTS_LEND: Point[] = [
 
 export const LendTable = () => {
   const { account } = useAccount();
-  const { changeAction, changeTokenAmount, changeActionTokenAssetId } =
-    useMarketStore();
+  const {
+    changeAction,
+    changeTokenAmount,
+    changeActionTokenAssetId,
+    changeInputDialogOpen,
+  } = useMarketStore();
 
   const { data: userSupplyBorrow } = useUserSupplyBorrow();
 
@@ -60,6 +64,7 @@ export const LendTable = () => {
     changeAction(action);
     changeTokenAmount(BigNumber(0));
     changeActionTokenAssetId(marketConfiguration?.baseToken);
+    changeInputDialogOpen(true);
   };
 
   const { balance } = useBalance({

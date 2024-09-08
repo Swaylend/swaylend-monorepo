@@ -29,8 +29,12 @@ const SYMBOL_TO_LOGO: Record<string, StaticImport> = {
 
 export const BorrowTable = () => {
   const { account } = useAccount();
-  const { changeAction, changeTokenAmount, changeActionTokenAssetId } =
-    useMarketStore();
+  const {
+    changeAction,
+    changeTokenAmount,
+    changeActionTokenAssetId,
+    changeInputDialogOpen,
+  } = useMarketStore();
 
   const { data: userSupplyBorrow } = useUserSupplyBorrow();
 
@@ -42,6 +46,7 @@ export const BorrowTable = () => {
     changeAction(action);
     changeTokenAmount(BigNumber(0));
     changeActionTokenAssetId(marketConfiguration?.baseToken);
+    changeInputDialogOpen(true);
   };
 
   const { balance } = useBalance({

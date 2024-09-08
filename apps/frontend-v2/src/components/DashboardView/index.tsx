@@ -1,9 +1,9 @@
 'use client';
 import React from 'react';
 import { AssetsTable } from './AssetsTable';
-import { Input } from './Input';
 import { MarketSwitch } from './MarketSwitch';
 import { Stats } from './Stats';
+import { InputDialog } from '../InputDialog';
 
 export const DashboardView = () => {
   return (
@@ -11,9 +11,7 @@ export const DashboardView = () => {
       <Stats />
       <MarketSwitch />
       <AssetsTable />
-      <div className="mt-[100px]">
-        <Input />
-      </div>
+      <InputDialog />
     </div>
   );
 };

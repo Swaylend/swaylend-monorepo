@@ -55,7 +55,6 @@ export const InfoBowl = () => {
     if (!collateralUtilization || collateralUtilization.eq(0)) return 0;
     return -1.5 * Number(collateralUtilization.times(100).toFixed(2)) + 150;
   }, [collateralUtilization]);
-  console.log('wave height', waveHeight);
 
   const waveColor = useMemo(() => {
     if (!collateralUtilization || collateralUtilization.eq(0))

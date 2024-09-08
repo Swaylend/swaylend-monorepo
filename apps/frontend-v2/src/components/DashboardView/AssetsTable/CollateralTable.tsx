@@ -114,6 +114,7 @@ export const CollateralTable = () => {
     changeTokenAmount,
     changeMode,
     changeActionTokenAssetId,
+    changeInputDialogOpen,
   } = useMarketStore();
 
   const { data: userCollateralAssets, isLoading: userCollateralAssetsLoading } =
@@ -136,6 +137,7 @@ export const CollateralTable = () => {
     changeAction(action);
     changeMode(0);
     changeActionTokenAssetId(assetId);
+    changeInputDialogOpen(true);
   };
 
   return (
