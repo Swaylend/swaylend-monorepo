@@ -1,18 +1,9 @@
-import React, { useMemo } from 'react';
 import {
   Dialog,
   DialogClose,
   DialogContent,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { InputField } from './InputField';
-import { Button } from '../ui/button';
-import { ACTION_TYPE, useMarketStore } from '@/stores';
-import { cn } from '@/lib/utils';
-import { useAccount, useBalance } from '@fuels/react';
-import BigNumber from 'bignumber.js';
-import { formatUnits } from '@/utils';
-import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import {
   useBorrowBase,
   useBorrowCapacity,
@@ -26,6 +17,15 @@ import {
   useWithdrawBase,
   useWithdrawCollateral,
 } from '@/hooks';
+import { cn } from '@/lib/utils';
+import { ACTION_TYPE, useMarketStore } from '@/stores';
+import { formatUnits } from '@/utils';
+import { useAccount, useBalance } from '@fuels/react';
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
+import BigNumber from 'bignumber.js';
+import React, { useMemo } from 'react';
+import { Button } from '../ui/button';
+import { InputField } from './InputField';
 import { PositionSummary } from './PositionSummary';
 
 export const InputDialog = () => {

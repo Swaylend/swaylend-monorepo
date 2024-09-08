@@ -1,9 +1,9 @@
 'use client';
 import React from 'react';
+import { InputDialog } from '../InputDialog';
 import { AssetsTable } from './AssetsTable';
 import { MarketSwitch } from './MarketSwitch';
 import { Stats } from './Stats';
-import { InputDialog } from '../InputDialog';
 
 export const DashboardView = () => {
   return (

@@ -1,17 +1,17 @@
 import { useMarketStore } from '@/stores';
+import { ASSET_ID_TO_SYMBOL, SYMBOL_TO_NAME } from '@/utils';
 import BigNumber from 'bignumber.js';
+import type { StaticImport } from 'next/dist/shared/lib/get-img-props';
+import Image from 'next/image';
 import type React from 'react';
 import { useEffect, useState } from 'react';
 import { useDebounceCallback } from 'usehooks-ts';
-import { Input } from '../ui/input';
 import BTC from '/public/tokens/bitcoin.svg?url';
 import ETH from '/public/tokens/ethereum.svg?url';
 import BNB from '/public/tokens/sway.svg?url';
 import UNI from '/public/tokens/uni.svg?url';
 import USDC from '/public/tokens/usdc.svg?url';
-import type { StaticImport } from 'next/dist/shared/lib/get-img-props';
-import Image from 'next/image';
-import { ASSET_ID_TO_SYMBOL, SYMBOL_TO_NAME } from '@/utils';
+import { Input } from '../ui/input';
 
 const SYMBOL_TO_LOGO: Record<string, StaticImport> = {
   ETH: ETH,
