@@ -3,8 +3,8 @@ import {
   useTotalCollateral,
   useUserCollateralAssets,
 } from '@/hooks';
-import { type ACTION_TYPE, useMarketStore } from '@/stores';
-import { ASSET_ID_TO_SYMBOL, type IToken, formatUnits } from '@/utils';
+import { ACTION_TYPE, useMarketStore } from '@/stores';
+import { ASSET_ID_TO_SYMBOL, formatUnits } from '@/utils';
 import { useAccount, useBalance } from '@fuels/react';
 import BigNumber from 'bignumber.js';
 import clsx from 'clsx';
