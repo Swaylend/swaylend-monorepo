@@ -12,7 +12,7 @@ import { useMarketConfiguration } from './useMarketConfiguration';
 export const useBorrowBase = () => {
   const { wallet } = useWallet();
   const { account } = useAccount();
-  const { market } = useMarketStore();
+  const { market, changeTokenAmount } = useMarketStore();
   const { data: marketConfiguration } = useMarketConfiguration();
 
   return useMutation({
@@ -58,6 +58,7 @@ export const useBorrowBase = () => {
     onSuccess: (data) => {
       if (data) {
         TransactionSuccessToast({ transactionId: data });
+        changeTokenAmount(BigNumber(0));
       }
     },
     onError: (error) => {

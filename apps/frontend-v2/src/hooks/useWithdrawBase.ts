@@ -16,7 +16,7 @@ import { useMarketConfiguration } from './useMarketConfiguration';
 export const useWithdrawBase = () => {
   const { wallet } = useWallet();
   const { account } = useAccount();
-  const { market } = useMarketStore();
+  const { market, changeTokenAmount } = useMarketStore();
   const { data: marketConfiguration } = useMarketConfiguration();
 
   return useMutation({
@@ -68,6 +68,7 @@ export const useWithdrawBase = () => {
     onSuccess: (data) => {
       if (data) {
         TransactionSuccessToast({ transactionId: data });
+        changeTokenAmount(BigNumber(0));
       }
     },
     onError: (error) => {

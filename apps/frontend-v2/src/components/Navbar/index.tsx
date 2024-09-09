@@ -20,8 +20,8 @@ const NAVBAR_LINKS = [
 export const Navbar = () => {
   const pathname = usePathname();
   return (
-    <>
-      <div className="flex justify-between items-center px-16 h-[93px]">
+    <div>
+      <div className="flex justify-between items-center px-16 min-h-[93px]">
         <Link href="https://swaylend.com">
           <Image src={Logo} alt="logo" />
         </Link>
@@ -54,6 +54,6 @@ export const Navbar = () => {
         </div>
       </div>
       <Line />
-    </>
+    </div>
   );
 };

@@ -7,9 +7,7 @@ import { useCollateralConfigurations } from './useCollateralConfigurations';
 import { useMarketConfiguration } from './useMarketConfiguration';
 import { usePrice } from './usePrice';
 import { useUserCollateralAssets } from './useUserCollateralAssets';
-import { useUserCollateralUtilization } from './useUserCollateralUtilization';
 import { useUserCollateralValue } from './useUserCollateralValue';
-import { useUserLiquidationPoint } from './useUserLiquidationPoint';
 import { useUserSupplyBorrow } from './useUserSupplyBorrow';
 import { useUserTrueCollateralValue } from './useUserTrueCollateralValue';
 
@@ -26,8 +24,6 @@ export const usePossiblePositionSummary = () => {
   const { data: userSupplyBorrow } = useUserSupplyBorrow();
   const collateralValue = useUserCollateralValue();
   const trueCollateralValue = useUserTrueCollateralValue();
-  const collateralUtilization = useUserCollateralUtilization();
-  const liquidationPoint = useUserLiquidationPoint();
 
   const [possibleBorrowCapacity, setPossibleBorrowCapacity] =
     useState<BigNumber | null>(null);
@@ -83,18 +79,11 @@ export const usePossiblePositionSummary = () => {
     const loanAmount = userSupplyBorrow.borrowed ?? BigNumber(0);
 
     if (action === ACTION_TYPE.BORROW) {
-      console.log(
-        'here...',
-        loanAmount.toFixed(2),
-        parsedTokenAmount?.toFixed(2),
-        borrowCapacity?.toFixed(2)
-      );
       const baseTokenPrice = priceData.prices[marketConfiguration.baseToken];
       const newLoanValue = formatUnits(
         loanAmount.plus(parsedTokenAmount),
         marketConfiguration?.baseTokenDecimals ?? 9
       ).times(baseTokenPrice);
-      console.log('newLoanValue', newLoanValue.toFixed(2));
 
       const collateralUtilization = newLoanValue.div(
         trueCollateralValue ?? BigNumber(0)
@@ -153,44 +142,69 @@ export const usePossiblePositionSummary = () => {
         userCollateralAssets &&
         collateralConfigurations
       ) {
-        // Get collaterals value
-        const collateralsValue = Object.entries(userCollateralAssets).reduce(
-          (acc, [assetId, v]) => {
-            const token = collateralConfigurations[assetId];
-            let balance = v;
-            if (assetId === actionTokenAssetId) {
-              balance = balance.plus(parsedTokenAmount ?? BigNumber(0));
-            }
-            balance = formatUnits(balance, token.decimals);
-            const dollBalance = priceData.prices[assetId].times(balance);
-            return acc.plus(dollBalance);
-          },
-          BigNumber(0)
-        );
+        console.log('hereowsky', userCollateralAssets);
 
-        const newBorrowCapacity = Object.entries(userCollateralAssets).reduce(
-          (acc, [assetId, v]) => {
-            const token = collateralConfigurations[assetId];
-            const tokenBorrowCollateralFactor = formatUnits(
-              BigNumber(
-                collateralConfigurations[
-                  assetId
-                ].borrow_collateral_factor.toString()
-              ),
-              18
-            );
-            let balance = v;
-            if (assetId === actionTokenAssetId) {
-              balance = balance.plus(parsedTokenAmount ?? BigNumber(0));
-            }
-            balance = formatUnits(balance, token.decimals);
-            const dollBalance = priceData.prices[assetId]
-              .times(balance)
-              .times(tokenBorrowCollateralFactor);
-            return acc.plus(dollBalance);
-          },
-          BigNumber(0)
-        );
+        let collateralsValue = BigNumber(0);
+        let newBorrowCapacity = BigNumber(0);
+
+        // If array is empty
+        if (Object.keys(userCollateralAssets).length === 0) {
+          const dollValue = tokenAmount.times(
+            priceData.prices[actionTokenAssetId]
+          );
+          collateralsValue = collateralsValue.plus(dollValue);
+          const tokenBorrowCollateralFactor = formatUnits(
+            BigNumber(
+              collateralConfigurations[
+                actionTokenAssetId
+              ].borrow_collateral_factor.toString()
+            ),
+            18
+          );
+          newBorrowCapacity = newBorrowCapacity.plus(
+            dollValue.times(tokenBorrowCollateralFactor)
+          );
+        }
+        // Get collaterals value
+        else {
+          collateralsValue = Object.entries(userCollateralAssets).reduce(
+            (acc, [assetId, v]) => {
+              const token = collateralConfigurations[assetId];
+              let balance = v;
+              if (assetId === actionTokenAssetId) {
+                balance = balance.plus(parsedTokenAmount ?? BigNumber(0));
+              }
+              balance = formatUnits(balance, token.decimals);
+              const dollBalance = priceData.prices[assetId].times(balance);
+              return acc.plus(dollBalance);
+            },
+            BigNumber(0)
+          );
+
+          newBorrowCapacity = Object.entries(userCollateralAssets).reduce(
+            (acc, [assetId, v]) => {
+              const token = collateralConfigurations[assetId];
+              const tokenBorrowCollateralFactor = formatUnits(
+                BigNumber(
+                  collateralConfigurations[
+                    assetId
+                  ].borrow_collateral_factor.toString()
+                ),
+                18
+              );
+              let balance = v;
+              if (assetId === actionTokenAssetId) {
+                balance = balance.plus(parsedTokenAmount ?? BigNumber(0));
+              }
+              balance = formatUnits(balance, token.decimals);
+              const dollBalance = priceData.prices[assetId]
+                .times(balance)
+                .times(tokenBorrowCollateralFactor);
+              return acc.plus(dollBalance);
+            },
+            BigNumber(0)
+          );
+        }
 
         setPossibleCollateralValue(collateralsValue);
         setPossibleBorrowCapacity(newBorrowCapacity);
