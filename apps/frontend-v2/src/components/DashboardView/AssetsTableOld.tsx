@@ -4,7 +4,7 @@ import {
   useUserCollateralAssets,
 } from '@/hooks';
 import { ACTION_TYPE, useMarketStore } from '@/stores';
-import { ASSET_ID_TO_SYMBOL, type IToken, formatUnits } from '@/utils';
+import { ASSET_ID_TO_SYMBOL, formatUnits } from '@/utils';
 import { useAccount, useBalance } from '@fuels/react';
 import BigNumber from 'bignumber.js';
 import clsx from 'clsx';
@@ -75,7 +75,7 @@ const TableRow = ({
   );
 };
 
-export const Table = () => {
+export const AssetsTable = () => {
   const {
     changeAction,
     changeMode,
@@ -114,6 +114,9 @@ export const Table = () => {
     return <div>Failed to load collateral configurations</div>;
   }
 
+  // Return Lender View
+
+  // Return Borrower View
   return (
     <div>
       {collaterals.map((collateral) => (

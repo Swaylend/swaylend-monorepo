@@ -3,6 +3,7 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Inter as FontSans } from 'next/font/google';
 
+import { Footer } from '@/components/Footer';
 import { Navbar } from '@/components/Navbar';
 import { Providers } from '@/components/Providers';
 import { cn } from '@/lib/utils';
@@ -31,8 +32,11 @@ export default function RootLayout({
         )}
       >
         <Providers>
-          <Navbar />
-          {children}
+          <div className="h-screen flex flex-col">
+            <Navbar />
+            <div className="bg-background mb-auto">{children}</div>
+            <Footer />
+          </div>
         </Providers>
       </body>
     </html>
