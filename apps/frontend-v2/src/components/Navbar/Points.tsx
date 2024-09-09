@@ -3,11 +3,26 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { Copy, Sparkle, Trophy } from 'lucide-react';
-import React from 'react';
+import { useRedeemInvite, useUser } from '@/hooks';
+import clsx from 'clsx';
+import { Copy, Loader, Sparkle, Trophy } from 'lucide-react';
+import React, { useState } from 'react';
 import { Button } from '../ui/button';
 
 export const Points = () => {
+  const { data: user, isPending, isError, refetch } = useUser();
+  const { mutate: redeemInvite } = useRedeemInvite();
+
+  const [isCopied, setIsCopied] = useState(false);
+
+  const handleCopy = async (value: string) => {
+    setIsCopied(true);
+    await navigator.clipboard.writeText(value);
+    setTimeout(() => {
+      setIsCopied(false);
+    }, 1000);
+  };
+
   return (
     <Popover>
       <PopoverTrigger>
@@ -22,17 +37,39 @@ export const Points = () => {
       >
         <div className="flex flex-col gap-y-2 items-center">
           <div className="text-neutral5">SwayLend Pts</div>
-          <div className="text-2xl font-semibold text-yellow-400">687</div>
+          <div
+            className={clsx(
+              'text-2xl font-semibold text-yellow-400',
+              isPending && 'animate-pulse'
+            )}
+          >
+            {isPending ? 'Loading...' : user ? user.points : '0'}
+          </div>
         </div>
         <div className="rounded-full bg-white/5 px-4 py-2 text-neutral5">
           Fuel Pts <span className="text-neutral2">27</span>
         </div>
-        <Button className="w-full flex gap-x-2" variant={'tertiary-card'}>
+        <Button className="w-full flex gap-x-2" variant="tertiary-card">
           <Trophy className="w-5 h-5" />
           Points Leaderboard
         </Button>
-        <Button className="w-full flex gap-x-2" variant={'tertiary-card'}>
-          <Copy className="w-5 h-5" /> Copy referral code
+        <Button
+          className={clsx('w-full flex gap-x-2', isPending && 'animate-pulse')}
+          variant="tertiary-card"
+          disabled={isPending}
+          onMouseDown={async () => {
+            if (isError || !user) return await refetch();
+            await handleCopy(user.inviteCode);
+          }}
+        >
+          {!isPending && user && (
+            <>
+              <Copy className="w-5 h-5" />
+              {isCopied ? 'Copied' : 'Copy referral code'}t
+            </>
+          )}
+          {isPending && <Loader className="w-5 h-5 animate-spin" />}
+          {!isPending && isError && 'Refresh'}
         </Button>
       </PopoverContent>
     </Popover>

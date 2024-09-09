@@ -19,6 +19,7 @@ const NAVBAR_LINKS = [
 
 export const Navbar = () => {
   const pathname = usePathname();
+
   return (
     <>
       <div className="flex justify-between items-center px-16 h-[93px]">

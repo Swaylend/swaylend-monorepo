@@ -19,7 +19,7 @@ export const ErrorToast = ({ error }: ErrorToastProps) => {
       return 'Transaction reverted.';
     }
 
-    return '';
+    return error;
   };
 
   return toast.error(extractErrorReason(error));

@@ -10,6 +10,7 @@ export interface IToken {
 
 // Indexer URL
 export const NODE_URL = 'https://testnet.fuel.network/v1/graphql';
+export const SWAYLEND_API = process.env.NEXT_PUBLIC_SWAYLEND_API!;
 
 // Contract addresses
 export type MarketConfiguration = {
