@@ -156,11 +156,7 @@ export const InputDialog = () => {
     if (action === 'WITHDRAW') {
       if (actionTokenAssetId === marketConfiguration?.baseToken) {
         return formatUnits(
-          BigNumber(
-            userCollateralAssets?.[marketConfiguration?.baseToken ?? ''] ??
-              new BigNumber(0) ??
-              0
-          ),
+          BigNumber(userSupplyBorrow?.supplied ?? new BigNumber(0) ?? 0),
           marketConfiguration?.baseTokenDecimals
         );
       }
@@ -211,10 +207,8 @@ export const InputDialog = () => {
           ) ?? BigNumber(0);
 
         if (finalBalanceRepay.gte(userBorrowed)) {
-          console.log('here...');
           changeTokenAmount(userBorrowed);
         } else {
-          console.log('here smh..', userSupplyBorrow.borrowed.toFixed(2));
           changeTokenAmount(finalBalanceRepay);
         }
         break;
