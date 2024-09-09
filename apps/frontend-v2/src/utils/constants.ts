@@ -29,9 +29,9 @@ export const DEPLOYED_MARKETS: Record<DeployedMarket, MarketConfiguration> = {
     oracleAddress:
       '0xc3c47cdeaec412778fc86842b44fb061b350db57f9d52def4f73036156f71506',
     marketAddress:
-      '0x8cd0c973a8ab7c15c0a8ee8f5cb4dd04ea3f27411c8eef6e76f3765fe43863fe',
+      '0x891734bb325148ed28fdc7603e404375c44ee090b66708f45c722ccd702517d5',
     tokenFactoryAddress:
-      '0xf190b8420458f3fff1149343a60d9fe721a49c9caf7afb54d1bde9d72424bec6',
+      '0x3ec32d1dc979cc9862e779a573ceea9e4ddea0ab5bcbeac6f13aef0489821be2',
     graphqlUrl: 'https://indexer.bigdevenergy.link/c755070/v1/graphql',
   },
   USDT: {
