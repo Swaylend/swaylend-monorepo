@@ -111,8 +111,13 @@ impl SRC5 for Contract {
 // Mint and Burn Standard
 impl SRC3 for Contract {
     #[storage(read, write)]
-    fn mint(recipient: Identity, sub_id: SubId, amount: u64) {
-        require(sub_id == DEFAULT_SUB_ID, "incorrect-sub-id");
+    fn mint(recipient: Identity, sub_id:Option<SubId>, amount: u64) {
+        require(
+            sub_id
+                .is_some() && sub_id
+                .unwrap() == DEFAULT_SUB_ID,
+            "incorrect-sub-id",
+        );
         require(
             storage.owner.read() == State::Initialized(msg_sender().unwrap()),
             AccessError::NotOwner,

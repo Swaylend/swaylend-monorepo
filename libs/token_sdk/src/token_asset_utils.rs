@@ -102,7 +102,7 @@ impl TokenAsset {
         let symbol_hash = get_symbol_hash(&self.symbol);
         self.instance
             .methods()
-            .mint(Identity::Address(recipient), symbol_hash, amount)
+            .mint(Identity::Address(recipient), Some(symbol_hash), amount)
             .with_variable_output_policy(VariableOutputPolicy::Exactly(1))
             .with_tx_policies(TxPolicies::default().with_tip(1))
             .call()
