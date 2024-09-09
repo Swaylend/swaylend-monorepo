@@ -253,7 +253,11 @@ impl SRC3 for Contract {
     /// }
     /// ```
     #[storage(read, write)]
-    fn mint(recipient: Identity, sub_id: SubId, amount: u64) {
+    fn mint(recipient: Identity, sub_id: Option<SubId>, amount: u64) {
+         let sub_id = match sub_id {
+            Some(s) => s,
+            None => DEFAULT_SUB_ID,
+        };
         let asset_id = AssetId::new(ContractId::this(), sub_id);
  
         // If this SubId is new, increment the total number of distinguishable assets this contract has minted.
