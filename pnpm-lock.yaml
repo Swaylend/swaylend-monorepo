@@ -4,11 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-patchedDependencies:
-  '@fuel-ts/account@0.94.3':
-    hash: ehqly2kbszritzxealzee2drjm
-    path: patches/@fuel-ts__account@0.94.3.patch
-
 importers:
 
   .:
@@ -9745,8 +9740,8 @@ packages:
       typescript:
         optional: true
 
-  viem@2.19.6:
-    resolution: {integrity: sha512-7jiuX+ZncPZE8iEzgW/iO7EaAMRJEW8hYeJy9YFTMK34Wa9aWzqOm4lrORgemlsqJ/kpQG4InzhG0jc2HY67FA==}
+  viem@2.20.1:
+    resolution: {integrity: sha512-a/BSe25TSfkc423GTSKYl1O0ON2J5huoQeOLkylHT1WS8wh3JFqb8nfAq7vg+aZ+W06BCTn36bbi47yp4D92Cg==}
     peerDependencies:
       typescript: '>=5.0.4'
     peerDependenciesMeta:
@@ -13676,7 +13671,7 @@ snapshots:
   '@safe-global/safe-apps-sdk@9.1.0(bufferutil@4.0.8)(typescript@5.0.4)(utf-8-validate@5.0.10)(zod@3.23.8)':
     dependencies:
       '@safe-global/safe-gateway-typescript-sdk': 3.22.1
-      viem: 2.19.6(bufferutil@4.0.8)(typescript@5.0.4)(utf-8-validate@5.0.10)(zod@3.23.8)
+      viem: 2.20.1(bufferutil@4.0.8)(typescript@5.0.4)(utf-8-validate@5.0.10)(zod@3.23.8)
     transitivePeerDependencies:
       - bufferutil
       - typescript
@@ -22675,7 +22670,7 @@ snapshots:
       - utf-8-validate
       - zod
 
-  viem@2.19.6(bufferutil@4.0.8)(typescript@5.0.4)(utf-8-validate@5.0.10)(zod@3.23.8):
+  viem@2.20.1(bufferutil@4.0.8)(typescript@5.0.4)(utf-8-validate@5.0.10)(zod@3.23.8):
     dependencies:
       '@adraffy/ens-normalize': 1.10.0
       '@noble/curves': 1.4.0

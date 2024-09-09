@@ -5,7 +5,7 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 
 /*
-  Fuels version: 0.94.3
+  Fuels version: 0.94.5
 */
 
 import { Contract, Interface } from "fuels";
@@ -1771,12 +1771,12 @@ const abi = {
     {
       "name": "DEBUG_STEP",
       "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
-      "offset": 117312
+      "offset": 116328
     },
     {
       "name": "FUEL_ETH_BASE_ASSET_ID",
       "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b",
-      "offset": 117320
+      "offset": 116336
     }
   ]
 };
