@@ -5,7 +5,7 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 
 /*
-  Fuels version: 0.94.3
+  Fuels version: 0.94.5
 */
 
 import { Contract, Interface } from "fuels";
@@ -52,6 +52,14 @@ const abi = {
       "type": "enum std::identity::Identity",
       "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335",
       "metadataTypeId": 0
+    },
+    {
+      "type": "enum std::option::Option<b256>",
+      "concreteTypeId": "0c2beb9013490c4f753f2757dfe2d8340b22ce3827d596d81d249b7038033cb6",
+      "metadataTypeId": 1,
+      "typeArguments": [
+        "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+      ]
     },
     {
       "type": "enum std::option::Option<struct std::string::String>",
@@ -210,6 +218,75 @@ const abi = {
     }
   ],
   "functions": [
+    {
+      "inputs": [
+        {
+          "name": "sub_id",
+          "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+        },
+        {
+          "name": "decimals",
+          "concreteTypeId": "c89951a24c6ca28c13fd1cfdc646b2b656d69e61a92b91023be7eb58eb914b6b"
+        }
+      ],
+      "name": "set_decimals",
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read",
+            "write"
+          ]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "sub_id",
+          "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+        },
+        {
+          "name": "name",
+          "concreteTypeId": "9a7f1d3e963c10e0a4ea70a8e20a4813d1dc5682e28f74cb102ae50d32f7f98c"
+        }
+      ],
+      "name": "set_name",
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read",
+            "write"
+          ]
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "sub_id",
+          "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+        },
+        {
+          "name": "symbol",
+          "concreteTypeId": "9a7f1d3e963c10e0a4ea70a8e20a4813d1dc5682e28f74cb102ae50d32f7f98c"
+        }
+      ],
+      "name": "set_symbol",
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read",
+            "write"
+          ]
+        }
+      ]
+    },
     {
       "inputs": [
         {
@@ -1296,7 +1373,7 @@ const abi = {
         },
         {
           "name": "sub_id",
-          "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+          "concreteTypeId": "0c2beb9013490c4f753f2757dfe2d8340b22ce3827d596d81d249b7038033cb6"
         },
         {
           "name": "amount",
@@ -1483,6 +1560,9 @@ export class TokenInterface extends Interface {
   }
 
   declare functions: {
+    set_decimals: FunctionFragment;
+    set_name: FunctionFragment;
+    set_symbol: FunctionFragment;
     decimals: FunctionFragment;
     name: FunctionFragment;
     symbol: FunctionFragment;
@@ -1499,13 +1579,16 @@ export class Token extends Contract {
 
   declare interface: TokenInterface;
   declare functions: {
+    set_decimals: InvokeFunction<[sub_id: string, decimals: BigNumberish], void>;
+    set_name: InvokeFunction<[sub_id: string, name: StdString], void>;
+    set_symbol: InvokeFunction<[sub_id: string, symbol: StdString], void>;
     decimals: InvokeFunction<[asset: AssetIdInput], Option<number>>;
     name: InvokeFunction<[asset: AssetIdInput], Option<StdString>>;
     symbol: InvokeFunction<[asset: AssetIdInput], Option<StdString>>;
     total_assets: InvokeFunction<[], BN>;
     total_supply: InvokeFunction<[asset: AssetIdInput], Option<BN>>;
     burn: InvokeFunction<[sub_id: string, amount: BigNumberish], void>;
-    mint: InvokeFunction<[recipient: IdentityInput, sub_id: string, amount: BigNumberish], void>;
+    mint: InvokeFunction<[recipient: IdentityInput, sub_id: Option<string>, amount: BigNumberish], void>;
   };
 
   constructor(
