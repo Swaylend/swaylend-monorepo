@@ -10,7 +10,14 @@ import React, { useState } from 'react';
 import { Button } from '../ui/button';
 
 export const Points = () => {
-  const { data: user, isPending, isError, refetch } = useUser();
+  const {
+    data: user,
+    isPending,
+    isFetching,
+    isLoading,
+    isError,
+    refetch,
+  } = useUser();
   const { mutate: redeemInvite } = useRedeemInvite();
 
   const [isCopied, setIsCopied] = useState(false);
@@ -40,10 +47,10 @@ export const Points = () => {
           <div
             className={clsx(
               'text-2xl font-semibold text-yellow-400',
-              isPending && 'animate-pulse'
+              isLoading && 'animate-pulse'
             )}
           >
-            {isPending ? 'Loading...' : user ? user.points : '0'}
+            {isLoading ? 'Loading...' : user ? user.points : '0'}
           </div>
         </div>
         <div className="rounded-full bg-white/5 px-4 py-2 text-neutral5">
@@ -54,7 +61,7 @@ export const Points = () => {
           Points Leaderboard
         </Button>
         <Button
-          className={clsx('w-full flex gap-x-2', isPending && 'animate-pulse')}
+          className={clsx('w-full flex gap-x-2', isLoading && 'animate-pulse')}
           variant="tertiary-card"
           disabled={isPending}
           onMouseDown={async () => {
@@ -62,13 +69,13 @@ export const Points = () => {
             await handleCopy(user.inviteCode);
           }}
         >
-          {!isPending && user && (
+          {!isLoading && (
             <>
               <Copy className="w-5 h-5" />
               {isCopied ? 'Copied' : 'Copy referral code'}t
             </>
           )}
-          {isPending && <Loader className="w-5 h-5 animate-spin" />}
+          {isLoading && <Loader className="w-5 h-5 animate-spin" />}
           {!isPending && isError && 'Refresh'}
         </Button>
       </PopoverContent>
