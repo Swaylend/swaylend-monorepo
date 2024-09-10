@@ -12,10 +12,18 @@ import React, { useMemo } from 'react';
 import { InfoBowl } from './InfoBowl';
 
 export const Stats = () => {
-  const { data: userSupplyBorrow } = useUserSupplyBorrow();
+  const {
+    data: userSupplyBorrow,
+    isFetching: isUserSupplyBorrowFetching,
+    isPending: isUserSupplyBorrowPending,
+  } = useUserSupplyBorrow();
   const { data: userCollateralAssets } = useUserCollateralAssets();
   const { data: priceData } = usePrice();
-  const { data: marketConfiguration } = useMarketConfiguration();
+  const {
+    data: marketConfiguration,
+    isFetching: isMarketConfigurationFetching,
+    isPending: isMarketConfigurationPending,
+  } = useMarketConfiguration();
   const { data: colateralConfigurations } = useCollateralConfigurations();
 
   const totalSuppliedBalance = useMemo(() => {
@@ -56,7 +64,16 @@ export const Stats = () => {
     colateralConfigurations,
   ]);
 
-  if (!marketConfiguration) return <div>Loading...</div>;
+  const borrowedBalance = useMemo(() => {
+    if (!marketConfiguration || !userSupplyBorrow) {
+      return BigNumber(0).toFormat(2);
+    }
+
+    return formatUnits(
+      userSupplyBorrow.borrowed,
+      marketConfiguration.baseTokenDecimals
+    ).toFormat(2);
+  }, [marketConfiguration, userSupplyBorrow]);
 
   return (
     <div className="w-full px-[203px]">
@@ -66,7 +83,7 @@ export const Stats = () => {
             Supplied Balance
           </div>
           <div className="text-neutral2 font-bold text-4xl">
-            {totalSuppliedBalance}
+            ${totalSuppliedBalance}
           </div>
         </div>
         <InfoBowl />
@@ -75,11 +92,7 @@ export const Stats = () => {
             Borrowed Assets
           </div>
           <div className="text-neutral2 font-bold text-4xl">
-            $
-            {formatUnits(
-              userSupplyBorrow?.borrowed ?? new BigNumber(0),
-              marketConfiguration.baseTokenDecimals
-            ).toFormat(2)}
+            ${borrowedBalance}
           </div>
         </div>
       </div>

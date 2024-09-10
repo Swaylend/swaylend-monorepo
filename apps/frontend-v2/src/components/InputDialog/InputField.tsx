@@ -63,8 +63,6 @@ export const InputField = () => {
       return;
     }
 
-    console.log(value);
-
     // Remove leading zeros if there's no decimal point
     if (!value.includes('.')) {
       value = value.replace(/^0+/, '') || '0';
