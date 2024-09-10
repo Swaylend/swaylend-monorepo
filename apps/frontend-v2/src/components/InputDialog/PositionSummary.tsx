@@ -1,21 +1,15 @@
+import React, { useMemo } from 'react';
 import {
   useBorrowCapacity,
-  useCollateralConfigurations,
   useMarketConfiguration,
   usePossiblePositionSummary,
-  usePrice,
-  useUserCollateralAssets,
-  useUserCollateralUtilization,
   useUserCollateralValue,
   useUserSupplyBorrow,
-  useUserTrueCollateralValue,
 } from '@/hooks';
 import { useUserLiquidationPoint } from '@/hooks/useUserLiquidationPoint';
 import { formatUnits } from '@/utils';
-import { useAccount } from '@fuels/react';
 import BigNumber from 'bignumber.js';
 import { ArrowDown, ArrowUp, InfoIcon } from 'lucide-react';
-import React, { useMemo, useState } from 'react';
 
 export const PositionSummary = () => {
   const { data: marketConfiguration } = useMarketConfiguration();
@@ -23,8 +17,8 @@ export const PositionSummary = () => {
   const { data: borrowCapacity } = useBorrowCapacity();
   const { data: userSupplyBorrow } = useUserSupplyBorrow();
 
-  const collateralValue = useUserCollateralValue();
-  const liquidationPoint = useUserLiquidationPoint();
+  const { data: collateralValue } = useUserCollateralValue();
+  const { data: liquidationPoint } = useUserLiquidationPoint();
 
   const totalBorrowCapacity = useMemo(() => {
     if (userSupplyBorrow == null || borrowCapacity == null) return BigNumber(0);
@@ -45,15 +39,17 @@ export const PositionSummary = () => {
     return [
       {
         title: 'Collateral Value',
-        value: `$${collateralValue.toFixed(2)}`,
+        value: `$${collateralValue?.toFixed(2)}`,
         changeValue: possibleCollateralValue
           ? `$${possibleCollateralValue.toFixed(2)}`
           : null,
-        color: possibleCollateralValue?.lte(collateralValue) ? 0 : 1,
+        color: possibleCollateralValue?.lte(collateralValue ?? BigNumber(0))
+          ? 0
+          : 1,
       },
       {
         title: 'Liquidation Point',
-        value: `$${liquidationPoint.toFixed(2)}` ?? BigNumber(0),
+        value: `$${liquidationPoint?.toFixed(2)}` ?? BigNumber(0),
         changeValue: possibleLiquidationPoint
           ? `$${(possibleLiquidationPoint ?? BigNumber(0)).toFixed(2)}`
           : null,

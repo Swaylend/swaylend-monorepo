@@ -1,13 +1,22 @@
-import { useMemo } from 'react';
 import { useUserCollateralUtilization } from './useUserCollateralUtilization';
 import { useUserCollateralValue } from './useUserCollateralValue';
+import BigNumber from 'bignumber.js';
+import { useQuery } from '@tanstack/react-query';
 
 export const useUserLiquidationPoint = () => {
-  const collateralValue = useUserCollateralValue();
-  const userCollateralUtilization = useUserCollateralUtilization();
+  const { data: collateralValue } = useUserCollateralValue();
+  const { data: userCollateralUtilization } = useUserCollateralUtilization();
 
-  const userLiquidationPoint = useMemo(() => {
-    return collateralValue.times(userCollateralUtilization);
-  }, [collateralValue, userCollateralUtilization]);
-  return userLiquidationPoint;
+  return useQuery({
+    queryKey: [
+      'userLiquidationPoint',
+      collateralValue,
+      userCollateralUtilization,
+    ],
+    queryFn: async () => {
+      if (!collateralValue || !userCollateralUtilization) return BigNumber(0);
+      return collateralValue.times(userCollateralUtilization);
+    },
+    enabled: !!collateralValue && !!userCollateralUtilization,
+  });
 };

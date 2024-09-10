@@ -54,8 +54,8 @@ export const FAUCET_URL = 'https://faucet-testnet.fuel.network/';
 export const FAUCET_AMOUNTS: Record<string, number> = {
   UNI: 50,
   BTC: 1,
-  USDC: 300,
-  USDT: 300,
+  USDC: 1000000,
+  USDT: 1000000,
   BNB: 300,
 };
 
