@@ -17,43 +17,43 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { useMarketConfiguration, useUserSupplyBorrow } from '@/hooks';
+import {
+  useMarketConfiguration,
+  useSupplyRate,
+  useUserSupplyBorrow,
+} from '@/hooks';
+import { cn } from '@/lib/utils';
 import { ACTION_TYPE, useMarketStore } from '@/stores';
-import { ASSET_ID_TO_SYMBOL, formatUnits } from '@/utils';
+import {
+  ASSET_ID_TO_SYMBOL,
+  SYMBOL_TO_ICON,
+  formatUnits,
+  getSupplyApr,
+} from '@/utils';
 import { useAccount, useBalance } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import BigNumber from 'bignumber.js';
-import type { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import Image from 'next/image';
 import React from 'react';
-import FUEL from '/public/icons/fuel-logo.svg?url';
-import SWAY from '/public/tokens/sway.svg?url';
-import USDC from '/public/tokens/usdc.svg?url';
-import USDT from '/public/tokens/usdt.svg?url';
-
-const SYMBOL_TO_LOGO: Record<string, StaticImport> = {
-  USDC: USDC,
-  USDT: USDT,
-};
 
 const POINTS_LEND: Point[] = [
   {
     id: '1',
     name: 'Fuel',
     description: 'Earn Fuel Points by lending assets',
-    icon: FUEL,
+    icon: SYMBOL_TO_ICON.FUEL,
   },
   {
     id: '2',
     name: 'SwayLend',
     description: 'Earn SwayLend Points by lending assets',
-    icon: SWAY,
+    icon: SYMBOL_TO_ICON.SWAY,
   },
   {
     id: '3',
-    name: 'SwayLend',
-    description: 'Earn SwayLend Points by lending assets',
-    icon: USDC,
+    name: 'USDC',
+    description: 'Earn USDC Points by lending assets',
+    icon: SYMBOL_TO_ICON.USDC,
   },
 ];
 
@@ -66,8 +66,8 @@ export const LendTable = () => {
     changeInputDialogOpen,
   } = useMarketStore();
 
+  const { data: supplyRate, isPending: isSupplyRatePending } = useSupplyRate();
   const { data: userSupplyBorrow } = useUserSupplyBorrow();
-
   const { data: marketConfiguration } = useMarketConfiguration();
 
   const handleBaseTokenClick = (action: ACTION_TYPE) => {
@@ -100,26 +100,26 @@ export const LendTable = () => {
             <TableCell>
               <div className="flex gap-x-2 items-center">
                 <div>
-                  <Image
-                    src={
-                      SYMBOL_TO_LOGO[
-                        ASSET_ID_TO_SYMBOL[
-                          marketConfiguration?.baseToken ?? ''
-                        ] ?? 'USDC'
-                      ]
-                    }
-                    alt={
-                      ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']
-                    }
-                    width={32}
-                    height={32}
-                    className={'rounded-full'}
-                  />
+                  {marketConfiguration && (
+                    <Image
+                      src={
+                        SYMBOL_TO_ICON[
+                          ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]
+                        ]
+                      }
+                      alt={ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]}
+                      width={32}
+                      height={32}
+                      className="rounded-full"
+                    />
+                  )}
                 </div>
                 <div>
-                  <div className="text-neutral2 font-medium">
-                    {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
-                  </div>
+                  {marketConfiguration && (
+                    <div className="text-neutral2 font-medium">
+                      {ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]}
+                    </div>
+                  )}
                   <div>
                     {formatUnits(
                       balance ? BigNumber(balance.toString()) : BigNumber(0),
@@ -131,7 +131,9 @@ export const LendTable = () => {
                 </div>
               </div>
             </TableCell>
-            <TableCell>5%</TableCell>
+            <TableCell className={cn(isSupplyRatePending && 'animate-pulse')}>
+              {getSupplyApr(supplyRate)}
+            </TableCell>
             <TableCell>
               {formatUnits(
                 userSupplyBorrow?.supplied ?? BigNumber(0),
@@ -154,7 +156,7 @@ export const LendTable = () => {
                 </Button>
                 <Button
                   className="w-1/2"
-                  variant={'tertiary'}
+                  variant="tertiary"
                   onClick={() => {
                     handleBaseTokenClick(ACTION_TYPE.WITHDRAW);
                   }}
@@ -184,26 +186,26 @@ export const LendTable = () => {
                 </div>
                 <div className="flex gap-x-2 items-center">
                   <div>
-                    <Image
-                      src={
-                        SYMBOL_TO_LOGO[
-                          ASSET_ID_TO_SYMBOL[
-                            marketConfiguration?.baseToken ?? ''
-                          ] ?? 'USDC'
-                        ]
-                      }
-                      alt={
-                        ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']
-                      }
-                      width={32}
-                      height={32}
-                      className={'rounded-full'}
-                    />
+                    {marketConfiguration && (
+                      <Image
+                        src={
+                          SYMBOL_TO_ICON[
+                            ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]
+                          ]
+                        }
+                        alt={ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]}
+                        width={32}
+                        height={32}
+                        className={'rounded-full'}
+                      />
+                    )}
                   </div>
                   <div>
-                    <div className="text-neutral2 font-medium">
-                      {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
-                    </div>
+                    {marketConfiguration && (
+                      <div className="text-neutral2 font-medium">
+                        {ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]}
+                      </div>
+                    )}
                     <div className="text-neutral5 text-sm">
                       {formatUnits(
                         balance ? BigNumber(balance.toString()) : BigNumber(0),
@@ -216,7 +218,14 @@ export const LendTable = () => {
               </div>
               <div className="w-full flex items-center">
                 <div className="w-1/2 text-neutral4 font-medium">Lend APY</div>
-                <div className="text-neutral5">5%</div>
+                <div
+                  className={cn(
+                    'text-neutral5',
+                    isSupplyRatePending && 'animate-pulse'
+                  )}
+                >
+                  {getSupplyApr(supplyRate)}
+                </div>
               </div>
               <div className="w-full flex items-center">
                 <div className="w-1/2 text-neutral4 font-medium">

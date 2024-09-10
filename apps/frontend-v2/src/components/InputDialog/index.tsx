@@ -36,16 +36,13 @@ export const InputDialog = () => {
   const { data: borrowCapacity } = useBorrowCapacity();
   const { data: userSupplyBorrow } = useUserSupplyBorrow();
   const {
-    mode,
     marketMode,
-    market,
     actionTokenAssetId,
     tokenAmount,
     action,
     inputDialogOpen: open,
     changeAction,
     changeTokenAmount,
-    changeActionTokenAssetId,
     changeInputDialogOpen: setOpen,
   } = useMarketStore();
 

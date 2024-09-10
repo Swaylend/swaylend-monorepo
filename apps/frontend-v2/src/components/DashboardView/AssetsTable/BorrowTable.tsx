@@ -18,24 +18,23 @@ import {
 } from '@/components/ui/table';
 import {
   useBorrowCapacity,
+  useBorrowRate,
   useMarketConfiguration,
   useUserSupplyBorrow,
 } from '@/hooks';
+import { cn } from '@/lib/utils';
 import { ACTION_TYPE, useMarketStore } from '@/stores';
-import { ASSET_ID_TO_SYMBOL, formatUnits } from '@/utils';
+import {
+  ASSET_ID_TO_SYMBOL,
+  SYMBOL_TO_ICON,
+  formatUnits,
+  getBorrowApr,
+} from '@/utils';
 import { useAccount, useBalance } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import BigNumber from 'bignumber.js';
-import type { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import Image from 'next/image';
 import React from 'react';
-import USDC from '/public/tokens/usdc.svg?url';
-import USDT from '/public/tokens/usdt.svg?url';
-
-const SYMBOL_TO_LOGO: Record<string, StaticImport> = {
-  USDC: USDC,
-  USDT: USDT,
-};
 
 export const BorrowTable = () => {
   const { account } = useAccount();
@@ -46,10 +45,9 @@ export const BorrowTable = () => {
     changeInputDialogOpen,
   } = useMarketStore();
 
+  const { data: borrowRate, isPending: isBorrowRatePending } = useBorrowRate();
   const { data: userSupplyBorrow } = useUserSupplyBorrow();
-
   const { data: marketConfiguration } = useMarketConfiguration();
-
   const { data: maxBorrowAmount } = useBorrowCapacity();
 
   const handleBaseTokenClick = (action: ACTION_TYPE) => {
@@ -82,21 +80,19 @@ export const BorrowTable = () => {
             <TableCell>
               <div className="flex gap-x-2 items-center">
                 <div>
-                  <Image
-                    src={
-                      SYMBOL_TO_LOGO[
-                        ASSET_ID_TO_SYMBOL[
-                          marketConfiguration?.baseToken ?? ''
-                        ] ?? 'USDC'
-                      ]
-                    }
-                    alt={
-                      ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']
-                    }
-                    width={32}
-                    height={32}
-                    className={'rounded-full'}
-                  />
+                  {marketConfiguration && (
+                    <Image
+                      src={
+                        SYMBOL_TO_ICON[
+                          ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]
+                        ]
+                      }
+                      alt={ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]}
+                      width={32}
+                      height={32}
+                      className="rounded-full"
+                    />
+                  )}
                 </div>
                 <div>
                   <div className="text-neutral2 font-medium">
@@ -113,7 +109,9 @@ export const BorrowTable = () => {
                 </div>
               </div>
             </TableCell>
-            <TableCell>5%</TableCell>
+            <TableCell className={cn(isBorrowRatePending && 'animate-pulse')}>
+              {getBorrowApr(borrowRate)}
+            </TableCell>
             <TableCell>
               {formatUnits(
                 userSupplyBorrow?.borrowed ?? BigNumber(0),
@@ -138,7 +136,7 @@ export const BorrowTable = () => {
                     !userSupplyBorrow || userSupplyBorrow.borrowed.eq(0)
                   }
                   className="w-1/2"
-                  variant={'tertiary'}
+                  variant="tertiary"
                   onClick={() => {
                     handleBaseTokenClick(ACTION_TYPE.REPAY);
                   }}
@@ -168,21 +166,19 @@ export const BorrowTable = () => {
                 </div>
                 <div className="flex gap-x-2 items-center">
                   <div>
-                    <Image
-                      src={
-                        SYMBOL_TO_LOGO[
-                          ASSET_ID_TO_SYMBOL[
-                            marketConfiguration?.baseToken ?? ''
-                          ] ?? 'USDC'
-                        ]
-                      }
-                      alt={
-                        ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']
-                      }
-                      width={32}
-                      height={32}
-                      className={'rounded-full'}
-                    />
+                    {marketConfiguration && (
+                      <Image
+                        src={
+                          SYMBOL_TO_ICON[
+                            ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]
+                          ]
+                        }
+                        alt={ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]}
+                        width={32}
+                        height={32}
+                        className="rounded-full"
+                      />
+                    )}
                   </div>
                   <div>
                     <div className="text-neutral2 font-medium">
@@ -202,7 +198,14 @@ export const BorrowTable = () => {
                 <div className="w-1/2 text-neutral4 font-medium">
                   Borrow APY
                 </div>
-                <div className="text-neutral5">5%</div>
+                <div
+                  className={cn(
+                    'text-neutral5',
+                    isBorrowRatePending && 'animate-pulse'
+                  )}
+                >
+                  {getBorrowApr(borrowRate)}
+                </div>
               </div>
               <div className="w-full flex items-center">
                 <div className="w-1/2 text-neutral4 font-medium">

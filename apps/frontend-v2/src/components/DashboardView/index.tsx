@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
 import { InputDialog } from '../InputDialog';
+import { RedeemReferralDialog } from '../RedeemReferralDialog';
 import { AssetsTable } from './AssetsTable';
 import { MarketSwitch } from './MarketSwitch';
 import { Stats } from './Stats';
@@ -12,6 +13,7 @@ export const DashboardView = () => {
       <MarketSwitch />
       <AssetsTable />
       <InputDialog />
+      <RedeemReferralDialog />
     </div>
   );
 };

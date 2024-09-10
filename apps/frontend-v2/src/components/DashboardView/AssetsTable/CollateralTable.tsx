@@ -19,23 +19,16 @@ import {
 } from '@/components/ui/table';
 import { useCollateralConfigurations, useUserCollateralAssets } from '@/hooks';
 import { ACTION_TYPE, useMarketStore } from '@/stores';
-import { ASSET_ID_TO_SYMBOL, SYMBOL_TO_NAME, formatUnits } from '@/utils';
+import {
+  ASSET_ID_TO_SYMBOL,
+  SYMBOL_TO_ICON,
+  SYMBOL_TO_NAME,
+  formatUnits,
+} from '@/utils';
 import { useAccount, useBalance } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import BigNumber from 'bignumber.js';
-import type { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import React, { useMemo } from 'react';
-import BTC from '/public/tokens/bitcoin.svg?url';
-import ETH from '/public/tokens/ethereum.svg?url';
-import BNB from '/public/tokens/sway.svg?url';
-import UNI from '/public/tokens/uni.svg?url';
-
-const SYMBOL_TO_LOGO: Record<string, StaticImport> = {
-  ETH: ETH,
-  BTC: BTC,
-  BNB: BNB,
-  UNI: UNI,
-};
 
 type TableRowProps = {
   account: string | undefined;
@@ -73,7 +66,7 @@ const CollateralTableRow = ({
         <AssetName
           symbol={symbol}
           name={SYMBOL_TO_NAME[symbol]}
-          src={SYMBOL_TO_LOGO[symbol ?? 'ETH']}
+          src={SYMBOL_TO_ICON[symbol]}
         />
       </TableCell>
       <TableCell>
@@ -147,7 +140,7 @@ const CollateralCard = ({
             <AssetName
               symbol={symbol}
               name={SYMBOL_TO_NAME[symbol]}
-              src={SYMBOL_TO_LOGO[symbol ?? 'ETH']}
+              src={SYMBOL_TO_ICON[symbol]}
             />
           </div>
           <div className="w-full flex items-center">

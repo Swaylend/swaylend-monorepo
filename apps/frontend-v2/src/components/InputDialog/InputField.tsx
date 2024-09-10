@@ -1,25 +1,12 @@
 import { useMarketStore } from '@/stores';
-import { ASSET_ID_TO_SYMBOL, SYMBOL_TO_NAME } from '@/utils';
+import { ASSET_ID_TO_SYMBOL, SYMBOL_TO_ICON } from '@/utils';
 import BigNumber from 'bignumber.js';
 import type { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import Image from 'next/image';
 import type React from 'react';
 import { useEffect, useState } from 'react';
 import { useDebounceCallback } from 'usehooks-ts';
-import BTC from '/public/tokens/bitcoin.svg?url';
-import ETH from '/public/tokens/ethereum.svg?url';
-import BNB from '/public/tokens/sway.svg?url';
-import UNI from '/public/tokens/uni.svg?url';
-import USDC from '/public/tokens/usdc.svg?url';
 import { Input } from '../ui/input';
-
-const SYMBOL_TO_LOGO: Record<string, StaticImport> = {
-  ETH: ETH,
-  BTC: BTC,
-  BNB: BNB,
-  UNI: UNI,
-  USDC: USDC,
-};
 
 export const InputField = () => {
   const { changeTokenAmount, tokenAmount, actionTokenAssetId } =
@@ -95,17 +82,21 @@ export const InputField = () => {
       />
       <div className="absolute flex items-center gap-x-2 h-[24px] top-[calc(50%-12px)] left-[calc(100%-80px)]">
         <div className="w-[24px] h-[24px]">
-          <Image
-            alt={'token'}
-            className="rounded-full"
-            src={SYMBOL_TO_LOGO[ASSET_ID_TO_SYMBOL[actionTokenAssetId ?? '']]}
-            width={32}
-            height={32}
-          />
+          {actionTokenAssetId && (
+            <Image
+              alt="token"
+              className="rounded-full"
+              src={SYMBOL_TO_ICON[ASSET_ID_TO_SYMBOL[actionTokenAssetId]]}
+              width={32}
+              height={32}
+            />
+          )}
         </div>
-        <div className="text-sm text-neutral4 font-semibold">
-          {ASSET_ID_TO_SYMBOL[actionTokenAssetId ?? '']}
-        </div>
+        {actionTokenAssetId && (
+          <div className="text-sm text-neutral4 font-semibold">
+            {ASSET_ID_TO_SYMBOL[actionTokenAssetId]}
+          </div>
+        )}
       </div>
     </div>
   );
