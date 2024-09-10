@@ -259,7 +259,7 @@ export const CollateralTable = () => {
         </TableBody>
       </Table>
 
-      <div className="flex flex-col gap-y-4 px-4 sm:hidden">
+      <div className="mt-8 flex flex-col gap-y-4 px-4 sm:hidden">
         <Title>Collateral Assets</Title>
         <div className="flex flex-col gap-y-4">
           {collaterals.map((collateral) => (
