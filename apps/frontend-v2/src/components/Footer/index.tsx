@@ -5,7 +5,7 @@ export const Footer = () => {
   return (
     <>
       <Line />
-      <div className="relative flex justify-between overflow-hidden items-center px-16 py-4 text-neutral4">
+      <div className="relative flex justify-between overflow-hidden items-center px-4 sm:px-16 py-4 text-neutral4 text-xs sm:text-md">
         {/* biome-ignore lint/a11y/useValidAnchor: <explanation> */}
         <a href="#">Terms</a>
         Swaylend. All Rights Reserved. © 2024

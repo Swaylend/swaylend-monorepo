@@ -163,8 +163,8 @@ export const InputDialog = () => {
       return formatUnits(
         BigNumber(
           userCollateralAssets?.[actionTokenAssetId ?? ''] ??
-            new BigNumber(0) ??
-            0
+          new BigNumber(0) ??
+          0
         ),
         collateralConfigurations?.[actionTokenAssetId ?? '']?.decimals ?? 9
       );
@@ -218,7 +218,7 @@ export const InputDialog = () => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="p-0 max-w-[400px]">
+      <DialogContent className="p-0 max-sm:w-[90%] max-sm:rounded-xl max-w-[400px]">
         <VisuallyHidden.Root asChild>
           <DialogTitle>Input Dialog</DialogTitle>
         </VisuallyHidden.Root>

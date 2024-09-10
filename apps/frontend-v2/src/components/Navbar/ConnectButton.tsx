@@ -11,7 +11,7 @@ import {
   useDisconnect,
   useIsConnected,
 } from '@fuels/react';
-import { ChevronDown, ClipboardCopyIcon } from 'lucide-react';
+import { ChevronDown, ClipboardCopyIcon, Copy } from 'lucide-react';
 
 export const ConnectButton = () => {
   const { connect, isConnecting } = useConnectUI();
@@ -23,23 +23,41 @@ export const ConnectButton = () => {
     return (
       <Popover>
         <PopoverTrigger>
-          <div className="px-4 py-2 rounded-full flex gap-x-2 items-center bg-slate-700 text-neutral4 font-semibold">
+          <div className="px-4 py-2 rounded-full max-sm:hidden flex gap-x-2 items-center bg-slate-700 text-neutral4 font-semibold">
             {`${account?.slice(0, 6)}...${account?.slice(-4)}`}
+
+            <ChevronDown className="h-4 w-4" />
+          </div>
+          <div className="px-4 py-2 rounded-full sm:hidden flex gap-x-2 items-center bg-slate-700 text-neutral4 font-semibold">
+            {`${account?.slice(0, 4)}...${account?.slice(-2)}`}
 
             <ChevronDown className="h-4 w-4" />
           </div>
         </PopoverTrigger>
         <PopoverContent align="end" className="w-[260px] px-[25px]">
-          <div className="flex justify-between items-center">
-            <div className="text-neutral4">Wallet Balance</div>
-            <ClipboardCopyIcon
-              className="w-4 h-4 hover:opacity-80"
-              onClick={async () => {
-                await navigator.clipboard.writeText(account);
-              }}
-            />
+          <div className="w-full">
+            <div>
+              <div className='text-neutral4 text-sm'>
+                Connected Wallet
+              </div>
+              <div className='text-xl font-medium flex items-center justify-between w-full'>
+                <div className='flex gap-x-2 items-center'>
+                  <div className='w-2 h-2 rounded-full bg-accent' />
+                  {`${account?.slice(0, 6)}...${account?.slice(-4)}`}
+                </div>
+                <Copy
+                  className="w-4 h-4 hover:opacity-80"
+                  onClick={async () => {
+                    await navigator.clipboard.writeText(account);
+                  }}
+                />
+              </div>
+            </div>
           </div>
-          <div className="text-primary01 text-2xl font-semibold mt-2">$613</div>
+          <div className="mt-6">
+            <div className="text-neutral4 text-sm">Wallet Balance</div>
+          </div>
+          <div className="text-primary01 text-2xl font-semibold">$613</div>
           <div className="mt-10">
             <Button
               className="w-full"

@@ -8,7 +8,7 @@ export const AssetsTable = () => {
   const { market, marketMode } = useMarketStore();
 
   return (
-    <div className="w-full mt-[55px]">
+    <div className="w-full mt-[30px] sm:mt-[55px]">
       {marketMode === 'lend' && (
         <div className="flex flex-col gap-y-4">
           <LendTable />
