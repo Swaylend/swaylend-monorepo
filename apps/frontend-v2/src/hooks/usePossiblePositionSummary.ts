@@ -51,7 +51,7 @@ export const usePossiblePositionSummary = () => {
       return;
     }
 
-    const loanAmount = formatUnits(
+    let loanAmount = formatUnits(
       userSupplyBorrow.borrowed,
       marketConfiguration.baseTokenDecimals
     );
@@ -67,16 +67,13 @@ export const usePossiblePositionSummary = () => {
 
       const baseTokenPrice = priceData.prices[marketConfiguration.baseToken];
 
-      let newLoanValue = loanAmount;
-      if (action === ACTION_TYPE.BORROW) {
-        newLoanValue = loanAmount.plus(tokenAmount).times(baseTokenPrice);
-      } else if (action === ACTION_TYPE.REPAY) {
-        newLoanValue = loanAmount.minus(tokenAmount).times(baseTokenPrice);
-      }
+      loanAmount = loanAmount
+        .plus(tokenAmount.times(action === ACTION_TYPE.BORROW ? 1 : -1))
+        .times(baseTokenPrice);
 
       const collateralUtilization = trueCollateralValue.eq(0)
         ? BigNumber(0)
-        : newLoanValue.div(trueCollateralValue);
+        : loanAmount.div(trueCollateralValue);
 
       const userPositionLiquidationPoint = collateralValue.times(
         collateralUtilization
