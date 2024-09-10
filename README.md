@@ -2,9 +2,9 @@
 
 ![SwayLend](assets/svg/logo.svg)
 
-<h3>Swaylend ⛽️⚡️</h3>
+<h3>SwayLend ⛽️⚡️</h3>
 
-<h4>First ever Lending protocol on Fuel Network</h4>
+<h4>The First Lending Protocol on Fuel Network</h4>
 
 </div>
 
@@ -19,58 +19,53 @@
 
 # Introduction
 
-SwayLend is a decentralized lending platform that operates on the [Fuel Network](https://fuel.network), which has an Ethereum consensus layer. Our platform provides a secure and trustful place for crypto users to earn passive income by supplying liquidity to the market.
+SwayLend is a decentralized lending platform operating on the [Fuel Network](https://fuel.network), which utilizes an Ethereum consensus layer. Our platform offers a secure and trustworthy environment for crypto users to earn passive income by supplying liquidity to the market.
 
-With SwayLend, users can supply up to 6 different crypto assets as collateral and borrow USDC, the base asset. Suppliers earn a passive income by providing liquidity, while borrowers have the option to borrow in either an overcollateralized (perpetually) or undercollateralized manner.
+With SwayLend, users can supply up to six different crypto assets as collateral and borrow USDC, the base asset. Suppliers earn passive income by providing liquidity, while borrowers can borrow in either an overcollateralized (perpetually) or undercollateralized manner.
 
-The SwayLend protocol is built on a re-engineered solution from the Ethereum blockchain, rewritten in the Sway programming language. Our platform is a re-imagining of the [Compound](https://compound.finance/) architecture offers all the features and benefits of the [Compound](https://compound.finance/) with the added security and stability of the [Fuel Network.](https://fuel.network) Our platform is constantly monitored and improved by our dedicated team, who are always available to answer any questions or provide support.
+The SwayLend protocol is built on a re-engineered solution from the Ethereum blockchain, rewritten in the Sway programming language. Our platform reimagines the [Compound](https://compound.finance/) architecture, offering all its features and benefits with the added security and stability of the [Fuel Network](https://fuel.network). Our dedicated team continuously monitors and improves the platform, always available to answer questions or provide support.
 
-The SwayLend is alive on [https://swaylend.com](https://swaylend.com)
+SwayLend is live at [https://swaylend.com](https://swaylend.com).
 
-> Please note that Sway Lend is in the alpha testing phase and contracts may change in the future, leading to potential loss of supply/borrow amount.
+> ⚠️ Warning: Please note that SwayLend is in the alpha testing phase, and contracts may change in the future, leading to potential loss of supply/borrow amounts.
 
 
+# Project Structure
 
-# Project structure
+At the first level, the monorepo is divided into `contracts`, `apps`, `scripts`, and `libs`.
 
-On the first level, the monorepo is divided into `contracts` , `apps` , `scripts` , and `libs` .
-* **abis**: Contains ABI (Application Binary Interface) files, specifically for the market contract.
-* **apps**: Houses different applications related to the project:
+* [`abis`](/abis/): Contains ABI (Application Binary Interface) files, specifically for the market contract.
+* [`apps`](/apps/): Houses different applications related to the project:
+  + `frontend-v2`: A newer version of the frontend application.
+  + `indexer`: Application responsible for indexing blockchain data.
+  + `oracle`: Application related to the oracle service.
+* [`contracts`](/contracts/): Contains smart contracts for various functionalities:
+  + `market`: The main market contract.
+  + `pyth-mock`: Mock contract for Pyth oracle, used in tests.
+  + `src-20`: SRC-20 contract, used in tests.
+  + `token`: Token contract, used in tests.
+* [`libs`](/libs/): Includes shared libraries used across the project:
+  + `i256`: Library for 256-bit integer operations.
+  + `market_sdk`: Custom SDK for interacting with the market contract, used in tests.
+  + `pyth_mock_sdk`: Custom SDK for the Pyth mock contract, used in tests.
+  + `token_sdk`: Custom SDK for the token contract, used in tests.
+* [`scripts`](/scripts/): Contains scripts for various network operations:
+  + `devnet`: Scripts related to the local development network.
+  + `testnet`: Scripts related to the public test network.
+ 
+> ℹ️ Note: The instructions for each component can be found in their corresponding `README.md` files.
 
-  + **frontend-v2**: A newer version of the frontend application.
-  + **indexer**: Application responsible for indexing blockchain data.
-  + **oracle**: Application related to the oracle service.
-
-* **contracts**: Contains smart contracts for various functionalities.
-
-  + **market**: The main market contract.
-  + **pyth-mock**: Mock contract for Pyth oracle, used in tests.
-  + **src-20**: SRC-20 contract, used in tests.
-  + **token**: Token contract, used in tests.
-
-* **libs**: Includes shared libraries used across the project.
-
-  + **i256**: Library for 256-bit integer operations.
-  + **market\_sdk**: Custom SDK for interacting with the market contract, used in tests.
-  + **pyth\_mock\_sdk**: Custom SDK for the Pyth mock contract, used in tests.
-  + **token\_sdk**: Custom SDK for the token contract, used in tests.
-
-* **scripts**: Contains scripts for various network operations.
-
-  + **devnet**: Scripts related to the local development network.
-  + **testnet**: Scripts related to the public test network.
 
 
 # Deployments
 
-There is a dedicated [DEPLOYMENTS.md](https:///DEPLOYMENTS.md) for contracts. For the releases of the dapp, see Releases.
+There is a dedicated [DEPLOYMENTS.md](DEPLOYMENTS.md) for contracts. For the releases of the dapp, see [Releases](https://github.com/Swaylend/swaylend-monorepo/releases).
 
 # Socials / Contact
 * Twitter/X: [@swaylend](https://x.com/swaylend)
 * Email: TBA
 * Discord: TBA
 
-
 # Licensing
 
-The primary license for all SwayLend components is the MIT License, see [ `LICENSE` ](/LICENSE).
+The primary license for all SwayLend components is the MIT License. See [`LICENSE`](/LICENSE).
