@@ -7,27 +7,21 @@ import { useCollateralConfigurations } from './useCollateralConfigurations';
 import { useMarketConfiguration } from './useMarketConfiguration';
 import { usePrice } from './usePrice';
 import { useUserCollateralAssets } from './useUserCollateralAssets';
-import { useUserCollateralUtilization } from './useUserCollateralUtilization';
 import { useUserCollateralValue } from './useUserCollateralValue';
-import { useUserLiquidationPoint } from './useUserLiquidationPoint';
 import { useUserSupplyBorrow } from './useUserSupplyBorrow';
 import { useUserTrueCollateralValue } from './useUserTrueCollateralValue';
 
 export const usePossiblePositionSummary = () => {
   const { actionTokenAssetId, tokenAmount, action } = useMarketStore();
-
   const { data: priceData } = usePrice();
-
   const { data: marketConfiguration } = useMarketConfiguration();
   const { data: userCollateralAssets } = useUserCollateralAssets();
   const { data: collateralConfigurations } = useCollateralConfigurations();
   //TODO -> Borrow capacity cant be higher than the amount of base asset in market contract... Check balance of base asset in market contract
   const { data: borrowCapacity } = useBorrowCapacity();
   const { data: userSupplyBorrow } = useUserSupplyBorrow();
-  const collateralValue = useUserCollateralValue();
-  const trueCollateralValue = useUserTrueCollateralValue();
-  const collateralUtilization = useUserCollateralUtilization();
-  const liquidationPoint = useUserLiquidationPoint();
+  const { data: collateralValue } = useUserCollateralValue();
+  const { data: trueCollateralValue } = useUserTrueCollateralValue();
 
   const [possibleBorrowCapacity, setPossibleBorrowCapacity] =
     useState<BigNumber | null>(null);
@@ -39,27 +33,17 @@ export const usePossiblePositionSummary = () => {
     useState<BigNumber | null>(null);
 
   const calcPositionSummary = async () => {
-    // if (!this.initialized) return;
     if (
       action == null ||
       actionTokenAssetId == null ||
-      tokenAmount == null ||
       marketConfiguration == null ||
       userSupplyBorrow == null ||
       priceData == null ||
       borrowCapacity == null ||
       userCollateralAssets == null ||
-      collateralConfigurations == null
+      collateralConfigurations == null ||
+      tokenAmount.eq(0)
     ) {
-      console.log('pre ret 1');
-      setPossibleBorrowCapacity(null);
-      setPossibleCollateralValue(null);
-      setPossibleLiquidationPoint(null);
-      setPossibleAvailableToBorrow(null);
-      return;
-    }
-    if (!tokenAmount || tokenAmount.eq(0)) {
-      console.log('pre ret 2');
       setPossibleBorrowCapacity(null);
       setPossibleCollateralValue(null);
       setPossibleLiquidationPoint(null);
@@ -67,207 +51,96 @@ export const usePossiblePositionSummary = () => {
       return;
     }
 
-    let parsedTokenAmount = BigNumber(0);
-    if (actionTokenAssetId === marketConfiguration.baseToken) {
-      parsedTokenAmount = parseUnits(
-        tokenAmount,
-        marketConfiguration?.baseTokenDecimals ?? 9
-      );
-    } else {
-      parsedTokenAmount = parseUnits(
-        tokenAmount,
-        collateralConfigurations[actionTokenAssetId].decimals ?? 9
-      );
-    }
+    const loanAmount = formatUnits(
+      userSupplyBorrow.borrowed,
+      marketConfiguration.baseTokenDecimals
+    );
 
-    const loanAmount = userSupplyBorrow.borrowed ?? BigNumber(0);
-
-    if (action === ACTION_TYPE.BORROW) {
-      console.log(
-        'here...',
-        loanAmount.toFixed(2),
-        parsedTokenAmount?.toFixed(2),
-        borrowCapacity?.toFixed(2)
-      );
-      const baseTokenPrice = priceData.prices[marketConfiguration.baseToken];
-      const newLoanValue = formatUnits(
-        loanAmount.plus(parsedTokenAmount),
-        marketConfiguration?.baseTokenDecimals ?? 9
-      ).times(baseTokenPrice);
-      console.log('newLoanValue', newLoanValue.toFixed(2));
-
-      const collateralUtilization = newLoanValue.div(
-        trueCollateralValue ?? BigNumber(0)
-      );
-      const userPositionLiquidationPoint = (
-        collateralValue ?? BigNumber(0)
-      ).times(collateralUtilization);
-      if (userPositionLiquidationPoint.lt(BigNumber(0))) {
-        setPossibleLiquidationPoint(BigNumber(0));
-      } else {
-        setPossibleLiquidationPoint(userPositionLiquidationPoint);
+    if (action === ACTION_TYPE.REPAY || action === ACTION_TYPE.BORROW) {
+      if (!trueCollateralValue || !collateralValue) {
+        setPossibleBorrowCapacity(null);
+        setPossibleCollateralValue(null);
+        setPossibleLiquidationPoint(null);
+        setPossibleAvailableToBorrow(null);
+        return;
       }
 
-      const availableToBorrowChange = borrowCapacity.minus(
-        tokenAmount ?? BigNumber(0)
-      );
-      if (availableToBorrowChange.lt(0)) {
-        setPossibleAvailableToBorrow(BigNumber(0));
-      } else {
-        setPossibleAvailableToBorrow(availableToBorrowChange);
-      }
-    }
-
-    if (action === ACTION_TYPE.REPAY) {
       const baseTokenPrice = priceData.prices[marketConfiguration.baseToken];
-      const newLoanValue = formatUnits(
-        loanAmount.minus(parsedTokenAmount),
-        marketConfiguration?.baseTokenDecimals ?? 9
+
+      const newLoanValue = parseUnits(
+        loanAmount.plus(tokenAmount),
+        marketConfiguration.baseTokenDecimals
       ).times(baseTokenPrice);
 
-      const collateralUtilization = newLoanValue.div(
-        trueCollateralValue ?? BigNumber(0)
-      );
-      const userPositionLiquidationPoint = (
-        collateralValue ?? BigNumber(0)
-      ).times(collateralUtilization);
-      if (userPositionLiquidationPoint.lt(BigNumber(0))) {
-        setPossibleLiquidationPoint(BigNumber(0));
-      } else {
-        setPossibleLiquidationPoint(userPositionLiquidationPoint);
-      }
+      const collateralUtilization = trueCollateralValue.eq(0)
+        ? BigNumber(0)
+        : newLoanValue.div(trueCollateralValue);
 
-      const availableToBorrowChange = borrowCapacity.plus(
-        tokenAmount ?? BigNumber(0)
+      const userPositionLiquidationPoint = collateralValue.times(
+        collateralUtilization
       );
-      if (availableToBorrowChange.lt(0)) {
-        setPossibleAvailableToBorrow(BigNumber(0));
-      } else {
-        setPossibleAvailableToBorrow(availableToBorrowChange);
-      }
+
+      setPossibleLiquidationPoint(
+        userPositionLiquidationPoint.lt(BigNumber(0))
+          ? BigNumber(0)
+          : userPositionLiquidationPoint
+      );
+
+      const availableToBorrowChange =
+        action === ACTION_TYPE.BORROW
+          ? borrowCapacity.minus(tokenAmount)
+          : borrowCapacity.plus(tokenAmount);
+
+      setPossibleAvailableToBorrow(
+        availableToBorrowChange.lt(0) ? BigNumber(0) : availableToBorrowChange
+      );
     }
 
-    if (action === ACTION_TYPE.SUPPLY) {
+    if (action === ACTION_TYPE.SUPPLY || action === ACTION_TYPE.WITHDRAW) {
       if (
-        actionTokenAssetId !== marketConfiguration.baseToken &&
-        userCollateralAssets &&
-        collateralConfigurations
+        actionTokenAssetId === marketConfiguration.baseToken ||
+        !collateralValue
       ) {
-        // Get collaterals value
-        const collateralsValue = Object.entries(userCollateralAssets).reduce(
-          (acc, [assetId, v]) => {
-            const token = collateralConfigurations[assetId];
-            let balance = v;
-            if (assetId === actionTokenAssetId) {
-              balance = balance.plus(parsedTokenAmount ?? BigNumber(0));
-            }
-            balance = formatUnits(balance, token.decimals);
-            const dollBalance = priceData.prices[assetId].times(balance);
-            return acc.plus(dollBalance);
-          },
-          BigNumber(0)
-        );
+        setPossibleBorrowCapacity(null);
+        setPossibleCollateralValue(null);
+        setPossibleLiquidationPoint(null);
+        setPossibleAvailableToBorrow(null);
+        return;
+      }
 
-        const newBorrowCapacity = Object.entries(userCollateralAssets).reduce(
-          (acc, [assetId, v]) => {
-            const token = collateralConfigurations[assetId];
-            const tokenBorrowCollateralFactor = formatUnits(
+      // Existing collateral value +/- (token supplied * price * borrow_collateral_factor)
+      const collateralsValue = collateralValue.plus(
+        tokenAmount
+          .times(priceData.prices[actionTokenAssetId])
+          .times(action === ACTION_TYPE.SUPPLY ? 1 : -1)
+      );
+
+      // Existing borrow capacity +/- (token supplied * price * borrow_collateral_factor) + borrwed_amount
+      const newAvailableToBorrow = borrowCapacity.plus(
+        tokenAmount
+          .times(priceData.prices[actionTokenAssetId])
+          .times(
+            formatUnits(
               BigNumber(
                 collateralConfigurations[
-                  assetId
+                  actionTokenAssetId
                 ].borrow_collateral_factor.toString()
               ),
               18
-            );
-            let balance = v;
-            if (assetId === actionTokenAssetId) {
-              balance = balance.plus(parsedTokenAmount ?? BigNumber(0));
-            }
-            balance = formatUnits(balance, token.decimals);
-            const dollBalance = priceData.prices[assetId]
-              .times(balance)
-              .times(tokenBorrowCollateralFactor);
-            return acc.plus(dollBalance);
-          },
-          BigNumber(0)
-        );
-
-        setPossibleCollateralValue(collateralsValue);
-        setPossibleBorrowCapacity(newBorrowCapacity);
-        const newAvailableToBorrow = newBorrowCapacity.minus(
-          formatUnits(
-            userSupplyBorrow.borrowed ?? BigNumber(0),
-            marketConfiguration?.baseTokenDecimals ?? 9
+            )
           )
-        );
-        if (newAvailableToBorrow.lt(0)) {
-          setPossibleAvailableToBorrow(BigNumber(0));
-        } else {
-          setPossibleAvailableToBorrow(newAvailableToBorrow);
-        }
-      }
-    }
+          .times(action === ACTION_TYPE.SUPPLY ? 1 : -1)
+      );
 
-    if (action === ACTION_TYPE.WITHDRAW) {
-      if (
-        actionTokenAssetId !== marketConfiguration.baseToken &&
-        userCollateralAssets &&
-        collateralConfigurations
-      ) {
-        // Get collaterals value
-        const collateralsValue = Object.entries(userCollateralAssets).reduce(
-          (acc, [assetId, v]) => {
-            const token = collateralConfigurations[assetId];
-            let balance = v;
-            if (assetId === actionTokenAssetId) {
-              balance = balance.minus(parsedTokenAmount ?? BigNumber(0));
-            }
-            balance = formatUnits(balance, token.decimals);
-            const dollBalance = priceData.prices[assetId].times(balance);
-            return acc.plus(dollBalance);
-          },
-          BigNumber(0)
-        );
+      const newBorrowCapacity = newAvailableToBorrow.plus(loanAmount);
 
-        const newBorrowCapacity = Object.entries(userCollateralAssets).reduce(
-          (acc, [assetId, v]) => {
-            const token = collateralConfigurations[assetId];
-            const tokenBorrowCollateralFactor = formatUnits(
-              BigNumber(
-                collateralConfigurations[
-                  assetId
-                ].borrow_collateral_factor.toString()
-              ),
-              18
-            );
-            let balance = v;
-            if (assetId === actionTokenAssetId) {
-              balance = balance.minus(parsedTokenAmount ?? BigNumber(0));
-            }
-            balance = formatUnits(balance, token.decimals);
-            const dollBalance = priceData.prices[assetId]
-              .times(balance)
-              .times(tokenBorrowCollateralFactor);
-            return acc.plus(dollBalance);
-          },
-          BigNumber(0)
-        );
-
-        setPossibleCollateralValue(collateralsValue);
-        setPossibleBorrowCapacity(newBorrowCapacity);
-        const newAvailableToBorrow = newBorrowCapacity.minus(
-          formatUnits(
-            userSupplyBorrow.borrowed ?? BigNumber(0),
-            marketConfiguration?.baseTokenDecimals ?? 9
-          )
-        );
-        if (newAvailableToBorrow.lt(0)) {
-          setPossibleAvailableToBorrow(BigNumber(0));
-        } else {
-          setPossibleAvailableToBorrow(newAvailableToBorrow);
-        }
-      }
-      return;
+      setPossibleCollateralValue(collateralsValue);
+      setPossibleBorrowCapacity(
+        newBorrowCapacity.lt(0) ? BigNumber(0) : newBorrowCapacity
+      );
+      setPossibleAvailableToBorrow(
+        newAvailableToBorrow.lt(0) ? BigNumber(0) : newAvailableToBorrow
+      );
     }
   };
 

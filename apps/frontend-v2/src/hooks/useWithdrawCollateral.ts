@@ -24,6 +24,7 @@ export const useWithdrawCollateral = ({
   const { account } = useAccount();
   const { market } = useMarketStore();
   const { data: collateralConfigurations } = useCollateralConfigurations();
+  const { changeTokenAmount } = useMarketStore();
 
   return useMutation({
     mutationKey: ['withdrawCollateral', actionTokenAssetId, account, market],
@@ -83,6 +84,7 @@ export const useWithdrawCollateral = ({
     onSuccess: (data) => {
       if (data) {
         TransactionSuccessToast({ transactionId: data });
+        changeTokenAmount(BigNumber(0));
       }
     },
     onError: (error) => {

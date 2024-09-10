@@ -25,45 +25,65 @@ export const InputField = () => {
   const { changeTokenAmount, tokenAmount, actionTokenAssetId } =
     useMarketStore();
 
-  useEffect(() => {
-    if (tokenAmount && tokenAmount.toString() !== inputValue)
-      setInputValue(tokenAmount.toString());
-  }, [tokenAmount]);
-
   const [inputValue, setInputValue] = useState<string>('');
+
+  useEffect(() => {
+    if (
+      tokenAmount.gt(0) &&
+      tokenAmount.toString() !== inputValue &&
+      `${tokenAmount.toString()}.` !== inputValue
+    ) {
+      setInputValue(tokenAmount.toString());
+    }
+  }, [tokenAmount]);
 
   const debounce = useDebounceCallback(changeTokenAmount, 500);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     let { value } = event.currentTarget;
+
     // Replace comma to the dot
     value = value.replace(',', '.');
 
-    // Replace leading zeros
-    if (/^0+[^.]/.test(value)) {
-      value = value.replace(/^0+/, '');
-      if (value === '') {
-        value = '0';
-      }
+    // Remove additional decimal separators
+    const parts = value.split('.');
+    if (parts.length > 2) {
+      value = `${parts[0]}.${parts.slice(1).join('')}`;
     }
 
+    // Add leading zero if only decimal point is entered
     if (value === '.') {
       value = '0.';
     }
-    // TODO: use correct decimals
-    // Limit the number of decimal places to token decimals
-    if (value && !/^\d+(.\d{0,9})?$/.test(value)) {
-      return;
-    }
-    if (value === '') {
+
+    // Allow clearing the input or removing the last character if it's '0'
+    if (value === '' || (inputValue === '0' && value === '')) {
       setInputValue('');
       debounce(BigNumber(0));
       return;
     }
-    if (BigNumber(value).isNaN()) return;
 
-    setInputValue(value);
-    debounce(BigNumber(value));
+    console.log(value);
+
+    // Remove leading zeros if there's no decimal point
+    if (!value.includes('.')) {
+      value = value.replace(/^0+/, '') || '0';
+    }
+
+    // TODO: use correct decimals for the specific token
+    // Limit to 9 decimal places
+    const decimalParts = value.split('.');
+    if (decimalParts[1] && decimalParts[1].length > 9) {
+      decimalParts[1] = decimalParts[1].slice(0, 9);
+      value = decimalParts.join('.');
+    }
+
+    // Update only if it's a valid number or empty
+    if (value === '' || !Number.isNaN(Number.parseFloat(value))) {
+      setInputValue(value);
+      debounce(BigNumber(value));
+      return;
+    }
   };
 
   return (
@@ -72,8 +92,8 @@ export const InputField = () => {
         type="string"
         className="h-[56px] bg-card"
         value={inputValue}
-        placeholder="0.00"
         onChange={handleChange}
+        placeholder="Enter amount"
       />
       <div className="absolute flex items-center gap-x-2 h-[24px] top-[calc(50%-12px)] left-[calc(100%-80px)]">
         <div className="w-[24px] h-[24px]">
