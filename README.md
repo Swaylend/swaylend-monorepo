@@ -16,7 +16,6 @@
   <a target="_blank" href="https://x.com/swaylend">Twitter</a>
 </h6>
 
-
 # Introduction
 
 SwayLend is a decentralized lending platform operating on the [Fuel Network](https://fuel.network), which utilizes an Ethereum consensus layer. Our platform offers a secure and trustworthy environment for crypto users to earn passive income by supplying liquidity to the market.
@@ -29,10 +28,9 @@ SwayLend is live at [https://swaylend.com](https://swaylend.com).
 
 > ⚠️ Warning: Please note that SwayLend is in the alpha testing phase, and contracts may change in the future, leading to potential loss of supply/borrow amounts.
 
-
 # Project Structure
 
-At the first level, the monorepo is divided into `contracts`, `apps`, `scripts`, and `libs`.
+At the first level, the monorepo is divided into `contracts` , `apps` , `scripts` , and `libs` .
 
 * [`abis`](/abis/): Contains ABI (Application Binary Interface) files, specifically for the market contract.
 * [`apps`](/apps/): Houses different applications related to the project:
@@ -42,7 +40,7 @@ At the first level, the monorepo is divided into `contracts`, `apps`, `scripts`,
 * [`contracts`](/contracts/): Contains smart contracts for various functionalities:
   + `market`: The main market contract.
   + `pyth-mock`: Mock contract for Pyth oracle, used in tests.
-  + `src-20`: SRC-20 contract, used in tests.
+  + `src-20`: SRC-20 contract, SLEND governance token.
   + `token`: Token contract, used in tests.
 * [`libs`](/libs/): Includes shared libraries used across the project:
   + `i256`: Library for 256-bit integer operations.
@@ -53,9 +51,8 @@ At the first level, the monorepo is divided into `contracts`, `apps`, `scripts`,
   + `devnet`: Scripts related to the local development network.
   + `testnet`: Scripts related to the public test network.
  
+
 > ℹ️ Note: The instructions for each component can be found in their corresponding `README.md` files.
-
-
 
 # Deployments
 
@@ -65,7 +62,6 @@ There is a dedicated [DEPLOYMENTS.md](DEPLOYMENTS.md) for contracts. For the rel
 * Twitter/X: [@swaylend](https://x.com/swaylend)
 * Email: TBA
 * Discord: TBA
-
 # Licensing
 
-The primary license for all SwayLend components is the MIT License. See [`LICENSE`](/LICENSE).
+The primary license for all SwayLend components is the MIT License. See [ `LICENSE` ](/LICENSE).
