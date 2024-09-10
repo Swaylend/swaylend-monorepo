@@ -42,16 +42,23 @@ const MarketItem = ({ market, logo }: { market: string; logo: any }) => {
 };
 
 export const MarketSwitcher = () => {
-  const { changeMarket } = useMarketStore();
+  const { market, changeMarket } = useMarketStore();
 
   const handleChange = (value: string) => {
     changeMarket(value as DeployedMarket);
   };
 
   return (
-    <Select onValueChange={handleChange}>
+    <Select value={market} onValueChange={handleChange}>
       <SelectTrigger className="w-[180px]">
-        <SelectValue placeholder={<MarketItem market="USDC" logo={USDC} />} />
+        <SelectValue
+          placeholder={
+            <MarketItem
+              market={market}
+              logo={market === 'USDC' ? USDC : USDT} // TODO: Extract to function/maybe constants
+            />
+          }
+        />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
