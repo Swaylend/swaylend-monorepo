@@ -12,17 +12,12 @@ import {
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import {
-  useCollateralConfigurations,
-  useMarketConfiguration,
-  useUserCollateralAssets,
-} from '@/hooks';
+import { useCollateralConfigurations, useUserCollateralAssets } from '@/hooks';
 import { ACTION_TYPE, useMarketStore } from '@/stores';
 import { ASSET_ID_TO_SYMBOL, SYMBOL_TO_NAME, formatUnits } from '@/utils';
 import { useAccount, useBalance } from '@fuels/react';
@@ -30,12 +25,10 @@ import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import BigNumber from 'bignumber.js';
 import type { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import React, { useMemo } from 'react';
-import { useMediaQuery } from 'usehooks-ts';
 import BTC from '/public/tokens/bitcoin.svg?url';
 import ETH from '/public/tokens/ethereum.svg?url';
 import BNB from '/public/tokens/sway.svg?url';
 import UNI from '/public/tokens/uni.svg?url';
-import USDC from '/public/tokens/usdc.svg?url';
 
 const SYMBOL_TO_LOGO: Record<string, StaticImport> = {
   ETH: ETH,
@@ -60,7 +53,6 @@ const CollateralTableRow = ({
   symbol,
   decimals,
   protocolBalance,
-  protocolBalancePending,
   handleAssetClick,
 }: TableRowProps) => {
   const { balance } = useBalance({
@@ -124,7 +116,6 @@ const CollateralCard = ({
   symbol,
   decimals,
   protocolBalance,
-  protocolBalancePending,
   handleAssetClick,
 }: TableRowProps) => {
   const { balance } = useBalance({
@@ -222,11 +213,7 @@ export const CollateralTable = () => {
   const { data: userCollateralAssets, isLoading: userCollateralAssetsLoading } =
     useUserCollateralAssets();
 
-  const {
-    data: collateralConfigurations,
-    isPending: collateralConfigurationsPending,
-    error: collateralConfigurationsError,
-  } = useCollateralConfigurations();
+  const { data: collateralConfigurations } = useCollateralConfigurations();
 
   const collaterals = useMemo(() => {
     if (!collateralConfigurations) return [];
@@ -242,11 +229,9 @@ export const CollateralTable = () => {
     changeInputDialogOpen(true);
   };
 
-  const mobile = useMediaQuery('(max-width:640px)');
-
-  if (!mobile) {
-    return (
-      <Table>
+  return (
+    <>
+      <Table className="max-sm:hidden">
         <TableHeader>
           <TableRow>
             <TableHead className="w-3/12">Collateral Asset</TableHead>
@@ -273,27 +258,26 @@ export const CollateralTable = () => {
           ))}
         </TableBody>
       </Table>
-    );
-  }
-  return (
-    <div className="flex flex-col gap-y-4 px-4">
-      <Title>Collateral Assets</Title>
-      <div className="flex flex-col gap-y-4">
-        {collaterals.map((collateral) => (
-          <CollateralCard
-            key={collateral.asset_id}
-            account={account ?? undefined}
-            assetId={collateral.asset_id}
-            symbol={ASSET_ID_TO_SYMBOL[collateral.asset_id]}
-            decimals={collateral.decimals}
-            protocolBalance={
-              userCollateralAssets?.[collateral.asset_id] ?? new BigNumber(0)
-            }
-            protocolBalancePending={userCollateralAssetsLoading}
-            handleAssetClick={handleAssetClick}
-          />
-        ))}
+
+      <div className="flex flex-col gap-y-4 px-4 sm:hidden">
+        <Title>Collateral Assets</Title>
+        <div className="flex flex-col gap-y-4">
+          {collaterals.map((collateral) => (
+            <CollateralCard
+              key={collateral.asset_id}
+              account={account ?? undefined}
+              assetId={collateral.asset_id}
+              symbol={ASSET_ID_TO_SYMBOL[collateral.asset_id]}
+              decimals={collateral.decimals}
+              protocolBalance={
+                userCollateralAssets?.[collateral.asset_id] ?? new BigNumber(0)
+              }
+              protocolBalancePending={userCollateralAssetsLoading}
+              handleAssetClick={handleAssetClick}
+            />
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 };

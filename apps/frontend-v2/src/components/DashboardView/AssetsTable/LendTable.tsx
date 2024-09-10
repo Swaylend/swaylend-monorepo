@@ -26,7 +26,6 @@ import BigNumber from 'bignumber.js';
 import type { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import Image from 'next/image';
 import React from 'react';
-import { useMediaQuery } from 'usehooks-ts';
 import FUEL from '/public/icons/fuel-logo.svg?url';
 import SWAY from '/public/tokens/sway.svg?url';
 import USDC from '/public/tokens/usdc.svg?url';
@@ -83,11 +82,10 @@ export const LendTable = () => {
     assetId: marketConfiguration?.baseToken,
   });
 
-  const mobile = useMediaQuery('(max-width:640px)');
-
-  if (!mobile) {
-    return (
-      <Table>
+  return (
+    <>
+      {/* DESKTOP */}
+      <Table className="max-sm:hidden">
         <TableHeader>
           <TableRow>
             <TableHead className="w-3/12">Lend Asset</TableHead>
@@ -168,100 +166,101 @@ export const LendTable = () => {
           </TableRow>
         </TableBody>
       </Table>
-    );
-  }
-  return (
-    <div className="flex flex-col gap-y-4 px-4">
-      <Title>Lend Assets</Title>
-      <Card>
-        <VisuallyHidden.Root asChild>
-          <CardHeader>
-            <CardTitle>Card Title</CardTitle>
-            <CardDescription>Card Description</CardDescription>
-          </CardHeader>
-        </VisuallyHidden.Root>
-        <CardContent>
-          <div className="flex flex-col gap-y-4 pt-8 px-4">
-            <div className="w-full flex items-center">
-              <div className="w-1/2 text-neutral4 font-medium">Lend Asset</div>
-              <div className="flex gap-x-2 items-center">
-                <div>
-                  <Image
-                    src={
-                      SYMBOL_TO_LOGO[
-                        ASSET_ID_TO_SYMBOL[
-                          marketConfiguration?.baseToken ?? ''
-                        ] ?? 'USDC'
-                      ]
-                    }
-                    alt={
-                      ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']
-                    }
-                    width={32}
-                    height={32}
-                    className={'rounded-full'}
-                  />
+      {/* MOBILE */}
+      <div className="flex flex-col gap-y-4 px-4 sm:hidden">
+        <Title>Lend Assets</Title>
+        <Card>
+          <VisuallyHidden.Root asChild>
+            <CardHeader>
+              <CardTitle>Card Title</CardTitle>
+              <CardDescription>Card Description</CardDescription>
+            </CardHeader>
+          </VisuallyHidden.Root>
+          <CardContent>
+            <div className="flex flex-col gap-y-4 pt-8 px-4">
+              <div className="w-full flex items-center">
+                <div className="w-1/2 text-neutral4 font-medium">
+                  Lend Asset
+                </div>
+                <div className="flex gap-x-2 items-center">
+                  <div>
+                    <Image
+                      src={
+                        SYMBOL_TO_LOGO[
+                          ASSET_ID_TO_SYMBOL[
+                            marketConfiguration?.baseToken ?? ''
+                          ] ?? 'USDC'
+                        ]
+                      }
+                      alt={
+                        ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']
+                      }
+                      width={32}
+                      height={32}
+                      className={'rounded-full'}
+                    />
+                  </div>
+                  <div>
+                    <div className="text-neutral2 font-medium">
+                      {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
+                    </div>
+                    <div className="text-neutral5 text-sm">
+                      {formatUnits(
+                        balance ? BigNumber(balance.toString()) : BigNumber(0),
+                        marketConfiguration?.baseTokenDecimals ?? 9
+                      ).toFixed(2)}
+                      {' in wallet'}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="w-full flex items-center">
+                <div className="w-1/2 text-neutral4 font-medium">Lend APY</div>
+                <div className="text-neutral5">5%</div>
+              </div>
+              <div className="w-full flex items-center">
+                <div className="w-1/2 text-neutral4 font-medium">
+                  Supplied Assets
                 </div>
                 <div>
-                  <div className="text-neutral2 font-medium">
-                    {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
-                  </div>
-                  <div className="text-neutral5 text-sm">
-                    {formatUnits(
-                      balance ? BigNumber(balance.toString()) : BigNumber(0),
-                      marketConfiguration?.baseTokenDecimals ?? 9
-                    ).toFixed(2)}
-                    {' in wallet'}
-                  </div>
+                  {formatUnits(
+                    userSupplyBorrow?.supplied ?? BigNumber(0),
+                    marketConfiguration?.baseTokenDecimals ?? 9
+                  ).toFormat(2)}{' '}
+                  {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
                 </div>
               </div>
-            </div>
-            <div className="w-full flex items-center">
-              <div className="w-1/2 text-neutral4 font-medium">Lend APY</div>
-              <div className="text-neutral5">5%</div>
-            </div>
-            <div className="w-full flex items-center">
-              <div className="w-1/2 text-neutral4 font-medium">
-                Supplied Assets
-              </div>
-              <div>
-                {formatUnits(
-                  userSupplyBorrow?.supplied ?? BigNumber(0),
-                  marketConfiguration?.baseTokenDecimals ?? 9
-                ).toFormat(2)}{' '}
-                {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
+              <div className="w-full flex items-center">
+                <div className="w-1/2 text-neutral4 font-medium">
+                  Supply Points
+                </div>
+                <PointIcons points={POINTS_LEND} />
               </div>
             </div>
-            <div className="w-full flex items-center">
-              <div className="w-1/2 text-neutral4 font-medium">
-                Supply Points
-              </div>
-              <PointIcons points={POINTS_LEND} />
+          </CardContent>
+          <CardFooter>
+            <div className="flex gap-x-2 w-full">
+              <Button
+                className="w-1/2"
+                onClick={() => {
+                  handleBaseTokenClick(ACTION_TYPE.SUPPLY);
+                }}
+              >
+                Supply
+              </Button>
+              <Button
+                className="w-1/2"
+                variant={'tertiary'}
+                onClick={() => {
+                  handleBaseTokenClick(ACTION_TYPE.WITHDRAW);
+                }}
+              >
+                Withdraw
+              </Button>
             </div>
-          </div>
-        </CardContent>
-        <CardFooter>
-          <div className="flex gap-x-2 w-full">
-            <Button
-              className="w-1/2"
-              onClick={() => {
-                handleBaseTokenClick(ACTION_TYPE.SUPPLY);
-              }}
-            >
-              Supply
-            </Button>
-            <Button
-              className="w-1/2"
-              variant={'tertiary'}
-              onClick={() => {
-                handleBaseTokenClick(ACTION_TYPE.WITHDRAW);
-              }}
-            >
-              Withdraw
-            </Button>
-          </div>
-        </CardFooter>
-      </Card>
-    </div>
+          </CardFooter>
+        </Card>
+      </div>
+    </>
   );
 };
