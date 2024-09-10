@@ -1,10 +1,10 @@
 import { formatUnits } from '@/utils';
+import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { useMarketConfiguration } from './useMarketConfiguration';
 import { usePrice } from './usePrice';
 import { useUserSupplyBorrow } from './useUserSupplyBorrow';
 import { useUserTrueCollateralValue } from './useUserTrueCollateralValue';
-import { useQuery } from '@tanstack/react-query';
 
 export const useUserCollateralUtilization = () => {
   const { data: userSupplyBorrow } = useUserSupplyBorrow();

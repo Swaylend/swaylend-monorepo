@@ -1,4 +1,3 @@
-import React, { useMemo } from 'react';
 import {
   useBorrowCapacity,
   useMarketConfiguration,
@@ -10,6 +9,7 @@ import { useUserLiquidationPoint } from '@/hooks/useUserLiquidationPoint';
 import { formatUnits } from '@/utils';
 import BigNumber from 'bignumber.js';
 import { ArrowDown, ArrowUp, InfoIcon } from 'lucide-react';
+import React, { useMemo } from 'react';
 
 export const PositionSummary = () => {
   const { data: marketConfiguration } = useMarketConfiguration();

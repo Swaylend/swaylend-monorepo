@@ -1,9 +1,9 @@
 import { formatUnits } from '@/utils';
+import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
 import { usePrice } from './usePrice';
 import { useUserCollateralAssets } from './useUserCollateralAssets';
-import { useQuery } from '@tanstack/react-query';
 
 // Value of collateral in USD times the liquidation factor
 export const useUserTrueCollateralValue = () => {
