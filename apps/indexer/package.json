@@ -1,6 +1,7 @@
 {
   "name": "sway-lend-indexer",
   "version": "0.1.0",
+  "license": "MIT",
   "scripts": {
     "clean": "tsc --clean",
     "build": "tsc --build",
