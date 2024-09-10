@@ -56,7 +56,16 @@ export const Stats = () => {
     colateralConfigurations,
   ]);
 
-  if (!marketConfiguration) return <div>Loading...</div>;
+  const borrowedBalance = useMemo(() => {
+    if (!marketConfiguration || !userSupplyBorrow) {
+      return BigNumber(0).toFormat(2);
+    }
+
+    return formatUnits(
+      userSupplyBorrow.borrowed,
+      marketConfiguration.baseTokenDecimals
+    ).toFormat(2);
+  }, [marketConfiguration, userSupplyBorrow]);
 
   return (
     <div className="w-full sm:px-[203px]">
@@ -66,7 +75,7 @@ export const Stats = () => {
             Supplied Balance
           </div>
           <div className="text-neutral2 font-bold text-lg sm:text-4xl">
-            {totalSuppliedBalance}
+            ${totalSuppliedBalance}
           </div>
         </div>
         <InfoBowl />
@@ -75,11 +84,7 @@ export const Stats = () => {
             Borrowed Assets
           </div>
           <div className="text-neutral2 font-bold text-lg sm:text-4xl">
-            $
-            {formatUnits(
-              userSupplyBorrow?.borrowed ?? new BigNumber(0),
-              marketConfiguration.baseTokenDecimals
-            ).toFormat(2)}
+            ${borrowedBalance}
           </div>
         </div>
       </div>

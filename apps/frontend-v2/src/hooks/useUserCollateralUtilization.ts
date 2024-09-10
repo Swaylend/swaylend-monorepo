@@ -1,5 +1,5 @@
 import { formatUnits } from '@/utils';
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { useMarketConfiguration } from './useMarketConfiguration';
 import { usePrice } from './usePrice';
@@ -18,7 +18,7 @@ export const useUserCollateralUtilization = () => {
       userSupplyBorrow,
       marketConfiguration,
       trueCollateralValue,
-      priceData,
+      priceData?.prices,
     ],
     queryFn: async () => {
       if (
@@ -26,9 +26,12 @@ export const useUserCollateralUtilization = () => {
         !marketConfiguration ||
         !trueCollateralValue ||
         !priceData
-      )
-        return BigNumber(0);
+      ) {
+        return null;
+      }
+
       if (userSupplyBorrow.borrowed.eq(0)) return BigNumber(0);
+
       const borrowedBalance = formatUnits(
         userSupplyBorrow.borrowed,
         marketConfiguration.baseTokenDecimals
@@ -44,5 +47,6 @@ export const useUserCollateralUtilization = () => {
       !!marketConfiguration &&
       !!trueCollateralValue &&
       !!priceData,
+    placeholderData: keepPreviousData,
   });
 };

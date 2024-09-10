@@ -21,10 +21,13 @@ export const PositionSummary = () => {
   const { data: liquidationPoint } = useUserLiquidationPoint();
 
   const totalBorrowCapacity = useMemo(() => {
-    if (userSupplyBorrow == null || borrowCapacity == null) return BigNumber(0);
+    if (!userSupplyBorrow || !borrowCapacity || !marketConfiguration) {
+      return BigNumber(0);
+    }
+
     return formatUnits(
-      userSupplyBorrow.borrowed ?? BigNumber(0),
-      marketConfiguration?.baseTokenDecimals ?? 9
+      userSupplyBorrow.borrowed,
+      marketConfiguration.baseTokenDecimals
     ).plus(borrowCapacity);
   }, [userSupplyBorrow, borrowCapacity]);
 
@@ -46,24 +49,37 @@ export const PositionSummary = () => {
         color: possibleCollateralValue?.lte(collateralValue ?? BigNumber(0))
           ? 0
           : 1,
+        direction: possibleCollateralValue?.lte(collateralValue ?? BigNumber(0))
+          ? 0
+          : 1,
       },
       {
         title: 'Liquidation Point',
-        value: `$${liquidationPoint?.toFixed(2)}`,
+        value: `$${(liquidationPoint ?? BigNumber(0)).toFixed(2)}`,
         changeValue: possibleLiquidationPoint
-          ? `$${(possibleLiquidationPoint ?? BigNumber(0)).toFixed(2)}`
+          ? `$${possibleLiquidationPoint.toFixed(2)}`
           : null,
         color: possibleLiquidationPoint?.lte(liquidationPoint ?? BigNumber(0))
           ? 1
           : 0,
+        direction: possibleLiquidationPoint?.lte(
+          liquidationPoint ?? BigNumber(0)
+        )
+          ? 0
+          : 1,
       },
       {
         title: 'Borrow Capacity',
         value: `${(totalBorrowCapacity ?? BigNumber(0)).toFormat(2)} USDC`,
         changeValue: possibleBorrowCapacity
-          ? `${possibleBorrowCapacity?.toFormat(2)} USDC`
+          ? `${possibleBorrowCapacity.toFormat(2)} USDC`
           : null,
         color: possibleBorrowCapacity?.lte(totalBorrowCapacity ?? BigNumber(0))
+          ? 0
+          : 1,
+        direction: possibleBorrowCapacity?.lte(
+          totalBorrowCapacity ?? BigNumber(0)
+        )
           ? 0
           : 1,
       },
@@ -71,9 +87,14 @@ export const PositionSummary = () => {
         title: 'Available to Borrow',
         value: `${(borrowCapacity ?? BigNumber(0)).toFormat(2)} USDC`,
         changeValue: possibleAvailableToBorrow
-          ? `${possibleAvailableToBorrow?.toFixed(2)} USDC`
+          ? `${possibleAvailableToBorrow.toFixed(2)} USDC`
           : null,
         color: possibleAvailableToBorrow?.lte(borrowCapacity ?? BigNumber(0))
+          ? 0
+          : 1,
+        direction: possibleBorrowCapacity?.lte(
+          totalBorrowCapacity ?? BigNumber(0)
+        )
           ? 0
           : 1,
       },
@@ -105,8 +126,12 @@ export const PositionSummary = () => {
                 <div
                   className={`${stat.color === 0 && 'text-red-500'} ${stat.color === 1 && 'text-primary03'} flex items-center gap-x-1`}
                 >
-                  {stat.color === 0 && <ArrowDown className="w-4 h-4" />}
-                  {stat.color === 1 && <ArrowUp className="w-4 h-4" />}
+                  {stat.direction ? (
+                    <ArrowUp className="w-4 h-4" />
+                  ) : (
+                    <ArrowDown className="w-4 h-4" />
+                  )}
+
                   {stat.changeValue}
                 </div>
               )}

@@ -2,7 +2,7 @@ import { Market } from '@/contract-types';
 import { useMarketStore } from '@/stores';
 import { DEPLOYED_MARKETS } from '@/utils';
 import { useAccount, useWallet } from '@fuels/react';
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 
 export const useUserSupplyBorrow = () => {
@@ -30,5 +30,6 @@ export const useUserSupplyBorrow = () => {
       };
     },
     enabled: !!wallet && !!account,
+    placeholderData: keepPreviousData,
   });
 };

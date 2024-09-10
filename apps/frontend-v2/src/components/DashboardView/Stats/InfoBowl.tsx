@@ -55,8 +55,9 @@ export const InfoBowl = () => {
   }, [collateralUtilization]);
 
   const waveColor = useMemo(() => {
-    if (!collateralUtilization || collateralUtilization.eq(0))
+    if (!collateralUtilization || collateralUtilization.eq(0)) {
       return WAVE_COLORS.normal;
+    }
     if (collateralUtilization.lt(0.6)) return WAVE_COLORS.normal;
     if (collateralUtilization.lt(0.8)) return WAVE_COLORS.warning;
     return WAVE_COLORS.danger;

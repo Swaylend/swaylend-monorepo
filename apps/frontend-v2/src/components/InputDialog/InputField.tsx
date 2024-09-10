@@ -37,7 +37,7 @@ export const InputField = () => {
     }
   }, [tokenAmount]);
 
-  const debounce = useDebounceCallback(changeTokenAmount, 500);
+  const debounce = useDebounceCallback(changeTokenAmount, 333);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     let { value } = event.currentTarget;
@@ -62,8 +62,6 @@ export const InputField = () => {
       debounce(BigNumber(0));
       return;
     }
-
-    console.log(value);
 
     // Remove leading zeros if there's no decimal point
     if (!value.includes('.')) {

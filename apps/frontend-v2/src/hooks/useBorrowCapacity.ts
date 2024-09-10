@@ -1,7 +1,7 @@
 import { useMarketStore } from '@/stores';
 import { formatUnits } from '@/utils';
 import { useAccount } from '@fuels/react';
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
 import { useMarketConfiguration } from './useMarketConfiguration';
@@ -38,7 +38,7 @@ export const useBorrowCapacity = () => {
         !priceData ||
         !marketConfiguration
       ) {
-        return BigNumber(0);
+        return null;
       }
 
       const borrowCapacity = Object.entries(userCollateralAssets)
@@ -68,7 +68,7 @@ export const useBorrowCapacity = () => {
           )
         );
 
-      return borrowCapacity;
+      return borrowCapacity.lt(0) ? BigNumber(0) : borrowCapacity;
     },
     enabled:
       !!account &&
@@ -77,5 +77,6 @@ export const useBorrowCapacity = () => {
       !!userCollateralAssets &&
       !!priceData &&
       !!marketConfiguration,
+    placeholderData: keepPreviousData,
   });
 };

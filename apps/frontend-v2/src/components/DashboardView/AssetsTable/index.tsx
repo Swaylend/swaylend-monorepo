@@ -5,12 +5,12 @@ import { CollateralTable } from './CollateralTable';
 import { LendTable } from './LendTable';
 
 export const AssetsTable = () => {
-  const { market, marketMode } = useMarketStore();
+  const { marketMode } = useMarketStore();
 
   return (
     <div className="w-full mt-[30px] sm:mt-[55px]">
       {marketMode === 'lend' && (
-        <div className="flex flex-col gap-y-4">
+        <div className="flex flex-col">
           <LendTable />
           <CollateralTable />
         </div>

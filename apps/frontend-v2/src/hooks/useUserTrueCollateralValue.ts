@@ -18,7 +18,7 @@ export const useUserTrueCollateralValue = () => {
       collateralBalances,
       assetsConfigs,
       collateralConfig,
-      priceData,
+      priceData?.prices,
     ],
     queryFn: async () => {
       if (
