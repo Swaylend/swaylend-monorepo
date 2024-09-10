@@ -1,8 +1,21 @@
-# [Swaylend ⛽️⚡️](https://swaylend.com/)
+<div align="center" id="logo">
+  
+  ![SwayLend](assets/svg/logo_text_white_shadow.svg#gh-dark-mode-only)
+  ![Masca logo](assets/svg/logo_text_black_shadow.svg#gh-light-mode-only)
+  
+</div>
 
-## First ever Lending protocol on Fuel Network
+<h6 align="center">
+  <a href="https://swaylend.com">Website</a>
+  ·
+  <a href="https://docs.swaylend.com/">Docs</a>
+  ·
+  <a href="https://medium.com/@blockchainlabum/open-sourcing-ssi-snap-for-metamask-aaa176775be2">Blog</a>
+</h6>
 
-<figure><img src="https://static.tildacdn.com/tild3165-3835-4163-b062-666230613733/Tilda\_badge\_1200x630.jpg" alt=""><figcaption></figcaption></figure>
+# [Swaylend ⛽️⚡️](https://swaylend.com/) - First ever Lending protocol on Fuel Network
+
+<figure><img src="https://static.tildacdn.com/tild3165-3835-4163-b062-666230613733/Tilda_badge_1200x630.jpg" alt=""><figcaption></figcaption></figure>
 
 # Introduction
 
