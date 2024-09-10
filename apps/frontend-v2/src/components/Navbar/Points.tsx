@@ -26,9 +26,9 @@ export const Points = () => {
   return (
     <Popover>
       <PopoverTrigger>
-        <div className="text-yellow-400 px-3 py-1.5 flex items-center gap-x-1 rounded-full border-[2px] border-yellow-400">
+        <div className="text-yellow-400 sm:px-3 sm:py-1.5 max-sm:p-1 flex items-center gap-x-1 rounded-full border-[3px] border-yellow-400">
           <Sparkle className="w-5 h-5" />
-          687
+          <span className="max-sm:hidden">687</span>
         </div>
       </PopoverTrigger>
       <PopoverContent
