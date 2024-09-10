@@ -21,10 +21,13 @@ export const PositionSummary = () => {
   const { data: liquidationPoint } = useUserLiquidationPoint();
 
   const totalBorrowCapacity = useMemo(() => {
-    if (userSupplyBorrow == null || borrowCapacity == null) return BigNumber(0);
+    if (!userSupplyBorrow || !borrowCapacity || !marketConfiguration) {
+      return BigNumber(0);
+    }
+
     return formatUnits(
-      userSupplyBorrow.borrowed ?? BigNumber(0),
-      marketConfiguration?.baseTokenDecimals ?? 9
+      userSupplyBorrow.borrowed,
+      marketConfiguration.baseTokenDecimals
     ).plus(borrowCapacity);
   }, [userSupplyBorrow, borrowCapacity]);
 
@@ -49,9 +52,9 @@ export const PositionSummary = () => {
       },
       {
         title: 'Liquidation Point',
-        value: `$${liquidationPoint?.toFixed(2)}`,
+        value: `$${(liquidationPoint ?? BigNumber(0)).toFixed(2)}`,
         changeValue: possibleLiquidationPoint
-          ? `$${(possibleLiquidationPoint ?? BigNumber(0)).toFixed(2)}`
+          ? `$${possibleLiquidationPoint.toFixed(2)}`
           : null,
         color: possibleLiquidationPoint?.lte(liquidationPoint ?? BigNumber(0))
           ? 1
@@ -61,7 +64,7 @@ export const PositionSummary = () => {
         title: 'Borrow Capacity',
         value: `${(totalBorrowCapacity ?? BigNumber(0)).toFormat(2)} USDC`,
         changeValue: possibleBorrowCapacity
-          ? `${possibleBorrowCapacity?.toFormat(2)} USDC`
+          ? `${possibleBorrowCapacity.toFormat(2)} USDC`
           : null,
         color: possibleBorrowCapacity?.lte(totalBorrowCapacity ?? BigNumber(0))
           ? 0
@@ -71,7 +74,7 @@ export const PositionSummary = () => {
         title: 'Available to Borrow',
         value: `${(borrowCapacity ?? BigNumber(0)).toFormat(2)} USDC`,
         changeValue: possibleAvailableToBorrow
-          ? `${possibleAvailableToBorrow?.toFixed(2)} USDC`
+          ? `${possibleAvailableToBorrow.toFixed(2)} USDC`
           : null,
         color: possibleAvailableToBorrow?.lte(borrowCapacity ?? BigNumber(0))
           ? 0

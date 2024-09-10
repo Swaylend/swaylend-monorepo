@@ -1,5 +1,5 @@
 import { ACTION_TYPE, useMarketStore } from '@/stores';
-import { formatUnits, parseUnits } from '@/utils';
+import { formatUnits } from '@/utils';
 import BigNumber from 'bignumber.js';
 import { useMemo, useState } from 'react';
 import { useBorrowCapacity } from './useBorrowCapacity';
@@ -67,10 +67,7 @@ export const usePossiblePositionSummary = () => {
 
       const baseTokenPrice = priceData.prices[marketConfiguration.baseToken];
 
-      const newLoanValue = parseUnits(
-        loanAmount.plus(tokenAmount),
-        marketConfiguration.baseTokenDecimals
-      ).times(baseTokenPrice);
+      const newLoanValue = loanAmount.plus(tokenAmount).times(baseTokenPrice);
 
       const collateralUtilization = trueCollateralValue.eq(0)
         ? BigNumber(0)

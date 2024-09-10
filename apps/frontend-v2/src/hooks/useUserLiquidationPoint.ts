@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { useUserCollateralUtilization } from './useUserCollateralUtilization';
 import { useUserCollateralValue } from './useUserCollateralValue';
@@ -18,5 +18,6 @@ export const useUserLiquidationPoint = () => {
       return collateralValue.times(userCollateralUtilization);
     },
     enabled: !!collateralValue && !!userCollateralUtilization,
+    placeholderData: keepPreviousData,
   });
 };

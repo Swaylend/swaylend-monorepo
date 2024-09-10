@@ -1,5 +1,5 @@
 import { formatUnits } from '@/utils';
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
 import { usePrice } from './usePrice';
@@ -42,5 +42,6 @@ export const useUserCollateralValue = () => {
       !!assetsConfigs &&
       !!priceData &&
       !!collateralConfig,
+    placeholderData: keepPreviousData,
   });
 };

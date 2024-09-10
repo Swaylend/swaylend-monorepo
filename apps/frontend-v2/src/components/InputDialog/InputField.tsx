@@ -37,7 +37,7 @@ export const InputField = () => {
     }
   }, [tokenAmount]);
 
-  const debounce = useDebounceCallback(changeTokenAmount, 500);
+  const debounce = useDebounceCallback(changeTokenAmount, 333);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     let { value } = event.currentTarget;

@@ -12,18 +12,10 @@ import React, { useMemo } from 'react';
 import { InfoBowl } from './InfoBowl';
 
 export const Stats = () => {
-  const {
-    data: userSupplyBorrow,
-    isFetching: isUserSupplyBorrowFetching,
-    isPending: isUserSupplyBorrowPending,
-  } = useUserSupplyBorrow();
+  const { data: userSupplyBorrow } = useUserSupplyBorrow();
   const { data: userCollateralAssets } = useUserCollateralAssets();
   const { data: priceData } = usePrice();
-  const {
-    data: marketConfiguration,
-    isFetching: isMarketConfigurationFetching,
-    isPending: isMarketConfigurationPending,
-  } = useMarketConfiguration();
+  const { data: marketConfiguration } = useMarketConfiguration();
   const { data: colateralConfigurations } = useCollateralConfigurations();
 
   const totalSuppliedBalance = useMemo(() => {
