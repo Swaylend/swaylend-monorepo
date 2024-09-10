@@ -1,10 +1,11 @@
 <div align="center" id="logo">
-  
-  
 
 ![SwayLend](assets/svg/logo.svg)
 
-  
+<h3>Swaylend ⛽️⚡️</h3>
+
+<h4>First ever Lending protocol on Fuel Network</h4>
+
 </div>
 
 <h6 align="center">
@@ -12,12 +13,9 @@
   ·
   <a href="https://docs.swaylend.com/">Docs</a>
   ·
-  <a href="https://medium.com/@blockchainlabum/open-sourcing-ssi-snap-for-metamask-aaa176775be2">Blog</a>
+  <a href="https://x.com/swaylend">Twitter</a>
 </h6>
 
-# [Swaylend ⛽️⚡️](https://swaylend.com/) - First ever Lending protocol on Fuel Network
-
-<figure><img src="https://static.tildacdn.com/tild3165-3835-4163-b062-666230613733/Tilda_badge_1200x630.jpg" alt=""><figcaption></figcaption></figure>
 
 # Introduction
 
@@ -31,7 +29,8 @@ The SwayLend is alive on [https://swaylend.com](https://swaylend.com)
 
 > Please note that Sway Lend is in the alpha testing phase and contracts may change in the future, leading to potential loss of supply/borrow amount.
 
-* * *
+
+
 # Project structure
 
 On the first level, the monorepo is divided into `contracts` , `apps` , `scripts` , and `libs` .
@@ -61,17 +60,17 @@ On the first level, the monorepo is divided into `contracts` , `apps` , `scripts
   + **devnet**: Scripts related to the local development network.
   + **testnet**: Scripts related to the public test network.
 
-* * *
+
 # Deployments
 
 There is a dedicated [DEPLOYMENTS.md](https:///DEPLOYMENTS.md) for contracts. For the releases of the dapp, see Releases.
-* * *
+
 # Socials / Contact
 * Twitter/X: [@swaylend](https://x.com/swaylend)
 * Email: TBA
 * Discord: TBA
 
-* * *
+
 # Licensing
 
 The primary license for all SwayLend components is the MIT License, see [ `LICENSE` ](/LICENSE).
