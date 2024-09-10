@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+body > div > div[role="dialog"] {
+  bottom: unset !important;
+  top: 40% !important;
+}
+
 @layer base {
   :root {
     --background: 205 16% 15%;
