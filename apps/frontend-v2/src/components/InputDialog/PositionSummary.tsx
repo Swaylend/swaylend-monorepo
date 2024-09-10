@@ -49,6 +49,9 @@ export const PositionSummary = () => {
         color: possibleCollateralValue?.lte(collateralValue ?? BigNumber(0))
           ? 0
           : 1,
+        direction: possibleCollateralValue?.lte(collateralValue ?? BigNumber(0))
+          ? 0
+          : 1,
       },
       {
         title: 'Liquidation Point',
@@ -59,6 +62,11 @@ export const PositionSummary = () => {
         color: possibleLiquidationPoint?.lte(liquidationPoint ?? BigNumber(0))
           ? 1
           : 0,
+        direction: possibleLiquidationPoint?.lte(
+          liquidationPoint ?? BigNumber(0)
+        )
+          ? 0
+          : 1,
       },
       {
         title: 'Borrow Capacity',
@@ -69,6 +77,11 @@ export const PositionSummary = () => {
         color: possibleBorrowCapacity?.lte(totalBorrowCapacity ?? BigNumber(0))
           ? 0
           : 1,
+        direction: possibleBorrowCapacity?.lte(
+          totalBorrowCapacity ?? BigNumber(0)
+        )
+          ? 0
+          : 1,
       },
       {
         title: 'Available to Borrow',
@@ -77,6 +90,11 @@ export const PositionSummary = () => {
           ? `${possibleAvailableToBorrow.toFixed(2)} USDC`
           : null,
         color: possibleAvailableToBorrow?.lte(borrowCapacity ?? BigNumber(0))
+          ? 0
+          : 1,
+        direction: possibleBorrowCapacity?.lte(
+          totalBorrowCapacity ?? BigNumber(0)
+        )
           ? 0
           : 1,
       },
@@ -108,10 +126,12 @@ export const PositionSummary = () => {
                 <div
                   className={`${stat.color === 0 && 'text-red-500'} ${stat.color === 1 && 'text-primary03'} flex items-center gap-x-1`}
                 >
-                  {stat.color === 0 && stat.title !== 'Liquidation Point' && <ArrowDown className="w-4 h-4" />}
-                  {stat.color === 1 && stat.title !== 'Liquidation Point' && <ArrowUp className="w-4 h-4" />}
-                  {stat.color === 1 && stat.title === 'Liquidation Point' && <ArrowDown className="w-4 h-4" />}
-                  {stat.color === 0 && stat.title === 'Liquidation Point' && <ArrowUp className="w-4 h-4" />}
+                  {stat.direction ? (
+                    <ArrowUp className="w-4 h-4" />
+                  ) : (
+                    <ArrowDown className="w-4 h-4" />
+                  )}
+
                   {stat.changeValue}
                 </div>
               )}
