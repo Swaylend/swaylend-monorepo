@@ -37,12 +37,10 @@ export const ConnectButton = () => {
         <PopoverContent align="end" className="w-[260px] px-[25px]">
           <div className="w-full">
             <div>
-              <div className='text-neutral4 text-sm'>
-                Connected Wallet
-              </div>
-              <div className='text-xl font-medium flex items-center justify-between w-full'>
-                <div className='flex gap-x-2 items-center'>
-                  <div className='w-2 h-2 rounded-full bg-accent' />
+              <div className="text-neutral4 text-sm">Connected Wallet</div>
+              <div className="text-xl font-medium flex items-center justify-between w-full">
+                <div className="flex gap-x-2 items-center">
+                  <div className="w-2 h-2 rounded-full bg-accent" />
                   {`${account?.slice(0, 6)}...${account?.slice(-4)}`}
                 </div>
                 <Copy

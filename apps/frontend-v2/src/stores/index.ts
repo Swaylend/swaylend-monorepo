@@ -1,2 +1,2 @@
 export * from './marketStore';
-export * from './providerStore'
+export * from './providerStore';

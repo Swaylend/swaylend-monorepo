@@ -12,7 +12,7 @@ export const useProvider = () => {
   useEffect(() => {
     if (provider === null && !isLoading) {
       setIsLoading(true);
-      
+
       if (!initializationPromise) {
         initializationPromise = initProvider();
       }

@@ -16,7 +16,9 @@ export const MarketSwitch = () => {
       className="mt-[40px] sm:mt-[55px]"
     >
       <TabsList className="max-sm:h-[40px]">
-        <TabsTrigger value="lend" className='max-sm:py-1 max-sm:px-6'>Lend</TabsTrigger>
+        <TabsTrigger value="lend" className="max-sm:py-1 max-sm:px-6">
+          Lend
+        </TabsTrigger>
         <TabsTrigger
           className="data-[state=active]:bg-purple-600 data-[state=active]:text-neutral2 max-sm:py-1 max-sm:px-6"
           value="borrow"

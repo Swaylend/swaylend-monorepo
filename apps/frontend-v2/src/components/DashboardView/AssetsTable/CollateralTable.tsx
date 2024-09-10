@@ -1,5 +1,14 @@
 import { AssetName } from '@/components/AssetName';
+import { Title } from '@/components/Title';
 import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import {
   Table,
   TableBody,
@@ -17,25 +26,16 @@ import {
 import { ACTION_TYPE, useMarketStore } from '@/stores';
 import { ASSET_ID_TO_SYMBOL, SYMBOL_TO_NAME, formatUnits } from '@/utils';
 import { useAccount, useBalance } from '@fuels/react';
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import BigNumber from 'bignumber.js';
 import type { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import React, { useMemo } from 'react';
+import { useMediaQuery } from 'usehooks-ts';
 import BTC from '/public/tokens/bitcoin.svg?url';
 import ETH from '/public/tokens/ethereum.svg?url';
 import BNB from '/public/tokens/sway.svg?url';
 import UNI from '/public/tokens/uni.svg?url';
 import USDC from '/public/tokens/usdc.svg?url';
-import { useMediaQuery } from 'usehooks-ts';
-import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { Title } from '@/components/Title';
 
 const SYMBOL_TO_LOGO: Record<string, StaticImport> = {
   ETH: ETH,
@@ -148,28 +148,38 @@ const CollateralCard = ({
         </CardHeader>
       </VisuallyHidden.Root>
       <CardContent>
-        <div className='flex flex-col gap-y-4 pt-8 px-4'>
-          <div className='w-full flex items-center'
-          ><div className='w-1/2 text-neutral4 font-medium'>Collateral Asset</div>
+        <div className="flex flex-col gap-y-4 pt-8 px-4">
+          <div className="w-full flex items-center">
+            <div className="w-1/2 text-neutral4 font-medium">
+              Collateral Asset
+            </div>
             <AssetName
               symbol={symbol}
               name={SYMBOL_TO_NAME[symbol]}
               src={SYMBOL_TO_LOGO[symbol ?? 'ETH']}
             />
           </div>
-          <div className='w-full flex items-center'
-          ><div className='w-1/2 text-neutral4 font-medium'>Wallet Balance</div>
-            <div className='text-neutral5'>{formattedBalance} {symbol}</div>
+          <div className="w-full flex items-center">
+            <div className="w-1/2 text-neutral4 font-medium">
+              Wallet Balance
+            </div>
+            <div className="text-neutral5">
+              {formattedBalance} {symbol}
+            </div>
           </div>
-          <div className='w-full flex items-center'
-          ><div className='w-1/2 text-neutral4 font-medium'>Supplied Assets</div>
-            <div> {formatUnits(protocolBalance, decimals).toFixed(4)} {symbol}</div>
+          <div className="w-full flex items-center">
+            <div className="w-1/2 text-neutral4 font-medium">
+              Supplied Assets
+            </div>
+            <div>
+              {' '}
+              {formatUnits(protocolBalance, decimals).toFixed(4)} {symbol}
+            </div>
           </div>
-          <div className='w-full flex items-center'
-          ><div className='w-1/2 text-neutral4 font-medium'>Supply Points</div>
+          <div className="w-full flex items-center">
+            <div className="w-1/2 text-neutral4 font-medium">Supply Points</div>
             100
           </div>
-
         </div>
       </CardContent>
       <CardFooter>
@@ -198,8 +208,6 @@ const CollateralCard = ({
     </Card>
   );
 };
-
-
 
 export const CollateralTable = () => {
   const { account } = useAccount();
@@ -245,7 +253,7 @@ export const CollateralTable = () => {
             <TableHead className="w-1/6">Wallet Balance</TableHead>
             <TableHead className="w-1/6">Supplied Assets</TableHead>
             <TableHead className="w-1/6">Supply Points</TableHead>
-            <TableHead className="w-3/12">{ }</TableHead>
+            <TableHead className="w-3/12">{}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -268,30 +276,24 @@ export const CollateralTable = () => {
     );
   }
   return (
-    <div className='flex flex-col gap-y-4 px-4'>
-      <Title>
-        Collateral Assets
-      </Title>
-      <div className='flex flex-col gap-y-4'>
-        {
-          collaterals.map((collateral) => (
-
-            <CollateralCard
-              key={collateral.asset_id}
-              account={account ?? undefined}
-              assetId={collateral.asset_id}
-              symbol={ASSET_ID_TO_SYMBOL[collateral.asset_id]}
-              decimals={collateral.decimals}
-              protocolBalance={
-                userCollateralAssets?.[collateral.asset_id] ?? new BigNumber(0)
-              }
-              protocolBalancePending={userCollateralAssetsLoading}
-              handleAssetClick={handleAssetClick}
-            />
-          )
-          )
-        }
+    <div className="flex flex-col gap-y-4 px-4">
+      <Title>Collateral Assets</Title>
+      <div className="flex flex-col gap-y-4">
+        {collaterals.map((collateral) => (
+          <CollateralCard
+            key={collateral.asset_id}
+            account={account ?? undefined}
+            assetId={collateral.asset_id}
+            symbol={ASSET_ID_TO_SYMBOL[collateral.asset_id]}
+            decimals={collateral.decimals}
+            protocolBalance={
+              userCollateralAssets?.[collateral.asset_id] ?? new BigNumber(0)
+            }
+            protocolBalancePending={userCollateralAssetsLoading}
+            handleAssetClick={handleAssetClick}
+          />
+        ))}
       </div>
     </div>
-  )
+  );
 };

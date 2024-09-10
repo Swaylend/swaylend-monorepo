@@ -1,4 +1,13 @@
+import { Title } from '@/components/Title';
 import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import {
   Table,
   TableBody,
@@ -15,23 +24,14 @@ import {
 import { ACTION_TYPE, useMarketStore } from '@/stores';
 import { ASSET_ID_TO_SYMBOL, formatUnits } from '@/utils';
 import { useAccount, useBalance } from '@fuels/react';
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import BigNumber from 'bignumber.js';
 import type { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import Image from 'next/image';
 import React from 'react';
+import { useMediaQuery } from 'usehooks-ts';
 import USDC from '/public/tokens/usdc.svg?url';
 import USDT from '/public/tokens/usdt.svg?url';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
-import { useMediaQuery } from 'usehooks-ts';
-import { Title } from '@/components/Title';
 
 const SYMBOL_TO_LOGO: Record<string, StaticImport> = {
   USDC: USDC,
@@ -68,7 +68,6 @@ export const BorrowTable = () => {
   const mobile = useMediaQuery('(max-width:640px)');
 
   if (!mobile) {
-
     return (
       <Table>
         <TableHeader>
@@ -77,7 +76,7 @@ export const BorrowTable = () => {
             <TableHead className="w-1/6">Borrow APY</TableHead>
             <TableHead className="w-1/6">Borrowed Assets</TableHead>
             <TableHead className="w-1/6">Borrow Points</TableHead>
-            <TableHead className="w-3/12">{ }</TableHead>
+            <TableHead className="w-3/12">{}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -88,12 +87,14 @@ export const BorrowTable = () => {
                   <Image
                     src={
                       SYMBOL_TO_LOGO[
-                      ASSET_ID_TO_SYMBOL[
-                      marketConfiguration?.baseToken ?? ''
-                      ] ?? 'USDC'
+                        ASSET_ID_TO_SYMBOL[
+                          marketConfiguration?.baseToken ?? ''
+                        ] ?? 'USDC'
                       ]
                     }
-                    alt={ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
+                    alt={
+                      ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']
+                    }
                     width={32}
                     height={32}
                     className={'rounded-full'}
@@ -135,7 +136,9 @@ export const BorrowTable = () => {
                   Borrow
                 </Button>
                 <Button
-                  disabled={!userSupplyBorrow || userSupplyBorrow.borrowed.eq(0)}
+                  disabled={
+                    !userSupplyBorrow || userSupplyBorrow.borrowed.eq(0)
+                  }
                   className="w-1/2"
                   variant={'tertiary'}
                   onClick={() => {
@@ -153,10 +156,8 @@ export const BorrowTable = () => {
   }
 
   return (
-    <div className='flex flex-col gap-y-4 px-4'>
-      <Title>
-        Borrow Assets
-      </Title>
+    <div className="flex flex-col gap-y-4 px-4">
+      <Title>Borrow Assets</Title>
       <Card>
         <VisuallyHidden.Root asChild>
           <CardHeader>
@@ -165,20 +166,24 @@ export const BorrowTable = () => {
           </CardHeader>
         </VisuallyHidden.Root>
         <CardContent>
-          <div className='flex flex-col gap-y-4 pt-8 px-4'>
-            <div className='w-full flex items-center'
-            ><div className='w-1/2 text-neutral4 font-medium'>Borrow Asset</div>
+          <div className="flex flex-col gap-y-4 pt-8 px-4">
+            <div className="w-full flex items-center">
+              <div className="w-1/2 text-neutral4 font-medium">
+                Borrow Asset
+              </div>
               <div className="flex gap-x-2 items-center">
                 <div>
                   <Image
                     src={
                       SYMBOL_TO_LOGO[
-                      ASSET_ID_TO_SYMBOL[
-                      marketConfiguration?.baseToken ?? ''
-                      ] ?? 'USDC'
+                        ASSET_ID_TO_SYMBOL[
+                          marketConfiguration?.baseToken ?? ''
+                        ] ?? 'USDC'
                       ]
                     }
-                    alt={ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
+                    alt={
+                      ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']
+                    }
                     width={32}
                     height={32}
                     className={'rounded-full'}
@@ -188,7 +193,7 @@ export const BorrowTable = () => {
                   <div className="text-neutral2 font-medium">
                     {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
                   </div>
-                  <div className='text-neutral5 text-sm'>
+                  <div className="text-neutral5 text-sm">
                     {formatUnits(
                       balance ? BigNumber(balance.toString()) : BigNumber(0),
                       marketConfiguration?.baseTokenDecimals ?? 9
@@ -198,23 +203,28 @@ export const BorrowTable = () => {
                 </div>
               </div>
             </div>
-            <div className='w-full flex items-center'
-            ><div className='w-1/2 text-neutral4 font-medium'>Borrow APY</div>
-              <div className='text-neutral5'>5%</div>
+            <div className="w-full flex items-center">
+              <div className="w-1/2 text-neutral4 font-medium">Borrow APY</div>
+              <div className="text-neutral5">5%</div>
             </div>
-            <div className='w-full flex items-center'
-            ><div className='w-1/2 text-neutral4 font-medium'>Borrowed Assets</div>
-              <div>{formatUnits(
-                userSupplyBorrow?.borrowed ?? BigNumber(0),
-                marketConfiguration?.baseTokenDecimals ?? 9
-              ).toFormat(2)}{' '}
-                {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}</div>
+            <div className="w-full flex items-center">
+              <div className="w-1/2 text-neutral4 font-medium">
+                Borrowed Assets
+              </div>
+              <div>
+                {formatUnits(
+                  userSupplyBorrow?.borrowed ?? BigNumber(0),
+                  marketConfiguration?.baseTokenDecimals ?? 9
+                ).toFormat(2)}{' '}
+                {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
+              </div>
             </div>
-            <div className='w-full flex items-center'
-            ><div className='w-1/2 text-neutral4 font-medium'>Borrow Points</div>
+            <div className="w-full flex items-center">
+              <div className="w-1/2 text-neutral4 font-medium">
+                Borrow Points
+              </div>
               100
             </div>
-
           </div>
         </CardContent>
         <CardFooter>
@@ -242,5 +252,5 @@ export const BorrowTable = () => {
         </CardFooter>
       </Card>
     </div>
-  )
+  );
 };
