@@ -11,7 +11,7 @@ import {
   useDisconnect,
   useIsConnected,
 } from '@fuels/react';
-import { ChevronDown, ClipboardCopyIcon, Copy } from 'lucide-react';
+import { ChevronDown, Copy } from 'lucide-react';
 
 export const ConnectButton = () => {
   const { connect, isConnecting } = useConnectUI();
@@ -45,7 +45,7 @@ export const ConnectButton = () => {
                 </div>
                 <Copy
                   className="w-4 h-4 hover:opacity-80"
-                  onClick={async () => {
+                  onMouseDown={async () => {
                     await navigator.clipboard.writeText(account);
                   }}
                 />
@@ -60,7 +60,7 @@ export const ConnectButton = () => {
             <Button
               className="w-full"
               variant={'destructive'}
-              onClick={() => disconnect()}
+              onMouseDown={() => disconnect()}
             >
               Disconnect
             </Button>
@@ -72,7 +72,7 @@ export const ConnectButton = () => {
 
   return (
     <div>
-      <Button disabled={isConnecting} onClick={connect}>
+      <Button disabled={isConnecting} onMouseDown={connect}>
         {isConnected
           ? `${account?.slice(0, 6)}...${account?.slice(-4)}`
           : isConnecting

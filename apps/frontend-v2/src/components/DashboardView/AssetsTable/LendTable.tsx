@@ -148,7 +148,8 @@ export const LendTable = () => {
               <div className="flex gap-x-2 w-full">
                 <Button
                   className="w-1/2"
-                  onClick={() => {
+                  disabled={!account}
+                  onMouseDown={() => {
                     handleBaseTokenClick(ACTION_TYPE.SUPPLY);
                   }}
                 >
@@ -156,8 +157,9 @@ export const LendTable = () => {
                 </Button>
                 <Button
                   className="w-1/2"
+                  disabled={!account}
                   variant="tertiary"
-                  onClick={() => {
+                  onMouseDown={() => {
                     handleBaseTokenClick(ACTION_TYPE.WITHDRAW);
                   }}
                 >
@@ -251,7 +253,8 @@ export const LendTable = () => {
             <div className="flex gap-x-2 w-full">
               <Button
                 className="w-1/2"
-                onClick={() => {
+                disabled={!account}
+                onMouseDown={() => {
                   handleBaseTokenClick(ACTION_TYPE.SUPPLY);
                 }}
               >
@@ -259,8 +262,9 @@ export const LendTable = () => {
               </Button>
               <Button
                 className="w-1/2"
+                disabled={!account}
                 variant={'tertiary'}
-                onClick={() => {
+                onMouseDown={() => {
                   handleBaseTokenClick(ACTION_TYPE.WITHDRAW);
                 }}
               >

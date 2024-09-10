@@ -405,6 +405,9 @@ importers:
       pino-pretty:
         specifier: ^11.2.2
         version: 11.2.2
+      posthog-js:
+        specifier: ^1.161.3
+        version: 1.161.3
       react:
         specifier: ^18
         version: 18.3.1
@@ -6621,6 +6624,9 @@ packages:
   fbjs@3.0.5:
     resolution: {integrity: sha512-ztsSx77JBtkuMrEypfhgc3cI0+0h+svqeie7xHbh1k/IKdcydnvadp/mUaGgjAOXQmQSxsqgaRhS3q9fy+1kxg==}
 
+  fflate@0.4.8:
+    resolution: {integrity: sha512-FJqqoDBR00Mdj9ppamLa/Y7vxm+PRmNWA67N846RvsoYVMKB4q3y/de5PA7gUmRMYK/8CMz2GDZQmCRN1wBcWA==}
+
   fflate@0.8.2:
     resolution: {integrity: sha512-cPJU47OaAoCbg0pBvzsgpTPhmhqI5eJjh/JIu8tPj5q+T7iLvW/JAYUqmE7KOB4R1ZyEhzBaIQpQpardBF5z8A==}
 
@@ -9350,6 +9356,9 @@ packages:
     resolution: {integrity: sha512-Wasjv6WEzrZXbwKByR2RGD7MBfj7VBqco3hYWz8ifzSAp6tb2L6MlmcKFzkmgV1jT7/vKlcSa+lxXZeTdeVMzQ==}
     engines: {node: '>=12'}
 
+  posthog-js@1.161.3:
+    resolution: {integrity: sha512-TQ77jtLemkUJUyJAPrwGay6tLqcAmXEM1IJgXOx5Tr4UohiTx8JTznzrCuh/SdwPIrbcSM1r2YPwb72XwTC3wg==}
+
   preact@10.23.2:
     resolution: {integrity: sha512-kKYfePf9rzKnxOAKDpsWhg/ysrHPqT+yQ7UW4JjdnqjFIeNUnNcEJvhuA8fDenxAGWzUqtd51DfVg7xp/8T9NA==}
 
@@ -11186,6 +11195,9 @@ packages:
 
   web-vitals@2.1.4:
     resolution: {integrity: sha512-sVWcwhU5mX6crfI5Vd2dC4qchyTqxV8URinzt25XqVh+bHEPGH4C3NPrNionCP7Obx59wrYEbNlw4Z8sjALzZg==}
+
+  web-vitals@4.2.3:
+    resolution: {integrity: sha512-/CFAm1mNxSmOj6i0Co+iGFJ58OS4NRGVP+AWS/l509uIK5a1bSoIVaHz/ZumpHTfHSZBpgrJ+wjfpAOrTHok5Q==}
 
   webauthn-p256@0.0.5:
     resolution: {integrity: sha512-drMGNWKdaixZNobeORVIqq7k5DsRC9FnG201K2QjeOoQLmtSDaSsVZdkg6n5jUALJKcAG++zBPJXmv6hy0nWFg==}
@@ -20597,6 +20609,8 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
+  fflate@0.4.8: {}
+
   fflate@0.8.2: {}
 
   figures@3.2.0:
@@ -23934,6 +23948,12 @@ snapshots:
 
   postgres@3.4.1: {}
 
+  posthog-js@1.161.3:
+    dependencies:
+      fflate: 0.4.8
+      preact: 10.23.2
+      web-vitals: 4.2.3
+
   preact@10.23.2: {}
 
   preact@10.4.1: {}
@@ -26214,6 +26234,8 @@ snapshots:
   web-streams-polyfill@3.3.3: {}
 
   web-vitals@2.1.4: {}
+
+  web-vitals@4.2.3: {}
 
   webauthn-p256@0.0.5:
     dependencies:
