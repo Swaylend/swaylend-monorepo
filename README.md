@@ -9,11 +9,11 @@
 </div>
 
 <h6 align="center">
-  <a href="https://swaylend.com">Website</a>
+  <a target="_blank" href="https://swaylend.com">Website</a>
   ·
-  <a href="https://docs.swaylend.com/">Docs</a>
+  <a target="_blank" href="https://docs.swaylend.com/">Docs</a>
   ·
-  <a href="https://x.com/swaylend">Twitter</a>
+  <a target="_blank" href="https://x.com/swaylend">Twitter</a>
 </h6>
 
 
