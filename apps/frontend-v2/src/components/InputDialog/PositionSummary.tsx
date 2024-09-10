@@ -49,7 +49,7 @@ export const PositionSummary = () => {
       },
       {
         title: 'Liquidation Point',
-        value: `$${liquidationPoint?.toFixed(2)}` ?? BigNumber(0),
+        value: `$${liquidationPoint?.toFixed(2)}`,
         changeValue: possibleLiquidationPoint
           ? `$${(possibleLiquidationPoint ?? BigNumber(0)).toFixed(2)}`
           : null,
