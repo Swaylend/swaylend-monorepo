@@ -4,6 +4,7 @@ import { InputDialog } from '../InputDialog';
 import { AssetsTable } from './AssetsTable';
 import { MarketSwitch } from './MarketSwitch';
 import { Stats } from './Stats';
+import { RedeemReferralDialog } from '../RedeemReferralDialog';
 
 export const DashboardView = () => {
   return (
@@ -12,6 +13,7 @@ export const DashboardView = () => {
       <MarketSwitch />
       <AssetsTable />
       <InputDialog />
+      <RedeemReferralDialog />
     </div>
   );
 };

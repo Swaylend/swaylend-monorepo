@@ -3,22 +3,17 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { useRedeemInvite, useUser } from '@/hooks';
+import { useUser } from '@/hooks';
 import clsx from 'clsx';
 import { Copy, Loader, Sparkle, Trophy } from 'lucide-react';
 import React, { useState } from 'react';
 import { Button } from '../ui/button';
+import { useReferralModalStore } from '@/stores/referralModalStore';
 
 export const Points = () => {
-  const {
-    data: user,
-    isPending,
-    isFetching,
-    isLoading,
-    isError,
-    refetch,
-  } = useUser();
-  const { mutate: redeemInvite } = useRedeemInvite();
+  const { setOpen } = useReferralModalStore();
+
+  const { data: user, isPending, isLoading, isError, refetch } = useUser();
 
   const [isCopied, setIsCopied] = useState(false);
 
@@ -72,12 +67,21 @@ export const Points = () => {
           {!isLoading && (
             <>
               <Copy className="w-5 h-5" />
-              {isCopied ? 'Copied' : 'Copy referral code'}t
+              {isCopied ? 'Copied' : 'Copy referral code'}
             </>
           )}
           {isLoading && <Loader className="w-5 h-5 animate-spin" />}
           {!isPending && isError && 'Refresh'}
         </Button>
+        {user?.redeemedInviteCode === false && (
+          <Button
+            className="w-full flex gap-x-2"
+            variant="tertiary-card"
+            onMouseDown={() => setOpen(true)}
+          >
+            Redeem referral code
+          </Button>
+        )}
       </PopoverContent>
     </Popover>
   );

@@ -1,4 +1,3 @@
-import { ErrorToast } from '@/components/Toasts';
 import { SWAYLEND_API } from '@/utils';
 import { useAccount, useWallet } from '@fuels/react';
 import { useMutation } from '@tanstack/react-query';
@@ -38,9 +37,6 @@ export const useRedeemInvite = () => {
     },
     onSuccess: () => {
       toast.success('Invite code redeemed');
-    },
-    onError: () => {
-      ErrorToast({ error: 'Failed to redeem invite code' });
     },
   });
 };
