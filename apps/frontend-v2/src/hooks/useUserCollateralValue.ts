@@ -17,7 +17,7 @@ export const useUserCollateralValue = () => {
       'userCollateralValue',
       collateralBalances,
       assetsConfigs,
-      priceData,
+      priceData?.prices,
       collateralConfig,
     ],
     queryFn: async () => {

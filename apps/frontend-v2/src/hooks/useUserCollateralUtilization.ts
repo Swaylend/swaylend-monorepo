@@ -18,7 +18,7 @@ export const useUserCollateralUtilization = () => {
       userSupplyBorrow,
       marketConfiguration,
       trueCollateralValue,
-      priceData,
+      priceData?.prices,
     ],
     queryFn: async () => {
       if (
