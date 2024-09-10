@@ -81,7 +81,7 @@ const CollateralTableRow = ({
           <Button
             className="w-1/2"
             disabled={!canSupply}
-            onClick={() =>
+            onMouseDown={() =>
               canSupply && handleAssetClick(ACTION_TYPE.SUPPLY, assetId)
             }
           >
@@ -91,7 +91,7 @@ const CollateralTableRow = ({
             className="w-1/2"
             disabled={!canWithdraw}
             variant={'tertiary'}
-            onClick={() =>
+            onMouseDown={() =>
               canWithdraw && handleAssetClick(ACTION_TYPE.WITHDRAW, assetId)
             }
           >
@@ -171,7 +171,7 @@ const CollateralCard = ({
           <Button
             className="w-1/2"
             disabled={!canSupply}
-            onClick={() =>
+            onMouseDown={() =>
               canSupply && handleAssetClick(ACTION_TYPE.SUPPLY, assetId)
             }
           >
@@ -181,7 +181,7 @@ const CollateralCard = ({
             className="w-1/2"
             disabled={!canWithdraw}
             variant={'tertiary'}
-            onClick={() =>
+            onMouseDown={() =>
               canWithdraw && handleAssetClick(ACTION_TYPE.WITHDRAW, assetId)
             }
           >

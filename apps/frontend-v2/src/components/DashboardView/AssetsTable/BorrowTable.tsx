@@ -125,7 +125,7 @@ export const BorrowTable = () => {
                 <Button
                   disabled={!maxBorrowAmount || maxBorrowAmount.eq(0)}
                   className="w-1/2"
-                  onClick={() => {
+                  onMouseDown={() => {
                     handleBaseTokenClick(ACTION_TYPE.BORROW);
                   }}
                 >
@@ -137,7 +137,7 @@ export const BorrowTable = () => {
                   }
                   className="w-1/2"
                   variant="tertiary"
-                  onClick={() => {
+                  onMouseDown={() => {
                     handleBaseTokenClick(ACTION_TYPE.REPAY);
                   }}
                 >
@@ -232,7 +232,7 @@ export const BorrowTable = () => {
               <Button
                 disabled={!maxBorrowAmount || maxBorrowAmount.eq(0)}
                 className="w-1/2"
-                onClick={() => {
+                onMouseDown={() => {
                   handleBaseTokenClick(ACTION_TYPE.BORROW);
                 }}
               >
@@ -242,7 +242,7 @@ export const BorrowTable = () => {
                 disabled={!userSupplyBorrow || userSupplyBorrow.borrowed.eq(0)}
                 className="w-1/2"
                 variant={'tertiary'}
-                onClick={() => {
+                onMouseDown={() => {
                   handleBaseTokenClick(ACTION_TYPE.REPAY);
                 }}
               >

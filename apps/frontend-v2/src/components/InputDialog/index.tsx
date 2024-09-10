@@ -224,7 +224,7 @@ export const InputDialog = () => {
             <div className="w-1/2 relative h-[64px] flex justify-center items-center">
               {/* TODO -> Disable buttons when not available */}
               <button
-                onClick={() => handleModeChange(0)}
+                onMouseDown={() => handleModeChange(0)}
                 type="button"
                 className={cn(
                   `${!(action === 'SUPPLY' || action === 'BORROW') && 'text-neutral4'}`,
@@ -250,7 +250,7 @@ export const InputDialog = () => {
             </div>
             <div className="w-1/2 relative h-[64px] flex justify-center items-center">
               <button
-                onClick={() => handleModeChange(1)}
+                onMouseDown={() => handleModeChange(1)}
                 type="button"
                 className={cn(
                   `${!(action === 'WITHDRAW' || action === 'REPAY') && 'text-neutral4'}`,
@@ -288,7 +288,7 @@ export const InputDialog = () => {
                 </div>
                 <Button
                   disabled={!finalBalance || finalBalance.eq(0)}
-                  onClick={onMaxBtnClick}
+                  onMouseDown={onMaxBtnClick}
                   size={'sm'}
                   variant={'tertiary-card'}
                 >
@@ -302,7 +302,7 @@ export const InputDialog = () => {
                   Cancel
                 </Button>
               </DialogClose>
-              <Button onClick={handleSubmit} className="w-1/2">
+              <Button onMouseDown={handleSubmit} className="w-1/2">
                 Submit
               </Button>
             </div>

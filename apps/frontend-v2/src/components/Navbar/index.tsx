@@ -79,7 +79,7 @@ export const Navbar = () => {
             <Points />
             <ConnectButton />
             <Button
-              onClick={() => setOpen(true)}
+              onMouseDown={() => setOpen(true)}
               className="rounded-full w-[40px] h-[40px] p-0"
               variant={'tertiary'}
             >
@@ -101,7 +101,7 @@ export const Navbar = () => {
                   <Image src={LogoIcon} alt="logo" />
                 </Link>
                 <Button
-                  onClick={() => setOpen(false)}
+                  onMouseDown={() => setOpen(false)}
                   className="rounded-full w-[40px] h-[40px] p-0"
                   variant={'tertiary'}
                 >
@@ -112,7 +112,11 @@ export const Navbar = () => {
               <div className="h-full flex flex-col justify-between items-start px-8 w-full py-16 mt-8">
                 <div className="flex flex-col w-full h-full items-start gap-y-8  pt-16">
                   {NAVBAR_LINKS.map(({ href, label, icon }) => (
-                    <Link key={href} href={href} onClick={() => setOpen(false)}>
+                    <Link
+                      key={href}
+                      href={href}
+                      onMouseDown={() => setOpen(false)}
+                    >
                       <div
                         className={cn(
                           pathname === href ? 'text-primary' : 'text-neutral2',
