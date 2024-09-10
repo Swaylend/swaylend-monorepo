@@ -22,19 +22,19 @@ import {
   useMarketConfiguration,
   useUserSupplyBorrow,
 } from '@/hooks';
+import { cn } from '@/lib/utils';
 import { ACTION_TYPE, useMarketStore } from '@/stores';
 import {
   ASSET_ID_TO_SYMBOL,
+  SYMBOL_TO_ICON,
   formatUnits,
   getBorrowApr,
-  SYMBOL_TO_ICON,
 } from '@/utils';
 import { useAccount, useBalance } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import BigNumber from 'bignumber.js';
 import Image from 'next/image';
 import React from 'react';
-import { cn } from '@/lib/utils';
 
 export const BorrowTable = () => {
   const { account } = useAccount();

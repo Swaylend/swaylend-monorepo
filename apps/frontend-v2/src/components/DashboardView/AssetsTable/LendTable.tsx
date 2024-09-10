@@ -22,19 +22,19 @@ import {
   useSupplyRate,
   useUserSupplyBorrow,
 } from '@/hooks';
+import { cn } from '@/lib/utils';
 import { ACTION_TYPE, useMarketStore } from '@/stores';
 import {
   ASSET_ID_TO_SYMBOL,
+  SYMBOL_TO_ICON,
   formatUnits,
   getSupplyApr,
-  SYMBOL_TO_ICON,
 } from '@/utils';
 import { useAccount, useBalance } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import BigNumber from 'bignumber.js';
 import Image from 'next/image';
 import React from 'react';
-import { cn } from '@/lib/utils';
 
 const POINTS_LEND: Point[] = [
   {

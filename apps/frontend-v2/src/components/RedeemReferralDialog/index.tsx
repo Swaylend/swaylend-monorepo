@@ -1,11 +1,11 @@
-import { Dialog, DialogContent, DialogTitle } from '../ui/dialog';
+import { useRedeemInvite } from '@/hooks';
+import { cn } from '@/lib/utils';
 import { useReferralModalStore } from '@/stores/referralModalStore';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
-import { Input } from '../ui/input';
-import { cn } from '@/lib/utils';
-import { Button } from '../ui/button';
-import { useRedeemInvite } from '@/hooks';
 import { useState } from 'react';
+import { Button } from '../ui/button';
+import { Dialog, DialogContent, DialogTitle } from '../ui/dialog';
+import { Input } from '../ui/input';
 
 export const RedeemReferralDialog = () => {
   const { open, setOpen } = useReferralModalStore();

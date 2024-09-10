@@ -7,7 +7,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useMarketStore } from '@/stores';
-import { SYMBOL_TO_ICON, type DeployedMarket } from '@/utils';
+import { type DeployedMarket, SYMBOL_TO_ICON } from '@/utils';
 import { SelectGroup, SelectLabel } from '@radix-ui/react-select';
 import Image from 'next/image';
 

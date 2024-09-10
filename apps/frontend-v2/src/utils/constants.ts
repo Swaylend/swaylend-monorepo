@@ -1,10 +1,10 @@
+import fuel from '/public/icons/fuel-logo.svg?url';
 import btc from '/public/tokens/bitcoin.svg?url';
 import eth from '/public/tokens/ethereum.svg?url';
+import sway from '/public/tokens/sway.svg?url';
 import uni from '/public/tokens/uni.svg?url';
 import usdc from '/public/tokens/usdc.svg?url';
 import usdt from '/public/tokens/usdt.svg?url';
-import sway from '/public/tokens/sway.svg?url';
-import fuel from '/public/icons/fuel-logo.svg?url';
 
 // Indexer URL
 export const NODE_URL = 'https://testnet.fuel.network/v1/graphql';
