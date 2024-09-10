@@ -99,7 +99,7 @@ export const Providers = ({ children }: { children: ReactNode }) => {
                 progressStyle={{ background: 'hsl(var(--primary))' }}
                 hideProgressBar={false}
                 newestOnTop={true}
-                closeonMouseDown={false}
+                closeOnClick={false}
                 rtl={false}
                 pauseOnFocusLoss
                 draggable
