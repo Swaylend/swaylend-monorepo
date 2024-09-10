@@ -7,11 +7,9 @@ import {
 import {
   useBorrowCapacity,
   useBorrowRate,
-  usePrice,
   useSupplyRate,
   useUserCollateralValue,
   useUserSupplyBorrow,
-  useUserTrueCollateralValue,
 } from '@/hooks';
 import { useUserCollateralUtilization } from '@/hooks/useUserCollateralUtilization';
 import { useUserLiquidationPoint } from '@/hooks/useUserLiquidationPoint';
@@ -41,9 +39,9 @@ export const InfoBowl = () => {
   const { data: supplyRate } = useSupplyRate();
   const { data: borrowCapacity } = useBorrowCapacity();
   const { data: userSupplyBorrow } = useUserSupplyBorrow();
-  const collateralUtilization = useUserCollateralUtilization();
-  const collateralValue = useUserCollateralValue();
-  const userLiquidationPoint = useUserLiquidationPoint();
+  const { data: collateralUtilization } = useUserCollateralUtilization();
+  const { data: collateralValue } = useUserCollateralValue();
+  const { data: userLiquidationPoint } = useUserLiquidationPoint();
 
   const bowlMode = useMemo(() => {
     if (userSupplyBorrow?.borrowed.gt(0)) return 2;
@@ -130,7 +128,7 @@ export const InfoBowl = () => {
                 {bowlMode === 2 && (
                   <div className="z-10 text-lg text-neutral2 font-bold">
                     Liquidation Risk
-                    <div>{collateralUtilization.times(100).toFixed(2)}%</div>
+                    <div>{collateralUtilization?.times(100).toFixed(2)}%</div>
                   </div>
                 )}
                 {bowlMode === 1 && (
