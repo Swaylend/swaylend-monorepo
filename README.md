@@ -1,7 +1,9 @@
 <div align="center" id="logo">
   
-  ![SwayLend](assets/svg/logo_text_white_shadow.svg#gh-dark-mode-only)
-  ![Masca logo](assets/svg/logo_text_black_shadow.svg#gh-light-mode-only)
+  
+
+![SwayLend](assets/svg/logo.svg)
+
   
 </div>
 
