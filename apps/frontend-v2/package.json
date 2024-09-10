@@ -1,6 +1,7 @@
 {
   "name": "swaylend-v2",
   "version": "0.1.0",
+  "license": "MIT",
   "private": true,
   "homepage": "https://app.swaylend.com",
   "scripts": {
@@ -43,6 +44,7 @@
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
     "usehooks-ts": "^3.1.0",
+    "vaul": "^0.9.2",
     "zustand": "^4.5.5"
   },
   "devDependencies": {

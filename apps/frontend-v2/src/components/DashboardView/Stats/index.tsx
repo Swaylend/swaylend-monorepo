@@ -68,22 +68,22 @@ export const Stats = () => {
   }, [marketConfiguration, userSupplyBorrow]);
 
   return (
-    <div className="w-full px-[203px]">
-      <div className="flex w-full bg-gradient-to-r justify-between from-background to-background via-accent/40 items-center h-[123px] px-[56px]">
+    <div className="w-full sm:px-[203px]">
+      <div className="flex w-full bg-gradient-to-r justify-between from-background to-background via-accent/40 items-center h-[91px] sm:h-[123px] px-[24px] sm:px-[56px]">
         <div className="w-[300px]">
-          <div className="text-neutral3 text-lg font-semibold">
+          <div className="text-neutral3 text-xs sm:text-lg font-semibold">
             Supplied Balance
           </div>
-          <div className="text-neutral2 font-bold text-4xl">
+          <div className="text-neutral2 font-bold text-lg sm:text-4xl">
             ${totalSuppliedBalance}
           </div>
         </div>
         <InfoBowl />
         <div className="w-[300px] text-right">
-          <div className="text-neutral3 text-lg font-semibold">
+          <div className="text-neutral3 text-xs sm:text-lg font-semibold">
             Borrowed Assets
           </div>
-          <div className="text-neutral2 font-bold text-4xl">
+          <div className="text-neutral2 font-bold text-lg sm:text-4xl">
             ${borrowedBalance}
           </div>
         </div>

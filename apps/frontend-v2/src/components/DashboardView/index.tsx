@@ -7,7 +7,7 @@ import { Stats } from './Stats';
 
 export const DashboardView = () => {
   return (
-    <div className="pt-[55px] pb-[55px] px-[88px] flex flex-col w-full items-center justify-center">
+    <div className="pt-[33px] sm:pt-[55px] pb-[55px] md:px-[88px] flex flex-col w-full items-center justify-center">
       <Stats />
       <MarketSwitch />
       <AssetsTable />
