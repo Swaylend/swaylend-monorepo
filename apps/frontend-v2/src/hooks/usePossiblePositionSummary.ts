@@ -67,7 +67,12 @@ export const usePossiblePositionSummary = () => {
 
       const baseTokenPrice = priceData.prices[marketConfiguration.baseToken];
 
-      const newLoanValue = loanAmount.plus(tokenAmount).times(baseTokenPrice);
+      let newLoanValue = loanAmount;
+      if (action === ACTION_TYPE.BORROW) {
+        newLoanValue = loanAmount.plus(tokenAmount).times(baseTokenPrice);
+      } else if (action === ACTION_TYPE.REPAY) {
+        newLoanValue = loanAmount.minus(tokenAmount).times(baseTokenPrice);
+      }
 
       const collateralUtilization = trueCollateralValue.eq(0)
         ? BigNumber(0)

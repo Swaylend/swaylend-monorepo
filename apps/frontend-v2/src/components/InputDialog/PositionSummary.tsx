@@ -108,8 +108,10 @@ export const PositionSummary = () => {
                 <div
                   className={`${stat.color === 0 && 'text-red-500'} ${stat.color === 1 && 'text-primary03'} flex items-center gap-x-1`}
                 >
-                  {stat.color === 0 && <ArrowDown className="w-4 h-4" />}
-                  {stat.color === 1 && <ArrowUp className="w-4 h-4" />}
+                  {stat.color === 0 && stat.title !== 'Liquidation Point' && <ArrowDown className="w-4 h-4" />}
+                  {stat.color === 1 && stat.title !== 'Liquidation Point' && <ArrowUp className="w-4 h-4" />}
+                  {stat.color === 1 && stat.title === 'Liquidation Point' && <ArrowDown className="w-4 h-4" />}
+                  {stat.color === 0 && stat.title === 'Liquidation Point' && <ArrowUp className="w-4 h-4" />}
                   {stat.changeValue}
                 </div>
               )}
