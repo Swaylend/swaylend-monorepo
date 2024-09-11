@@ -53,7 +53,7 @@ export const Navbar = () => {
                   <div
                     className={cn(
                       pathname === href &&
-                      '-z-10 absolute blur-2xl top-[19px] left-[calc(50%-20px)] w-16 h-10 bg-primary01'
+                        '-z-10 absolute blur-2xl top-[19px] left-[calc(50%-20px)] w-16 h-10 bg-primary01'
                     )}
                   />
                 </div>
@@ -77,7 +77,7 @@ export const Navbar = () => {
           </Link>
           <div className="flex items-center gap-x-2">
             <Points />
-            <div className='hidden md:block'>
+            <div className="hidden md:block">
               <MarketSwitcher />
             </div>
             <ConnectButton />

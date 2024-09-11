@@ -119,7 +119,7 @@ export const PositionSummary = () => {
         {stats.map((stat) => {
           return (
             <div key={stat.title} className="flex w-full justify-between">
-              <div className='text-neutral4'>{stat.title}</div>
+              <div className="text-neutral4">{stat.title}</div>
               {stat.changeValue === null ? (
                 <div className="text-neutral2 font-semibold">{stat.value}</div>
               ) : (

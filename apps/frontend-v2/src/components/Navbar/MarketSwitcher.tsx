@@ -11,9 +11,13 @@ import { type DeployedMarket, SYMBOL_TO_ICON } from '@/utils';
 import { SelectGroup, SelectLabel } from '@radix-ui/react-select';
 import Image from 'next/image';
 
-const MarketItem = ({ market, logo, selected }: { market: string; logo: any, selected?: boolean }) => {
+const MarketItem = ({
+  market,
+  logo,
+  selected,
+}: { market: string; logo: any; selected?: boolean }) => {
   return (
-    <div className='flex gap-x-2 w-full items-center justify-center px-2'>
+    <div className="flex gap-x-2 w-full items-center justify-center px-2">
       <div className="flex items-center">
         <div className="bg-neutral6 min-w-[32px] h-[32px] rounded-full flex items-center justify-center">
           <Image
@@ -33,9 +37,12 @@ const MarketItem = ({ market, logo, selected }: { market: string; logo: any, sel
         />
       </div>
 
-      <div className={`${selected && 'hidden xl:block'} text-neutral4`}>Fuel</div>
-      <div className={`${selected && 'hidden xl:block'} font-semibold text-md`}>{market}</div>
-
+      <div className={`${selected && 'hidden xl:block'} text-neutral4`}>
+        Fuel
+      </div>
+      <div className={`${selected && 'hidden xl:block'} font-semibold text-md`}>
+        {market}
+      </div>
     </div>
   );
 };
@@ -52,7 +59,11 @@ export const MarketSwitcher = () => {
     <Select value={market} onValueChange={handleChange}>
       <SelectTrigger className="">
         <SelectValue>
-          <MarketItem selected={true} market={market} logo={SYMBOL_TO_ICON[market]} />
+          <MarketItem
+            selected={true}
+            market={market}
+            logo={SYMBOL_TO_ICON[market]}
+          />
         </SelectValue>
       </SelectTrigger>
       <SelectContent>

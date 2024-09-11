@@ -156,34 +156,26 @@ export const InfoBowl = () => {
             <div className="font-bold">Position Summary</div>
             <div className="flex flex-col gap-y-1 mt-2">
               <div className="text-sm flex justify-between">
-                <div className='text-neutral4'>
-                  Available to Borrow
-                </div>
-                <div className='font-semibold text-netural2'>
+                <div className="text-neutral4">Available to Borrow</div>
+                <div className="font-semibold text-netural2">
                   {borrowCapacity?.toFormat(2)} USD
                 </div>
               </div>
               <div className="text-sm flex justify-between">
-                <div className='text-neutral4'>
-                  Liquidation point
-                </div>
-                <div className='font-semibold text-netural2'>
+                <div className="text-neutral4">Liquidation point</div>
+                <div className="font-semibold text-netural2">
                   ${userLiquidationPoint?.toFormat(2)}
                 </div>
               </div>
               <div className="text-sm flex justify-between">
-                <div className='text-neutral4'>
-                  Collateral Utilization
-                </div>
-                <div className='font-semibold text-netural2'>
+                <div className="text-neutral4">Collateral Utilization</div>
+                <div className="font-semibold text-netural2">
                   {collateralUtilization?.times(100).toFormat(2)}%
                 </div>
               </div>
               <div className="text-sm flex justify-between">
-                <div className='text-neutral4'>
-                  Collateral Value
-                </div>
-                <div className='font-semibold text-netural2'>
+                <div className="text-neutral4">Collateral Value</div>
+                <div className="font-semibold text-netural2">
                   ${collateralValue?.toFormat(2)}
                 </div>
               </div>

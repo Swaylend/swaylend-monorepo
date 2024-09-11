@@ -92,7 +92,7 @@ export const LendTable = () => {
             <TableHead className="w-1/6">Lend APY</TableHead>
             <TableHead className="w-1/6">Supplied Assets</TableHead>
             <TableHead className="w-1/6">Supply Points</TableHead>
-            <TableHead className="w-3/12">{ }</TableHead>
+            <TableHead className="w-3/12">{}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -104,7 +104,7 @@ export const LendTable = () => {
                     <Image
                       src={
                         SYMBOL_TO_ICON[
-                        ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]
+                          ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]
                         ]
                       }
                       alt={ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]}
@@ -157,7 +157,11 @@ export const LendTable = () => {
                 </Button>
                 <Button
                   className="w-1/2"
-                  disabled={!account || !userSupplyBorrow || userSupplyBorrow?.supplied.eq(0)}
+                  disabled={
+                    !account ||
+                    !userSupplyBorrow ||
+                    userSupplyBorrow?.supplied.eq(0)
+                  }
                   variant="tertiary"
                   onMouseDown={() => {
                     handleBaseTokenClick(ACTION_TYPE.WITHDRAW);
@@ -192,7 +196,7 @@ export const LendTable = () => {
                       <Image
                         src={
                           SYMBOL_TO_ICON[
-                          ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]
+                            ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]
                           ]
                         }
                         alt={ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]}

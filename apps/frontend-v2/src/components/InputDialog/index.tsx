@@ -163,8 +163,8 @@ export const InputDialog = () => {
       return formatUnits(
         BigNumber(
           userCollateralAssets?.[actionTokenAssetId ?? ''] ??
-          new BigNumber(0) ??
-          0
+            new BigNumber(0) ??
+            0
         ),
         collateralConfigurations?.[actionTokenAssetId ?? '']?.decimals ?? 9
       );
@@ -237,33 +237,41 @@ export const InputDialog = () => {
       actionTokenBalance == null
     )
       return null;
-    if (tokenAmount == null || tokenAmount.eq(0))
-      return null;
+    if (tokenAmount == null || tokenAmount.eq(0)) return null;
     if (action === ACTION_TYPE.SUPPLY) {
-      let balance = BigNumber(0)
+      let balance = BigNumber(0);
       if (actionTokenAssetId === marketConfiguration?.baseToken) {
-        balance = formatUnits(BigNumber(actionTokenBalance.toString()), marketConfiguration?.baseTokenDecimals);
+        balance = formatUnits(
+          BigNumber(actionTokenBalance.toString()),
+          marketConfiguration?.baseTokenDecimals
+        );
       } else {
-        balance = formatUnits(BigNumber(actionTokenBalance.toString()), collateralConfigurations?.[actionTokenAssetId ?? '']?.decimals);
+        balance = formatUnits(
+          BigNumber(actionTokenBalance.toString()),
+          collateralConfigurations?.[actionTokenAssetId ?? '']?.decimals
+        );
       }
       if (balance == null) return null;
-      if (balance.lt(tokenAmount))
-        return 'Insufficient balance';
+      if (balance.lt(tokenAmount)) return 'Insufficient balance';
     }
     if (action === ACTION_TYPE.WITHDRAW) {
-      if (
-        actionTokenAssetId === marketConfiguration?.baseToken
-      ) {
+      if (actionTokenAssetId === marketConfiguration?.baseToken) {
         if (tokenAmount.gt(userSupplyBorrow.supplied ?? BigNumber(0)))
           return 'Insufficient balance';
       } else {
-        const balance = formatUnits(BigNumber(userCollateralAssets?.[actionTokenAssetId] ?? BigNumber(0)), collateralConfigurations?.[actionTokenAssetId ?? '']?.decimals);
+        const balance = formatUnits(
+          BigNumber(userCollateralAssets?.[actionTokenAssetId] ?? BigNumber(0)),
+          collateralConfigurations?.[actionTokenAssetId ?? '']?.decimals
+        );
         if (tokenAmount.gt(balance ?? BigNumber(0)))
           return 'Insufficient balance';
       }
     }
     if (action === ACTION_TYPE.BORROW) {
-      const baseBalance = formatUnits(BigNumber(baseTokenBalance?.toString()), marketConfiguration?.baseTokenDecimals);
+      const baseBalance = formatUnits(
+        BigNumber(baseTokenBalance?.toString()),
+        marketConfiguration?.baseTokenDecimals
+      );
       if (baseBalance?.eq(0)) {
         return `There is no ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken]} to borrow`;
       }
@@ -285,7 +293,10 @@ export const InputDialog = () => {
         return 'You will be immediately liquidated';
     }
     if (action === ACTION_TYPE.REPAY) {
-      const balance = formatUnits(BigNumber(baseTokenBalance?.toString()), marketConfiguration?.baseTokenDecimals);
+      const balance = formatUnits(
+        BigNumber(baseTokenBalance?.toString()),
+        marketConfiguration?.baseTokenDecimals
+      );
       if (tokenAmount.gt(balance ?? BigNumber(0)))
         return 'Insufficient balance';
     }
@@ -303,7 +314,6 @@ export const InputDialog = () => {
     setError(tokenInputError());
   }, [tokenAmount, actionTokenAssetId, action]);
 
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="p-0 max-sm:w-[90%] max-sm:rounded-xl max-w-[400px]">
@@ -316,7 +326,6 @@ export const InputDialog = () => {
               {/* TODO -> Disable buttons when not available */}
               <button
                 onMouseDown={() => handleModeChange(0)}
-
                 type="button"
                 className={cn(
                   `${!(action === 'SUPPLY' || action === 'BORROW') && 'text-neutral4'}`,
@@ -343,7 +352,6 @@ export const InputDialog = () => {
             <div className="w-1/2 relative h-[64px] flex justify-center items-center">
               <button
                 onMouseDown={() => handleModeChange(1)}
-
                 type="button"
                 className={cn(
                   `${!(action === 'WITHDRAW' || action === 'REPAY') && 'text-neutral4'}`,
@@ -372,9 +380,9 @@ export const InputDialog = () => {
             <div>
               <div>
                 <InputField />
-                {error && <div className='text-red-500 mt-2 text-sm'>
-                  {error}
-                </div>}
+                {error && (
+                  <div className="text-red-500 mt-2 text-sm">{error}</div>
+                )}
               </div>
               <div className="flex mt-2 justify-between items-center w-full">
                 <div className="text-neutral4 text-sm">
@@ -397,7 +405,11 @@ export const InputDialog = () => {
                   Cancel
                 </Button>
               </DialogClose>
-              <Button disabled={error !== null || tokenAmount.eq(0)} onMouseDown={handleSubmit} className="w-1/2">
+              <Button
+                disabled={error !== null || tokenAmount.eq(0)}
+                onMouseDown={handleSubmit}
+                className="w-1/2"
+              >
                 Submit
               </Button>
             </div>
