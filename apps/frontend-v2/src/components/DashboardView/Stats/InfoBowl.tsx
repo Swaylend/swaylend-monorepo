@@ -149,23 +149,44 @@ export const InfoBowl = () => {
           </div>
         </TooltipTrigger>
         <TooltipContent
-          className={`${bowlMode !== 2 && 'hidden'}`}
+          className={`${bowlMode !== 2 && 'hidden'} w-[300px]`}
           side="bottom"
         >
           <div className="p-1">
             <div className="font-bold">Position Summary</div>
-            <div className="text-sm text-gray-400">
-              Available to Borrow: {borrowCapacity?.toFormat(2)} USD
-            </div>
-            <div className="text-sm text-gray-400">
-              Liquidation point: ${userLiquidationPoint?.toFormat(2)}
-            </div>
-            <div className="text-sm text-gray-400">
-              Collateral Utilization:{' '}
-              {collateralUtilization?.times(100).toFormat(2)}%
-            </div>
-            <div className="text-sm text-gray-400">
-              Collateral Value: ${collateralValue?.toFormat(2)}
+            <div className="flex flex-col gap-y-1 mt-2">
+              <div className="text-sm flex justify-between">
+                <div className='text-neutral4'>
+                  Available to Borrow
+                </div>
+                <div className='font-semibold text-netural2'>
+                  {borrowCapacity?.toFormat(2)} USD
+                </div>
+              </div>
+              <div className="text-sm flex justify-between">
+                <div className='text-neutral4'>
+                  Liquidation point
+                </div>
+                <div className='font-semibold text-netural2'>
+                  ${userLiquidationPoint?.toFormat(2)}
+                </div>
+              </div>
+              <div className="text-sm flex justify-between">
+                <div className='text-neutral4'>
+                  Collateral Utilization
+                </div>
+                <div className='font-semibold text-netural2'>
+                  {collateralUtilization?.times(100).toFormat(2)}%
+                </div>
+              </div>
+              <div className="text-sm flex justify-between">
+                <div className='text-neutral4'>
+                  Collateral Value
+                </div>
+                <div className='font-semibold text-netural2'>
+                  ${collateralValue?.toFormat(2)}
+                </div>
+              </div>
             </div>
           </div>
         </TooltipContent>
