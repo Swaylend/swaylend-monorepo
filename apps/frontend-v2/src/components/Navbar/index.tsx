@@ -1,4 +1,5 @@
 'use client';
+
 import {
   Drawer,
   DrawerContent,
@@ -22,7 +23,7 @@ import { Points } from './Points';
 
 const NAVBAR_LINKS = [
   { href: '/', label: 'Dashboard', icon: <LayoutDashboard /> },
-  { href: '/market', label: 'Market', icon: <ChartLine /> },
+  // { href: '/market', label: 'Market', icon: <ChartLine /> },
   { href: '/faucet', label: 'Faucet', icon: <Coins /> },
 ];
 
@@ -44,7 +45,7 @@ export const Navbar = () => {
                 <div
                   className={cn(
                     pathname === href ? 'text-primary' : 'text-neutral2',
-                    pathname === href ? '' : 'hover:text-neutral2/80',
+                    pathname !== href && 'hover:text-neutral2/80',
                     'flex items-center gap-x-1 h-full relative'
                   )}
                 >
@@ -84,7 +85,7 @@ export const Navbar = () => {
             <Button
               onMouseDown={() => setOpen(true)}
               className="rounded-full w-[40px] h-[40px] p-0"
-              variant={'tertiary'}
+              variant="tertiary"
             >
               <Menu className="w-5 h-5" />
             </Button>
@@ -106,7 +107,7 @@ export const Navbar = () => {
                 <Button
                   onMouseDown={() => setOpen(false)}
                   className="rounded-full w-[40px] h-[40px] p-0"
-                  variant={'tertiary'}
+                  variant="tertiary"
                 >
                   <X className="w-5 h-5" />
                 </Button>
@@ -114,7 +115,7 @@ export const Navbar = () => {
 
               <div className="h-full flex flex-col justify-between items-start px-8 w-full py-16 mt-8">
                 <div className="flex flex-col w-full h-full items-start gap-y-8  pt-16">
-                  {NAVBAR_LINKS.map(({ href, label, icon }) => (
+                  {NAVBAR_LINKS.map(({ href, label }) => (
                     <Link
                       key={href}
                       href={href}
@@ -123,7 +124,7 @@ export const Navbar = () => {
                       <div
                         className={cn(
                           pathname === href ? 'text-primary' : 'text-neutral2',
-                          pathname === href ? '' : 'hover:text-neutral2/80',
+                          pathname !== href && 'hover:text-neutral2/80',
                           'flex font-bold text-3xl items-center gap-x-2 h-full relative'
                         )}
                       >
@@ -132,8 +133,7 @@ export const Navbar = () => {
                     </Link>
                   ))}
                 </div>
-
-                <div className="w-full md:hidden block flex-col flex gap-y-2 w-[160px] mt-16">
+                <div className="md:hidden flex-col flex gap-y-2 w-[160px] mt-16">
                   <div className="pl-4">Market</div>
                   <MarketSwitcher />
                 </div>

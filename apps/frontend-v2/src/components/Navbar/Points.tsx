@@ -30,7 +30,7 @@ export const Points = () => {
       <PopoverTrigger>
         <div className="text-yellow-400 sm:px-3 sm:py-1.5 max-sm:p-1 flex items-center gap-x-1 rounded-full border-[3px] border-yellow-400">
           <Sparkle className="w-5 h-5" />
-          <span className="max-sm:hidden">687</span>
+          <span className="max-sm:hidden">{user?.points ?? 0}</span>
         </div>
       </PopoverTrigger>
       <PopoverContent
@@ -49,7 +49,7 @@ export const Points = () => {
           </div>
         </div>
         <div className="rounded-full bg-white/5 px-4 py-2 text-neutral5">
-          Fuel Pts <span className="text-neutral2">27</span>
+          Fuel Pts <span className="text-neutral2">0</span>
         </div>
         <Button className="w-full flex gap-x-2" variant="tertiary-card">
           <Trophy className="w-5 h-5" />
@@ -64,7 +64,7 @@ export const Points = () => {
             await handleCopy(user.inviteCode);
           }}
         >
-          {!isLoading && (
+          {!isLoading && !isError && (
             <>
               <Copy className="w-5 h-5" />
               {isCopied ? 'Copied' : 'Copy referral code'}

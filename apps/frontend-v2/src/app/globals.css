@@ -2,6 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  box-sizing: border-box;
+}
+
+/* Used for correct mobile height */
+:root {
+  --doc-height: 100%;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  height: 100vh; /* fallback for Js load */
+  height: var(--doc-height);
+}
+
 body > div > div[role="dialog"] {
   bottom: unset !important;
   top: 40% !important;
