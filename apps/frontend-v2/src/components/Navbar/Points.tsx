@@ -64,7 +64,7 @@ export const Points = () => {
             await handleCopy(user.inviteCode);
           }}
         >
-          {!isLoading && (
+          {!isLoading && !isError && (
             <>
               <Copy className="w-5 h-5" />
               {isCopied ? 'Copied' : 'Copy referral code'}
