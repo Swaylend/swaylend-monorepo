@@ -4,8 +4,8 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { useUser } from '@/hooks';
+import { cn } from '@/lib/utils';
 import { useReferralModalStore } from '@/stores/referralModalStore';
-import clsx from 'clsx';
 import { Copy, Loader, Sparkle, Trophy } from 'lucide-react';
 import React, { useState } from 'react';
 import { Button } from '../ui/button';
@@ -40,7 +40,7 @@ export const Points = () => {
         <div className="flex flex-col gap-y-2 items-center">
           <div className="text-neutral5">SwayLend Pts</div>
           <div
-            className={clsx(
+            className={cn(
               'text-2xl font-semibold text-yellow-400',
               isLoading && 'animate-pulse'
             )}
@@ -56,7 +56,7 @@ export const Points = () => {
           Points Leaderboard
         </Button>
         <Button
-          className={clsx('w-full flex gap-x-2', isLoading && 'animate-pulse')}
+          className={cn('w-full flex gap-x-2', isLoading && 'animate-pulse')}
           variant="tertiary-card"
           disabled={isPending}
           onMouseDown={async () => {

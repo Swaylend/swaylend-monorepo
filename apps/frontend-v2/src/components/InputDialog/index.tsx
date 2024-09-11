@@ -19,17 +19,18 @@ import {
 } from '@/hooks';
 import { cn } from '@/lib/utils';
 import { ACTION_TYPE, useMarketStore } from '@/stores';
-import { formatUnits } from '@/utils';
-import { useAccount, useBalance } from '@fuels/react';
+import { ASSET_ID_TO_SYMBOL, formatUnits } from '@/utils';
+import { useAccount, useBalance, useIsConnected } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import BigNumber from 'bignumber.js';
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Button } from '../ui/button';
 import { InputField } from './InputField';
 import { PositionSummary } from './PositionSummary';
 
 export const InputDialog = () => {
   const { account } = useAccount();
+  const { isConnected } = useIsConnected();
   const { data: marketConfiguration } = useMarketConfiguration();
   const { data: userCollateralAssets } = useUserCollateralAssets();
   const { data: collateralConfigurations } = useCollateralConfigurations();
@@ -61,6 +62,8 @@ export const InputDialog = () => {
   const { mutate: withdrawBase } = useWithdrawBase();
 
   const { mutate: borrowBase } = useBorrowBase();
+
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = () => {
     if (!marketConfiguration) return;
@@ -213,6 +216,120 @@ export const InputDialog = () => {
     }
   };
 
+  const { balance: actionTokenBalance } = useBalance({
+    address: account ?? undefined,
+    assetId: actionTokenAssetId ?? undefined,
+  });
+
+  const { balance: baseTokenBalance } = useBalance({
+    address: account ?? undefined,
+    assetId: marketConfiguration?.baseToken,
+  });
+
+  const tokenInputError = (): string | null => {
+    if (
+      actionTokenAssetId == null ||
+      borrowCapacity == null ||
+      marketConfiguration == null ||
+      !userSupplyBorrow ||
+      baseTokenBalance == null ||
+      userCollateralAssets == null ||
+      actionTokenBalance == null
+    ) {
+      return null;
+    }
+
+    if (tokenAmount == null || tokenAmount.eq(0)) return null;
+
+    if (action === ACTION_TYPE.SUPPLY) {
+      let balance = BigNumber(0);
+      if (actionTokenAssetId === marketConfiguration?.baseToken) {
+        balance = formatUnits(
+          BigNumber(actionTokenBalance.toString()),
+          marketConfiguration?.baseTokenDecimals
+        );
+      } else {
+        balance = formatUnits(
+          BigNumber(actionTokenBalance.toString()),
+          collateralConfigurations?.[actionTokenAssetId ?? '']?.decimals
+        );
+      }
+      if (balance == null) return null;
+      if (balance.lt(tokenAmount)) return 'Insufficient balance';
+    }
+
+    if (action === ACTION_TYPE.WITHDRAW) {
+      if (actionTokenAssetId === marketConfiguration?.baseToken) {
+        if (tokenAmount.gt(userSupplyBorrow.supplied ?? BigNumber(0))) {
+          return 'Insufficient balance';
+        }
+      } else {
+        const balance = formatUnits(
+          BigNumber(userCollateralAssets?.[actionTokenAssetId] ?? BigNumber(0)),
+          collateralConfigurations?.[actionTokenAssetId ?? '']?.decimals
+        );
+        if (tokenAmount.gt(balance ?? BigNumber(0))) {
+          return 'Insufficient balance';
+        }
+      }
+    }
+
+    if (action === ACTION_TYPE.BORROW) {
+      const baseBalance = formatUnits(
+        BigNumber(baseTokenBalance?.toString()),
+        marketConfiguration?.baseTokenDecimals
+      );
+
+      if (baseBalance?.eq(0)) {
+        return `There is no ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken]} to borrow`;
+      }
+
+      // TODO: Get minimum borrow amount from MarketConfiguration
+      if (tokenAmount.lt(new BigNumber(10))) {
+        return `Minimum borrow amount is 10 ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken]}`;
+      }
+
+      // If reserve is less than user collateral
+      if (borrowCapacity.gt(baseBalance)) {
+        if (tokenAmount?.gt(baseBalance ?? 0)) {
+          const max = formatUnits(
+            baseBalance,
+            marketConfiguration?.baseTokenDecimals
+          ).toFormat(2);
+
+          return `Max to borrow is ${max} ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken]}`;
+        }
+        return null;
+      }
+
+      if (tokenAmount.gt(borrowCapacity)) {
+        return 'You will be immediately liquidated';
+      }
+    }
+
+    if (action === ACTION_TYPE.REPAY) {
+      const balance = formatUnits(
+        BigNumber(baseTokenBalance?.toString()),
+        marketConfiguration?.baseTokenDecimals
+      );
+      if (tokenAmount.gt(balance ?? BigNumber(0)))
+        return 'Insufficient balance';
+    }
+
+    return null;
+  };
+
+  // Close modal if user disconnects...
+  useEffect(() => {
+    if (!isConnected) {
+      setOpen(false);
+    }
+  }, [isConnected]);
+
+  useEffect(() => {
+    setError(tokenInputError());
+  }, [tokenAmount, actionTokenAssetId, action]);
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="p-0 max-sm:w-[90%] max-sm:rounded-xl max-w-[400px]">
@@ -278,8 +395,10 @@ export const InputDialog = () => {
           <div className="w-full flex flex-col gap-y-[30px] pt-[30px] h-[calc(100%-68px)] bg-popover p-[16px] z-10">
             <div>
               <div>
-                {/* TODO -> Add errors to the input field (not enough coins, etc...) */}
                 <InputField />
+                {error && (
+                  <div className="text-red-500 mt-2 text-sm">{error}</div>
+                )}
               </div>
               <div className="flex mt-2 justify-between items-center w-full">
                 <div className="text-neutral4 text-sm">
@@ -302,7 +421,11 @@ export const InputDialog = () => {
                   Cancel
                 </Button>
               </DialogClose>
-              <Button onMouseDown={handleSubmit} className="w-1/2">
+              <Button
+                disabled={error !== null || tokenAmount.eq(0)}
+                onMouseDown={handleSubmit}
+                className="w-1/2"
+              >
                 Submit
               </Button>
             </div>

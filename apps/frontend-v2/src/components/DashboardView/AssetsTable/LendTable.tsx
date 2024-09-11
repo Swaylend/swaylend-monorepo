@@ -157,7 +157,11 @@ export const LendTable = () => {
                 </Button>
                 <Button
                   className="w-1/2"
-                  disabled={!account}
+                  disabled={
+                    !account ||
+                    !userSupplyBorrow ||
+                    userSupplyBorrow.supplied.eq(0)
+                  }
                   variant="tertiary"
                   onMouseDown={() => {
                     handleBaseTokenClick(ACTION_TYPE.WITHDRAW);

@@ -133,7 +133,9 @@ export const usePossiblePositionSummary = () => {
 
       const newBorrowCapacity = newAvailableToBorrow.plus(loanAmount);
 
-      setPossibleCollateralValue(collateralsValue);
+      setPossibleCollateralValue(
+        collateralsValue.lt(0) ? BigNumber(0) : collateralsValue
+      );
       setPossibleBorrowCapacity(
         newBorrowCapacity.lt(0) ? BigNumber(0) : newBorrowCapacity
       );
