@@ -160,7 +160,7 @@ export const LendTable = () => {
                   disabled={
                     !account ||
                     !userSupplyBorrow ||
-                    userSupplyBorrow?.supplied.eq(0)
+                    userSupplyBorrow.supplied.eq(0)
                   }
                   variant="tertiary"
                   onMouseDown={() => {

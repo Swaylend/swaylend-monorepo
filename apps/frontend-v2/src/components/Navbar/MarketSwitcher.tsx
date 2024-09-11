@@ -6,6 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { cn } from '@/lib/utils';
 import { useMarketStore } from '@/stores';
 import { type DeployedMarket, SYMBOL_TO_ICON } from '@/utils';
 import { SelectGroup, SelectLabel } from '@radix-ui/react-select';
@@ -37,10 +38,12 @@ const MarketItem = ({
         />
       </div>
 
-      <div className={`${selected && 'hidden xl:block'} text-neutral4`}>
+      <div className={cn(selected && 'hidden xl:block', 'text-neutral4')}>
         Fuel
       </div>
-      <div className={`${selected && 'hidden xl:block'} font-semibold text-md`}>
+      <div
+        className={cn(selected && 'hidden xl:block', 'font-semibold text-md')}
+      >
         {market}
       </div>
     </div>
@@ -57,7 +60,7 @@ export const MarketSwitcher = () => {
 
   return (
     <Select value={market} onValueChange={handleChange}>
-      <SelectTrigger className="">
+      <SelectTrigger>
         <SelectValue>
           <MarketItem
             selected={true}

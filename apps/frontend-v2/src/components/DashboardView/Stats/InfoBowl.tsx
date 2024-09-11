@@ -13,6 +13,7 @@ import {
 } from '@/hooks';
 import { useUserCollateralUtilization } from '@/hooks/useUserCollateralUtilization';
 import { useUserLiquidationPoint } from '@/hooks/useUserLiquidationPoint';
+import { cn } from '@/lib/utils';
 import { useMarketStore } from '@/stores';
 import { getBorrowApr, getSupplyApr } from '@/utils';
 import React, { useMemo } from 'react';
@@ -149,7 +150,7 @@ export const InfoBowl = () => {
           </div>
         </TooltipTrigger>
         <TooltipContent
-          className={`${bowlMode !== 2 && 'hidden'} w-[300px]`}
+          className={cn(bowlMode !== 2 && 'hidden', 'w-[300px]')}
           side="bottom"
         >
           <div className="p-1">

@@ -6,6 +6,7 @@ import {
   useUserSupplyBorrow,
 } from '@/hooks';
 import { useUserLiquidationPoint } from '@/hooks/useUserLiquidationPoint';
+import { cn } from '@/lib/utils';
 import { formatUnits } from '@/utils';
 import BigNumber from 'bignumber.js';
 import { ArrowDown, ArrowUp, InfoIcon } from 'lucide-react';
@@ -124,7 +125,11 @@ export const PositionSummary = () => {
                 <div className="text-neutral2 font-semibold">{stat.value}</div>
               ) : (
                 <div
-                  className={`${stat.color === 0 && 'text-red-500'} ${stat.color === 1 && 'text-accent'} flex items-center gap-x-1`}
+                  className={cn(
+                    stat.color === 0 && 'text-red-500',
+                    stat.color === 1 && 'text-accent',
+                    'flex items-center gap-x-1'
+                  )}
                 >
                   {stat.direction ? (
                     <ArrowUp className="w-4 h-4" />

@@ -217,13 +217,13 @@ export const InputDialog = () => {
   };
 
   const { balance: actionTokenBalance } = useBalance({
-    address: account ?? '',
-    assetId: actionTokenAssetId ?? '',
+    address: account ?? undefined,
+    assetId: actionTokenAssetId ?? undefined,
   });
 
   const { balance: baseTokenBalance } = useBalance({
-    address: account ?? '',
-    assetId: marketConfiguration?.baseToken ?? '',
+    address: account ?? undefined,
+    assetId: marketConfiguration?.baseToken,
   });
 
   const tokenInputError = (): string | null => {
@@ -235,9 +235,12 @@ export const InputDialog = () => {
       baseTokenBalance == null ||
       userCollateralAssets == null ||
       actionTokenBalance == null
-    )
+    ) {
       return null;
+    }
+
     if (tokenAmount == null || tokenAmount.eq(0)) return null;
+
     if (action === ACTION_TYPE.SUPPLY) {
       let balance = BigNumber(0);
       if (actionTokenAssetId === marketConfiguration?.baseToken) {
@@ -254,44 +257,56 @@ export const InputDialog = () => {
       if (balance == null) return null;
       if (balance.lt(tokenAmount)) return 'Insufficient balance';
     }
+
     if (action === ACTION_TYPE.WITHDRAW) {
       if (actionTokenAssetId === marketConfiguration?.baseToken) {
-        if (tokenAmount.gt(userSupplyBorrow.supplied ?? BigNumber(0)))
+        if (tokenAmount.gt(userSupplyBorrow.supplied ?? BigNumber(0))) {
           return 'Insufficient balance';
+        }
       } else {
         const balance = formatUnits(
           BigNumber(userCollateralAssets?.[actionTokenAssetId] ?? BigNumber(0)),
           collateralConfigurations?.[actionTokenAssetId ?? '']?.decimals
         );
-        if (tokenAmount.gt(balance ?? BigNumber(0)))
+        if (tokenAmount.gt(balance ?? BigNumber(0))) {
           return 'Insufficient balance';
+        }
       }
     }
+
     if (action === ACTION_TYPE.BORROW) {
       const baseBalance = formatUnits(
         BigNumber(baseTokenBalance?.toString()),
         marketConfiguration?.baseTokenDecimals
       );
+
       if (baseBalance?.eq(0)) {
         return `There is no ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken]} to borrow`;
       }
+
+      // TODO: Get minimum borrow amount from MarketConfiguration
       if (tokenAmount.lt(new BigNumber(10))) {
         return `Minimum borrow amount is 10 ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken]}`;
       }
-      //if reserve is less than user collateral
+
+      // If reserve is less than user collateral
       if (borrowCapacity.gt(baseBalance)) {
         if (tokenAmount?.gt(baseBalance ?? 0)) {
           const max = formatUnits(
             baseBalance,
             marketConfiguration?.baseTokenDecimals
           ).toFormat(2);
+
           return `Max to borrow is ${max} ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken]}`;
         }
         return null;
       }
-      if (tokenAmount.gt(borrowCapacity))
+
+      if (tokenAmount.gt(borrowCapacity)) {
         return 'You will be immediately liquidated';
+      }
     }
+
     if (action === ACTION_TYPE.REPAY) {
       const balance = formatUnits(
         BigNumber(baseTokenBalance?.toString()),
@@ -300,6 +315,7 @@ export const InputDialog = () => {
       if (tokenAmount.gt(balance ?? BigNumber(0)))
         return 'Insufficient balance';
     }
+
     return null;
   };
 
