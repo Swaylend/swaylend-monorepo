@@ -4,11 +4,11 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { useUser } from '@/hooks';
+import { cn } from '@/lib/utils';
 import { useReferralModalStore } from '@/stores/referralModalStore';
 import { Copy, Loader, Sparkle, Trophy } from 'lucide-react';
 import React, { useState } from 'react';
 import { Button } from '../ui/button';
-import { cn } from '@/lib/utils';
 
 export const Points = () => {
   const { setOpen } = useReferralModalStore();
