@@ -5,7 +5,7 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 
 /*
-  Fuels version: 0.94.3
+  Fuels version: 0.94.5
 */
 
 import { Contract, Interface } from "fuels";
@@ -73,6 +73,14 @@ const abi = {
       "type": "enum std::identity::Identity",
       "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335",
       "metadataTypeId": 2
+    },
+    {
+      "type": "enum std::option::Option<b256>",
+      "concreteTypeId": "0c2beb9013490c4f753f2757dfe2d8340b22ce3827d596d81d249b7038033cb6",
+      "metadataTypeId": 3,
+      "typeArguments": [
+        "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+      ]
     },
     {
       "type": "enum std::option::Option<struct std::string::String>",
@@ -436,7 +444,7 @@ const abi = {
         },
         {
           "name": "sub_id",
-          "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+          "concreteTypeId": "0c2beb9013490c4f753f2757dfe2d8340b22ce3827d596d81d249b7038033cb6"
         },
         {
           "name": "amount",
@@ -471,22 +479,22 @@ const abi = {
     {
       "name": "DECIMALS",
       "concreteTypeId": "c89951a24c6ca28c13fd1cfdc646b2b656d69e61a92b91023be7eb58eb914b6b",
-      "offset": 22016
+      "offset": 21424
     },
     {
       "name": "NAME",
       "concreteTypeId": "fd59cdd2c531ab3564f4fcc13eb876860d4d7cd4d12aa1f042a5aeceacde951f",
-      "offset": 22032
+      "offset": 21440
     },
     {
       "name": "SYMBOL",
       "concreteTypeId": "84877f6e98274b9e4721db68b4c0bdb9e52b8e9572c5bd7811c07a41ced882c7",
-      "offset": 22040
+      "offset": 21448
     },
     {
       "name": "MAX_SUPPLY",
       "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
-      "offset": 22024
+      "offset": 21432
     }
   ]
 };
@@ -542,7 +550,7 @@ export class Src20 extends Contract {
     total_supply: InvokeFunction<[asset: AssetIdInput], Option<BN>>;
     owner: InvokeFunction<[], StateOutput>;
     burn: InvokeFunction<[sub_id: string, amount: BigNumberish], void>;
-    mint: InvokeFunction<[recipient: IdentityInput, sub_id: string, amount: BigNumberish], void>;
+    mint: InvokeFunction<[recipient: IdentityInput, sub_id: Option<string>, amount: BigNumberish], void>;
   };
 
   constructor(

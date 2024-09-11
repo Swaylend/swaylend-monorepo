@@ -1,10 +1,11 @@
-// SPDX-License-Identifier: BUSL-1.1
+// SPDX-License-Identifier: MIT
+
 contract;
 
 //
 // @title Swaylend's Market Contract
 // @notice An efficient monolithic money market protocol
-// @author
+// @author Reserve Labs LTD
 //
 
 mod events;

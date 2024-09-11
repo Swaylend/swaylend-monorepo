@@ -1,15 +1,14 @@
-export interface IToken {
-  logo: string;
-  assetId: string;
-  name: string;
-  symbol: string;
-  decimals: number;
-  pythSymbol: string;
-  priceFeed: string;
-}
+import fuel from '/public/icons/fuel-logo.svg?url';
+import btc from '/public/tokens/bitcoin.svg?url';
+import eth from '/public/tokens/ethereum.svg?url';
+import sway from '/public/tokens/sway.svg?url';
+import uni from '/public/tokens/uni.svg?url';
+import usdc from '/public/tokens/usdc.svg?url';
+import usdt from '/public/tokens/usdt.svg?url';
 
 // Indexer URL
 export const NODE_URL = 'https://testnet.fuel.network/v1/graphql';
+export const SWAYLEND_API = process.env.NEXT_PUBLIC_SWAYLEND_API!;
 
 // Contract addresses
 export type MarketConfiguration = {
@@ -29,18 +28,18 @@ export const DEPLOYED_MARKETS: Record<DeployedMarket, MarketConfiguration> = {
     oracleAddress:
       '0xc3c47cdeaec412778fc86842b44fb061b350db57f9d52def4f73036156f71506',
     marketAddress:
-      '0x8cd0c973a8ab7c15c0a8ee8f5cb4dd04ea3f27411c8eef6e76f3765fe43863fe',
+      '0x891734bb325148ed28fdc7603e404375c44ee090b66708f45c722ccd702517d5',
     tokenFactoryAddress:
-      '0xf190b8420458f3fff1149343a60d9fe721a49c9caf7afb54d1bde9d72424bec6',
+      '0x3ec32d1dc979cc9862e779a573ceea9e4ddea0ab5bcbeac6f13aef0489821be2',
     graphqlUrl: 'https://indexer.bigdevenergy.link/c755070/v1/graphql',
   },
   USDT: {
     oracleAddress:
       '0xc3c47cdeaec412778fc86842b44fb061b350db57f9d52def4f73036156f71506',
     marketAddress:
-      '0x7c8fb9bb98269f51789c115c251e37a4dab4292e7795396a6a21250d4cec8aff',
+      '0x79d9be371612a8e367db167549797bf4228081cb2147cfe1bab0d369f401c821',
     tokenFactoryAddress:
-      '0xb43705648c279371c777d8bc9f8867688f8bb10896e20bd337c590dec5471b29',
+      '0x8dba87c49afd9250c8641d4b113ce0ebefc9dc0bf9850124bb36916c55a20e83',
     graphqlUrl: 'https://indexer.bigdevenergy.link/8ce655e/v1/graphql',
   },
 };
@@ -54,8 +53,8 @@ export const FAUCET_URL = 'https://faucet-testnet.fuel.network/';
 export const FAUCET_AMOUNTS: Record<string, number> = {
   UNI: 50,
   BTC: 1,
-  USDC: 300,
-  USDT: 300,
+  USDC: 1000000,
+  USDT: 1000000,
   BNB: 300,
 };
 
@@ -63,11 +62,31 @@ export const FUEL_ETH_BASE_ASSET_ID =
   '0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07';
 
 export const ASSET_ID_TO_SYMBOL: Record<string, string> = {
-  '0xfe744f19db1affff30c628b29d93e330f966ecb649ba83606b1ff49ac9b37f47': 'USDC',
-  '0x037ea5d51e94f792554fb14e117cfb5129650d162455febd9a74ab4f85f554e7': 'USDT',
+  '0xa91cc878ea68463efd1e1dab8e9709f8bdf704ae09890f67641ea417b0426627': 'USDC',
+  '0xb721728f80e4e450f9078dc6df78f121593375531e8f8712b6e0f9c7a69b1985': 'USDT',
   '0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07': 'ETH',
-  '0xe71f395845246fd16ddee5317fedaf169c602c13158488979326d5d5e7705719': 'BTC',
-  '0xea49850b5a88ac6291de4be2c11699e65e6a61685da43bef156379ee2764ea94': 'UNI',
-  '0x41d27014277db7dbcaf043472455df4bd66c6367dc9cb1d252ab35854d4d5a33': 'BTC',
-  '0x18fdaa23cd9b5ad26d535b0c16cf522571cfd89fe3c60ec67d5e1555cf540aef': 'BNB',
+  '0xb976a09362dd94bdd03d1f924be913e010b438ef73e4b565a500848d327baf54': 'BTC',
+  '0x6104c8e55327b418ac489353c977a7344d4ed3ff74af61a9efe9d3fe0f81c211': 'UNI',
+  '0x2eef3d6048f6a6cf7a9d48b9724cf8035f6d25c0b25048173b47982464fe9a8d': 'BTC',
+  '0x093b81d58871e5fb0dd382fb4696f7c074ccab19800298cd52e1111f5db859a7': 'BNB',
+};
+
+export const SYMBOL_TO_ICON: Record<string, any> = {
+  USDC: usdc,
+  USDT: usdt,
+  ETH: eth,
+  BTC: btc,
+  UNI: uni,
+  BNB: sway,
+  SWAY: sway,
+  FUEL: fuel,
+};
+
+export const SYMBOL_TO_NAME: Record<string, string> = {
+  BTC: 'Bitcoin',
+  ETH: 'Ethereum',
+  USDC: 'USD Coin',
+  USDT: 'Tether',
+  UNI: 'Uniswap',
+  BNB: 'Binance Coin',
 };

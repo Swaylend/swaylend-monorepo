@@ -1,8 +1,9 @@
-// ERC20 equivalent in Sway.
+// SPDX-License-Identifier: MIT
+
 contract;
- 
+
 use standards::src3::SRC3;
-use standards::src5::{SRC5, State, AccessError};
+use standards::src5::{AccessError, SRC5, State};
 use standards::src20::SRC20;
 use std::{
     asset::{
@@ -14,14 +15,14 @@ use std::{
     context::msg_amount,
     string::String,
 };
- 
+
 configurable {
     DECIMALS: u8 = 9u8,
     NAME: str[8] = __to_str_array("SwayLend"),
     SYMBOL: str[5] = __to_str_array("SLEND"),
-    MAX_SUPPLY: u64 = 1_000_000_000_000_000_000u64, // 1 billion
+    MAX_SUPPLY: u64 = 1_000_000_000_000_000_000u64,
 }
- 
+
 storage {
     total_supply: u64 = 0,
     owner: State = State::Uninitialized,
@@ -35,11 +36,16 @@ abi SingleAsset {
 
     fn asset_id() -> AssetId;
 }
- 
+
 impl SingleAsset for Contract {
     #[storage(read, write)]
     fn constructor(owner_: Identity) {
-        require(storage.owner.read() == State::Uninitialized, "owner-initialized");
+        require(
+            storage
+                .owner
+                .read() == State::Uninitialized,
+            "owner-initialized",
+        );
         storage.owner.write(State::Initialized(owner_));
     }
 
@@ -55,14 +61,14 @@ impl SingleAsset for Contract {
         AssetId::default()
     }
 }
- 
+
 // Native Asset Standard
 impl SRC20 for Contract {
     #[storage(read)]
     fn total_assets() -> u64 {
         1_u64
     }
- 
+
     #[storage(read)]
     fn total_supply(asset: AssetId) -> Option<u64> {
         if asset == AssetId::default() {
@@ -71,7 +77,7 @@ impl SRC20 for Contract {
             None
         }
     }
- 
+
     #[storage(read)]
     fn name(asset: AssetId) -> Option<String> {
         if asset == AssetId::default() {
@@ -80,7 +86,7 @@ impl SRC20 for Contract {
             None
         }
     }
- 
+
     #[storage(read)]
     fn symbol(asset: AssetId) -> Option<String> {
         if asset == AssetId::default() {
@@ -89,7 +95,7 @@ impl SRC20 for Contract {
             None
         }
     }
- 
+
     #[storage(read)]
     fn decimals(asset: AssetId) -> Option<u8> {
         if asset == AssetId::default() {
@@ -99,7 +105,7 @@ impl SRC20 for Contract {
         }
     }
 }
- 
+
 // Ownership Standard
 impl SRC5 for Contract {
     #[storage(read)]
@@ -107,24 +113,36 @@ impl SRC5 for Contract {
         storage.owner.read()
     }
 }
- 
+
 // Mint and Burn Standard
 impl SRC3 for Contract {
     #[storage(read, write)]
-    fn mint(recipient: Identity, sub_id: SubId, amount: u64) {
-        require(sub_id == DEFAULT_SUB_ID, "incorrect-sub-id");
+    fn mint(recipient: Identity, sub_id: Option<SubId>, amount: u64) {
         require(
-            storage.owner.read() == State::Initialized(msg_sender().unwrap()),
+            sub_id
+                .is_some() && sub_id
+                .unwrap() == DEFAULT_SUB_ID,
+            "incorrect-sub-id",
+        );
+        require(
+            storage
+                .owner
+                .read() == State::Initialized(msg_sender().unwrap()),
             AccessError::NotOwner,
         );
-        require(storage.total_supply.read() + amount <= MAX_SUPPLY, "max-supply-reached");
- 
+        require(
+            storage
+                .total_supply
+                .read() + amount <= MAX_SUPPLY,
+            "max-supply-reached",
+        );
+
         storage
             .total_supply
             .write(amount + storage.total_supply.read());
         mint_to(recipient, DEFAULT_SUB_ID, amount);
     }
- 
+
     #[payable]
     #[storage(read, write)]
     fn burn(sub_id: SubId, amount: u64) {
@@ -134,7 +152,7 @@ impl SRC3 for Contract {
             msg_asset_id() == AssetId::default(),
             "incorrect-asset-provided",
         );
- 
+
         storage
             .total_supply
             .write(storage.total_supply.read() - amount);

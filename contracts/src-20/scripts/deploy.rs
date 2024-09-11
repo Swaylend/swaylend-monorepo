@@ -64,7 +64,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     instance
         .methods()
-        .mint(wallet.address().into(), sub_id.into(), max_supply)
+        .mint(wallet.address().into(), Some(sub_id.into()), max_supply)
         .with_variable_output_policy(VariableOutputPolicy::Exactly(1))
         .call()
         .await?;

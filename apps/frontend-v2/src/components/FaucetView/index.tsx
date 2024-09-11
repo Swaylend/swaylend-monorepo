@@ -16,6 +16,14 @@ import BigNumber from 'bignumber.js';
 import { BN, toFixed } from 'fuels';
 import React, { useMemo } from 'react';
 import { Button } from '../ui/button';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '../ui/table';
 
 type FaucetRowProps = {
   account: string | undefined;
@@ -42,8 +50,8 @@ const FaucetRow = ({
   const { mutate: mint } = useMintToken(symbol, decimals);
 
   return (
-    <div key={assetId} className="flex gap-x-4">
-      <div>
+    <TableRow key={assetId}>
+      <TableCell>
         {toFixed(
           formatUnits(
             BigNumber(balance ? balance.toString() : '0'),
@@ -53,23 +61,25 @@ const FaucetRow = ({
             precision: 4,
           }
         )}
-        {symbol}
-      </div>
-      <Button
-        disabled={
-          !account || mintPending || (symbol !== 'ETH' && ethBalance.eq(0))
-        }
-        onMouseDown={() => {
-          if (symbol === 'ETH') {
-            window.open(`${FAUCET_URL}/?address=${account}`, 'blank');
-            return null;
+        {` ${symbol}`}
+      </TableCell>
+      <TableCell>
+        <Button
+          disabled={
+            !account || mintPending || (symbol !== 'ETH' && ethBalance.eq(0))
           }
-          mint();
-        }}
-      >
-        Mint
-      </Button>
-    </div>
+          onMouseDown={() => {
+            if (symbol === 'ETH') {
+              window.open(`${FAUCET_URL}/?address=${account}`, 'blank');
+              return null;
+            }
+            mint();
+          }}
+        >
+          Mint
+        </Button>
+      </TableCell>
+    </TableRow>
   );
 };
 
@@ -119,18 +129,30 @@ export const FaucetView = () => {
   }
 
   return (
-    <div>
-      {assets.map((asset) => (
-        <FaucetRow
-          key={asset.assetId}
-          assetId={asset.assetId}
-          symbol={asset.symbol}
-          decimals={asset.decimals}
-          account={account ?? undefined}
-          mintPending={numberOfMintsPending > 0}
-          ethBalance={ethBalance ?? new BN(0)}
-        />
-      ))}
+    <div className="h-full w-full flex flex-1 items-center justify-center flex-col gap-y-4 px-2 sm:px-16">
+      <div className="max-w-[640px] w-full">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-8/12">Current balance</TableHead>
+              <TableHead className="w-4/12">Action</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {assets.map((asset) => (
+              <FaucetRow
+                key={asset.assetId}
+                assetId={asset.assetId}
+                symbol={asset.symbol}
+                decimals={asset.decimals}
+                account={account ?? undefined}
+                mintPending={numberOfMintsPending > 0}
+                ethBalance={ethBalance ?? new BN(0)}
+              />
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 };

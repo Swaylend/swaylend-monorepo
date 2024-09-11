@@ -109,5 +109,6 @@ export const usePrice = () => {
     },
     refetchInterval: 5000,
     enabled: !!provider && !!priceFeedIdToAssetId,
+    refetchOnWindowFocus: true,
   });
 };

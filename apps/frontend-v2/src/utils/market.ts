@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js';
 import { formatUnits } from './BigNumber';
 
 export function getBorrowApr(borrowRate: BigNumber | null | undefined) {
-  if (borrowRate == null) return '0.00';
+  if (borrowRate == null) return `${BigNumber(0).toFormat(2)}%`;
   const rate = new BigNumber(borrowRate);
   const coefficient = new BigNumber(365)
     .times(24)
@@ -13,7 +13,7 @@ export function getBorrowApr(borrowRate: BigNumber | null | undefined) {
 }
 
 export function getSupplyApr(supplyRate: BigNumber | null | undefined) {
-  if (supplyRate == null) return '0.00';
+  if (supplyRate == null) return `${BigNumber(0).toFormat(2)}%`;
   const rate = new BigNumber(supplyRate);
   const coefficient = new BigNumber(365)
     .times(24)

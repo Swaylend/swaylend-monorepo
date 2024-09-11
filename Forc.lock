@@ -1,6 +1,6 @@
 [[package]]
 name = "core"
-source = "path+from-root-D19F39D92CA9923C"
+source = "path+from-root-EF1196EF955CE54B"
 
 [[package]]
 name = "i256"
@@ -46,7 +46,7 @@ dependencies = [
 name = "src-20"
 source = "member"
 dependencies = [
-    "standards git+https://github.com/FuelLabs/sway-standards?tag=v0.5.2#270350e69bd7455b7e99f0aae2e29a94d42324bd",
+    "standards git+https://github.com/FuelLabs/sway-standards?tag=v0.6.0#65e09f95ea8b9476b171a66c8a47108f352fa32c",
     "std",
 ]
 
@@ -57,23 +57,18 @@ dependencies = ["std"]
 
 [[package]]
 name = "standards"
-source = "git+https://github.com/FuelLabs/sway-standards?tag=v0.5.1#e2d5ac40a1d11a9e38e0a662d35141076515319f"
-dependencies = ["std"]
-
-[[package]]
-name = "standards"
-source = "git+https://github.com/FuelLabs/sway-standards?tag=v0.5.2#270350e69bd7455b7e99f0aae2e29a94d42324bd"
+source = "git+https://github.com/FuelLabs/sway-standards?tag=v0.6.0#65e09f95ea8b9476b171a66c8a47108f352fa32c"
 dependencies = ["std"]
 
 [[package]]
 name = "std"
-source = "git+https://github.com/fuellabs/sway?tag=v0.63.1#169f91ae0a6a698bd1cb459c4c203bab646a38ec"
+source = "git+https://github.com/fuellabs/sway?tag=v0.63.3#f55c81cce61aac31913ac0e87306cbaed7da679a"
 dependencies = ["core"]
 
 [[package]]
 name = "token"
 source = "member"
 dependencies = [
-    "standards git+https://github.com/FuelLabs/sway-standards?tag=v0.5.1#e2d5ac40a1d11a9e38e0a662d35141076515319f",
+    "standards git+https://github.com/FuelLabs/sway-standards?tag=v0.6.0#65e09f95ea8b9476b171a66c8a47108f352fa32c",
     "std",
 ]

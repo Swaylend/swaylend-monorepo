@@ -13,6 +13,7 @@ export const useSupplyBase = () => {
   const { account } = useAccount();
   const { market } = useMarketStore();
   const { data: marketConfiguration } = useMarketConfiguration();
+  const { changeTokenAmount } = useMarketStore();
 
   return useMutation({
     mutationKey: ['supplyBase', account, marketConfiguration, market],
@@ -51,6 +52,7 @@ export const useSupplyBase = () => {
     onSuccess: (data) => {
       if (data) {
         TransactionSuccessToast({ transactionId: data });
+        changeTokenAmount(BigNumber(0));
       }
     },
     onError: (error) => {

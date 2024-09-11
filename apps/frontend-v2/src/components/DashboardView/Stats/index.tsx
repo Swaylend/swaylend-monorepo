@@ -1,27 +1,22 @@
 import {
-  useBorrowCapacity,
-  useBorrowRate,
   useCollateralConfigurations,
   useMarketConfiguration,
   usePrice,
-  useSupplyRate,
   useUserCollateralAssets,
   useUserSupplyBorrow,
 } from '@/hooks';
 
-import { formatUnits, getBorrowApr, getSupplyApr } from '@/utils';
+import { formatUnits } from '@/utils';
 import BigNumber from 'bignumber.js';
 import React, { useMemo } from 'react';
+import { InfoBowl } from './InfoBowl';
 
-export const Header = () => {
-  const { data: borrowRate } = useBorrowRate();
-  const { data: supplyRate } = useSupplyRate();
+export const Stats = () => {
   const { data: userSupplyBorrow } = useUserSupplyBorrow();
   const { data: userCollateralAssets } = useUserCollateralAssets();
   const { data: priceData } = usePrice();
   const { data: marketConfiguration } = useMarketConfiguration();
   const { data: colateralConfigurations } = useCollateralConfigurations();
-  const { data: borrowCapacity } = useBorrowCapacity();
 
   const totalSuppliedBalance = useMemo(() => {
     if (
@@ -61,27 +56,38 @@ export const Header = () => {
     colateralConfigurations,
   ]);
 
-  const borrowApr = useMemo(() => getBorrowApr(borrowRate), [borrowRate]);
+  const borrowedBalance = useMemo(() => {
+    if (!marketConfiguration || !userSupplyBorrow) {
+      return BigNumber(0).toFormat(2);
+    }
 
-  const supplyApr = useMemo(() => getSupplyApr(supplyRate), [supplyRate]);
-
-  if (!marketConfiguration) return <div>Loading...</div>;
+    return formatUnits(
+      userSupplyBorrow.borrowed,
+      marketConfiguration.baseTokenDecimals
+    ).toFormat(2);
+  }, [marketConfiguration, userSupplyBorrow]);
 
   return (
-    <div className="flex justify-between">
-      <div>Supplied Balance: {totalSuppliedBalance}$</div>
-      <div>
-        Supply{supplyApr}/borrow APR{borrowApr}
+    <div className="w-full xl:px-[203px]">
+      <div className="flex w-full bg-gradient-to-r justify-between from-background to-background via-accent/40 items-center h-[91px] sm:h-[123px] px-[24px] sm:px-[56px]">
+        <div className="w-[300px]">
+          <div className="text-neutral3 text-xs sm:text-lg font-semibold">
+            Supplied Balance
+          </div>
+          <div className="text-neutral2 font-bold text-lg sm:text-4xl">
+            ${totalSuppliedBalance}
+          </div>
+        </div>
+        <InfoBowl />
+        <div className="w-[300px] text-right">
+          <div className="text-neutral3 text-xs sm:text-lg font-semibold">
+            Borrowed Assets
+          </div>
+          <div className="text-neutral2 font-bold text-lg sm:text-4xl">
+            ${borrowedBalance}
+          </div>
+        </div>
       </div>
-      <div>
-        Borrowed balance:{' '}
-        {formatUnits(
-          userSupplyBorrow?.borrowed ?? new BigNumber(0),
-          marketConfiguration.baseTokenDecimals
-        ).toFormat(2)}
-        $
-      </div>
-      <div>Borrow capacity: {borrowCapacity?.toFormat(2)}</div>
     </div>
   );
 };
