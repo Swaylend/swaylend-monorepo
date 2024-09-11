@@ -119,12 +119,12 @@ export const PositionSummary = () => {
         {stats.map((stat) => {
           return (
             <div key={stat.title} className="flex w-full justify-between">
-              <div>{stat.title}</div>
+              <div className='text-neutral4'>{stat.title}</div>
               {stat.changeValue === null ? (
-                <div className="text-accent">{stat.value}</div>
+                <div className="text-neutral2 font-semibold">{stat.value}</div>
               ) : (
                 <div
-                  className={`${stat.color === 0 && 'text-red-500'} ${stat.color === 1 && 'text-primary03'} flex items-center gap-x-1`}
+                  className={`${stat.color === 0 && 'text-red-500'} ${stat.color === 1 && 'text-accent'} flex items-center gap-x-1`}
                 >
                   {stat.direction ? (
                     <ArrowUp className="w-4 h-4" />

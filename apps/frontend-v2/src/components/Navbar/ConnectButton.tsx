@@ -23,12 +23,12 @@ export const ConnectButton = () => {
     return (
       <Popover>
         <PopoverTrigger>
-          <div className="px-4 py-2 rounded-full max-sm:hidden flex gap-x-2 items-center bg-slate-700 text-neutral4 font-semibold">
+          <div className="px-4 py-2 rounded-full max-xl:hidden flex gap-x-2 items-center bg-slate-700 text-neutral4 font-semibold">
             {`${account?.slice(0, 6)}...${account?.slice(-4)}`}
 
             <ChevronDown className="h-4 w-4" />
           </div>
-          <div className="px-4 py-2 rounded-full sm:hidden flex gap-x-2 items-center bg-slate-700 text-neutral4 font-semibold">
+          <div className="px-4 py-2 rounded-full xl:hidden flex gap-x-2 items-center bg-slate-700 text-neutral4 font-semibold">
             {`${account?.slice(0, 4)}...${account?.slice(-2)}`}
 
             <ChevronDown className="h-4 w-4" />

@@ -33,7 +33,7 @@ export const Navbar = () => {
   return (
     <>
       {/* DESKTOP */}
-      <div className="max-sm:hidden">
+      <div className="max-lg:hidden">
         <div className="flex justify-between items-center px-16 min-h-[93px]">
           <Link href="https://swaylend.com">
             <Image src={Logo} alt="logo" />
@@ -53,7 +53,7 @@ export const Navbar = () => {
                   <div
                     className={cn(
                       pathname === href &&
-                        '-z-10 absolute blur-2xl top-[19px] left-[calc(50%-20px)] w-16 h-10 bg-primary01'
+                      '-z-10 absolute blur-2xl top-[19px] left-[calc(50%-20px)] w-16 h-10 bg-primary01'
                     )}
                   />
                 </div>
@@ -70,13 +70,16 @@ export const Navbar = () => {
       </div>
 
       {/* MOBILE */}
-      <div className="hidden max-sm:block">
+      <div className="hidden max-lg:block">
         <div className="flex justify-between items-center px-4 h-[80px]">
           <Link href="https://swaylend.com">
             <Image src={LogoIcon} alt="logo" />
           </Link>
           <div className="flex items-center gap-x-2">
             <Points />
+            <div className='hidden md:block'>
+              <MarketSwitcher />
+            </div>
             <ConnectButton />
             <Button
               onMouseDown={() => setOpen(true)}
@@ -130,7 +133,7 @@ export const Navbar = () => {
                   ))}
                 </div>
 
-                <div className="w-full flex-col flex gap-y-2  mt-16">
+                <div className="w-full md:hidden block flex-col flex gap-y-2 w-[160px] mt-16">
                   <div className="pl-4">Market</div>
                   <MarketSwitcher />
                 </div>

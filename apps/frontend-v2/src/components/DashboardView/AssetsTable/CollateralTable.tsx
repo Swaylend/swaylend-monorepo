@@ -224,14 +224,14 @@ export const CollateralTable = () => {
 
   return (
     <>
-      <Table className="max-sm:hidden">
+      <Table className="max-sm:hidden mt-8">
         <TableHeader>
           <TableRow>
             <TableHead className="w-3/12">Collateral Asset</TableHead>
             <TableHead className="w-1/6">Wallet Balance</TableHead>
             <TableHead className="w-1/6">Supplied Assets</TableHead>
             <TableHead className="w-1/6">Supply Points</TableHead>
-            <TableHead className="w-3/12">{}</TableHead>
+            <TableHead className="w-3/12">{ }</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
