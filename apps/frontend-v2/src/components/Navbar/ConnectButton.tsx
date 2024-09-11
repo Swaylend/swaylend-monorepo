@@ -1,4 +1,5 @@
 'use client';
+
 import { Button } from '@/components/ui/button';
 import {
   Popover,
@@ -59,7 +60,7 @@ export const ConnectButton = () => {
           <div className="mt-10">
             <Button
               className="w-full"
-              variant={'destructive'}
+              variant="destructive"
               onMouseDown={() => disconnect()}
             >
               Disconnect

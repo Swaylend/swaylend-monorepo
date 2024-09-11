@@ -54,9 +54,9 @@ export default function RootLayout({
         )}
       >
         <Providers>
-          <div className="h-screen flex flex-col">
+          <div className="h-screen flex flex-col min-h-[calc(100dvh)]">
             <Navbar />
-            <div className="bg-background mb-auto">{children}</div>
+            <div className="bg-background flex-1">{children}</div>
             <Footer />
           </div>
         </Providers>

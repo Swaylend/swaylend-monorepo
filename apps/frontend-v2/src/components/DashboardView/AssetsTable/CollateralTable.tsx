@@ -224,7 +224,7 @@ export const CollateralTable = () => {
 
   return (
     <>
-      <Table className="max-sm:hidden">
+      <Table className="max-sm:hidden mt-8">
         <TableHeader>
           <TableRow>
             <TableHead className="w-3/12">Collateral Asset</TableHead>
