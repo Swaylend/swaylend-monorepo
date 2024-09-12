@@ -5,6 +5,7 @@ import { RedeemReferralDialog } from '../RedeemReferralDialog';
 import { AssetsTable } from './AssetsTable';
 import { MarketSwitch } from './MarketSwitch';
 import { Stats } from './Stats';
+import { useUserRole } from '@/hooks';
 
 export const DashboardView = () => {
   return (

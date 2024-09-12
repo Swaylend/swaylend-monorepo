@@ -1,3 +1,4 @@
+import { Skeleton } from '@/components/ui/skeleton';
 import {
   Tooltip,
   TooltipContent,
@@ -16,6 +17,7 @@ import { useUserLiquidationPoint } from '@/hooks/useUserLiquidationPoint';
 import { cn } from '@/lib/utils';
 import { useMarketStore } from '@/stores';
 import { getBorrowApr, getSupplyApr } from '@/utils';
+import { useIsConnected } from '@fuels/react';
 import React, { useMemo } from 'react';
 import Wave from 'react-wavify';
 
@@ -36,19 +38,20 @@ const WAVE_COLORS = {
 
 export const InfoBowl = () => {
   const { marketMode } = useMarketStore();
-  const { data: borrowRate } = useBorrowRate();
-  const { data: supplyRate } = useSupplyRate();
+  const { isConnected } = useIsConnected();
+  const { data: borrowRate, isPending: isPendingBorrowRate } = useBorrowRate();
+  const { data: supplyRate, isPending: isPendingSupplyRate } = useSupplyRate();
   const { data: borrowCapacity } = useBorrowCapacity();
-  const { data: userSupplyBorrow } = useUserSupplyBorrow();
+  const { data: userSupplyBorrow, isPending: isPendingUserSupplyBorrow } = useUserSupplyBorrow();
   const { data: collateralUtilization } = useUserCollateralUtilization();
   const { data: collateralValue } = useUserCollateralValue();
   const { data: userLiquidationPoint } = useUserLiquidationPoint();
 
   const bowlMode = useMemo(() => {
-    if (userSupplyBorrow?.borrowed.gt(0)) return 2;
+    if (userSupplyBorrow?.borrowed.gt(0) && isConnected) return 2;
     if (marketMode === 'borrow') return 1;
     if (marketMode === 'lend') return 0;
-  }, [userSupplyBorrow, marketMode]);
+  }, [userSupplyBorrow, marketMode, isConnected]);
 
   const waveHeight = useMemo(() => {
     if (!collateralUtilization || collateralUtilization.eq(0)) return 0;
@@ -68,12 +71,17 @@ export const InfoBowl = () => {
 
   const supplyApr = useMemo(() => getSupplyApr(supplyRate), [supplyRate]);
 
+  const isLoading = useMemo(() => {
+    if (!isConnected) return isPendingBorrowRate || isPendingSupplyRate
+    return [isPendingBorrowRate, isPendingSupplyRate, isPendingUserSupplyBorrow].some(res => res);
+  }, [isConnected, isPendingBorrowRate, isPendingSupplyRate, isPendingUserSupplyBorrow])
+
   return (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger>
           <div className="sm:w-[174px] sm:h-[174px] w-[124px] h-[124px] bg-background rounded-full flex items-center p-2 justify-center">
-            <div className="w-full h-full relative">
+            {isLoading ? <Skeleton className="w-full h-full bg-accent/20 rounded-full ring-2 ring-white/20" /> : <div className="w-full h-full relative">
               {bowlMode === 2 && (
                 <>
                   <Wave
@@ -146,7 +154,7 @@ export const InfoBowl = () => {
                   </div>
                 )}
               </div>
-            </div>
+            </div>}
           </div>
         </TooltipTrigger>
         <TooltipContent

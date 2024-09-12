@@ -163,8 +163,8 @@ export const InputDialog = () => {
       return formatUnits(
         BigNumber(
           userCollateralAssets?.[actionTokenAssetId ?? ''] ??
-            new BigNumber(0) ??
-            0
+          new BigNumber(0) ??
+          0
         ),
         collateralConfigurations?.[actionTokenAssetId ?? '']?.decimals ?? 9
       );
@@ -200,6 +200,8 @@ export const InputDialog = () => {
         break;
       case ACTION_TYPE.REPAY: {
         const finalBalanceRepay = finalBalance ?? BigNumber(0);
+
+        if (userSupplyBorrow.borrowed.eq(0)) return;
         const userBorrowed =
           formatUnits(
             userSupplyBorrow.borrowed.plus(10),
@@ -395,7 +397,7 @@ export const InputDialog = () => {
           <div className="w-full flex flex-col gap-y-[30px] pt-[30px] h-[calc(100%-68px)] bg-popover p-[16px] z-10">
             <div>
               <div>
-                <InputField />
+                <InputField error={error !== null} />
                 {error && (
                   <div className="text-red-500 mt-2 text-sm">{error}</div>
                 )}
@@ -403,7 +405,7 @@ export const InputDialog = () => {
               <div className="flex mt-2 justify-between items-center w-full">
                 <div className="text-neutral4 text-sm">
                   {finalBalance.toFormat(4)}
-                  {' available'}
+                  {action === ACTION_TYPE.BORROW ? ' available to borrow' : ' available'}
                 </div>
                 <Button
                   disabled={!finalBalance || finalBalance.eq(0)}

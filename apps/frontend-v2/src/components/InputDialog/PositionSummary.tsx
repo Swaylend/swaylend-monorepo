@@ -96,8 +96,8 @@ export const PositionSummary = () => {
         direction: possibleBorrowCapacity?.lte(
           totalBorrowCapacity ?? BigNumber(0)
         )
-          ? 0
-          : 1,
+          ? 1
+          : 0,
       },
     ];
   }, [

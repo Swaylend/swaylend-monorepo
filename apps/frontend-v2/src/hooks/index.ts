@@ -22,3 +22,4 @@ export * from './useUserCollateralValue';
 export * from './usePossiblePositionSummary';
 export * from './useUser';
 export * from './useRedeemInvite';
+export * from './useUserRole';

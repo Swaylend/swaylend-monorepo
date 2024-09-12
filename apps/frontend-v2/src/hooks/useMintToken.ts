@@ -29,11 +29,7 @@ export const useMintToken = (symbol: string, decimals: number) => {
       const hash = hashMessage(symbol);
 
       const tx = await tokenFactoryContract.functions
-        .mint(
-          { Address: { bits: wallet.address.toB256() } },
-          hash,
-          amount.toString()
-        )
+        .mint({ Address: { bits: account } }, hash, amount.toString())
         .call();
 
       const transactionResult = await toast.promise(tx.waitForResult(), {

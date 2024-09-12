@@ -1,14 +1,13 @@
 import { useMarketStore } from '@/stores';
 import { ASSET_ID_TO_SYMBOL, SYMBOL_TO_ICON } from '@/utils';
 import BigNumber from 'bignumber.js';
-import type { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import Image from 'next/image';
 import type React from 'react';
 import { useEffect, useState } from 'react';
 import { useDebounceCallback } from 'usehooks-ts';
 import { Input } from '../ui/input';
 
-export const InputField = () => {
+export const InputField = ({ error }: { error: boolean }) => {
   const { changeTokenAmount, tokenAmount, actionTokenAssetId } =
     useMarketStore();
 
@@ -75,7 +74,7 @@ export const InputField = () => {
     <div className="relative flex w-full">
       <Input
         type="string"
-        className="h-[56px] bg-card"
+        className={`h-[56px] bg-card border-2 ${error && 'border-red-500 focus-visible:ring-red-500'}`}
         value={inputValue}
         onChange={handleChange}
         placeholder="Enter amount"
