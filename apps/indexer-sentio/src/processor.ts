@@ -426,14 +426,15 @@ MarketProcessor.bind({
     let positionSnapshot = await ctx.store.get(CollateralPositionSnapshot, id);
 
     if (!positionSnapshot) {
+      console.log(`User ${address.bits} has no position snapshot`);
       positionSnapshot = new CollateralPositionSnapshot({
         id,
         chainId: chainId,
         poolAddress: ctx.contractAddress,
+        userAddress: address.bits,
         underlyingTokenAddress: collateralConfiguration.assetAddress,
         underlyingTokenSymbol:
           ASSET_ID_TO_SYMBOL[collateralConfiguration.assetAddress],
-        userAddress: address.bits,
         suppliedAmount: BigDecimal(0),
         borrowedAmount: BigDecimal(0),
         collateralAmount: BigDecimal(amount.toString()).dividedBy(
@@ -643,217 +644,226 @@ MarketProcessor.bind({
     await ctx.store.upsert(marketBasic);
   })
   // Process only current market
-  .onTimeInterval(async (block, ctx) => {
-    const START_TIME = dayjs(ctx.timestamp.getTime()).utc();
-    const START_TIME_UNIX = START_TIME.unix();
-    const START_TIME_FORMATED = START_TIME.format('YYYY-MM-DD HH:00:00');
+  .onTimeInterval(
+    async (block, ctx) => {
+      const START_TIME = dayjs(ctx.timestamp.getTime()).utc();
+      const START_TIME_UNIX = START_TIME.unix();
+      const START_TIME_FORMATED = START_TIME.format('YYYY-MM-DD HH:00:00');
 
-    const pools = (
-      await ctx.store.list(Pool, [
-        { field: 'poolType', op: '=', value: 'supply_only' },
-        // { field: 'chainId', op: '=', value: 0 },
-        {
-          field: 'poolAddress',
-          op: '=',
-          value:
-            '0x891734bb325148ed28fdc7603e404375c44ee090b66708f45c722ccd702517d5',
-        },
-      ])
-    ).filter((val) => val.chainId === 0);
+      const pools = (
+        await ctx.store.list(Pool, [
+          { field: 'poolType', op: '=', value: 'supply_only' },
+          // { field: 'chainId', op: '=', value: 0 },
+          {
+            field: 'poolAddress',
+            op: '=',
+            value:
+              '0x891734bb325148ed28fdc7603e404375c44ee090b66708f45c722ccd702517d5',
+          },
+        ])
+      ).filter((val) => val.chainId === 0);
 
-    if (pools.length !== 1) {
-      throw new Error(`Only one pool should be found. Found: ${pools.length}`);
-    }
-
-    const pool = pools[0];
-    const marketConfigId = `${pool.chainId}_${pool.poolAddress}`;
-    const marketBasic = await ctx.store.get(MarketBasic, marketConfigId);
-
-    if (!marketBasic) {
-      throw new Error(
-        `Market basic not found for market ${pool.poolAddress} on chain ${pool.chainId}`
-      );
-    }
-
-    const marketConfiguration = await ctx.store.get(
-      MarketConfiguration,
-      marketConfigId
-    );
-
-    if (!marketConfiguration) {
-      throw new Error(
-        `Market configuration not found for market ${pool.poolAddress} on chain ${pool.chainId}`
-      );
-    }
-    // Accrue interest
-    const now = BigDecimal(DateTime.fromUnixSeconds(START_TIME_UNIX).toTai64()); // Need to convert timestamp to Tai64 format
-    const timeElapsed = now.minus(marketBasic.lastAccrualTime);
-
-    if (timeElapsed.gt(0)) {
-      if (!marketBasic.lastAccrualTime.eq(0)) {
-        const baseSupplyIndex = marketBasic.baseSupplyIndex;
-        const baseBorrowIndex = marketBasic.baseBorrowIndex;
-
-        const utilization = getUtilization(
-          marketBasic.totalSupplyBase,
-          marketBasic.totalBorrowBase,
-          baseSupplyIndex,
-          baseBorrowIndex
+      if (pools.length !== 1) {
+        throw new Error(
+          `Only one pool should be found. Found: ${pools.length}`
         );
-
-        const supplyRate = getSupplyRate(marketConfiguration, utilization);
-        const borrowRate = getBorrowRate(marketConfiguration, utilization);
-
-        const baseSupplyIndexDelta = baseSupplyIndex
-          .times(supplyRate)
-          .times(timeElapsed)
-          .dividedBy(FACTOR_SCALE_18);
-
-        const baseBorrowIndexDelta = baseBorrowIndex
-          .times(borrowRate)
-          .times(timeElapsed)
-          .dividedBy(FACTOR_SCALE_18);
-
-        marketBasic.baseSupplyIndex =
-          baseSupplyIndex.plus(baseSupplyIndexDelta);
-        marketBasic.baseBorrowIndex =
-          baseBorrowIndex.plus(baseBorrowIndexDelta);
       }
 
-      marketBasic.lastAccrualTime = now;
-    }
+      const pool = pools[0];
+      const marketConfigId = `${pool.chainId}_${pool.poolAddress}`;
+      const marketBasic = await ctx.store.get(MarketBasic, marketConfigId);
 
-    // Only handle events from the current market (contract)
-    const userBasics = (
-      await ctx.store.list(UserBasic, [
-        // { field: 'chainId', op: '=', value: 0 },
-        {
-          field: 'contractAddress',
-          op: '=',
-          value: marketBasic.contractAddress,
-        },
-      ])
-    ).filter((val) => val.chainId === 0);
+      if (!marketBasic) {
+        throw new Error(
+          `Market basic not found for market ${pool.poolAddress} on chain ${pool.chainId}`
+        );
+      }
 
-    for (const userBasic of userBasics) {
-      const basePositionSnapshotId = `${userBasic.chainId}_${userBasic.contractAddress}_${marketConfiguration.baseTokenAddress}_${userBasic.address}`;
-
-      const presentValue = getPresentValue(
-        userBasic.principal,
-        userBasic.isNegative
-          ? marketBasic.baseBorrowIndex
-          : marketBasic.baseSupplyIndex
+      const marketConfiguration = await ctx.store.get(
+        MarketConfiguration,
+        marketConfigId
       );
 
-      let basePositionSnapshot = await ctx.store.get(
-        BasePositionSnapshot,
-        basePositionSnapshotId
+      if (!marketConfiguration) {
+        throw new Error(
+          `Market configuration not found for market ${pool.poolAddress} on chain ${pool.chainId}`
+        );
+      }
+      // Accrue interest
+      const now = BigDecimal(
+        DateTime.fromUnixSeconds(START_TIME_UNIX).toTai64()
+      ); // Need to convert timestamp to Tai64 format
+      const timeElapsed = now.minus(marketBasic.lastAccrualTime);
+
+      if (timeElapsed.gt(0)) {
+        if (!marketBasic.lastAccrualTime.eq(0)) {
+          const baseSupplyIndex = marketBasic.baseSupplyIndex;
+          const baseBorrowIndex = marketBasic.baseBorrowIndex;
+
+          const utilization = getUtilization(
+            marketBasic.totalSupplyBase,
+            marketBasic.totalBorrowBase,
+            baseSupplyIndex,
+            baseBorrowIndex
+          );
+
+          const supplyRate = getSupplyRate(marketConfiguration, utilization);
+          const borrowRate = getBorrowRate(marketConfiguration, utilization);
+
+          const baseSupplyIndexDelta = baseSupplyIndex
+            .times(supplyRate)
+            .times(timeElapsed)
+            .dividedBy(FACTOR_SCALE_18);
+
+          const baseBorrowIndexDelta = baseBorrowIndex
+            .times(borrowRate)
+            .times(timeElapsed)
+            .dividedBy(FACTOR_SCALE_18);
+
+          marketBasic.baseSupplyIndex =
+            baseSupplyIndex.plus(baseSupplyIndexDelta);
+          marketBasic.baseBorrowIndex =
+            baseBorrowIndex.plus(baseBorrowIndexDelta);
+        }
+
+        marketBasic.lastAccrualTime = now;
+      }
+
+      // Only handle events from the current market (contract)
+      const userBasics = (
+        await ctx.store.list(UserBasic, [
+          // { field: 'chainId', op: '=', value: 0 },
+          {
+            field: 'contractAddress',
+            op: '=',
+            value: marketBasic.contractAddress,
+          },
+        ])
+      ).filter((val) => val.chainId === 0);
+
+      for (const userBasic of userBasics) {
+        const basePositionSnapshotId = `${userBasic.chainId}_${userBasic.contractAddress}_${marketConfiguration.baseTokenAddress}_${userBasic.address}`;
+
+        const presentValue = getPresentValue(
+          userBasic.principal,
+          userBasic.isNegative
+            ? marketBasic.baseBorrowIndex
+            : marketBasic.baseSupplyIndex
+        ).dividedBy(BigDecimal(10).pow(marketConfiguration.baseTokenDecimals));
+
+        let basePositionSnapshot = await ctx.store.get(
+          BasePositionSnapshot,
+          basePositionSnapshotId
+        );
+
+        // Create base position snapshot if it doesn't exist
+        if (!basePositionSnapshot) {
+          const underlyingTokenAddress = marketConfiguration.baseTokenAddress;
+
+          basePositionSnapshot = new BasePositionSnapshot({
+            id: basePositionSnapshotId,
+            timestamp: START_TIME_UNIX,
+            blockDate: START_TIME_FORMATED,
+            chainId: 0,
+            poolAddress: userBasic.contractAddress,
+            underlyingTokenAddress: underlyingTokenAddress,
+            underlyingTokenSymbol: ASSET_ID_TO_SYMBOL[underlyingTokenAddress],
+            userAddress: userBasic.address,
+            suppliedAmount: userBasic.isNegative ? BigDecimal(0) : presentValue,
+            borrowedAmount: userBasic.isNegative ? presentValue : BigDecimal(0),
+            collateralAmount: BigDecimal(0),
+          });
+        } else {
+          basePositionSnapshot.timestamp = START_TIME_UNIX;
+          basePositionSnapshot.blockDate = START_TIME_FORMATED;
+          basePositionSnapshot.suppliedAmount = userBasic.isNegative
+            ? BigDecimal(0)
+            : presentValue;
+          basePositionSnapshot.borrowedAmount = userBasic.isNegative
+            ? presentValue
+            : BigDecimal(0);
+        }
+
+        await ctx.store.upsert(basePositionSnapshot);
+      }
+
+      // Create BasePoolSnapshot
+      const underlyingTokenAddress = marketConfiguration.baseTokenAddress;
+
+      // Create BasePoolSnapshot
+      const basePoolSnapshotId = `${marketBasic.chainId}_${marketBasic.contractAddress}_${underlyingTokenAddress}`;
+      let basePoolSnapshot = await ctx.store.get(
+        BasePoolSnapshot,
+        basePoolSnapshotId
       );
 
-      // Create base position snapshot if it doesn't exist
-      if (!basePositionSnapshot) {
-        const underlyingTokenAddress = marketConfiguration.baseTokenAddress;
+      const totalSupplyBase = getPresentValue(
+        marketBasic.totalSupplyBase,
+        marketBasic.baseSupplyIndex
+      ).dividedBy(BigDecimal(10).pow(marketConfiguration.baseTokenDecimals));
 
-        basePositionSnapshot = new BasePositionSnapshot({
-          id: basePositionSnapshotId,
+      const totalBorrowBase = getPresentValue(
+        marketBasic.totalBorrowBase,
+        marketBasic.baseBorrowIndex
+      ).dividedBy(BigDecimal(10).pow(marketConfiguration.baseTokenDecimals));
+
+      const utilization = getUtilization(
+        totalSupplyBase,
+        totalBorrowBase,
+        marketBasic.baseSupplyIndex,
+        marketBasic.baseBorrowIndex
+      );
+      const supplyRate = getSupplyRate(marketConfiguration, utilization);
+      const borrowRate = getBorrowRate(marketConfiguration, utilization);
+      const supplyApr = getApr(supplyRate);
+      const borrowApr = getApr(borrowRate);
+
+      if (!basePoolSnapshot) {
+        basePoolSnapshot = new BasePoolSnapshot({
+          id: basePoolSnapshotId,
           timestamp: START_TIME_UNIX,
           blockDate: START_TIME_FORMATED,
           chainId: 0,
-          poolAddress: userBasic.contractAddress,
+          poolAddress: marketBasic.contractAddress,
           underlyingTokenAddress: underlyingTokenAddress,
           underlyingTokenSymbol: ASSET_ID_TO_SYMBOL[underlyingTokenAddress],
-          userAddress: userBasic.address,
-          suppliedAmount: userBasic.isNegative ? BigDecimal(0) : presentValue,
-          borrowedAmount: userBasic.isNegative ? presentValue : BigDecimal(0),
+          underlyingTokenPriceUsd: BigDecimal(0),
+          availableAmount: totalSupplyBase.minus(totalBorrowBase),
+          availableAmountUsd: BigDecimal(0),
+          suppliedAmount: totalSupplyBase,
+          suppliedAmountUsd: BigDecimal(0),
+          nonRecursiveSuppliedAmount: totalSupplyBase,
           collateralAmount: BigDecimal(0),
+          collateralAmountUsd: BigDecimal(0),
+          collateralFactor: BigDecimal(0),
+          supplyIndex: marketBasic.baseSupplyIndex.dividedBy(FACTOR_SCALE_15),
+          supplyApr: supplyApr,
+          borrowedAmount: totalBorrowBase,
+          borrowedAmountUsd: BigDecimal(0),
+          borrowIndex: marketBasic.baseBorrowIndex.dividedBy(FACTOR_SCALE_15),
+          borrowApr: borrowApr,
+          totalFeesUsd: BigDecimal(0),
+          userFeesUsd: BigDecimal(0),
+          protocolFeesUsd: BigDecimal(0),
         });
       } else {
-        basePositionSnapshot.timestamp = START_TIME_UNIX;
-        basePositionSnapshot.blockDate = START_TIME_FORMATED;
-        basePositionSnapshot.suppliedAmount = userBasic.isNegative
-          ? BigDecimal(0)
-          : presentValue;
-        basePositionSnapshot.borrowedAmount = userBasic.isNegative
-          ? presentValue
-          : BigDecimal(0);
+        basePoolSnapshot.timestamp = START_TIME_UNIX;
+        basePoolSnapshot.blockDate = START_TIME_FORMATED;
+        basePoolSnapshot.availableAmount =
+          totalSupplyBase.minus(totalBorrowBase);
+        basePoolSnapshot.borrowedAmount = totalBorrowBase;
+        basePoolSnapshot.suppliedAmount = totalSupplyBase;
+        basePoolSnapshot.nonRecursiveSuppliedAmount = totalSupplyBase;
+        basePoolSnapshot.supplyIndex =
+          marketBasic.baseSupplyIndex.dividedBy(FACTOR_SCALE_15);
+        basePoolSnapshot.borrowIndex =
+          marketBasic.baseBorrowIndex.dividedBy(FACTOR_SCALE_15);
+
+        basePoolSnapshot.borrowApr = borrowApr;
       }
 
-      await ctx.store.upsert(basePositionSnapshot);
-    }
-
-    // Create BasePoolSnapshot
-    const underlyingTokenAddress = marketConfiguration.baseTokenAddress;
-
-    // Create BasePoolSnapshot
-    const basePoolSnapshotId = `${marketBasic.chainId}_${marketBasic.contractAddress}_${underlyingTokenAddress}`;
-    let basePoolSnapshot = await ctx.store.get(
-      BasePoolSnapshot,
-      basePoolSnapshotId
-    );
-
-    const totalSupplyBase = getPresentValue(
-      marketBasic.totalSupplyBase,
-      marketBasic.baseSupplyIndex
-    ).dividedBy(BigDecimal(10).pow(marketConfiguration.baseTokenDecimals));
-
-    const totalBorrowBase = getPresentValue(
-      marketBasic.totalBorrowBase,
-      marketBasic.baseBorrowIndex
-    ).dividedBy(BigDecimal(10).pow(marketConfiguration.baseTokenDecimals));
-
-    const utilization = getUtilization(
-      totalSupplyBase,
-      totalBorrowBase,
-      marketBasic.baseSupplyIndex,
-      marketBasic.baseBorrowIndex
-    );
-    const supplyRate = getSupplyRate(marketConfiguration, utilization);
-    const borrowRate = getBorrowRate(marketConfiguration, utilization);
-    const supplyApr = getApr(supplyRate);
-    const borrowApr = getApr(borrowRate);
-
-    if (!basePoolSnapshot) {
-      basePoolSnapshot = new BasePoolSnapshot({
-        id: basePoolSnapshotId,
-        timestamp: START_TIME_UNIX,
-        blockDate: START_TIME_FORMATED,
-        chainId: 0,
-        poolAddress: marketBasic.contractAddress,
-        underlyingTokenAddress: underlyingTokenAddress,
-        underlyingTokenSymbol: ASSET_ID_TO_SYMBOL[underlyingTokenAddress],
-        underlyingTokenPriceUsd: BigDecimal(0),
-        availableAmount: totalSupplyBase.minus(totalBorrowBase),
-        availableAmountUsd: BigDecimal(0),
-        suppliedAmount: totalSupplyBase,
-        suppliedAmountUsd: BigDecimal(0),
-        nonRecursiveSuppliedAmount: totalSupplyBase,
-        collateralAmount: BigDecimal(0),
-        collateralAmountUsd: BigDecimal(0),
-        collateralFactor: BigDecimal(0),
-        supplyIndex: marketBasic.baseSupplyIndex.dividedBy(FACTOR_SCALE_15),
-        supplyApr: supplyApr,
-        borrowedAmount: totalBorrowBase,
-        borrowedAmountUsd: BigDecimal(0),
-        borrowIndex: marketBasic.baseBorrowIndex.dividedBy(FACTOR_SCALE_15),
-        borrowApr: borrowApr,
-        totalFeesUsd: BigDecimal(0),
-        userFeesUsd: BigDecimal(0),
-        protocolFeesUsd: BigDecimal(0),
-      });
-    } else {
-      basePoolSnapshot.timestamp = START_TIME_UNIX;
-      basePoolSnapshot.blockDate = START_TIME_FORMATED;
-      basePoolSnapshot.availableAmount = totalSupplyBase.minus(totalBorrowBase);
-      basePoolSnapshot.borrowedAmount = totalBorrowBase;
-      basePoolSnapshot.suppliedAmount = totalSupplyBase;
-      basePoolSnapshot.nonRecursiveSuppliedAmount = totalSupplyBase;
-      basePoolSnapshot.supplyIndex =
-        marketBasic.baseSupplyIndex.dividedBy(FACTOR_SCALE_15);
-      basePoolSnapshot.borrowIndex =
-        marketBasic.baseBorrowIndex.dividedBy(FACTOR_SCALE_15);
-
-      basePoolSnapshot.borrowApr = borrowApr;
-    }
-
-    await ctx.store.upsert(basePoolSnapshot);
-  }, 60);
+      await ctx.store.upsert(basePoolSnapshot);
+    },
+    60,
+    60
+  );

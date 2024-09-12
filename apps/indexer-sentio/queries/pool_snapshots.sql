@@ -21,8 +21,8 @@ SELECT
     argMax (borrowIndex, __genBlockTime__) as borrow_index,
     argMax (borrowApr, __genBlockTime__) as borrow_apr
 FROM
-    `PoolSnapshot_raw`
+   `CollateralPoolSnapshot_raw`
 WHERE
-    __genBlockTime__ <= '2024-09-07 23:00:00'
+    __genBlockTime__ <= '2024-09-13 23:00:00'
 GROUP BY
     id
