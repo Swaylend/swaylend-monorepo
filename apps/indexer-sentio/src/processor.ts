@@ -1,21 +1,21 @@
 import { BigDecimal } from '@sentio/sdk';
 import { FuelNetwork } from '@sentio/sdk/fuel';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc.js';
 import { DateTime } from 'fuels';
 import { ASSET_ID_TO_SYMBOL } from './constants.js';
 import {
+  BasePoolSnapshot,
   BasePositionSnapshot,
   CollateralConfiguration,
+  CollateralPoolSnapshot,
   CollateralPositionSnapshot,
   MarketBasic,
   MarketConfiguration,
   Pool,
-  BasePoolSnapshot,
-  CollateralPoolSnapshot,
   UserBasic,
 } from './schema/store.js';
 import { MarketProcessor } from './types/fuel/MarketProcessor.js';
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc.js';
 
 dayjs.extend(utc);
 
