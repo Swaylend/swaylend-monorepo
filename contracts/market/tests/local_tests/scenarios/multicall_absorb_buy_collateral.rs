@@ -132,7 +132,7 @@ async fn multicall_absorb_buy_collateral_test() {
     let price_data_update = PriceDataUpdate {
         update_fee: 1,
         price_feed_ids: vec![eth.price_feed_id],
-        publish_times: vec![Utc::now().timestamp().try_into().unwrap()],
+        publish_times: vec![tai64::Tai64::from_unix(Utc::now().timestamp().try_into().unwrap()).0],
         update_data: oracle.create_update_data(&prices).await.unwrap(),
     };
 

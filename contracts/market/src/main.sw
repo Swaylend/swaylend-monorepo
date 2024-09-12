@@ -33,6 +33,9 @@ use std::bytes::Bytes;
 configurable {
     DEBUG_STEP: u64 = 0,
     FUEL_ETH_BASE_ASSET_ID: b256 = 0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07,
+    ORACLE_MAX_STALENESS: u64 = 30, // 30 seconds
+    ORACLE_MAX_AHEADNESS: u64 = 15 * 60, // 15 minutes
+    ORACLE_MAX_CONF_WIDTH: u256 = 100, // 100 / 10000 = 1 % 
 }
 
 storage {
@@ -913,6 +916,21 @@ fn get_price_internal(price_feed_id: PriceFeedId) -> Price {
 
     let oracle = abi(PythCore, contract_id);
     let price = oracle.price(price_feed_id);
+
+    // validate values
+
+    if price.publish_time < std::block::timestamp() {
+        let staleness = std::block::timestamp() - price.publish_time;
+        require(staleness <= ORACLE_MAX_STALENESS, Error::OraclePriceValidationError);
+    } else {
+        let aheadness = price.publish_time - std::block::timestamp();
+        require(aheadness <= ORACLE_MAX_AHEADNESS, Error::OraclePriceValidationError);
+    }
+
+    require(price.price > 0, Error::OraclePriceValidationError);
+
+    require(u256::from(price.confidence) <= (u256::from(price.price) * ORACLE_MAX_CONF_WIDTH / ORACLE_CONF_BASIS_POINTS), Error::OraclePriceValidationError);
+
     price
 }
 
