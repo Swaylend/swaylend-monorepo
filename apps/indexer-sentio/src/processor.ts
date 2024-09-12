@@ -589,6 +589,7 @@ MarketProcessor.bind({
     await ctx.store.delete(positionSnapshot, positionSnapshotId);
   })
   .onLogMarketBasicEvent(async (event, ctx) => {
+    2;
     const {
       data: {
         market_basic: {
@@ -655,7 +656,7 @@ MarketProcessor.bind({
           field: 'poolAddress',
           op: '=',
           value:
-            '0x8cd0c973a8ab7c15c0a8ee8f5cb4dd04ea3f27411c8eef6e76f3765fe43863fe',
+            '0x891734bb325148ed28fdc7603e404375c44ee090b66708f45c722ccd702517d5',
         },
       ])
     ).filter((val) => val.chainId === 0);
@@ -791,11 +792,11 @@ MarketProcessor.bind({
     );
 
     const totalSupplyBase = marketBasic.totalSupplyBase
-      .times(marketBasic.baseSupplyIndex)
+      .times(marketBasic.baseSupplyIndex.dividedBy(FACTOR_SCALE_15))
       .dividedBy(BigDecimal(10).pow(marketConfiguration.baseTokenDecimals));
 
     const totalBorrowBase = marketBasic.totalBorrowBase
-      .times(marketBasic.baseBorrowIndex)
+      .times(marketBasic.baseBorrowIndex.dividedBy(FACTOR_SCALE_15))
       .dividedBy(BigDecimal(10).pow(marketConfiguration.baseTokenDecimals));
 
     const utilization = getUtilization(
