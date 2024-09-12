@@ -117,11 +117,16 @@ const getUtilization = (
     .dividedBy(presentValueSupply);
 };
 
-const START_BLOCK = BigInt(9500000);
+const START_BLOCK = BigInt(9910000);
+
+const CHAIN_ID_MAP = {
+  fuel_testnet: 0,
+  fuel_mainnet: 0,
+};
 
 MarketProcessor.bind({
   chainId: FuelNetwork.TEST_NET,
-  address: '0x8cd0c973a8ab7c15c0a8ee8f5cb4dd04ea3f27411c8eef6e76f3765fe43863fe',
+  address: '0x891734bb325148ed28fdc7603e404375c44ee090b66708f45c722ccd702517d5',
   startBlock: START_BLOCK,
 })
   .onLogMarketConfigurationEvent(async (event, ctx) => {
@@ -143,14 +148,15 @@ MarketProcessor.bind({
     } = event;
 
     // Chain ID, contract address
-    const id = `${ctx.chainId}_${ctx.contractAddress}`;
+    const chainId = CHAIN_ID_MAP[ctx.chainId as keyof typeof CHAIN_ID_MAP];
+    const id = `${chainId}_${ctx.contractAddress}`;
 
     let marketConfiguration = await ctx.store.get(MarketConfiguration, id);
 
     if (!marketConfiguration) {
       marketConfiguration = new MarketConfiguration({
         id,
-        chainId: 0,
+        chainId: chainId,
         contractAddress: ctx.contractAddress,
         baseTokenAddress: base_token,
         baseTokenDecimals: base_token_decimals,
@@ -178,7 +184,7 @@ MarketProcessor.bind({
     } else {
       marketConfiguration.baseTokenAddress = base_token;
       marketConfiguration.baseTokenDecimals = base_token_decimals;
-      marketConfiguration.chainId = 0;
+      marketConfiguration.chainId = chainId;
       marketConfiguration.contractAddress = ctx.contractAddress;
       marketConfiguration.supplyKink = BigDecimal(supply_kink.toString());
       marketConfiguration.borrowKink = BigDecimal(borrow_kink.toString());
@@ -204,102 +210,8 @@ MarketProcessor.bind({
 
     await ctx.store.upsert(marketConfiguration);
 
-    // // Create pool if it doesn't exist
-    // const poolId = `${ctx.chainId}_${ctx.contractAddress}_${base_token}`;
-    // const pool = await ctx.store.get(Pool, poolId);
-
-    // if (!pool) {
-    //   if (!ctx.transaction) throw new Error('No transaction found');
-    //   if (!ctx.transaction.blockNumber) {
-    //     throw new Error('Transaction block number missing');
-    //   }
-    //   if (!ctx.transaction.time) throw new Error('Transaction time missing');
-
-    //   const pool = new Pool({
-    //     id: poolId,
-    //     chainId: 0,
-    //     creationBlockNumber: Number(ctx.transaction?.blockNumber),
-    //     creationTimestamp: DateTime.fromTai64(
-    //       ctx.transaction.time
-    //     ).toUnixSeconds(),
-    //     underlyingTokenAddress: base_token,
-    //     underlyingTokenSymbol: ASSET_ID_TO_SYMBOL[base_token],
-    //     receiptTokenAddress: 'TODO',
-    //     receiptTokenSymbol: 'TODO',
-    //     poolAddress: ctx.contractAddress,
-    //     poolType: 'supply_only',
-    //   });
-
-    //   await ctx.store.upsert(pool);
-    // }
-
-    // // Create pool snapshot
-    // const poolSnapshotId = `${ctx.chainId}_${ctx.contractAddress}_${base_token}`;
-    // const poolSnapshot = await ctx.store.get(BasePoolSnapshot, poolSnapshotId);
-
-    // if (!poolSnapshot) {
-    //   const poolSnapshot = new BasePoolSnapshot({
-    //     id: poolSnapshotId,
-    //     chainId: 0,
-    //     poolAddress: ctx.contractAddress,
-    //     underlyingTokenAddress: base_token,
-    //     underlyingTokenSymbol: ASSET_ID_TO_SYMBOL[base_token],
-    //     underlyingTokenPriceUsd: BigDecimal(0),
-    //     availableAmount: BigDecimal(0),
-    //     availableAmountUsd: BigDecimal(0),
-    //     suppliedAmount: BigDecimal(0),
-    //     suppliedAmountUsd: BigDecimal(0),
-    //     nonRecursiveSuppliedAmount: BigDecimal(0),
-    //     collateralAmount: BigDecimal(0),
-    //     collateralAmountUsd: BigDecimal(0),
-    //     collateralFactor: BigDecimal(0),
-    //     supplyIndex: BigDecimal(0),
-    //     supplyApr: BigDecimal(0),
-    //     borrowedAmount: BigDecimal(0),
-    //     borrowedAmountUsd: BigDecimal(0),
-    //     borrowIndex: BigDecimal(0),
-    //     borrowApr: BigDecimal(0),
-    //     totalFeesUsd: BigDecimal(0),
-    //     userFeesUsd: BigDecimal(0),
-    //     protocolFeesUsd: BigDecimal(0),
-    //   });
-
-    //   await ctx.store.upsert(poolSnapshot);
-    // }
-  })
-  .onLogCollateralAssetAdded(async (event, ctx) => {
-    const {
-      data: {
-        asset_id,
-        configuration: { decimals, borrow_collateral_factor },
-      },
-    } = event;
-
-    const id = `${ctx.chainId}_${ctx.contractAddress}_${asset_id}`;
-
-    let collateralConfiguration = await ctx.store.get(
-      CollateralConfiguration,
-      id
-    );
-
-    if (!collateralConfiguration) {
-      collateralConfiguration = new CollateralConfiguration({
-        id,
-        chainId: 0,
-        contractAddress: ctx.contractAddress,
-        assetAddress: asset_id,
-        decimals: decimals,
-      });
-    } else {
-      throw new Error(
-        `Collateral configuration already exists for asset ${asset_id} on chain ${ctx.chainId}`
-      );
-    }
-
-    await ctx.store.upsert(collateralConfiguration);
-
     // Create pool if it doesn't exist
-    const poolId = `${ctx.chainId}_${ctx.contractAddress}_${asset_id}`;
+    const poolId = `${chainId}_${ctx.contractAddress}_${base_token}`;
     const pool = await ctx.store.get(Pool, poolId);
 
     if (!pool) {
@@ -311,7 +223,68 @@ MarketProcessor.bind({
 
       const pool = new Pool({
         id: poolId,
-        chainId: 0,
+        chainId: chainId,
+        creationBlockNumber: Number(ctx.transaction?.blockNumber),
+        creationTimestamp: DateTime.fromTai64(
+          ctx.transaction.time
+        ).toUnixSeconds(),
+        underlyingTokenAddress: base_token,
+        underlyingTokenSymbol: ASSET_ID_TO_SYMBOL[base_token],
+        receiptTokenAddress: 'TODO',
+        receiptTokenSymbol: 'TODO',
+        poolAddress: ctx.contractAddress,
+        poolType: 'supply_only',
+      });
+
+      await ctx.store.upsert(pool);
+    }
+  })
+  .onLogCollateralAssetAdded(async (event, ctx) => {
+    const {
+      data: {
+        asset_id,
+        configuration: { decimals, borrow_collateral_factor },
+      },
+    } = event;
+
+    const chainId = CHAIN_ID_MAP[ctx.chainId as keyof typeof CHAIN_ID_MAP];
+    const id = `${chainId}_${ctx.contractAddress}_${asset_id}`;
+
+    let collateralConfiguration = await ctx.store.get(
+      CollateralConfiguration,
+      id
+    );
+
+    if (!collateralConfiguration) {
+      collateralConfiguration = new CollateralConfiguration({
+        id,
+        chainId: chainId,
+        contractAddress: ctx.contractAddress,
+        assetAddress: asset_id,
+        decimals: decimals,
+      });
+    } else {
+      throw new Error(
+        `Collateral configuration already exists for asset ${asset_id} on chain ${chainId}`
+      );
+    }
+
+    await ctx.store.upsert(collateralConfiguration);
+
+    // Create pool if it doesn't exist
+    const poolId = `${chainId}_${ctx.contractAddress}_${asset_id}`;
+    const pool = await ctx.store.get(Pool, poolId);
+
+    if (!pool) {
+      if (!ctx.transaction) throw new Error('No transaction found');
+      if (!ctx.transaction.blockNumber) {
+        throw new Error('Transaction block number missing');
+      }
+      if (!ctx.transaction.time) throw new Error('Transaction time missing');
+
+      const pool = new Pool({
+        id: poolId,
+        chainId: chainId,
         creationBlockNumber: Number(ctx.transaction?.blockNumber),
         creationTimestamp: DateTime.fromTai64(
           ctx.transaction.time
@@ -328,7 +301,7 @@ MarketProcessor.bind({
     }
 
     // Create pool snapshot
-    const poolSnapshotId = `${ctx.chainId}_${ctx.contractAddress}_${asset_id}`;
+    const poolSnapshotId = `${chainId}_${ctx.contractAddress}_${asset_id}`;
     const poolSnapshot = await ctx.store.get(
       CollateralPoolSnapshot,
       poolSnapshotId
@@ -337,7 +310,7 @@ MarketProcessor.bind({
     if (!poolSnapshot) {
       const poolSnapshot = new CollateralPoolSnapshot({
         id: poolSnapshotId,
-        chainId: 0,
+        chainId: chainId,
         poolAddress: ctx.contractAddress,
         underlyingTokenAddress: asset_id,
         underlyingTokenSymbol: ASSET_ID_TO_SYMBOL[asset_id],
@@ -374,7 +347,8 @@ MarketProcessor.bind({
       },
     } = event;
 
-    const id = `${ctx.chainId}_${ctx.contractAddress}_${asset_id}`;
+    const chainId = CHAIN_ID_MAP[ctx.chainId as keyof typeof CHAIN_ID_MAP];
+    const id = `${chainId}_${ctx.contractAddress}_${asset_id}`;
 
     let collateralConfiguration = await ctx.store.get(
       CollateralConfiguration,
@@ -383,13 +357,13 @@ MarketProcessor.bind({
 
     if (!collateralConfiguration) {
       throw new Error(
-        `Collateral configuration not found for asset ${asset_id} on chain ${ctx.chainId}`
+        `Collateral configuration not found for asset ${asset_id} on chain ${chainId}`
       );
     }
 
     collateralConfiguration = new CollateralConfiguration({
       id,
-      chainId: 0,
+      chainId: chainId,
       contractAddress: ctx.contractAddress,
       assetAddress: asset_id,
       decimals: decimals,
@@ -407,14 +381,15 @@ MarketProcessor.bind({
       },
     } = event;
 
-    const userBasicId = `${ctx.chainId}_${ctx.contractAddress}_${address}`;
+    const chainId = CHAIN_ID_MAP[ctx.chainId as keyof typeof CHAIN_ID_MAP];
+    const userBasicId = `${chainId}_${ctx.contractAddress}_${address}`;
 
     let userBasic = await ctx.store.get(UserBasic, userBasicId);
 
     if (!userBasic) {
       userBasic = new UserBasic({
         id: userBasicId,
-        chainId: 0,
+        chainId: chainId,
         contractAddress: ctx.contractAddress,
         address: address.bits,
         principal: BigDecimal(value.toString()),
@@ -432,7 +407,9 @@ MarketProcessor.bind({
       data: { address, asset_id, amount },
     } = event;
 
-    const collateralConfigurationId = `${ctx.chainId}_${ctx.contractAddress}_${asset_id}`;
+    const chainId = CHAIN_ID_MAP[ctx.chainId as keyof typeof CHAIN_ID_MAP];
+
+    const collateralConfigurationId = `${chainId}_${ctx.contractAddress}_${asset_id}`;
     const collateralConfiguration = await ctx.store.get(
       CollateralConfiguration,
       collateralConfigurationId
@@ -440,18 +417,18 @@ MarketProcessor.bind({
 
     if (!collateralConfiguration) {
       throw new Error(
-        `Collateral configuration not found for asset ${asset_id} on chain ${ctx.chainId}`
+        `Collateral configuration not found for asset ${asset_id} on chain ${chainId}`
       );
     }
 
-    const id = `${ctx.chainId}_${ctx.contractAddress}_${address.bits}_${asset_id}`;
+    const id = `${chainId}_${ctx.contractAddress}_${address.bits}_${asset_id}`;
 
     let positionSnapshot = await ctx.store.get(CollateralPositionSnapshot, id);
 
     if (!positionSnapshot) {
       positionSnapshot = new CollateralPositionSnapshot({
         id,
-        chainId: 0,
+        chainId: chainId,
         poolAddress: ctx.contractAddress,
         underlyingTokenAddress: collateralConfiguration.assetAddress,
         underlyingTokenSymbol:
@@ -475,7 +452,7 @@ MarketProcessor.bind({
     await ctx.store.upsert(positionSnapshot);
 
     // Pool snapshot
-    const poolSnapshotId = `${ctx.chainId}_${ctx.contractAddress}_${collateralConfiguration.assetAddress}`;
+    const poolSnapshotId = `${chainId}_${ctx.contractAddress}_${collateralConfiguration.assetAddress}`;
     const poolSnapshot = await ctx.store.get(
       CollateralPoolSnapshot,
       poolSnapshotId
@@ -483,7 +460,7 @@ MarketProcessor.bind({
 
     if (!poolSnapshot) {
       throw new Error(
-        `Pool snapshot not found for market ${ctx.contractAddress} on chain ${ctx.chainId}`
+        `Pool snapshot not found for market ${ctx.contractAddress} on chain ${chainId}`
       );
     }
 
@@ -502,7 +479,9 @@ MarketProcessor.bind({
       data: { address, asset_id, amount },
     } = event;
 
-    const collateralConfigurationId = `${ctx.chainId}_${ctx.contractAddress}_${asset_id}`;
+    const chainId = CHAIN_ID_MAP[ctx.chainId as keyof typeof CHAIN_ID_MAP];
+
+    const collateralConfigurationId = `${chainId}_${ctx.contractAddress}_${asset_id}`;
     const collateralConfiguration = await ctx.store.get(
       CollateralConfiguration,
       collateralConfigurationId
@@ -510,11 +489,11 @@ MarketProcessor.bind({
 
     if (!collateralConfiguration) {
       throw new Error(
-        `Collateral configuration not found for asset ${asset_id} on chain ${ctx.chainId}`
+        `Collateral configuration not found for asset ${asset_id} on chain ${chainId}`
       );
     }
 
-    const id = `${ctx.chainId}_${ctx.contractAddress}_${address.bits}_${asset_id}`;
+    const id = `${chainId}_${ctx.contractAddress}_${address.bits}_${asset_id}`;
 
     const positionSnapshot = await ctx.store.get(
       CollateralPositionSnapshot,
@@ -523,7 +502,7 @@ MarketProcessor.bind({
 
     if (!positionSnapshot) {
       throw new Error(
-        `Position snapshot (${id}) not found for user ${address.bits} on chain ${ctx.chainId}`
+        `Position snapshot (${id}) not found for user ${address.bits} on chain ${chainId}`
       );
     }
 
@@ -545,7 +524,7 @@ MarketProcessor.bind({
     }
 
     // Pool snapshot
-    const poolSnapshotId = `${ctx.chainId}_${ctx.contractAddress}_${collateralConfiguration.assetAddress}`;
+    const poolSnapshotId = `${chainId}_${ctx.contractAddress}_${collateralConfiguration.assetAddress}`;
     const poolSnapshot = await ctx.store.get(
       CollateralPoolSnapshot,
       poolSnapshotId
@@ -553,7 +532,7 @@ MarketProcessor.bind({
 
     if (!poolSnapshot) {
       throw new Error(
-        `Pool snapshot not found for market ${ctx.contractAddress} on chain ${ctx.chainId}`
+        `Pool snapshot not found for market ${ctx.contractAddress} on chain ${chainId}`
       );
     }
 
@@ -573,7 +552,8 @@ MarketProcessor.bind({
     } = event;
 
     // Collateral pool reduced for absorbed collateral
-    const poolSnapshotId = `${ctx.chainId}_${ctx.contractAddress}_${asset_id}`;
+    const chainId = CHAIN_ID_MAP[ctx.chainId as keyof typeof CHAIN_ID_MAP];
+    const poolSnapshotId = `${chainId}_${ctx.contractAddress}_${asset_id}`;
     const poolSnapshot = await ctx.store.get(
       CollateralPoolSnapshot,
       poolSnapshotId
@@ -581,7 +561,7 @@ MarketProcessor.bind({
 
     if (!poolSnapshot) {
       throw new Error(
-        `Pool snapshot not found for market ${ctx.contractAddress} on chain ${ctx.chainId}`
+        `Pool snapshot not found for market ${ctx.contractAddress} on chain ${chainId}`
       );
     }
 
@@ -594,7 +574,7 @@ MarketProcessor.bind({
     await ctx.store.upsert(poolSnapshot);
 
     // Get collateral position snapshot (and delete it as all collateral has been absorbed/seized)
-    const positionSnapshotId = `${ctx.chainId}_${ctx.contractAddress}_${address.bits}_${asset_id}`;
+    const positionSnapshotId = `${chainId}_${ctx.contractAddress}_${address.bits}_${asset_id}`;
     const positionSnapshot = await ctx.store.get(
       CollateralPositionSnapshot,
       positionSnapshotId
@@ -602,7 +582,7 @@ MarketProcessor.bind({
 
     if (!positionSnapshot) {
       throw new Error(
-        `Position snapshot (${positionSnapshotId}) not found for user ${address.bits} on chain ${ctx.chainId}`
+        `Position snapshot (${positionSnapshotId}) not found for user ${address.bits} on chain ${chainId}`
       );
     }
 
@@ -621,28 +601,29 @@ MarketProcessor.bind({
       },
     } = event;
 
-    const marketConfigId = `${ctx.chainId}_${ctx.contractAddress}`;
+    const chainId = CHAIN_ID_MAP[ctx.chainId as keyof typeof CHAIN_ID_MAP];
+    const marketConfigId = `${chainId}_${ctx.contractAddress}`;
     const marketConfiguration = await ctx.store.get(
       MarketConfiguration,
       marketConfigId
     );
 
-    if (
-      !marketConfiguration &&
-      ctx.block?.height.toString() === START_BLOCK.toString() // TODO: Remove on redeploy
-    ) {
-      throw new Error(
-        `Market configuration not found for market ${ctx.contractAddress} on chain ${ctx.chainId}`
-      );
-    }
+    // if (
+    //   !marketConfiguration &&
+    //   ctx.block?.height.toString() === START_BLOCK.toString() // TODO: Remove on redeploy
+    // ) {
+    //   throw new Error(
+    //     `Market configuration not found for market ${ctx.contractAddress} on chain ${ctx.chainId}`
+    //   );
+    // }
 
-    const marketBasicId = `${ctx.chainId}_${ctx.contractAddress}`;
+    const marketBasicId = `${chainId}_${ctx.contractAddress}`;
     let marketBasic = await ctx.store.get(MarketBasic, marketBasicId);
 
     if (!marketBasic) {
       marketBasic = new MarketBasic({
         id: marketBasicId,
-        chainId: 0,
+        chainId: chainId,
         contractAddress: ctx.contractAddress,
         lastAccrualTime: BigDecimal(last_accrual_time.toString()),
         baseSupplyIndex: BigDecimal(base_supply_index.toString()),
@@ -662,24 +643,22 @@ MarketProcessor.bind({
   })
   // Process only current market
   .onTimeInterval(async (block, ctx) => {
-    if (block.height.toString() === START_BLOCK.toString()) {
-      return;
-    }
-
-    const START_TIME = dayjs(ctx.timestamp).utc();
+    const START_TIME = dayjs(ctx.timestamp.getTime()).utc();
     const START_TIME_UNIX = START_TIME.unix();
     const START_TIME_FORMATED = START_TIME.format('YYYY-MM-DD HH:00:00');
 
-    const pools = await ctx.store.list(Pool, [
-      { field: 'poolType', op: '=', value: 'supply_only' },
-      { field: 'chainId', op: '=', value: 0 },
-      {
-        field: 'poolAddress',
-        op: '=',
-        value:
-          '0x8cd0c973a8ab7c15c0a8ee8f5cb4dd04ea3f27411c8eef6e76f3765fe43863fe',
-      },
-    ]);
+    const pools = (
+      await ctx.store.list(Pool, [
+        { field: 'poolType', op: '=', value: 'supply_only' },
+        // { field: 'chainId', op: '=', value: 0 },
+        {
+          field: 'poolAddress',
+          op: '=',
+          value:
+            '0x8cd0c973a8ab7c15c0a8ee8f5cb4dd04ea3f27411c8eef6e76f3765fe43863fe',
+        },
+      ])
+    ).filter((val) => val.chainId === 0);
 
     if (pools.length !== 1) {
       throw new Error(`Only one pool should be found. Found: ${pools.length}`);
@@ -705,23 +684,22 @@ MarketProcessor.bind({
         `Market configuration not found for market ${pool.poolAddress} on chain ${pool.chainId}`
       );
     }
-
     // Accrue interest
-    const now = BigDecimal(
-      DateTime.fromUnixSeconds(START_TIME.unix()).toTai64()
-    ); // Need to convert timestamp to Tai64 format
+    const now = BigDecimal(DateTime.fromUnixSeconds(START_TIME_UNIX).toTai64()); // Need to convert timestamp to Tai64 format
     const timeElapsed = now.minus(marketBasic.lastAccrualTime);
 
     if (timeElapsed.gt(0)) {
       if (!marketBasic.lastAccrualTime.eq(0)) {
         const baseSupplyIndex = marketBasic.baseSupplyIndex;
         const baseBorrowIndex = marketBasic.baseBorrowIndex;
+
         const utilization = getUtilization(
           marketBasic.totalSupplyBase,
           marketBasic.totalBorrowBase,
           baseSupplyIndex,
           baseBorrowIndex
         );
+
         const supplyRate = getSupplyRate(marketConfiguration, utilization);
         const borrowRate = getBorrowRate(marketConfiguration, utilization);
 
@@ -745,10 +723,16 @@ MarketProcessor.bind({
     }
 
     // Only handle events from the current market (contract)
-    const userBasics = await ctx.store.list(UserBasic, [
-      { field: 'chainId', op: '=', value: 0 },
-      { field: 'contractAddress', op: '=', value: marketBasic.contractAddress },
-    ]);
+    const userBasics = (
+      await ctx.store.list(UserBasic, [
+        // { field: 'chainId', op: '=', value: 0 },
+        {
+          field: 'contractAddress',
+          op: '=',
+          value: marketBasic.contractAddress,
+        },
+      ])
+    ).filter((val) => val.chainId === 0);
 
     for (const userBasic of userBasics) {
       const basePositionSnapshotId = `${userBasic.chainId}_${userBasic.contractAddress}_${marketConfiguration.baseTokenAddress}_${userBasic.address}`;
