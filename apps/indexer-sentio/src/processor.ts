@@ -79,23 +79,23 @@ const getApr = (rate: BigDecimal) => {
 
 const getPresentValue = (
   principal: BigDecimal,
-  baseTrackingIndex: BigDecimal
+  index: BigDecimal
 ): BigDecimal => {
-  return principal.times(baseTrackingIndex).dividedBy(FACTOR_SCALE_15);
+  return principal.times(index).dividedBy(FACTOR_SCALE_15);
 };
 
 const getPrincipalValue = (
   presentValue: BigDecimal,
-  baseTrackingIndex: BigDecimal
+  index: BigDecimal
 ): BigDecimal => {
   if (presentValue.gte(0)) {
-    return presentValue.times(FACTOR_SCALE_15).dividedBy(baseTrackingIndex);
+    return presentValue.times(FACTOR_SCALE_15).dividedBy(index);
   }
 
   return presentValue
     .times(FACTOR_SCALE_15)
-    .plus(baseTrackingIndex.minus(1))
-    .dividedBy(baseTrackingIndex);
+    .plus(index.minus(1))
+    .dividedBy(index);
 };
 
 // Get the utilization of the market
@@ -791,13 +791,15 @@ MarketProcessor.bind({
       basePoolSnapshotId
     );
 
-    const totalSupplyBase = marketBasic.totalSupplyBase
-      .times(marketBasic.baseSupplyIndex.dividedBy(FACTOR_SCALE_15))
-      .dividedBy(BigDecimal(10).pow(marketConfiguration.baseTokenDecimals));
+    const totalSupplyBase = getPresentValue(
+      marketBasic.totalSupplyBase,
+      marketBasic.baseSupplyIndex
+    ).dividedBy(BigDecimal(10).pow(marketConfiguration.baseTokenDecimals));
 
-    const totalBorrowBase = marketBasic.totalBorrowBase
-      .times(marketBasic.baseBorrowIndex.dividedBy(FACTOR_SCALE_15))
-      .dividedBy(BigDecimal(10).pow(marketConfiguration.baseTokenDecimals));
+    const totalBorrowBase = getPresentValue(
+      marketBasic.totalBorrowBase,
+      marketBasic.baseBorrowIndex
+    ).dividedBy(BigDecimal(10).pow(marketConfiguration.baseTokenDecimals));
 
     const utilization = getUtilization(
       totalSupplyBase,
