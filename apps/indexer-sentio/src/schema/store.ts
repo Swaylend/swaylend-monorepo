@@ -12,6 +12,72 @@ import { DatabaseSchema } from '@sentio/sdk'
 
 
 
+@Entity("MarketBasic")
+export class MarketBasic extends AbstractEntity  {
+
+	@Required
+	@Column("ID")
+	id: ID
+
+	@Required
+	@Column("Int")
+	chainId: Int
+
+	@Required
+	@Column("String")
+	contractAddress: String
+
+	@Required
+	@Column("BigDecimal")
+	baseSupplyIndex: BigDecimal
+
+	@Required
+	@Column("BigDecimal")
+	baseBorrowIndex: BigDecimal
+
+	@Required
+	@Column("BigDecimal")
+	totalSupplyBase: BigDecimal
+
+	@Required
+	@Column("BigDecimal")
+	totalBorrowBase: BigDecimal
+
+	@Required
+	@Column("BigDecimal")
+	lastAccrualTime: BigDecimal
+  constructor(data: Partial<MarketBasic>) {super()}
+}
+
+@Entity("UserBasic")
+export class UserBasic extends AbstractEntity  {
+
+	@Required
+	@Column("ID")
+	id: ID
+
+	@Required
+	@Column("Int")
+	chainId: Int
+
+	@Required
+	@Column("String")
+	contractAddress: String
+
+	@Required
+	@Column("String")
+	address: String
+
+	@Required
+	@Column("BigDecimal")
+	principal: BigDecimal
+
+	@Required
+	@Column("Boolean")
+	isNegative: Boolean
+  constructor(data: Partial<UserBasic>) {super()}
+}
+
 @Entity("MarketConfiguration")
 export class MarketConfiguration extends AbstractEntity  {
 
@@ -139,8 +205,66 @@ export class Pool extends AbstractEntity  {
   constructor(data: Partial<Pool>) {super()}
 }
 
-@Entity("PositionSnapshot")
-export class PositionSnapshot extends AbstractEntity  {
+@Entity("BasePositionSnapshot")
+export class BasePositionSnapshot extends AbstractEntity  {
+
+	@Required
+	@Column("ID")
+	id: ID
+
+	@Required
+	@Column("Int")
+	timestamp: Int
+
+	@Required
+	@Column("String")
+	blockDate: String
+
+	@Required
+	@Column("Int")
+	chainId: Int
+
+	@Required
+	@Column("String")
+	poolAddress: String
+
+	@Required
+	@Column("String")
+	underlyingTokenAddress: String
+
+	@Required
+	@Column("String")
+	underlyingTokenSymbol: String
+
+	@Required
+	@Column("String")
+	userAddress: String
+
+	@Required
+	@Column("BigDecimal")
+	suppliedAmount: BigDecimal
+
+	@Column("BigDecimal")
+	suppliedAmountUsd?: BigDecimal
+
+	@Required
+	@Column("BigDecimal")
+	borrowedAmount: BigDecimal
+
+	@Column("BigDecimal")
+	borrowedAmountUsd?: BigDecimal
+
+	@Required
+	@Column("BigDecimal")
+	collateralAmount: BigDecimal
+
+	@Column("BigDecimal")
+	collateralAmountUsd?: BigDecimal
+  constructor(data: Partial<BasePositionSnapshot>) {super()}
+}
+
+@Entity("CollateralPositionSnapshot")
+export class CollateralPositionSnapshot extends AbstractEntity  {
 
 	@Required
 	@Column("ID")
@@ -186,11 +310,108 @@ export class PositionSnapshot extends AbstractEntity  {
 
 	@Column("BigDecimal")
 	collateralAmountUsd?: BigDecimal
-  constructor(data: Partial<PositionSnapshot>) {super()}
+  constructor(data: Partial<CollateralPositionSnapshot>) {super()}
 }
 
-@Entity("PoolSnapshot")
-export class PoolSnapshot extends AbstractEntity  {
+@Entity("BasePoolSnapshot")
+export class BasePoolSnapshot extends AbstractEntity  {
+
+	@Required
+	@Column("ID")
+	id: ID
+
+	@Required
+	@Column("Int")
+	timestamp: Int
+
+	@Required
+	@Column("String")
+	blockDate: String
+
+	@Required
+	@Column("Int")
+	chainId: Int
+
+	@Required
+	@Column("String")
+	poolAddress: String
+
+	@Required
+	@Column("String")
+	underlyingTokenAddress: String
+
+	@Required
+	@Column("String")
+	underlyingTokenSymbol: String
+
+	@Column("BigDecimal")
+	underlyingTokenPriceUsd?: BigDecimal
+
+	@Required
+	@Column("BigDecimal")
+	availableAmount: BigDecimal
+
+	@Column("BigDecimal")
+	availableAmountUsd?: BigDecimal
+
+	@Required
+	@Column("BigDecimal")
+	suppliedAmount: BigDecimal
+
+	@Column("BigDecimal")
+	suppliedAmountUsd?: BigDecimal
+
+	@Required
+	@Column("BigDecimal")
+	nonRecursiveSuppliedAmount: BigDecimal
+
+	@Required
+	@Column("BigDecimal")
+	collateralAmount: BigDecimal
+
+	@Column("BigDecimal")
+	collateralAmountUsd?: BigDecimal
+
+	@Required
+	@Column("BigDecimal")
+	collateralFactor: BigDecimal
+
+	@Required
+	@Column("BigDecimal")
+	supplyIndex: BigDecimal
+
+	@Required
+	@Column("BigDecimal")
+	supplyApr: BigDecimal
+
+	@Required
+	@Column("BigDecimal")
+	borrowedAmount: BigDecimal
+
+	@Column("BigDecimal")
+	borrowedAmountUsd?: BigDecimal
+
+	@Required
+	@Column("BigDecimal")
+	borrowIndex: BigDecimal
+
+	@Required
+	@Column("BigDecimal")
+	borrowApr: BigDecimal
+
+	@Column("BigDecimal")
+	totalFeesUsd?: BigDecimal
+
+	@Column("BigDecimal")
+	userFeesUsd?: BigDecimal
+
+	@Column("BigDecimal")
+	protocolFeesUsd?: BigDecimal
+  constructor(data: Partial<BasePoolSnapshot>) {super()}
+}
+
+@Entity("CollateralPoolSnapshot")
+export class CollateralPoolSnapshot extends AbstractEntity  {
 
 	@Required
 	@Column("ID")
@@ -275,11 +496,31 @@ export class PoolSnapshot extends AbstractEntity  {
 
 	@Column("BigDecimal")
 	protocolFeesUsd?: BigDecimal
-  constructor(data: Partial<PoolSnapshot>) {super()}
+  constructor(data: Partial<CollateralPoolSnapshot>) {super()}
 }
 
 
-const source = `type MarketConfiguration @entity {
+const source = `type MarketBasic @entity {
+    id: ID! # Constructed as chainId_marketAddress
+    chainId: Int!
+    contractAddress: String!
+    baseSupplyIndex: BigDecimal!
+    baseBorrowIndex: BigDecimal!
+    totalSupplyBase: BigDecimal!
+    totalBorrowBase: BigDecimal!
+    lastAccrualTime: BigDecimal!
+}
+
+type UserBasic @entity {
+    id: ID!
+    chainId: Int!
+    contractAddress: String!
+    address: String!
+    principal: BigDecimal!
+    isNegative: Boolean!
+}
+
+type MarketConfiguration @entity {
     id: ID!
     chainId: Int!
     contractAddress: String!
@@ -316,7 +557,24 @@ type Pool @entity {
     poolType: String! # collteral_only or supply_only
 }
 
-type PositionSnapshot @entity {
+type BasePositionSnapshot @entity {
+    id: ID!
+    timestamp: Int!
+    blockDate: String!
+    chainId: Int!
+    poolAddress: String!
+    underlyingTokenAddress: String!
+    underlyingTokenSymbol: String!
+    userAddress: String!
+    suppliedAmount: BigDecimal!
+    suppliedAmountUsd: BigDecimal
+    borrowedAmount: BigDecimal!
+    borrowedAmountUsd: BigDecimal
+    collateralAmount: BigDecimal!
+    collateralAmountUsd: BigDecimal
+}
+
+type CollateralPositionSnapshot @entity {
     id: ID!
     chainId: Int!
     poolAddress: String!
@@ -331,7 +589,35 @@ type PositionSnapshot @entity {
     collateralAmountUsd: BigDecimal
 }
 
-type PoolSnapshot @entity {
+type BasePoolSnapshot @entity {
+    id: ID!
+    timestamp: Int!
+    blockDate: String!
+    chainId: Int!
+    poolAddress: String!
+    underlyingTokenAddress: String!
+    underlyingTokenSymbol: String!
+    underlyingTokenPriceUsd: BigDecimal
+    availableAmount: BigDecimal!
+    availableAmountUsd: BigDecimal
+    suppliedAmount: BigDecimal!
+    suppliedAmountUsd: BigDecimal
+    nonRecursiveSuppliedAmount: BigDecimal!
+    collateralAmount: BigDecimal!
+    collateralAmountUsd: BigDecimal
+    collateralFactor: BigDecimal!
+    supplyIndex: BigDecimal!
+    supplyApr: BigDecimal!
+    borrowedAmount: BigDecimal!
+    borrowedAmountUsd: BigDecimal
+    borrowIndex: BigDecimal!
+    borrowApr: BigDecimal!
+    totalFeesUsd: BigDecimal
+    userFeesUsd: BigDecimal
+    protocolFeesUsd: BigDecimal
+}
+
+type CollateralPoolSnapshot @entity {
     id: ID!
     chainId: Int!
     poolAddress: String!
@@ -359,10 +645,14 @@ type PoolSnapshot @entity {
 DatabaseSchema.register({
   source,
   entities: {
-    "MarketConfiguration": MarketConfiguration,
+    "MarketBasic": MarketBasic,
+		"UserBasic": UserBasic,
+		"MarketConfiguration": MarketConfiguration,
 		"CollateralConfiguration": CollateralConfiguration,
 		"Pool": Pool,
-		"PositionSnapshot": PositionSnapshot,
-		"PoolSnapshot": PoolSnapshot
+		"BasePositionSnapshot": BasePositionSnapshot,
+		"CollateralPositionSnapshot": CollateralPositionSnapshot,
+		"BasePoolSnapshot": BasePoolSnapshot,
+		"CollateralPoolSnapshot": CollateralPoolSnapshot
   }
 })
