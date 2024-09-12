@@ -19,8 +19,8 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import {
-  useMarketConfiguration,
   USER_ROLE,
+  useMarketConfiguration,
   useSupplyRate,
   useUserRole,
   useUserSupplyBorrow,
@@ -65,7 +65,8 @@ export const LendTable = () => {
 
   const { data: supplyRate, isPending: isSupplyRatePending } = useSupplyRate();
   const { data: userSupplyBorrow } = useUserSupplyBorrow();
-  const { data: marketConfiguration, isPending: isPendingMarketConfiguration } = useMarketConfiguration();
+  const { data: marketConfiguration, isPending: isPendingMarketConfiguration } =
+    useMarketConfiguration();
 
   const handleBaseTokenClick = (action: ACTION_TYPE) => {
     changeAction(action);
@@ -97,53 +98,39 @@ export const LendTable = () => {
       </TableCell>
       <TableCell>
         <div className="flex gap-x-2 w-full">
-          <Button
-            className="w-1/2"
-            disabled={true}
-          >
+          <Button className="w-1/2" disabled={true}>
             Supply
           </Button>
-          <Button
-            className="w-1/2"
-            disabled={true}
-          >
+          <Button className="w-1/2" disabled={true}>
             Withdraw
           </Button>
         </div>
       </TableCell>
     </TableRow>
-  )
-
+  );
 
   const SkeletonCardContent = (
     <CardContent>
       <div className="flex flex-col gap-y-4 pt-8 px-4">
         <div className="w-full flex items-center">
-          <div className="w-1/2 text-neutral4 font-medium">
-            Lend Asset
-          </div>
+          <div className="w-1/2 text-neutral4 font-medium">Lend Asset</div>
           <Skeleton className="w-1/2 h-[24px] bg-accent/20 rounded-md" />
-
         </div>
         <div className="w-full flex items-center">
           <div className="w-1/2 text-neutral4 font-medium">Lend APY</div>
           <Skeleton className="w-1/2 h-[24px] bg-accent/20 rounded-md" />
         </div>
         <div className="w-full flex items-center">
-          <div className="w-1/2 text-neutral4 font-medium">
-            Supplied Assets
-          </div>
+          <div className="w-1/2 text-neutral4 font-medium">Supplied Assets</div>
           <Skeleton className="w-1/2 h-[24px] bg-accent/20 rounded-md" />
         </div>
         <div className="w-full flex items-center">
-          <div className="w-1/2 text-neutral4 font-medium">
-            Supply Points
-          </div>
+          <div className="w-1/2 text-neutral4 font-medium">Supply Points</div>
           <Skeleton className="w-1/2 h-[24px] bg-accent/20 rounded-md" />
         </div>
       </div>
     </CardContent>
-  )
+  );
 
   return (
     <>
@@ -155,89 +142,96 @@ export const LendTable = () => {
             <TableHead className="w-1/6">Lend APY</TableHead>
             <TableHead className="w-1/6">Supplied Assets</TableHead>
             <TableHead className="w-1/6">Supply Points</TableHead>
-            <TableHead className="w-3/12">{ }</TableHead>
+            <TableHead className="w-3/12">{}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {
-            isPendingMarketConfiguration ? SkeletonRow :
-              <TableRow>
-                <TableCell>
-                  <div className="flex gap-x-2 items-center">
-                    <div>
-                      {marketConfiguration && (
-                        <Image
-                          src={
-                            SYMBOL_TO_ICON[
+          {isPendingMarketConfiguration ? (
+            SkeletonRow
+          ) : (
+            <TableRow>
+              <TableCell>
+                <div className="flex gap-x-2 items-center">
+                  <div>
+                    {marketConfiguration && (
+                      <Image
+                        src={
+                          SYMBOL_TO_ICON[
                             ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]
-                            ]
-                          }
-                          alt={ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]}
-                          width={32}
-                          height={32}
-                          className="rounded-full"
-                        />
-                      )}
-                    </div>
-                    <div>
-                      {marketConfiguration && (
-                        <div className="text-neutral2 font-medium">
-                          {ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]}
-                        </div>
-                      )}
-                      <div>
-                        {formatUnits(
-                          balance ? BigNumber(balance.toString()) : BigNumber(0),
-                          marketConfiguration?.baseTokenDecimals ?? 9
-                        ).toFixed(2)}{' '}
-                        {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
-                        {' in wallet'}
+                          ]
+                        }
+                        alt={ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]}
+                        width={32}
+                        height={32}
+                        className="rounded-full"
+                      />
+                    )}
+                  </div>
+                  <div>
+                    {marketConfiguration && (
+                      <div className="text-neutral2 font-medium">
+                        {ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]}
                       </div>
+                    )}
+                    <div>
+                      {formatUnits(
+                        balance ? BigNumber(balance.toString()) : BigNumber(0),
+                        marketConfiguration?.baseTokenDecimals ?? 9
+                      ).toFixed(2)}{' '}
+                      {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
+                      {' in wallet'}
                     </div>
                   </div>
-                </TableCell>
-                <TableCell className={cn(isSupplyRatePending && 'animate-pulse', 'text-neutral2 text-md font-medium')}>
-                  {getSupplyApr(supplyRate)}
-                </TableCell>
-                <TableCell>
-                  {formatUnits(
-                    userSupplyBorrow?.supplied ?? BigNumber(0),
-                    marketConfiguration?.baseTokenDecimals ?? 9
-                  ).toFormat(2)}{' '}
-                  {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
-                </TableCell>
-                <TableCell>
-                  <PointIcons points={POINTS_LEND} />
-                </TableCell>
-                <TableCell>
-                  <div className="flex gap-x-2 w-full">
-                    <Button
-                      className="w-1/2"
-                      disabled={userRole === USER_ROLE.BORROWER || !account}
-                      onMouseDown={() => {
-                        handleBaseTokenClick(ACTION_TYPE.SUPPLY);
-                      }}
-                    >
-                      Supply
-                    </Button>
-                    <Button
-                      className="w-1/2"
-                      disabled={userRole === USER_ROLE.BORROWER ||
-                        !account ||
-                        !userSupplyBorrow ||
-                        userSupplyBorrow.supplied.eq(0)
-                      }
-                      variant="tertiary"
-                      onMouseDown={() => {
-                        handleBaseTokenClick(ACTION_TYPE.WITHDRAW);
-                      }}
-                    >
-                      Withdraw
-                    </Button>
-                  </div>
-                </TableCell>
-              </TableRow>
-          }
+                </div>
+              </TableCell>
+              <TableCell
+                className={cn(
+                  isSupplyRatePending && 'animate-pulse',
+                  'text-neutral2 text-md font-medium'
+                )}
+              >
+                {getSupplyApr(supplyRate)}
+              </TableCell>
+              <TableCell>
+                {formatUnits(
+                  userSupplyBorrow?.supplied ?? BigNumber(0),
+                  marketConfiguration?.baseTokenDecimals ?? 9
+                ).toFormat(2)}{' '}
+                {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
+              </TableCell>
+              <TableCell>
+                <PointIcons points={POINTS_LEND} />
+              </TableCell>
+              <TableCell>
+                <div className="flex gap-x-2 w-full">
+                  <Button
+                    className="w-1/2"
+                    disabled={userRole === USER_ROLE.BORROWER || !account}
+                    onMouseDown={() => {
+                      handleBaseTokenClick(ACTION_TYPE.SUPPLY);
+                    }}
+                  >
+                    Supply
+                  </Button>
+                  <Button
+                    className="w-1/2"
+                    disabled={
+                      userRole === USER_ROLE.BORROWER ||
+                      !account ||
+                      !userSupplyBorrow ||
+                      userSupplyBorrow.supplied.eq(0)
+                    }
+                    variant="tertiary"
+                    onMouseDown={() => {
+                      handleBaseTokenClick(ACTION_TYPE.WITHDRAW);
+                    }}
+                  >
+                    Withdraw
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+          )}
         </TableBody>
       </Table>
       {/* MOBILE */}
@@ -250,8 +244,9 @@ export const LendTable = () => {
               <CardDescription>Card Description</CardDescription>
             </CardHeader>
           </VisuallyHidden.Root>
-          {isPendingMarketConfiguration ? SkeletonCardContent :
-
+          {isPendingMarketConfiguration ? (
+            SkeletonCardContent
+          ) : (
             <CardContent>
               <div className="flex flex-col gap-y-4 pt-8 px-4">
                 <div className="w-full flex items-center">
@@ -264,10 +259,12 @@ export const LendTable = () => {
                         <Image
                           src={
                             SYMBOL_TO_ICON[
-                            ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]
+                              ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]
                             ]
                           }
-                          alt={ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]}
+                          alt={
+                            ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]
+                          }
                           width={32}
                           height={32}
                           className={'rounded-full'}
@@ -282,7 +279,9 @@ export const LendTable = () => {
                       )}
                       <div className="text-neutral5 text-sm">
                         {formatUnits(
-                          balance ? BigNumber(balance.toString()) : BigNumber(0),
+                          balance
+                            ? BigNumber(balance.toString())
+                            : BigNumber(0),
                           marketConfiguration?.baseTokenDecimals ?? 9
                         ).toFixed(2)}
                         {' in wallet'}
@@ -291,7 +290,9 @@ export const LendTable = () => {
                   </div>
                 </div>
                 <div className="w-full flex items-center">
-                  <div className="w-1/2 text-neutral4 font-medium">Lend APY</div>
+                  <div className="w-1/2 text-neutral4 font-medium">
+                    Lend APY
+                  </div>
                   <div
                     className={cn(
                       'text-neutral2',
@@ -305,7 +306,7 @@ export const LendTable = () => {
                   <div className="w-1/2 text-neutral4 font-medium">
                     Supplied Assets
                   </div>
-                  <div className='text-neutral4'>
+                  <div className="text-neutral4">
                     {formatUnits(
                       userSupplyBorrow?.supplied ?? BigNumber(0),
                       marketConfiguration?.baseTokenDecimals ?? 9
@@ -320,7 +321,8 @@ export const LendTable = () => {
                   <PointIcons points={POINTS_LEND} />
                 </div>
               </div>
-            </CardContent>}
+            </CardContent>
+          )}
           <CardFooter>
             <div className="flex gap-x-2 w-full">
               <Button

@@ -19,10 +19,10 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import {
+  USER_ROLE,
   useBorrowCapacity,
   useBorrowRate,
   useMarketConfiguration,
-  USER_ROLE,
   useUserRole,
   useUserSupplyBorrow,
 } from '@/hooks';
@@ -141,7 +141,7 @@ export const BorrowTable = () => {
             <TableHead className="w-1/6">Borrow APY</TableHead>
             <TableHead className="w-1/6">Borrowed Assets</TableHead>
             <TableHead className="w-1/6">Borrow Points</TableHead>
-            <TableHead className="w-3/12">{ }</TableHead>
+            <TableHead className="w-3/12">{}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -156,7 +156,7 @@ export const BorrowTable = () => {
                       <Image
                         src={
                           SYMBOL_TO_ICON[
-                          ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]
+                            ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]
                           ]
                         }
                         alt={ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]}
@@ -259,7 +259,7 @@ export const BorrowTable = () => {
                         <Image
                           src={
                             SYMBOL_TO_ICON[
-                            ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]
+                              ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]
                             ]
                           }
                           alt={
@@ -275,7 +275,7 @@ export const BorrowTable = () => {
                       <div className="text-neutral2 font-medium">
                         {
                           ASSET_ID_TO_SYMBOL[
-                          marketConfiguration?.baseToken ?? ''
+                            marketConfiguration?.baseToken ?? ''
                           ]
                         }
                       </div>

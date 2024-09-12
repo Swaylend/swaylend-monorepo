@@ -163,8 +163,8 @@ export const InputDialog = () => {
       return formatUnits(
         BigNumber(
           userCollateralAssets?.[actionTokenAssetId ?? ''] ??
-          new BigNumber(0) ??
-          0
+            new BigNumber(0) ??
+            0
         ),
         collateralConfigurations?.[actionTokenAssetId ?? '']?.decimals ?? 9
       );
@@ -405,7 +405,9 @@ export const InputDialog = () => {
               <div className="flex mt-2 justify-between items-center w-full">
                 <div className="text-neutral4 text-sm">
                   {finalBalance.toFormat(4)}
-                  {action === ACTION_TYPE.BORROW ? ' available to borrow' : ' available'}
+                  {action === ACTION_TYPE.BORROW
+                    ? ' available to borrow'
+                    : ' available'}
                 </div>
                 <Button
                   disabled={!finalBalance || finalBalance.eq(0)}
