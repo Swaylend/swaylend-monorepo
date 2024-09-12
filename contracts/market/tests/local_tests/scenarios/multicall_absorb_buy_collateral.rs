@@ -169,7 +169,7 @@ async fn multicall_absorb_buy_collateral_test() {
         .methods()
         .absorb(vec![bob_address], price_data_update.clone())
         .with_contracts(&[&oracle.instance])
-        .call_params(CallParameters::default())
+        .call_params(CallParameters::default().with_amount(price_data_update.update_fee))
         .unwrap();
 
     // Check reserves are not negative
@@ -221,7 +221,7 @@ async fn multicall_absorb_buy_collateral_test() {
 
     // Check asset balance
     let balance = chad.get_asset_balance(&eth.asset_id).await.unwrap();
-    assert!(balance == 10_998_986_826);
+    assert!(balance == 10_998_986_826 - 1); // subtract oracle update fee
 
     market
         .print_debug_state(&wallets, &usdc, &eth)

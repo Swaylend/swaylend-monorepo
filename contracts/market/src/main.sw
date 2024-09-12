@@ -54,6 +54,7 @@ storage {
     market_basic: MarketBasics = MarketBasics::default(),
     // debug timestamp (for testing purposes)
     debug_timestamp: u64 = 0,
+    // pyth contract id
     pyth_contract_id: b256 = ZERO_B256,
 }
 
@@ -929,6 +930,13 @@ fn update_fee_internal(update_data: Vec<Bytes>) -> u64 {
 fn update_price_feeds_if_necessary_internal(price_data_update: PriceDataUpdate) {
     let contract_id = storage.pyth_contract_id.read();
     require(contract_id != ZERO_B256, Error::OracleContractIdNotSet);
+
+    // check if the payment is sufficient
+    require(
+        msg_amount() >= price_data_update.update_fee && msg_asset_id()
+            .bits() == FUEL_ETH_BASE_ASSET_ID,
+        Error::InvalidPayment,
+    );
 
     let oracle = abi(PythCore, contract_id);
     oracle
