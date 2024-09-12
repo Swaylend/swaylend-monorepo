@@ -64,4 +64,4 @@ There is a dedicated [DEPLOYMENTS.md](DEPLOYMENTS.md) for contracts. For the rel
 * Discord: TBA
 # Licensing
 
-The primary license for all SwayLend components is the MIT License. See [ `LICENSE` ](/LICENSE).
+The primary license for all SwayLend components is the MIT License. See [`LICENSE`](/LICENSE).
