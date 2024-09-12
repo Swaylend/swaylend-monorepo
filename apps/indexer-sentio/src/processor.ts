@@ -627,7 +627,10 @@ MarketProcessor.bind({
       marketConfigId
     );
 
-    if (!marketConfiguration) {
+    if (
+      !marketConfiguration &&
+      ctx.block?.height.toString() === START_BLOCK.toString() // TODO: Remove on redeploy
+    ) {
       throw new Error(
         `Market configuration not found for market ${ctx.contractAddress} on chain ${ctx.chainId}`
       );
@@ -659,9 +662,7 @@ MarketProcessor.bind({
   })
   // Process only current market
   .onTimeInterval(async (block, ctx) => {
-    if (
-      BigDecimal(block.height.toString()).eq(BigDecimal(START_BLOCK.toString()))
-    ) {
+    if (block.height.toString() === START_BLOCK.toString()) {
       return;
     }
 
