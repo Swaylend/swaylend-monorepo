@@ -230,8 +230,8 @@ MarketProcessor.bind({
         ).toUnixSeconds(),
         underlyingTokenAddress: base_token,
         underlyingTokenSymbol: ASSET_ID_TO_SYMBOL[base_token],
-        receiptTokenAddress: 'TODO',
-        receiptTokenSymbol: 'TODO',
+        receiptTokenAddress: '',
+        receiptTokenSymbol: '',
         poolAddress: ctx.contractAddress,
         poolType: 'supply_only',
       });
@@ -291,8 +291,8 @@ MarketProcessor.bind({
         ).toUnixSeconds(),
         underlyingTokenAddress: asset_id,
         underlyingTokenSymbol: ASSET_ID_TO_SYMBOL[asset_id],
-        receiptTokenAddress: 'TODO',
-        receiptTokenSymbol: 'TODO',
+        receiptTokenAddress: '',
+        receiptTokenSymbol: '',
         poolAddress: ctx.contractAddress,
         poolType: 'collateral_only',
       });

@@ -1,6 +1,35 @@
 SELECT
-    argMax (toUnixTimestamp(__genBlockTime__), __genBlockTime__) as timestamp,
-    argMax (toStartOfHour(__genBlockTime__), __genBlockTime__) as block_date,
+   timestamp,
+   blockDate as block_date,
+   chainId as chain_id,
+   poolAddress as pool_address,
+   underlyingTokenAddress as underlying_token_address,
+   underlyingTokenSymbol as underlying_token_symbol,
+   underlyingTokenPriceUsd as underlying_token_price_usd,
+   availableAmount as available_amount,
+   availableAmountUsd as available_amount_usd,
+   suppliedAmount as supplied_amount,
+   suppliedAmountUsd as supplied_amount_usd,
+   nonRecursiveSuppliedAmount as non_recursive_supplied_amount,
+   collateralAmount as collateral_amount,
+   collateralAmountUsd as collateral_amount_usd,
+   collateralFactor as collateral_factor,
+   supplyIndex as supply_index,
+   supplyApr as supply_apr,
+   borrowedAmount as borrowed_amount,
+   borrowedAmountUsd as borrowed_amount_usd,
+   borrowIndex as borrow_index,
+   borrowApr as borrow_apr
+FROM
+   `BasePoolSnapshot_raw`
+WHERE
+    blockDate == '2024-09-11 23:00:00'
+
+UNION ALL
+
+SELECT
+    1726095600 as timestamp,
+    '2024-09-11 23:00:00' as block_date,
     argMax (chainId, __genBlockTime__) as chain_id,
     argMax (poolAddress, __genBlockTime__) as pool_address,
     argMax (underlyingTokenAddress, __genBlockTime__) as underlying_token_address,
@@ -23,6 +52,6 @@ SELECT
 FROM
    `CollateralPoolSnapshot_raw`
 WHERE
-    __genBlockTime__ <= '2024-09-13 23:00:00'
+    __genBlockTime__ <= '2024-09-11 23:00:00'
 GROUP BY
     id
