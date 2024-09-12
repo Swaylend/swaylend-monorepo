@@ -146,7 +146,7 @@ export const InfoBowl = () => {
                   </>
                 )}
                 <div
-                  className={`w-full h-full ${bowlMode === 2 && 'bg-white/5 ring-2 ring-white/20'} flex-col ${bowlMode === 1 && 'bg-purple-500 text-neutral2'} ${bowlMode === 0 && 'bg-accent text-neutral6'} ring-2 ring-white/20 rounded-full flex justify-center items-center sm:text-xl text-md text-center font-semibold`}
+                  className={`w-full h-full ${bowlMode === 2 && 'bg-white/5 ring-2 ring-white/20'} flex-col ${bowlMode === 0 && 'bg-purple-500 text-neutral2'} ${bowlMode === 1 && 'bg-accent text-neutral6'} ring-2 ring-white/20 rounded-full flex justify-center items-center sm:text-xl text-md text-center font-semibold`}
                 >
                   {bowlMode === 2 && (
                     <div className="z-10 text-sm sm:text-lg text-neutral2 font-bold">

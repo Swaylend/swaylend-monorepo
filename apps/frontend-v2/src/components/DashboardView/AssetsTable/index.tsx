@@ -12,12 +12,12 @@ export const AssetsTable = () => {
       {marketMode === 'lend' && (
         <div className="flex flex-col">
           <LendTable />
-          <CollateralTable />
         </div>
       )}
       {marketMode === 'borrow' && (
         <div>
           <BorrowTable />
+          <CollateralTable />
         </div>
       )}
     </div>

@@ -42,7 +42,7 @@ interface MarketStore {
 export const marketStoreInitialState = {
   market: DeployedMarket.USDC,
   mode: 0,
-  marketMode: MARKET_MODE.LEND,
+  marketMode: MARKET_MODE.BORROW,
   action: null,
   tokenAmount: new BigNumber(0),
   actionTokenAssetId: null,
