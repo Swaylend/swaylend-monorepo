@@ -112,11 +112,11 @@ export const BorrowTable = () => {
     <CardContent>
       <div className="flex flex-col gap-y-4 pt-8 px-4">
         <div className="w-full flex items-center">
-          <div className="w-1/2 text-neutral4 font-medium">Lend Asset</div>
+          <div className="w-1/2 text-neutral4 font-medium">Borrow Asset</div>
           <Skeleton className="w-1/2 h-[24px] bg-accent/20 rounded-md" />
         </div>
         <div className="w-full flex items-center">
-          <div className="w-1/2 text-neutral4 font-medium">Lend APY</div>
+          <div className="w-1/2 text-neutral4 font-medium">Borrow APY</div>
           <Skeleton className="w-1/2 h-[24px] bg-accent/20 rounded-md" />
         </div>
         <div className="w-full flex items-center">
