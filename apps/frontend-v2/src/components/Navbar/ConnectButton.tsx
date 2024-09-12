@@ -74,7 +74,7 @@ export const ConnectButton = () => {
   return (
     <div>
       <Button disabled={isConnecting} onMouseDown={connect}>
-        {isConnected
+        {isConnected && account
           ? `${account?.slice(0, 6)}...${account?.slice(-4)}`
           : isConnecting
             ? 'Connecting'
