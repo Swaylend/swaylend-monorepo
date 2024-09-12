@@ -382,7 +382,7 @@ MarketProcessor.bind({
     } = event;
 
     const chainId = CHAIN_ID_MAP[ctx.chainId as keyof typeof CHAIN_ID_MAP];
-    const userBasicId = `${chainId}_${ctx.contractAddress}_${address}`;
+    const userBasicId = `${chainId}_${ctx.contractAddress}_${address.bits}`;
 
     let userBasic = await ctx.store.get(UserBasic, userBasicId);
 
