@@ -81,8 +81,7 @@ impl Market for Contract {
 
         let market_basic = storage.market_basic.read();
 
-        // Emit market basic event
-        log(MarketBasicEvent { market_basic });
+
 
         let pause_config = PauseConfiguration {
             supply_paused: false,
@@ -101,6 +100,9 @@ impl Market for Contract {
         log(MarketConfigurationEvent {
             market_config: market_configuration,
         });
+
+        // Emit market basic event
+        log(MarketBasicEvent { market_basic });
     }
 
     // # 1. Debug functionality (for testing purposes)
