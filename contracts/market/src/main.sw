@@ -34,7 +34,7 @@ configurable {
     DEBUG_STEP: u64 = 0,
     FUEL_ETH_BASE_ASSET_ID: b256 = 0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07,
     ORACLE_MAX_STALENESS: u64 = 30, // 30 seconds
-    ORACLE_MAX_AHEADNESS: u64 = 15 * 60, // 15 minutes
+    ORACLE_MAX_AHEADNESS: u64 = 60, // 60 seconds
     ORACLE_MAX_CONF_WIDTH: u256 = 100, // 100 / 10000 = 1 % 
 }
 
