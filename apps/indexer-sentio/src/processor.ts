@@ -428,7 +428,6 @@ MarketProcessor.bind({
     let collateralPosition = await ctx.store.get(CollateralPosition, id);
 
     if (!collateralPosition) {
-      console.log(`User ${address.bits} has no position snapshot`);
       collateralPosition = new CollateralPosition({
         id,
         chainId: chainId,
