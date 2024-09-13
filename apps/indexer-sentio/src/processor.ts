@@ -8,7 +8,9 @@ import {
   BasePoolSnapshot,
   BasePositionSnapshot,
   CollateralConfiguration,
+  CollateralPool,
   CollateralPoolSnapshot,
+  CollateralPosition,
   CollateralPositionSnapshot,
   MarketBasic,
   MarketConfiguration,
@@ -300,16 +302,16 @@ MarketProcessor.bind({
       await ctx.store.upsert(pool);
     }
 
-    // Create pool snapshot
-    const poolSnapshotId = `${chainId}_${ctx.contractAddress}_${asset_id}`;
-    const poolSnapshot = await ctx.store.get(
-      CollateralPoolSnapshot,
-      poolSnapshotId
+    // Collateral pool
+    const collateralPoolId = `${chainId}_${ctx.contractAddress}_${asset_id}`;
+    const collateralPool = await ctx.store.get(
+      CollateralPool,
+      collateralPoolId
     );
 
-    if (!poolSnapshot) {
-      const poolSnapshot = new CollateralPoolSnapshot({
-        id: poolSnapshotId,
+    if (!collateralPool) {
+      const poolSnapshot = new CollateralPool({
+        id: collateralPoolId,
         chainId: chainId,
         poolAddress: ctx.contractAddress,
         underlyingTokenAddress: asset_id,
@@ -423,11 +425,11 @@ MarketProcessor.bind({
 
     const id = `${chainId}_${ctx.contractAddress}_${address.bits}_${asset_id}`;
 
-    let positionSnapshot = await ctx.store.get(CollateralPositionSnapshot, id);
+    let collateralPosition = await ctx.store.get(CollateralPosition, id);
 
-    if (!positionSnapshot) {
+    if (!collateralPosition) {
       console.log(`User ${address.bits} has no position snapshot`);
-      positionSnapshot = new CollateralPositionSnapshot({
+      collateralPosition = new CollateralPosition({
         id,
         chainId: chainId,
         poolAddress: ctx.contractAddress,
@@ -442,38 +444,38 @@ MarketProcessor.bind({
         ),
       });
     } else {
-      positionSnapshot.collateralAmount =
-        positionSnapshot.collateralAmount.plus(
+      collateralPosition.collateralAmount =
+        collateralPosition.collateralAmount.plus(
           BigDecimal(amount.toString()).dividedBy(
             BigDecimal(10).pow(collateralConfiguration.decimals)
           )
         );
     }
 
-    await ctx.store.upsert(positionSnapshot);
+    await ctx.store.upsert(collateralPosition);
 
-    // Pool snapshot
-    const poolSnapshotId = `${chainId}_${ctx.contractAddress}_${collateralConfiguration.assetAddress}`;
-    const poolSnapshot = await ctx.store.get(
-      CollateralPoolSnapshot,
-      poolSnapshotId
+    // Collateral pool
+    const collateralPoolId = `${chainId}_${ctx.contractAddress}_${collateralConfiguration.assetAddress}`;
+    const collateralPool = await ctx.store.get(
+      CollateralPool,
+      collateralPoolId
     );
 
-    if (!poolSnapshot) {
+    if (!collateralPool) {
       throw new Error(
-        `Pool snapshot not found for market ${ctx.contractAddress} on chain ${chainId}`
+        `Collateral pool not found for market ${ctx.contractAddress} on chain ${chainId}`
       );
     }
 
-    poolSnapshot.collateralAmount = BigDecimal(
-      poolSnapshot.collateralAmount
+    collateralPool.collateralAmount = BigDecimal(
+      collateralPool.collateralAmount
     ).plus(
       BigDecimal(amount.toString()).dividedBy(
         BigDecimal(10).pow(collateralConfiguration.decimals)
       )
     );
 
-    await ctx.store.upsert(poolSnapshot);
+    await ctx.store.upsert(collateralPool);
   })
   .onLogUserWithdrawCollateralEvent(async (event, ctx) => {
     const {
@@ -496,19 +498,16 @@ MarketProcessor.bind({
 
     const id = `${chainId}_${ctx.contractAddress}_${address.bits}_${asset_id}`;
 
-    const positionSnapshot = await ctx.store.get(
-      CollateralPositionSnapshot,
-      id
-    );
+    const collateralPosition = await ctx.store.get(CollateralPosition, id);
 
-    if (!positionSnapshot) {
+    if (!collateralPosition) {
       throw new Error(
-        `Position snapshot (${id}) not found for user ${address.bits} on chain ${chainId}`
+        `Collateral position (${id}) not found for user ${address.bits} on chain ${chainId}`
       );
     }
 
-    positionSnapshot.collateralAmount = BigDecimal(
-      positionSnapshot.collateralAmount
+    collateralPosition.collateralAmount = BigDecimal(
+      collateralPosition.collateralAmount
         .minus(
           BigDecimal(amount.toString()).dividedBy(
             BigDecimal(10).pow(collateralConfiguration.decimals)
@@ -517,35 +516,35 @@ MarketProcessor.bind({
         .toString()
     );
 
-    // If user withdraws all collateral, delete the position snapshot
-    if (positionSnapshot.collateralAmount.lte(0)) {
-      await ctx.store.delete(positionSnapshot, id);
+    // If user withdraws all collateral, delete the collateral position
+    if (collateralPosition.collateralAmount.lte(0)) {
+      await ctx.store.delete(collateralPosition, id);
     } else {
-      await ctx.store.upsert(positionSnapshot);
+      await ctx.store.upsert(collateralPosition);
     }
 
-    // Pool snapshot
-    const poolSnapshotId = `${chainId}_${ctx.contractAddress}_${collateralConfiguration.assetAddress}`;
-    const poolSnapshot = await ctx.store.get(
-      CollateralPoolSnapshot,
-      poolSnapshotId
+    // Collateral pool
+    const collateralPoolId = `${chainId}_${ctx.contractAddress}_${collateralConfiguration.assetAddress}`;
+    const collateralPool = await ctx.store.get(
+      CollateralPool,
+      collateralPoolId
     );
 
-    if (!poolSnapshot) {
+    if (!collateralPool) {
       throw new Error(
-        `Pool snapshot not found for market ${ctx.contractAddress} on chain ${chainId}`
+        `Collateral pool not found for market ${ctx.contractAddress} on chain ${chainId}`
       );
     }
 
-    poolSnapshot.collateralAmount = BigDecimal(
-      poolSnapshot.collateralAmount
+    collateralPool.collateralAmount = BigDecimal(
+      collateralPool.collateralAmount
     ).minus(
       BigDecimal(amount.toString()).dividedBy(
         BigDecimal(10).pow(collateralConfiguration.decimals)
       )
     );
 
-    await ctx.store.upsert(poolSnapshot);
+    await ctx.store.upsert(collateralPool);
   })
   .onLogAbsorbCollateralEvent(async (event, ctx) => {
     const {
@@ -554,40 +553,40 @@ MarketProcessor.bind({
 
     // Collateral pool reduced for absorbed collateral
     const chainId = CHAIN_ID_MAP[ctx.chainId as keyof typeof CHAIN_ID_MAP];
-    const poolSnapshotId = `${chainId}_${ctx.contractAddress}_${asset_id}`;
-    const poolSnapshot = await ctx.store.get(
-      CollateralPoolSnapshot,
-      poolSnapshotId
+    const collateralPoolId = `${chainId}_${ctx.contractAddress}_${asset_id}`;
+    const collateralPool = await ctx.store.get(
+      CollateralPool,
+      collateralPoolId
     );
 
-    if (!poolSnapshot) {
+    if (!collateralPool) {
       throw new Error(
-        `Pool snapshot not found for market ${ctx.contractAddress} on chain ${chainId}`
+        `Collateral pool not found for market ${ctx.contractAddress} on chain ${chainId}`
       );
     }
 
-    poolSnapshot.collateralAmount = BigDecimal(
-      poolSnapshot.collateralAmount
+    collateralPool.collateralAmount = BigDecimal(
+      collateralPool.collateralAmount
     ).minus(
       BigDecimal(amount.toString()).dividedBy(BigDecimal(10).pow(decimals))
     );
 
-    await ctx.store.upsert(poolSnapshot);
+    await ctx.store.upsert(collateralPool);
 
-    // Get collateral position snapshot (and delete it as all collateral has been absorbed/seized)
-    const positionSnapshotId = `${chainId}_${ctx.contractAddress}_${address.bits}_${asset_id}`;
-    const positionSnapshot = await ctx.store.get(
-      CollateralPositionSnapshot,
-      positionSnapshotId
+    // Get collateral position (and delete it as all collateral has been absorbed/seized)
+    const collateralPositionId = `${chainId}_${ctx.contractAddress}_${address.bits}_${asset_id}`;
+    const collateralPosition = await ctx.store.get(
+      CollateralPosition,
+      collateralPositionId
     );
 
-    if (!positionSnapshot) {
+    if (!collateralPosition) {
       throw new Error(
-        `Position snapshot (${positionSnapshotId}) not found for user ${address.bits} on chain ${chainId}`
+        `Collateral position (${collateralPositionId}) not found for user ${address.bits} on chain ${chainId}`
       );
     }
 
-    await ctx.store.delete(positionSnapshot, positionSnapshotId);
+    await ctx.store.delete(collateralPosition, collateralPositionId);
   })
   .onLogMarketBasicEvent(async (event, ctx) => {
     2;
@@ -646,10 +645,12 @@ MarketProcessor.bind({
   // Process only current market
   .onTimeInterval(
     async (block, ctx) => {
+      // SHARED
       const START_TIME = dayjs(ctx.timestamp.getTime()).utc();
       const START_TIME_UNIX = START_TIME.unix();
       const START_TIME_FORMATED = START_TIME.format('YYYY-MM-DD HH:00:00');
 
+      // BASE POOL SNAPSHOTS AND BASE POSITIONS SNAPSHOTS
       const pools = (
         await ctx.store.list(Pool, [
           { field: 'poolType', op: '=', value: 'supply_only' },
@@ -863,6 +864,91 @@ MarketProcessor.bind({
       }
 
       await ctx.store.upsert(basePoolSnapshot);
+
+      // COLLATERAL POOL SNAPSHOTS AND COLLATERAL POSITIONS SNAPSHOTS
+      const collateralPools = (
+        await ctx.store.list(CollateralPool, [
+          {
+            field: 'poolAddress',
+            op: '=',
+            value:
+              '0x891734bb325148ed28fdc7603e404375c44ee090b66708f45c722ccd702517d5',
+          },
+        ])
+      ).filter((val) => val.chainId === 0);
+
+      // Create CollateralPoolSnapshots
+      const processCollateralPoolSnapshotsPromises = collateralPools.map(
+        async (collateralPool) => {
+          const collateralPoolSnapshotId = `${collateralPool.chainId}_${collateralPool.poolAddress}_${collateralPool.underlyingTokenAddress}`;
+
+          let collateralPoolSnapshot = await ctx.store.get(
+            CollateralPoolSnapshot,
+            collateralPoolSnapshotId
+          );
+
+          if (!collateralPoolSnapshot) {
+            collateralPoolSnapshot = new CollateralPoolSnapshot({
+              ...collateralPool,
+              timestamp: START_TIME_UNIX,
+              blockDate: START_TIME_FORMATED,
+            });
+          } else {
+            collateralPoolSnapshot.timestamp = START_TIME_UNIX;
+            collateralPoolSnapshot.blockDate = START_TIME_FORMATED;
+            collateralPoolSnapshot.availableAmount =
+              collateralPool.availableAmount;
+            collateralPoolSnapshot.collateralAmount =
+              collateralPool.collateralAmount;
+            collateralPoolSnapshot.collateralFactor =
+              collateralPool.collateralFactor;
+          }
+
+          await ctx.store.upsert(collateralPoolSnapshot);
+        }
+      );
+
+      await Promise.all(processCollateralPoolSnapshotsPromises);
+
+      // Create CollateralPositionSnapshots
+      const collateralPositions = (
+        await ctx.store.list(CollateralPosition, [
+          {
+            field: 'poolAddress',
+            op: '=',
+            value:
+              '0x891734bb325148ed28fdc7603e404375c44ee090b66708f45c722ccd702517d5',
+          },
+        ])
+      ).filter((val) => val.chainId === 0);
+
+      const processCollateralPositionSnapshotsPromises =
+        collateralPositions.map(async (collateralPosition) => {
+          const collateralPositionSnapshotId = `${collateralPosition.chainId}_${collateralPosition.poolAddress}_${collateralPosition.underlyingTokenAddress}_${collateralPosition.userAddress}`;
+
+          let collateralPositionSnapshot = await ctx.store.get(
+            CollateralPositionSnapshot,
+            collateralPositionSnapshotId
+          );
+
+          if (!collateralPositionSnapshot) {
+            collateralPositionSnapshot = new CollateralPositionSnapshot({
+              ...collateralPosition,
+              timestamp: START_TIME_UNIX,
+              blockDate: START_TIME_FORMATED,
+            });
+          } else {
+            collateralPositionSnapshot.timestamp = START_TIME_UNIX;
+            collateralPositionSnapshot.blockDate = START_TIME_FORMATED;
+
+            collateralPositionSnapshot.collateralAmount =
+              collateralPosition.collateralAmount;
+          }
+
+          await ctx.store.upsert(collateralPositionSnapshot);
+        });
+
+      await Promise.all(processCollateralPositionSnapshotsPromises);
     },
     60,
     60
