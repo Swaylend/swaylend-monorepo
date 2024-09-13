@@ -1,3 +1,4 @@
+import { cn } from '@/lib/utils';
 import { useMarketStore } from '@/stores';
 import { ASSET_ID_TO_SYMBOL, SYMBOL_TO_ICON } from '@/utils';
 import BigNumber from 'bignumber.js';
@@ -74,7 +75,10 @@ export const InputField = ({ error }: { error: boolean }) => {
     <div className="relative flex w-full">
       <Input
         type="string"
-        className={`h-[56px] bg-card border-2 ${error && 'border-red-500 focus-visible:ring-red-500'}`}
+        className={cn(
+          'h-[56px] bg-card border-2',
+          error && 'border-red-500 focus-visible:ring-red-500'
+        )}
         value={inputValue}
         onChange={handleChange}
         placeholder="Enter amount"

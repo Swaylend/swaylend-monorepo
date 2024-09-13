@@ -98,10 +98,10 @@ export const BorrowTable = () => {
       <TableCell>
         <div className="flex gap-x-2 w-full">
           <Button className="w-1/2" disabled={true}>
-            Supply
+            Borrow
           </Button>
           <Button className="w-1/2" disabled={true}>
-            Withdraw
+            Repay
           </Button>
         </div>
       </TableCell>
