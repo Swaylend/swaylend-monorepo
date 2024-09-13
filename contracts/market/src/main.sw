@@ -85,8 +85,7 @@ impl Market for Contract {
 
         let market_basic = storage.market_basic.read();
 
-        // Emit market basic event
-        log(MarketBasicEvent { market_basic });
+
 
         let pause_config = PauseConfiguration {
             supply_paused: false,
@@ -105,6 +104,9 @@ impl Market for Contract {
         log(MarketConfigurationEvent {
             market_config: market_configuration,
         });
+
+        // Emit market basic event
+        log(MarketBasicEvent { market_basic });
     }
 
     // # 1. Debug functionality (for testing purposes)
@@ -1359,7 +1361,7 @@ fn update_base_principal(account: Address, basic: UserBasic, principal_new: I256
     // Emit user basic event
     log(UserBasicEvent {
         address: account,
-        user_basic: basic,
+        user_basic: basic
     });
 }
 
@@ -1552,7 +1554,7 @@ fn absorb_internal(account: Address) {
         base_paid_out: delta_balance,
         base_paid_out_value: delta_balance_value,
         total_base,
-        total_base_value: delta_balance_value,
+        total_base_value,
         decimals: base_price_exponent,
     });
 }

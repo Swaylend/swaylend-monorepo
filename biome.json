@@ -34,7 +34,10 @@
       "**/contracts/lib/**",
       "**/__generated__/**",
       "**/ignition/deployments/**",
-      "**/subgraphs/tests/.latest.json"
+      "**/subgraphs/tests/.latest.json",
+      "apps/indexer-sentio/src/types/**",
+      "apps/indexer-sentio/src/schema/**",
+      "apps/indexer-sentio/store.graphql"
     ]
   },
   "organizeImports": {

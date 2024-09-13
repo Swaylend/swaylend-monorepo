@@ -1,0 +1,20 @@
+{
+  "private": true,
+  "name": "indexer-sentio",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "sentio build --skip-deps --skip-gen",
+    "gen": "sentio gen --skip-deps",
+    "upload": "sentio upload --skip-deps --skip-gen"
+  },
+  "dependencies": {
+    "@sentio/sdk": "2.43.0",
+    "dayjs": "^1.11.13",
+    "fuels": "0.94.5"
+  },
+  "devDependencies": {
+    "@sentio/cli": "2.21.1",
+    "typescript": "^5.5.2"
+  }
+}
