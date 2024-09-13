@@ -30,6 +30,6 @@ export const useUserSupplyBorrow = () => {
       };
     },
     enabled: !!wallet && !!account,
-    // placeholderData: keepPreviousData,
+    placeholderData: keepPreviousData,
   });
 };
