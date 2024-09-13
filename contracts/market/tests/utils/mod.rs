@@ -127,7 +127,7 @@ pub async fn setup() -> TestData {
     // ==================== Set oracle prices ====================
     let mut prices = Vec::new();
     let mut price_feed_ids = Vec::new();
-    let publish_time: u64 = Utc::now().timestamp().try_into().unwrap();
+    let publish_time: u64 = tai64::Tai64::from_unix(Utc::now().timestamp().try_into().unwrap()).0;
     let confidence = 0;
 
     for asset in &assets {
