@@ -10,7 +10,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { formatUnits } from '@/utils';
 import { useIsConnected } from '@fuels/react';
 import BigNumber from 'bignumber.js';
-import React, { Suspense, useEffect, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { InfoBowl } from './InfoBowl';
 
 export const Stats = () => {
