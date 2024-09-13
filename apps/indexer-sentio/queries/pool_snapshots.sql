@@ -1,4 +1,28 @@
-SELECT *
+SELECT 
+timestamp,
+block_date,
+chain_id,
+pool_address,
+underlying_token_address,
+underlying_token_symbol,
+underlying_token_price_usd,
+available_amount,
+available_amount_usd,
+supplied_amount,
+supplied_amount_usd,
+non_recursive_supplied_amount,
+collateral_amount,
+collateral_amount_usd,
+collateral_factor,
+supply_index,
+supply_apr,
+borrowed_amount,
+borrowed_amount_usd,
+borrow_index, 
+borrow_apr,
+total_fees_usd,
+user_fees_usd,
+protocol_fees_usd
 FROM (
         SELECT id,
             timestamp,
@@ -21,9 +45,12 @@ FROM (
             argMax (borrowedAmount, timestamp) as borrowed_amount,
             argMax (borrowedAmountUsd, timestamp) as borrowed_amount_usd,
             argMax (borrowIndex, timestamp) as borrow_index,
-            argMax (borrowApr, timestamp) as borrow_apr
+            argMax (borrowApr, timestamp) as borrow_apr,
+            argMax (totalFeesUsd, timestamp) as total_fees_usd,
+            argMax (userFeesUsd, timestamp) as user_fees_usd,
+            argMax (protocolFeesUsd, timestamp) as protocol_fees_usd
         FROM `CollateralPoolSnapshot_raw`
-        WHERE timestamp > toUnixTimestamp('2024-09-01 23:00:00')
+        WHERE timestamp > timestamp('{{timestamp}}')
         GROUP BY id,
             timestamp
         UNION ALL
@@ -48,11 +75,14 @@ FROM (
             argMax (borrowedAmount, timestamp) as borrowed_amount,
             argMax (borrowedAmountUsd, timestamp) as borrowed_amount_usd,
             argMax (borrowIndex, timestamp) as borrow_index,
-            argMax (borrowApr, timestamp) as borrow_apr
+            argMax (borrowApr, timestamp) as borrow_apr,
+            argMax (totalFeesUsd, timestamp) as total_fees_usd,
+            argMax (userFeesUsd, timestamp) as user_fees_usd,
+            argMax (protocolFeesUsd, timestamp) as protocol_fees_usd
         FROM `BasePoolSnapshot_raw`
-        WHERE timestamp > toUnixTimestamp('2024-09-01 23:00:00')
+        WHERE timestamp > timestamp('{{timestamp}}')
         GROUP BY id,
             timestamp
     )
-ORDER BY timestamp ASC,
-    id
+ORDER BY timestamp ASC
+   

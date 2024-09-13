@@ -1,4 +1,17 @@
-SELECT *
+SELECT
+    timestamp,
+    block_date,
+    chain_id,
+    pool_address,
+    underlying_token_address,
+    underlying_token_symbol,
+    user_address,
+    supplied_amount,
+    supplied_amount_usd,
+    borrowed_amount,
+    borrowed_amount_usd,
+    collateral_amount,
+    collateral_amount_usd
 FROM (
         SELECT id,
             timestamp,
@@ -18,7 +31,7 @@ FROM (
             argMax(collateralAmount, timestamp) as collateral_amount,
             argMax(collateralAmountUsd, timestamp) as collateral_amount_usd
         FROM `BasePositionSnapshot_raw`
-        WHERE timestamp > toUnixTimestamp('2024-09-01 23:00:00')
+        WHERE timestamp > timestamp('{{timestamp}}')
         GROUP BY id,
             timestamp
         UNION ALL
@@ -40,9 +53,8 @@ FROM (
             argMax(collateralAmount, timestamp) as collateral_amount,
             argMax(collateralAmountUsd, timestamp) as collateral_amount_usd
         FROM `CollateralPositionSnapshot_raw`
-        WHERE timestamp > toUnixTimestamp('2024-09-01 23:00:00')
+        WHERE timestamp > timestamp('{{timestamp}}')
         GROUP BY id,
             timestamp
     )
-ORDER BY timestamp ASC,
-    id
+ORDER BY timestamp ASC
