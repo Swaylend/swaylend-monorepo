@@ -8,6 +8,7 @@ use pyth_interface::{data_structures::price::{PriceFeedId}};
 pub const BASE_ACCRUAL_SCALE: u256 = 1_000_000; // 1e6
 pub const BASE_INDEX_SCALE_15: u256 = 1_000_000_000_000_000; // 1e15
 pub const FACTOR_SCALE_18: u256 = 1_000_000_000_000_000_000; // 1e18
+pub const ORACLE_CONF_BASIS_POINTS: u256 = 10_000; // 1e4
 
 pub struct CollateralConfiguration {
     pub asset_id: b256,
@@ -153,4 +154,5 @@ pub enum Error {
     NotYetActive: (),
     AlreadyActive: (),
     OracleContractIdNotSet: (),
+    OraclePriceValidationError: (),
 }

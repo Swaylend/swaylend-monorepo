@@ -121,7 +121,7 @@ async fn multicall_withdraw_supply_test() {
         .withdraw_base(bob_withdraw_amount.into(), price_data_update.clone())
         .with_contracts(&[&oracle.instance])
         .with_tx_policies(tx_policies)
-        .call_params(CallParameters::default())
+        .call_params(CallParameters::default().with_amount(price_data_update.update_fee))
         .unwrap();
 
     // Supply base

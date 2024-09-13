@@ -29,3 +29,4 @@ serde_json = { workspace = true }
 rand = { workspace = true }
 chrono = { workspace = true }
 anyhow = { workspace = true }
+tai64 = { workspace = true }
