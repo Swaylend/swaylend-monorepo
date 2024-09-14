@@ -38,7 +38,7 @@ export const Points = () => {
         className="flex flex-col gap-y-4 items-center w-[258px] px-[24px]"
       >
         <div className="flex flex-col gap-y-2 items-center">
-          <div className="text-neutral5">SwayLend Pts</div>
+          <div className="text-moon">SwayLend Pts</div>
           <div
             className={cn(
               'text-2xl font-semibold text-yellow-400',
@@ -48,8 +48,8 @@ export const Points = () => {
             {isLoading ? 'Loading...' : user ? user.points : '0'}
           </div>
         </div>
-        <div className="rounded-full bg-white/5 px-4 py-2 text-neutral5">
-          Fuel Pts <span className="text-neutral2">0</span>
+        <div className="rounded-full bg-white/5 px-4 py-2 text-moon">
+          Fuel Pts <span className="text-moon">0</span>
         </div>
         <Button className="w-full flex gap-x-2" variant="tertiary-card">
           <Trophy className="w-5 h-5" />

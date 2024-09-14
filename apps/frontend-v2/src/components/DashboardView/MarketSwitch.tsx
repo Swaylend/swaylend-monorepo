@@ -16,14 +16,14 @@ export const MarketSwitch = () => {
       className="mt-[40px] sm:mt-[55px]"
     >
       <TabsList className="max-sm:h-[40px]">
-        <TabsTrigger value="lend" className="max-sm:py-1 max-sm:px-6">
-          Lend
+        <TabsTrigger value="borrow" className="max-sm:py-1.5 max-sm:px-6">
+          Borrow
         </TabsTrigger>
         <TabsTrigger
-          className="data-[state=active]:bg-purple-600 data-[state=active]:text-neutral2 max-sm:py-1 max-sm:px-6"
-          value="borrow"
+          className="data-[state=active]:bg-purple-600 data-[state=active]:text-white max-sm:py-1 max-sm:px-6"
+          value="lend"
         >
-          Borrow
+          Earn
         </TabsTrigger>
       </TabsList>
     </Tabs>

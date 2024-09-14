@@ -1,4 +1,5 @@
 import { AssetName } from '@/components/AssetName';
+import { type Point, PointIcons } from '@/components/PointIcons';
 import { Title } from '@/components/Title';
 import { Button } from '@/components/ui/button';
 import {
@@ -9,6 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
   Table,
   TableBody,
@@ -40,6 +42,21 @@ type TableRowProps = {
   handleAssetClick: (action: ACTION_TYPE, assetId: string) => void;
 };
 
+const POINTS_COLLATERAL: Point[] = [
+  {
+    id: '1',
+    name: 'Fuel',
+    description: 'Earn Fuel Points by lending assets',
+    icon: SYMBOL_TO_ICON.FUEL,
+  },
+  {
+    id: '2',
+    name: 'SwayLend',
+    description: 'Earn SwayLend Points by lending assets',
+    icon: SYMBOL_TO_ICON.SWAY,
+  },
+];
+
 const CollateralTableRow = ({
   account,
   assetId,
@@ -60,6 +77,7 @@ const CollateralTableRow = ({
 
   const canSupply = balance?.gt(0);
   const canWithdraw = protocolBalance.gt(0);
+
   return (
     <TableRow>
       <TableCell>
@@ -75,7 +93,9 @@ const CollateralTableRow = ({
       <TableCell>
         {formatUnits(protocolBalance, decimals).toFixed(4)} {symbol}
       </TableCell>
-      <TableCell>100</TableCell>
+      <TableCell>
+        <PointIcons points={POINTS_COLLATERAL} />
+      </TableCell>
       <TableCell>
         <div className="flex gap-x-2 w-full">
           <Button
@@ -90,7 +110,7 @@ const CollateralTableRow = ({
           <Button
             className="w-1/2"
             disabled={!canWithdraw}
-            variant={'tertiary'}
+            variant={'secondary'}
             onMouseDown={() =>
               canWithdraw && handleAssetClick(ACTION_TYPE.WITHDRAW, assetId)
             }
@@ -134,9 +154,7 @@ const CollateralCard = ({
       <CardContent>
         <div className="flex flex-col gap-y-4 pt-8 px-4">
           <div className="w-full flex items-center">
-            <div className="w-1/2 text-neutral4 font-medium">
-              Collateral Asset
-            </div>
+            <div className="w-1/2 text-moon font-medium">Collateral Asset</div>
             <AssetName
               symbol={symbol}
               name={SYMBOL_TO_NAME[symbol]}
@@ -144,25 +162,21 @@ const CollateralCard = ({
             />
           </div>
           <div className="w-full flex items-center">
-            <div className="w-1/2 text-neutral4 font-medium">
-              Wallet Balance
-            </div>
-            <div className="text-neutral5">
+            <div className="w-1/2 text-moon font-medium">Wallet Balance</div>
+            <div className="text-moon">
               {formattedBalance} {symbol}
             </div>
           </div>
           <div className="w-full flex items-center">
-            <div className="w-1/2 text-neutral4 font-medium">
-              Supplied Assets
-            </div>
-            <div>
+            <div className="w-1/2 text-moon font-medium">Supplied Assets</div>
+            <div className="text-moon">
               {' '}
               {formatUnits(protocolBalance, decimals).toFixed(4)} {symbol}
             </div>
           </div>
           <div className="w-full flex items-center">
-            <div className="w-1/2 text-neutral4 font-medium">Supply Points</div>
-            100
+            <div className="w-1/2 text-moon font-medium">Supply Points</div>
+            <PointIcons points={POINTS_COLLATERAL} />
           </div>
         </div>
       </CardContent>
@@ -180,7 +194,7 @@ const CollateralCard = ({
           <Button
             className="w-1/2"
             disabled={!canWithdraw}
-            variant={'tertiary'}
+            variant={'secondary'}
             onMouseDown={() =>
               canWithdraw && handleAssetClick(ACTION_TYPE.WITHDRAW, assetId)
             }
@@ -193,6 +207,33 @@ const CollateralCard = ({
   );
 };
 
+const SkeletonRow = (
+  <TableRow>
+    <TableCell>
+      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+    </TableCell>
+    <TableCell>
+      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+    </TableCell>
+    <TableCell>
+      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+    </TableCell>
+    <TableCell>
+      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+    </TableCell>
+    <TableCell>
+      <div className="flex gap-x-2 w-full">
+        <Button className="w-1/2" disabled={true}>
+          Supply
+        </Button>
+        <Button className="w-1/2" disabled={true}>
+          Withdraw
+        </Button>
+      </div>
+    </TableCell>
+  </TableRow>
+);
+
 export const CollateralTable = () => {
   const { account } = useAccount();
   const {
@@ -203,10 +244,15 @@ export const CollateralTable = () => {
     changeInputDialogOpen,
   } = useMarketStore();
 
-  const { data: userCollateralAssets, isLoading: userCollateralAssetsLoading } =
-    useUserCollateralAssets();
+  const {
+    data: userCollateralAssets,
+    isPending: isPendingUserCollateralAssets,
+  } = useUserCollateralAssets();
 
-  const { data: collateralConfigurations } = useCollateralConfigurations();
+  const {
+    data: collateralConfigurations,
+    isPending: isPendingCollateralConfigurations,
+  } = useCollateralConfigurations();
 
   const collaterals = useMemo(() => {
     if (!collateralConfigurations) return [];
@@ -235,41 +281,61 @@ export const CollateralTable = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {collaterals.map((collateral) => (
-            <CollateralTableRow
-              key={collateral.asset_id}
-              account={account ?? undefined}
-              assetId={collateral.asset_id}
-              symbol={ASSET_ID_TO_SYMBOL[collateral.asset_id]}
-              decimals={collateral.decimals}
-              protocolBalance={
-                userCollateralAssets?.[collateral.asset_id] ?? new BigNumber(0)
-              }
-              protocolBalancePending={userCollateralAssetsLoading}
-              handleAssetClick={handleAssetClick}
-            />
-          ))}
+          {isPendingCollateralConfigurations ? (
+            SkeletonRow
+          ) : (
+            <>
+              {collaterals.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={5} className="text-center py-4">
+                    No collateral assets found
+                  </TableCell>
+                </TableRow>
+              ) : (
+                collaterals.map((collateral) => (
+                  <CollateralTableRow
+                    key={collateral.asset_id}
+                    account={account ?? undefined}
+                    assetId={collateral.asset_id}
+                    symbol={ASSET_ID_TO_SYMBOL[collateral.asset_id]}
+                    decimals={collateral.decimals}
+                    protocolBalance={
+                      userCollateralAssets?.[collateral.asset_id] ??
+                      new BigNumber(0)
+                    }
+                    protocolBalancePending={isPendingUserCollateralAssets}
+                    handleAssetClick={handleAssetClick}
+                  />
+                ))
+              )}
+            </>
+          )}
         </TableBody>
       </Table>
 
       <div className="mt-8 flex flex-col gap-y-4 px-4 sm:hidden">
         <Title>Collateral Assets</Title>
-        <div className="flex flex-col gap-y-4">
-          {collaterals.map((collateral) => (
-            <CollateralCard
-              key={collateral.asset_id}
-              account={account ?? undefined}
-              assetId={collateral.asset_id}
-              symbol={ASSET_ID_TO_SYMBOL[collateral.asset_id]}
-              decimals={collateral.decimals}
-              protocolBalance={
-                userCollateralAssets?.[collateral.asset_id] ?? new BigNumber(0)
-              }
-              protocolBalancePending={userCollateralAssetsLoading}
-              handleAssetClick={handleAssetClick}
-            />
-          ))}
-        </div>
+        {isPendingCollateralConfigurations ? (
+          <Skeleton className="w-full h-[100px] bg-primary/20 rounded-md" />
+        ) : (
+          <div className="flex flex-col gap-y-4">
+            {collaterals.map((collateral) => (
+              <CollateralCard
+                key={collateral.asset_id}
+                account={account ?? undefined}
+                assetId={collateral.asset_id}
+                symbol={ASSET_ID_TO_SYMBOL[collateral.asset_id]}
+                decimals={collateral.decimals}
+                protocolBalance={
+                  userCollateralAssets?.[collateral.asset_id] ??
+                  new BigNumber(0)
+                }
+                protocolBalancePending={isPendingUserCollateralAssets}
+                handleAssetClick={handleAssetClick}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </>
   );

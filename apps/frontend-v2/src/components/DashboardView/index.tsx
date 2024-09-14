@@ -1,4 +1,5 @@
 'use client';
+import { useUserRole } from '@/hooks';
 import React from 'react';
 import { InputDialog } from '../InputDialog';
 import { RedeemReferralDialog } from '../RedeemReferralDialog';

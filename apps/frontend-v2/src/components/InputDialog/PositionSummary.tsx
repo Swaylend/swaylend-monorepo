@@ -1,5 +1,6 @@
 import {
   useBorrowCapacity,
+  useMarketBalanceOfBase,
   useMarketConfiguration,
   usePossiblePositionSummary,
   useUserCollateralValue,
@@ -14,7 +15,7 @@ import React, { useMemo } from 'react';
 
 export const PositionSummary = () => {
   const { data: marketConfiguration } = useMarketConfiguration();
-  //TODO -> Borrow capacity cant be higher than the amount of base asset in market contract... Check balance of base asset in market contract
+  const { data: marketBalanceOfBase } = useMarketBalanceOfBase();
   const { data: borrowCapacity } = useBorrowCapacity();
   const { data: userSupplyBorrow } = useUserSupplyBorrow();
 
@@ -22,15 +23,25 @@ export const PositionSummary = () => {
   const { data: liquidationPoint } = useUserLiquidationPoint();
 
   const totalBorrowCapacity = useMemo(() => {
-    if (!userSupplyBorrow || !borrowCapacity || !marketConfiguration) {
+    if (
+      !userSupplyBorrow ||
+      !borrowCapacity ||
+      !marketConfiguration ||
+      !marketBalanceOfBase
+    ) {
       return BigNumber(0);
+    }
+
+    let totalBorrowCapacity = borrowCapacity;
+    if (marketBalanceOfBase.formatted.lte(borrowCapacity)) {
+      totalBorrowCapacity = marketBalanceOfBase.formatted;
     }
 
     return formatUnits(
       userSupplyBorrow.borrowed,
       marketConfiguration.baseTokenDecimals
-    ).plus(borrowCapacity);
-  }, [userSupplyBorrow, borrowCapacity]);
+    ).plus(totalBorrowCapacity);
+  }, [userSupplyBorrow, borrowCapacity, marketBalanceOfBase]);
 
   const {
     possibleBorrowCapacity,
@@ -96,8 +107,8 @@ export const PositionSummary = () => {
         direction: possibleBorrowCapacity?.lte(
           totalBorrowCapacity ?? BigNumber(0)
         )
-          ? 0
-          : 1,
+          ? 1
+          : 0,
       },
     ];
   }, [
@@ -113,21 +124,21 @@ export const PositionSummary = () => {
 
   return (
     <div className="w-full flex-col flex justify-center items-center">
-      <div className="text-neutral4 flex items-center gap-x-2">
+      <div className="text-moon flex items-center gap-x-2">
         Position Summary <InfoIcon className="w-4 h-4" />
       </div>
       <div className="w-full mt-4 flex flex-col gap-y-2">
         {stats.map((stat) => {
           return (
             <div key={stat.title} className="flex w-full justify-between">
-              <div className="text-neutral4">{stat.title}</div>
+              <div className="text-moon">{stat.title}</div>
               {stat.changeValue === null ? (
-                <div className="text-neutral2 font-semibold">{stat.value}</div>
+                <div className="text-lavender font-semibold">{stat.value}</div>
               ) : (
                 <div
                   className={cn(
                     stat.color === 0 && 'text-red-500',
-                    stat.color === 1 && 'text-accent',
+                    stat.color === 1 && 'text-primary',
                     'flex items-center gap-x-1'
                   )}
                 >

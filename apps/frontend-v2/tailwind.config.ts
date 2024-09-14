@@ -13,26 +13,66 @@ const config = {
         '2xl': '1400px',
       },
     },
+    fontSize: {
+      '2xl': [
+        '48px',
+        {
+          lineHeight: '58px',
+        },
+      ],
+      xl: [
+        '30px',
+        {
+          lineHeight: '36px',
+        },
+      ],
+      lg: [
+        '18px',
+        {
+          lineHeight: '27px',
+        },
+      ],
+      md: [
+        '16px',
+        {
+          lineHeight: '24px',
+        },
+      ],
+      sm: [
+        '14px',
+        {
+          lineHeight: '21px',
+        },
+      ],
+      xs: [
+        '12px',
+        {
+          lineHeight: '12px',
+        },
+      ],
+    },
     extend: {
       fontFamily: {
-        sans: ['var(--font-sans)', ...fontFamily.sans],
+        sans: ['Inter var', ...fontFamily.sans],
       },
       colors: {
-        neutral0: '#FFFFFF',
-        neutral1: '#F0F2FA',
-        neutral2: '#E3E9F9',
-        neutral3: '#B0B7C3',
-        neutral4: '#9A9ABD',
-        neutral5: '#8D98AF',
-        neutral6: '#313A45',
-        neutral7: '#1A1D1F',
-        neutral8: '#111315',
-        primary01: '#3FE8BD',
-        primary02: '#1DD4A6',
-        primary03: '#00B493',
-        secondary1: '#FF6A55',
-        secondary2: '#FFB8AE',
-        secondary3: '#CFDAFF',
+        neutral0: '#8D021F',
+        neutral1: '#8D021F',
+        neutral2: '#8D021F',
+        neutral3: '#8D021F',
+        neutral4: '#8D021F',
+        neutral5: '#8D021F',
+        neutral6: '#8D021F',
+        neutral7: '#8D021F',
+        neutral8: '#8D021F',
+        primary01: '#8D021F',
+        primary02: '#8D021F',
+        primary03: '#8D021F',
+        secondary1: '#8D021F',
+        secondary2: '#8D021F',
+        secondary3: '#8D021F',
+        lavender: '#DFE5FA',
+        moon: '#8D98AF',
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',

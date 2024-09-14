@@ -38,8 +38,8 @@ body > div > div[role="dialog"] {
     --secondary-foreground: 222.2 47.4% 11.2%;
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --primary: 210 40% 96.1%;
+    --primary-foreground: 222.2 47.4% 11.2%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
     --border: 214.3 31.8% 91.4%;
@@ -55,19 +55,19 @@ body > div > div[role="dialog"] {
 
   .dark {
     --background: 205 16% 15%;
-    --foreground: 224 65% 93%; 
+    --foreground: 227 73% 93%; 
     --card: 198 15% 17%; 
-    --card-foreground: 224 65% 93%; 
+    --card-foreground: 227 73% 93%; 
     --popover: 198 15% 17%; 
-    --popover-foreground: 224 65% 93%; 
+    --popover-foreground: 227 73% 93%;
     --primary: 165 79% 58%; 
-    --primary-foreground: 204 9% 11%; 
-    --secondary: 7 100% 67%; 
-    --secondary-foreground: 213 17% 23%; 
+    --primary-foreground: 205 16% 15%; 
+    --secondary: 213 17% 23%; 
+    --secondary-foreground: 227 73% 93%;  
     --muted: 213 17% 23%; 
     --muted-foreground: 0 0% 35%; 
-    --accent: 165 79% 58%;
-    --accent-foreground: 204 9% 11%;
+    --primary: 165 79% 58%;
+    --primary-foreground: 205 16% 15%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
     --border: 213 17% 23%; 

@@ -9,6 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
   Table,
   TableBody,
@@ -18,8 +19,10 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import {
+  USER_ROLE,
   useMarketConfiguration,
   useSupplyRate,
+  useUserRole,
   useUserSupplyBorrow,
 } from '@/hooks';
 import { cn } from '@/lib/utils';
@@ -49,13 +52,34 @@ const POINTS_LEND: Point[] = [
     description: 'Earn SwayLend Points by lending assets',
     icon: SYMBOL_TO_ICON.SWAY,
   },
-  {
-    id: '3',
-    name: 'USDC',
-    description: 'Earn USDC Points by lending assets',
-    icon: SYMBOL_TO_ICON.USDC,
-  },
 ];
+
+const SkeletonRow = (
+  <TableRow>
+    <TableCell>
+      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+    </TableCell>
+    <TableCell>
+      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+    </TableCell>
+    <TableCell>
+      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+    </TableCell>
+    <TableCell>
+      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+    </TableCell>
+    <TableCell>
+      <div className="flex gap-x-2 w-full">
+        <Button className="w-1/2" disabled={true}>
+          Supply
+        </Button>
+        <Button className="w-1/2" disabled={true}>
+          Withdraw
+        </Button>
+      </div>
+    </TableCell>
+  </TableRow>
+);
 
 export const LendTable = () => {
   const { account } = useAccount();
@@ -68,7 +92,8 @@ export const LendTable = () => {
 
   const { data: supplyRate, isPending: isSupplyRatePending } = useSupplyRate();
   const { data: userSupplyBorrow } = useUserSupplyBorrow();
-  const { data: marketConfiguration } = useMarketConfiguration();
+  const { data: marketConfiguration, isPending: isPendingMarketConfiguration } =
+    useMarketConfiguration();
 
   const handleBaseTokenClick = (action: ACTION_TYPE) => {
     changeAction(action);
@@ -81,6 +106,31 @@ export const LendTable = () => {
     address: account ?? undefined,
     assetId: marketConfiguration?.baseToken,
   });
+
+  const userRole = useUserRole();
+
+  const SkeletonCardContent = (
+    <CardContent>
+      <div className="flex flex-col gap-y-4 pt-8 px-4">
+        <div className="w-full flex items-center">
+          <div className="w-1/2 text-moon font-medium">Lend Asset</div>
+          <Skeleton className="w-1/2 h-[24px] bg-primary/20 rounded-md" />
+        </div>
+        <div className="w-full flex items-center">
+          <div className="w-1/2 text-moon font-medium">Lend APY</div>
+          <Skeleton className="w-1/2 h-[24px] bg-primary/20 rounded-md" />
+        </div>
+        <div className="w-full flex items-center">
+          <div className="w-1/2 text-moon font-medium">Supplied Assets</div>
+          <Skeleton className="w-1/2 h-[24px] bg-primary/20 rounded-md" />
+        </div>
+        <div className="w-full flex items-center">
+          <div className="w-1/2 text-moon font-medium">Supply Points</div>
+          <Skeleton className="w-1/2 h-[24px] bg-primary/20 rounded-md" />
+        </div>
+      </div>
+    </CardContent>
+  );
 
   return (
     <>
@@ -96,100 +146,11 @@ export const LendTable = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          <TableRow>
-            <TableCell>
-              <div className="flex gap-x-2 items-center">
-                <div>
-                  {marketConfiguration && (
-                    <Image
-                      src={
-                        SYMBOL_TO_ICON[
-                          ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]
-                        ]
-                      }
-                      alt={ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]}
-                      width={32}
-                      height={32}
-                      className="rounded-full"
-                    />
-                  )}
-                </div>
-                <div>
-                  {marketConfiguration && (
-                    <div className="text-neutral2 font-medium">
-                      {ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]}
-                    </div>
-                  )}
-                  <div>
-                    {formatUnits(
-                      balance ? BigNumber(balance.toString()) : BigNumber(0),
-                      marketConfiguration?.baseTokenDecimals ?? 9
-                    ).toFixed(2)}{' '}
-                    {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
-                    {' in wallet'}
-                  </div>
-                </div>
-              </div>
-            </TableCell>
-            <TableCell className={cn(isSupplyRatePending && 'animate-pulse')}>
-              {getSupplyApr(supplyRate)}
-            </TableCell>
-            <TableCell>
-              {formatUnits(
-                userSupplyBorrow?.supplied ?? BigNumber(0),
-                marketConfiguration?.baseTokenDecimals ?? 9
-              ).toFormat(2)}{' '}
-              {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
-            </TableCell>
-            <TableCell>
-              <PointIcons points={POINTS_LEND} />
-            </TableCell>
-            <TableCell>
-              <div className="flex gap-x-2 w-full">
-                <Button
-                  className="w-1/2"
-                  disabled={!account}
-                  onMouseDown={() => {
-                    handleBaseTokenClick(ACTION_TYPE.SUPPLY);
-                  }}
-                >
-                  Supply
-                </Button>
-                <Button
-                  className="w-1/2"
-                  disabled={
-                    !account ||
-                    !userSupplyBorrow ||
-                    userSupplyBorrow.supplied.eq(0)
-                  }
-                  variant="tertiary"
-                  onMouseDown={() => {
-                    handleBaseTokenClick(ACTION_TYPE.WITHDRAW);
-                  }}
-                >
-                  Withdraw
-                </Button>
-              </div>
-            </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-      {/* MOBILE */}
-      <div className="flex flex-col gap-y-4 px-4 sm:hidden">
-        <Title>Lend Assets</Title>
-        <Card>
-          <VisuallyHidden.Root asChild>
-            <CardHeader>
-              <CardTitle>Card Title</CardTitle>
-              <CardDescription>Card Description</CardDescription>
-            </CardHeader>
-          </VisuallyHidden.Root>
-          <CardContent>
-            <div className="flex flex-col gap-y-4 pt-8 px-4">
-              <div className="w-full flex items-center">
-                <div className="w-1/2 text-neutral4 font-medium">
-                  Lend Asset
-                </div>
+          {isPendingMarketConfiguration ? (
+            SkeletonRow
+          ) : (
+            <TableRow>
+              <TableCell>
                 <div className="flex gap-x-2 items-center">
                   <div>
                     {marketConfiguration && (
@@ -202,79 +163,195 @@ export const LendTable = () => {
                         alt={ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]}
                         width={32}
                         height={32}
-                        className={'rounded-full'}
+                        className="rounded-full"
                       />
                     )}
                   </div>
                   <div>
                     {marketConfiguration && (
-                      <div className="text-neutral2 font-medium">
+                      <div className="text-white font-medium">
                         {ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]}
                       </div>
                     )}
-                    <div className="text-neutral5 text-sm">
+                    <div>
                       {formatUnits(
                         balance ? BigNumber(balance.toString()) : BigNumber(0),
                         marketConfiguration?.baseTokenDecimals ?? 9
-                      ).toFixed(2)}
+                      ).toFixed(2)}{' '}
+                      {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
                       {' in wallet'}
                     </div>
                   </div>
                 </div>
-              </div>
-              <div className="w-full flex items-center">
-                <div className="w-1/2 text-neutral4 font-medium">Lend APY</div>
-                <div
-                  className={cn(
-                    'text-neutral5',
-                    isSupplyRatePending && 'animate-pulse'
-                  )}
-                >
-                  {getSupplyApr(supplyRate)}
-                </div>
-              </div>
-              <div className="w-full flex items-center">
-                <div className="w-1/2 text-neutral4 font-medium">
-                  Supplied Assets
-                </div>
-                <div>
-                  {formatUnits(
-                    userSupplyBorrow?.supplied ?? BigNumber(0),
-                    marketConfiguration?.baseTokenDecimals ?? 9
-                  ).toFormat(2)}{' '}
-                  {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
-                </div>
-              </div>
-              <div className="w-full flex items-center">
-                <div className="w-1/2 text-neutral4 font-medium">
-                  Supply Points
-                </div>
+              </TableCell>
+              <TableCell
+                className={cn(
+                  isSupplyRatePending && 'animate-pulse',
+                  'text-white text-md font-medium'
+                )}
+              >
+                {getSupplyApr(supplyRate)}
+              </TableCell>
+              <TableCell>
+                {formatUnits(
+                  userSupplyBorrow?.supplied ?? BigNumber(0),
+                  marketConfiguration?.baseTokenDecimals ?? 9
+                ).toFormat(2)}{' '}
+                {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
+              </TableCell>
+              <TableCell>
                 <PointIcons points={POINTS_LEND} />
+              </TableCell>
+              <TableCell>
+                {userRole === USER_ROLE.BORROWER ? (
+                  <div className="text-lavender text-md font-medium text-center w-full">
+                    Repay your debt to supply base asset!
+                  </div>
+                ) : (
+                  <div className="flex gap-x-2 w-full">
+                    <Button
+                      className="w-1/2"
+                      disabled={!account}
+                      onMouseDown={() => {
+                        handleBaseTokenClick(ACTION_TYPE.SUPPLY);
+                      }}
+                    >
+                      Supply
+                    </Button>
+                    <Button
+                      className="w-1/2"
+                      disabled={
+                        !account ||
+                        !userSupplyBorrow ||
+                        userSupplyBorrow.supplied.eq(0)
+                      }
+                      variant="secondary"
+                      onMouseDown={() => {
+                        handleBaseTokenClick(ACTION_TYPE.WITHDRAW);
+                      }}
+                    >
+                      Withdraw
+                    </Button>
+                  </div>
+                )}
+              </TableCell>
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+      {/* MOBILE */}
+      <div className="flex flex-col gap-y-4 px-4 sm:hidden">
+        <Title>Lend Assets</Title>
+        <Card>
+          <VisuallyHidden.Root asChild>
+            <CardHeader>
+              <CardTitle>Card Title</CardTitle>
+              <CardDescription>Card Description</CardDescription>
+            </CardHeader>
+          </VisuallyHidden.Root>
+          {isPendingMarketConfiguration ? (
+            SkeletonCardContent
+          ) : (
+            <CardContent>
+              <div className="flex flex-col gap-y-4 pt-8 px-4">
+                <div className="w-full flex items-center">
+                  <div className="w-1/2 text-moon font-medium">Lend Asset</div>
+                  <div className="flex gap-x-2 items-center">
+                    <div>
+                      {marketConfiguration && (
+                        <Image
+                          src={
+                            SYMBOL_TO_ICON[
+                              ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]
+                            ]
+                          }
+                          alt={
+                            ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]
+                          }
+                          width={32}
+                          height={32}
+                          className={'rounded-full'}
+                        />
+                      )}
+                    </div>
+                    <div>
+                      {marketConfiguration && (
+                        <div className="text-white font-medium">
+                          {ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]}
+                        </div>
+                      )}
+                      <div className="text-moon text-sm">
+                        {formatUnits(
+                          balance
+                            ? BigNumber(balance.toString())
+                            : BigNumber(0),
+                          marketConfiguration?.baseTokenDecimals ?? 9
+                        ).toFixed(2)}
+                        {' in wallet'}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="w-full flex items-center">
+                  <div className="w-1/2 text-moon font-medium">Lend APY</div>
+                  <div
+                    className={cn(
+                      'text-white',
+                      isSupplyRatePending && 'animate-pulse'
+                    )}
+                  >
+                    {getSupplyApr(supplyRate)}
+                  </div>
+                </div>
+                <div className="w-full flex items-center">
+                  <div className="w-1/2 text-moon font-medium">
+                    Supplied Assets
+                  </div>
+                  <div className="text-moon">
+                    {formatUnits(
+                      userSupplyBorrow?.supplied ?? BigNumber(0),
+                      marketConfiguration?.baseTokenDecimals ?? 9
+                    ).toFormat(2)}{' '}
+                    {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
+                  </div>
+                </div>
+                <div className="w-full flex items-center">
+                  <div className="w-1/2 text-moon font-medium">
+                    Supply Points
+                  </div>
+                  <PointIcons points={POINTS_LEND} />
+                </div>
               </div>
-            </div>
-          </CardContent>
+            </CardContent>
+          )}
           <CardFooter>
-            <div className="flex gap-x-2 w-full">
-              <Button
-                className="w-1/2"
-                disabled={!account}
-                onMouseDown={() => {
-                  handleBaseTokenClick(ACTION_TYPE.SUPPLY);
-                }}
-              >
-                Supply
-              </Button>
-              <Button
-                className="w-1/2"
-                disabled={!account}
-                variant={'tertiary'}
-                onMouseDown={() => {
-                  handleBaseTokenClick(ACTION_TYPE.WITHDRAW);
-                }}
-              >
-                Withdraw
-              </Button>
-            </div>
+            {userRole === USER_ROLE.BORROWER ? (
+              <div className="text-lavender text-md font-medium text-center w-full">
+                Repay your debt to supply base asset!
+              </div>
+            ) : (
+              <div className="flex gap-x-2 w-full">
+                <Button
+                  className="w-1/2"
+                  disabled={!account}
+                  onMouseDown={() => {
+                    handleBaseTokenClick(ACTION_TYPE.SUPPLY);
+                  }}
+                >
+                  Supply
+                </Button>
+                <Button
+                  className="w-1/2"
+                  disabled={!account}
+                  variant={'secondary'}
+                  onMouseDown={() => {
+                    handleBaseTokenClick(ACTION_TYPE.WITHDRAW);
+                  }}
+                >
+                  Withdraw
+                </Button>
+              </div>
+            )}
           </CardFooter>
         </Card>
       </div>

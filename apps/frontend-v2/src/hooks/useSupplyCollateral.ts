@@ -53,7 +53,7 @@ export const useSupplyCollateral = ({
         .callParams({
           forward: {
             assetId: actionTokenAssetId,
-            amount: amount.toString(),
+            amount: amount.toFixed(0),
           },
         })
         .call();

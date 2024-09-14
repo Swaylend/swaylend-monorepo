@@ -5,7 +5,7 @@ import * as React from 'react';
 import { cn } from '@/lib/utils';
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+  'inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-bold ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
   {
     variants: {
       variant: {
@@ -13,13 +13,13 @@ const buttonVariants = cva(
         destructive:
           'bg-destructive text-destructive-foreground hover:bg-destructive/90',
         outline:
-          'border border-primary bg-background hover:bg-accent hover:text-accent-foreground',
+          'border border-primary bg-background hover:bg-primary hover:text-primary-foreground',
         secondary:
           'bg-secondary text-secondary-foreground hover:bg-secondary/80',
-        ghost: 'hover:bg-accent hover:text-accent-foreground',
+        ghost: 'hover:bg-primary hover:text-primary-foreground',
         link: 'text-primary underline-offset-4 hover:underline',
-        tertiary: 'bg-neutral6 text-neutral1 hover:bg-neutral5/20',
-        'tertiary-card': 'bg-white/5 text-neutral-2 hover:bg-white/10',
+        tertiary: 'bg-secondary text-lavender hover:bg-moon/20',
+        'tertiary-card': 'bg-white/5 text-secondary-2 hover:bg-white/10',
       },
       size: {
         default: 'h-10 px-4 py-2',

@@ -8,6 +8,7 @@ import {
   useBorrowBase,
   useBorrowCapacity,
   useCollateralConfigurations,
+  useMarketBalanceOfBase,
   useMarketConfiguration,
   usePrice,
   useSupplyBase,
@@ -48,6 +49,7 @@ export const InputDialog = () => {
   } = useMarketStore();
 
   const { data: priceData } = usePrice();
+  const { data: marketBalanceOfBase } = useMarketBalanceOfBase();
 
   const { mutate: supplyCollateral } = useSupplyCollateral({
     actionTokenAssetId,
@@ -188,18 +190,25 @@ export const InputDialog = () => {
 
     switch (action) {
       case ACTION_TYPE.SUPPLY: {
-        changeTokenAmount(finalBalance);
+        changeTokenAmount(BigNumber(finalBalance.toFixed(9)));
         break;
       }
       case ACTION_TYPE.WITHDRAW:
-        changeTokenAmount(finalBalance);
+        changeTokenAmount(BigNumber(finalBalance.toFixed(9)));
         break;
       case ACTION_TYPE.BORROW:
-        // TODO -> Check balance of base asset in Market contract and set that balance if lower than max borrow amount
-        changeTokenAmount(finalBalance);
+        if (marketBalanceOfBase?.formatted.lt(finalBalance)) {
+          changeTokenAmount(
+            BigNumber(marketBalanceOfBase?.formatted.toFixed(9))
+          );
+        } else {
+          changeTokenAmount(BigNumber(finalBalance.toFixed(9)));
+        }
         break;
       case ACTION_TYPE.REPAY: {
         const finalBalanceRepay = finalBalance ?? BigNumber(0);
+
+        if (userSupplyBorrow.borrowed.eq(0)) return;
         const userBorrowed =
           formatUnits(
             userSupplyBorrow.borrowed.plus(10),
@@ -207,9 +216,9 @@ export const InputDialog = () => {
           ) ?? BigNumber(0);
 
         if (finalBalanceRepay.gte(userBorrowed)) {
-          changeTokenAmount(userBorrowed);
+          changeTokenAmount(BigNumber(userBorrowed.toFixed(9)));
         } else {
-          changeTokenAmount(finalBalanceRepay);
+          changeTokenAmount(BigNumber(finalBalanceRepay.toFixed(9)));
         }
         break;
       }
@@ -280,30 +289,33 @@ export const InputDialog = () => {
         marketConfiguration?.baseTokenDecimals
       );
 
-      if (baseBalance?.eq(0)) {
+      if (marketBalanceOfBase?.formatted.eq(0)) {
         return `There is no ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken]} to borrow`;
       }
 
-      // TODO: Get minimum borrow amount from MarketConfiguration
+      if (marketBalanceOfBase?.formatted.lt(tokenAmount)) {
+        return `There is not enough ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken]} to borrow`;
+      }
+
       if (tokenAmount.lt(new BigNumber(10))) {
         return `Minimum borrow amount is 10 ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken]}`;
       }
 
-      // If reserve is less than user collateral
-      if (borrowCapacity.gt(baseBalance)) {
-        if (tokenAmount?.gt(baseBalance ?? 0)) {
-          const max = formatUnits(
-            baseBalance,
-            marketConfiguration?.baseTokenDecimals
-          ).toFormat(2);
+      // // If reserve is less than user collateral
+      // if (borrowCapacity.gt(baseBalance)) {
+      //   if (tokenAmount?.gt(baseBalance ?? 0)) {
+      //     const max = formatUnits(
+      //       baseBalance,
+      //       marketConfiguration?.baseTokenDecimals
+      //     ).toFormat(2);
 
-          return `Max to borrow is ${max} ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken]}`;
-        }
-        return null;
-      }
+      //     return `Max to borrow is ${max} ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken]}`;
+      //   }
+      //   return null;
+      // }
 
       if (tokenAmount.gt(borrowCapacity)) {
-        return 'You will be immediately liquidated';
+        return 'You are trying to borrow more than the max borrowable amount';
       }
     }
 
@@ -344,23 +356,23 @@ export const InputDialog = () => {
                 onMouseDown={() => handleModeChange(0)}
                 type="button"
                 className={cn(
-                  `${!(action === 'SUPPLY' || action === 'BORROW') && 'text-neutral4'}`,
-                  'w-full font-semibold text-lg'
+                  `${!(action === 'SUPPLY' || action === 'BORROW') && 'text-moon'}`,
+                  'w-full font-semibold text-lg h-full'
                 )}
               >
-                {marketMode === 'lend' ? 'Supply' : 'Borrow'}
+                {action === 'SUPPLY' ? 'Supply' : 'Borrow'}
               </button>
               <div
                 className={`${action === 'SUPPLY' || action === 'BORROW' ? 'block' : 'hidden'}`}
               >
                 <div
                   className={cn(
-                    '-z-10 w-[60%] top-[62px] h-2 bg-gradient-to-r from-popover  via-accent to-popover absolute left-[calc(20%)]'
+                    '-z-10 w-[60%] top-[62px] h-2 bg-gradient-to-r from-popover  via-primary to-popover absolute left-[calc(20%)]'
                   )}
                 />
                 <div
                   className={cn(
-                    '-z-10 absolute blur-xl top-[50px] left-[calc(20%)] rounded-full w-[60%] h-8 bg-primary01'
+                    '-z-10 absolute blur-xl top-[50px] left-[calc(20%)] rounded-full w-[60%] h-8 bg-primary'
                   )}
                 />
               </div>
@@ -370,8 +382,8 @@ export const InputDialog = () => {
                 onMouseDown={() => handleModeChange(1)}
                 type="button"
                 className={cn(
-                  `${!(action === 'WITHDRAW' || action === 'REPAY') && 'text-neutral4'}`,
-                  'w-full font-semibold text-lg'
+                  `${!(action === 'WITHDRAW' || action === 'REPAY') && 'text-moon'}`,
+                  'w-full font-semibold text-lg h-full'
                 )}
               >
                 {marketMode === 'lend' ? 'Withdraw' : 'Repay'}
@@ -381,12 +393,12 @@ export const InputDialog = () => {
               >
                 <div
                   className={cn(
-                    '-z-10 w-[60%] top-[62px] h-2 bg-gradient-to-r from-popover  via-accent to-popover absolute left-[calc(20%)]'
+                    '-z-10 w-[60%] top-[62px] h-2 bg-gradient-to-r from-popover  via-primary to-popover absolute left-[calc(20%)]'
                   )}
                 />
                 <div
                   className={cn(
-                    '-z-10 absolute blur-xl top-[50px] left-[calc(20%)] rounded-full w-[60%] h-8 bg-primary01'
+                    '-z-10 absolute blur-xl top-[50px] left-[calc(20%)] rounded-full w-[60%] h-8 bg-primary'
                   )}
                 />
               </div>
@@ -395,21 +407,23 @@ export const InputDialog = () => {
           <div className="w-full flex flex-col gap-y-[30px] pt-[30px] h-[calc(100%-68px)] bg-popover p-[16px] z-10">
             <div>
               <div>
-                <InputField />
+                <InputField error={error !== null} />
                 {error && (
                   <div className="text-red-500 mt-2 text-sm">{error}</div>
                 )}
               </div>
               <div className="flex mt-2 justify-between items-center w-full">
-                <div className="text-neutral4 text-sm">
+                <div className="text-moon text-sm">
                   {finalBalance.toFormat(4)}
-                  {' available'}
+                  {action === ACTION_TYPE.BORROW
+                    ? ' available to borrow'
+                    : ' available'}
                 </div>
                 <Button
                   disabled={!finalBalance || finalBalance.eq(0)}
                   onMouseDown={onMaxBtnClick}
                   size={'sm'}
-                  variant={'tertiary-card'}
+                  variant={'secondary'}
                 >
                   Max
                 </Button>
@@ -417,7 +431,7 @@ export const InputDialog = () => {
             </div>
             <div className="flex gap-x-2 w-full">
               <DialogClose asChild>
-                <Button className="w-1/2" variant={'tertiary'}>
+                <Button className="w-1/2" variant={'secondary'}>
                   Cancel
                 </Button>
               </DialogClose>

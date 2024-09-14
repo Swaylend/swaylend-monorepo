@@ -20,7 +20,7 @@ export const AssetName = ({ src, symbol, name }: AssetNameProps) => {
           className={'rounded-full'}
         />
       </div>
-      <div className="font-medium text-neutral2">{name}</div>
+      <div className="font-medium text-white">{name}</div>
       <div>{symbol}</div>
     </div>
   );
