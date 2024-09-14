@@ -3,8 +3,8 @@ import { useMarketStore } from '@/stores';
 import { DEPLOYED_MARKETS, formatUnits } from '@/utils';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
-import { useProvider } from './useProvider';
 import { useMarketConfiguration } from './useMarketConfiguration';
+import { useProvider } from './useProvider';
 
 export const useMarketBalanceOfBase = () => {
   const provider = useProvider();

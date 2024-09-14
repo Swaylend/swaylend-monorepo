@@ -165,8 +165,8 @@ export const InputDialog = () => {
       return formatUnits(
         BigNumber(
           userCollateralAssets?.[actionTokenAssetId ?? ''] ??
-          new BigNumber(0) ??
-          0
+            new BigNumber(0) ??
+            0
         ),
         collateralConfigurations?.[actionTokenAssetId ?? '']?.decimals ?? 9
       );
@@ -198,7 +198,9 @@ export const InputDialog = () => {
         break;
       case ACTION_TYPE.BORROW:
         if (marketBalanceOfBase?.formatted.lt(finalBalance)) {
-          changeTokenAmount(BigNumber(marketBalanceOfBase?.formatted.toFixed(9)));
+          changeTokenAmount(
+            BigNumber(marketBalanceOfBase?.formatted.toFixed(9))
+          );
         } else {
           changeTokenAmount(BigNumber(finalBalance.toFixed(9)));
         }

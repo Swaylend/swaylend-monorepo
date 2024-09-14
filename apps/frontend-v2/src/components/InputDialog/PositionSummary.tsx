@@ -23,7 +23,12 @@ export const PositionSummary = () => {
   const { data: liquidationPoint } = useUserLiquidationPoint();
 
   const totalBorrowCapacity = useMemo(() => {
-    if (!userSupplyBorrow || !borrowCapacity || !marketConfiguration || !marketBalanceOfBase) {
+    if (
+      !userSupplyBorrow ||
+      !borrowCapacity ||
+      !marketConfiguration ||
+      !marketBalanceOfBase
+    ) {
       return BigNumber(0);
     }
 
