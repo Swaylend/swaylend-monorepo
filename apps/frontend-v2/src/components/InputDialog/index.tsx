@@ -289,27 +289,30 @@ export const InputDialog = () => {
         marketConfiguration?.baseTokenDecimals
       );
 
-      if (baseBalance?.eq(0)) {
+      if (marketBalanceOfBase?.formatted.eq(0)) {
         return `There is no ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken]} to borrow`;
       }
 
-      // TODO: Get minimum borrow amount from MarketConfiguration
+      if (marketBalanceOfBase?.formatted.lt(tokenAmount)) {
+        return `There is not enough ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken]} to borrow`;
+      }
+
       if (tokenAmount.lt(new BigNumber(10))) {
         return `Minimum borrow amount is 10 ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken]}`;
       }
 
-      // If reserve is less than user collateral
-      if (borrowCapacity.gt(baseBalance)) {
-        if (tokenAmount?.gt(baseBalance ?? 0)) {
-          const max = formatUnits(
-            baseBalance,
-            marketConfiguration?.baseTokenDecimals
-          ).toFormat(2);
+      // // If reserve is less than user collateral
+      // if (borrowCapacity.gt(baseBalance)) {
+      //   if (tokenAmount?.gt(baseBalance ?? 0)) {
+      //     const max = formatUnits(
+      //       baseBalance,
+      //       marketConfiguration?.baseTokenDecimals
+      //     ).toFormat(2);
 
-          return `Max to borrow is ${max} ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken]}`;
-        }
-        return null;
-      }
+      //     return `Max to borrow is ${max} ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken]}`;
+      //   }
+      //   return null;
+      // }
 
       if (tokenAmount.gt(borrowCapacity)) {
         return 'You are trying to borrow more than the max borrowable amount';
