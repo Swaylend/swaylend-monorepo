@@ -3,6 +3,7 @@ import { useUserRole } from '@/hooks';
 import React from 'react';
 import { InputDialog } from '../InputDialog';
 import { RedeemReferralDialog } from '../RedeemReferralDialog';
+import { ErrorToast, InfoToast, TransactionSuccessToast } from '../Toasts';
 import { AssetsTable } from './AssetsTable';
 import { MarketSwitch } from './MarketSwitch';
 import { Stats } from './Stats';
