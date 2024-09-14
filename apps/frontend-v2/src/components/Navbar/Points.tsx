@@ -51,13 +51,13 @@ export const Points = () => {
         <div className="rounded-full bg-white/5 px-4 py-2 text-moon">
           Fuel Pts <span className="text-moon">0</span>
         </div>
-        <Button className="w-full flex gap-x-2" variant="secondary-card">
+        <Button className="w-full flex gap-x-2" variant="tertiary-card">
           <Trophy className="w-5 h-5" />
           Points Leaderboard
         </Button>
         <Button
           className={cn('w-full flex gap-x-2', isLoading && 'animate-pulse')}
-          variant="secondary-card"
+          variant="tertiary-card"
           disabled={isPending}
           onMouseDown={async () => {
             if (isError || !user) return await refetch();
@@ -76,7 +76,7 @@ export const Points = () => {
         {user?.redeemedInviteCode === false && (
           <Button
             className="w-full flex gap-x-2"
-            variant="secondary-card"
+            variant="tertiary-card"
             onMouseDown={() => setOpen(true)}
           >
             Redeem referral code
