@@ -55,6 +55,33 @@ const POINTS_BORROW: Point[] = [
   },
 ];
 
+const SkeletonRow = (
+  <TableRow>
+    <TableCell>
+      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+    </TableCell>
+    <TableCell>
+      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+    </TableCell>
+    <TableCell>
+      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+    </TableCell>
+    <TableCell>
+      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+    </TableCell>
+    <TableCell>
+      <div className="flex gap-x-2 w-full">
+        <Button className="w-1/2" disabled={true}>
+          Borrow
+        </Button>
+        <Button className="w-1/2" disabled={true}>
+          Repay
+        </Button>
+      </div>
+    </TableCell>
+  </TableRow>
+);
+
 export const BorrowTable = () => {
   const { account } = useAccount();
   const {
@@ -81,32 +108,6 @@ export const BorrowTable = () => {
     address: account ?? undefined,
     assetId: marketConfiguration?.baseToken,
   });
-  const SkeletonRow = (
-    <TableRow>
-      <TableCell>
-        <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
-      </TableCell>
-      <TableCell>
-        <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
-      </TableCell>
-      <TableCell>
-        <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
-      </TableCell>
-      <TableCell>
-        <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
-      </TableCell>
-      <TableCell>
-        <div className="flex gap-x-2 w-full">
-          <Button className="w-1/2" disabled={true}>
-            Borrow
-          </Button>
-          <Button className="w-1/2" disabled={true}>
-            Repay
-          </Button>
-        </div>
-      </TableCell>
-    </TableRow>
-  );
 
   const SkeletonCardContent = (
     <CardContent>
