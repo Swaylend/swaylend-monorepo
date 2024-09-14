@@ -102,17 +102,17 @@ export const Stats = () => {
 
   return (
     <div className="w-full xl:px-[203px]">
-      <div className="flex w-full bg-gradient-to-r justify-between from-background to-background via-accent/40 items-center h-[91px] sm:h-[123px] px-[24px] sm:px-[56px]">
+      <div className="flex w-full bg-gradient-to-r justify-between from-background to-background via-primary/40 items-center h-[91px] sm:h-[123px] px-[24px] sm:px-[56px]">
         <div className="w-[300px]">
           {isConnected && (
             <div>
-              <div className="text-neutral3 text-xs sm:text-lg font-semibold">
+              <div className="text-moon text-xs sm:text-lg font-semibold">
                 Supplied Balance
               </div>
               {isLoading ? (
-                <Skeleton className="w-[60%] h-[40px] bg-accent/20" />
+                <Skeleton className="w-[60%] h-[40px] bg-primary/20" />
               ) : (
-                <div className="text-neutral2 font-bold text-lg sm:text-4xl">
+                <div className="text-lavender font-semibold text-lg sm:text-2xl">
                   ${totalSuppliedBalance}
                 </div>
               )}
@@ -123,17 +123,17 @@ export const Stats = () => {
         <div className="w-[300px] text-right">
           {isConnected &&
             userSupplyBorrow &&
-            userSupplyBorrow.borrowed.lt(0) && (
+            userSupplyBorrow.borrowed.gt(0) && (
               <div>
-                <div className="text-neutral3 text-xs sm:text-lg font-semibold">
+                <div className="text-moon text-xs sm:text-lg font-semibold">
                   Borrowed Assets
                 </div>
                 {isLoading ? (
                   <div className="w-full flex justify-end">
-                    <Skeleton className="w-[60%] h-[40px] bg-accent/20" />
+                    <Skeleton className="w-[60%] h-[40px] bg-primary/20" />
                   </div>
                 ) : (
-                  <div className="text-neutral2 font-bold text-lg sm:text-4xl">
+                  <div className="text-lavender font-semibold text-lg sm:text-2xl">
                     {borrowedBalance}
                   </div>
                 )}

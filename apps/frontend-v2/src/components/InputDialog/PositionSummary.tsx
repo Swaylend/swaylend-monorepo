@@ -124,21 +124,21 @@ export const PositionSummary = () => {
 
   return (
     <div className="w-full flex-col flex justify-center items-center">
-      <div className="text-neutral4 flex items-center gap-x-2">
+      <div className="text-moon flex items-center gap-x-2">
         Position Summary <InfoIcon className="w-4 h-4" />
       </div>
       <div className="w-full mt-4 flex flex-col gap-y-2">
         {stats.map((stat) => {
           return (
             <div key={stat.title} className="flex w-full justify-between">
-              <div className="text-neutral4">{stat.title}</div>
+              <div className="text-moon">{stat.title}</div>
               {stat.changeValue === null ? (
-                <div className="text-neutral2 font-semibold">{stat.value}</div>
+                <div className="text-lavender font-semibold">{stat.value}</div>
               ) : (
                 <div
                   className={cn(
                     stat.color === 0 && 'text-red-500',
-                    stat.color === 1 && 'text-accent',
+                    stat.color === 1 && 'text-primary',
                     'flex items-center gap-x-1'
                   )}
                 >

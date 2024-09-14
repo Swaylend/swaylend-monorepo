@@ -110,7 +110,7 @@ const CollateralTableRow = ({
           <Button
             className="w-1/2"
             disabled={!canWithdraw}
-            variant={'tertiary'}
+            variant={'secondary'}
             onMouseDown={() =>
               canWithdraw && handleAssetClick(ACTION_TYPE.WITHDRAW, assetId)
             }
@@ -154,9 +154,7 @@ const CollateralCard = ({
       <CardContent>
         <div className="flex flex-col gap-y-4 pt-8 px-4">
           <div className="w-full flex items-center">
-            <div className="w-1/2 text-neutral4 font-medium">
-              Collateral Asset
-            </div>
+            <div className="w-1/2 text-moon font-medium">Collateral Asset</div>
             <AssetName
               symbol={symbol}
               name={SYMBOL_TO_NAME[symbol]}
@@ -164,24 +162,20 @@ const CollateralCard = ({
             />
           </div>
           <div className="w-full flex items-center">
-            <div className="w-1/2 text-neutral4 font-medium">
-              Wallet Balance
-            </div>
-            <div className="text-neutral5">
+            <div className="w-1/2 text-moon font-medium">Wallet Balance</div>
+            <div className="text-moon">
               {formattedBalance} {symbol}
             </div>
           </div>
           <div className="w-full flex items-center">
-            <div className="w-1/2 text-neutral4 font-medium">
-              Supplied Assets
-            </div>
-            <div className="text-neutral4">
+            <div className="w-1/2 text-moon font-medium">Supplied Assets</div>
+            <div className="text-moon">
               {' '}
               {formatUnits(protocolBalance, decimals).toFixed(4)} {symbol}
             </div>
           </div>
           <div className="w-full flex items-center">
-            <div className="w-1/2 text-neutral4 font-medium">Supply Points</div>
+            <div className="w-1/2 text-moon font-medium">Supply Points</div>
             <PointIcons points={POINTS_COLLATERAL} />
           </div>
         </div>
@@ -200,7 +194,7 @@ const CollateralCard = ({
           <Button
             className="w-1/2"
             disabled={!canWithdraw}
-            variant={'tertiary'}
+            variant={'secondary'}
             onMouseDown={() =>
               canWithdraw && handleAssetClick(ACTION_TYPE.WITHDRAW, assetId)
             }
@@ -250,16 +244,16 @@ export const CollateralTable = () => {
   const SkeletonRow = (
     <TableRow>
       <TableCell>
-        <Skeleton className="w-full h-[40px] bg-accent/20 rounded-md" />
+        <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
       </TableCell>
       <TableCell>
-        <Skeleton className="w-full h-[40px] bg-accent/20 rounded-md" />
+        <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
       </TableCell>
       <TableCell>
-        <Skeleton className="w-full h-[40px] bg-accent/20 rounded-md" />
+        <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
       </TableCell>
       <TableCell>
-        <Skeleton className="w-full h-[40px] bg-accent/20 rounded-md" />
+        <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
       </TableCell>
       <TableCell>
         <div className="flex gap-x-2 w-full">
@@ -322,7 +316,7 @@ export const CollateralTable = () => {
       <div className="mt-8 flex flex-col gap-y-4 px-4 sm:hidden">
         <Title>Collateral Assets</Title>
         {isPendingCollateralConfigurations ? (
-          <Skeleton className="w-full h-[100px] bg-accent/20 rounded-md" />
+          <Skeleton className="w-full h-[100px] bg-primary/20 rounded-md" />
         ) : (
           <div className="flex flex-col gap-y-4">
             {collaterals.map((collateral) => (

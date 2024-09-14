@@ -20,7 +20,7 @@ const MarketItem = ({
   return (
     <div className="flex gap-x-2 w-full items-center justify-center px-2">
       <div className="flex items-center">
-        <div className="bg-neutral6 min-w-[32px] h-[32px] rounded-full flex items-center justify-center">
+        <div className="bg-white/10 min-w-[32px] h-[32px] rounded-full flex items-center justify-center">
           <Image
             src={SYMBOL_TO_ICON.FUEL}
             alt="FUEL"
@@ -38,9 +38,7 @@ const MarketItem = ({
         />
       </div>
 
-      <div className={cn(selected && 'hidden xl:block', 'text-neutral4')}>
-        Fuel
-      </div>
+      <div className={cn(selected && 'hidden xl:block', 'text-moon')}>Fuel</div>
       <div
         className={cn(selected && 'hidden xl:block', 'font-semibold text-md')}
       >

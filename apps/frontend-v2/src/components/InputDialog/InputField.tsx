@@ -96,7 +96,7 @@ export const InputField = ({ error }: { error: boolean }) => {
           )}
         </div>
         {actionTokenAssetId && (
-          <div className="text-sm text-neutral4 font-semibold">
+          <div className="text-sm text-moon font-semibold">
             {ASSET_ID_TO_SYMBOL[actionTokenAssetId]}
           </div>
         )}

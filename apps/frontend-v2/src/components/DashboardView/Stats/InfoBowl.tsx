@@ -92,7 +92,7 @@ export const InfoBowl = () => {
         <TooltipTrigger>
           <div className="sm:w-[174px] sm:h-[174px] w-[124px] h-[124px] bg-background rounded-full flex items-center p-2 justify-center">
             {isLoading ? (
-              <Skeleton className="w-full h-full bg-accent/20 rounded-full ring-2 ring-white/20" />
+              <Skeleton className="w-full h-full bg-primary/20 rounded-full ring-2 ring-white/20" />
             ) : (
               <div className="w-full h-full relative">
                 {bowlMode === 2 && (
@@ -146,24 +146,30 @@ export const InfoBowl = () => {
                   </>
                 )}
                 <div
-                  className={`w-full h-full ${bowlMode === 2 && 'bg-white/5 ring-2 ring-white/20'} flex-col ${bowlMode === 0 && 'bg-purple-500 text-neutral2'} ${bowlMode === 1 && 'bg-accent text-neutral6'} ring-2 ring-white/20 rounded-full flex justify-center items-center sm:text-xl text-md text-center font-semibold`}
+                  className={`w-full h-full ${bowlMode === 2 && 'bg-white/5 ring-2 ring-white/20'} flex-col ${bowlMode === 0 && 'bg-purple-500 text-white'} ${bowlMode === 1 && 'bg-primary text-secondary'} ring-2 ring-white/20 rounded-full flex justify-center items-center sm:text-xl text-md text-center font-semibold`}
                 >
                   {bowlMode === 2 && (
-                    <div className="z-10 text-sm sm:text-lg text-neutral2 font-bold">
+                    <div className="z-10 text-xs sm:text-lg text-white font-bold">
                       Liquidation Risk
-                      <div>{collateralUtilization?.times(100).toFixed(2)}%</div>
+                      <div className="sm:text-xl text-lg font-semibold">
+                        {collateralUtilization?.times(100).toFixed(2)}%
+                      </div>
                     </div>
                   )}
                   {bowlMode === 1 && (
-                    <div>
+                    <div className="text-sm sm:text-lg text-primary-foreground font-bold">
                       Borrow APR
-                      <div>{borrowApr}</div>
+                      <div className="sm:text-xl text-lg font-semibold">
+                        {borrowApr}
+                      </div>
                     </div>
                   )}
                   {bowlMode === 0 && (
-                    <div>
+                    <div className="text-sm sm:text-lg text-white font-bold">
                       Supply APR
-                      <div>{supplyApr}</div>
+                      <div className="sm:text-xl text-lg  font-semibold">
+                        {supplyApr}
+                      </div>
                     </div>
                   )}
                 </div>
@@ -179,26 +185,26 @@ export const InfoBowl = () => {
             <div className="font-bold">Position Summary</div>
             <div className="flex flex-col gap-y-1 mt-2">
               <div className="text-sm flex justify-between">
-                <div className="text-neutral4">Available to Borrow</div>
-                <div className="font-semibold text-netural2">
+                <div className="text-lavender">Available to Borrow</div>
+                <div className="font-semibold text-moon">
                   {borrowCapacity?.toFormat(2)} USD
                 </div>
               </div>
               <div className="text-sm flex justify-between">
-                <div className="text-neutral4">Liquidation point</div>
-                <div className="font-semibold text-netural2">
+                <div className="text-lavender">Liquidation point</div>
+                <div className="font-semibold text-moon">
                   ${userLiquidationPoint?.toFormat(2)}
                 </div>
               </div>
               <div className="text-sm flex justify-between">
-                <div className="text-neutral4">Collateral Utilization</div>
-                <div className="font-semibold text-netural2">
+                <div className="text-lavender">Collateral Utilization</div>
+                <div className="font-semibold text-moon">
                   {collateralUtilization?.times(100).toFormat(2)}%
                 </div>
               </div>
               <div className="text-sm flex justify-between">
-                <div className="text-neutral4">Collateral Value</div>
-                <div className="font-semibold text-netural2">
+                <div className="text-lavender">Collateral Value</div>
+                <div className="font-semibold text-moon">
                   ${collateralValue?.toFormat(2)}
                 </div>
               </div>

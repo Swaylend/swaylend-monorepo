@@ -85,16 +85,16 @@ export const LendTable = () => {
   const SkeletonRow = (
     <TableRow>
       <TableCell>
-        <Skeleton className="w-full h-[40px] bg-accent/20 rounded-md" />
+        <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
       </TableCell>
       <TableCell>
-        <Skeleton className="w-full h-[40px] bg-accent/20 rounded-md" />
+        <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
       </TableCell>
       <TableCell>
-        <Skeleton className="w-full h-[40px] bg-accent/20 rounded-md" />
+        <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
       </TableCell>
       <TableCell>
-        <Skeleton className="w-full h-[40px] bg-accent/20 rounded-md" />
+        <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
       </TableCell>
       <TableCell>
         <div className="flex gap-x-2 w-full">
@@ -113,20 +113,20 @@ export const LendTable = () => {
     <CardContent>
       <div className="flex flex-col gap-y-4 pt-8 px-4">
         <div className="w-full flex items-center">
-          <div className="w-1/2 text-neutral4 font-medium">Lend Asset</div>
-          <Skeleton className="w-1/2 h-[24px] bg-accent/20 rounded-md" />
+          <div className="w-1/2 text-moon font-medium">Lend Asset</div>
+          <Skeleton className="w-1/2 h-[24px] bg-primary/20 rounded-md" />
         </div>
         <div className="w-full flex items-center">
-          <div className="w-1/2 text-neutral4 font-medium">Lend APY</div>
-          <Skeleton className="w-1/2 h-[24px] bg-accent/20 rounded-md" />
+          <div className="w-1/2 text-moon font-medium">Lend APY</div>
+          <Skeleton className="w-1/2 h-[24px] bg-primary/20 rounded-md" />
         </div>
         <div className="w-full flex items-center">
-          <div className="w-1/2 text-neutral4 font-medium">Supplied Assets</div>
-          <Skeleton className="w-1/2 h-[24px] bg-accent/20 rounded-md" />
+          <div className="w-1/2 text-moon font-medium">Supplied Assets</div>
+          <Skeleton className="w-1/2 h-[24px] bg-primary/20 rounded-md" />
         </div>
         <div className="w-full flex items-center">
-          <div className="w-1/2 text-neutral4 font-medium">Supply Points</div>
-          <Skeleton className="w-1/2 h-[24px] bg-accent/20 rounded-md" />
+          <div className="w-1/2 text-moon font-medium">Supply Points</div>
+          <Skeleton className="w-1/2 h-[24px] bg-primary/20 rounded-md" />
         </div>
       </div>
     </CardContent>
@@ -169,7 +169,7 @@ export const LendTable = () => {
                   </div>
                   <div>
                     {marketConfiguration && (
-                      <div className="text-neutral2 font-medium">
+                      <div className="text-white font-medium">
                         {ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]}
                       </div>
                     )}
@@ -187,7 +187,7 @@ export const LendTable = () => {
               <TableCell
                 className={cn(
                   isSupplyRatePending && 'animate-pulse',
-                  'text-neutral2 text-md font-medium'
+                  'text-white text-md font-medium'
                 )}
               >
                 {getSupplyApr(supplyRate)}
@@ -203,32 +203,37 @@ export const LendTable = () => {
                 <PointIcons points={POINTS_LEND} />
               </TableCell>
               <TableCell>
-                <div className="flex gap-x-2 w-full">
-                  <Button
-                    className="w-1/2"
-                    disabled={userRole === USER_ROLE.BORROWER || !account}
-                    onMouseDown={() => {
-                      handleBaseTokenClick(ACTION_TYPE.SUPPLY);
-                    }}
-                  >
-                    Supply
-                  </Button>
-                  <Button
-                    className="w-1/2"
-                    disabled={
-                      userRole === USER_ROLE.BORROWER ||
-                      !account ||
-                      !userSupplyBorrow ||
-                      userSupplyBorrow.supplied.eq(0)
-                    }
-                    variant="tertiary"
-                    onMouseDown={() => {
-                      handleBaseTokenClick(ACTION_TYPE.WITHDRAW);
-                    }}
-                  >
-                    Withdraw
-                  </Button>
-                </div>
+                {userRole === USER_ROLE.BORROWER ? (
+                  <div className="text-lavender text-md font-medium text-center w-full">
+                    Repay your debt to supply base asset!
+                  </div>
+                ) : (
+                  <div className="flex gap-x-2 w-full">
+                    <Button
+                      className="w-1/2"
+                      disabled={!account}
+                      onMouseDown={() => {
+                        handleBaseTokenClick(ACTION_TYPE.SUPPLY);
+                      }}
+                    >
+                      Supply
+                    </Button>
+                    <Button
+                      className="w-1/2"
+                      disabled={
+                        !account ||
+                        !userSupplyBorrow ||
+                        userSupplyBorrow.supplied.eq(0)
+                      }
+                      variant="secondary"
+                      onMouseDown={() => {
+                        handleBaseTokenClick(ACTION_TYPE.WITHDRAW);
+                      }}
+                    >
+                      Withdraw
+                    </Button>
+                  </div>
+                )}
               </TableCell>
             </TableRow>
           )}
@@ -250,9 +255,7 @@ export const LendTable = () => {
             <CardContent>
               <div className="flex flex-col gap-y-4 pt-8 px-4">
                 <div className="w-full flex items-center">
-                  <div className="w-1/2 text-neutral4 font-medium">
-                    Lend Asset
-                  </div>
+                  <div className="w-1/2 text-moon font-medium">Lend Asset</div>
                   <div className="flex gap-x-2 items-center">
                     <div>
                       {marketConfiguration && (
@@ -273,11 +276,11 @@ export const LendTable = () => {
                     </div>
                     <div>
                       {marketConfiguration && (
-                        <div className="text-neutral2 font-medium">
+                        <div className="text-white font-medium">
                           {ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]}
                         </div>
                       )}
-                      <div className="text-neutral5 text-sm">
+                      <div className="text-moon text-sm">
                         {formatUnits(
                           balance
                             ? BigNumber(balance.toString())
@@ -290,12 +293,10 @@ export const LendTable = () => {
                   </div>
                 </div>
                 <div className="w-full flex items-center">
-                  <div className="w-1/2 text-neutral4 font-medium">
-                    Lend APY
-                  </div>
+                  <div className="w-1/2 text-moon font-medium">Lend APY</div>
                   <div
                     className={cn(
-                      'text-neutral2',
+                      'text-white',
                       isSupplyRatePending && 'animate-pulse'
                     )}
                   >
@@ -303,10 +304,10 @@ export const LendTable = () => {
                   </div>
                 </div>
                 <div className="w-full flex items-center">
-                  <div className="w-1/2 text-neutral4 font-medium">
+                  <div className="w-1/2 text-moon font-medium">
                     Supplied Assets
                   </div>
-                  <div className="text-neutral4">
+                  <div className="text-moon">
                     {formatUnits(
                       userSupplyBorrow?.supplied ?? BigNumber(0),
                       marketConfiguration?.baseTokenDecimals ?? 9
@@ -315,7 +316,7 @@ export const LendTable = () => {
                   </div>
                 </div>
                 <div className="w-full flex items-center">
-                  <div className="w-1/2 text-neutral4 font-medium">
+                  <div className="w-1/2 text-moon font-medium">
                     Supply Points
                   </div>
                   <PointIcons points={POINTS_LEND} />
@@ -324,27 +325,33 @@ export const LendTable = () => {
             </CardContent>
           )}
           <CardFooter>
-            <div className="flex gap-x-2 w-full">
-              <Button
-                className="w-1/2"
-                disabled={userRole === USER_ROLE.BORROWER || !account}
-                onMouseDown={() => {
-                  handleBaseTokenClick(ACTION_TYPE.SUPPLY);
-                }}
-              >
-                Supply
-              </Button>
-              <Button
-                className="w-1/2"
-                disabled={userRole === USER_ROLE.BORROWER || !account}
-                variant={'tertiary'}
-                onMouseDown={() => {
-                  handleBaseTokenClick(ACTION_TYPE.WITHDRAW);
-                }}
-              >
-                Withdraw
-              </Button>
-            </div>
+            {userRole === USER_ROLE.BORROWER ? (
+              <div className="text-lavender text-md font-medium text-center w-full">
+                Repay your debt to supply base asset!
+              </div>
+            ) : (
+              <div className="flex gap-x-2 w-full">
+                <Button
+                  className="w-1/2"
+                  disabled={!account}
+                  onMouseDown={() => {
+                    handleBaseTokenClick(ACTION_TYPE.SUPPLY);
+                  }}
+                >
+                  Supply
+                </Button>
+                <Button
+                  className="w-1/2"
+                  disabled={!account}
+                  variant={'secondary'}
+                  onMouseDown={() => {
+                    handleBaseTokenClick(ACTION_TYPE.WITHDRAW);
+                  }}
+                >
+                  Withdraw
+                </Button>
+              </div>
+            )}
           </CardFooter>
         </Card>
       </div>

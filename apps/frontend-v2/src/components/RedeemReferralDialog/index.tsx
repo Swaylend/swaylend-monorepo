@@ -22,16 +22,16 @@ export const RedeemReferralDialog = () => {
           <div className="w-full overflow-hidden relative">
             <div
               className={cn(
-                '-z-10 w-[90%] top-[62px] h-2 bg-gradient-to-r from-popover via-accent to-popover absolute left-[calc(5%)]'
+                '-z-10 w-[90%] top-[62px] h-2 bg-gradient-to-r from-popover via-primary to-popover absolute left-[calc(5%)]'
               )}
             />
             <div
               className={cn(
-                '-z-10 absolute blur-2xl top-[61px] left-[calc(33%)] rounded-full w-[33%] h-8 bg-primary01'
+                '-z-10 absolute blur-2xl top-[61px] left-[calc(33%)] rounded-full w-[33%] h-8 bg-primary'
               )}
             />
             <div className="w-full text-lg h-16 flex items-center justify-center">
-              <div className="text-neutral1 font-semibold text-lg">
+              <div className="text-lavender font-semibold text-lg">
                 Redeem Referral Code
               </div>
             </div>
@@ -54,7 +54,7 @@ export const RedeemReferralDialog = () => {
             <div className="flex gap-x-[10px] w-full">
               <Button
                 className="w-1/2 h-10"
-                variant="tertiary"
+                variant="secondary"
                 onMouseDown={() => setOpen(false)}
               >
                 Cancel

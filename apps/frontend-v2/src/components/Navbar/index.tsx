@@ -44,9 +44,9 @@ export const Navbar = () => {
               <Link key={href} href={href}>
                 <div
                   className={cn(
-                    pathname === href ? 'text-primary' : 'text-neutral2',
-                    pathname !== href && 'hover:text-neutral2/80',
-                    'flex items-center gap-x-1 h-full relative'
+                    pathname === href ? 'text-primary' : 'text-lavender',
+                    pathname !== href && 'hover:text-lavender/80',
+                    'flex items-center text-md gap-x-1 h-full relative'
                   )}
                 >
                   {icon}
@@ -54,7 +54,7 @@ export const Navbar = () => {
                   <div
                     className={cn(
                       pathname === href &&
-                        '-z-10 absolute blur-2xl top-[19px] left-[calc(50%-20px)] w-16 h-10 bg-primary01'
+                        '-z-10 absolute blur-2xl top-[19px] left-[calc(50%-20px)] w-16 h-10 bg-primary'
                     )}
                   />
                 </div>
@@ -85,7 +85,7 @@ export const Navbar = () => {
             <Button
               onMouseDown={() => setOpen(true)}
               className="rounded-full w-[40px] h-[40px] p-0"
-              variant="tertiary"
+              variant="secondary"
             >
               <Menu className="w-5 h-5" />
             </Button>
@@ -107,7 +107,7 @@ export const Navbar = () => {
                 <Button
                   onMouseDown={() => setOpen(false)}
                   className="rounded-full w-[40px] h-[40px] p-0"
-                  variant="tertiary"
+                  variant="secondary"
                 >
                   <X className="w-5 h-5" />
                 </Button>
@@ -123,9 +123,9 @@ export const Navbar = () => {
                     >
                       <div
                         className={cn(
-                          pathname === href ? 'text-primary' : 'text-neutral2',
-                          pathname !== href && 'hover:text-neutral2/80',
-                          'flex font-bold text-3xl items-center gap-x-2 h-full relative'
+                          pathname === href ? 'text-primary' : 'text-lavender',
+                          pathname !== href && 'hover:text-lavender/80',
+                          'flex font-bold text-xl items-center gap-x-2 h-full relative'
                         )}
                       >
                         {label}
