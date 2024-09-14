@@ -9,6 +9,7 @@
 /* Used for correct mobile height */
 :root {
   --doc-height: 100%;
+  --toastify-color-dark: #262F33;
 }
 
 html,
