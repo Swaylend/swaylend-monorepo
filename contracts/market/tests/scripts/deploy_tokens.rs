@@ -1,7 +1,6 @@
-use std::{path::PathBuf, thread::sleep, time::Duration};
-
 use dotenv::dotenv;
 use fuels::accounts::{provider::Provider, wallet::WalletUnlocked};
+use std::{thread::sleep, time::Duration};
 use token_sdk::{TokenAsset, TokenContract};
 
 #[tokio::test]

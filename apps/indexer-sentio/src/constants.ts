@@ -1,0 +1,6 @@
+export const ASSET_ID_TO_SYMBOL: Record<string, string> = {
+  '0xa91cc878ea68463efd1e1dab8e9709f8bdf704ae09890f67641ea417b0426627': 'USDC',
+  '0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07': 'ETH',
+  '0xb976a09362dd94bdd03d1f924be913e010b438ef73e4b565a500848d327baf54': 'BTC',
+  '0x6104c8e55327b418ac489353c977a7344d4ed3ff74af61a9efe9d3fe0f81c211': 'UNI',
+};

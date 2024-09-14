@@ -33,6 +33,9 @@ use std::bytes::Bytes;
 configurable {
     DEBUG_STEP: u64 = 0,
     FUEL_ETH_BASE_ASSET_ID: b256 = 0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07,
+    ORACLE_MAX_STALENESS: u64 = 30, // 30 seconds
+    ORACLE_MAX_AHEADNESS: u64 = 60, // 60 seconds
+    ORACLE_MAX_CONF_WIDTH: u256 = 100, // 100 / 10000 = 1 % 
 }
 
 storage {
@@ -54,6 +57,7 @@ storage {
     market_basic: MarketBasics = MarketBasics::default(),
     // debug timestamp (for testing purposes)
     debug_timestamp: u64 = 0,
+    // pyth contract id
     pyth_contract_id: b256 = ZERO_B256,
 }
 
@@ -81,8 +85,7 @@ impl Market for Contract {
 
         let market_basic = storage.market_basic.read();
 
-        // Emit market basic event
-        log(MarketBasicEvent { market_basic });
+
 
         let pause_config = PauseConfiguration {
             supply_paused: false,
@@ -101,6 +104,9 @@ impl Market for Contract {
         log(MarketConfigurationEvent {
             market_config: market_configuration,
         });
+
+        // Emit market basic event
+        log(MarketBasicEvent { market_basic });
     }
 
     // # 1. Debug functionality (for testing purposes)
@@ -912,6 +918,21 @@ fn get_price_internal(price_feed_id: PriceFeedId) -> Price {
 
     let oracle = abi(PythCore, contract_id);
     let price = oracle.price(price_feed_id);
+
+    // validate values
+
+    if price.publish_time < std::block::timestamp() {
+        let staleness = std::block::timestamp() - price.publish_time;
+        require(staleness <= ORACLE_MAX_STALENESS, Error::OraclePriceValidationError);
+    } else {
+        let aheadness = price.publish_time - std::block::timestamp();
+        require(aheadness <= ORACLE_MAX_AHEADNESS, Error::OraclePriceValidationError);
+    }
+
+    require(price.price > 0, Error::OraclePriceValidationError);
+
+    require(u256::from(price.confidence) <= (u256::from(price.price) * ORACLE_MAX_CONF_WIDTH / ORACLE_CONF_BASIS_POINTS), Error::OraclePriceValidationError);
+
     price
 }
 
@@ -929,6 +950,13 @@ fn update_fee_internal(update_data: Vec<Bytes>) -> u64 {
 fn update_price_feeds_if_necessary_internal(price_data_update: PriceDataUpdate) {
     let contract_id = storage.pyth_contract_id.read();
     require(contract_id != ZERO_B256, Error::OracleContractIdNotSet);
+
+    // check if the payment is sufficient
+    require(
+        msg_amount() >= price_data_update.update_fee && msg_asset_id()
+            .bits() == FUEL_ETH_BASE_ASSET_ID,
+        Error::InvalidPayment,
+    );
 
     let oracle = abi(PythCore, contract_id);
     oracle
@@ -1333,7 +1361,7 @@ fn update_base_principal(account: Address, basic: UserBasic, principal_new: I256
     // Emit user basic event
     log(UserBasicEvent {
         address: account,
-        user_basic: basic,
+        user_basic: basic
     });
 }
 
@@ -1526,7 +1554,7 @@ fn absorb_internal(account: Address) {
         base_paid_out: delta_balance,
         base_paid_out_value: delta_balance_value,
         total_base,
-        total_base_value: delta_balance_value,
+        total_base_value,
         decimals: base_price_exponent,
     });
 }

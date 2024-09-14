@@ -14,7 +14,7 @@ export const useMarketBalanceOfBase = () => {
   return useQuery({
     queryKey: ['marketBalanceOfBase', marketConfiguration?.baseToken, market],
     queryFn: async () => {
-      if (!provider) return null;
+      if (!provider || !marketConfiguration) return null;
 
       const marketContract = new Market(
         DEPLOYED_MARKETS[market].marketAddress,
@@ -22,15 +22,16 @@ export const useMarketBalanceOfBase = () => {
       );
 
       const { value } = await marketContract.functions
-        .balance_of(marketConfiguration?.baseToken!)
+        .balance_of(marketConfiguration.baseToken)
         .get();
 
-      if (!value) throw new Error('Failed to fetch supplyRate');
+      if (!value) throw new Error('Failed to fetch market balance');
+
       return {
         raw: BigNumber(value.toString()),
         formatted: formatUnits(
           BigNumber(value.toString()),
-          marketConfiguration?.baseTokenDecimals
+          marketConfiguration.baseTokenDecimals
         ),
       };
     },

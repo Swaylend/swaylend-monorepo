@@ -207,6 +207,33 @@ const CollateralCard = ({
   );
 };
 
+const SkeletonRow = (
+  <TableRow>
+    <TableCell>
+      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+    </TableCell>
+    <TableCell>
+      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+    </TableCell>
+    <TableCell>
+      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+    </TableCell>
+    <TableCell>
+      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+    </TableCell>
+    <TableCell>
+      <div className="flex gap-x-2 w-full">
+        <Button className="w-1/2" disabled={true}>
+          Supply
+        </Button>
+        <Button className="w-1/2" disabled={true}>
+          Withdraw
+        </Button>
+      </div>
+    </TableCell>
+  </TableRow>
+);
+
 export const CollateralTable = () => {
   const { account } = useAccount();
   const {

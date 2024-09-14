@@ -55,6 +55,56 @@ const POINTS_BORROW: Point[] = [
   },
 ];
 
+const SkeletonRow = (
+  <TableRow>
+    <TableCell>
+      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+    </TableCell>
+    <TableCell>
+      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+    </TableCell>
+    <TableCell>
+      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+    </TableCell>
+    <TableCell>
+      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+    </TableCell>
+    <TableCell>
+      <div className="flex gap-x-2 w-full">
+        <Button className="w-1/2" disabled={true}>
+          Borrow
+        </Button>
+        <Button className="w-1/2" disabled={true}>
+          Repay
+        </Button>
+      </div>
+    </TableCell>
+  </TableRow>
+);
+
+const SkeletonCardContent = (
+  <CardContent>
+    <div className="flex flex-col gap-y-4 pt-8 px-4">
+      <div className="w-full flex items-center">
+        <div className="w-1/2 text-moon font-medium">Borrow Asset</div>
+        <Skeleton className="w-1/2 h-[24px] bg-primary/20 rounded-md" />
+      </div>
+      <div className="w-full flex items-center">
+        <div className="w-1/2 text-moon font-medium">Borrow APY</div>
+        <Skeleton className="w-1/2 h-[24px] bg-primary/20 rounded-md" />
+      </div>
+      <div className="w-full flex items-center">
+        <div className="w-1/2 text-moon font-medium">Supplied Assets</div>
+        <Skeleton className="w-1/2 h-[24px] bg-primary/20 rounded-md" />
+      </div>
+      <div className="w-full flex items-center">
+        <div className="w-1/2 text-moon font-medium">Supply Points</div>
+        <Skeleton className="w-1/2 h-[24px] bg-primary/20 rounded-md" />
+      </div>
+    </div>
+  </CardContent>
+);
+
 export const BorrowTable = () => {
   const { account } = useAccount();
   const {
@@ -81,55 +131,6 @@ export const BorrowTable = () => {
     address: account ?? undefined,
     assetId: marketConfiguration?.baseToken,
   });
-  const SkeletonRow = (
-    <TableRow>
-      <TableCell>
-        <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
-      </TableCell>
-      <TableCell>
-        <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
-      </TableCell>
-      <TableCell>
-        <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
-      </TableCell>
-      <TableCell>
-        <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
-      </TableCell>
-      <TableCell>
-        <div className="flex gap-x-2 w-full">
-          <Button className="w-1/2" disabled={true}>
-            Borrow
-          </Button>
-          <Button className="w-1/2" disabled={true}>
-            Repay
-          </Button>
-        </div>
-      </TableCell>
-    </TableRow>
-  );
-
-  const SkeletonCardContent = (
-    <CardContent>
-      <div className="flex flex-col gap-y-4 pt-8 px-4">
-        <div className="w-full flex items-center">
-          <div className="w-1/2 text-moon font-medium">Borrow Asset</div>
-          <Skeleton className="w-1/2 h-[24px] bg-primary/20 rounded-md" />
-        </div>
-        <div className="w-full flex items-center">
-          <div className="w-1/2 text-moon font-medium">Borrow APY</div>
-          <Skeleton className="w-1/2 h-[24px] bg-primary/20 rounded-md" />
-        </div>
-        <div className="w-full flex items-center">
-          <div className="w-1/2 text-moon font-medium">Supplied Assets</div>
-          <Skeleton className="w-1/2 h-[24px] bg-primary/20 rounded-md" />
-        </div>
-        <div className="w-full flex items-center">
-          <div className="w-1/2 text-moon font-medium">Supply Points</div>
-          <Skeleton className="w-1/2 h-[24px] bg-primary/20 rounded-md" />
-        </div>
-      </div>
-    </CardContent>
-  );
 
   return (
     <>
