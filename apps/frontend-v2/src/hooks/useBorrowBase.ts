@@ -32,13 +32,11 @@ export const useBorrowBase = () => {
         DEPLOYED_MARKETS[market].marketAddress,
         wallet
       );
-
       const amount = new BigNumber(tokenAmount).times(
         10 ** marketConfiguration.baseTokenDecimals
       );
-
       const { waitForResult } = await marketContract.functions
-        .withdraw_base(amount.toString(), priceUpdateData)
+        .withdraw_base(amount.toFixed(0), priceUpdateData)
         .callParams({
           forward: {
             amount: priceUpdateData.update_fee,

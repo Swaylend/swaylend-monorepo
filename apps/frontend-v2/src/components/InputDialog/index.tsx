@@ -8,6 +8,7 @@ import {
   useBorrowBase,
   useBorrowCapacity,
   useCollateralConfigurations,
+  useMarketBalanceOfBase,
   useMarketConfiguration,
   usePrice,
   useSupplyBase,
@@ -48,6 +49,7 @@ export const InputDialog = () => {
   } = useMarketStore();
 
   const { data: priceData } = usePrice();
+  const { data: marketBalanceOfBase } = useMarketBalanceOfBase();
 
   const { mutate: supplyCollateral } = useSupplyCollateral({
     actionTokenAssetId,
@@ -163,8 +165,8 @@ export const InputDialog = () => {
       return formatUnits(
         BigNumber(
           userCollateralAssets?.[actionTokenAssetId ?? ''] ??
-            new BigNumber(0) ??
-            0
+          new BigNumber(0) ??
+          0
         ),
         collateralConfigurations?.[actionTokenAssetId ?? '']?.decimals ?? 9
       );
@@ -188,15 +190,18 @@ export const InputDialog = () => {
 
     switch (action) {
       case ACTION_TYPE.SUPPLY: {
-        changeTokenAmount(finalBalance);
+        changeTokenAmount(BigNumber(finalBalance.toFixed(9)));
         break;
       }
       case ACTION_TYPE.WITHDRAW:
-        changeTokenAmount(finalBalance);
+        changeTokenAmount(BigNumber(finalBalance.toFixed(9)));
         break;
       case ACTION_TYPE.BORROW:
-        // TODO -> Check balance of base asset in Market contract and set that balance if lower than max borrow amount
-        changeTokenAmount(finalBalance);
+        if (marketBalanceOfBase?.formatted.lt(finalBalance)) {
+          changeTokenAmount(BigNumber(marketBalanceOfBase?.formatted.toFixed(9)));
+        } else {
+          changeTokenAmount(BigNumber(finalBalance.toFixed(9)));
+        }
         break;
       case ACTION_TYPE.REPAY: {
         const finalBalanceRepay = finalBalance ?? BigNumber(0);
@@ -209,9 +214,9 @@ export const InputDialog = () => {
           ) ?? BigNumber(0);
 
         if (finalBalanceRepay.gte(userBorrowed)) {
-          changeTokenAmount(userBorrowed);
+          changeTokenAmount(BigNumber(userBorrowed.toFixed(9)));
         } else {
-          changeTokenAmount(finalBalanceRepay);
+          changeTokenAmount(BigNumber(finalBalanceRepay.toFixed(9)));
         }
         break;
       }
@@ -305,7 +310,7 @@ export const InputDialog = () => {
       }
 
       if (tokenAmount.gt(borrowCapacity)) {
-        return 'You will be immediately liquidated';
+        return 'You are trying to borrow more than the max borrowable amount';
       }
     }
 
@@ -350,7 +355,7 @@ export const InputDialog = () => {
                   'w-full font-semibold text-lg'
                 )}
               >
-                {marketMode === 'lend' ? 'Supply' : 'Borrow'}
+                {action === 'SUPPLY' ? 'Supply' : 'Borrow'}
               </button>
               <div
                 className={`${action === 'SUPPLY' || action === 'BORROW' ? 'block' : 'hidden'}`}

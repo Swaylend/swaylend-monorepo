@@ -61,7 +61,7 @@ export const useWithdrawCollateral = ({
       const { waitForResult } = await marketContract.functions
         .withdraw_collateral(
           actionTokenAssetId,
-          amount.toString(),
+          amount.toFixed(0),
           priceUpdateData
         )
         .callParams({

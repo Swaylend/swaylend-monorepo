@@ -1,5 +1,6 @@
 import {
   useBorrowCapacity,
+  useMarketBalanceOfBase,
   useMarketConfiguration,
   usePossiblePositionSummary,
   useUserCollateralValue,
@@ -14,7 +15,7 @@ import React, { useMemo } from 'react';
 
 export const PositionSummary = () => {
   const { data: marketConfiguration } = useMarketConfiguration();
-  //TODO -> Borrow capacity cant be higher than the amount of base asset in market contract... Check balance of base asset in market contract
+  const { data: marketBalanceOfBase } = useMarketBalanceOfBase();
   const { data: borrowCapacity } = useBorrowCapacity();
   const { data: userSupplyBorrow } = useUserSupplyBorrow();
 
@@ -22,15 +23,20 @@ export const PositionSummary = () => {
   const { data: liquidationPoint } = useUserLiquidationPoint();
 
   const totalBorrowCapacity = useMemo(() => {
-    if (!userSupplyBorrow || !borrowCapacity || !marketConfiguration) {
+    if (!userSupplyBorrow || !borrowCapacity || !marketConfiguration || !marketBalanceOfBase) {
       return BigNumber(0);
+    }
+
+    let totalBorrowCapacity = borrowCapacity;
+    if (marketBalanceOfBase.formatted.lte(borrowCapacity)) {
+      totalBorrowCapacity = marketBalanceOfBase.formatted;
     }
 
     return formatUnits(
       userSupplyBorrow.borrowed,
       marketConfiguration.baseTokenDecimals
-    ).plus(borrowCapacity);
-  }, [userSupplyBorrow, borrowCapacity]);
+    ).plus(totalBorrowCapacity);
+  }, [userSupplyBorrow, borrowCapacity, marketBalanceOfBase]);
 
   const {
     possibleBorrowCapacity,
