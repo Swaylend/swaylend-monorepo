@@ -18,6 +18,7 @@ import {
   UserBasic,
 } from './schema/store.js';
 import { MarketProcessor } from './types/fuel/MarketProcessor.js';
+import { getPriceBySymbol } from '@sentio/sdk/utils';
 
 dayjs.extend(utc);
 
@@ -689,6 +690,20 @@ MarketProcessor.bind({
           `Market configuration not found for market ${pool.poolAddress} on chain ${pool.chainId}`
         );
       }
+
+      const baseAssetPrice = await getPriceBySymbol(
+        ASSET_ID_TO_SYMBOL[pool.underlyingTokenAddress],
+        ctx.timestamp
+      );
+
+      if (!baseAssetPrice) {
+        console.error(
+          `No price found for ${ASSET_ID_TO_SYMBOL[pool.underlyingTokenAddress]} at ${ctx.timestamp}`
+        );
+      }
+
+      const basePrice = BigDecimal(baseAssetPrice ?? 0);
+
       // Accrue interest
       const now = BigDecimal(
         DateTime.fromUnixSeconds(START_TIME_UNIX).toTai64()
@@ -827,11 +842,13 @@ MarketProcessor.bind({
           poolAddress: marketBasic.contractAddress,
           underlyingTokenAddress: underlyingTokenAddress,
           underlyingTokenSymbol: ASSET_ID_TO_SYMBOL[underlyingTokenAddress],
-          underlyingTokenPriceUsd: BigDecimal(0),
+          underlyingTokenPriceUsd: basePrice,
           availableAmount: totalSupplyBase.minus(totalBorrowBase),
-          availableAmountUsd: BigDecimal(0),
+          availableAmountUsd: totalSupplyBase
+            .minus(totalBorrowBase)
+            .times(basePrice),
           suppliedAmount: totalSupplyBase,
-          suppliedAmountUsd: BigDecimal(0),
+          suppliedAmountUsd: totalSupplyBase.times(basePrice),
           nonRecursiveSuppliedAmount: totalSupplyBase,
           collateralAmount: BigDecimal(0),
           collateralAmountUsd: BigDecimal(0),
@@ -858,7 +875,12 @@ MarketProcessor.bind({
           marketBasic.baseSupplyIndex.dividedBy(FACTOR_SCALE_15);
         basePoolSnapshot.borrowIndex =
           marketBasic.baseBorrowIndex.dividedBy(FACTOR_SCALE_15);
-
+        basePoolSnapshot.supplyApr = supplyApr;
+        basePoolSnapshot.borrowApr = borrowApr;
+        basePoolSnapshot.suppliedAmountUsd =
+          totalSupplyBase.multipliedBy(basePrice);
+        basePoolSnapshot.borrowedAmountUsd =
+          totalBorrowBase.multipliedBy(basePrice);
         basePoolSnapshot.borrowApr = borrowApr;
       }
 
@@ -871,10 +893,30 @@ MarketProcessor.bind({
             field: 'poolAddress',
             op: '=',
             value:
-              '0x891734bb325148ed28fdc7603e404375c44ee090b66708f45c722ccd702517d5',
+              '0x891734bb325148ed28fdc7603e404375c44ee090b66708f45c722ccd702517d5', // TODO: Replace with contract address
           },
         ])
       ).filter((val) => val.chainId === 0);
+
+      const collateralPrices = new Map<string, BigDecimal>();
+
+      for (const collateralPool of collateralPools) {
+        const collateralPrice = await getPriceBySymbol(
+          ASSET_ID_TO_SYMBOL[collateralPool.underlyingTokenAddress],
+          ctx.timestamp
+        );
+
+        if (!collateralPrice) {
+          console.error(
+            `No price found for ${ASSET_ID_TO_SYMBOL[collateralPool.underlyingTokenAddress]} at ${ctx.timestamp}`
+          );
+        }
+
+        collateralPrices.set(
+          collateralPool.underlyingTokenAddress,
+          BigDecimal(collateralPrice ?? 0)
+        );
+      }
 
       // Create CollateralPoolSnapshots
       const processCollateralPoolSnapshotsPromises = collateralPools.map(
@@ -891,6 +933,12 @@ MarketProcessor.bind({
               ...collateralPool,
               timestamp: START_TIME_UNIX,
               blockDate: START_TIME_FORMATED,
+              underlyingTokenPriceUsd: collateralPrices.get(
+                collateralPool.underlyingTokenAddress
+              ),
+              collateralAmountUsd: collateralPool.collateralAmount.times(
+                collateralPrices.get(collateralPool.underlyingTokenAddress)!
+              ),
             });
           } else {
             collateralPoolSnapshot.timestamp = START_TIME_UNIX;
@@ -901,6 +949,12 @@ MarketProcessor.bind({
               collateralPool.collateralAmount;
             collateralPoolSnapshot.collateralFactor =
               collateralPool.collateralFactor;
+            collateralPoolSnapshot.underlyingTokenPriceUsd =
+              collateralPrices.get(collateralPool.underlyingTokenAddress);
+            collateralPoolSnapshot.collateralAmountUsd =
+              collateralPool.collateralAmount.times(
+                collateralPrices.get(collateralPool.underlyingTokenAddress)!
+              );
           }
 
           await ctx.store.upsert(collateralPoolSnapshot);
@@ -935,6 +989,9 @@ MarketProcessor.bind({
               ...collateralPosition,
               timestamp: START_TIME_UNIX,
               blockDate: START_TIME_FORMATED,
+              collateralAmountUsd: collateralPosition.collateralAmount.times(
+                collateralPrices.get(collateralPosition.underlyingTokenAddress)!
+              ),
             });
           } else {
             collateralPositionSnapshot.timestamp = START_TIME_UNIX;
@@ -942,6 +999,10 @@ MarketProcessor.bind({
 
             collateralPositionSnapshot.collateralAmount =
               collateralPosition.collateralAmount;
+            collateralPositionSnapshot.collateralAmountUsd =
+              collateralPosition.collateralAmount.times(
+                collateralPrices.get(collateralPosition.underlyingTokenAddress)!
+              );
           }
 
           await ctx.store.upsert(collateralPositionSnapshot);
