@@ -19,6 +19,7 @@ export const useSupplyCollateral = ({
   const { account } = useAccount();
   const { market } = useMarketStore();
   const { data: collateralConfigurations } = useCollateralConfigurations();
+  const { changeTokenAmount } = useMarketStore();
 
   return useMutation({
     mutationKey: [
@@ -52,7 +53,7 @@ export const useSupplyCollateral = ({
         .callParams({
           forward: {
             assetId: actionTokenAssetId,
-            amount: amount.toString(),
+            amount: amount.toFixed(0),
           },
         })
         .call();
@@ -68,6 +69,7 @@ export const useSupplyCollateral = ({
     onSuccess: (data) => {
       if (data) {
         TransactionSuccessToast({ transactionId: data });
+        changeTokenAmount(BigNumber(0));
       }
     },
     onError: (error) => {

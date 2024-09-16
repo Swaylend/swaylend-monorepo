@@ -15,8 +15,12 @@ import {
 } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { ThemeProvider } from 'next-themes';
-import type { ReactNode } from 'react';
+import { type ReactNode, useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
+
+import posthog from 'posthog-js';
+import { PostHogProvider } from 'posthog-js/react';
+import PostHogIdentify from './PostHogIdentify';
 
 function makeQueryClient() {
   return new QueryClient({
@@ -50,6 +54,18 @@ function getQueryClient() {
 export const Providers = ({ children }: { children: ReactNode }) => {
   const queryClient = getQueryClient();
 
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'development') return;
+
+    posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
+      api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST!,
+      person_profiles: 'always',
+      loaded: (posthog) => {
+        if (process.env.NODE_ENV === 'development') posthog.debug(); // debug mode in development
+      },
+    });
+  }, []);
+
   return (
     <ThemeProvider
       attribute="class"
@@ -58,40 +74,43 @@ export const Providers = ({ children }: { children: ReactNode }) => {
       enableSystem={false}
       disableTransitionOnChange
     >
-      <QueryClientProvider client={queryClient}>
-        <FuelProvider
-          theme="dark"
-          fuelConfig={{
-            connectors: [
-              new FuelWalletConnector(),
-              new FueletWalletConnector(),
-              new WalletConnectConnector({
-                // TODO: setup walletconnect project and add project id
-                projectId: '972bec1eae519664815444d4b7a7578a',
-              }),
-            ],
-          }}
-        >
-          <>
-            {children}
-            <ToastContainer
-              icon={false}
-              position="bottom-right"
-              autoClose={5000}
-              progressStyle={{ background: 'hsl(var(--primary))' }}
-              hideProgressBar={false}
-              newestOnTop={true}
-              closeOnClick={false}
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-              theme="dark"
-            />
-          </>
-        </FuelProvider>
-        <ReactQueryDevtools initialIsOpen />
-      </QueryClientProvider>
+      <PostHogProvider client={posthog}>
+        <QueryClientProvider client={queryClient}>
+          <FuelProvider
+            theme="dark"
+            fuelConfig={{
+              connectors: [
+                new FuelWalletConnector(),
+                new FueletWalletConnector(),
+                new WalletConnectConnector({
+                  // TODO: setup walletconnect project and add project id
+                  projectId: '972bec1eae519664815444d4b7a7578a',
+                }),
+              ],
+            }}
+          >
+            <>
+              {children}
+              <PostHogIdentify />
+              <ToastContainer
+                icon={false}
+                position="bottom-right"
+                autoClose={5000}
+                progressStyle={{ background: 'hsl(var(--primary))' }}
+                hideProgressBar={false}
+                newestOnTop={true}
+                closeOnClick={false}
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="dark"
+              />
+            </>
+          </FuelProvider>
+          <ReactQueryDevtools initialIsOpen />
+        </QueryClientProvider>
+      </PostHogProvider>
     </ThemeProvider>
   );
 };

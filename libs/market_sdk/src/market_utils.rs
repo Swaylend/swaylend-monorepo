@@ -283,12 +283,14 @@ impl MarketContract {
         price_data_update: &PriceDataUpdate,
     ) -> anyhow::Result<CallResponse<()>> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
+        let call_params = CallParameters::default().with_amount(price_data_update.update_fee);
 
         Ok(self
             .instance
             .methods()
             .withdraw_collateral(asset_id, amount.into(), price_data_update.clone())
             .with_tx_policies(tx_policies)
+            .call_params(call_params)?
             .with_contracts(contract_ids)
             .with_variable_output_policy(VariableOutputPolicy::Exactly(1))
             .call()

@@ -1,6 +1,7 @@
 {
   "name": "sway-lend-indexer",
   "version": "0.1.0",
+  "license": "MIT",
   "scripts": {
     "clean": "tsc --clean",
     "build": "tsc --build",
@@ -19,7 +20,7 @@
     "@types/chai": "^4.3.11",
     "@types/mocha": "10.0.6",
     "@types/node": "20.8.8",
-    "envio": "2.2.1-fuel",
+    "envio": "2.2.4-fuel",
     "mocha": "10.2.0",
     "ts-mocha": "^10.0.0",
     "typescript": "5.2.2"

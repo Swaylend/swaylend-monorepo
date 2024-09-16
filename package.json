@@ -2,7 +2,6 @@
   "name": "@lutralabs/sway-lend-monorepo",
   "private": true,
   "license": "MIT",
-  "workspaces": ["apps/**/*"],
   "scripts": {
     "lint": "biome check .",
     "lint:fix": "biome check --write ."
@@ -14,12 +13,12 @@
     "@graphql-typed-document-node/core": "^3.2.0",
     "graphql": "^16.9.0"
   },
-  "packageManager": "pnpm@9.0.6",
+  "packageManager": "pnpm@9.10.0",
   "engines": {
-    "node": ">=20.15.0"
+    "node": ">=20.17.0"
   },
   "volta": {
-    "node": "20.15.0",
-    "pnpm": "9.0.6"
+    "node": "20.17.0",
+    "pnpm": "9.10.0"
   }
 }
