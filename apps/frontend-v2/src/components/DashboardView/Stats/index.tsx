@@ -12,8 +12,10 @@ import { useIsConnected } from '@fuels/react';
 import BigNumber from 'bignumber.js';
 import React, { useMemo } from 'react';
 import { InfoBowl } from './InfoBowl';
+import { useMarketStore } from '@/stores';
 
 export const Stats = () => {
+  const { marketMode } = useMarketStore();
   const { data: userSupplyBorrow, isPending: isPendingUserSupplyBorrow } =
     useUserSupplyBorrow();
   const {
@@ -54,32 +56,34 @@ export const Stats = () => {
     ) {
       return BigNumber(0).toFormat(2);
     }
+    if (marketMode === 'lend') {
+      return formatUnits(
+        userSupplyBorrow.supplied.times(
+          priceData.prices[marketConfiguration.baseToken]
+        ),
+        marketConfiguration.baseTokenDecimals
+      ).toFormat(2);
+    }
 
-    const baseTokenSupliedBalance = formatUnits(
-      userSupplyBorrow.supplied.times(
-        priceData.prices[marketConfiguration.baseToken]
-      ),
-      marketConfiguration.baseTokenDecimals
-    );
-
-    const collateralSuppiedBalance = Object.entries(
-      userCollateralAssets
-    ).reduce((acc, [key, value]) => {
-      return acc.plus(
-        formatUnits(
-          value.times(priceData.prices[key]),
-          colateralConfigurations[key].decimals
-        )
-      );
-    }, new BigNumber(0));
-
-    return baseTokenSupliedBalance.plus(collateralSuppiedBalance).toFormat(2);
+    if (marketMode === 'borrow') {
+      return Object.entries(userCollateralAssets)
+        .reduce((acc, [key, value]) => {
+          return acc.plus(
+            formatUnits(
+              value.times(priceData.prices[key]),
+              colateralConfigurations[key].decimals
+            )
+          );
+        }, new BigNumber(0))
+        .toFormat(2);
+    }
   }, [
     userSupplyBorrow,
     userCollateralAssets,
     priceData,
     marketConfiguration,
     colateralConfigurations,
+    marketMode,
   ]);
 
   const borrowedBalance = useMemo(() => {
@@ -90,12 +94,11 @@ export const Stats = () => {
     const val = formatUnits(
       userSupplyBorrow.borrowed,
       marketConfiguration.baseTokenDecimals
-    ).toFormat(2);
-
-    if (BigNumber(val).lt(1) && BigNumber(val).gt(0)) {
+    );
+    if (val.lt(1) && val.gt(0)) {
       return '< $1';
     }
-    return `$${val}`;
+    return `$${val.toFormat(2)}`;
   }, [marketConfiguration, userSupplyBorrow]);
 
   const { isConnected } = useIsConnected();
@@ -123,7 +126,8 @@ export const Stats = () => {
         <div className="w-[300px] text-right">
           {isConnected &&
             userSupplyBorrow &&
-            userSupplyBorrow.borrowed.gt(0) && (
+            userSupplyBorrow.borrowed.gt(0) &&
+            marketMode === 'borrow' && (
               <div>
                 <div className="text-moon text-xs sm:text-lg font-semibold">
                   Borrowed Assets

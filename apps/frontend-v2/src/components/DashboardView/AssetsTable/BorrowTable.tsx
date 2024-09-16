@@ -34,11 +34,11 @@ import {
   formatUnits,
   getBorrowApr,
 } from '@/utils';
-import { useAccount, useBalance } from '@fuels/react';
+import { useAccount, useBalance, useIsConnected } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import BigNumber from 'bignumber.js';
 import Image from 'next/image';
-import React from 'react';
+import React, { useMemo } from 'react';
 
 const POINTS_BORROW: Point[] = [
   {
@@ -127,10 +127,27 @@ export const BorrowTable = () => {
     changeInputDialogOpen(true);
   };
 
+  const { isConnected } = useIsConnected();
+
   const { balance } = useBalance({
     address: account ?? undefined,
     assetId: marketConfiguration?.baseToken,
   });
+
+  const borrowedBalance = useMemo(() => {
+    if (!marketConfiguration || !userSupplyBorrow || !isConnected) {
+      return `${BigNumber(0).toFormat(4)} ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}`;
+    }
+
+    const val = formatUnits(
+      userSupplyBorrow.borrowed,
+      marketConfiguration.baseTokenDecimals
+    );
+    if (val.lt(1) && val.gt(0)) {
+      return `< 1 ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}`;
+    }
+    return `${val.toFormat(4)} ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}`;
+  }, [marketConfiguration, userSupplyBorrow, isConnected]);
 
   return (
     <>
@@ -190,13 +207,7 @@ export const BorrowTable = () => {
               >
                 {getBorrowApr(borrowRate)}
               </TableCell>
-              <TableCell>
-                {formatUnits(
-                  userSupplyBorrow?.borrowed ?? BigNumber(0),
-                  marketConfiguration?.baseTokenDecimals ?? 9
-                ).toFormat(2)}{' '}
-                {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
-              </TableCell>
+              <TableCell>{borrowedBalance}</TableCell>
               <TableCell>
                 <PointIcons points={POINTS_BORROW} />
               </TableCell>
@@ -314,13 +325,7 @@ export const BorrowTable = () => {
                   <div className="w-1/2 text-moon font-medium">
                     Borrowed Assets
                   </div>
-                  <div className="text-moon">
-                    {formatUnits(
-                      userSupplyBorrow?.borrowed ?? BigNumber(0),
-                      marketConfiguration?.baseTokenDecimals ?? 9
-                    ).toFormat(2)}{' '}
-                    {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
-                  </div>
+                  <div className="text-moon">{borrowedBalance}</div>
                 </div>
                 <div className="w-full flex items-center">
                   <div className="w-1/2 text-moon font-medium">

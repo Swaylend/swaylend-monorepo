@@ -138,8 +138,8 @@ export const LendTable = () => {
       <Table className="max-sm:hidden">
         <TableHeader>
           <TableRow>
-            <TableHead className="w-3/12">Lend Asset</TableHead>
-            <TableHead className="w-1/6">Lend APY</TableHead>
+            <TableHead className="w-3/12">Earn Asset</TableHead>
+            <TableHead className="w-1/6">Earn APY</TableHead>
             <TableHead className="w-1/6">Supplied Assets</TableHead>
             <TableHead className="w-1/6">Supply Points</TableHead>
             <TableHead className="w-3/12">{}</TableHead>
@@ -241,7 +241,7 @@ export const LendTable = () => {
       </Table>
       {/* MOBILE */}
       <div className="flex flex-col gap-y-4 px-4 sm:hidden">
-        <Title>Lend Assets</Title>
+        <Title>Earn Assets</Title>
         <Card>
           <VisuallyHidden.Root asChild>
             <CardHeader>
@@ -293,7 +293,7 @@ export const LendTable = () => {
                   </div>
                 </div>
                 <div className="w-full flex items-center">
-                  <div className="w-1/2 text-moon font-medium">Lend APY</div>
+                  <div className="w-1/2 text-moon font-medium">Earn APY</div>
                   <div
                     className={cn(
                       'text-white',

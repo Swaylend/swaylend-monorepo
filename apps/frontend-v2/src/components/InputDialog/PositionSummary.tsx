@@ -15,7 +15,7 @@ import React, { useMemo } from 'react';
 
 export const PositionSummary = () => {
   const { data: marketConfiguration } = useMarketConfiguration();
-  const { data: marketBalanceOfBase } = useMarketBalanceOfBase();
+  const marketBalanceOfBase = useMarketBalanceOfBase();
   const { data: borrowCapacity } = useBorrowCapacity();
   const { data: userSupplyBorrow } = useUserSupplyBorrow();
 
