@@ -1,6 +1,6 @@
+import { formatUnits } from '@/utils';
 import BigNumber from 'bignumber.js';
 import { useMarketBasics } from './useMarketBasics';
-import { formatUnits } from '@/utils';
 import { useMarketConfiguration } from './useMarketConfiguration';
 
 export const useMarketBalanceOfBase = () => {

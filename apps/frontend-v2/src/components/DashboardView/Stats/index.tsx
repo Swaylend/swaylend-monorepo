@@ -7,12 +7,12 @@ import {
 } from '@/hooks';
 
 import { Skeleton } from '@/components/ui/skeleton';
+import { useMarketStore } from '@/stores';
 import { formatUnits } from '@/utils';
 import { useIsConnected } from '@fuels/react';
 import BigNumber from 'bignumber.js';
 import React, { useMemo } from 'react';
 import { InfoBowl } from './InfoBowl';
-import { useMarketStore } from '@/stores';
 
 export const Stats = () => {
   const { marketMode } = useMarketStore();
