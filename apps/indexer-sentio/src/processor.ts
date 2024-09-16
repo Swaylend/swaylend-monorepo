@@ -1,5 +1,6 @@
 import { BigDecimal } from '@sentio/sdk';
 import { FuelNetwork } from '@sentio/sdk/fuel';
+import { getPriceBySymbol } from '@sentio/sdk/utils';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc.js';
 import { DateTime } from 'fuels';
@@ -18,7 +19,6 @@ import {
   UserBasic,
 } from './schema/store.js';
 import { MarketProcessor } from './types/fuel/MarketProcessor.js';
-import { getPriceBySymbol } from '@sentio/sdk/utils';
 
 dayjs.extend(utc);
 
