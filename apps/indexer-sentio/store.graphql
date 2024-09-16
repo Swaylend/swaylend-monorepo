@@ -72,21 +72,6 @@ type BasePositionSnapshot @entity {
     collateralAmountUsd: BigDecimal
 }
 
-type CollateralPositionSnapshot @entity {
-    id: ID!
-    chainId: Int!
-    poolAddress: String!
-    underlyingTokenAddress: String!
-    underlyingTokenSymbol: String!
-    userAddress: String!
-    suppliedAmount: BigDecimal!
-    suppliedAmountUsd: BigDecimal
-    borrowedAmount: BigDecimal!
-    borrowedAmountUsd: BigDecimal
-    collateralAmount: BigDecimal!
-    collateralAmountUsd: BigDecimal
-}
-
 type BasePoolSnapshot @entity {
     id: ID!
     timestamp: Int!
@@ -115,8 +100,68 @@ type BasePoolSnapshot @entity {
     protocolFeesUsd: BigDecimal
 }
 
+type CollateralPosition @entity {
+    id: ID!
+    chainId: Int!
+    poolAddress: String!
+    underlyingTokenAddress: String!
+    underlyingTokenSymbol: String!
+    userAddress: String!
+    suppliedAmount: BigDecimal!
+    suppliedAmountUsd: BigDecimal
+    borrowedAmount: BigDecimal!
+    borrowedAmountUsd: BigDecimal
+    collateralAmount: BigDecimal!
+    collateralAmountUsd: BigDecimal
+}
+
+type CollateralPool @entity {
+    id: ID!
+    chainId: Int!
+    poolAddress: String!
+    underlyingTokenAddress: String!
+    underlyingTokenSymbol: String!
+    underlyingTokenPriceUsd: BigDecimal
+    availableAmount: BigDecimal!
+    availableAmountUsd: BigDecimal
+    suppliedAmount: BigDecimal!
+    suppliedAmountUsd: BigDecimal
+    nonRecursiveSuppliedAmount: BigDecimal!
+    collateralAmount: BigDecimal!
+    collateralAmountUsd: BigDecimal
+    collateralFactor: BigDecimal!
+    supplyIndex: BigDecimal!
+    supplyApr: BigDecimal!
+    borrowedAmount: BigDecimal!
+    borrowedAmountUsd: BigDecimal
+    borrowIndex: BigDecimal!
+    borrowApr: BigDecimal!
+    totalFeesUsd: BigDecimal
+    userFeesUsd: BigDecimal
+    protocolFeesUsd: BigDecimal
+}
+
+type CollateralPositionSnapshot @entity {
+    id: ID!
+    timestamp: Int!
+    blockDate: String!
+    chainId: Int!
+    poolAddress: String!
+    underlyingTokenAddress: String!
+    underlyingTokenSymbol: String!
+    userAddress: String!
+    suppliedAmount: BigDecimal!
+    suppliedAmountUsd: BigDecimal
+    borrowedAmount: BigDecimal!
+    borrowedAmountUsd: BigDecimal
+    collateralAmount: BigDecimal!
+    collateralAmountUsd: BigDecimal
+}
+
 type CollateralPoolSnapshot @entity {
     id: ID!
+    timestamp: Int!
+    blockDate: String!
     chainId: Int!
     poolAddress: String!
     underlyingTokenAddress: String!
