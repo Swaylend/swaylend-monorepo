@@ -1,18 +1,18 @@
 ```ts                                                          
 FUEL TESTNET
 
-Pyth Oracle contract = 0xc3c47cdeaec412778fc86842b44fb061b350db57f9d52def4f73036156f71506
+Pyth Oracle contract = 0xe31e04946c67fb41923f93d50ee7fc1c6c99d6e07c02860c6bea5f4a13919277
 
 ETH  = 0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07
 
 // Market 1 (USDC)
-Token factory contract = 0x3ec32d1dc979cc9862e779a573ceea9e4ddea0ab5bcbeac6f13aef0489821be2
-Market contract = 0x891734bb325148ed28fdc7603e404375c44ee090b66708f45c722ccd702517d5
+Token factory contract = 0x10299154a8cb0cdd54e4dbc5f8f6b89ca06fffb6b366d39592af7ff24798b1fd
+Market contract = 0x66a64bffe98195ab13162b5f478bf5e1fa938631df2e845c29e3839727c41293
 
 // Assets
-USDC = 0xa91cc878ea68463efd1e1dab8e9709f8bdf704ae09890f67641ea417b0426627
-UNI  = 0x6104c8e55327b418ac489353c977a7344d4ed3ff74af61a9efe9d3fe0f81c211
-BTC  = 0xb976a09362dd94bdd03d1f924be913e010b438ef73e4b565a500848d327baf54
+USDC = 0x6435053a1901c1a5d193531c36ef4f92e93472ede7c94d9a2a5dd272a4dfb392
+UNI  = 0xe886d61e8bee0cc99fb631f418d7f0879e0e24cf517ff960be89bca51d41b06b
+BTC  = 0x18f9d5eaba2d9fcebfbc6cdcd646e7b9abdacec5d41bbd1b9c97b4c027163323
 
 // Market 2 (USDT)
 Token factory contract = 0x8dba87c49afd9250c8641d4b113ce0ebefc9dc0bf9850124bb36916c55a20e83
