@@ -26,14 +26,14 @@ const BLOCKED_COUNTRIES = [
 export function middleware(req: NextRequest) {
   const country = req.geo?.country;
 
-  if (!country) {
-    return NextResponse.next();
-  }
-
   // TODO: Maybe better to move this to Cloudflare WAF
   // As Vercel cost will be too high for this
-  if (BLOCKED_COUNTRIES.includes(country)) {
-    return new Response('Blocked for legal reasons', { status: 451 });
+  if (
+    req.nextUrl.pathname !== '/blocked' &&
+    process.env.NODE_ENV !== 'development' &&
+    (!country || BLOCKED_COUNTRIES.includes(country))
+  ) {
+    return NextResponse.redirect(new URL('/blocked', req.url));
   }
 
   return NextResponse.next();
