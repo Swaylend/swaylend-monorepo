@@ -331,20 +331,20 @@ importers:
   apps/frontend-v2:
     dependencies:
       '@fuel-ts/contract':
-        specifier: ^0.94.5
-        version: 0.94.5(encoding@0.1.13)
+        specifier: ^0.94.6
+        version: 0.94.6(encoding@0.1.13)
       '@fuels/connectors':
         specifier: ^0.27.1
-        version: 0.27.1(@tanstack/query-core@5.55.4)(@types/react@18.3.5)(@wagmi/connectors@5.1.10(@types/react@18.3.5)(@wagmi/core@2.13.5(@tanstack/query-core@5.55.4)(@types/react@18.3.5)(immer@10.1.1)(react@18.3.1)(typescript@5.6.2)(viem@2.20.1(bufferutil@4.0.8)(typescript@5.6.2)(utf-8-validate@5.0.10)(zod@3.23.8)))(bufferutil@4.0.8)(encoding@0.1.13)(react-dom@18.3.1(react@18.3.1))(react-native@0.75.2(@babel/core@7.25.2)(@babel/preset-env@7.25.4(@babel/core@7.25.2))(@types/react@18.3.5)(bufferutil@4.0.8)(encoding@0.1.13)(react@18.3.1)(typescript@5.6.2)(utf-8-validate@5.0.10))(react@18.3.1)(rollup@4.21.2)(typescript@5.6.2)(utf-8-validate@5.0.10)(viem@2.20.1(bufferutil@4.0.8)(typescript@5.6.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8))(bufferutil@4.0.8)(encoding@0.1.13)(fuels@0.94.5(encoding@0.1.13))(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.2)(utf-8-validate@5.0.10)(zod@3.23.8)
+        version: 0.27.1(@tanstack/query-core@5.55.4)(@types/react@18.3.5)(@wagmi/connectors@5.1.10(@types/react@18.3.5)(@wagmi/core@2.13.5(@tanstack/query-core@5.55.4)(@types/react@18.3.5)(immer@10.1.1)(react@18.3.1)(typescript@5.6.2)(viem@2.20.1(bufferutil@4.0.8)(typescript@5.6.2)(utf-8-validate@5.0.10)(zod@3.23.8)))(bufferutil@4.0.8)(encoding@0.1.13)(react-dom@18.3.1(react@18.3.1))(react-native@0.75.2(@babel/core@7.25.2)(@babel/preset-env@7.25.4(@babel/core@7.25.2))(@types/react@18.3.5)(bufferutil@4.0.8)(encoding@0.1.13)(react@18.3.1)(typescript@5.6.2)(utf-8-validate@5.0.10))(react@18.3.1)(rollup@4.21.2)(typescript@5.6.2)(utf-8-validate@5.0.10)(viem@2.20.1(bufferutil@4.0.8)(typescript@5.6.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8))(bufferutil@4.0.8)(encoding@0.1.13)(fuels@0.94.6(encoding@0.1.13))(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.2)(utf-8-validate@5.0.10)(zod@3.23.8)
       '@fuels/react':
         specifier: ^0.27.1
-        version: 0.27.1(@tanstack/react-query@5.55.4(react@18.3.1))(@types/react-dom@18.3.0)(fuels@0.94.5(encoding@0.1.13))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        version: 0.27.1(@tanstack/react-query@5.55.4(react@18.3.1))(@types/react-dom@18.3.0)(fuels@0.94.6(encoding@0.1.13))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@pythnetwork/hermes-client':
-        specifier: ^1.0.4
-        version: 1.0.4(axios@1.7.7)
+        specifier: ^1.1.0
+        version: 1.1.0(axios@1.7.7)
       '@pythnetwork/pyth-fuel-js':
-        specifier: ^1.0.5
-        version: 1.0.5(encoding@0.1.13)
+        specifier: ^1.0.6
+        version: 1.0.6(encoding@0.1.13)
       '@radix-ui/react-dialog':
         specifier: ^1.1.1
         version: 1.1.1(@types/react-dom@18.3.0)(@types/react@18.3.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -391,8 +391,8 @@ importers:
         specifier: ^0.1.13
         version: 0.1.13
       fuels:
-        specifier: ^0.94.5
-        version: 0.94.5(encoding@0.1.13)
+        specifier: ^0.94.6
+        version: 0.94.6(encoding@0.1.13)
       lucide-react:
         specifier: ^0.428.0
         version: 0.428.0(react@18.3.1)
@@ -3325,8 +3325,14 @@ packages:
   '@pythnetwork/hermes-client@1.0.4':
     resolution: {integrity: sha512-/IrDaA7D2i3bqBLqUO2N6qUXq7xHA/mlpN+99O6iQiW/KuGn3JI9G1iv39v/Q84fFhQowhE56JAnLyNAoI6y7g==}
 
+  '@pythnetwork/hermes-client@1.1.0':
+    resolution: {integrity: sha512-TMkH5RtkLhOyUi3cCWcSdwgOYfOx/gFjiOKUhD7A3Gpzh2TeVJg3Qk+Z697SGVE7DG+ZS6zc13BICJbEeMqQ7A==}
+
   '@pythnetwork/pyth-fuel-js@1.0.5':
     resolution: {integrity: sha512-7afeIekNsJ/ZK//J7YiAVi+LLDgwRVP1QdcUQkaIqj0kAn617ARmFhuzOdd8q/S9Z5fbQIiQBsmCZVyEev2Nag==}
+
+  '@pythnetwork/pyth-fuel-js@1.0.6':
+    resolution: {integrity: sha512-Qsb/QzSJDpg4VmI1jWgI/3X5oshraX7cYbZQuAu4TNLpWG5CpZ7c/rkyJv+y1YZlWqfR6OV4k7KHbdBcNuIBig==}
 
   '@radix-ui/number@1.1.0':
     resolution: {integrity: sha512-V3gRzhVNU1ldS5XhAPTom1fOIo4ccrjjJgmE+LI2h/WaFpHmx0MQApT+KZHnx8abG6Avtfcz4WoEciMnpFT3HQ==}
@@ -15331,7 +15337,7 @@ snapshots:
       - vue
       - zod
 
-  '@fuels/connectors@0.27.1(@tanstack/query-core@5.55.4)(@types/react@18.3.5)(@wagmi/connectors@5.1.10(@types/react@18.3.5)(@wagmi/core@2.13.5(@tanstack/query-core@5.55.4)(@types/react@18.3.5)(immer@10.1.1)(react@18.3.1)(typescript@5.6.2)(viem@2.20.1(bufferutil@4.0.8)(typescript@5.6.2)(utf-8-validate@5.0.10)(zod@3.23.8)))(bufferutil@4.0.8)(encoding@0.1.13)(react-dom@18.3.1(react@18.3.1))(react-native@0.75.2(@babel/core@7.25.2)(@babel/preset-env@7.25.4(@babel/core@7.25.2))(@types/react@18.3.5)(bufferutil@4.0.8)(encoding@0.1.13)(react@18.3.1)(typescript@5.6.2)(utf-8-validate@5.0.10))(react@18.3.1)(rollup@4.21.2)(typescript@5.6.2)(utf-8-validate@5.0.10)(viem@2.20.1(bufferutil@4.0.8)(typescript@5.6.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8))(bufferutil@4.0.8)(encoding@0.1.13)(fuels@0.94.5(encoding@0.1.13))(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.2)(utf-8-validate@5.0.10)(zod@3.23.8)':
+  '@fuels/connectors@0.27.1(@tanstack/query-core@5.55.4)(@types/react@18.3.5)(@wagmi/connectors@5.1.10(@types/react@18.3.5)(@wagmi/core@2.13.5(@tanstack/query-core@5.55.4)(@types/react@18.3.5)(immer@10.1.1)(react@18.3.1)(typescript@5.6.2)(viem@2.20.1(bufferutil@4.0.8)(typescript@5.6.2)(utf-8-validate@5.0.10)(zod@3.23.8)))(bufferutil@4.0.8)(encoding@0.1.13)(react-dom@18.3.1(react@18.3.1))(react-native@0.75.2(@babel/core@7.25.2)(@babel/preset-env@7.25.4(@babel/core@7.25.2))(@types/react@18.3.5)(bufferutil@4.0.8)(encoding@0.1.13)(react@18.3.1)(typescript@5.6.2)(utf-8-validate@5.0.10))(react@18.3.1)(rollup@4.21.2)(typescript@5.6.2)(utf-8-validate@5.0.10)(viem@2.20.1(bufferutil@4.0.8)(typescript@5.6.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8))(bufferutil@4.0.8)(encoding@0.1.13)(fuels@0.94.6(encoding@0.1.13))(immer@10.1.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.2)(utf-8-validate@5.0.10)(zod@3.23.8)':
     dependencies:
       '@ethereumjs/util': 9.0.3
       '@ethersproject/bytes': 5.7.0
@@ -15341,7 +15347,7 @@ snapshots:
       '@web3modal/scaffold': 5.0.0(@types/react@18.3.5)(react@18.3.1)
       '@web3modal/solana': 5.0.0(@types/react@18.3.5)(bufferutil@4.0.8)(encoding@0.1.13)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(utf-8-validate@5.0.10)
       '@web3modal/wagmi': 5.0.0(bou6sh2fnvlph7iqgedk23xmdm)
-      fuels: 0.94.5(encoding@0.1.13)
+      fuels: 0.94.6(encoding@0.1.13)
       rpc-websockets: 7.11.0
       socket.io-client: 4.7.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       viem: 2.20.1(bufferutil@4.0.8)(typescript@5.6.2)(utf-8-validate@5.0.10)(zod@3.23.8)
@@ -15386,13 +15392,13 @@ snapshots:
       - '@types/react-dom'
       - react-dom
 
-  '@fuels/react@0.27.1(@tanstack/react-query@5.55.4(react@18.3.1))(@types/react-dom@18.3.0)(fuels@0.94.5(encoding@0.1.13))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+  '@fuels/react@0.27.1(@tanstack/react-query@5.55.4(react@18.3.1))(@types/react-dom@18.3.0)(fuels@0.94.6(encoding@0.1.13))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
     dependencies:
       '@radix-ui/react-dialog': 1.1.1(@types/react-dom@18.3.0)(@types/react@18.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@tanstack/react-query': 5.55.4(react@18.3.1)
       '@types/react': 18.3.1
       events: 3.3.0
-      fuels: 0.94.5(encoding@0.1.13)
+      fuels: 0.94.6(encoding@0.1.13)
       react: 18.3.1
     transitivePeerDependencies:
       - '@types/react-dom'
@@ -16801,9 +16807,24 @@ snapshots:
     transitivePeerDependencies:
       - axios
 
+  '@pythnetwork/hermes-client@1.1.0(axios@1.7.7)':
+    dependencies:
+      '@zodios/core': 10.9.6(axios@1.7.7)(zod@3.23.8)
+      eventsource: 2.0.2
+      zod: 3.23.8
+    transitivePeerDependencies:
+      - axios
+
   '@pythnetwork/pyth-fuel-js@1.0.5(encoding@0.1.13)':
     dependencies:
       fuels: 0.94.5(encoding@0.1.13)
+    transitivePeerDependencies:
+      - encoding
+      - supports-color
+
+  '@pythnetwork/pyth-fuel-js@1.0.6(encoding@0.1.13)':
+    dependencies:
+      fuels: 0.94.6(encoding@0.1.13)
     transitivePeerDependencies:
       - encoding
       - supports-color
