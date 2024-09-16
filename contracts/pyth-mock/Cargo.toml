@@ -5,6 +5,7 @@ version = "0.1.0"
 edition = "2021"
 license = "Apache-2.0"
 
+
 [lib]
 path = "core/lib.rs"
 
@@ -15,9 +16,11 @@ path = "tests/harness.rs"
 
 [dependencies]
 fuels = { workspace = true }
+market_sdk = { workspace = true }
+token_sdk = { workspace = true }
+dotenv = { workspace = true }
+tokio = { workspace = true }
 
 [dev-dependencies]
 pyth_mock_sdk = { workspace = true }
 pyth_sdk = { workspace = true }
-tokio = { workspace = true }
-anyhow = { workspace = true }
