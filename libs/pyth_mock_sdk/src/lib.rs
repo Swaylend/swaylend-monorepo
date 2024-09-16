@@ -8,7 +8,7 @@ use fuels::{
         contract::{Contract, LoadConfiguration, StorageConfiguration},
         responses::CallResponse,
     },
-    types::{transaction::TxPolicies, Bits256, Bytes},
+    types::{bech32::Bech32ContractId, transaction::TxPolicies, Bits256, Bytes},
 };
 use rand::Rng;
 
@@ -55,6 +55,10 @@ impl PythMockContract {
             .update_price_feeds(update_data)
             .call()
             .await?)
+    }
+
+    pub fn contract_id(&self) -> &Bech32ContractId {
+        self.instance.contract_id()
     }
 
     pub async fn create_update_data(
