@@ -29,8 +29,8 @@ export function middleware(req: NextRequest) {
   // Ignore for OG image (opengraph-image.png)
   // and Twitter image (twitter-image.png)
   if (
-    req.nextUrl.pathname.startsWith('/og-image') ||
-    req.nextUrl.pathname.startsWith('/twitter-image')
+    req.nextUrl.pathname.includes('opengraph-image.png') ||
+    req.nextUrl.pathname.includes('twitter-image.png')
   ) {
     return NextResponse.next();
   }
