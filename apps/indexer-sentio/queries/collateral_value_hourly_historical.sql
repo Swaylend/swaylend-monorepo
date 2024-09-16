@@ -5,6 +5,6 @@ FROM `CollateralPoolSnapshot_raw`
 WHERE 
     chainId = 0 
     AND 
-    poolAddress = "0x891734bb325148ed28fdc7603e404375c44ee090b66708f45c722ccd702517d5"
+    poolAddress = "0x66a64bffe98195ab13162b5f478bf5e1fa938631df2e845c29e3839727c41293"
 GROUP BY timestamp, chainId, poolAddress
 ORDER BY timestamp asc
