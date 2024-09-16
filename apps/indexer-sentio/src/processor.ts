@@ -119,7 +119,7 @@ const getUtilization = (
     .dividedBy(presentValueSupply);
 };
 
-const START_BLOCK = BigInt(9910000);
+const START_BLOCK = BigInt(10529000);
 
 const CHAIN_ID_MAP = {
   fuel_testnet: 0,
@@ -128,7 +128,7 @@ const CHAIN_ID_MAP = {
 
 MarketProcessor.bind({
   chainId: FuelNetwork.TEST_NET,
-  address: '0x891734bb325148ed28fdc7603e404375c44ee090b66708f45c722ccd702517d5',
+  address: '0x66a64bffe98195ab13162b5f478bf5e1fa938631df2e845c29e3839727c41293',
   startBlock: START_BLOCK,
 })
   .onLogMarketConfigurationEvent(async (event, ctx) => {
