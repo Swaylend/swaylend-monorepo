@@ -26,6 +26,15 @@ const BLOCKED_COUNTRIES = [
 export function middleware(req: NextRequest) {
   const country = req.geo?.country;
 
+  // Ignore for OG image (opengraph-image.png)
+  // and Twitter image (twitter-image.png)
+  if (
+    req.nextUrl.pathname.startsWith('/og-image') ||
+    req.nextUrl.pathname.startsWith('/twitter-image')
+  ) {
+    return NextResponse.next();
+  }
+
   if (
     process.env.NODE_ENV !== 'development' &&
     (!country || BLOCKED_COUNTRIES.includes(country))
