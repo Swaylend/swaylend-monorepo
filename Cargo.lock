@@ -4799,10 +4799,12 @@ dependencies = [
 name = "pyth_mock"
 version = "0.1.0"
 dependencies = [
- "anyhow",
+ "dotenv",
  "fuels",
+ "market_sdk",
  "pyth_mock_sdk",
  "pyth_sdk",
+ "token_sdk",
  "tokio",
 ]
 

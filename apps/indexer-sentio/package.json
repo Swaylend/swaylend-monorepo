@@ -11,7 +11,7 @@
   "dependencies": {
     "@sentio/sdk": "2.43.0",
     "dayjs": "^1.11.13",
-    "fuels": "0.94.5"
+    "fuels": "0.94.6"
   },
   "devDependencies": {
     "@sentio/cli": "2.21.1",

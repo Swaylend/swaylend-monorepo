@@ -1,3 +1,4 @@
+mod scripts;
 use fuels::{
     test_helpers::{launch_custom_provider_and_get_wallets, NodeConfig, Trigger, WalletsConfig},
     types::{Bits256, Bytes},
