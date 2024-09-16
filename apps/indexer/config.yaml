@@ -1,10 +1,10 @@
-name: Fuel Greeter Indexer
+name: SwayLend USDC Market
 networks:
   - id: 0
-    start_block: 9910000
+    start_block: 10529000
     contracts:
       - name: Market
-        address: 0x891734bb325148ed28fdc7603e404375c44ee090b66708f45c722ccd702517d5
+        address: 0x66a64bffe98195ab13162b5f478bf5e1fa938631df2e845c29e3839727c41293
         abi_file_path: ../../contracts/market/out/release/market-abi.json
         handler: ./src/EventHandlers.ts
         events:
