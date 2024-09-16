@@ -26,7 +26,10 @@ const BLOCKED_COUNTRIES = [
 export function middleware(req: NextRequest) {
   const country = req.geo?.country;
 
-  if (!country || BLOCKED_COUNTRIES.includes(country)) {
+  if (
+    process.env.NODE_ENV !== 'development' &&
+    (!country || BLOCKED_COUNTRIES.includes(country))
+  ) {
     return new Response('Blocked for legal reasons', { status: 451 });
   }
 
