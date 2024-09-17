@@ -1,4 +1,3 @@
-import type { FunctionResult } from 'fuels';
 import { LoaderCircleIcon } from 'lucide-react';
 
 export const PendingToast = () => (
