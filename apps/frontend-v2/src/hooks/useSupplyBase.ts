@@ -3,7 +3,7 @@ import { Market } from '@/contract-types';
 import { useMarketStore } from '@/stores';
 import { DEPLOYED_MARKETS } from '@/utils';
 import { useAccount, useWallet } from '@fuels/react';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { toast } from 'react-toastify';
 import { useMarketConfiguration } from './useMarketConfiguration';
@@ -14,6 +14,7 @@ export const useSupplyBase = () => {
   const { market } = useMarketStore();
   const { data: marketConfiguration } = useMarketConfiguration();
   const { changeTokenAmount } = useMarketStore();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationKey: ['supplyBase', account, marketConfiguration, market],
@@ -49,14 +50,54 @@ export const useSupplyBase = () => {
 
       return transactionResult.transactionId;
     },
+    onMutate: async (tokenAmount: BigNumber) => {
+      if (!marketConfiguration) return null;
+
+      // Cancel any outgoing queries
+      await queryClient.cancelQueries({ queryKey: ['userSupplyBorrow'] });
+
+      // Snapshot the current state
+      const previousSupplyBorrow = queryClient.getQueryData<{
+        supplied: BigNumber;
+        borrowed: BigNumber;
+      } | null>(['userSupplyBorrow', account, market]);
+
+      const amount = new BigNumber(tokenAmount).times(
+        10 ** marketConfiguration.baseTokenDecimals
+      );
+
+      // Optmistic update
+      queryClient.setQueryData(['userSupplyBorrow', account, market], () => ({
+        supplied: new BigNumber(previousSupplyBorrow?.supplied ?? 0).plus(
+          amount
+        ),
+        borrowed: new BigNumber(previousSupplyBorrow?.borrowed ?? 0),
+      }));
+
+      return { previousSupplyBorrow };
+    },
     onSuccess: (data) => {
       if (data) {
         TransactionSuccessToast({ transactionId: data });
         changeTokenAmount(BigNumber(0));
       }
     },
-    onError: (error) => {
+    onError: (error, _, ctx) => {
       ErrorToast({ error: error.message });
+
+      // Reset to old state
+      if (ctx?.previousSupplyBorrow) {
+        queryClient.setQueryData(
+          ['userSupplyBorrow', account, market],
+          ctx.previousSupplyBorrow
+        );
+      }
     },
+    // onSettled: () => {
+    //   // Invalidate queries
+    //   queryClient.invalidateQueries({
+    //     queryKey: ['userSupplyBorrow', account, market],
+    //   });
+    // },
   });
 };

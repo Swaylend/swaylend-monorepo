@@ -3,7 +3,7 @@ import { Market } from '@/contract-types';
 import { useMarketStore } from '@/stores';
 import { DEPLOYED_MARKETS } from '@/utils';
 import { useAccount, useWallet } from '@fuels/react';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { toast } from 'react-toastify';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
@@ -20,6 +20,7 @@ export const useSupplyCollateral = ({
   const { market } = useMarketStore();
   const { data: collateralConfigurations } = useCollateralConfigurations();
   const { changeTokenAmount } = useMarketStore();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationKey: [
@@ -66,14 +67,71 @@ export const useSupplyCollateral = ({
 
       return transactionResult.transactionId;
     },
+    onMutate: async (tokenAmount: BigNumber) => {
+      if (!actionTokenAssetId || !collateralConfigurations) {
+        return null;
+      }
+
+      // Cancel any outgoing queries
+      await queryClient.cancelQueries({ queryKey: ['collateralAssets'] });
+
+      // Snapshot the current state
+      const previousCollateralAssets = queryClient.getQueryData<Record<
+        string,
+        BigNumber
+      > | null>([
+        'collateralAssets',
+        account,
+        market,
+        collateralConfigurations,
+      ]);
+
+      if (!previousCollateralAssets) return null;
+
+      const amount = new BigNumber(tokenAmount).times(
+        10 ** collateralConfigurations[actionTokenAssetId].decimals
+      );
+
+      // Optmistic update
+      queryClient.setQueryData(
+        ['collateralAssets', account, market, collateralConfigurations],
+        () => ({
+          ...previousCollateralAssets,
+          [actionTokenAssetId]: new BigNumber(
+            previousCollateralAssets[actionTokenAssetId] ?? 0
+          ).plus(amount),
+        })
+      );
+
+      return { previousCollateralAssets };
+    },
     onSuccess: (data) => {
       if (data) {
         TransactionSuccessToast({ transactionId: data });
         changeTokenAmount(BigNumber(0));
       }
     },
-    onError: (error) => {
+    onError: (error, _, ctx) => {
       ErrorToast({ error: error.message });
+
+      // Reset to old state
+      if (ctx?.previousCollateralAssets) {
+        queryClient.setQueryData(
+          ['collateralAssets', account, market],
+          ctx.previousCollateralAssets
+        );
+      }
+    },
+    onSettled: () => {
+      // Invalidate queries
+      queryClient.invalidateQueries({
+        queryKey: [
+          'collateralAssets',
+          account,
+          market,
+          collateralConfigurations,
+        ],
+      });
     },
   });
 };
