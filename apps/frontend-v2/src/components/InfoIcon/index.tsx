@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Tooltip,
   TooltipContent,
@@ -6,6 +5,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { Info } from 'lucide-react';
+import React from 'react';
 export const InfoIcon = ({ text }: { text: string }) => {
   return (
     <TooltipProvider>

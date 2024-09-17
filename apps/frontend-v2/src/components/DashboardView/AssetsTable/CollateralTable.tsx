@@ -1,13 +1,9 @@
 import { AssetName } from '@/components/AssetName';
+import { CircularProgressBar } from '@/components/CircularProgressBar';
+import { InfoIcon } from '@/components/InfoIcon';
 import { type Point, PointIcons } from '@/components/PointIcons';
 import { Title } from '@/components/Title';
 import { Button } from '@/components/ui/button';
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip';
 import {
   Card,
   CardContent,
@@ -25,6 +21,12 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import type { CollateralConfigurationOutput } from '@/contract-types/Market';
 import {
   useCollateralConfigurations,
@@ -43,8 +45,6 @@ import { useAccount, useBalance } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import BigNumber from 'bignumber.js';
 import React, { useMemo } from 'react';
-import { CircularProgressBar } from '@/components/CircularProgressBar';
-import { InfoIcon } from '@/components/InfoIcon';
 
 type TableRowProps = {
   account: string | undefined;
