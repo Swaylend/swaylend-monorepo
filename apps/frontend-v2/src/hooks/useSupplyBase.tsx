@@ -53,7 +53,7 @@ export const useSupplyBase = () => {
 
       const transactionResult = await toast.promise(waitForResult(), {
         pending: {
-          render: <PendingToast />,
+          render: PendingToast(),
         },
       });
 

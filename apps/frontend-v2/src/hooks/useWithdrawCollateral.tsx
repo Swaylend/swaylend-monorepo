@@ -85,7 +85,7 @@ export const useWithdrawCollateral = ({
 
       const transactionResult = await toast.promise(waitForResult(), {
         pending: {
-          render: <PendingToast />,
+          render: PendingToast(),
         },
       });
 

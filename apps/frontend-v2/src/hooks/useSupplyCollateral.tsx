@@ -70,7 +70,7 @@ export const useSupplyCollateral = ({
 
       const transactionResult = await toast.promise(waitForResult(), {
         pending: {
-          render: <PendingToast />,
+          render: PendingToast(),
         },
       });
 

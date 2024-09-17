@@ -58,7 +58,7 @@ export const useBorrowBase = () => {
 
       const transactionResult = await toast.promise(waitForResult(), {
         pending: {
-          render: <PendingToast />,
+          render: PendingToast(),
         },
       });
 
