@@ -1,3 +1,4 @@
+import { MarketsView } from '@/components/MarketsView';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -5,5 +6,5 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <div>Market Page</div>;
+  return <MarketsView />;
 }

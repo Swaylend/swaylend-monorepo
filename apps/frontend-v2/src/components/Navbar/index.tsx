@@ -23,7 +23,7 @@ import { Points } from './Points';
 
 const NAVBAR_LINKS = [
   { href: '/', label: 'Dashboard', icon: <LayoutDashboard /> },
-  // { href: '/market', label: 'Market', icon: <ChartLine /> },
+  { href: '/market', label: 'Market', icon: <ChartLine /> },
   { href: '/faucet', label: 'Faucet', icon: <Coins /> },
 ];
 
