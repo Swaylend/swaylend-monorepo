@@ -810,7 +810,29 @@ impl Market for Contract {
         storage.market_basic.read()
     }
 
-    // ## 9.3 Get user basic
+    // ## 9.4 Get market basics (with included interest)
+    // ### Returns:
+    // - `MarketBasics`: The market basic information (with included interest)
+    #[storage(read)]
+    fn get_market_basics_with_interest() -> MarketBasics {
+        let mut market_basic = storage.market_basic.read();
+        let last_accrual_time = market_basic.last_accrual_time;
+        let current_time = timestamp();
+
+        // Calculate new indices
+        let (supply_index, borrow_index) = accrued_interest_indices(current_time.into(), last_accrual_time);
+
+        // Set latest values
+        market_basic.last_accrual_time = current_time.into();
+        market_basic.base_supply_index = supply_index;
+        market_basic.base_borrow_index = borrow_index;
+        market_basic.total_supply_base = present_value_supply(market_basic.base_supply_index, market_basic.total_supply_base);
+        market_basic.total_borrow_base = present_value_borrow(market_basic.base_borrow_index, market_basic.total_borrow_base);
+
+        market_basic
+    }
+
+    // ## 9.5 Get user basic
     // ### Parameters:
     // - `account`: The address of the user
     // ### Returns:
@@ -820,7 +842,32 @@ impl Market for Contract {
         storage.user_basic.get(account).try_read().unwrap_or(UserBasic::default())
     }
 
-    // ## 9.4 Get utilization
+    // ## 9.6 Get user basic (with included interest)
+    // ### Parameters:
+    // - `account`: The address of the user
+    // ### Returns:
+    // - `UserBasic`: The user basic information (with included interest)
+    #[storage(read)]
+    fn get_user_basic_with_interest(account: Address) -> UserBasic {
+        let mut user_basic = storage.user_basic.get(account).try_read().unwrap_or(UserBasic::default());
+        let last_accrual_time = storage.market_basic.last_accrual_time.read();
+
+        // Calculate new indices
+        let (supply_index, borrow_index) = accrued_interest_indices(timestamp().into(), last_accrual_time);
+
+        // Set latest values
+        if !user_basic.principal.negative {
+            user_basic.principal = present_value_supply(supply_index, user_basic.principal.into()).into();
+        } else {
+            user_basic.principal = present_value_borrow(borrow_index, user_basic.principal.flip().into()).into();
+            user_basic.principal = user_basic.principal.flip();
+        }
+
+        user_basic
+    }
+
+
+    // ## 9.7 Get utilization
     // ### Returns:
     // - `u256`: The utilization of the market
     #[storage(read)]
@@ -828,12 +875,12 @@ impl Market for Contract {
         get_utilization_internal()
     }
 
-    // ## 9.5 Get balance of an asset
+    // ## 9.8 Get balance of an asset
     fn balance_of(asset: b256) -> u64 {
         this_balance(AssetId::from(asset))
     }
 
-    // ## 9.6 Get supply rate for a given utilization
+    // ## 9.9 Get supply rate for a given utilization
     // ### Parameters:
     // - `utilization`: The utilization of the market
     // ### Returns:
@@ -843,7 +890,7 @@ impl Market for Contract {
         get_supply_rate_internal(utilization)
     }
 
-    // ## 9.7 Get borrow rate for a given utilization
+    // ## 9.10 Get borrow rate for a given utilization
     // ### Parameters:
     // - `utilization`: The utilization of the market
     // ### Returns:

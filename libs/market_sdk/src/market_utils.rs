@@ -601,6 +601,20 @@ impl MarketContract {
             .await?)
     }
 
+    pub async fn get_market_basics_with_interest(
+        &self,
+    ) -> anyhow::Result<CallResponse<MarketBasics>> {
+        let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
+
+        Ok(self
+            .instance
+            .methods()
+            .get_market_basics_with_interest()
+            .with_tx_policies(tx_policies)
+            .call()
+            .await?)
+    }
+
     pub async fn get_user_basic(
         &self,
         address: Address,
@@ -611,6 +625,21 @@ impl MarketContract {
             .instance
             .methods()
             .get_user_basic(address)
+            .with_tx_policies(tx_policies)
+            .call()
+            .await?)
+    }
+
+    pub async fn get_user_basic_with_interest(
+        &self,
+        address: Address,
+    ) -> anyhow::Result<CallResponse<UserBasic>> {
+        let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
+
+        Ok(self
+            .instance
+            .methods()
+            .get_user_basic_with_interest(address)
             .with_tx_policies(tx_policies)
             .call()
             .await?)
