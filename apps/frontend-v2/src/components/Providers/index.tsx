@@ -3,8 +3,10 @@
 import 'react-toastify/dist/ReactToastify.css';
 
 import {
+  BakoSafeConnector,
   FuelWalletConnector,
   FueletWalletConnector,
+  SolanaConnector,
   WalletConnectConnector,
 } from '@fuels/connectors';
 import { FuelProvider } from '@fuels/react';
@@ -82,8 +84,12 @@ export const Providers = ({ children }: { children: ReactNode }) => {
               connectors: [
                 new FuelWalletConnector(),
                 new FueletWalletConnector(),
+                new BakoSafeConnector(),
                 new WalletConnectConnector({
                   // TODO: setup walletconnect project and add project id
+                  projectId: '972bec1eae519664815444d4b7a7578a',
+                }),
+                new SolanaConnector({
                   projectId: '972bec1eae519664815444d4b7a7578a',
                 }),
               ],
