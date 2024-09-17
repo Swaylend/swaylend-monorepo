@@ -1,3 +1,4 @@
+import { InfoIcon } from '@/components/InfoIcon';
 import { type Point, PointIcons } from '@/components/PointIcons';
 import { Title } from '@/components/Title';
 import { Button } from '@/components/ui/button';
@@ -138,10 +139,24 @@ export const LendTable = () => {
       <Table className="max-sm:hidden">
         <TableHeader>
           <TableRow>
-            <TableHead className="w-3/12">Earn Asset</TableHead>
+            <TableHead className="w-3/12">
+              <div className="flex items-center gap-x-2">
+                Earn Asset
+                <InfoIcon text={'Assets you lend to the market.'} />
+              </div>
+            </TableHead>
             <TableHead className="w-1/6">Earn APY</TableHead>
             <TableHead className="w-1/6">Supplied Assets</TableHead>
-            <TableHead className="w-1/6">Supply Points</TableHead>
+            <TableHead className="w-1/6">
+              <div className="flex items-center gap-x-2">
+                Earn Points
+                <InfoIcon
+                  text={
+                    'Points earned by supplying these assets. Hover over the points to learn more.'
+                  }
+                />
+              </div>
+            </TableHead>
             <TableHead className="w-3/12">{}</TableHead>
           </TableRow>
         </TableHeader>

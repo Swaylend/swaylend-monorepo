@@ -4,29 +4,37 @@ import {
   TransactionSuccessToast,
 } from '@/components/Toasts';
 import { Market } from '@/contract-types';
+import type { PriceDataUpdateInput } from '@/contract-types/Market';
 import { useMarketStore } from '@/stores';
-import { DEPLOYED_MARKETS } from '@/utils';
+import { DEPLOYED_MARKETS, FUEL_ETH_BASE_ASSET_ID } from '@/utils';
 import { useAccount, useWallet } from '@fuels/react';
 import { useMutation } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
+import { LoaderCircleIcon } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { useMarketConfiguration } from './useMarketConfiguration';
 
-export const useSupplyBase = () => {
+export const useBorrowBase = () => {
   const { wallet } = useWallet();
   const { account } = useAccount();
-  const { market } = useMarketStore();
-  const { data: marketConfiguration } = useMarketConfiguration();
   const {
+    market,
     changeTokenAmount,
     changeInputDialogOpen,
     changeSuccessDialogOpen,
     changeSuccessDialogTransactionId,
   } = useMarketStore();
+  const { data: marketConfiguration } = useMarketConfiguration();
 
   return useMutation({
-    mutationKey: ['supplyBase', account, marketConfiguration, market],
-    mutationFn: async (tokenAmount: BigNumber) => {
+    mutationKey: ['borrowBase', account, marketConfiguration, market],
+    mutationFn: async ({
+      tokenAmount,
+      priceUpdateData,
+    }: {
+      tokenAmount: BigNumber;
+      priceUpdateData: PriceDataUpdateInput;
+    }) => {
       if (!wallet || !account || !marketConfiguration) {
         return null;
       }
@@ -35,17 +43,15 @@ export const useSupplyBase = () => {
         DEPLOYED_MARKETS[market].marketAddress,
         wallet
       );
-
       const amount = new BigNumber(tokenAmount).times(
         10 ** marketConfiguration.baseTokenDecimals
       );
-
       const { waitForResult } = await marketContract.functions
-        .supply_base()
+        .withdraw_base(amount.toFixed(0), priceUpdateData)
         .callParams({
           forward: {
-            assetId: marketConfiguration.baseToken,
-            amount: amount.toFixed(0),
+            amount: priceUpdateData.update_fee,
+            assetId: FUEL_ETH_BASE_ASSET_ID,
           },
         })
         .call();
