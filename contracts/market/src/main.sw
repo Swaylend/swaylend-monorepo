@@ -356,7 +356,23 @@ impl Market for Contract {
         storage.user_collateral.get((address, asset_id)).try_read().unwrap_or(0)
     }
 
-    // ## 3.4 Get Total Collateral
+    // ## 3.4 Get all of User's Collateral assets
+    // ### Parameters:
+    // - `address`: The address of the user
+    #[storage(read)]
+    fn get_all_user_collateral(address: Address) -> Vec<(b256, u256)> {
+        let mut result = Vec::new();
+        let mut index = 0;
+        while index < storage.collateral_configurations_keys.len() {
+            let collateral_configuration = storage.collateral_configurations.get(storage.collateral_configurations_keys.get(index).unwrap().read()).read();
+            let collateral_amount = storage.user_collateral.get((address, collateral_configuration.asset_id)).try_read().unwrap_or(0);
+            result.push((collateral_configuration.asset_id, collateral_amount));
+            index += 1;
+        }
+        result
+    }
+
+    // ## 3.5 Get Total Collateral
     // ### Parameters:
     // - `asset_id`: The asset ID of the collateral asset
     #[storage(read)]
@@ -855,7 +871,7 @@ impl Market for Contract {
         // Calculate new indices
         let (supply_index, borrow_index) = accrued_interest_indices(timestamp().into(), last_accrual_time);
 
-        // Set latest values
+        // Set latest values (the principal is now the present value of the user's supply or borrow)
         if !user_basic.principal.negative {
             user_basic.principal = present_value_supply(supply_index, user_basic.principal.into()).into();
         } else {

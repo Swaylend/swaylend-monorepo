@@ -48,6 +48,9 @@ abi Market {
     fn get_user_collateral(address: Address, asset_id: b256) -> u256;
 
     #[storage(read)]
+    fn get_all_user_collateral(address: Address) -> Vec<(b256, u256)>;
+
+    #[storage(read)]
     fn totals_collateral(asset_id: b256) -> u256;
 
     // # 4. Base asset management (Supply and Withdrawal)
