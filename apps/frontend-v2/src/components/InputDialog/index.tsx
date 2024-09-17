@@ -333,6 +333,68 @@ export const InputDialog = () => {
     setError(tokenInputError());
   }, [tokenAmount, actionTokenAssetId, action]);
 
+  const disabledLeftTab = useMemo(() => {
+    if (action === ACTION_TYPE.SUPPLY || action === ACTION_TYPE.WITHDRAW) {
+      // Lend/Withdraw
+      if (actionTokenAssetId === marketConfiguration?.baseToken) {
+      }
+      // Supply collatera/withdraw
+      else {
+        if (!account || balance?.eq(0)) {
+          return true;
+        }
+      }
+      return false;
+    }
+    // Borrow/Repay
+    if (!account || !borrowCapacity || borrowCapacity.eq(0)) {
+      return true;
+    }
+
+    return false;
+  }, [
+    account,
+    borrowCapacity,
+    balance,
+    marketConfiguration,
+    actionTokenAssetId,
+  ]);
+
+  const disabledRightTab = useMemo(() => {
+    if (action === ACTION_TYPE.SUPPLY || action === ACTION_TYPE.WITHDRAW) {
+      // Lend/Withdraw
+      if (actionTokenAssetId === marketConfiguration?.baseToken) {
+        if (!account || !userSupplyBorrow || userSupplyBorrow?.supplied.eq(0)) {
+          return true;
+        }
+      }
+      // Supply collatera/withdraw
+      else {
+        if (
+          !account ||
+          (userCollateralAssets?.[actionTokenAssetId ?? ''] ?? BigNumber(0)).eq(
+            0
+          )
+        ) {
+          return true;
+        }
+      }
+      return false;
+    }
+    // Borrow/Repay
+    if (!account || !userSupplyBorrow || userSupplyBorrow.borrowed.eq(0)) {
+      return true;
+    }
+
+    return false;
+  }, [
+    account,
+    userSupplyBorrow,
+    userCollateralAssets,
+    actionTokenAssetId,
+    marketConfiguration,
+  ]);
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="p-0 max-sm:w-[90%] max-sm:rounded-xl max-w-[400px]">
@@ -344,17 +406,20 @@ export const InputDialog = () => {
             <div className="w-1/2 relative h-[64px] flex justify-center items-center">
               {/* TODO -> Disable buttons when not available */}
               <button
+                disabled={disabledLeftTab}
                 onMouseDown={() =>
                   handleModeChange(
-                    action === ACTION_TYPE.WITHDRAW
+                    action === ACTION_TYPE.WITHDRAW ||
+                      action === ACTION_TYPE.SUPPLY
                       ? ACTION_TYPE.SUPPLY
                       : ACTION_TYPE.BORROW
                   )
                 }
                 type="button"
                 className={cn(
-                  `${!(action === 'SUPPLY' || action === 'BORROW') && 'text-moon'}`,
-                  'w-full font-semibold text-lg h-full'
+                  `${!(action === 'SUPPLY' || action === 'BORROW') && 'text-lavender'}`,
+                  'w-full font-semibold text-lg h-full',
+                  disabledLeftTab ? 'text-gray-500' : ''
                 )}
               >
                 {action === ACTION_TYPE.SUPPLY ||
@@ -379,6 +444,7 @@ export const InputDialog = () => {
             </div>
             <div className="w-1/2 relative h-[64px] flex justify-center items-center">
               <button
+                disabled={disabledRightTab}
                 onMouseDown={() =>
                   handleModeChange(
                     action === ACTION_TYPE.BORROW
@@ -388,8 +454,9 @@ export const InputDialog = () => {
                 }
                 type="button"
                 className={cn(
-                  `${!(action === 'WITHDRAW' || action === 'REPAY') && 'text-moon'}`,
-                  'w-full font-semibold text-lg h-full'
+                  `${!(action === 'WITHDRAW' || action === 'REPAY') && 'text-lavender'}`,
+                  'w-full font-semibold text-lg h-full',
+                  disabledRightTab ? 'text-gray-500' : ''
                 )}
               >
                 {action === ACTION_TYPE.SUPPLY ||

@@ -1,4 +1,8 @@
-import { ErrorToast, TransactionSuccessToast } from '@/components/Toasts';
+import {
+  ErrorToast,
+  PendingToast,
+  TransactionSuccessToast,
+} from '@/components/Toasts';
 import { Market } from '@/contract-types';
 import type { PriceDataUpdateInput } from '@/contract-types/Market';
 import { useMarketStore } from '@/stores';
@@ -8,11 +12,18 @@ import { useMutation } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { toast } from 'react-toastify';
 import { useMarketConfiguration } from './useMarketConfiguration';
+import { LoaderCircleIcon } from 'lucide-react';
 
 export const useBorrowBase = () => {
   const { wallet } = useWallet();
   const { account } = useAccount();
-  const { market, changeTokenAmount } = useMarketStore();
+  const {
+    market,
+    changeTokenAmount,
+    changeInputDialogOpen,
+    changeSuccessDialogOpen,
+    changeSuccessDialogTransactionId,
+  } = useMarketStore();
   const { data: marketConfiguration } = useMarketConfiguration();
 
   return useMutation({
@@ -47,7 +58,7 @@ export const useBorrowBase = () => {
 
       const transactionResult = await toast.promise(waitForResult(), {
         pending: {
-          render: 'Transaction is pending...',
+          render: <PendingToast />,
         },
       });
 
@@ -56,7 +67,10 @@ export const useBorrowBase = () => {
     onSuccess: (data) => {
       if (data) {
         TransactionSuccessToast({ transactionId: data });
+        changeSuccessDialogTransactionId(data);
+        changeInputDialogOpen(false);
         changeTokenAmount(BigNumber(0));
+        changeSuccessDialogOpen(true);
       }
     },
     onError: (error) => {

@@ -1,26 +1,52 @@
-import { ErrorToast, TransactionSuccessToast } from '@/components/Toasts';
+import {
+  ErrorToast,
+  PendingToast,
+  TransactionSuccessToast,
+} from '@/components/Toasts';
 import { Market } from '@/contract-types';
+import type { PriceDataUpdateInput } from '@/contract-types/Market';
 import { useMarketStore } from '@/stores';
-import { DEPLOYED_MARKETS } from '@/utils';
+import { DEPLOYED_MARKETS, FUEL_ETH_BASE_ASSET_ID } from '@/utils';
 import { useAccount, useWallet } from '@fuels/react';
+import {
+  PYTH_CONTRACT_ADDRESS_SEPOLIA,
+  PythContract,
+} from '@pythnetwork/pyth-fuel-js';
 import { useMutation } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { toast } from 'react-toastify';
 import { useMarketConfiguration } from './useMarketConfiguration';
+import { LoaderCircleIcon } from 'lucide-react';
 
-export const useSupplyBase = () => {
+export const useWithdrawBase = () => {
   const { wallet } = useWallet();
   const { account } = useAccount();
-  const { market } = useMarketStore();
+  const {
+    market,
+    changeTokenAmount,
+    changeInputDialogOpen,
+    changeSuccessDialogOpen,
+    changeSuccessDialogTransactionId,
+  } = useMarketStore();
   const { data: marketConfiguration } = useMarketConfiguration();
-  const { changeTokenAmount } = useMarketStore();
 
   return useMutation({
-    mutationKey: ['supplyBase', account, marketConfiguration, market],
-    mutationFn: async (tokenAmount: BigNumber) => {
+    mutationKey: ['withdrawBase', account, market, marketConfiguration],
+    mutationFn: async ({
+      tokenAmount,
+      priceUpdateData,
+    }: {
+      tokenAmount: BigNumber;
+      priceUpdateData: PriceDataUpdateInput;
+    }) => {
       if (!wallet || !account || !marketConfiguration) {
         return null;
       }
+
+      const pythContract = new PythContract(
+        PYTH_CONTRACT_ADDRESS_SEPOLIA,
+        wallet
+      );
 
       const marketContract = new Market(
         DEPLOYED_MARKETS[market].marketAddress,
@@ -32,18 +58,19 @@ export const useSupplyBase = () => {
       );
 
       const { waitForResult } = await marketContract.functions
-        .supply_base()
+        .withdraw_base(amount.toFixed(0), priceUpdateData)
         .callParams({
           forward: {
-            assetId: marketConfiguration.baseToken,
-            amount: amount.toFixed(0),
+            amount: priceUpdateData.update_fee,
+            assetId: FUEL_ETH_BASE_ASSET_ID,
           },
         })
+        .addContracts([pythContract])
         .call();
 
       const transactionResult = await toast.promise(waitForResult(), {
         pending: {
-          render: 'Transaction is pending...',
+          render: <PendingToast />,
         },
       });
 
@@ -52,7 +79,10 @@ export const useSupplyBase = () => {
     onSuccess: (data) => {
       if (data) {
         TransactionSuccessToast({ transactionId: data });
+        changeSuccessDialogTransactionId(data);
+        changeInputDialogOpen(false);
         changeTokenAmount(BigNumber(0));
+        changeSuccessDialogOpen(true);
       }
     },
     onError: (error) => {
