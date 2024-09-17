@@ -39,7 +39,7 @@ export const useTotalCollateral = () => {
       const totals = new Map<string, BigNumber>(
         data.map(({ assetId, value }) => [
           assetId,
-          new BigNumber(value.toString()),
+          new BigNumber(value.value.toString()),
         ])
       );
 
