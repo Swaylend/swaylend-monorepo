@@ -9,9 +9,9 @@ import { DEPLOYED_MARKETS } from '@/utils';
 import { useAccount, useWallet } from '@fuels/react';
 import { useMutation } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
+import { LoaderCircleIcon } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
-import { LoaderCircleIcon } from 'lucide-react';
 
 type useSupplyCollateralProps = {
   actionTokenAssetId: string | null | undefined;

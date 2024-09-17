@@ -10,9 +10,9 @@ import { DEPLOYED_MARKETS, FUEL_ETH_BASE_ASSET_ID } from '@/utils';
 import { useAccount, useWallet } from '@fuels/react';
 import { useMutation } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
+import { LoaderCircleIcon } from 'lucide-react';
 import { toast } from 'react-toastify';
 import { useMarketConfiguration } from './useMarketConfiguration';
-import { LoaderCircleIcon } from 'lucide-react';
 
 export const useBorrowBase = () => {
   const { wallet } = useWallet();
