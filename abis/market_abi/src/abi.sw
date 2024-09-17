@@ -113,7 +113,7 @@ abi Market {
     fn get_user_basic(account: Address) -> UserBasic;
 
     #[storage(read)]
-    fn get_user_basic_with_interest(account: Address) -> UserBasic;
+    fn get_user_balance_with_interest(account: Address) -> I256;
 
     #[storage(read)]
     fn get_utilization() -> u256;

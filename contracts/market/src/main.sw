@@ -858,28 +858,29 @@ impl Market for Contract {
         storage.user_basic.get(account).try_read().unwrap_or(UserBasic::default())
     }
 
-    // ## 9.6 Get user basic (with included interest)
+    // ## 9.6 Get user balance (with included interest)
     // ### Parameters:
     // - `account`: The address of the user
     // ### Returns:
-    // - `UserBasic`: The user basic information (with included interest)
+    // - `I256`: The user balance (with included interest)
     #[storage(read)]
-    fn get_user_basic_with_interest(account: Address) -> UserBasic {
+    fn get_user_balance_with_interest(account: Address) -> I256 {
         let mut user_basic = storage.user_basic.get(account).try_read().unwrap_or(UserBasic::default());
         let last_accrual_time = storage.market_basic.last_accrual_time.read();
 
         // Calculate new indices
         let (supply_index, borrow_index) = accrued_interest_indices(timestamp().into(), last_accrual_time);
+        let mut present_value = I256::zero();
 
         // Set latest values (the principal is now the present value of the user's supply or borrow)
         if !user_basic.principal.negative {
-            user_basic.principal = present_value_supply(supply_index, user_basic.principal.into()).into();
+            present_value = present_value_supply(supply_index, user_basic.principal.into()).into();
         } else {
-            user_basic.principal = present_value_borrow(borrow_index, user_basic.principal.flip().into()).into();
-            user_basic.principal = user_basic.principal.flip();
+            present_value = present_value_borrow(borrow_index, user_basic.principal.flip().into()).into();
+            present_value = present_value.flip();
         }
 
-        user_basic
+        present_value
     }
 
 

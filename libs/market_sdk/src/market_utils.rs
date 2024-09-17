@@ -651,16 +651,16 @@ impl MarketContract {
             .await?)
     }
 
-    pub async fn get_user_basic_with_interest(
+    pub async fn get_user_balance_with_interest(
         &self,
         address: Address,
-    ) -> anyhow::Result<CallResponse<UserBasic>> {
+    ) -> anyhow::Result<CallResponse<I256>> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
 
         Ok(self
             .instance
             .methods()
-            .get_user_basic_with_interest(address)
+            .get_user_balance_with_interest(address)
             .with_tx_policies(tx_policies)
             .call()
             .await?)
