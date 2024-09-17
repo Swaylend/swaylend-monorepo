@@ -321,11 +321,11 @@ export const InputDialog = () => {
 
   const disabledLeftTab = useMemo(() => {
     if (action === ACTION_TYPE.SUPPLY || action === ACTION_TYPE.WITHDRAW) {
-      // Lend/Withdraw
-      if (actionTokenAssetId === marketConfiguration?.baseToken) {
-      }
       // Supply collateral/withdraw
-      if (!account || balance?.eq(0)) {
+      if (
+        actionTokenAssetId !== marketConfiguration?.baseToken &&
+        (!account || balance?.eq(0))
+      ) {
         return true;
       }
 
