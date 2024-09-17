@@ -95,6 +95,7 @@ export const Providers = ({ children }: { children: ReactNode }) => {
               <ToastContainer
                 icon={false}
                 position="bottom-right"
+                style={{ zIndex: 1000 }}
                 autoClose={5000}
                 progressStyle={{ background: 'hsl(var(--primary))' }}
                 hideProgressBar={false}

@@ -1,4 +1,8 @@
-import { ErrorToast, TransactionSuccessToast } from '@/components/Toasts';
+import {
+  ErrorToast,
+  PendingToast,
+  TransactionSuccessToast,
+} from '@/components/Toasts';
 import { Market } from '@/contract-types';
 import { useMarketStore } from '@/stores';
 import { DEPLOYED_MARKETS } from '@/utils';
@@ -19,7 +23,12 @@ export const useSupplyCollateral = ({
   const { account } = useAccount();
   const { market } = useMarketStore();
   const { data: collateralConfigurations } = useCollateralConfigurations();
-  const { changeTokenAmount } = useMarketStore();
+  const {
+    changeTokenAmount,
+    changeInputDialogOpen,
+    changeSuccessDialogOpen,
+    changeSuccessDialogTransactionId,
+  } = useMarketStore();
 
   return useMutation({
     mutationKey: [
@@ -60,7 +69,7 @@ export const useSupplyCollateral = ({
 
       const transactionResult = await toast.promise(waitForResult(), {
         pending: {
-          render: 'Transaction is pending...',
+          render: PendingToast(),
         },
       });
 
@@ -69,7 +78,10 @@ export const useSupplyCollateral = ({
     onSuccess: (data) => {
       if (data) {
         TransactionSuccessToast({ transactionId: data });
+        changeSuccessDialogTransactionId(data);
+        changeInputDialogOpen(false);
         changeTokenAmount(BigNumber(0));
+        changeSuccessDialogOpen(true);
       }
     },
     onError: (error) => {
