@@ -35,6 +35,6 @@ export const useUserCollateralAssets = () => {
 
       return formattedCollaterals;
     },
-    enabled: !!account,
+    enabled: !!account && !!wallet && !!collateralConfigurations,
   });
 };
