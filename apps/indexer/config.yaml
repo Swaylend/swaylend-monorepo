@@ -1,10 +1,10 @@
 name: SwayLend USDC Market
 networks:
   - id: 0
-    start_block: 10529000
+    start_block: 10670000
     contracts:
       - name: Market
-        address: 0x66a64bffe98195ab13162b5f478bf5e1fa938631df2e845c29e3839727c41293
+        address: 0x9acd98624f163187a3dd558cb8e215d417f6c0ac291b78ba20f6df3c07a352e0
         abi_file_path: ../../contracts/market/out/release/market-abi.json
         handler: ./src/EventHandlers.ts
         events:
