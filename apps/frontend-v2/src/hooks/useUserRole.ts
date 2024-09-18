@@ -15,6 +15,7 @@ export const useUserRole = () => {
     return USER_ROLE.NONE;
   }
 
+  // FIXME: A better way to select this (or maybe just adjust the value)
   if (userSupplyBorrow?.supplied.gt(10)) {
     return USER_ROLE.LENDER;
   }

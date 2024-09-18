@@ -39,6 +39,7 @@
     "pino-pretty": "^11.2.2",
     "posthog-js": "^1.161.3",
     "react": "^18",
+    "react-circular-progressbar": "^2.1.0",
     "react-dom": "^18",
     "react-toastify": "^10.0.5",
     "react-wavify": "^1.11.1",

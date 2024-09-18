@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import {
   FuelWalletConnector,
   FueletWalletConnector,
+  SolanaConnector,
   WalletConnectConnector,
 } from '@fuels/connectors';
 import { FuelProvider } from '@fuels/react';
@@ -60,6 +61,8 @@ export const Providers = ({ children }: { children: ReactNode }) => {
     posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
       api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST!,
       person_profiles: 'always',
+      autocapture: false,
+      capture_pageview: true,
       loaded: (posthog) => {
         if (process.env.NODE_ENV === 'development') posthog.debug(); // debug mode in development
       },
@@ -86,6 +89,9 @@ export const Providers = ({ children }: { children: ReactNode }) => {
                   // TODO: setup walletconnect project and add project id
                   projectId: '972bec1eae519664815444d4b7a7578a',
                 }),
+                new SolanaConnector({
+                  projectId: '972bec1eae519664815444d4b7a7578a',
+                }),
               ],
             }}
           >
@@ -95,6 +101,7 @@ export const Providers = ({ children }: { children: ReactNode }) => {
               <ToastContainer
                 icon={false}
                 position="bottom-right"
+                style={{ zIndex: 1000 }}
                 autoClose={5000}
                 progressStyle={{ background: 'hsl(var(--primary))' }}
                 hideProgressBar={false}
