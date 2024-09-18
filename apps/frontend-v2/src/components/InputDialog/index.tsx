@@ -171,23 +171,37 @@ export const InputDialog = () => {
   ]);
 
   const onMaxBtnClick = () => {
-    if (userSupplyBorrow == null || finalBalance == null) return null;
+    if (
+      userSupplyBorrow == null ||
+      finalBalance == null ||
+      marketBalanceOfBase == null ||
+      !actionTokenAssetId ||
+      !collateralConfigurations ||
+      !marketConfiguration
+    ) {
+      return null;
+    }
+
+    const decimals =
+      actionTokenAssetId === marketConfiguration.baseToken
+        ? marketConfiguration.baseTokenDecimals
+        : collateralConfigurations[actionTokenAssetId].decimals;
 
     switch (action) {
       case ACTION_TYPE.SUPPLY: {
-        changeTokenAmount(BigNumber(finalBalance.toFixed(9)));
+        changeTokenAmount(BigNumber(finalBalance.toFixed(decimals)));
         break;
       }
       case ACTION_TYPE.WITHDRAW:
-        changeTokenAmount(BigNumber(finalBalance.toFixed(9)));
+        changeTokenAmount(BigNumber(finalBalance.toFixed(decimals)));
         break;
       case ACTION_TYPE.BORROW:
         if (marketBalanceOfBase?.formatted.lt(finalBalance)) {
           changeTokenAmount(
-            BigNumber(marketBalanceOfBase?.formatted.toFixed(9))
+            BigNumber(marketBalanceOfBase.formatted.toFixed(decimals))
           );
         } else {
-          changeTokenAmount(BigNumber(finalBalance.toFixed(9)));
+          changeTokenAmount(BigNumber(finalBalance.toFixed(decimals)));
         }
         break;
       case ACTION_TYPE.REPAY: {
@@ -201,9 +215,9 @@ export const InputDialog = () => {
           ) ?? BigNumber(0);
 
         if (finalBalanceRepay.gte(userBorrowed)) {
-          changeTokenAmount(BigNumber(userBorrowed.toFixed(9)));
+          changeTokenAmount(BigNumber(userBorrowed.toFixed(decimals)));
         } else {
-          changeTokenAmount(BigNumber(finalBalanceRepay.toFixed(9)));
+          changeTokenAmount(BigNumber(finalBalanceRepay.toFixed(decimals)));
         }
         break;
       }
