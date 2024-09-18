@@ -137,7 +137,7 @@ export const useWithdrawBase = () => {
       // Invalidate Fuel balance query
       queryClient.invalidateQueries({
         exact: true,
-        queryKey: ['fuel', 'balance', account, marketConfiguration?.baseToken],
+        queryKey: ['balance', account, marketConfiguration?.baseToken],
       });
     },
   });

@@ -1,5 +1,6 @@
 'use client';
 import {
+  useBalance,
   useCollateralConfigurations,
   useMarketConfiguration,
   useMintToken,
@@ -10,7 +11,7 @@ import {
   FUEL_ETH_BASE_ASSET_ID,
   formatUnits,
 } from '@/utils';
-import { useAccount, useBalance } from '@fuels/react';
+import { useAccount } from '@fuels/react';
 import { useIsMutating } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { BN, toFixed } from 'fuels';
@@ -42,7 +43,7 @@ const FaucetRow = ({
   mintPending,
   ethBalance,
 }: FaucetRowProps) => {
-  const { balance } = useBalance({
+  const { data: balance } = useBalance({
     address: account,
     assetId: assetId,
   });
@@ -94,7 +95,7 @@ export const FaucetView = () => {
     isPending: isPendingCollateralConfigurations,
   } = useCollateralConfigurations();
 
-  const { balance: ethBalance } = useBalance({
+  const { data: ethBalance } = useBalance({
     address: account ?? undefined,
     assetId: FUEL_ETH_BASE_ASSET_ID,
   });

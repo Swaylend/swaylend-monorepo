@@ -149,7 +149,7 @@ export const useSupplyCollateral = ({
       // Invalidate Fuel balance query
       queryClient.invalidateQueries({
         exact: true,
-        queryKey: ['fuel', 'balance', account, actionTokenAssetId],
+        queryKey: ['balance', account, actionTokenAssetId],
       });
     },
   });

@@ -29,6 +29,7 @@ import {
 } from '@/components/ui/tooltip';
 import type { CollateralConfigurationOutput } from '@/contract-types/Market';
 import {
+  useBalance,
   useCollateralConfigurations,
   usePrice,
   useTotalCollateral,
@@ -41,7 +42,7 @@ import {
   SYMBOL_TO_NAME,
   formatUnits,
 } from '@/utils';
-import { useAccount, useBalance } from '@fuels/react';
+import { useAccount } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import BigNumber from 'bignumber.js';
 import React, { useMemo } from 'react';
@@ -85,7 +86,7 @@ const CollateralTableRow = ({
   collateralAmount,
   price,
 }: TableRowProps) => {
-  const { balance } = useBalance({
+  const { data: balance } = useBalance({
     address: account,
     assetId: assetId,
   });
@@ -258,7 +259,7 @@ const CollateralCard = ({
   collateralConfiguration,
   price,
 }: TableRowProps) => {
-  const { balance } = useBalance({
+  const { data: balance } = useBalance({
     address: account,
     assetId: assetId,
   });

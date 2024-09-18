@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/table';
 import {
   USER_ROLE,
+  useBalance,
   useMarketConfiguration,
   useSupplyRate,
   useUserRole,
@@ -34,7 +35,7 @@ import {
   formatUnits,
   getSupplyApr,
 } from '@/utils';
-import { useAccount, useBalance } from '@fuels/react';
+import { useAccount } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import BigNumber from 'bignumber.js';
 import Image from 'next/image';
@@ -126,7 +127,7 @@ export const LendTable = () => {
     changeInputDialogOpen(true);
   };
 
-  const { balance } = useBalance({
+  const { data: balance } = useBalance({
     address: account ?? undefined,
     assetId: marketConfiguration?.baseToken,
   });

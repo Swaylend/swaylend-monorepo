@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/table';
 import {
   USER_ROLE,
+  useBalance,
   useBorrowCapacity,
   useBorrowRate,
   useMarketConfiguration,
@@ -35,7 +36,7 @@ import {
   formatUnits,
   getBorrowApr,
 } from '@/utils';
-import { useAccount, useBalance, useIsConnected } from '@fuels/react';
+import { useAccount, useIsConnected } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import BigNumber from 'bignumber.js';
 import Image from 'next/image';
@@ -130,7 +131,7 @@ export const BorrowTable = () => {
 
   const { isConnected } = useIsConnected();
 
-  const { balance } = useBalance({
+  const { data: balance } = useBalance({
     address: account ?? undefined,
     assetId: marketConfiguration?.baseToken,
   });
