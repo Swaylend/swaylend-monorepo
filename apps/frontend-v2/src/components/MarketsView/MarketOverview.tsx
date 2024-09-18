@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { ArrowLeft, ExternalLink } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -24,6 +24,7 @@ import {
 } from '@/components/ui/chart';
 import Link from 'next/link';
 import { IconPair } from '../IconPair';
+import { SYMBOL_TO_ICON } from '@/utils';
 
 type MarketOverviewProps = {
   network: string;
@@ -56,24 +57,43 @@ export default function MarketOverview({
   } satisfies ChartConfig;
 
   return (
-    <div className="min-h-screen bg-background text-gray-100 p-6">
-      <header className="flex justify-between items-center mb-6">
-        <div className="flex items-center space-x-4">
+    <div className="pt-[60px] pb-[55px] px-[88px] flex flex-col w-full items-center justify-center">
+      <div className="flex items-start justify-between w-full">
+        <div className="flex items-center space-x-4 text-white/40 w-1/3">
           <Link href="/market">
-            <Button variant="ghost" size="icon">
-              <ArrowLeft className="h-6 w-6" />
-            </Button>
+            <div className="flex gap-x-2 items-center">
+              <ChevronLeft className="h-6 w-6" />
+              <div className="text-[20px] font-semibold">Markets</div>
+            </div>
           </Link>
-          <h1 className="text-2xl font-bold">Markets</h1>
         </div>
-      </header>
 
-      <div className="mb-6 flex items-center justify-center space-x-2">
-        <IconPair icons={[]} />
-        <h2 className="text-2xl font-bold">Fuel-USDT</h2>
+        <div className="w-1/3 flex flex-col items-center justify-center">
+          <IconPair
+            icons={[
+              {
+                id: 'usdc',
+                name: 'USDC',
+                path: SYMBOL_TO_ICON.USDC,
+              },
+              {
+                id: 'fuel',
+                name: 'Fuel',
+                path: SYMBOL_TO_ICON.ETH,
+              },
+            ]}
+          />
+          <div className="mt-[36px]">
+            <span className="text-xl text-white font-semibold">USDC</span>
+            <span className="text-moon text-xl font-semibold ml-2">
+              · Fuel Network
+            </span>
+          </div>
+        </div>
+        <div className="w-1/3" />
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 mt-[125px]">
         <Card>
           <CardHeader>
             <CardTitle className="text-green-400">Total Collateral</CardTitle>
