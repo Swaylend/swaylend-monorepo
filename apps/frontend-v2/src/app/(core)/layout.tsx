@@ -14,7 +14,7 @@ export default function AppLayout({
         <Navbar />
         <div className="bg-background flex-1">{children}</div>
         <Footer />
-        {/* <TermsAndConditions /> */}
+        <TermsAndConditions />
       </div>
     </Providers>
   );
