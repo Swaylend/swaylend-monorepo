@@ -4,12 +4,14 @@ const { PHASE_DEVELOPMENT_SERVER } = require('next/constants');
 
 /** @type {import('next').NextConfig} */
 module.exports = (phase, { defaultConfig }) => {
-  const isDev = phase === PHASE_DEVELOPMENT_SERVER;
   /**
    * @type {import('next').NextConfig}
    */
   const nextConfig = {
-    assetPrefix: isDev ? undefined : 'https://static.swaylend.com',
+    assetPrefix:
+      process.env.USE_CDN === 'true'
+        ? 'https://static.swaylend.com'
+        : undefined,
     /* config options here */
     webpack: (config, _) => {
       // SVGR Config from: https://react-svgr.com/docs/next/
