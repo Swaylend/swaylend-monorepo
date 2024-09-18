@@ -63,107 +63,33 @@ export const TermsAndConditions = () => {
           <div className="flex-1 w-full h-full bg-popover px-[15px] sm:px-6 z-10 overflow-auto">
             <div className="flex flex-col w-full h-full px-6 py-4 gap-y-2.5 border-[1px] border-[#666E79] rounded-md overflow-auto text-lavender">
               <p>
-                Welcome to SwayLend, the first Lending Protocol built on the
-                Fuel network. By accessing or using our platform (the
-                "Platform"), you agree to comply with and be bound by the
-                following terms and conditions (the "Terms"). If you do not
-                agree to these Terms, you should not use the Platform.
+                No representation or warranty is made concerning any aspect of
+                the SwayLend Protocol, including its suitability, quality,
+                availability, accessibility, accuracy or safety. As more fully
+                explained in the Terms and Conditions (available below), your
+                access to and use of the SwayLend Protocol through this
+                Interface is entirely at your own risk and could lead to
+                substantial losses, for which you take full responsibility.
               </p>
-              <h2 className="font-bold">1. Acceptance of Terms</h2>
               <p>
-                By accessing, browsing, or using the Platform, you acknowledge
-                that you have read, understood, and agree to be bound by these
-                Terms and any other applicable laws and regulations. SwayLend
-                reserves the right to modify these Terms at any time. Changes
-                will be effective immediately upon posting.
+                This Interface is not available to residents of Belarus,
+                Burundi, the Central African Republic, the Democratic Republic
+                of Congo, the Democratic People’s Republic of Korea, the
+                temporarily occupied regions of Ukraine, Cuba, Iran, Libya, the
+                People’s Republic of China, the Russian Federation, Somalia,
+                Sudan, South Sudan, Syria, the United States of America,
+                Venezuela, Yemen, and Zimbabwe or any other jurisdiction in
+                which accessing or using the SwayLend Protocol is prohibited
+                (“Prohibited Jurisdictions”). In using this Interface, you
+                confirm that you are not located in, incorporated or otherwise
+                established in, or resident of, a Prohibited Jurisdiction.
               </p>
-              <h2 className="font-bold">2. Eligibility</h2>
               <p>
-                To use the Platform, you must be at least 18 years old and
-                capable of forming legally binding contracts under applicable
-                law.
-              </p>
-              <h2 className="font-bold">3. Platform Services</h2>
-              <p>
-                SwayLend offers a decentralized lending protocol, allowing users
-                to deposit and borrow digital assets. You are responsible for
-                understanding how decentralized finance (DeFi) works, including
-                its risks, and ensuring compliance with any applicable
-                regulations.
-              </p>
-              <h2 className="font-bold">4. User Accounts</h2>
-              <p>
-                You may be required to create an account to access certain
-                features of the Platform. You are responsible for maintaining
-                the confidentiality of your account and all activities under it.
-                SwayLend is not responsible for unauthorized access or activity
-                related to your account.
-              </p>
-              <h2 className="font-bold">5. No Financial Advice</h2>
-              <p>
-                All information provided by SwayLend is for informational
-                purposes only and should not be considered financial advice. You
-                should consult with a financial advisor before making any
-                lending or borrowing decisions.
-              </p>
-              <h2 className="font-bold">6. Risk Acknowledgement</h2>
-              <p>
-                Using DeFi products involves significant risks, including but
-                not limited to the risk of loss due to market volatility,
-                liquidity issues, smart contract bugs, and other unforeseen
-                circumstances. You acknowledge that you use the Platform at your
-                own risk, and SwayLend is not responsible for any losses you may
-                incur.
-              </p>
-              <h2 className="font-bold">7. Fees</h2>
-              <p>
-                SwayLend reserves the right to charge fees for certain services
-                or transactions on the Platform. Any applicable fees will be
-                clearly indicated, and you agree to pay these fees as part of
-                using the Platform.
-              </p>
-              <h2 className="font-bold">8. Privacy</h2>
-              <p>
-                Your use of the Platform is subject to our Privacy Policy, which
-                describes how we collect, use, and share your personal
-                information.
-              </p>
-              <h2 className="font-bold">9. Intellectual Property</h2>
-              <p>
-                All content on the Platform, including text, graphics, logos,
-                and software, is the property of SwayLend or its licensors. You
-                may not use any part of the Platform's content without prior
-                written consent.
-              </p>
-              <h2 className="font-bold">10. Limitation of Liability</h2>
-              <p>
-                To the fullest extent permitted by law, SwayLend and its
-                affiliates will not be liable for any damages or losses arising
-                from your use of the Platform, including but not limited to
-                direct, indirect, incidental, or consequential damages.
-              </p>
-              <h2 className="font-bold">11. Indemnification</h2>
-              <p>
-                You agree to indemnify and hold SwayLend and its affiliates
-                harmless from any claims, damages, or losses resulting from your
-                use of the Platform or violation of these Terms.
-              </p>
-              <h2 className="font-bold">12. Termination</h2>
-              <p>
-                SwayLend reserves the right to terminate or suspend your access
-                to the Platform at any time for any reason, without prior
-                notice.
-              </p>
-              <h2 className="font-bold">13. Governing Law</h2>
-              <p>
-                These Terms are governed by and construed in accordance with the
-                laws of [Jurisdiction]. Any legal actions related to these Terms
-                must be brought in the courts of [Jurisdiction].
-              </p>
-              <h2 className="font-bold">14. Contact Information</h2>
-              <p>
-                If you have any questions or concerns about these Terms, please
-                contact us at [email].
+                I confirm that I have read, understand and accept the{' '}
+                {/* biome-ignore lint/a11y/useValidAnchor: <explanation> */}
+                <a href="#" className="underline text-primary">
+                  Terms and Conditions
+                </a>
               </p>
             </div>
           </div>
