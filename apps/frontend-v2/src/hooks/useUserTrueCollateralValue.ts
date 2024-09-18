@@ -54,5 +54,6 @@ export const useUserTrueCollateralValue = () => {
       !!assetsConfigs &&
       !!collateralConfig &&
       !!priceData,
+    refetchOnWindowFocus: false,
   });
 };

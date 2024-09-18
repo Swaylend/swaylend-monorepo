@@ -51,7 +51,7 @@ export const useMarketConfiguration = () => {
         targetReserves: marketConfiguration.target_reserves,
       };
     },
-    refetchInterval: 1000 * 100, // TODO: Check if necessary
+    refetchOnWindowFocus: false,
     enabled: !!provider,
   });
 };

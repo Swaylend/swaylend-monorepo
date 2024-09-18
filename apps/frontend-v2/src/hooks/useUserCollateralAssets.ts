@@ -8,7 +8,6 @@ import { useCollateralConfigurations } from './useCollateralConfigurations';
 
 export const useUserCollateralAssets = () => {
   const { wallet } = useWallet();
-
   const { account } = useAccount();
   const { market } = useMarketStore();
   const { data: collateralConfigurations } = useCollateralConfigurations();

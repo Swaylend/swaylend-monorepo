@@ -45,7 +45,7 @@ export const useCollateralConfigurations = () => {
 
       return formattedConfigurations;
     },
-    refetchInterval: 1000 * 100, // TODO: Check if necessary
+    refetchOnWindowFocus: false,
     enabled: !!provider,
   });
 };

@@ -52,6 +52,18 @@ function getQueryClient() {
   return browserQueryClient;
 }
 
+const connectors = [
+  new FuelWalletConnector(),
+  new FueletWalletConnector(),
+  new WalletConnectConnector({
+    // TODO: setup walletconnect project and add project id
+    projectId: '972bec1eae519664815444d4b7a7578a',
+  }),
+  new SolanaConnector({
+    projectId: '972bec1eae519664815444d4b7a7578a',
+  }),
+];
+
 export const Providers = ({ children }: { children: ReactNode }) => {
   const queryClient = getQueryClient();
 
@@ -82,17 +94,7 @@ export const Providers = ({ children }: { children: ReactNode }) => {
           <FuelProvider
             theme="dark"
             fuelConfig={{
-              connectors: [
-                new FuelWalletConnector(),
-                new FueletWalletConnector(),
-                new WalletConnectConnector({
-                  // TODO: setup walletconnect project and add project id
-                  projectId: '972bec1eae519664815444d4b7a7578a',
-                }),
-                new SolanaConnector({
-                  projectId: '972bec1eae519664815444d4b7a7578a',
-                }),
-              ],
+              connectors: connectors,
             }}
           >
             <>
