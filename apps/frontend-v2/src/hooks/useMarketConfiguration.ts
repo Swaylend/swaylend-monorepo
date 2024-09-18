@@ -1,8 +1,8 @@
+import { Market } from '@/contract-types';
 import { useMarketStore } from '@/stores';
+import { DEPLOYED_MARKETS } from '@/utils';
 import { useQuery } from '@tanstack/react-query';
 import { useProvider } from './useProvider';
-import { Market } from '@/contract-types';
-import { DEPLOYED_MARKETS } from '@/utils';
 
 export const useMarketConfiguration = () => {
   const provider = useProvider();

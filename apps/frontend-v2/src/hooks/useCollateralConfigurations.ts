@@ -1,11 +1,11 @@
 import {
-  Market,
   type CollateralConfigurationOutput,
+  Market,
 } from '@/contract-types/Market';
 import { useMarketStore } from '@/stores';
+import { DEPLOYED_MARKETS } from '@/utils';
 import { useQuery } from '@tanstack/react-query';
 import { useProvider } from './useProvider';
-import { DEPLOYED_MARKETS } from '@/utils';
 
 export const useCollateralConfigurations = () => {
   const provider = useProvider();

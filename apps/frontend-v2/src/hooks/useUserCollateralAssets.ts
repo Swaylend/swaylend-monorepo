@@ -1,10 +1,10 @@
+import { Market } from '@/contract-types';
 import { useMarketStore } from '@/stores';
+import { DEPLOYED_MARKETS } from '@/utils';
 import { useAccount, useWallet } from '@fuels/react';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
-import { Market } from '@/contract-types';
-import { DEPLOYED_MARKETS } from '@/utils';
 
 export const useUserCollateralAssets = () => {
   const { wallet } = useWallet();
