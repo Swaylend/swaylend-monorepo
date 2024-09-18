@@ -1,6 +1,6 @@
 [
   {
-    "asset_id": "0x6435053a1901c1a5d193531c36ef4f92e93472ede7c94d9a2a5dd272a4dfb392",
+    "asset_id": "0x36a5d3c64c0a26af42a0d3e6cfbfd81e543036433a67770dbfbe57579b30b7a2",
     "price_feed_id": "0xeaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a",
     "price_feed_decimals": 7,
     "name": "USD Coin",
@@ -24,7 +24,7 @@
     "supply_cap": 1000000000000
   },
   {
-    "asset_id": "0x18f9d5eaba2d9fcebfbc6cdcd646e7b9abdacec5d41bbd1b9c97b4c027163323",
+    "asset_id": "0xca877514280b1b529097507a75e6c985e42ed3ae3ba381938990942043fbd3c8",
     "price_feed_id": "0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43",
     "price_feed_decimals": 7,
     "name": "Bitcoin",
@@ -38,7 +38,7 @@
     "supply_cap": 2000000000
   },
   {
-    "asset_id": "0xe886d61e8bee0cc99fb631f418d7f0879e0e24cf517ff960be89bca51d41b06b",
+    "asset_id": "0x9f1bfac996a5e9bc12505e1d68b0298714c6576deafdd3c79c7e9694de1b18e8",
     "price_feed_id": "0x78d185a741d07edb3412b09008b7c5cfb9bbbd7d568bf00ba737b456ba171501",
     "price_feed_decimals": 8,
     "name": "Uniswap",
