@@ -81,7 +81,7 @@ export const useSupplyBase = () => {
         supplied: new BigNumber(previousSupplyBorrow?.supplied ?? 0).plus(
           amount
         ),
-        borrowed: new BigNumber(previousSupplyBorrow?.borrowed ?? 0),
+        borrowed: new BigNumber(0),
       }));
 
       return { previousSupplyBorrow };
@@ -106,11 +106,17 @@ export const useSupplyBase = () => {
         );
       }
     },
-    // onSettled: () => {
-    //   // Invalidate queries
-    //   queryClient.invalidateQueries({
-    //     queryKey: ['userSupplyBorrow', account, market],
-    //   });
-    // },
+    onSettled: () => {
+      // Invalidate queries
+      queryClient.invalidateQueries({
+        queryKey: ['userSupplyBorrow', account, market],
+      });
+
+      // Invalidate Fuel balance query
+      queryClient.invalidateQueries({
+        exact: true,
+        queryKey: ['fuel', 'balance', account, marketConfiguration?.baseToken],
+      });
+    },
   });
 };

@@ -8,7 +8,7 @@ import type { PriceDataUpdateInput } from '@/contract-types/Market';
 import { useMarketStore } from '@/stores';
 import { DEPLOYED_MARKETS, FUEL_ETH_BASE_ASSET_ID } from '@/utils';
 import { useAccount, useWallet } from '@fuels/react';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { toast } from 'react-toastify';
 import { useMarketConfiguration } from './useMarketConfiguration';
@@ -24,6 +24,8 @@ export const useBorrowBase = () => {
     changeSuccessDialogTransactionId,
   } = useMarketStore();
   const { data: marketConfiguration } = useMarketConfiguration();
+
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationKey: ['borrowBase', account, marketConfiguration, market],
@@ -63,6 +65,37 @@ export const useBorrowBase = () => {
 
       return transactionResult.transactionId;
     },
+    onMutate: async ({
+      tokenAmount,
+    }: {
+      tokenAmount: BigNumber;
+      priceUpdateData: PriceDataUpdateInput;
+    }) => {
+      if (!marketConfiguration) return null;
+
+      // Cancel any outgoing queries
+      await queryClient.cancelQueries({ queryKey: ['userSupplyBorrow'] });
+
+      // Snapshot the current state
+      const previousSupplyBorrow = queryClient.getQueryData<{
+        supplied: BigNumber;
+        borrowed: BigNumber;
+      } | null>(['userSupplyBorrow', account, market]);
+
+      const amount = new BigNumber(tokenAmount).times(
+        10 ** marketConfiguration.baseTokenDecimals
+      );
+
+      // Optmistic update
+      queryClient.setQueryData(['userSupplyBorrow', account, market], () => ({
+        supplied: new BigNumber(0),
+        borrowed: new BigNumber(previousSupplyBorrow?.borrowed ?? 0).plus(
+          amount
+        ),
+      }));
+
+      return { previousSupplyBorrow };
+    },
     onSuccess: (data) => {
       if (data) {
         TransactionSuccessToast({ transactionId: data });
@@ -72,8 +105,28 @@ export const useBorrowBase = () => {
         changeSuccessDialogOpen(true);
       }
     },
-    onError: (error) => {
+    onError: (error, _, ctx) => {
       ErrorToast({ error: error.message });
+
+      // Reset to old state
+      if (ctx?.previousSupplyBorrow) {
+        queryClient.setQueryData(
+          ['userSupplyBorrow', account, market],
+          ctx.previousSupplyBorrow
+        );
+      }
+    },
+    onSettled: () => {
+      // Invalidate queries
+      queryClient.invalidateQueries({
+        queryKey: ['userSupplyBorrow', account, market],
+      });
+
+      // Invalidate Fuel balance query
+      queryClient.invalidateQueries({
+        exact: true,
+        queryKey: ['fuel', 'balance', account, marketConfiguration?.baseToken],
+      });
     },
   });
 };

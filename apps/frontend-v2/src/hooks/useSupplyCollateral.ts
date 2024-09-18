@@ -145,6 +145,12 @@ export const useSupplyCollateral = ({
           collateralConfigurations,
         ],
       });
+
+      // Invalidate Fuel balance query
+      queryClient.invalidateQueries({
+        exact: true,
+        queryKey: ['fuel', 'balance', account, actionTokenAssetId],
+      });
     },
   });
 };

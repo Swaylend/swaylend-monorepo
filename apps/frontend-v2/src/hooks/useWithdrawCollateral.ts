@@ -12,7 +12,7 @@ import {
   PYTH_CONTRACT_ADDRESS_SEPOLIA,
   PythContract,
 } from '@pythnetwork/pyth-fuel-js';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { toast } from 'react-toastify';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
@@ -34,6 +34,8 @@ export const useWithdrawCollateral = ({
     changeSuccessDialogOpen,
     changeSuccessDialogTransactionId,
   } = useMarketStore();
+
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationKey: ['withdrawCollateral', actionTokenAssetId, account, market],
@@ -90,6 +92,49 @@ export const useWithdrawCollateral = ({
 
       return transactionResult.transactionId;
     },
+    onMutate: async ({
+      tokenAmount,
+    }: {
+      tokenAmount: BigNumber;
+      priceUpdateData: PriceDataUpdateInput;
+    }) => {
+      if (!actionTokenAssetId || !collateralConfigurations) {
+        return null;
+      }
+
+      // Cancel any outgoing queries
+      await queryClient.cancelQueries({ queryKey: ['collateralAssets'] });
+
+      // Snapshot the current state
+      const previousCollateralAssets = queryClient.getQueryData<Record<
+        string,
+        BigNumber
+      > | null>([
+        'collateralAssets',
+        account,
+        market,
+        collateralConfigurations,
+      ]);
+
+      if (!previousCollateralAssets) return null;
+
+      const amount = new BigNumber(tokenAmount).times(
+        10 ** collateralConfigurations[actionTokenAssetId].decimals
+      );
+
+      // Optmistic update
+      queryClient.setQueryData(
+        ['collateralAssets', account, market, collateralConfigurations],
+        () => ({
+          ...previousCollateralAssets,
+          [actionTokenAssetId]: new BigNumber(
+            previousCollateralAssets[actionTokenAssetId] ?? 0
+          ).minus(amount),
+        })
+      );
+
+      return { previousCollateralAssets };
+    },
     onSuccess: (data) => {
       if (data) {
         TransactionSuccessToast({ transactionId: data });
@@ -99,8 +144,33 @@ export const useWithdrawCollateral = ({
         changeSuccessDialogOpen(true);
       }
     },
-    onError: (error) => {
+    onError: (error, _, ctx) => {
       ErrorToast({ error: error.message });
+
+      // Reset to old state
+      if (ctx?.previousCollateralAssets) {
+        queryClient.setQueryData(
+          ['collateralAssets', account, market],
+          ctx.previousCollateralAssets
+        );
+      }
+    },
+    onSettled: () => {
+      // Invalidate queries
+      queryClient.invalidateQueries({
+        queryKey: [
+          'collateralAssets',
+          account,
+          market,
+          collateralConfigurations,
+        ],
+      });
+
+      // Invalidate Fuel balance query
+      queryClient.invalidateQueries({
+        exact: true,
+        queryKey: ['fuel', 'balance', account, actionTokenAssetId],
+      });
     },
   });
 };
