@@ -10,40 +10,34 @@ import {
 } from '@/components/ui/table';
 import { useMarketConfiguration, useUserSupplyBorrow } from '@/hooks';
 import { type ACTION_TYPE, useMarketStore } from '@/stores';
-import { ASSET_ID_TO_SYMBOL, formatUnits } from '@/utils';
+import {
+  ASSET_ID_TO_SYMBOL,
+  formatUnits,
+  SYMBOL_TO_ICON,
+  SYMBOL_TO_NAME,
+} from '@/utils';
 import { useAccount, useBalance } from '@fuels/react';
 import BigNumber from 'bignumber.js';
 import type { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import Image from 'next/image';
 import React from 'react';
-import FUEL from '/public/icons/fuel-logo.svg?url';
-import SWAY from '/public/tokens/sway.svg?url';
-import USDC from '/public/tokens/usdc.svg?url';
-import USDT from '/public/tokens/usdt.svg?url';
+import { type Collateral, CollateralIcons } from '../CollateralIcons';
 
-const SYMBOL_TO_LOGO: Record<string, StaticImport> = {
-  USDC: USDC,
-  USDT: USDT,
-};
-
-const POINTS_LEND: Point[] = [
+const USDC_COLLATERALS: Collateral[] = [
   {
     id: '1',
-    name: 'Fuel',
-    description: 'Earn Fuel Points by lending assets',
-    icon: FUEL,
+    name: 'Ethereum',
+    icon: SYMBOL_TO_ICON.ETH,
   },
   {
     id: '2',
-    name: 'SwayLend',
-    description: 'Earn SwayLend Points by lending assets',
-    icon: SWAY,
+    name: 'Bitcoin',
+    icon: SYMBOL_TO_ICON.BTC,
   },
   {
     id: '3',
-    name: 'SwayLend',
-    description: 'Earn SwayLend Points by lending assets',
-    icon: USDC,
+    name: 'Uniswap',
+    icon: SYMBOL_TO_ICON.UNI,
   },
 ];
 
@@ -76,14 +70,37 @@ export const MarketsTable = () => {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="w-1/6">Lend Asset</TableHead>
-          <TableHead className="w-1/6">Supply Points</TableHead>
-          <TableHead className="w-1/12">Utilization</TableHead>
-          <TableHead className="w-1/12">Net Earn APR</TableHead>
-          <TableHead className="w-1/12">Net Borrow APR</TableHead>
-          <TableHead className="w-1/12">Total Earning</TableHead>
-          <TableHead className="w-1/12">Total Borrowing</TableHead>
-          <TableHead className="w-1/12">Total Collateral</TableHead>
+          <TableHead colSpan={8} className="">
+            <div className="w-full flex justify-center text-white font-semibold">
+              Fuel Network
+            </div>
+          </TableHead>
+        </TableRow>
+        <TableRow>
+          <TableHead className="h-[64px] pt-4 text-primary font-bold bg-card">
+            Market
+          </TableHead>
+          <TableHead className="h-[64px] pt-4 text-primary font-bold bg-card">
+            Collateral Assets
+          </TableHead>
+          <TableHead className="h-[64px] pt-4 text-primary font-bold bg-card">
+            Utilization
+          </TableHead>
+          <TableHead className="h-[64px] pt-4 text-primary font-bold bg-card">
+            Net Earn APR
+          </TableHead>
+          <TableHead className="h-[64px] pt-4 text-primary font-bold bg-card">
+            Net Borrow APR
+          </TableHead>
+          <TableHead className="h-[64px] pt-4 text-primary font-bold bg-card">
+            Total Earning
+          </TableHead>
+          <TableHead className="h-[64px] pt-4 text-primary font-bold bg-card">
+            Total Borrowing
+          </TableHead>
+          <TableHead className="h-[64px] pt-4 text-primary font-bold bg-card">
+            Total Collateral
+          </TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -93,7 +110,7 @@ export const MarketsTable = () => {
               <div>
                 <Image
                   src={
-                    SYMBOL_TO_LOGO[
+                    SYMBOL_TO_ICON[
                       ASSET_ID_TO_SYMBOL[
                         marketConfiguration?.baseToken ?? ''
                       ] ?? 'USDC'
@@ -105,52 +122,40 @@ export const MarketsTable = () => {
                   className={'rounded-full'}
                 />
               </div>
-              <div>
-                <div className="text-neutral2 font-medium">
+              <div className="flex gap-x-2 items-baseline">
+                <div className="text-white text-lg font-semibold">
+                  {
+                    SYMBOL_TO_NAME[
+                      ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']
+                    ]
+                  }
+                </div>
+                <div className="text-sm font-semibold text-moon">
                   {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
                 </div>
-                <div>USDC</div>
               </div>
             </div>
           </TableCell>
           <TableCell>
-            <PointIcons points={POINTS_LEND} />
-          </TableCell>
-          <TableCell>5%</TableCell>
-          <TableCell>
-            {formatUnits(
-              userSupplyBorrow?.supplied ?? BigNumber(0),
-              marketConfiguration?.baseTokenDecimals ?? 9
-            ).toFormat(2)}{' '}
-            {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
+            <CollateralIcons collaterals={USDC_COLLATERALS} />
           </TableCell>
           <TableCell>
-            {formatUnits(
-              userSupplyBorrow?.supplied ?? BigNumber(0),
-              marketConfiguration?.baseTokenDecimals ?? 9
-            ).toFormat(2)}{' '}
-            {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
+            <div className="text-white text-md font-medium">5%</div>
           </TableCell>
           <TableCell>
-            {formatUnits(
-              userSupplyBorrow?.supplied ?? BigNumber(0),
-              marketConfiguration?.baseTokenDecimals ?? 9
-            ).toFormat(2)}{' '}
-            {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
+            <div className="text-white text-md font-medium">5%</div>
           </TableCell>
           <TableCell>
-            {formatUnits(
-              userSupplyBorrow?.supplied ?? BigNumber(0),
-              marketConfiguration?.baseTokenDecimals ?? 9
-            ).toFormat(2)}{' '}
-            {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
+            <div className="text-white text-md font-medium">5%</div>
           </TableCell>
           <TableCell>
-            {formatUnits(
-              userSupplyBorrow?.supplied ?? BigNumber(0),
-              marketConfiguration?.baseTokenDecimals ?? 9
-            ).toFormat(2)}{' '}
-            {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
+            <div className="text-white text-md font-medium">$5</div>
+          </TableCell>
+          <TableCell>
+            <div className="text-white text-md font-medium">$5</div>
+          </TableCell>
+          <TableCell>
+            <div className="text-white text-md font-medium">$230</div>
           </TableCell>
         </TableRow>
       </TableBody>
