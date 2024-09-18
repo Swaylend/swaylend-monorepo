@@ -1,4 +1,6 @@
 import { useIsConnected } from '@fuels/react';
+import BigNumber from 'bignumber.js';
+import { useMarketConfiguration } from './useMarketConfiguration';
 import { useUserSupplyBorrow } from './useUserSupplyBorrow';
 
 export enum USER_ROLE {
@@ -10,16 +12,27 @@ export enum USER_ROLE {
 export const useUserRole = () => {
   const { isConnected } = useIsConnected();
   const { data: userSupplyBorrow } = useUserSupplyBorrow();
+  const { data: marketConfiguration } = useMarketConfiguration();
 
-  if (!isConnected) {
+  if (!isConnected || !userSupplyBorrow || !marketConfiguration) {
     return USER_ROLE.NONE;
   }
 
-  // FIXME: A better way to select this (or maybe just adjust the value)
-  if (userSupplyBorrow?.supplied.gt(10)) {
+  // FIXME: Extract to separate hook to calculate supply/borrow value in dollars
+  // then specify a $ treshold in CONSTANTS for supply/borrow
+  const supplyTreshold = BigNumber(0.1).times(
+    BigNumber(10).pow(marketConfiguration.baseTokenDecimals)
+  );
+
+  const borrowTreshold = BigNumber(0.1).times(
+    BigNumber(10).pow(marketConfiguration.baseTokenDecimals)
+  );
+
+  if (userSupplyBorrow.supplied.gt(supplyTreshold)) {
     return USER_ROLE.LENDER;
   }
-  if (userSupplyBorrow?.borrowed.gt(0)) {
+
+  if (userSupplyBorrow.borrowed.gt(borrowTreshold)) {
     return USER_ROLE.BORROWER;
   }
 
