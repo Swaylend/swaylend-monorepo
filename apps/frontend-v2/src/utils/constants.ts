@@ -40,7 +40,7 @@ export const DEPLOYED_MARKETS: Record<DeployedMarket, MarketConfiguration> = {
       '0x5a22498724036fa16887731686c756aacf26e422ba64c826c5e521f47751f12b',
     tokenFactoryAddress:
       '0x31fa2d4e478308180a380fcafd786d2708b70a723e7742f8633956b03f3999ea',
-    graphqlUrl: 'https://indexer.bigdevenergy.link/d1b799e/v1/graphql',
+    graphqlUrl: 'https://indexer.bigdevenergy.link/8ce655e/v1/graphql',
   },
 };
 
