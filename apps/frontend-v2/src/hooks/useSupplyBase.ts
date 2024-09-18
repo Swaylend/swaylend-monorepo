@@ -9,6 +9,7 @@ import { DEPLOYED_MARKETS } from '@/utils';
 import { useAccount, useWallet } from '@fuels/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
+import { BN } from 'fuels';
 import { toast } from 'react-toastify';
 import { useMarketConfiguration } from './useMarketConfiguration';
 
@@ -65,6 +66,7 @@ export const useSupplyBase = () => {
 
       // Cancel any outgoing queries
       await queryClient.cancelQueries({ queryKey: ['userSupplyBorrow'] });
+      await queryClient.cancelQueries({ queryKey: ['balance'] });
 
       // Snapshot the current state
       const previousSupplyBorrow = queryClient.getQueryData<{
@@ -72,19 +74,34 @@ export const useSupplyBase = () => {
         borrowed: BigNumber;
       } | null>(['userSupplyBorrow', account, market]);
 
+      const previousBalance =
+        queryClient.getQueryData<BN | null>([
+          'balance',
+          account,
+          marketConfiguration?.baseToken,
+        ]) ?? new BN(0);
+
       const amount = new BigNumber(tokenAmount).times(
         10 ** marketConfiguration.baseTokenDecimals
       );
 
+      const newSupplyBalance =
+        previousSupplyBorrow?.supplied.plus(amount) ?? BigNumber(0);
+      const newBorrowBalance =
+        previousSupplyBorrow?.borrowed.minus(amount) ?? BigNumber(0);
+
       // Optmistic update
       queryClient.setQueryData(['userSupplyBorrow', account, market], () => ({
-        supplied: new BigNumber(previousSupplyBorrow?.supplied ?? 0).plus(
-          amount
-        ),
-        borrowed: new BigNumber(0),
+        supplied: newSupplyBalance,
+        borrowed: newBorrowBalance?.lt(0) ? new BigNumber(0) : newBorrowBalance,
       }));
 
-      return { previousSupplyBorrow };
+      queryClient.setQueryData(
+        ['balance', account, marketConfiguration?.baseToken],
+        () => previousBalance.sub(new BN(amount.toString()))
+      );
+
+      return { previousSupplyBorrow, previousBalance };
     },
     onSuccess: (data) => {
       if (data) {
@@ -103,6 +120,13 @@ export const useSupplyBase = () => {
         queryClient.setQueryData(
           ['userSupplyBorrow', account, market],
           ctx.previousSupplyBorrow
+        );
+      }
+
+      if (ctx?.previousBalance) {
+        queryClient.setQueryData(
+          ['balance', account, marketConfiguration?.baseToken],
+          ctx.previousBalance
         );
       }
     },

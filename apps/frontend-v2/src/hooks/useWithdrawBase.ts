@@ -14,6 +14,7 @@ import {
 } from '@pythnetwork/pyth-fuel-js';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
+import { BN } from 'fuels';
 import { toast } from 'react-toastify';
 import { useMarketConfiguration } from './useMarketConfiguration';
 
@@ -87,6 +88,7 @@ export const useWithdrawBase = () => {
 
       // Cancel any outgoing queries
       await queryClient.cancelQueries({ queryKey: ['userSupplyBorrow'] });
+      await queryClient.cancelQueries({ queryKey: ['balance'] });
 
       // Snapshot the current state
       const previousSupplyBorrow = queryClient.getQueryData<{
@@ -94,19 +96,33 @@ export const useWithdrawBase = () => {
         borrowed: BigNumber;
       } | null>(['userSupplyBorrow', account, market]);
 
+      const previousBalance =
+        queryClient.getQueryData<BN | null>([
+          'balance',
+          account,
+          marketConfiguration?.baseToken,
+        ]) ?? new BN(0);
+
       const amount = new BigNumber(tokenAmount).times(
         10 ** marketConfiguration.baseTokenDecimals
       );
 
+      const newSupplyBalance =
+        previousSupplyBorrow?.supplied.minus(amount) ?? BigNumber(0);
+      const newBorrowBalance = BigNumber(0);
+
       // Optmistic update
       queryClient.setQueryData(['userSupplyBorrow', account, market], () => ({
-        supplied: new BigNumber(previousSupplyBorrow?.supplied ?? 0).minus(
-          amount
-        ),
-        borrowed: new BigNumber(previousSupplyBorrow?.borrowed ?? 0),
+        supplied: newSupplyBalance.lt(0) ? new BigNumber(0) : newSupplyBalance,
+        borrowed: newBorrowBalance,
       }));
 
-      return { previousSupplyBorrow };
+      queryClient.setQueryData(
+        ['balance', account, marketConfiguration?.baseToken],
+        () => previousBalance.add(new BN(amount.toString()))
+      );
+
+      return { previousSupplyBorrow, previousBalance };
     },
     onSuccess: (data) => {
       if (data) {
@@ -125,6 +141,13 @@ export const useWithdrawBase = () => {
         queryClient.setQueryData(
           ['userSupplyBorrow', account, market],
           ctx.previousSupplyBorrow
+        );
+      }
+
+      if (ctx?.previousBalance) {
+        queryClient.setQueryData(
+          ['balance', account, marketConfiguration?.baseToken],
+          ctx.previousBalance
         );
       }
     },

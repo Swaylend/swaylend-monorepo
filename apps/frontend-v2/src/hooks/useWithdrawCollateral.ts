@@ -14,6 +14,7 @@ import {
 } from '@pythnetwork/pyth-fuel-js';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
+import { BN } from 'fuels';
 import { toast } from 'react-toastify';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
 
@@ -104,6 +105,7 @@ export const useWithdrawCollateral = ({
 
       // Cancel any outgoing queries
       await queryClient.cancelQueries({ queryKey: ['collateralAssets'] });
+      await queryClient.cancelQueries({ queryKey: ['balance'] });
 
       // Snapshot the current state
       const previousCollateralAssets = queryClient.getQueryData<Record<
@@ -117,6 +119,13 @@ export const useWithdrawCollateral = ({
       ]);
 
       if (!previousCollateralAssets) return null;
+
+      const previousBalance =
+        queryClient.getQueryData<BN | null>([
+          'balance',
+          account,
+          actionTokenAssetId,
+        ]) ?? new BN(0);
 
       const amount = new BigNumber(tokenAmount).times(
         10 ** collateralConfigurations[actionTokenAssetId].decimals
@@ -133,7 +142,11 @@ export const useWithdrawCollateral = ({
         })
       );
 
-      return { previousCollateralAssets };
+      queryClient.setQueryData(['balance', account, actionTokenAssetId], () =>
+        previousBalance.add(new BN(amount.toString()))
+      );
+
+      return { previousCollateralAssets, previousBalance };
     },
     onSuccess: (data) => {
       if (data) {
@@ -152,6 +165,13 @@ export const useWithdrawCollateral = ({
         queryClient.setQueryData(
           ['collateralAssets', account, market],
           ctx.previousCollateralAssets
+        );
+      }
+
+      if (ctx?.previousBalance) {
+        queryClient.setQueryData(
+          ['balance', account, actionTokenAssetId],
+          ctx.previousBalance
         );
       }
     },
