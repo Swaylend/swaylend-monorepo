@@ -19,7 +19,7 @@ import {
   useWithdrawCollateral,
 } from '@/hooks';
 import { cn } from '@/lib/utils';
-import { ACTION_TYPE, useMarketStore } from '@/stores';
+import { ACTION_TYPE, MARKET_MODE, useMarketStore } from '@/stores';
 import { ASSET_ID_TO_SYMBOL, formatUnits } from '@/utils';
 import { useAccount, useBalance, useIsConnected } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
@@ -38,7 +38,6 @@ export const InputDialog = () => {
   const { data: borrowCapacity } = useBorrowCapacity();
   const { data: userSupplyBorrow } = useUserSupplyBorrow();
   const {
-    marketMode,
     actionTokenAssetId,
     tokenAmount,
     action,
@@ -49,7 +48,7 @@ export const InputDialog = () => {
   } = useMarketStore();
 
   const { data: priceData } = usePrice();
-  const { data: marketBalanceOfBase } = useMarketBalanceOfBase();
+  const marketBalanceOfBase = useMarketBalanceOfBase();
 
   const { mutate: supplyCollateral } = useSupplyCollateral({
     actionTokenAssetId,
@@ -112,23 +111,8 @@ export const InputDialog = () => {
     // setOpen(false);
   };
 
-  const handleModeChange = (value: number) => {
-    if (value === 0) {
-      if (marketMode === 'lend') {
-        changeAction(ACTION_TYPE.SUPPLY);
-      }
-      if (marketMode === 'borrow') {
-        changeAction(ACTION_TYPE.BORROW);
-      }
-    }
-    if (value === 1) {
-      if (marketMode === 'lend') {
-        changeAction(ACTION_TYPE.WITHDRAW);
-      }
-      if (marketMode === 'borrow') {
-        changeAction(ACTION_TYPE.REPAY);
-      }
-    }
+  const handleModeChange = (action: ACTION_TYPE) => {
+    changeAction(action);
   };
 
   const { balance } = useBalance({
@@ -284,11 +268,6 @@ export const InputDialog = () => {
     }
 
     if (action === ACTION_TYPE.BORROW) {
-      const baseBalance = formatUnits(
-        BigNumber(baseTokenBalance?.toString()),
-        marketConfiguration?.baseTokenDecimals
-      );
-
       if (marketBalanceOfBase?.formatted.eq(0)) {
         return `There is no ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken]} to borrow`;
       }
@@ -300,19 +279,6 @@ export const InputDialog = () => {
       if (tokenAmount.lt(new BigNumber(10))) {
         return `Minimum borrow amount is 10 ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken]}`;
       }
-
-      // // If reserve is less than user collateral
-      // if (borrowCapacity.gt(baseBalance)) {
-      //   if (tokenAmount?.gt(baseBalance ?? 0)) {
-      //     const max = formatUnits(
-      //       baseBalance,
-      //       marketConfiguration?.baseTokenDecimals
-      //     ).toFormat(2);
-
-      //     return `Max to borrow is ${max} ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken]}`;
-      //   }
-      //   return null;
-      // }
 
       if (tokenAmount.gt(borrowCapacity)) {
         return 'You are trying to borrow more than the max borrowable amount';
@@ -326,6 +292,17 @@ export const InputDialog = () => {
       );
       if (tokenAmount.gt(balance ?? BigNumber(0)))
         return 'Insufficient balance';
+
+      // Balance more than user borrowed
+      if (userSupplyBorrow.borrowed.eq(0)) return 'You have no debt';
+      const userBorrowed =
+        formatUnits(
+          userSupplyBorrow.borrowed.plus(20),
+          marketConfiguration?.baseTokenDecimals
+        ) ?? BigNumber(0);
+
+      if (tokenAmount.gt(userBorrowed))
+        return 'You are trying to repay more than your debt';
     }
 
     return null;
@@ -342,6 +319,67 @@ export const InputDialog = () => {
     setError(tokenInputError());
   }, [tokenAmount, actionTokenAssetId, action]);
 
+  const disabledLeftTab = useMemo(() => {
+    if (action === ACTION_TYPE.SUPPLY || action === ACTION_TYPE.WITHDRAW) {
+      // Supply collateral/withdraw
+      if (
+        actionTokenAssetId !== marketConfiguration?.baseToken &&
+        (!account || balance?.eq(0))
+      ) {
+        return true;
+      }
+
+      return false;
+    }
+
+    // Borrow/Repay
+    if (!account || !borrowCapacity || borrowCapacity.eq(0)) {
+      return true;
+    }
+
+    return false;
+  }, [
+    account,
+    borrowCapacity,
+    balance,
+    marketConfiguration,
+    actionTokenAssetId,
+  ]);
+
+  const disabledRightTab = useMemo(() => {
+    if (action === ACTION_TYPE.SUPPLY || action === ACTION_TYPE.WITHDRAW) {
+      // Lend/Withdraw
+      if (actionTokenAssetId === marketConfiguration?.baseToken) {
+        if (!account || !userSupplyBorrow || userSupplyBorrow?.supplied.eq(0)) {
+          return true;
+        }
+      }
+      // Supply collateral/withdraw
+      else if (
+        !account ||
+        !actionTokenAssetId ||
+        (userCollateralAssets?.[actionTokenAssetId] ?? BigNumber(0)).eq(0)
+      ) {
+        return true;
+      }
+
+      return false;
+    }
+
+    // Borrow/Repay
+    if (!account || !userSupplyBorrow || userSupplyBorrow.borrowed.eq(0)) {
+      return true;
+    }
+
+    return false;
+  }, [
+    account,
+    userSupplyBorrow,
+    userCollateralAssets,
+    actionTokenAssetId,
+    marketConfiguration,
+  ]);
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="p-0 max-sm:w-[90%] max-sm:rounded-xl max-w-[400px]">
@@ -351,19 +389,35 @@ export const InputDialog = () => {
         <div className="h-full w-full">
           <div className="w-full flex justify-between">
             <div className="w-1/2 relative h-[64px] flex justify-center items-center">
-              {/* TODO -> Disable buttons when not available */}
               <button
-                onMouseDown={() => handleModeChange(0)}
+                disabled={disabledLeftTab}
+                onMouseDown={() =>
+                  handleModeChange(
+                    action === ACTION_TYPE.WITHDRAW ||
+                      action === ACTION_TYPE.SUPPLY
+                      ? ACTION_TYPE.SUPPLY
+                      : ACTION_TYPE.BORROW
+                  )
+                }
                 type="button"
                 className={cn(
-                  `${!(action === 'SUPPLY' || action === 'BORROW') && 'text-moon'}`,
-                  'w-full font-semibold text-lg h-full'
+                  !(action === 'SUPPLY' || action === 'BORROW') &&
+                    'text-lavender',
+                  'w-full font-semibold text-lg h-full',
+                  disabledLeftTab && 'text-gray-500'
                 )}
               >
-                {action === 'SUPPLY' ? 'Supply' : 'Borrow'}
+                {action === ACTION_TYPE.SUPPLY ||
+                action === ACTION_TYPE.WITHDRAW
+                  ? 'Supply'
+                  : 'Borrow'}
               </button>
               <div
-                className={`${action === 'SUPPLY' || action === 'BORROW' ? 'block' : 'hidden'}`}
+                className={cn(
+                  action === 'SUPPLY' || action === 'BORROW'
+                    ? 'block'
+                    : 'hidden'
+                )}
               >
                 <div
                   className={cn(
@@ -379,14 +433,26 @@ export const InputDialog = () => {
             </div>
             <div className="w-1/2 relative h-[64px] flex justify-center items-center">
               <button
-                onMouseDown={() => handleModeChange(1)}
+                disabled={disabledRightTab}
+                onMouseDown={() =>
+                  handleModeChange(
+                    action === ACTION_TYPE.BORROW
+                      ? ACTION_TYPE.REPAY
+                      : ACTION_TYPE.WITHDRAW
+                  )
+                }
                 type="button"
                 className={cn(
-                  `${!(action === 'WITHDRAW' || action === 'REPAY') && 'text-moon'}`,
-                  'w-full font-semibold text-lg h-full'
+                  !(action === 'WITHDRAW' || action === 'REPAY') &&
+                    'text-lavender',
+                  'w-full font-semibold text-lg h-full',
+                  disabledRightTab && 'text-gray-500'
                 )}
               >
-                {marketMode === 'lend' ? 'Withdraw' : 'Repay'}
+                {action === ACTION_TYPE.SUPPLY ||
+                action === ACTION_TYPE.WITHDRAW
+                  ? 'Withdraw'
+                  : 'Repay'}
               </button>
               <div
                 className={`${action === 'WITHDRAW' || action === 'REPAY' ? 'block' : 'hidden'}`}
@@ -422,7 +488,7 @@ export const InputDialog = () => {
                 <Button
                   disabled={!finalBalance || finalBalance.eq(0)}
                   onMouseDown={onMaxBtnClick}
-                  size={'sm'}
+                  size="sm"
                   variant={'secondary'}
                 >
                   Max

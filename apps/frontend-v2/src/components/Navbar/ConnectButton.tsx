@@ -53,10 +53,6 @@ export const ConnectButton = () => {
               </div>
             </div>
           </div>
-          <div className="mt-6">
-            <div className="text-moon text-sm">Wallet Balance</div>
-          </div>
-          <div className="text-primary text-xl font-semibold">$613</div>
           <div className="mt-10">
             <Button
               className="w-full"

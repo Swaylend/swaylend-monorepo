@@ -1,3 +1,4 @@
+import { InfoIcon } from '@/components/InfoIcon';
 import { type Point, PointIcons } from '@/components/PointIcons';
 import { Title } from '@/components/Title';
 import { Button } from '@/components/ui/button';
@@ -34,11 +35,11 @@ import {
   formatUnits,
   getBorrowApr,
 } from '@/utils';
-import { useAccount, useBalance } from '@fuels/react';
+import { useAccount, useBalance, useIsConnected } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import BigNumber from 'bignumber.js';
 import Image from 'next/image';
-import React from 'react';
+import React, { useMemo } from 'react';
 
 const POINTS_BORROW: Point[] = [
   {
@@ -127,10 +128,27 @@ export const BorrowTable = () => {
     changeInputDialogOpen(true);
   };
 
+  const { isConnected } = useIsConnected();
+
   const { balance } = useBalance({
     address: account ?? undefined,
     assetId: marketConfiguration?.baseToken,
   });
+
+  const borrowedBalance = useMemo(() => {
+    if (!marketConfiguration || !userSupplyBorrow || !isConnected) {
+      return `${BigNumber(0).toFormat(4)} ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}`;
+    }
+
+    const val = formatUnits(
+      userSupplyBorrow.borrowed,
+      marketConfiguration.baseTokenDecimals
+    );
+    if (val.lt(1) && val.gt(0)) {
+      return `< 1 ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}`;
+    }
+    return `${val.toFormat(4)} ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}`;
+  }, [marketConfiguration, userSupplyBorrow, isConnected]);
 
   return (
     <>
@@ -138,10 +156,28 @@ export const BorrowTable = () => {
       <Table className="max-sm:hidden">
         <TableHeader>
           <TableRow>
-            <TableHead className="w-3/12">Borrow Asset</TableHead>
+            <TableHead className="w-3/12">
+              <div className="flex items-center gap-x-2">
+                Borrow Assets
+                <InfoIcon
+                  text={
+                    'Borrow assets using your supplied assets as collateral.'
+                  }
+                />
+              </div>
+            </TableHead>
             <TableHead className="w-1/6">Borrow APY</TableHead>
             <TableHead className="w-1/6">Borrowed Assets</TableHead>
-            <TableHead className="w-1/6">Borrow Points</TableHead>
+            <TableHead className="w-1/6">
+              <div className="flex items-center gap-x-2">
+                Borrow Points
+                <InfoIcon
+                  text={
+                    'Points earned by borrowing these assets. Hover over the points to learn more.'
+                  }
+                />
+              </div>
+            </TableHead>
             <TableHead className="w-3/12">{}</TableHead>
           </TableRow>
         </TableHeader>
@@ -190,13 +226,7 @@ export const BorrowTable = () => {
               >
                 {getBorrowApr(borrowRate)}
               </TableCell>
-              <TableCell>
-                {formatUnits(
-                  userSupplyBorrow?.borrowed ?? BigNumber(0),
-                  marketConfiguration?.baseTokenDecimals ?? 9
-                ).toFormat(2)}{' '}
-                {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
-              </TableCell>
+              <TableCell>{borrowedBalance}</TableCell>
               <TableCell>
                 <PointIcons points={POINTS_BORROW} />
               </TableCell>
@@ -314,13 +344,7 @@ export const BorrowTable = () => {
                   <div className="w-1/2 text-moon font-medium">
                     Borrowed Assets
                   </div>
-                  <div className="text-moon">
-                    {formatUnits(
-                      userSupplyBorrow?.borrowed ?? BigNumber(0),
-                      marketConfiguration?.baseTokenDecimals ?? 9
-                    ).toFormat(2)}{' '}
-                    {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
-                  </div>
+                  <div className="text-moon">{borrowedBalance}</div>
                 </div>
                 <div className="w-full flex items-center">
                   <div className="w-1/2 text-moon font-medium">

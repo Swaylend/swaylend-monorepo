@@ -24,3 +24,4 @@ export * from './useUser';
 export * from './useRedeemInvite';
 export * from './useUserRole';
 export * from './useMarketBalanceOfBase';
+export * from './useMarketBasics';

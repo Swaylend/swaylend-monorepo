@@ -36,7 +36,7 @@ export const Navbar = () => {
       {/* DESKTOP */}
       <div className="max-lg:hidden">
         <div className="flex justify-between items-center px-16 min-h-[93px]">
-          <Link href="https://swaylend.com">
+          <Link href="/">
             <Image src={Logo} alt="logo" />
           </Link>
           <div className="flex items-center gap-x-8 h-full">
@@ -73,7 +73,7 @@ export const Navbar = () => {
       {/* MOBILE */}
       <div className="hidden max-lg:block">
         <div className="flex justify-between items-center px-4 h-[80px]">
-          <Link href="https://swaylend.com">
+          <Link href="/">
             <Image src={LogoIcon} alt="logo" />
           </Link>
           <div className="flex items-center gap-x-2">
