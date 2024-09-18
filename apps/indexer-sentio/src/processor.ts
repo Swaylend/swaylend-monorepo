@@ -136,7 +136,7 @@ const DEPLOYED_MARKETS: Record<
   },
   USDT: {
     marketAddress:
-      '0x5569d82de2c854151bf7e7196ffecfd495be8a6c9e77fdfc87d4fce2bb964270',
+      '0x5a22498724036fa16887731686c756aacf26e422ba64c826c5e521f47751f12b',
     startBlock: BigInt(10675000),
   },
 };
