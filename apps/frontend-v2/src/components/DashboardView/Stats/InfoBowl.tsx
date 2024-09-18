@@ -178,7 +178,11 @@ export const InfoBowl = () => {
           </div>
         </TooltipTrigger>
         <TooltipContent
-          className={cn(bowlMode !== 2 && 'hidden', 'w-[300px]')}
+          className={cn(
+            bowlMode !== 2 && 'hidden',
+            'w-[300px]',
+            'max-lg:hidden'
+          )}
           side="bottom"
         >
           <div className="p-1">

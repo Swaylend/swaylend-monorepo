@@ -113,7 +113,7 @@ export const Stats = () => {
                 Supplied Balance
               </div>
               {isLoading ? (
-                <Skeleton className="w-[60%] h-[40px] bg-primary/20" />
+                <Skeleton className="w-[60%] h-[25px] mt-2 sm:h-[40px] bg-primary/20" />
               ) : (
                 <div className="text-lavender font-semibold text-lg sm:text-2xl">
                   ${totalSuppliedBalance}
@@ -134,7 +134,7 @@ export const Stats = () => {
                 </div>
                 {isLoading ? (
                   <div className="w-full flex justify-end">
-                    <Skeleton className="w-[60%] h-[40px] bg-primary/20" />
+                    <Skeleton className="w-[60%] h-[25px] mt-2 sm:h-[40px] bg-primary/20" />
                   </div>
                 ) : (
                   <div className="text-lavender font-semibold text-lg sm:text-2xl">

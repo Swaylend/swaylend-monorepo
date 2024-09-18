@@ -8,6 +8,9 @@ type ErrorToastProps = {
 export const ErrorToast = ({ error }: ErrorToastProps) => {
   console.error(error);
   const extractErrorReason = (error: string) => {
+    if (error.includes('User rejected the request')) {
+      return 'Transaction rejected by user.';
+    }
     if (error.includes('Out of gas')) {
       return 'Transaction failed. Out of gas';
     }
@@ -27,9 +30,9 @@ export const ErrorToast = ({ error }: ErrorToastProps) => {
       return 'Cannot withdraw more than collateralized. Try lowering the amount.';
     }
 
-    if (error.includes('transaction reverted')) {
-      return 'Transaction reverted.';
-    }
+    // if (error.includes('transaction reverted')) {
+    //   return 'Transaction reverted.';
+    // }
 
     return error;
   };

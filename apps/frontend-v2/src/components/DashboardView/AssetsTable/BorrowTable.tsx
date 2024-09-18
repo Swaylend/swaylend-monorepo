@@ -1,3 +1,4 @@
+import { InfoIcon } from '@/components/InfoIcon';
 import { type Point, PointIcons } from '@/components/PointIcons';
 import { Title } from '@/components/Title';
 import { Button } from '@/components/ui/button';
@@ -155,10 +156,28 @@ export const BorrowTable = () => {
       <Table className="max-sm:hidden">
         <TableHeader>
           <TableRow>
-            <TableHead className="w-3/12">Borrow Asset</TableHead>
+            <TableHead className="w-3/12">
+              <div className="flex items-center gap-x-2">
+                Borrow Assets
+                <InfoIcon
+                  text={
+                    'Borrow assets using your supplied assets as collateral.'
+                  }
+                />
+              </div>
+            </TableHead>
             <TableHead className="w-1/6">Borrow APY</TableHead>
             <TableHead className="w-1/6">Borrowed Assets</TableHead>
-            <TableHead className="w-1/6">Borrow Points</TableHead>
+            <TableHead className="w-1/6">
+              <div className="flex items-center gap-x-2">
+                Borrow Points
+                <InfoIcon
+                  text={
+                    'Points earned by borrowing these assets. Hover over the points to learn more.'
+                  }
+                />
+              </div>
+            </TableHead>
             <TableHead className="w-3/12">{}</TableHead>
           </TableRow>
         </TableHeader>
