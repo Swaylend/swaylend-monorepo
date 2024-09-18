@@ -25,13 +25,14 @@ export const useUserCollateralAssets = () => {
 
       const formattedCollaterals: Record<string, BigNumber> = {};
 
-      // TODO: Optimize this with 1 smart contract cal
-      for (const key in collateralConfigurations) {
-        const balance = await marketContract.functions
-          .get_user_collateral({ bits: account }, key)
-          .get();
+      const getAllUserCollateralResult = await marketContract.functions
+        .get_all_user_collateral({ bits: account })
+        .get();
 
-        formattedCollaterals[key] = new BigNumber(balance.value.toString());
+      const balances = getAllUserCollateralResult.value;
+
+      for (const [assetId, balance] of balances) {
+        formattedCollaterals[assetId] = new BigNumber(balance.toString());
       }
 
       return formattedCollaterals;
