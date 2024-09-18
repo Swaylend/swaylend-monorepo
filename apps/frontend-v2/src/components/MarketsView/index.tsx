@@ -125,7 +125,7 @@ export const MarketsView = () => {
   const [hoveredTick, setHoveredTick] = useState<string | null>(null);
 
   return (
-    <div className="pt-[55px] pb-[55px] px-[88px] flex flex-col w-full items-center justify-center">
+    <div className="pt-[60px] pb-[55px] px-[88px] flex flex-col w-full items-center justify-center">
       <div className="w-full flex justify-center items-center gap-x-4">
         <div className="flex gap-x-2 items-center">
           <div className="w-2 h-2 rounded-full bg-primary" />
@@ -140,7 +140,7 @@ export const MarketsView = () => {
           <div className="text-white text-md font-normal">Collateral</div>
         </div>
       </div>
-      <div className="w-full h-[300px] mt-4 mb-[55px]">
+      <div className="w-full h-[320px] mt-12 mb-[125px]">
         <ResponsiveContainer width="100%">
           <ChartContainer config={chartConfig}>
             <AreaChart
