@@ -16,7 +16,9 @@ import { useMarketConfiguration } from './useMarketConfiguration';
 import { useProvider } from './useProvider';
 
 export const usePrice = () => {
-  const hermesClient = new HermesClient('https://hermes.pyth.network');
+  const hermesClient = new HermesClient(
+    process.env.NEXT_PUBLIC_HERMES_API ?? 'https://hermes.pyth.network'
+  );
   const provider = useProvider();
 
   const { market } = useMarketStore();
