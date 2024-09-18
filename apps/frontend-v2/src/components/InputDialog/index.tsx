@@ -5,6 +5,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import {
+  useBalance,
   useBorrowBase,
   useBorrowCapacity,
   useCollateralConfigurations,
@@ -19,9 +20,9 @@ import {
   useWithdrawCollateral,
 } from '@/hooks';
 import { cn } from '@/lib/utils';
-import { ACTION_TYPE, MARKET_MODE, useMarketStore } from '@/stores';
+import { ACTION_TYPE, useMarketStore } from '@/stores';
 import { ASSET_ID_TO_SYMBOL, formatUnits } from '@/utils';
-import { useAccount, useBalance, useIsConnected } from '@fuels/react';
+import { useAccount, useIsConnected } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import BigNumber from 'bignumber.js';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -115,9 +116,9 @@ export const InputDialog = () => {
     changeAction(action);
   };
 
-  const { balance } = useBalance({
-    address: account ?? '',
-    assetId: actionTokenAssetId ?? '',
+  const { data: balance } = useBalance({
+    address: account ?? undefined,
+    assetId: actionTokenAssetId ?? undefined,
   });
 
   const finalBalance = useMemo(() => {
@@ -209,12 +210,12 @@ export const InputDialog = () => {
     }
   };
 
-  const { balance: actionTokenBalance } = useBalance({
+  const { data: actionTokenBalance } = useBalance({
     address: account ?? undefined,
     assetId: actionTokenAssetId ?? undefined,
   });
 
-  const { balance: baseTokenBalance } = useBalance({
+  const { data: baseTokenBalance } = useBalance({
     address: account ?? undefined,
     assetId: marketConfiguration?.baseToken,
   });

@@ -6,7 +6,6 @@ import { useProvider } from './useProvider';
 
 export const useUtilization = () => {
   const provider = useProvider();
-
   const { market } = useMarketStore();
 
   return useQuery({

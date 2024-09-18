@@ -12,9 +12,9 @@ import {
   PYTH_CONTRACT_ADDRESS_SEPOLIA,
   PythContract,
 } from '@pythnetwork/pyth-fuel-js';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
-import { LoaderCircleIcon } from 'lucide-react';
+import { BN } from 'fuels';
 import { toast } from 'react-toastify';
 import { useMarketConfiguration } from './useMarketConfiguration';
 
@@ -29,6 +29,8 @@ export const useWithdrawBase = () => {
     changeSuccessDialogTransactionId,
   } = useMarketStore();
   const { data: marketConfiguration } = useMarketConfiguration();
+
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationKey: ['withdrawBase', account, market, marketConfiguration],
@@ -76,6 +78,52 @@ export const useWithdrawBase = () => {
 
       return transactionResult.transactionId;
     },
+    onMutate: async ({
+      tokenAmount,
+    }: {
+      tokenAmount: BigNumber;
+      priceUpdateData: PriceDataUpdateInput;
+    }) => {
+      if (!marketConfiguration) return null;
+
+      // Cancel any outgoing queries
+      await queryClient.cancelQueries({ queryKey: ['userSupplyBorrow'] });
+      await queryClient.cancelQueries({ queryKey: ['balance'] });
+
+      // Snapshot the current state
+      const previousSupplyBorrow = queryClient.getQueryData<{
+        supplied: BigNumber;
+        borrowed: BigNumber;
+      } | null>(['userSupplyBorrow', account, market]);
+
+      const previousBalance =
+        queryClient.getQueryData<BN | null>([
+          'balance',
+          account,
+          marketConfiguration?.baseToken,
+        ]) ?? new BN(0);
+
+      const amount = new BigNumber(tokenAmount).times(
+        10 ** marketConfiguration.baseTokenDecimals
+      );
+
+      const newSupplyBalance =
+        previousSupplyBorrow?.supplied.minus(amount) ?? BigNumber(0);
+      const newBorrowBalance = BigNumber(0);
+
+      // Optmistic update
+      queryClient.setQueryData(['userSupplyBorrow', account, market], () => ({
+        supplied: newSupplyBalance.lt(0) ? new BigNumber(0) : newSupplyBalance,
+        borrowed: newBorrowBalance,
+      }));
+
+      queryClient.setQueryData(
+        ['balance', account, marketConfiguration?.baseToken],
+        () => previousBalance.add(new BN(amount.toString()))
+      );
+
+      return { previousSupplyBorrow, previousBalance };
+    },
     onSuccess: (data) => {
       if (data) {
         TransactionSuccessToast({ transactionId: data });
@@ -85,8 +133,35 @@ export const useWithdrawBase = () => {
         changeSuccessDialogOpen(true);
       }
     },
-    onError: (error) => {
+    onError: (error, _, ctx) => {
       ErrorToast({ error: error.message });
+
+      // Reset to old state
+      if (ctx?.previousSupplyBorrow) {
+        queryClient.setQueryData(
+          ['userSupplyBorrow', account, market],
+          ctx.previousSupplyBorrow
+        );
+      }
+
+      if (ctx?.previousBalance) {
+        queryClient.setQueryData(
+          ['balance', account, marketConfiguration?.baseToken],
+          ctx.previousBalance
+        );
+      }
+    },
+    onSettled: () => {
+      // Invalidate queries
+      queryClient.invalidateQueries({
+        queryKey: ['userSupplyBorrow', account, market],
+      });
+
+      // Invalidate Fuel balance query
+      queryClient.invalidateQueries({
+        exact: true,
+        queryKey: ['balance', account, marketConfiguration?.baseToken],
+      });
     },
   });
 };
