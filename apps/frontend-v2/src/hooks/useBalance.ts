@@ -1,6 +1,6 @@
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { Address, type BytesLike } from 'fuels';
 import { useProvider } from './useProvider';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 type UseBalanceParams = {
   address?: string;
