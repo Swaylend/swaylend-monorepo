@@ -1,6 +1,7 @@
+import { useReferralModalStore } from '@/stores/referralModalStore';
 import { SWAYLEND_API } from '@/utils';
 import { useAccount, useWallet } from '@fuels/react';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 
 const getMessage = (inviteCode: string) => {
@@ -10,6 +11,8 @@ const getMessage = (inviteCode: string) => {
 export const useRedeemInvite = () => {
   const { wallet } = useWallet();
   const { account } = useAccount();
+  const { setOpen } = useReferralModalStore();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationKey: ['redeemInvite', account],
@@ -37,6 +40,15 @@ export const useRedeemInvite = () => {
     },
     onSuccess: () => {
       toast.success('Invite code redeemed');
+      setOpen(false);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+    onSettled: async () => {
+      await queryClient.invalidateQueries({
+        queryKey: ['user', account],
+      });
     },
   });
 };

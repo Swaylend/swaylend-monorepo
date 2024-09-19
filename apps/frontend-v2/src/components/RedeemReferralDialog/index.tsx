@@ -2,15 +2,19 @@ import { useRedeemInvite } from '@/hooks';
 import { cn } from '@/lib/utils';
 import { useReferralModalStore } from '@/stores/referralModalStore';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Button } from '../ui/button';
 import { Dialog, DialogContent, DialogTitle } from '../ui/dialog';
 import { Input } from '../ui/input';
 
 export const RedeemReferralDialog = () => {
   const { open, setOpen } = useReferralModalStore();
-  const { mutate: redeemInvite, isError, isPending } = useRedeemInvite();
+  const { mutate: redeemInvite, isError, error, isPending } = useRedeemInvite();
   const [inviteCode, setInviteCode] = useState('');
+
+  const isPredicateError = useMemo(() => {
+    return error?.message === 'A predicate account cannot sign messages';
+  }, [error]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -41,13 +45,13 @@ export const RedeemReferralDialog = () => {
               <Input
                 className={cn(
                   'h-[56px] bg-card',
-                  isError && 'border-[#FF0606]'
+                  isError && !isPredicateError && 'border-[#FF0606]'
                 )}
                 value={inviteCode}
                 onChange={(e) => setInviteCode(e.target.value)}
                 placeholder="Enter referral code"
               />
-              {isError && (
+              {isError && !isPredicateError && (
                 <p className="text-[#FF0606]">Incorrect referral code</p>
               )}
             </div>
