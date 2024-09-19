@@ -122,7 +122,6 @@ export const MarketsView = () => {
       </>
     );
   }
-  const [hoveredTick, setHoveredTick] = useState<string | null>(null);
 
   return (
     <div className="pt-[60px] pb-[55px] px-[88px] flex flex-col w-full items-center justify-center">

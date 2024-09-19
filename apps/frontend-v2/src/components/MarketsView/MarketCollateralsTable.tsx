@@ -59,16 +59,16 @@ const MarketCollateralsTableRow = ({
           src={SYMBOL_TO_ICON[symbol]}
         />
       </TableCell>
-      <TableCell>
+      <TableCell className="text-white">
         {formattedBalance} {symbol}
       </TableCell>
-      <TableCell>
+      <TableCell className="text-white">
         {formatUnits(protocolBalance, decimals).toFixed(4)} {symbol}
       </TableCell>
-      <TableCell>100</TableCell>
-      <TableCell>80%</TableCell>
-      <TableCell>85%</TableCell>
-      <TableCell>5%</TableCell>
+      <TableCell className="text-white">100</TableCell>
+      <TableCell className="text-white">80%</TableCell>
+      <TableCell className="text-white">85%</TableCell>
+      <TableCell className="text-white">5%</TableCell>
     </TableRow>
   );
 };
@@ -103,34 +103,59 @@ export const MarketCollateralsTable = () => {
   };
 
   return (
-    <Table className="max-sm:hidden mt-8">
-      <TableHeader>
-        <TableRow>
-          <TableHead className="w-1/4">Collateral Asset</TableHead>
-          <TableHead className="w-1/8">Total Supply</TableHead>
-          <TableHead className="w-1/8">Reserves</TableHead>
-          <TableHead className="w-1/8">Oracle Price</TableHead>
-          <TableHead className="w-1/8">Collateral Factor</TableHead>
-          <TableHead className="w-1/8">Liquidation Factor</TableHead>
-          <TableHead className="w-1/8">Liquidation Penalty</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {collaterals.map((collateral) => (
-          <MarketCollateralsTableRow
-            key={collateral.asset_id}
-            account={account ?? undefined}
-            assetId={collateral.asset_id}
-            symbol={ASSET_ID_TO_SYMBOL[collateral.asset_id]}
-            decimals={collateral.decimals}
-            protocolBalance={
-              userCollateralAssets?.[collateral.asset_id] ?? new BigNumber(0)
-            }
-            protocolBalancePending={userCollateralAssetsLoading}
-            handleAssetClick={handleAssetClick}
-          />
-        ))}
-      </TableBody>
-    </Table>
+    <div className="w-full mt-8 border bg-gradient-to-b from-white/10 to-card rounded-lg ">
+      <Table className="max-sm:hidden">
+        <TableHeader>
+          <TableRow>
+            <TableHead className="h-[75px] rounded-t-md" colSpan={7}>
+              <div className="w-full items-center justify-center gap-x-2 font-semibold text-lg flex">
+                <div className="w-[260px] rounded-full h-[1px] bg-gradient-to-r from-white/0 to-primary" />
+                <div className="text-center text-white">Collateral Assets</div>
+                <div className="w-[260px] rounded-full h-[1px] bg-gradient-to-l from-white/0 to-primary" />
+              </div>
+            </TableHead>
+          </TableRow>
+          <TableRow>
+            <TableHead className="w-1/4 bg-card h-[60px] font-bold">
+              Collateral Asset
+            </TableHead>
+            <TableHead className="w-1/8 bg-card h-[60px] font-bold ">
+              Total Supply
+            </TableHead>
+            <TableHead className="w-1/8 bg-card h-[60px] font-bold">
+              Reserves
+            </TableHead>
+            <TableHead className="w-1/8 bg-card h-[60px] font-bold">
+              Oracle Price
+            </TableHead>
+            <TableHead className="w-1/8 bg-card h-[60px] font-bold">
+              Collateral Factor
+            </TableHead>
+            <TableHead className="w-1/8 bg-card h-[60px] font-bold">
+              Liquidation Factor
+            </TableHead>
+            <TableHead className="w-1/8 bg-card h-[60px] font-bold">
+              Liquidation Penalty
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {collaterals.map((collateral) => (
+            <MarketCollateralsTableRow
+              key={collateral.asset_id}
+              account={account ?? undefined}
+              assetId={collateral.asset_id}
+              symbol={ASSET_ID_TO_SYMBOL[collateral.asset_id]}
+              decimals={collateral.decimals}
+              protocolBalance={
+                userCollateralAssets?.[collateral.asset_id] ?? new BigNumber(0)
+              }
+              protocolBalancePending={userCollateralAssetsLoading}
+              handleAssetClick={handleAssetClick}
+            />
+          ))}
+        </TableBody>
+      </Table>
+    </div>
   );
 };
