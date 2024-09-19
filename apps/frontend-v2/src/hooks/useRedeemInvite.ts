@@ -1,8 +1,8 @@
+import { ErrorToast, InfoToast } from '@/components/Toasts';
 import { useReferralModalStore } from '@/stores/referralModalStore';
 import { SWAYLEND_API } from '@/utils';
 import { useAccount, useWallet } from '@fuels/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'react-toastify';
 
 const getMessage = (inviteCode: string) => {
   return `I want to redeem invite code ${inviteCode}.`;
@@ -39,11 +39,14 @@ export const useRedeemInvite = () => {
       return null;
     },
     onSuccess: () => {
-      toast.success('Invite code redeemed');
+      InfoToast({ title: 'Success!', description: 'Invite code redeemed' });
       setOpen(false);
     },
     onError: (error) => {
-      toast.error(error.message);
+      ErrorToast({ error: error.message });
+      if (error.message === 'A predicate account cannot sign messages') {
+        setOpen(false);
+      }
     },
     onSettled: async () => {
       await queryClient.invalidateQueries({
