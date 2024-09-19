@@ -9,7 +9,6 @@ import { DEPLOYED_MARKETS } from '@/utils';
 import { useAccount, useWallet } from '@fuels/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
-import { BN } from 'fuels';
 import { toast } from 'react-toastify';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
 
@@ -78,56 +77,6 @@ export const useSupplyCollateral = ({
 
       return transactionResult.transactionId;
     },
-    onMutate: async (tokenAmount: BigNumber) => {
-      if (!actionTokenAssetId || !collateralConfigurations) {
-        return null;
-      }
-
-      // Cancel any outgoing queries
-      await queryClient.cancelQueries({ queryKey: ['collateralAssets'] });
-      await queryClient.cancelQueries({ queryKey: ['balance'] });
-
-      // Snapshot the current state
-      const previousCollateralAssets = queryClient.getQueryData<Record<
-        string,
-        BigNumber
-      > | null>([
-        'collateralAssets',
-        account,
-        market,
-        collateralConfigurations,
-      ]);
-
-      const previousBalance =
-        queryClient.getQueryData<BN | null>([
-          'balance',
-          account,
-          actionTokenAssetId,
-        ]) ?? new BN(0);
-
-      if (!previousCollateralAssets) return null;
-
-      const amount = new BigNumber(tokenAmount).times(
-        10 ** collateralConfigurations[actionTokenAssetId].decimals
-      );
-
-      // Optmistic update
-      queryClient.setQueryData(
-        ['collateralAssets', account, market, collateralConfigurations],
-        () => ({
-          ...previousCollateralAssets,
-          [actionTokenAssetId]: new BigNumber(
-            previousCollateralAssets[actionTokenAssetId] ?? 0
-          ).plus(amount),
-        })
-      );
-
-      queryClient.setQueryData(['balance', account, actionTokenAssetId], () =>
-        previousBalance.sub(new BN(amount.toString()))
-      );
-
-      return { previousCollateralAssets, previousBalance };
-    },
     onSuccess: (data) => {
       if (data) {
         TransactionSuccessToast({ transactionId: data });
@@ -137,23 +86,8 @@ export const useSupplyCollateral = ({
         changeSuccessDialogOpen(true);
       }
     },
-    onError: (error, _, ctx) => {
+    onError: (error) => {
       ErrorToast({ error: error.message });
-
-      // Reset to old state
-      if (ctx?.previousCollateralAssets) {
-        queryClient.setQueryData(
-          ['collateralAssets', account, market],
-          ctx.previousCollateralAssets
-        );
-      }
-
-      if (ctx?.previousBalance) {
-        queryClient.setQueryData(
-          ['balance', account, actionTokenAssetId],
-          ctx.previousBalance
-        );
-      }
     },
     onSettled: () => {
       // Invalidate queries
