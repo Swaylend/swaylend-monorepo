@@ -17,12 +17,12 @@ impl From<u256> for I256 {
     }
 }
 
-impl From<I256> for u256 {
-    fn from(value: I256) -> Self {
+impl TryFrom<I256> for u256 {
+    fn try_from(value: I256) -> Option<Self> {
         if !value.negative {
-            value.value
+            Some(value.value)
         } else {
-            revert(0)
+            None
         }
     }
 }
@@ -36,12 +36,12 @@ impl From<u64> for I256 {
     }
 }
 
-impl From<I256> for u64 {
-    fn from(value: I256) -> Self {
+impl TryFrom<I256> for u64 {
+    fn try_from(value: I256) -> Option<Self> {
         if value.negative || value.value > u256::from(u64::max()) {
-            revert(0)
+            None
         } else {
-            value.value.try_into().unwrap()
+            Some(value.value.try_into().unwrap())
         }
     }
 }
