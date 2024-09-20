@@ -1,18 +1,26 @@
 'use client';
 
-import { useAccount } from '@fuels/react';
+import { useAccount, useFuel } from '@fuels/react';
 import { usePostHog } from 'posthog-js/react';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 
 export default function PostHogIdentify(): null {
   const posthog = usePostHog();
   const { account } = useAccount();
+  const { fuel } = useFuel();
+
+  const currentConnector = useMemo(() => {
+    if (!fuel) return null;
+    return fuel.currentConnector();
+  }, [fuel]);
 
   useEffect(() => {
-    if (posthog && account) {
-      posthog.identify(account);
+    if (posthog && account && currentConnector) {
+      posthog.identify(account, {
+        connector: currentConnector.name,
+      });
     }
-  }, [account, posthog]);
+  }, [account, posthog, currentConnector]);
 
   return null;
 }
