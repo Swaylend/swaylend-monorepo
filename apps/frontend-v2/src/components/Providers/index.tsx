@@ -56,11 +56,10 @@ const connectors = [
   new FuelWalletConnector(),
   new FueletWalletConnector(),
   new WalletConnectConnector({
-    // TODO: setup walletconnect project and add project id
-    projectId: '972bec1eae519664815444d4b7a7578a',
+    projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
   }),
   new SolanaConnector({
-    projectId: '972bec1eae519664815444d4b7a7578a',
+    projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
   }),
 ];
 
