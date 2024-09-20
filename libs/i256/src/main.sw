@@ -226,7 +226,7 @@ impl core::ops::Divide for I256 {
         } else if !self.negative == !divisor.negative {
             Self::from(self.value / divisor.value)
         } else if !self.negative != !divisor.negative {
-            Self::neg_from(self.value * divisor.value)
+            Self::neg_from(self.value / divisor.value)
         } else {
             revert(0)
         }
