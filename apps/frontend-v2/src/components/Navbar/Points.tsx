@@ -6,11 +6,11 @@ import {
 import { useUser } from '@/hooks';
 import { cn } from '@/lib/utils';
 import { useReferralModalStore } from '@/stores/referralModalStore';
+import { useIsConnected } from '@fuels/react';
 import { Copy, Loader, Sparkle, Trophy } from 'lucide-react';
+import Link from 'next/link';
 import React, { useState } from 'react';
 import { Button } from '../ui/button';
-import Link from 'next/link';
-import { useIsConnected } from '@fuels/react';
 
 export const Points = () => {
   const { setOpen } = useReferralModalStore();
