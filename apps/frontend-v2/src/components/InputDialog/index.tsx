@@ -14,6 +14,7 @@ import {
   usePrice,
   useSupplyBase,
   useSupplyCollateral,
+  useTotalCollateral,
   useUserCollateralAssets,
   useUserSupplyBorrow,
   useWithdrawBase,
@@ -36,6 +37,7 @@ export const InputDialog = () => {
   const { data: marketConfiguration } = useMarketConfiguration();
   const { data: userCollateralAssets } = useUserCollateralAssets();
   const { data: collateralConfigurations } = useCollateralConfigurations();
+  const { data: collateralBalances } = useTotalCollateral();
   const { data: borrowCapacity } = useBorrowCapacity();
   const { data: userSupplyBorrow } = useUserSupplyBorrow();
   const {
@@ -261,6 +263,21 @@ export const InputDialog = () => {
           BigNumber(actionTokenBalance.toString()),
           collateralConfigurations?.[actionTokenAssetId ?? '']?.decimals
         );
+        const collateralBalance =
+          collateralBalances?.get(actionTokenAssetId) ?? BigNumber(0);
+        const supplyCapLeft = formatUnits(
+          BigNumber(
+            collateralConfigurations?.[
+              actionTokenAssetId ?? ''
+            ]?.supply_cap.toString() ?? '0'
+          ).minus(collateralBalance),
+          collateralConfigurations?.[actionTokenAssetId ?? '']?.decimals
+        );
+
+        if (supplyCapLeft.eq(0)) return 'Supply cap reached';
+        if (supplyCapLeft.minus(tokenAmount).lt(0)) {
+          return 'Amount is higher than the supply cap available';
+        }
       }
       if (balance == null) return null;
       if (balance.lt(tokenAmount)) return 'Insufficient balance';
@@ -521,7 +538,8 @@ export const InputDialog = () => {
                 onMouseDown={handleSubmit}
                 className="w-1/2"
               >
-                Submit
+                {action &&
+                  `${action.slice(0, 1)}${action.slice(1).toLowerCase()}`}
               </Button>
             </div>
             <div className="w-full flex justify-center">
