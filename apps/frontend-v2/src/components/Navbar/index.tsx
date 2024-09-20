@@ -10,14 +10,11 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import {
-  ChartLine,
   ChevronDown,
   Coins,
   ExternalLink,
@@ -56,7 +53,7 @@ export const Navbar = () => {
             <Image src={Logo} alt="logo" />
           </Link>
           <div className="flex items-center gap-x-8 h-full">
-            {NAVBAR_LINKS.map(({ href, label, icon }) => (
+            {NAVBAR_LINKS.map(({ href, label }) => (
               <Link key={href} href={href}>
                 <div
                   className={cn(
@@ -84,28 +81,30 @@ export const Navbar = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuItem>
-                  <Link
+                  <a
                     href="https://app.uniswap.io"
                     target="_blank"
+                    rel="noreferrer"
                     className="w-full"
                   >
                     <div className="w-full flex items-center justify-between text-md font-medium text-lavender py-1 px-0.5 gap-x-2">
                       Bridge 1
                       <ExternalLink className="w-4 h-4" />
                     </div>
-                  </Link>
+                  </a>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Link
+                  <a
                     href="https://app.uniswap.io"
                     target="_blank"
+                    rel="noreferrer"
                     className="w-full"
                   >
                     <div className="w-full flex items-center justify-between text-md font-medium text-lavender py-1 px-0.5 gap-x-2">
                       Bridge 2
                       <ExternalLink className="w-4 h-4" />
                     </div>
-                  </Link>
+                  </a>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -118,28 +117,30 @@ export const Navbar = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuItem>
-                  <Link
+                  <a
                     href="https://app.uniswap.io"
                     target="_blank"
+                    rel="noreferrer"
                     className="w-full"
                   >
                     <div className="w-full flex items-center justify-between text-md font-medium text-lavender py-1 px-0.5 gap-x-2">
                       DEX 1
                       <ExternalLink className="w-4 h-4" />
                     </div>
-                  </Link>
+                  </a>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <Link
+                  <a
                     href="https://app.uniswap.io"
                     target="_blank"
+                    rel="noreferrer"
                     className="w-full"
                   >
                     <div className="w-full flex items-center justify-between text-md font-medium text-lavender py-1 px-0.5 gap-x-2">
                       DEX 2
                       <ExternalLink className="w-4 h-4" />
                     </div>
-                  </Link>
+                  </a>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -184,9 +185,9 @@ export const Navbar = () => {
             </VisuallyHidden.Root>
             <div className="flex flex-col items-center w-full h-full justify-center">
               <div className="flex justify-between w-full items-center px-4 h-[80px]">
-                <Link href="https://swaylend.com">
+                <a href="https://swaylend.com" target="_blank" rel="noreferrer">
                   <Image src={LogoIcon} alt="logo" />
-                </Link>
+                </a>
                 <Button
                   onMouseDown={() => setOpen(false)}
                   className="rounded-full w-[40px] h-[40px] p-0"

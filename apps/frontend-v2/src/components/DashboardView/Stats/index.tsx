@@ -154,37 +154,34 @@ export const Stats = () => {
         </div>
         <InfoBowl />
         <div className="w-[300px] text-right">
-          {isConnected &&
-            userSupplyBorrow &&
-            // userSupplyBorrow.borrowed.gt(0) &&
-            marketMode === 'borrow' && (
-              <div>
-                <div className="text-moon flex items-center justify-end gap-x-1 text-xs sm:text-md lg:text-lg font-semibold">
-                  {borrowedBalanceText.title}
-                  {userSupplyBorrow.borrowed.gt(0) && (
-                    <button
-                      className=""
-                      type="button"
-                      onClick={() => {
-                        setBorrowedMode(borrowedMode === 0 ? 1 : 0);
-                      }}
-                    >
-                      <Repeat className="w-4 h-4" />
-                    </button>
-                  )}
-                </div>
-
-                {isLoading ? (
-                  <div className="w-full flex justify-end">
-                    <Skeleton className="w-[60%] h-[25px] mt-2 sm:h-[40px] bg-primary/20" />
-                  </div>
-                ) : (
-                  <div className="text-lavender font-semibold text-lg sm:text-xl lg:text-2xl">
-                    {borrowedBalanceText.value}
-                  </div>
+          {isConnected && userSupplyBorrow && marketMode === 'borrow' && (
+            <div>
+              <div className="text-moon flex items-center justify-end gap-x-1 text-xs sm:text-md lg:text-lg font-semibold">
+                {borrowedBalanceText.title}
+                {userSupplyBorrow.borrowed.gt(0) && (
+                  <button
+                    className=""
+                    type="button"
+                    onClick={() => {
+                      setBorrowedMode(borrowedMode === 0 ? 1 : 0);
+                    }}
+                  >
+                    <Repeat className="w-4 h-4" />
+                  </button>
                 )}
               </div>
-            )}
+
+              {isLoading ? (
+                <div className="w-full flex justify-end">
+                  <Skeleton className="w-[60%] h-[25px] mt-2 sm:h-[40px] bg-primary/20" />
+                </div>
+              ) : (
+                <div className="text-lavender font-semibold text-lg sm:text-xl lg:text-2xl">
+                  {borrowedBalanceText.value}
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>

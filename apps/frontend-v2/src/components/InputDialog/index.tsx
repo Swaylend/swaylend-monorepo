@@ -275,8 +275,9 @@ export const InputDialog = () => {
         );
 
         if (supplyCapLeft.eq(0)) return 'Supply cap reached';
-        if (supplyCapLeft.minus(tokenAmount).lt(0))
+        if (supplyCapLeft.minus(tokenAmount).lt(0)) {
           return 'Amount is higher than the supply cap available';
+        }
       }
       if (balance == null) return null;
       if (balance.lt(tokenAmount)) return 'Insufficient balance';
@@ -537,8 +538,8 @@ export const InputDialog = () => {
                 onMouseDown={handleSubmit}
                 className="w-1/2"
               >
-                {(action?.slice(0, 1) ?? 'S') +
-                  (action?.slice(1).toLowerCase() ?? 'ubmit')}
+                {action &&
+                  `${action.slice(0, 1)}${action.slice(1).toLowerCase()}`}
               </Button>
             </div>
             <div className="w-full flex justify-center">
