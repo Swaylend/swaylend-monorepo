@@ -1,33 +1,33 @@
 'use client';
-import React from 'react';
-import { ArrowLeft, ChevronLeft, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  Area,
-  AreaChart,
-  CartesianGrid,
-  Rectangle,
-} from 'recharts';
-import { MarketCollateralsTable } from './MarketCollateralsTable';
 import {
   type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from '@/components/ui/chart';
-import Link from 'next/link';
-import { IconPair } from '../IconPair';
+import { Progress } from '@/components/ui/progress';
 import { SYMBOL_TO_ICON } from '@/utils';
+import { ArrowLeft, ChevronLeft, ExternalLink } from 'lucide-react';
+import Link from 'next/link';
+import React from 'react';
+import {
+  Area,
+  AreaChart,
+  CartesianGrid,
+  Line,
+  LineChart,
+  Rectangle,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
+import { IconPair } from '../IconPair';
 import { Title } from '../Title';
 import { KinkChart } from './KinkChart';
+import { MarketCollateralsTable } from './MarketCollateralsTable';
 
 type MarketOverviewProps = {
   network: string;

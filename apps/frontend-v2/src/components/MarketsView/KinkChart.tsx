@@ -1,16 +1,16 @@
 import React from 'react';
 import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
   Area,
   AreaChart,
   CartesianGrid,
+  Line,
+  LineChart,
   Rectangle,
   ReferenceLine,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
 } from 'recharts';
 
 import {

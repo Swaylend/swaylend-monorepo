@@ -12,9 +12,9 @@ import { useMarketConfiguration, useUserSupplyBorrow } from '@/hooks';
 import { type ACTION_TYPE, useMarketStore } from '@/stores';
 import {
   ASSET_ID_TO_SYMBOL,
-  formatUnits,
   SYMBOL_TO_ICON,
   SYMBOL_TO_NAME,
+  formatUnits,
 } from '@/utils';
 import { useAccount, useBalance } from '@fuels/react';
 import BigNumber from 'bignumber.js';

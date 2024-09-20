@@ -1,6 +1,5 @@
 'use client';
 import React, { PureComponent, useState } from 'react';
-import { MarketsTable } from './MarketsTable';
 import {
   Area,
   AreaChart,
@@ -16,6 +15,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from '../ui/chart';
+import { MarketsTable } from './MarketsTable';
 
 export const MarketsView = () => {
   const chartData = [
