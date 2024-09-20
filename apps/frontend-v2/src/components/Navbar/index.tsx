@@ -8,7 +8,15 @@ import {
 } from '@/components/ui/drawer';
 import { cn } from '@/lib/utils';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
-import { ChartLine, Coins, LayoutDashboard, Menu, X } from 'lucide-react';
+import {
+  ChartLine,
+  ChevronDown,
+  Coins,
+  ExternalLink,
+  LayoutDashboard,
+  Menu,
+  X,
+} from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -20,6 +28,14 @@ import { Button } from '../ui/button';
 import { ConnectButton } from './ConnectButton';
 import { MarketSwitcher } from './MarketSwitcher';
 import { Points } from './Points';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 const NAVBAR_LINKS = [
   { href: '/', label: 'Dashboard', icon: <LayoutDashboard /> },
@@ -59,6 +75,74 @@ export const Navbar = () => {
                 </div>
               </Link>
             ))}
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <div className="text-lavender outline-none border-none focus:outline-none focus:border-none hover:text-lavender/80 text-md font-semibold flex items-center gap-x-1">
+                  Bridges
+                  <ChevronDown className="w-4 h-4" />
+                </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem>
+                  <Link
+                    href="https://app.uniswap.io"
+                    target="_blank"
+                    className="w-full"
+                  >
+                    <div className="w-full flex items-center justify-between text-md font-medium text-lavender py-1 px-0.5 gap-x-2">
+                      Bridge 1
+                      <ExternalLink className="w-4 h-4" />
+                    </div>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link
+                    href="https://app.uniswap.io"
+                    target="_blank"
+                    className="w-full"
+                  >
+                    <div className="w-full flex items-center justify-between text-md font-medium text-lavender py-1 px-0.5 gap-x-2">
+                      Bridge 2
+                      <ExternalLink className="w-4 h-4" />
+                    </div>
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <DropdownMenu>
+              <DropdownMenuTrigger>
+                <div className="text-lavender outline-none border-none focus:outline-none focus:border-none hover:text-lavender/80 text-md font-semibold flex items-center gap-x-1">
+                  DEX
+                  <ChevronDown className="w-4 h-4" />
+                </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem>
+                  <Link
+                    href="https://app.uniswap.io"
+                    target="_blank"
+                    className="w-full"
+                  >
+                    <div className="w-full flex items-center justify-between text-md font-medium text-lavender py-1 px-0.5 gap-x-2">
+                      DEX 1
+                      <ExternalLink className="w-4 h-4" />
+                    </div>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Link
+                    href="https://app.uniswap.io"
+                    target="_blank"
+                    className="w-full"
+                  >
+                    <div className="w-full flex items-center justify-between text-md font-medium text-lavender py-1 px-0.5 gap-x-2">
+                      DEX 2
+                      <ExternalLink className="w-4 h-4" />
+                    </div>
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
           <div className="flex items-center gap-x-2">
             <Points />
