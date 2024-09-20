@@ -43,19 +43,13 @@ export const LeaderboardView = () => {
                 </div>
               </div>
             ))}
-          {/* <a
-        href="#"
-        className="mt-[55px] font-medium text-md text-lavender px-4 py-2 hover:opacity-80"
-      >
-      How it Works
-      </a> */}
           <div className="w-full mt-[55px] flex justify-between">
             <div className="text-lg text-white font-semibold">
               Top Contributors
             </div>
             <div className="text-sm text-yellow-100 flex items-center px-2">
-              <TriangleAlert className="w-4 h-4" />
-              Points are updated every 24 hours
+              <TriangleAlert className="w-4 h-4 mr-1" /> Points are updated
+              every 24 hours
             </div>
           </div>
           <table className="w-full mt-4">
