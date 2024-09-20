@@ -74,6 +74,7 @@ export const Providers = ({ children }: { children: ReactNode }) => {
       person_profiles: 'always',
       autocapture: false,
       capture_pageview: true,
+      capture_pageleave: false,
       loaded: (posthog) => {
         if (process.env.NODE_ENV === 'development') posthog.debug(); // debug mode in development
       },
