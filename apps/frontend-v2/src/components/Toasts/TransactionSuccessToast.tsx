@@ -15,17 +15,12 @@ export const TransactionSuccessToast = ({
       <div>
         <CheckCircleIcon className="w-8 h-8 text-primary" />
       </div>
-      <div className=" text-sm font-semibold flex flex-col gap-y-1">
+      <div className="text-sm font-semibold flex items-center">
         <span>Transaction Successful!</span>
-        <a
-          target="_blank"
-          rel="noreferrer"
-          className="underline cursor-pointer font-normal text-blue-500"
-          href={`${EXPLORER_URL}/${transactionId}`}
-        >
-          {transactionId}
-        </a>
       </div>
-    </div>
+    </div>,
+    {
+      autoClose: 1000,
+    }
   );
 };

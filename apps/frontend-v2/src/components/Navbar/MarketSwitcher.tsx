@@ -48,7 +48,6 @@ const MarketItem = ({
   );
 };
 
-// TODO: Icons load slowly (at least in dev mode)
 export const MarketSwitcher = () => {
   const { market, changeMarket } = useMarketStore();
 

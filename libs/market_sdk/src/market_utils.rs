@@ -316,6 +316,27 @@ impl MarketContract {
         Ok(convert_u256_to_u128(res))
     }
 
+    pub async fn get_all_user_collateral(
+        &self,
+        address: Address,
+    ) -> anyhow::Result<Vec<(Bits256, u128)>> {
+        let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
+
+        let res = self
+            .instance
+            .methods()
+            .get_all_user_collateral(address)
+            .with_tx_policies(tx_policies)
+            .call()
+            .await?
+            .value;
+
+        Ok(res
+            .into_iter()
+            .map(|(asset_id, amount)| (asset_id, convert_u256_to_u128(amount)))
+            .collect())
+    }
+
     pub async fn totals_collateral(&self, asset_id: Bits256) -> anyhow::Result<u128> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
 
@@ -601,6 +622,20 @@ impl MarketContract {
             .await?)
     }
 
+    pub async fn get_market_basics_with_interest(
+        &self,
+    ) -> anyhow::Result<CallResponse<MarketBasics>> {
+        let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
+
+        Ok(self
+            .instance
+            .methods()
+            .get_market_basics_with_interest()
+            .with_tx_policies(tx_policies)
+            .call()
+            .await?)
+    }
+
     pub async fn get_user_basic(
         &self,
         address: Address,
@@ -611,6 +646,21 @@ impl MarketContract {
             .instance
             .methods()
             .get_user_basic(address)
+            .with_tx_policies(tx_policies)
+            .call()
+            .await?)
+    }
+
+    pub async fn get_user_balance_with_interest(
+        &self,
+        address: Address,
+    ) -> anyhow::Result<CallResponse<I256>> {
+        let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
+
+        Ok(self
+            .instance
+            .methods()
+            .get_user_balance_with_interest(address)
             .with_tx_policies(tx_policies)
             .call()
             .await?)

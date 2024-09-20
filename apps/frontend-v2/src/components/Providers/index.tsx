@@ -5,6 +5,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import {
   FuelWalletConnector,
   FueletWalletConnector,
+  SolanaConnector,
   WalletConnectConnector,
 } from '@fuels/connectors';
 import { FuelProvider } from '@fuels/react';
@@ -51,6 +52,17 @@ function getQueryClient() {
   return browserQueryClient;
 }
 
+const connectors = [
+  new FuelWalletConnector(),
+  new FueletWalletConnector(),
+  new WalletConnectConnector({
+    projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
+  }),
+  new SolanaConnector({
+    projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
+  }),
+];
+
 export const Providers = ({ children }: { children: ReactNode }) => {
   const queryClient = getQueryClient();
 
@@ -60,6 +72,9 @@ export const Providers = ({ children }: { children: ReactNode }) => {
     posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
       api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST!,
       person_profiles: 'always',
+      autocapture: false,
+      capture_pageview: true,
+      capture_pageleave: false,
       loaded: (posthog) => {
         if (process.env.NODE_ENV === 'development') posthog.debug(); // debug mode in development
       },
@@ -79,14 +94,7 @@ export const Providers = ({ children }: { children: ReactNode }) => {
           <FuelProvider
             theme="dark"
             fuelConfig={{
-              connectors: [
-                new FuelWalletConnector(),
-                new FueletWalletConnector(),
-                new WalletConnectConnector({
-                  // TODO: setup walletconnect project and add project id
-                  projectId: '972bec1eae519664815444d4b7a7578a',
-                }),
-              ],
+              connectors: connectors,
             }}
           >
             <>
@@ -95,6 +103,7 @@ export const Providers = ({ children }: { children: ReactNode }) => {
               <ToastContainer
                 icon={false}
                 position="bottom-right"
+                style={{ zIndex: 1000 }}
                 autoClose={5000}
                 progressStyle={{ background: 'hsl(var(--primary))' }}
                 hideProgressBar={false}
@@ -108,7 +117,7 @@ export const Providers = ({ children }: { children: ReactNode }) => {
               />
             </>
           </FuelProvider>
-          <ReactQueryDevtools initialIsOpen />
+          <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </PostHogProvider>
     </ThemeProvider>

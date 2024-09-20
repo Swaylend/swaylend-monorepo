@@ -21,6 +21,7 @@ export const useTotalCollateral = () => {
         provider
       );
 
+      // FIXME: Add contract methods to fetch all data at once
       const promises = Object.keys(collateralConfigurations).map(
         async (assetId) => ({
           assetId,
@@ -39,7 +40,7 @@ export const useTotalCollateral = () => {
       const totals = new Map<string, BigNumber>(
         data.map(({ assetId, value }) => [
           assetId,
-          new BigNumber(value.toString()),
+          new BigNumber(value.value.toString()),
         ])
       );
 

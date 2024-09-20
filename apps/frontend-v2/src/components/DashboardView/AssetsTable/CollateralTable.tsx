@@ -1,4 +1,6 @@
 import { AssetName } from '@/components/AssetName';
+import { CircularProgressBar } from '@/components/CircularProgressBar';
+import { InfoIcon } from '@/components/InfoIcon';
 import { type Point, PointIcons } from '@/components/PointIcons';
 import { Title } from '@/components/Title';
 import { Button } from '@/components/ui/button';
@@ -19,7 +21,20 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { useCollateralConfigurations, useUserCollateralAssets } from '@/hooks';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import type { CollateralConfigurationOutput } from '@/contract-types/Market';
+import {
+  useBalance,
+  useCollateralConfigurations,
+  usePrice,
+  useTotalCollateral,
+  useUserCollateralAssets,
+} from '@/hooks';
 import { ACTION_TYPE, useMarketStore } from '@/stores';
 import {
   ASSET_ID_TO_SYMBOL,
@@ -27,7 +42,7 @@ import {
   SYMBOL_TO_NAME,
   formatUnits,
 } from '@/utils';
-import { useAccount, useBalance } from '@fuels/react';
+import { useAccount } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import BigNumber from 'bignumber.js';
 import React, { useMemo } from 'react';
@@ -40,6 +55,9 @@ type TableRowProps = {
   protocolBalance: BigNumber;
   protocolBalancePending: boolean;
   handleAssetClick: (action: ACTION_TYPE, assetId: string) => void;
+  collateralConfiguration: CollateralConfigurationOutput;
+  collateralAmount: BigNumber;
+  price: BigNumber;
 };
 
 const POINTS_COLLATERAL: Point[] = [
@@ -64,8 +82,11 @@ const CollateralTableRow = ({
   decimals,
   protocolBalance,
   handleAssetClick,
+  collateralConfiguration,
+  collateralAmount,
+  price,
 }: TableRowProps) => {
-  const { balance } = useBalance({
+  const { data: balance } = useBalance({
     address: account,
     assetId: assetId,
   });
@@ -75,23 +96,128 @@ const CollateralTableRow = ({
     decimals
   ).toFormat(4);
 
-  const canSupply = balance?.gt(0);
   const canWithdraw = protocolBalance.gt(0);
+
+  let supplyUsed = BigNumber(0);
+  if (collateralAmount.gt(0)) {
+    supplyUsed = collateralAmount
+      .div(
+        formatUnits(
+          BigNumber(collateralConfiguration.supply_cap.toString()),
+          decimals
+        )
+      )
+      .times(100);
+  }
+
+  const canSupply = balance?.gt(0) && supplyUsed.lt(100);
 
   return (
     <TableRow>
       <TableCell>
-        <AssetName
-          symbol={symbol}
-          name={SYMBOL_TO_NAME[symbol]}
-          src={SYMBOL_TO_ICON[symbol]}
-        />
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger>
+              <AssetName
+                symbol={symbol}
+                name={SYMBOL_TO_NAME[symbol]}
+                src={SYMBOL_TO_ICON[symbol]}
+              />
+            </TooltipTrigger>
+            <TooltipContent>
+              <div className="p-2 w-[250px]">
+                <div className="font-bold text-lg">Collateral Details</div>
+                <div className="flex flex-col gap-y-2 mt-2">
+                  <div className="text-md flex justify-between">
+                    <div className="text-lavender">Oracle Price</div>
+                    <div className="font-semibold text-moon">
+                      ${price.toFixed(2)}
+                    </div>
+                  </div>
+                  <div className="text-md flex justify-between">
+                    <div className="text-lavender">Supply Cap</div>
+                    <div className="font-semibold text-moon">
+                      {formatUnits(
+                        BigNumber(
+                          collateralConfiguration.supply_cap.toString()
+                        ),
+                        decimals
+                      ).toFormat(2)}
+                      {ASSET_ID_TO_SYMBOL[assetId]}
+                    </div>
+                  </div>
+                  <div className="text-md flex justify-between">
+                    <div className="text-lavender">Total Supplied</div>
+                    <div className="font-semibold text-moon">
+                      {collateralAmount.toFixed(2)}
+                      {ASSET_ID_TO_SYMBOL[assetId]}
+                    </div>
+                  </div>
+                  <div className="text-md flex justify-between">
+                    <div className="text-lavender">Collateral Factor</div>
+                    <div className="font-semibold text-moon">
+                      {formatUnits(
+                        BigNumber(
+                          collateralConfiguration.borrow_collateral_factor.toString()
+                        ),
+                        18
+                      ).toFormat(2)}
+                      %
+                    </div>
+                  </div>
+                  <div className="text-md flex justify-between">
+                    <div className="text-lavender">Liquidation Factor</div>
+                    <div className="font-semibold text-moon">
+                      {formatUnits(
+                        BigNumber(
+                          collateralConfiguration.liquidate_collateral_factor.toString()
+                        ),
+                        18
+                      ).toFormat(2)}
+                      %
+                    </div>
+                  </div>
+                  <div className="text-md flex justify-between">
+                    <div className="text-lavender">Liquidation Penalty</div>
+                    <div className="font-semibold text-moon">
+                      {formatUnits(
+                        BigNumber(
+                          collateralConfiguration.liquidation_penalty.toString()
+                        ),
+                        18
+                      ).toFormat(2)}
+                      %
+                    </div>
+                  </div>
+                  <div className="text-md flex justify-between">
+                    <div className="text-lavender">Collateral Active</div>
+                    <div className="font-semibold text-moon">
+                      {collateralConfiguration.paused ? 'No' : 'Yes'}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </TableCell>
       <TableCell>
         {formattedBalance} {symbol}
       </TableCell>
       <TableCell>
-        {formatUnits(protocolBalance, decimals).toFixed(4)} {symbol}
+        <div className="w-[48px] h-[48px]">
+          <CircularProgressBar
+            percent={Number(supplyUsed.div(100).toFormat(2))}
+          />
+        </div>
+      </TableCell>
+      <TableCell>
+        <div className=" h-full flex items-center gap-x-2">
+          <span className="text-lavender font-medium">
+            ${formatUnits(protocolBalance, decimals).times(price).toFixed(2)}
+          </span>
+          {formatUnits(protocolBalance, decimals).toFixed(4)} {symbol}
+        </div>
       </TableCell>
       <TableCell>
         <PointIcons points={POINTS_COLLATERAL} />
@@ -130,8 +256,11 @@ const CollateralCard = ({
   decimals,
   protocolBalance,
   handleAssetClick,
+  collateralAmount,
+  collateralConfiguration,
+  price,
 }: TableRowProps) => {
-  const { balance } = useBalance({
+  const { data: balance } = useBalance({
     address: account,
     assetId: assetId,
   });
@@ -141,7 +270,19 @@ const CollateralCard = ({
     decimals
   ).toFormat(4);
 
-  const canSupply = balance?.gt(0);
+  let supplyUsed = BigNumber(0);
+  if (collateralAmount.gt(0)) {
+    supplyUsed = collateralAmount
+      .div(
+        formatUnits(
+          BigNumber(collateralConfiguration.supply_cap.toString()),
+          decimals
+        )
+      )
+      .times(100);
+  }
+
+  const canSupply = balance?.gt(0) && supplyUsed.lt(100);
   const canWithdraw = protocolBalance.gt(0);
   return (
     <Card>
@@ -168,9 +309,18 @@ const CollateralCard = ({
             </div>
           </div>
           <div className="w-full flex items-center">
+            <div className="w-1/2 text-moon font-medium">
+              Supply Cap Reached
+            </div>
+            <div className="text-moon">{supplyUsed.toFormat(2)}%</div>
+          </div>
+          <div className="w-full flex items-center">
             <div className="w-1/2 text-moon font-medium">Supplied Assets</div>
-            <div className="text-moon">
-              {' '}
+            <div className=" text-moon flex items-center gap-x-2">
+              <span className="text-lavender font-medium">
+                $
+                {formatUnits(protocolBalance, decimals).times(price).toFixed(2)}
+              </span>
               {formatUnits(protocolBalance, decimals).toFixed(4)} {symbol}
             </div>
           </div>
@@ -249,6 +399,10 @@ export const CollateralTable = () => {
     isPending: isPendingUserCollateralAssets,
   } = useUserCollateralAssets();
 
+  const { data: collateralBalances } = useTotalCollateral();
+
+  const { data: priceData, isPending: isPendingPriceData } = usePrice();
+
   const {
     data: collateralConfigurations,
     isPending: isPendingCollateralConfigurations,
@@ -283,6 +437,9 @@ export const CollateralTable = () => {
         <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
       </TableCell>
       <TableCell>
+        <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+      </TableCell>
+      <TableCell>
         <div className="flex gap-x-2 w-full">
           <Button className="w-1/2" disabled={true}>
             Supply
@@ -297,13 +454,41 @@ export const CollateralTable = () => {
 
   return (
     <>
-      <Table className="max-sm:hidden mt-8">
+      <Table className="max-lg:hidden mt-8">
         <TableHeader>
           <TableRow>
-            <TableHead className="w-3/12">Collateral Asset</TableHead>
-            <TableHead className="w-1/6">Wallet Balance</TableHead>
-            <TableHead className="w-1/6">Supplied Assets</TableHead>
-            <TableHead className="w-1/6">Supply Points</TableHead>
+            <TableHead className="w-2/12">
+              <div className="flex items-center gap-x-2">
+                Collateral Asset
+                <InfoIcon
+                  text={
+                    'Assets you can deposit to secure borrowing positions and back your loans.'
+                  }
+                />
+              </div>
+            </TableHead>
+            <TableHead className="w-2/12">Wallet Balance</TableHead>
+            <TableHead className="w-2/12">
+              <div className="flex items-center gap-x-2">
+                Supply Cap Filled
+                <InfoIcon
+                  text={
+                    'Percentage of the limited supply that has been filled.'
+                  }
+                />
+              </div>
+            </TableHead>
+            <TableHead className="w-2/12">Supplied Assets</TableHead>
+            <TableHead className="w-1/12">
+              <div className="flex items-center gap-x-2">
+                Points
+                <InfoIcon
+                  text={
+                    'Points earned for providing incentivized asset as a collateral. Hover over the points to learn more.'
+                  }
+                />
+              </div>
+            </TableHead>
             <TableHead className="w-3/12">{}</TableHead>
           </TableRow>
         </TableHeader>
@@ -319,48 +504,78 @@ export const CollateralTable = () => {
                   </TableCell>
                 </TableRow>
               ) : (
-                collaterals.map((collateral) => (
-                  <CollateralTableRow
-                    key={collateral.asset_id}
-                    account={account ?? undefined}
-                    assetId={collateral.asset_id}
-                    symbol={ASSET_ID_TO_SYMBOL[collateral.asset_id]}
-                    decimals={collateral.decimals}
-                    protocolBalance={
-                      userCollateralAssets?.[collateral.asset_id] ??
-                      new BigNumber(0)
-                    }
-                    protocolBalancePending={isPendingUserCollateralAssets}
-                    handleAssetClick={handleAssetClick}
-                  />
-                ))
+                collaterals.map((collateral) => {
+                  const collateralAmount =
+                    collateralBalances?.get(collateral.asset_id) ??
+                    BigNumber(0);
+                  return (
+                    <CollateralTableRow
+                      key={collateral.asset_id}
+                      account={account ?? undefined}
+                      assetId={collateral.asset_id}
+                      symbol={ASSET_ID_TO_SYMBOL[collateral.asset_id]}
+                      decimals={collateral.decimals}
+                      protocolBalance={
+                        userCollateralAssets?.[collateral.asset_id] ??
+                        new BigNumber(0)
+                      }
+                      protocolBalancePending={isPendingUserCollateralAssets}
+                      handleAssetClick={handleAssetClick}
+                      collateralConfiguration={
+                        collateralConfigurations![collateral.asset_id]
+                      }
+                      collateralAmount={formatUnits(
+                        collateralAmount,
+                        collateral.decimals
+                      )}
+                      price={
+                        priceData?.prices[collateral.asset_id] ??
+                        new BigNumber(0)
+                      }
+                    />
+                  );
+                })
               )}
             </>
           )}
         </TableBody>
       </Table>
 
-      <div className="mt-8 flex flex-col gap-y-4 px-4 sm:hidden">
+      <div className="mt-8 flex flex-col gap-y-4 px-4 lg:hidden">
         <Title>Collateral Assets</Title>
         {isPendingCollateralConfigurations ? (
           <Skeleton className="w-full h-[100px] bg-primary/20 rounded-md" />
         ) : (
           <div className="flex flex-col gap-y-4">
-            {collaterals.map((collateral) => (
-              <CollateralCard
-                key={collateral.asset_id}
-                account={account ?? undefined}
-                assetId={collateral.asset_id}
-                symbol={ASSET_ID_TO_SYMBOL[collateral.asset_id]}
-                decimals={collateral.decimals}
-                protocolBalance={
-                  userCollateralAssets?.[collateral.asset_id] ??
-                  new BigNumber(0)
-                }
-                protocolBalancePending={isPendingUserCollateralAssets}
-                handleAssetClick={handleAssetClick}
-              />
-            ))}
+            {collaterals.map((collateral) => {
+              const collateralAmount =
+                collateralBalances?.get(collateral.asset_id) ?? BigNumber(0);
+              return (
+                <CollateralCard
+                  key={collateral.asset_id}
+                  account={account ?? undefined}
+                  assetId={collateral.asset_id}
+                  symbol={ASSET_ID_TO_SYMBOL[collateral.asset_id]}
+                  decimals={collateral.decimals}
+                  protocolBalance={
+                    userCollateralAssets?.[collateral.asset_id] ??
+                    new BigNumber(0)
+                  }
+                  protocolBalancePending={isPendingUserCollateralAssets}
+                  handleAssetClick={handleAssetClick}
+                  collateralConfiguration={
+                    collateralConfigurations![collateral.asset_id]
+                  }
+                  collateralAmount={formatUnits(
+                    collateralAmount,
+                    collateral.decimals
+                  )}
+                  price={
+                    priceData?.prices[collateral.asset_id] ?? new BigNumber(0)
+                  }
+                />
+              );
+            })}
           </div>
         )}
       </div>

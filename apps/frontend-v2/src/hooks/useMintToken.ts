@@ -1,4 +1,8 @@
-import { ErrorToast, TransactionSuccessToast } from '@/components/Toasts';
+import {
+  ErrorToast,
+  PendingToast,
+  TransactionSuccessToast,
+} from '@/components/Toasts';
 import { Token } from '@/contract-types';
 import { useMarketStore } from '@/stores';
 import { DEPLOYED_MARKETS, FAUCET_AMOUNTS } from '@/utils';
@@ -34,7 +38,7 @@ export const useMintToken = (symbol: string, decimals: number) => {
 
       const transactionResult = await toast.promise(tx.waitForResult(), {
         pending: {
-          render: 'TX is pending...',
+          render: PendingToast(),
         },
       });
 

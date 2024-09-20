@@ -28,6 +28,7 @@ export const useBorrowRate = () => {
       if (!value) throw new Error('Failed to fetch borrowRate');
       return new BigNumber(value.toString());
     },
+    refetchOnWindowFocus: false,
     enabled: !!utilization && !!provider,
   });
 };

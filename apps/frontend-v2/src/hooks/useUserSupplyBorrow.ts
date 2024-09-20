@@ -30,6 +30,7 @@ export const useUserSupplyBorrow = () => {
       };
     },
     enabled: !!wallet && !!account,
+    refetchOnWindowFocus: false,
     placeholderData: keepPreviousData,
   });
 };

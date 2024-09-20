@@ -1,3 +1,4 @@
+import { InfoIcon } from '@/components/InfoIcon';
 import { type Point, PointIcons } from '@/components/PointIcons';
 import { Title } from '@/components/Title';
 import { Button } from '@/components/ui/button';
@@ -20,6 +21,7 @@ import {
 } from '@/components/ui/table';
 import {
   USER_ROLE,
+  useBalance,
   useMarketConfiguration,
   useSupplyRate,
   useUserRole,
@@ -33,7 +35,7 @@ import {
   formatUnits,
   getSupplyApr,
 } from '@/utils';
-import { useAccount, useBalance } from '@fuels/react';
+import { useAccount } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import BigNumber from 'bignumber.js';
 import Image from 'next/image';
@@ -125,7 +127,7 @@ export const LendTable = () => {
     changeInputDialogOpen(true);
   };
 
-  const { balance } = useBalance({
+  const { data: balance } = useBalance({
     address: account ?? undefined,
     assetId: marketConfiguration?.baseToken,
   });
@@ -138,10 +140,24 @@ export const LendTable = () => {
       <Table className="max-sm:hidden">
         <TableHeader>
           <TableRow>
-            <TableHead className="w-3/12">Earn Asset</TableHead>
+            <TableHead className="w-3/12">
+              <div className="flex items-center gap-x-2">
+                Earn Asset
+                <InfoIcon text={'Base asset available for lending.'} />
+              </div>
+            </TableHead>
             <TableHead className="w-1/6">Earn APY</TableHead>
             <TableHead className="w-1/6">Supplied Assets</TableHead>
-            <TableHead className="w-1/6">Supply Points</TableHead>
+            <TableHead className="w-1/6">
+              <div className="flex items-center gap-x-2">
+                Earn Points
+                <InfoIcon
+                  text={
+                    'Points earned for maintaining an active lending position. Hover over the points to learn more.'
+                  }
+                />
+              </div>
+            </TableHead>
             <TableHead className="w-3/12">{}</TableHead>
           </TableRow>
         </TableHeader>
@@ -204,8 +220,16 @@ export const LendTable = () => {
               </TableCell>
               <TableCell>
                 {userRole === USER_ROLE.BORROWER ? (
-                  <div className="text-lavender text-md font-medium text-center w-full">
-                    Repay your debt to supply base asset!
+                  <div className=" text-lavender bg-primary/20 rounded-lg px-4 py-2 text-sm font-medium text-center w-full">
+                    You cannot Lend assets while you have an active borrowing
+                    position. Learn more about how{' '}
+                    <a
+                      // biome-ignore lint/a11y/useValidAnchor: <explanation>
+                      href="#"
+                      className="underline hover:opacity-90 text-white"
+                    >
+                      Sweylend works.
+                    </a>
                   </div>
                 ) : (
                   <div className="flex gap-x-2 w-full">
@@ -326,8 +350,13 @@ export const LendTable = () => {
           )}
           <CardFooter>
             {userRole === USER_ROLE.BORROWER ? (
-              <div className="text-lavender text-md font-medium text-center w-full">
-                Repay your debt to supply base asset!
+              <div className=" text-lavender bg-primary/20 rounded-lg px-4 py-2 text-sm font-medium text-center w-full">
+                You cannot Lend assets while you have an active borrowing
+                position. Learn more about how{' '}
+                {/* biome-ignore lint/a11y/useValidAnchor: <explanation> */}
+                <a href="#" className="underline hover:opacity-90 text-white">
+                  Sweylend works.
+                </a>
               </div>
             ) : (
               <div className="flex gap-x-2 w-full">
