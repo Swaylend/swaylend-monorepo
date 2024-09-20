@@ -41,13 +41,13 @@ export const Points = () => {
       </PopoverTrigger>
       <PopoverContent
         align="center"
-        className="flex flex-col gap-y-4 items-center w-[258px] px-[24px]"
+        className="flex flex-col gap-y-2 items-center w-[258px] px-[24px]"
       >
         <div className="flex flex-col gap-y-2 items-center">
           <div className="text-moon">SwayLend Pts</div>
           <div
             className={cn(
-              'text-2xl font-semibold text-yellow-400',
+              'text-lg font-semibold text-yellow-400',
               isLoading && 'animate-pulse'
             )}
           >
@@ -57,39 +57,41 @@ export const Points = () => {
         <div className="rounded-full bg-white/5 px-4 py-2 text-moon">
           Fuel Pts <span className="text-moon">0</span>
         </div>
-        <Link href="/leaderboard">
+        <Link href="/leaderboard" className="w-full mt-4">
           <Button className="w-full flex gap-x-2" variant="tertiary-card">
             <Trophy className="w-5 h-5" />
             Points Leaderboard
           </Button>
         </Link>
-        <Button
-          className={cn('w-full flex gap-x-2', isLoading && 'animate-pulse')}
-          variant="tertiary-card"
-          disabled={isPending}
-          onMouseDown={async () => {
-            if (isError || !user) return await refetch();
-            await handleCopy(user.inviteCode);
-          }}
-        >
-          {!isLoading && !isError && (
-            <>
-              <Copy className="w-5 h-5" />
-              {isCopied ? 'Copied' : 'Copy referral code'}
-            </>
-          )}
-          {isLoading && <Loader className="w-5 h-5 animate-spin" />}
-          {!isPending && isError && 'Refresh'}
-        </Button>
-        {user?.redeemedInviteCode === false && (
+        <div className="w-full">
           <Button
-            className="w-full flex gap-x-2"
+            className={cn('w-full flex gap-x-2', isLoading && 'animate-pulse')}
             variant="tertiary-card"
-            onMouseDown={() => setOpen(true)}
+            disabled={isPending}
+            onMouseDown={async () => {
+              if (isError || !user) return await refetch();
+              await handleCopy(user.inviteCode);
+            }}
           >
-            Redeem referral code
+            {!isLoading && !isError && (
+              <>
+                <Copy className="w-5 h-5" />
+                {isCopied ? 'Copied' : 'Copy referral code'}
+              </>
+            )}
+            {isLoading && <Loader className="w-5 h-5 animate-spin" />}
+            {!isPending && isError && 'Refresh'}
           </Button>
-        )}
+          {user?.redeemedInviteCode === false && (
+            <Button
+              className="w-full flex gap-x-2 mt-2"
+              variant="tertiary-card"
+              onMouseDown={() => setOpen(true)}
+            >
+              Redeem referral code
+            </Button>
+          )}
+        </div>
       </PopoverContent>
     </Popover>
   );
