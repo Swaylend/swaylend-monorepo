@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { ArrowLeft, ExternalLink } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -14,6 +14,7 @@ import {
   Area,
   AreaChart,
   CartesianGrid,
+  Rectangle,
 } from 'recharts';
 import { MarketCollateralsTable } from './MarketCollateralsTable';
 import {
@@ -24,6 +25,9 @@ import {
 } from '@/components/ui/chart';
 import Link from 'next/link';
 import { IconPair } from '../IconPair';
+import { SYMBOL_TO_ICON } from '@/utils';
+import { Title } from '../Title';
+import { KinkChart } from './KinkChart';
 
 type MarketOverviewProps = {
   network: string;
@@ -49,277 +53,311 @@ export default function MarketOverview({
       label: 'Desktop',
       color: 'hsl(var(--chart-1))',
     },
-    mobile: {
-      label: 'Mobile',
-      color: 'hsl(var(--chart-2))',
-    },
   } satisfies ChartConfig;
 
-  return (
-    <div className="min-h-screen bg-background text-gray-100 p-6">
-      <header className="flex justify-between items-center mb-6">
-        <div className="flex items-center space-x-4">
-          <Link href="/market">
-            <Button variant="ghost" size="icon">
-              <ArrowLeft className="h-6 w-6" />
-            </Button>
-          </Link>
-          <h1 className="text-2xl font-bold">Markets</h1>
+  const CustomTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="flex flex-col gap-y-2 items-start p-2 bg-card/40 shadow-md rounded-lg">
+          <div className="text-white text-md font-semibold">
+            ${payload[0].value}
+          </div>
+          <div className="text-moon text-sm font-semibold">Earn APR</div>
+          <div className="text-white text-md font-semibold">5.17%</div>
         </div>
-      </header>
+      );
+    }
 
-      <div className="mb-6 flex items-center justify-center space-x-2">
-        <IconPair icons={[]} />
-        <h2 className="text-2xl font-bold">Fuel-USDT</h2>
-      </div>
+    return null;
+  };
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-green-400">Total Collateral</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">$93.09M</div>
-            <div className="text-sm text-gray-400">7 day APR: 5.66%</div>
-            <ResponsiveContainer width="100%" height={200}>
-              <ChartContainer config={chartConfig}>
-                <AreaChart
-                  accessibilityLayer
-                  data={chartData}
-                  margin={{
-                    left: 12,
-                    right: 12,
-                  }}
-                >
-                  <CartesianGrid vertical={false} />
-                  <XAxis
-                    dataKey="month"
-                    tickLine={false}
-                    axisLine={false}
-                    tickMargin={8}
-                    tickFormatter={(value: string) => value.slice(0, 3)}
-                  />
-                  <ChartTooltip
-                    cursor={false}
-                    content={<ChartTooltipContent indicator="dot" />}
-                  />
-                  <Area
-                    dataKey="mobile"
-                    type="natural"
-                    fill="var(--color-mobile)"
-                    fillOpacity={0.4}
-                    stroke="var(--color-mobile)"
-                    stackId="a"
-                  />
-                  <Area
-                    dataKey="desktop"
-                    type="natural"
-                    fill="var(--color-desktop)"
-                    fillOpacity={0.4}
-                    stroke="var(--color-desktop)"
-                    stackId="a"
-                  />
-                </AreaChart>
-              </ChartContainer>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-purple-400">Total Borrowing</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">$93.09M</div>
-            <div className="text-sm text-gray-400">Borrow APR: 6.66%</div>
-            <ResponsiveContainer width="100%" height={200}>
-              <ChartContainer config={chartConfig}>
-                <AreaChart
-                  accessibilityLayer
-                  data={chartData}
-                  margin={{
-                    left: 12,
-                    right: 12,
-                  }}
-                >
-                  <CartesianGrid vertical={false} />
-                  <XAxis
-                    dataKey="month"
-                    tickLine={false}
-                    axisLine={false}
-                    tickMargin={8}
-                    tickFormatter={(value: string) => value.slice(0, 3)}
-                  />
-                  <ChartTooltip
-                    cursor={false}
-                    content={<ChartTooltipContent indicator="dot" />}
-                  />
-                  <Area
-                    dataKey="mobile"
-                    type="natural"
-                    fill="var(--color-mobile)"
-                    fillOpacity={0.4}
-                    stroke="var(--color-mobile)"
-                    stackId="a"
-                  />
-                  <Area
-                    dataKey="desktop"
-                    type="natural"
-                    fill="var(--color-desktop)"
-                    fillOpacity={0.4}
-                    stroke="var(--color-desktop)"
-                    stackId="a"
-                  />
-                </AreaChart>
-              </ChartContainer>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
-      </div>
+  function CustomCursor(props: any) {
+    const { stroke, pointerEvents, height, points, className } = props;
 
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle>Market Stats</CardTitle>
-        </CardHeader>
-        <CardContent className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-          <div>
-            <div className="text-sm text-gray-400">Total Earning</div>
-            <div className="text-xl font-bold">$456.05M</div>
-          </div>
-          <div>
-            <div className="text-sm text-gray-400">Available Liquidity</div>
-            <div className="text-xl font-bold">$147.37M</div>
-          </div>
-          <div>
-            <div className="text-sm text-gray-400">Total Reserves</div>
-            <div className="text-xl font-bold">$9.77M</div>
-          </div>
-          <div>
-            <div className="text-sm text-gray-400">Collateralization</div>
-            <div className="text-xl font-bold">143.21%</div>
-          </div>
-          <div>
-            <div className="text-sm text-gray-400">Oracle Price</div>
-            <div className="text-xl font-bold">$1.00</div>
-          </div>
-        </CardContent>
-      </Card>
+    const { x, y } = points[0];
+    return (
+      <>
+        <Rectangle
+          x={x - 0.5}
+          y={y}
+          fillOpacity={0}
+          stroke="#FFFFFF"
+          strokeOpacity={0.4}
+          pointerEvents={pointerEvents}
+          width={0.5}
+          height={height}
+          points={points}
+          className={className}
+          type="linear"
+        />
+        <Rectangle
+          x={x - 23}
+          y={y}
+          fillOpacity={0.4}
+          style={{
+            fill: 'url(#color4)',
+          }}
+          pointerEvents={pointerEvents}
+          width={46}
+          height={height}
+          points={points}
+          className={className}
+          type="linear"
+        />
+      </>
+    );
+  }
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Market Rates</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="mb-4">
-              <div className="flex justify-between mb-2">
-                <span className="text-gray-400">Net Borrow APR</span>
-                <span className="font-bold">2.37%</span>
-              </div>
-              <Progress value={30} className="h-2 bg-gray-700" />
+  return (
+    <div className="pt-[60px] pb-[55px] px-[88px] flex flex-col w-full items-center justify-center">
+      <div className="flex items-start justify-between w-full">
+        <div className="flex items-center space-x-4 text-white/60 w-1/3">
+          <Link href="/market">
+            <div className="flex gap-x-2 items-center">
+              <ChevronLeft className="h-6 w-6" />
+              <div className="text-[20px] font-semibold">Markets</div>
             </div>
-            <div>
-              <div className="flex justify-between mb-2">
-                <span className="text-gray-400">Net Supply APR</span>
-                <span className="font-bold">5.67%</span>
-              </div>
-              <Progress value={70} className="h-2 bg-gray-700" />
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Interest Rate Model</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <ResponsiveContainer width="100%" height={200}>
-              <ChartContainer config={chartConfig}>
-                <AreaChart
-                  accessibilityLayer
-                  data={chartData}
-                  margin={{
-                    left: 12,
-                    right: 12,
-                  }}
-                >
-                  <CartesianGrid vertical={false} />
-                  <XAxis
-                    dataKey="month"
-                    tickLine={false}
-                    axisLine={false}
-                    tickMargin={8}
-                    tickFormatter={(value: string) => value.slice(0, 3)}
-                  />
-                  <ChartTooltip
-                    cursor={false}
-                    content={<ChartTooltipContent indicator="dot" />}
-                  />
-                  <Area
-                    dataKey="mobile"
-                    type="natural"
-                    fill="var(--color-mobile)"
-                    fillOpacity={0.4}
-                    stroke="var(--color-mobile)"
-                    stackId="a"
-                  />
-                  <Area
-                    dataKey="desktop"
-                    type="natural"
-                    fill="var(--color-desktop)"
-                    fillOpacity={0.4}
-                    stroke="var(--color-desktop)"
-                    stackId="a"
-                  />
-                </AreaChart>
-              </ChartContainer>
-            </ResponsiveContainer>
-          </CardContent>
-        </Card>
+          </Link>
+        </div>
+
+        <div className="w-1/3 flex flex-col items-center justify-center">
+          <IconPair
+            icons={[
+              {
+                id: 'usdc',
+                name: 'USDC',
+                path: SYMBOL_TO_ICON.USDC,
+              },
+              {
+                id: 'fuel',
+                name: 'Fuel',
+                path: SYMBOL_TO_ICON.ETH,
+              },
+            ]}
+          />
+          <div className="mt-[36px]">
+            <span className="text-xl text-white font-semibold">USDC</span>
+            <span className="text-moon text-xl font-semibold ml-2">
+              · Fuel Network
+            </span>
+          </div>
+        </div>
+        <div className="w-1/3" />
       </div>
 
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle>Collateral Assets</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ResponsiveContainer>
-            <MarketCollateralsTable />
+      <div className="w-full flex justify-between mt-[55px]">
+        <div className="w-[47%]">
+          <div>
+            <div className="text-primary text-md font-semibold">
+              Total Collateral
+            </div>
+            <div className="text-white font-bold text-[20px]">$123.45M</div>
+          </div>
+          <ResponsiveContainer width="100%" height={200}>
+            <ChartContainer config={chartConfig}>
+              <AreaChart
+                accessibilityLayer
+                data={chartData}
+                margin={{
+                  left: 12,
+                  right: 12,
+                }}
+              >
+                <XAxis
+                  dataKey="month"
+                  tickLine={true}
+                  axisLine={true}
+                  tickMargin={8}
+                  tickFormatter={(value: string) => value.slice(0, 3)}
+                  // tick={<CustomTick />}
+                  style={{
+                    fill: '#FFFFFF',
+                    opacity: 0.6,
+                    fontSize: '12px',
+                    fontFamily: 'Inter',
+                    fontWeight: '400',
+                  }}
+                  stroke="#FFFFFF"
+                />
+                <ChartTooltip
+                  content={<CustomTooltip />}
+                  cursor={<CustomCursor />}
+                />
+                <defs>
+                  <linearGradient id="color1" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#3FE8BD" stopOpacity={0.2} />
+                    <stop offset="50%" stopColor="#3FE8BD" stopOpacity={0.1} />
+                    <stop offset="70%" stopColor="#3FE8BD" stopOpacity={0.03} />
+                    <stop offset="90%" stopColor="#3FE8BD" stopOpacity={0.0} />
+                  </linearGradient>
+                  <linearGradient id="color4" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#FFFFFF" stopOpacity={0} />
+                    <stop offset="50%" stopColor="#FFFFFF" stopOpacity={0.1} />
+                    <stop
+                      offset="100%"
+                      stopColor="#FFFFFF"
+                      stopOpacity={0.35}
+                    />
+                  </linearGradient>
+                </defs>
+                <Area
+                  dataKey="desktop"
+                  type="natural"
+                  fill="url(#color1)"
+                  fillOpacity={1}
+                  strokeWidth={3}
+                  stroke="#3FE8BD"
+                  stackId="a"
+                />
+              </AreaChart>
+            </ChartContainer>
           </ResponsiveContainer>
-        </CardContent>
-      </Card>
+        </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Additional Market Data</CardTitle>
+        <div className="w-[47%]">
+          <div>
+            <div className="text-purple text-md font-semibold">
+              Total Borrowing
+            </div>
+            <div className="text-white font-bold text-[20px]">$123.45M</div>
+          </div>
+          <ResponsiveContainer width="100%" height={200}>
+            <ChartContainer config={chartConfig}>
+              <AreaChart
+                accessibilityLayer
+                data={chartData}
+                margin={{
+                  left: 12,
+                  right: 12,
+                }}
+              >
+                <XAxis
+                  dataKey="month"
+                  tickLine={true}
+                  axisLine={true}
+                  tickMargin={8}
+                  tickFormatter={(value: string) => value.slice(0, 3)}
+                  // tick={<CustomTick />}
+                  style={{
+                    fill: '#FFFFFF',
+                    opacity: 0.6,
+                    fontSize: '12px',
+                    fontFamily: 'Inter',
+                    fontWeight: '400',
+                  }}
+                  stroke="#FFFFFF"
+                />
+                <ChartTooltip
+                  content={<CustomTooltip />}
+                  cursor={<CustomCursor />}
+                />
+                <defs>
+                  <linearGradient id="color2" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#8b5cf6" stopOpacity={0.2} />
+                    <stop offset="50%" stopColor="#8b5cf6" stopOpacity={0.1} />
+                    <stop offset="70%" stopColor="#8b5cf6" stopOpacity={0.03} />
+                    <stop offset="90%" stopColor="#8b5cf6" stopOpacity={0.0} />
+                  </linearGradient>
+                  <linearGradient id="color4" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#FFFFFF" stopOpacity={0} />
+                    <stop offset="50%" stopColor="#FFFFFF" stopOpacity={0.1} />
+                    <stop
+                      offset="100%"
+                      stopColor="#FFFFFF"
+                      stopOpacity={0.35}
+                    />
+                  </linearGradient>
+                </defs>
+                <Area
+                  dataKey="desktop"
+                  type="natural"
+                  fill="url(#color2)"
+                  fillOpacity={1}
+                  strokeWidth={3}
+                  stroke="#8b5cf6"
+                  stackId="a"
+                />
+              </AreaChart>
+            </ChartContainer>
+          </ResponsiveContainer>
+        </div>
+      </div>
+
+      <Card className="mt-[125px] w-full">
+        <CardHeader className="bg-white/5">
+          <div className="w-full items-center justify-center gap-x-2 font-semibold text-lg flex">
+            <div className="w-[260px] rounded-full h-[1px] bg-gradient-to-r from-white/0 to-primary" />
+            <div className="text-center text-white">Market Stats</div>
+            <div className="w-[260px] rounded-full h-[1px] bg-gradient-to-l from-white/0 to-primary" />
+          </div>
         </CardHeader>
-        <CardContent>
-          <div className="flex flex-col sm:flex-row sm:flex-wrap justify-between gap-4">
-            <Button
-              variant="outline"
-              className="text-gray-400 w-full sm:w-auto"
-            >
-              Etherscan <ExternalLink className="ml-2 h-4 w-4" />
-            </Button>
-            <Button
-              variant="outline"
-              className="text-gray-400 w-full sm:w-auto"
-            >
-              Gauntlet <ExternalLink className="ml-2 h-4 w-4" />
-            </Button>
-            <Button
-              variant="outline"
-              className="text-gray-400 w-full sm:w-auto"
-            >
-              Risk Analysis <ExternalLink className="ml-2 h-4 w-4" />
-            </Button>
-            <Button
-              variant="outline"
-              className="text-gray-400 w-full sm:w-auto"
-            >
-              Chaos Labs <ExternalLink className="ml-2 h-4 w-4" />
-            </Button>
+        <CardContent className="flex justify-evenly pt-[55px]">
+          <div>
+            <div className="text-sm text-primary font-semibold">
+              Total Earning
+            </div>
+            <div className="text-xl font-semibold text-white mt-2">
+              $456.05M
+            </div>
+          </div>
+          <div>
+            <div className="text-sm text-primary font-semibold">
+              Available Liquidity
+            </div>
+            <div className="text-xl font-semibold text-white mt-2">
+              $147.37M
+            </div>
+          </div>
+          <div>
+            <div className="text-sm text-primary font-semibold">
+              Total Reserves
+            </div>
+            <div className="text-xl font-semibold text-white mt-2">$9.77M</div>
+          </div>
+          <div>
+            <div className="text-sm text-primary font-semibold">
+              Collateralization
+            </div>
+            <div className="text-xl font-semibold text-white mt-2">143.21%</div>
+          </div>
+          <div>
+            <div className="text-sm text-primary font-semibold">
+              Oracle Price
+            </div>
+            <div className="text-xl font-semibold text-white mt-2">$1.00</div>
           </div>
         </CardContent>
       </Card>
+
+      <Card className="w-full mt-[55px]">
+        <CardHeader className="bg-white/5">
+          <div className="w-full items-center justify-center gap-x-2 font-semibold text-lg flex">
+            <div className="w-[260px] rounded-full h-[1px] bg-gradient-to-r from-white/0 to-primary" />
+            <div className="text-center text-white">Interest Rate Model</div>
+            <div className="w-[260px] rounded-full h-[1px] bg-gradient-to-l from-white/0 to-primary" />
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="w-full flex justify-between pt-16 px-8">
+            <div className="w-1/4 ">
+              <div className="text-purple text-lg font-semibold">
+                Net Borrow APR
+              </div>
+              <div className="text-xl text-white font-semibold">2.37%</div>
+
+              <div className="text-primary text-lg font-semibold mt-8">
+                Net Earn APR
+              </div>
+              <div className="text-xl text-white font-semibold">2.37%</div>
+            </div>
+            <div className="w-3/4">
+              <KinkChart />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <MarketCollateralsTable />
     </div>
   );
 }

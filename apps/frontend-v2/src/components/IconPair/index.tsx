@@ -33,8 +33,8 @@ export const IconPair = ({ icons }: IconPairProps) => {
                   <Image
                     src={icon.path}
                     alt={icon.name}
-                    width={28}
-                    height={28}
+                    width={64}
+                    height={64}
                     className="rounded-full"
                   />
                 </TooltipTrigger>
