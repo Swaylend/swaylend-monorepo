@@ -46,15 +46,14 @@ export const Navbar = () => {
                   className={cn(
                     pathname === href ? 'text-primary' : 'text-lavender',
                     pathname !== href && 'hover:text-lavender/80',
-                    'flex items-center text-md gap-x-1 h-full relative'
+                    'flex items-center w-[80px] justify-center text-md font-semibold gap-x-1 h-full relative'
                   )}
                 >
-                  {icon}
                   {label}
                   <div
                     className={cn(
                       pathname === href &&
-                        '-z-10 absolute blur-2xl top-[19px] left-[calc(50%-20px)] w-16 h-10 bg-primary'
+                        '-z-10 absolute blur-[30px] top-[35px] left-[calc(50%-30px)] w-16 h-10 bg-primary'
                     )}
                   />
                 </div>

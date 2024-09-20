@@ -96,7 +96,6 @@ const CollateralTableRow = ({
     decimals
   ).toFormat(4);
 
-  const canSupply = balance?.gt(0);
   const canWithdraw = protocolBalance.gt(0);
 
   let supplyUsed = BigNumber(0);
@@ -110,6 +109,8 @@ const CollateralTableRow = ({
       )
       .times(100);
   }
+
+  const canSupply = balance?.gt(0) && supplyUsed.lt(100);
 
   return (
     <TableRow>
@@ -281,7 +282,7 @@ const CollateralCard = ({
       .times(100);
   }
 
-  const canSupply = balance?.gt(0);
+  const canSupply = balance?.gt(0) && supplyUsed.lt(100);
   const canWithdraw = protocolBalance.gt(0);
   return (
     <Card>
@@ -459,7 +460,11 @@ export const CollateralTable = () => {
             <TableHead className="w-2/12">
               <div className="flex items-center gap-x-2">
                 Collateral Asset
-                <InfoIcon text={'Assets used as collateral'} />
+                <InfoIcon
+                  text={
+                    'Assets you can deposit to secure borrowing positions and back your loans.'
+                  }
+                />
               </div>
             </TableHead>
             <TableHead className="w-2/12">Wallet Balance</TableHead>
@@ -467,7 +472,9 @@ export const CollateralTable = () => {
               <div className="flex items-center gap-x-2">
                 Supply Cap Filled
                 <InfoIcon
-                  text={'Percentage of the supply cap that has been filled.'}
+                  text={
+                    'Percentage of the limited supply that has been filled.'
+                  }
                 />
               </div>
             </TableHead>
@@ -477,7 +484,7 @@ export const CollateralTable = () => {
                 Points
                 <InfoIcon
                   text={
-                    'Points earned by supplying these assets. Hover over the points to learn more.'
+                    'Points earned for providing incentivized asset as a collateral. Hover over the points to learn more.'
                   }
                 />
               </div>

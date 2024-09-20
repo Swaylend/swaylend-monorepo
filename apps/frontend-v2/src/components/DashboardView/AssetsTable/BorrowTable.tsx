@@ -162,7 +162,7 @@ export const BorrowTable = () => {
                 Borrow Assets
                 <InfoIcon
                   text={
-                    'Borrow assets using your supplied assets as collateral.'
+                    "Base asset available for borrowing once you've provided at least one collateral asset."
                   }
                 />
               </div>
@@ -174,7 +174,7 @@ export const BorrowTable = () => {
                 Borrow Points
                 <InfoIcon
                   text={
-                    'Points earned by borrowing these assets. Hover over the points to learn more.'
+                    'Points earned for maintaining an active borrowing position. Hover over the points to learn more.'
                   }
                 />
               </div>
@@ -233,9 +233,15 @@ export const BorrowTable = () => {
               </TableCell>
               <TableCell>
                 {userRole === USER_ROLE.LENDER ? (
-                  <div className="text-lavender text-md font-medium text-center w-full">
-                    You are already lending{' '}
-                    {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}!
+                  <div className=" text-lavender bg-primary/20 rounded-lg px-4 py-2 text-sm font-medium text-center w-full">
+                    You cannot Borrow assets while you have an active Earn
+                    position. Learn more about how{' '}
+                    <a
+                      href="#"
+                      className="underline hover:opacity-90 text-white"
+                    >
+                      Sweylend works.
+                    </a>
                   </div>
                 ) : (
                   <div className="flex gap-x-2 w-full">
@@ -358,9 +364,12 @@ export const BorrowTable = () => {
           )}
           <CardFooter>
             {userRole === USER_ROLE.LENDER ? (
-              <div className="text-lavender text-md font-medium text-center w-full">
-                You are already lending{' '}
-                {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}!
+              <div className=" text-lavender bg-primary/20 rounded-lg px-4 py-2 text-sm font-medium text-center w-full">
+                You cannot Borrow assets while you have an active Earn position.
+                Learn more about how{' '}
+                <a href="#" className="underline hover:opacity-90 text-white">
+                  Sweylend works.
+                </a>
               </div>
             ) : (
               <div className="flex gap-x-2 w-full">
