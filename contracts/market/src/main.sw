@@ -28,6 +28,7 @@ use std::storage::storage_vec::*;
 use std::u128::U128;
 use std::vec::Vec;
 use std::bytes::Bytes;
+use std::convert::TryFrom;
 
 // This is set during deployment of the contract
 configurable {
@@ -874,9 +875,9 @@ impl Market for Contract {
 
         // Set latest values (the principal is now the present value of the user's supply or borrow)
         if !user_basic.principal.negative {
-            present_value = present_value_supply(supply_index, user_basic.principal.into()).into();
+            present_value = present_value_supply(supply_index, user_basic.principal.try_into().unwrap() ).into();
         } else {
-            present_value = present_value_borrow(borrow_index, user_basic.principal.flip().into()).into();
+            present_value = present_value_borrow(borrow_index, user_basic.principal.flip().try_into().unwrap()).into();
             present_value = present_value.flip();
         }
 
@@ -1110,10 +1111,10 @@ pub fn principal_value_borrow(base_borrow_index: u256, present: u256) -> u256 {
 fn present_value(principal: I256) -> I256 {
     let market_basic = storage.market_basic.read();
     if principal >= I256::zero() {
-        let present_value = present_value_supply(market_basic.base_supply_index, principal.into());
+        let present_value = present_value_supply(market_basic.base_supply_index, principal.try_into().unwrap());
         I256::from(present_value)
     } else {
-        let present_value = present_value_borrow(market_basic.base_borrow_index, principal.flip().into());
+        let present_value = present_value_borrow(market_basic.base_borrow_index, principal.flip().try_into().unwrap());
         I256::from(present_value).flip()
     }
 }
@@ -1127,10 +1128,10 @@ fn present_value(principal: I256) -> I256 {
 fn principal_value(present_value: I256) -> I256 {
     let market_basic = storage.market_basic.read();
     if present_value >= I256::zero() {
-        let principal_value = principal_value_supply(market_basic.base_supply_index, present_value.into());
+        let principal_value = principal_value_supply(market_basic.base_supply_index, present_value.try_into().unwrap());
         I256::from(principal_value)
     } else {
-        let principal_value = principal_value_borrow(market_basic.base_borrow_index, present_value.flip().into());
+        let principal_value = principal_value_borrow(market_basic.base_borrow_index, present_value.flip().try_into().unwrap());
         I256::from(principal_value).flip()
     }
 }
@@ -1205,10 +1206,10 @@ fn get_user_supply_borrow_internal(account: Address) -> (u256, u256) {
     let last_accrual_time = storage.market_basic.last_accrual_time.read();
     let (supply_index, borrow_index) = accrued_interest_indices(timestamp().into(), last_accrual_time);
     if !principal.negative {
-        let supply = present_value_supply(supply_index, principal.into());
+        let supply = present_value_supply(supply_index, principal.try_into().unwrap());
         (supply, 0)
     } else {
-        let borrow = present_value_borrow(borrow_index, principal.flip().into());
+        let borrow = present_value_borrow(borrow_index, principal.flip().try_into().unwrap());
         (0, borrow)
     }
 }
@@ -1296,7 +1297,7 @@ fn is_liquidatable_internal(account: Address) -> bool {
         return false
     };
 
-    let present: u256 = present_value(principal.flip()).into(); // decimals: base_token_decimals
+    let present: u256 = present_value(principal.flip()).try_into().unwrap(); // decimals: base_token_decimals
     let mut liquidation_treshold: u256 = 0;
 
     let mut index = 0;
@@ -1404,11 +1405,11 @@ fn update_base_principal(account: Address, basic: UserBasic, principal_new: I256
     // Calculate accrued base interest
     if principal >= I256::zero() {
         let index_delta: u256 = market_basic.tracking_supply_index - basic.base_tracking_index;
-        let base_tracking_accrued_delta = index_delta * principal.into() / storage.market_configuration.read().base_tracking_index_scale / accrual_descale_factor;
+        let base_tracking_accrued_delta = index_delta * principal.try_into().unwrap()  / storage.market_configuration.read().base_tracking_index_scale / accrual_descale_factor;
         basic.base_tracking_accrued += base_tracking_accrued_delta;
     } else {
         let index_delta: u256 = market_basic.tracking_borrow_index - basic.base_tracking_index;
-        let base_tracking_accrued_delta = index_delta * principal.flip().into() / storage.market_configuration.read().base_tracking_index_scale / accrual_descale_factor;
+        let base_tracking_accrued_delta = index_delta * principal.flip().try_into().unwrap() / storage.market_configuration.read().base_tracking_index_scale / accrual_descale_factor;
         basic.base_tracking_accrued += base_tracking_accrued_delta;
     }
 
@@ -1445,11 +1446,11 @@ fn repay_and_supply_amount(old_principal: I256, new_principal: I256) -> (u256, u
     };
 
     if new_principal <= I256::zero() {
-        return ((new_principal - old_principal).into(), u256::zero());
+        return ((new_principal - old_principal).try_into().unwrap(), u256::zero());
     } else if old_principal >= I256::zero() {
-        return (u256::zero(), (new_principal - old_principal).into());
+        return (u256::zero(), (new_principal - old_principal).try_into().unwrap());
     } else {
-        return (old_principal.flip().into(), new_principal.into());
+        return (old_principal.flip().try_into().unwrap(), new_principal.try_into().unwrap() );
     }
 }
 
@@ -1469,11 +1470,11 @@ fn withdraw_and_borrow_amount(old_principal: I256, new_principal: I256) -> (u256
     };
 
     if new_principal >= I256::zero() {
-        return ((old_principal - new_principal).into(), u256::zero());
+        return ((old_principal - new_principal).try_into().unwrap(), u256::zero());
     } else if old_principal <= I256::zero() {
-        return (u256::zero(), (old_principal - new_principal).into());
+        return (u256::zero(), (old_principal - new_principal).try_into().unwrap());
     } else {
-        return ((old_principal).into(), (new_principal).flip().into());
+        return ((old_principal).try_into().unwrap(), (new_principal).flip().try_into().unwrap());
     }
 }
 
