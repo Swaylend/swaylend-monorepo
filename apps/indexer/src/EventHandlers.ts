@@ -6,56 +6,56 @@ const MARKET_CONFIGURATION_ID = 'MARKET_CONFIGURATION_ID';
 
 // Add Collateral Asset
 Market.CollateralAssetAdded.loader(({ event, context }) => {
-  const assetId = event.data.asset_id;
+  const assetId = event.params.asset_id;
   context.CollateralAsset.load(assetId);
 });
 
 Market.CollateralAssetAdded.handler(async ({ event, context }) => {
-  const assetId = event.data.asset_id;
+  const assetId = event.params.asset_id;
 
   context.CollateralAsset.set({
     id: assetId,
-    priceFeedId: event.data.configuration.price_feed_id,
-    decimals: event.data.configuration.decimals,
-    borrowCollateralFactor: event.data.configuration.borrow_collateral_factor,
+    priceFeedId: event.params.configuration.price_feed_id,
+    decimals: event.params.configuration.decimals,
+    borrowCollateralFactor: event.params.configuration.borrow_collateral_factor,
     liquidateCollateralFactor:
-      event.data.configuration.liquidate_collateral_factor,
-    liquidationPenalty: event.data.configuration.liquidation_penalty,
-    supplyCap: event.data.configuration.supply_cap,
-    paused: event.data.configuration.paused,
+      event.params.configuration.liquidate_collateral_factor,
+    liquidationPenalty: event.params.configuration.liquidation_penalty,
+    supplyCap: event.params.configuration.supply_cap,
+    paused: event.params.configuration.paused,
   });
 });
 
 // Update collateral asset
 Market.CollateralAssetUpdated.loader(({ event, context }) => {
-  const assetId = event.data.asset_id;
+  const assetId = event.params.asset_id;
   context.CollateralAsset.load(assetId);
 });
 
 Market.CollateralAssetUpdated.handler(async ({ event, context }) => {
-  const assetId = event.data.asset_id;
+  const assetId = event.params.asset_id;
 
   context.CollateralAsset.set({
     id: assetId,
-    priceFeedId: event.data.configuration.price_feed_id,
-    decimals: event.data.configuration.decimals,
-    borrowCollateralFactor: event.data.configuration.borrow_collateral_factor,
+    priceFeedId: event.params.configuration.price_feed_id,
+    decimals: event.params.configuration.decimals,
+    borrowCollateralFactor: event.params.configuration.borrow_collateral_factor,
     liquidateCollateralFactor:
-      event.data.configuration.liquidate_collateral_factor,
-    liquidationPenalty: event.data.configuration.liquidation_penalty,
-    supplyCap: event.data.configuration.supply_cap,
-    paused: event.data.configuration.paused,
+      event.params.configuration.liquidate_collateral_factor,
+    liquidationPenalty: event.params.configuration.liquidation_penalty,
+    supplyCap: event.params.configuration.supply_cap,
+    paused: event.params.configuration.paused,
   });
 });
 
 // Pause Collateral Asset
 Market.CollateralAssetPaused.loader(({ event, context }) => {
-  const assetId = event.data.asset_id;
+  const assetId = event.params.asset_id;
   context.CollateralAsset.load(assetId);
 });
 
 Market.CollateralAssetPaused.handler(async ({ event, context }) => {
-  const assetId = event.data.asset_id;
+  const assetId = event.params.asset_id;
   const collateralAsset = await context.CollateralAsset.get(assetId);
 
   if (collateralAsset) {
@@ -68,12 +68,12 @@ Market.CollateralAssetPaused.handler(async ({ event, context }) => {
 
 // Resume Collateral Asset
 Market.CollateralAssetResumed.loader(({ event, context }) => {
-  const assetId = event.data.asset_id;
+  const assetId = event.params.asset_id;
   context.CollateralAsset.load(assetId);
 });
 
 Market.CollateralAssetResumed.handler(async ({ event, context }) => {
-  const assetId = event.data.asset_id;
+  const assetId = event.params.asset_id;
   const collateralAsset = await context.CollateralAsset.get(assetId);
 
   if (collateralAsset) {
@@ -86,26 +86,26 @@ Market.CollateralAssetResumed.handler(async ({ event, context }) => {
 
 // User Basic Event
 Market.UserBasicEvent.loader(({ event, context }) => {
-  const address = event.data.address;
+  const address = event.params.address;
   context.User.load(address.bits);
 });
 
 Market.UserBasicEvent.handler(async ({ event, context }) => {
-  const address = event.data.address;
+  const address = event.params.address;
 
   const user = await context.User.get(address.bits);
 
   if (!user) {
-    const principalValue = event.data.user_basic.principal.negative
-      ? -event.data.user_basic.principal.value
-      : event.data.user_basic.principal.value;
+    const principalValue = event.params.user_basic.principal.negative
+      ? -event.params.user_basic.principal.value
+      : event.params.user_basic.principal.value;
 
     context.User.set({
       id: address.bits,
       address: address.bits,
       principal: principalValue,
-      baseTrackingIndex: event.data.user_basic.base_tracking_index,
-      baseTrackingAccrued: event.data.user_basic.base_tracking_accrued,
+      baseTrackingIndex: event.params.user_basic.base_tracking_index,
+      baseTrackingAccrued: event.params.user_basic.base_tracking_accrued,
       totalCollateralBought: BigInt(0),
       totalValueLiquidated: BigInt(0),
     });
@@ -115,11 +115,11 @@ Market.UserBasicEvent.handler(async ({ event, context }) => {
 
   context.User.set({
     ...user,
-    principal: event.data.user_basic.principal.negative
-      ? -event.data.user_basic.principal.value
-      : event.data.user_basic.principal.value,
-    baseTrackingIndex: event.data.user_basic.base_tracking_index,
-    baseTrackingAccrued: event.data.user_basic.base_tracking_accrued,
+    principal: event.params.user_basic.principal.negative
+      ? -event.params.user_basic.principal.value
+      : event.params.user_basic.principal.value,
+    baseTrackingIndex: event.params.user_basic.base_tracking_index,
+    baseTrackingAccrued: event.params.user_basic.base_tracking_accrued,
   });
 });
 
@@ -131,44 +131,44 @@ Market.MarketBasicEvent.loader(({ context }) => {
 Market.MarketBasicEvent.handler(async ({ event, context }) => {
   context.MarketState.set({
     id: MARKET_ID,
-    baseBorrowIndex: event.data.market_basic.base_borrow_index,
-    baseSupplyIndex: event.data.market_basic.base_supply_index,
-    lastAccrualTime: event.data.market_basic.last_accrual_time,
-    totalBorrowBase: event.data.market_basic.total_borrow_base,
-    totalSupplyBase: event.data.market_basic.total_supply_base,
-    trackingBorrowIndex: event.data.market_basic.tracking_borrow_index,
-    trackingSupplyIndex: event.data.market_basic.tracking_supply_index,
+    baseBorrowIndex: event.params.market_basic.base_borrow_index,
+    baseSupplyIndex: event.params.market_basic.base_supply_index,
+    lastAccrualTime: event.params.market_basic.last_accrual_time,
+    totalBorrowBase: event.params.market_basic.total_borrow_base,
+    totalSupplyBase: event.params.market_basic.total_supply_base,
+    trackingBorrowIndex: event.params.market_basic.tracking_borrow_index,
+    trackingSupplyIndex: event.params.market_basic.tracking_supply_index,
   });
 });
 
 // User Collateral Events
 Market.UserSupplyCollateralEvent.loader(({ event, context }) => {
-  const id = `${event.transactionId}_${event.receiptIndex}`;
+  const id = `${event.transaction.id}_${event.logIndex}`;
   context.UserCollateralEvent.load(id, {
     loadUser: false,
     loadCollateralAsset: false,
   });
 
-  const userCollateralId = `${event.data.address.bits}-${event.data.asset_id}`;
+  const userCollateralId = `${event.params.address.bits}-${event.params.asset_id}`;
   context.UserCollateral.load(userCollateralId, {
     loadCollateralAsset: false,
     loadUser: false,
   });
 
-  const address = event.data.address;
+  const address = event.params.address;
   context.User.load(address.bits);
 });
 
 Market.UserSupplyCollateralEvent.handler(async ({ event, context }) => {
-  const id = `${event.transactionId}_${event.receiptIndex}`;
+  const id = `${event.transaction.id}_${event.logIndex}`;
 
   // Create user if it doesn't exist
-  const user = await context.User.get(event.data.address.bits);
+  const user = await context.User.get(event.params.address.bits);
 
   if (!user) {
     context.User.set({
-      id: event.data.address.bits,
-      address: event.data.address.bits,
+      id: event.params.address.bits,
+      address: event.params.address.bits,
       principal: BigInt(0),
       baseTrackingIndex: BigInt(0),
       baseTrackingAccrued: BigInt(0),
@@ -179,15 +179,15 @@ Market.UserSupplyCollateralEvent.handler(async ({ event, context }) => {
 
   context.UserCollateralEvent.set({
     id,
-    user_id: event.data.address.bits,
-    collateralAsset_id: event.data.asset_id,
-    amount: event.data.amount,
+    user_id: event.params.address.bits,
+    collateralAsset_id: event.params.asset_id,
+    amount: event.params.amount,
     actionType: 'Supply',
-    timestamp: event.time,
+    timestamp: event.block.time,
   });
 
   // Also update the many-to-many relationship
-  const userCollateralId = `${event.data.address.bits}-${event.data.asset_id}`;
+  const userCollateralId = `${event.params.address.bits}-${event.params.asset_id}`;
 
   const userCollateral = await context.UserCollateral.get(userCollateralId);
 
@@ -195,26 +195,26 @@ Market.UserSupplyCollateralEvent.handler(async ({ event, context }) => {
   if (!userCollateral) {
     context.UserCollateral.set({
       id: userCollateralId,
-      user_id: event.data.address.bits,
-      collateralAsset_id: event.data.asset_id,
-      amount: event.data.amount,
+      user_id: event.params.address.bits,
+      collateralAsset_id: event.params.asset_id,
+      amount: event.params.amount,
     });
   } else {
     // Update user collateral
     context.UserCollateral.set({
       ...userCollateral,
-      amount: userCollateral.amount + event.data.amount,
+      amount: userCollateral.amount + event.params.amount,
     });
   }
 });
 
 Market.UserWithdrawCollateralEvent.loader(({ event, context }) => {
-  const id = `${event.transactionId}_${event.receiptIndex}`;
+  const id = `${event.transaction.id}_${event.logIndex}`;
   context.UserCollateralEvent.load(id, {
     loadUser: false,
     loadCollateralAsset: false,
   });
-  const userCollateralId = `${event.data.address.bits}-${event.data.asset_id}`;
+  const userCollateralId = `${event.params.address.bits}-${event.params.asset_id}`;
   context.UserCollateral.load(userCollateralId, {
     loadCollateralAsset: false,
     loadUser: false,
@@ -222,19 +222,19 @@ Market.UserWithdrawCollateralEvent.loader(({ event, context }) => {
 });
 
 Market.UserWithdrawCollateralEvent.handler(async ({ event, context }) => {
-  const id = `${event.transactionId}_${event.receiptIndex}`;
+  const id = `${event.transaction.id}_${event.logIndex}`;
 
   context.UserCollateralEvent.set({
     id,
-    user_id: event.data.address.bits,
-    collateralAsset_id: event.data.asset_id,
-    amount: event.data.amount,
+    user_id: event.params.address.bits,
+    collateralAsset_id: event.params.asset_id,
+    amount: event.params.amount,
     actionType: 'Withdraw',
-    timestamp: event.time,
+    timestamp: event.block.time,
   });
 
   // Also update the many-to-many relationship
-  const userCollateralId = `${event.data.address.bits}-${event.data.asset_id}`;
+  const userCollateralId = `${event.params.address.bits}-${event.params.asset_id}`;
 
   const userCollateral = await context.UserCollateral.get(userCollateralId);
 
@@ -242,81 +242,81 @@ Market.UserWithdrawCollateralEvent.handler(async ({ event, context }) => {
   if (!userCollateral) {
     context.UserCollateral.set({
       id: userCollateralId,
-      user_id: event.data.address.bits,
-      collateralAsset_id: event.data.asset_id,
-      amount: event.data.amount,
+      user_id: event.params.address.bits,
+      collateralAsset_id: event.params.asset_id,
+      amount: event.params.amount,
     });
   } else {
     // Update user collateral
     context.UserCollateral.set({
       ...userCollateral,
-      amount: userCollateral.amount - event.data.amount,
+      amount: userCollateral.amount - event.params.amount,
     });
   }
 });
 
 // User Base Asset Events
 Market.UserSupplyBaseEvent.loader(({ event, context }) => {
-  const id = `${event.transactionId}_${event.receiptIndex}`;
+  const id = `${event.transaction.id}_${event.logIndex}`;
   context.UserBaseEvent.load(id, { loadUser: false });
 });
 
 Market.UserSupplyBaseEvent.handler(async ({ event, context }) => {
-  const id = `${event.transactionId}_${event.receiptIndex}`;
+  const id = `${event.transaction.id}_${event.logIndex}`;
 
-  if (event.data.repay_amount > 0) {
+  if (event.params.repay_amount > 0) {
     context.UserBaseEvent.set({
       id: `${id}_1`,
-      user_id: event.data.address.bits,
-      amount: event.data.repay_amount,
+      user_id: event.params.address.bits,
+      amount: event.params.repay_amount,
       actionType: 'Repay',
-      timestamp: event.time,
+      timestamp: event.block.time,
     });
   }
 
-  if (event.data.supply_amount > 0) {
+  if (event.params.supply_amount > 0) {
     context.UserBaseEvent.set({
       id: `${id}_2`,
-      user_id: event.data.address.bits,
-      amount: event.data.supply_amount,
+      user_id: event.params.address.bits,
+      amount: event.params.supply_amount,
       actionType: 'Supply',
-      timestamp: event.time,
+      timestamp: event.block.time,
     });
   }
 });
 
 Market.UserWithdrawBaseEvent.loader(({ event, context }) => {
-  const id = `${event.transactionId}_${event.receiptIndex}`;
+  const id = `${event.transaction.id}_${event.logIndex}`;
   context.UserBaseEvent.load(id, { loadUser: false });
 });
 
 Market.UserWithdrawBaseEvent.handler(async ({ event, context }) => {
-  const id = `${event.transactionId}_${event.receiptIndex}`;
+  const id = `${event.transaction.id}_${event.logIndex}`;
 
-  if (event.data.withdraw_amount > 0) {
+  if (event.params.withdraw_amount > 0) {
     context.UserBaseEvent.set({
       id: `${id}_1`,
-      user_id: event.data.address.bits,
-      amount: event.data.withdraw_amount,
+      user_id: event.params.address.bits,
+      amount: event.params.withdraw_amount,
       actionType: 'Withdraw',
-      timestamp: event.time,
+      timestamp: event.block.time,
     });
   }
 
-  if (event.data.borrow_amount > 0) {
+  if (event.params.borrow_amount > 0) {
     context.UserBaseEvent.set({
       id: `${id}_2`,
-      user_id: event.data.address.bits,
-      amount: event.data.borrow_amount,
+      user_id: event.params.address.bits,
+      amount: event.params.borrow_amount,
       actionType: 'Borrow',
-      timestamp: event.time,
+      timestamp: event.block.time,
     });
   }
 });
 
 // Liquidation Events
 Market.UserLiquidatedEvent.loader(({ event, context }) => {
-  const id = `${event.transactionId}_${event.receiptIndex}`;
+  const id = `${event.transaction.id}_${event.logIndex}`;
   context.LiquidationEvent.load(id, {
     loadLiquidated: false,
     loadLiquidator: true,
@@ -324,45 +324,45 @@ Market.UserLiquidatedEvent.loader(({ event, context }) => {
 });
 
 Market.UserLiquidatedEvent.handler(async ({ event, context }) => {
-  const id = `${event.transactionId}_${event.receiptIndex}`;
+  const id = `${event.transaction.id}_${event.logIndex}`;
 
-  const liquidator = await context.User.get(event.data.liquidator.bits);
+  const liquidator = await context.User.get(event.params.liquidator.bits);
 
   // Create liquidator if it doesn't exist
   if (!liquidator) {
     context.User.set({
-      id: event.data.liquidator.bits,
-      address: event.data.liquidator.bits,
+      id: event.params.liquidator.bits,
+      address: event.params.liquidator.bits,
       principal: BigInt(0),
       baseTrackingIndex: BigInt(0),
       baseTrackingAccrued: BigInt(0),
       totalCollateralBought: BigInt(0),
-      totalValueLiquidated: BigInt(event.data.total_base_value),
+      totalValueLiquidated: BigInt(event.params.total_base_value),
     });
   } else {
     // Update liquidator
     context.User.set({
       ...liquidator,
       totalValueLiquidated:
-        liquidator.totalValueLiquidated + event.data.total_base_value,
+        liquidator.totalValueLiquidated + event.params.total_base_value,
     });
   }
 
   context.LiquidationEvent.set({
     id,
-    liquidator_id: event.data.liquidator.bits,
-    liquidated_id: event.data.address.bits,
-    basePaidOut: event.data.base_paid_out,
-    basePaidOutValue: event.data.base_paid_out_value,
-    totalBase: event.data.total_base,
-    totalBaseValue: event.data.total_base_value,
-    decimals: event.data.decimals,
-    timestamp: event.time,
+    liquidator_id: event.params.liquidator.bits,
+    liquidated_id: event.params.address.bits,
+    basePaidOut: event.params.base_paid_out,
+    basePaidOutValue: event.params.base_paid_out_value,
+    totalBase: event.params.total_base,
+    totalBaseValue: event.params.total_base_value,
+    decimals: event.params.decimals,
+    timestamp: event.block.time,
   });
 });
 
 Market.AbsorbCollateralEvent.loader(({ event, context }) => {
-  const id = `${event.transactionId}_${event.receiptIndex}`;
+  const id = `${event.transaction.id}_${event.logIndex}`;
   context.AbsorbCollateralEvent.load(id, {
     loadCollateralAsset: false,
     loadUser: true,
@@ -370,31 +370,31 @@ Market.AbsorbCollateralEvent.loader(({ event, context }) => {
 });
 
 Market.AbsorbCollateralEvent.handler(async ({ event, context }) => {
-  const id = `${event.transactionId}_${event.receiptIndex}`;
+  const id = `${event.transaction.id}_${event.logIndex}`;
 
   context.AbsorbCollateralEvent.set({
     id,
-    user_id: event.data.address.bits,
-    collateralAsset_id: event.data.asset_id,
-    amount: event.data.amount,
-    seizeValue: event.data.seize_value,
-    decimals: event.data.decimals,
-    timestamp: event.time,
+    user_id: event.params.address.bits,
+    collateralAsset_id: event.params.asset_id,
+    amount: event.params.amount,
+    seizeValue: event.params.seize_value,
+    decimals: event.params.decimals,
+    timestamp: event.block.time,
   });
 
   // Also update the many-to-many relationship
-  const userCollateralId = `${event.data.address.bits}-${event.data.asset_id}`;
+  const userCollateralId = `${event.params.address.bits}-${event.params.asset_id}`;
   context.UserCollateral.set({
     id: userCollateralId,
-    user_id: event.data.address.bits,
-    collateralAsset_id: event.data.asset_id,
+    user_id: event.params.address.bits,
+    collateralAsset_id: event.params.asset_id,
     amount: BigInt(0),
   });
 });
 
 // Buy Collateral Event
 Market.BuyCollateralEvent.loader(({ event, context }) => {
-  const id = `${event.transactionId}_${event.receiptIndex}`;
+  const id = `${event.transaction.id}_${event.logIndex}`;
   context.BuyCollateralEvent.load(id, {
     loadCollateralAsset: false,
     loadUser: true,
@@ -402,19 +402,19 @@ Market.BuyCollateralEvent.loader(({ event, context }) => {
 });
 
 Market.BuyCollateralEvent.handler(async ({ event, context }) => {
-  const id = `${event.transactionId}_${event.receiptIndex}`;
+  const id = `${event.transaction.id}_${event.logIndex}`;
 
-  let user = await context.User.get(event.data.caller.bits);
+  let user = await context.User.get(event.params.caller.bits);
 
   // Create user if it doesn't exist
   if (!user) {
     user = {
-      id: event.data.caller.bits,
-      address: event.data.caller.bits,
+      id: event.params.caller.bits,
+      address: event.params.caller.bits,
       principal: BigInt(0),
       baseTrackingIndex: BigInt(0),
       baseTrackingAccrued: BigInt(0),
-      totalCollateralBought: event.data.price,
+      totalCollateralBought: event.params.price,
       totalValueLiquidated: BigInt(0),
     };
 
@@ -423,35 +423,35 @@ Market.BuyCollateralEvent.handler(async ({ event, context }) => {
     // Update user
     context.User.set({
       ...user,
-      totalCollateralBought: user.totalCollateralBought + event.data.price,
+      totalCollateralBought: user.totalCollateralBought + event.params.price,
     });
   }
 
   context.BuyCollateralEvent.set({
     id,
-    user_id: event.data.caller.bits,
-    recipient: event.data.recipient.bits,
-    collateralAsset_id: event.data.asset_id,
-    amount: event.data.amount,
-    price: event.data.price,
-    timestamp: event.time,
+    user_id: event.params.caller.bits,
+    recipient: event.params.recipient.bits,
+    collateralAsset_id: event.params.asset_id,
+    amount: event.params.amount,
+    price: event.params.price,
+    timestamp: event.block.time,
   });
 });
 
 // Reserves Withdrawn Event
 Market.ReservesWithdrawnEvent.loader(({ event, context }) => {
-  const id = `${event.transactionId}_${event.receiptIndex}`;
+  const id = `${event.transaction.id}_${event.logIndex}`;
   context.ReservesWithdrawnEvent.load(id);
 });
 
 Market.ReservesWithdrawnEvent.handler(async ({ event, context }) => {
-  const id = `${event.transactionId}_${event.receiptIndex}`;
+  const id = `${event.transaction.id}_${event.logIndex}`;
 
   context.ReservesWithdrawnEvent.set({
     id,
-    recipient: event.data.address.bits,
-    amount: event.data.amount,
-    timestamp: event.time,
+    recipient: event.params.address.bits,
+    amount: event.params.amount,
+    timestamp: event.block.time,
   });
 });
 
@@ -461,7 +461,7 @@ Market.PauseConfigurationEvent.loader(({ context }) => {
 });
 
 Market.PauseConfigurationEvent.handler(async ({ event, context }) => {
-  const pauseConfiguration = event.data.pause_config;
+  const pauseConfiguration = event.params.pause_config;
 
   context.PauseConfiguration.set({
     id: PUASE_CONFIGURATION_ID,
@@ -478,7 +478,7 @@ Market.MarketConfigurationEvent.loader(({ context }) => {
 });
 
 Market.MarketConfigurationEvent.handler(async ({ event, context }) => {
-  const marketConfiguration = event.data.market_config;
+  const marketConfiguration = event.params.market_config;
 
   context.MarketConfiguartion.set({
     id: MARKET_CONFIGURATION_ID,
