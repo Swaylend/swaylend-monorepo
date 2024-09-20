@@ -12,9 +12,9 @@ import { useMarketStore } from '@/stores';
 import { formatUnits } from '@/utils';
 import { useIsConnected } from '@fuels/react';
 import BigNumber from 'bignumber.js';
+import { Repeat } from 'lucide-react';
 import React, { useMemo, useState } from 'react';
 import { InfoBowl } from './InfoBowl';
-import { Repeat } from 'lucide-react';
 
 export const Stats = () => {
   const [borrowedMode, setBorrowedMode] = useState(1); // 0: available to borrow, 1: borrowed

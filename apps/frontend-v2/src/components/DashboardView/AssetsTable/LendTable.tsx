@@ -224,6 +224,7 @@ export const LendTable = () => {
                     You cannot Lend assets while you have an active borrowing
                     position. Learn more about how{' '}
                     <a
+                      // biome-ignore lint/a11y/useValidAnchor: <explanation>
                       href="#"
                       className="underline hover:opacity-90 text-white"
                     >
@@ -352,6 +353,7 @@ export const LendTable = () => {
               <div className=" text-lavender bg-primary/20 rounded-lg px-4 py-2 text-sm font-medium text-center w-full">
                 You cannot Lend assets while you have an active borrowing
                 position. Learn more about how{' '}
+                {/* biome-ignore lint/a11y/useValidAnchor: <explanation> */}
                 <a href="#" className="underline hover:opacity-90 text-white">
                   Sweylend works.
                 </a>
