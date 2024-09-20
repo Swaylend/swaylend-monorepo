@@ -6,6 +6,14 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from '@/components/ui/drawer';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import {
@@ -28,14 +36,6 @@ import { Button } from '../ui/button';
 import { ConnectButton } from './ConnectButton';
 import { MarketSwitcher } from './MarketSwitcher';
 import { Points } from './Points';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 
 const NAVBAR_LINKS = [
   { href: '/', label: 'Dashboard', icon: <LayoutDashboard /> },
