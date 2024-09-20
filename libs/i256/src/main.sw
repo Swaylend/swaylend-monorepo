@@ -87,7 +87,7 @@ impl core::ops::OrdEq for I256 {}
 impl I256 {
     /// The size of this type in bits.
     pub fn bits() -> u32 {
-        256
+        257
     }
 
     /// Helper function to get a signed number from with an underlying
