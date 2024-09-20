@@ -9,6 +9,8 @@ import { useReferralModalStore } from '@/stores/referralModalStore';
 import { Copy, Loader, Sparkle, Trophy } from 'lucide-react';
 import React, { useState } from 'react';
 import { Button } from '../ui/button';
+import Link from 'next/link';
+import { useIsConnected } from '@fuels/react';
 
 export const Points = () => {
   const { setOpen } = useReferralModalStore();
@@ -17,6 +19,8 @@ export const Points = () => {
 
   const [isCopied, setIsCopied] = useState(false);
 
+  const { isConnected } = useIsConnected();
+
   const handleCopy = async (value: string) => {
     setIsCopied(true);
     await navigator.clipboard.writeText(value);
@@ -24,6 +28,8 @@ export const Points = () => {
       setIsCopied(false);
     }, 1000);
   };
+
+  if (!isConnected) return null;
 
   return (
     <Popover>
@@ -51,10 +57,12 @@ export const Points = () => {
         <div className="rounded-full bg-white/5 px-4 py-2 text-moon">
           Fuel Pts <span className="text-moon">0</span>
         </div>
-        <Button className="w-full flex gap-x-2" variant="tertiary-card">
-          <Trophy className="w-5 h-5" />
-          Points Leaderboard
-        </Button>
+        <Link href="/leaderboard">
+          <Button className="w-full flex gap-x-2" variant="tertiary-card">
+            <Trophy className="w-5 h-5" />
+            Points Leaderboard
+          </Button>
+        </Link>
         <Button
           className={cn('w-full flex gap-x-2', isLoading && 'animate-pulse')}
           variant="tertiary-card"
