@@ -82,15 +82,9 @@ impl core::ops::Ord for I256 {
     }
 }
 
+impl core::ops::OrdEq for I256 {}
+
 impl I256 {
-    pub fn ge(self, other: Self) -> bool {
-        self > other || self == other
-    }
-
-    pub fn le(self, other: Self) -> bool {
-        self < other || self == other
-    }
-
     /// The size of this type in bits.
     pub fn bits() -> u32 {
         256
