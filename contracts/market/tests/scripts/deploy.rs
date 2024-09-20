@@ -38,9 +38,6 @@ async fn deploy() {
 
     //--------------- MARKET ---------------
     let usdc_price_feed = Bits256::from_hex_str(USDC_USD_PRICE_FEED_ID).unwrap();
-    let fuel_eth_base_asset_id =
-        Bits256::from_hex_str("0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07")
-            .unwrap();
 
     let market_config = get_market_config(
         wallet.address().into(),
@@ -51,7 +48,7 @@ async fn deploy() {
     )
     .unwrap();
 
-    let market = MarketContract::deploy(&wallet, 0, fuel_eth_base_asset_id, use_random_address)
+    let market = MarketContract::deploy(&wallet, 0, use_random_address)
         .await
         .unwrap();
 
