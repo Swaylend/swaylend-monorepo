@@ -4,21 +4,21 @@ use market_abi::structs::*;
 
 // Collateral Asset Events
 pub struct CollateralAssetAdded {
-    pub asset_id: b256,
+    pub asset_id: AssetId,
     pub configuration: CollateralConfiguration,
 }
 
 pub struct CollateralAssetUpdated {
-    pub asset_id: b256,
+    pub asset_id: AssetId,
     pub configuration: CollateralConfiguration,
 }
 
 pub struct CollateralAssetPaused {
-    pub asset_id: b256,
+    pub asset_id: AssetId,
 }
 
 pub struct CollateralAssetResumed {
-    pub asset_id: b256,
+    pub asset_id: AssetId,
 }
 
 // User Basic Event
@@ -35,13 +35,13 @@ pub struct MarketBasicEvent {
 // User Collateral Events
 pub struct UserSupplyCollateralEvent {
     pub address: Address,
-    pub asset_id: b256,
+    pub asset_id: AssetId,
     pub amount: u64,
 }
 
 pub struct UserWithdrawCollateralEvent {
     pub address: Address,
-    pub asset_id: b256,
+    pub asset_id: AssetId,
     pub amount: u64,
 }
 
@@ -61,7 +61,7 @@ pub struct UserWithdrawBaseEvent {
 // Liquidation Events
 pub struct AbsorbCollateralEvent {
     pub address: Address,
-    pub asset_id: b256,
+    pub asset_id: AssetId,
     pub amount: u64,
     pub seize_value: u256,
     pub decimals: u32,
@@ -81,7 +81,7 @@ pub struct UserLiquidatedEvent {
 pub struct BuyCollateralEvent {
     pub caller: Address,
     pub recipient: Address,
-    pub asset_id: b256,
+    pub asset_id: AssetId,
     pub amount: u64,
     pub price: u64,
 }

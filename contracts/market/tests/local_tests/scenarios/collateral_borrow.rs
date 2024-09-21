@@ -86,7 +86,7 @@ async fn collateral_borrow_test() {
     assert!(bob_supply_res.is_ok());
 
     let bob_user_collateral = market
-        .get_user_collateral(bob_address, uni.bits256)
+        .get_user_collateral(bob_address, uni.asset_id)
         .await
         .unwrap()
         .value;
@@ -156,7 +156,7 @@ async fn collateral_borrow_test() {
         .unwrap()
         .withdraw_collateral(
             &[&oracle.instance],
-            uni.bits256,
+            uni.asset_id,
             bob_collateral_amount,
             &price_data_update,
         )
@@ -181,7 +181,7 @@ async fn collateral_borrow_test() {
     // 🤙 Call: withdraw_collateral
     // 💰 Amount: 40.00 UNI
     let bob_withdraw_amount = market
-        .get_user_collateral(bob_address, uni.bits256)
+        .get_user_collateral(bob_address, uni.asset_id)
         .await
         .unwrap()
         .value;
@@ -195,7 +195,7 @@ async fn collateral_borrow_test() {
         .unwrap()
         .withdraw_collateral(
             &[&oracle.instance],
-            uni.bits256,
+            uni.asset_id,
             bob_withdraw_amount_fail,
             &price_data_update,
         )
@@ -213,7 +213,7 @@ async fn collateral_borrow_test() {
         .unwrap()
         .withdraw_collateral(
             &[&oracle.instance],
-            uni.bits256,
+            uni.asset_id,
             bob_withdraw_amount.try_into().unwrap(),
             &price_data_update,
         )
@@ -305,7 +305,7 @@ async fn collateral_borrow_timeskip_test() {
     assert!(bob_supply_res.is_ok());
 
     let bob_user_collateral = market
-        .get_user_collateral(bob_address, uni.bits256)
+        .get_user_collateral(bob_address, uni.asset_id)
         .await
         .unwrap()
         .value;
@@ -379,7 +379,7 @@ async fn collateral_borrow_timeskip_test() {
     // 🤙 Call: withdraw_collateral
     // 💰 Amount: 40.00 UNI
     let bob_withdraw_amount = market
-        .get_user_collateral(bob_address, uni.bits256)
+        .get_user_collateral(bob_address, uni.asset_id)
         .await
         .unwrap()
         .value;
@@ -398,7 +398,7 @@ async fn collateral_borrow_timeskip_test() {
         .unwrap()
         .withdraw_collateral(
             &[&oracle.instance],
-            uni.bits256,
+            uni.asset_id,
             bob_withdraw_amount,
             &price_data_update,
         )

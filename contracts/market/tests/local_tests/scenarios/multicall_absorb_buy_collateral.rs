@@ -177,7 +177,7 @@ async fn multicall_absorb_buy_collateral_test() {
         .with_account(&chad)
         .await
         .unwrap()
-        .get_collateral_reserves(eth.bits256)
+        .get_collateral_reserves(eth.asset_id)
         .await
         .unwrap()
         .value;
@@ -196,7 +196,7 @@ async fn multicall_absorb_buy_collateral_test() {
     let buy_collateral_call = market
         .instance
         .methods()
-        .buy_collateral(eth.bits256, amount, chad_address)
+        .buy_collateral(eth.asset_id, amount, chad_address)
         .with_contracts(&[&oracle.instance])
         .call_params(
             CallParameters::default()

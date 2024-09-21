@@ -46,7 +46,7 @@ struct MarketConfig {
 pub fn get_market_config(
     governor: Address,
     pause_guardian: Address,
-    base_token_bits256: Bits256,
+    base_token: AssetId,
     base_token_decimals: u32,
     base_token_price_feed_id: Bits256,
 ) -> anyhow::Result<MarketConfiguration> {
@@ -58,7 +58,7 @@ pub fn get_market_config(
     Ok(MarketConfiguration {
         governor,
         pause_guardian,
-        base_token: base_token_bits256,
+        base_token,
         base_token_decimals,
         base_token_price_feed_id,
         supply_kink: config.supply_kink.into(),
@@ -273,7 +273,7 @@ impl MarketContract {
     pub async fn withdraw_collateral(
         &self,
         contract_ids: &[&dyn ContractDependency],
-        asset_id: Bits256,
+        asset_id: AssetId,
         amount: u64,
         price_data_update: &PriceDataUpdate,
     ) -> anyhow::Result<CallResponse<()>> {
@@ -295,7 +295,7 @@ impl MarketContract {
     pub async fn get_user_collateral(
         &self,
         address: Address,
-        asset_id: Bits256,
+        asset_id: AssetId,
     ) -> anyhow::Result<CallResponse<u64>> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
 
@@ -311,7 +311,7 @@ impl MarketContract {
     pub async fn get_all_user_collateral(
         &self,
         address: Address,
-    ) -> anyhow::Result<CallResponse<Vec<(Bits256, u64)>>> {
+    ) -> anyhow::Result<CallResponse<Vec<(AssetId, u64)>>> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
 
         Ok(self
@@ -323,7 +323,7 @@ impl MarketContract {
             .await?)
     }
 
-    pub async fn totals_collateral(&self, asset_id: Bits256) -> anyhow::Result<CallResponse<u64>> {
+    pub async fn totals_collateral(&self, asset_id: AssetId) -> anyhow::Result<CallResponse<u64>> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
 
         Ok(self
@@ -456,7 +456,7 @@ impl MarketContract {
         contract_ids: &[&dyn ContractDependency],
         base_asset_id: AssetId,
         amount: u64,
-        asset_id: Bits256,
+        asset_id: AssetId,
         min_amount: u64,
         recipient: Address,
     ) -> anyhow::Result<CallResponse<()>> {
@@ -481,7 +481,7 @@ impl MarketContract {
     pub async fn collateral_value_to_sell(
         &self,
         contract_ids: &[&dyn ContractDependency],
-        asset_id: Bits256,
+        asset_id: AssetId,
         collateral_amount: u64,
     ) -> anyhow::Result<CallResponse<u64>> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
@@ -546,7 +546,7 @@ impl MarketContract {
 
     pub async fn get_collateral_reserves(
         &self,
-        asset_id: Bits256,
+        asset_id: AssetId,
     ) -> anyhow::Result<CallResponse<I256>> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
 
@@ -657,13 +657,13 @@ impl MarketContract {
         Ok(convert_u256_to_u128(res))
     }
 
-    pub async fn balance_of(&self, bits256: Bits256) -> anyhow::Result<CallResponse<u64>> {
+    pub async fn balance_of(&self, asset_id: AssetId) -> anyhow::Result<CallResponse<u64>> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
 
         Ok(self
             .instance
             .methods()
-            .balance_of(bits256)
+            .balance_of(asset_id)
             .with_tx_policies(tx_policies)
             .call()
             .await?)
@@ -810,21 +810,21 @@ impl MarketContract {
         let scale18 = 10u64.pow(18) as f64;
 
         let market_basic = self.get_market_basics().await?.value;
-        let usdc_balance = self.balance_of(usdc.bits256).await?.value as f64 / 10u64.pow(6) as f64;
+        let usdc_balance = self.balance_of(usdc.asset_id).await?.value as f64 / 10u64.pow(6) as f64;
         let collateral_balance = format_units(
-            self.balance_of(collateral.bits256).await?.value,
+            self.balance_of(collateral.asset_id).await?.value,
             collateral_decimals,
         );
         let utilization = self.get_utilization().await? as f64 / scale18;
         let s_rate = convert_u256_to_u128(market_basic.base_supply_index) as f64 / scale15;
         let b_rate = convert_u256_to_u128(market_basic.base_borrow_index) as f64 / scale15;
-        let total_collateral = self.totals_collateral(collateral.bits256).await?.value;
+        let total_collateral = self.totals_collateral(collateral.asset_id).await?.value;
         let last_accrual_time = market_basic.last_accrual_time;
         let usdc_reserves = convert_i256_to_i128(self.get_reserves().await?.value);
 
         let usdc_reserves = format!("{} USDC", usdc_reserves as f64 / 10u64.pow(6) as f64);
         let collateral_reserves = convert_i256_to_i128(
-            self.get_collateral_reserves(collateral.bits256)
+            self.get_collateral_reserves(collateral.asset_id)
                 .await?
                 .value,
         );
@@ -857,7 +857,7 @@ impl MarketContract {
         let collateral_balance = alice.get_asset_balance(&collateral_asset_id).await? as f64
             / 10u64.pow(collateral_decimals as u32) as f64;
         let collateral_amount = self
-            .get_user_collateral(alice_address, collateral.bits256)
+            .get_user_collateral(alice_address, collateral.asset_id)
             .await?
             .value;
         println!("\nAlice 🦹");
@@ -878,7 +878,7 @@ impl MarketContract {
         let collateral_balance = bob.get_asset_balance(&collateral_asset_id).await? as f64
             / 10u64.pow(collateral_decimals as u32) as f64;
         let collateral_amount = self
-            .get_user_collateral(bob_address, collateral.bits256)
+            .get_user_collateral(bob_address, collateral.asset_id)
             .await?
             .value;
         println!("\nBob 🧛");
@@ -900,7 +900,7 @@ impl MarketContract {
         let collateral_balance = chad.get_asset_balance(&collateral_asset_id).await? as f64
             / 10u64.pow(collateral_decimals as u32) as f64;
         let collateral_amount = self
-            .get_user_collateral(chad_address, collateral.bits256)
+            .get_user_collateral(chad_address, collateral.asset_id)
             .await?
             .value;
         println!("\nChad 🤵");

@@ -96,7 +96,7 @@ async fn rewards_test() {
         .unwrap()
         .withdraw_collateral(
             &[&oracle.instance],
-            eth.bits256,
+            eth.asset_id,
             bob_supply_amount,
             &price_data_update,
         )

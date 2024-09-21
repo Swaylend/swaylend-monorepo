@@ -88,7 +88,7 @@ async fn pause_test() {
 
     // Сheck supply balance equal to 40 UNI
     let res = market
-        .get_user_collateral(alice_address, uni.bits256)
+        .get_user_collateral(alice_address, uni.asset_id)
         .await
         .unwrap()
         .value;
@@ -178,7 +178,7 @@ async fn pause_test() {
     assert!(borrow == 0);
 
     let amount = market
-        .get_user_collateral(alice_address, uni.bits256)
+        .get_user_collateral(alice_address, uni.asset_id)
         .await
         .unwrap()
         .value;
@@ -196,7 +196,7 @@ async fn pause_test() {
         .with_account(&bob)
         .await
         .unwrap()
-        .get_collateral_reserves(uni.bits256)
+        .get_collateral_reserves(uni.asset_id)
         .await
         .unwrap()
         .value;
@@ -205,7 +205,7 @@ async fn pause_test() {
     let amount = market
         .collateral_value_to_sell(
             &[&oracle.instance],
-            uni.bits256,
+            uni.asset_id,
             reserves.value.try_into().unwrap(),
         )
         .await
@@ -228,7 +228,7 @@ async fn pause_test() {
             &[&oracle.instance],
             usdc.asset_id,
             amount as u64,
-            uni.bits256,
+            uni.asset_id,
             1,
             bob_address,
         )
@@ -375,7 +375,7 @@ async fn pause_test() {
         .with_account(&bob)
         .await
         .unwrap()
-        .get_collateral_reserves(uni.bits256)
+        .get_collateral_reserves(uni.asset_id)
         .await
         .unwrap()
         .value;
@@ -384,7 +384,7 @@ async fn pause_test() {
     let amount = market
         .collateral_value_to_sell(
             &[&oracle.instance],
-            uni.bits256,
+            uni.asset_id,
             reserves.value.try_into().unwrap(),
         )
         .await
@@ -400,7 +400,7 @@ async fn pause_test() {
             &[&oracle.instance],
             usdc.asset_id,
             amount,
-            uni.bits256,
+            uni.asset_id,
             1,
             bob_address,
         )
