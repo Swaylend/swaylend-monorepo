@@ -40,7 +40,7 @@ pub struct TokenConfig {
     pub borrow_collateral_factor: Option<u128>,
     pub liquidate_collateral_factor: Option<u128>,
     pub liquidation_penalty: Option<u128>,
-    pub supply_cap: Option<u128>,
+    pub supply_cap: Option<u64>,
     pub price_feed_id: String,
     pub price_feed_decimals: u32,
 }

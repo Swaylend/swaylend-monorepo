@@ -174,7 +174,8 @@ async fn negative_reserves_test() {
     let amount = market
         .get_user_collateral(bob_address, eth.bits256)
         .await
-        .unwrap();
+        .unwrap()
+        .value;
     assert!(amount == 0);
 
     market

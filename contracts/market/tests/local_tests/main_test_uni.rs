@@ -114,8 +114,9 @@ async fn main_test() {
     let res = market
         .get_user_collateral(alice_address, uni.bits256)
         .await
-        .unwrap();
-    assert!(res == amount as u128);
+        .unwrap()
+        .value;
+    assert!(res == amount);
 
     market
         .print_debug_state(&wallets, &usdc, &uni)
@@ -182,8 +183,9 @@ async fn main_test() {
     let res = market
         .get_user_collateral(chad_address, uni.bits256)
         .await
-        .unwrap();
-    assert!(res == amount as u128);
+        .unwrap()
+        .value;
+    assert!(res == amount);
 
     market
         .print_debug_state(&wallets, &usdc, &uni)
@@ -365,7 +367,8 @@ async fn main_test() {
     let amount = market
         .get_user_collateral(alice_address, uni.bits256)
         .await
-        .unwrap();
+        .unwrap()
+        .value;
     assert!(amount == 0);
 
     market
@@ -397,16 +400,14 @@ async fn main_test() {
             reserves.value.try_into().unwrap(),
         )
         .await
-        .unwrap();
+        .unwrap()
+        .value;
 
     let log_amount = format!("{} USDC", amount as f64 / scale_6);
     print_case_title(8, "Bob", "buy_collateral", log_amount.as_str());
 
     // Transfer of amount to the wallet
-    usdc_contract
-        .mint(bob_address, amount.try_into().unwrap())
-        .await
-        .unwrap();
+    usdc_contract.mint(bob_address, amount).await.unwrap();
 
     // Сheck balance
     let balance = bob.get_asset_balance(&usdc.asset_id).await.unwrap();
@@ -586,7 +587,8 @@ async fn main_test() {
     let amount = market
         .get_user_collateral(chad_address, uni.bits256)
         .await
-        .unwrap();
+        .unwrap()
+        .value;
     let log_amount = format!("{} UNI", amount as f64 / scale_9);
     print_case_title(12, "Chad", "withdraw_collateral", log_amount.as_str());
 
@@ -606,7 +608,7 @@ async fn main_test() {
 
     // UNI balance check
     let balance = chad.get_asset_balance(&uni.asset_id).await.unwrap();
-    assert!(balance as u128 == amount);
+    assert!(balance == amount);
 
     market
         .print_debug_state(&wallets, &usdc, &uni)

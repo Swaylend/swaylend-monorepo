@@ -6,7 +6,7 @@ use fuels::{
         calls::{CallHandler, CallParameters},
         responses::CallResponse,
     },
-    types::{transaction::TxPolicies, transaction_builders::VariableOutputPolicy, U256},
+    types::{transaction::TxPolicies, transaction_builders::VariableOutputPolicy},
 };
 use market::PriceDataUpdate;
 use market_sdk::parse_units;
@@ -196,7 +196,7 @@ async fn multicall_absorb_buy_collateral_test() {
     let buy_collateral_call = market
         .instance
         .methods()
-        .buy_collateral(eth.bits256, U256::from(amount), chad_address)
+        .buy_collateral(eth.bits256, amount, chad_address)
         .with_contracts(&[&oracle.instance])
         .call_params(
             CallParameters::default()
