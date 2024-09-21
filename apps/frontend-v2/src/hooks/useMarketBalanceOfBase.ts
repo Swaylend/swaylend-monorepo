@@ -1,11 +1,11 @@
-import { formatUnits } from '@/utils';
+import { type DeployedMarket, formatUnits } from '@/utils';
 import BigNumber from 'bignumber.js';
 import { useMarketBasics } from './useMarketBasics';
 import { useMarketConfiguration } from './useMarketConfiguration';
 
-export const useMarketBalanceOfBase = () => {
-  const { data: marketBasics } = useMarketBasics();
-  const { data: marketConfiguration } = useMarketConfiguration();
+export const useMarketBalanceOfBase = (marketParam?: DeployedMarket) => {
+  const { data: marketBasics } = useMarketBasics(marketParam);
+  const { data: marketConfiguration } = useMarketConfiguration(marketParam);
 
   if (
     !marketBasics ||

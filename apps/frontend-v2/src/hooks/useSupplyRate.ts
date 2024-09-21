@@ -1,15 +1,16 @@
 import { Market } from '@/contract-types';
 import { useMarketStore } from '@/stores';
-import { DEPLOYED_MARKETS } from '@/utils';
+import { DEPLOYED_MARKETS, type DeployedMarket } from '@/utils';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { useProvider } from './useProvider';
 import { useUtilization } from './useUtilization';
 
-export const useSupplyRate = () => {
+export const useSupplyRate = (marketParam?: DeployedMarket) => {
   const provider = useProvider();
-  const { data: utilization } = useUtilization();
-  const { market } = useMarketStore();
+  const { data: utilization } = useUtilization(marketParam);
+  const { market: storeMarket } = useMarketStore();
+  const market = marketParam ?? storeMarket;
 
   return useQuery({
     queryKey: ['supplyRate', utilization?.toString(), market],
