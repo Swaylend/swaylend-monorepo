@@ -9,9 +9,9 @@ async fn rewards_test() {
     let TestData {
         wallets,
         bob,
-        bob_address,
+        bob_account,
         alice,
-        alice_address,
+        alice_account,
         market,
         assets,
         usdc,
@@ -34,7 +34,7 @@ async fn rewards_test() {
     // Step 0: Alice supplies 5000 USDC
     let alice_supply_amount = parse_units(5000 * AMOUNT_COEFFICIENT, usdc.decimals);
     usdc_contract
-        .mint(alice_address, alice_supply_amount)
+        .mint(alice_account, alice_supply_amount)
         .await
         .unwrap();
     let res = market
@@ -79,7 +79,7 @@ async fn rewards_test() {
 
     // Step 3: Bob repays 4000 USDC
     let repay_amount = parse_units(4000 * AMOUNT_COEFFICIENT, usdc.decimals);
-    usdc_contract.mint(bob_address, repay_amount).await.unwrap();
+    usdc_contract.mint(bob_account, repay_amount).await.unwrap();
     let res = market
         .with_account(&bob)
         .await
@@ -107,7 +107,7 @@ async fn rewards_test() {
     // Step 5: Alice supplies additional 500 USDC
     let alice_supply_amount = parse_units(500 * AMOUNT_COEFFICIENT, usdc.decimals);
     usdc_contract
-        .mint(alice_address, alice_supply_amount)
+        .mint(alice_account, alice_supply_amount)
         .await
         .unwrap();
     let res = market
@@ -119,12 +119,12 @@ async fn rewards_test() {
     assert!(res.is_ok());
     market.debug_increment_timestamp().await.unwrap();
 
-    let alice_user_basic = market.get_user_basic(alice_address).await.unwrap().value;
+    let alice_user_basic = market.get_user_basic(alice_account).await.unwrap().value;
     println!("Alice user basic: {:?}", alice_user_basic);
     let alice_supply_rewards = alice_user_basic.base_tracking_accrued;
     assert!(alice_supply_rewards > U256::zero());
 
-    let bob_user_basic = market.get_user_basic(bob_address).await.unwrap().value;
+    let bob_user_basic = market.get_user_basic(bob_account).await.unwrap().value;
     println!("Bob user basic: {:?}", bob_user_basic);
     let bob_borrow_rewards = bob_user_basic.base_tracking_accrued;
     assert!(bob_borrow_rewards > U256::zero());

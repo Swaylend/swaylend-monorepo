@@ -19,7 +19,7 @@ async fn utilization_above_kinks() {
     let TestData {
         wallets,
         alice,
-        alice_address,
+        alice_account,
         bob,
         market,
         usdc,
@@ -51,7 +51,7 @@ async fn utilization_above_kinks() {
     print_case_title(0, "Alice", "supply_base", alice_supply_log_amount.as_str());
     println!("💸 Alice + {alice_supply_log_amount}");
     usdc_contract
-        .mint(alice_address, alice_mint_amount)
+        .mint(alice_account, alice_mint_amount)
         .await
         .unwrap();
     let balance = alice.get_asset_balance(&usdc.asset_id).await.unwrap();

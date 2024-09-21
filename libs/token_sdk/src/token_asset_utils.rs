@@ -1,14 +1,12 @@
-use token::*;
-
+use crate::get_symbol_hash;
 use fuels::accounts::wallet::WalletUnlocked;
 use fuels::prelude::TxPolicies;
 use fuels::programs::responses::CallResponse;
 use fuels::types::transaction_builders::VariableOutputPolicy;
-use fuels::types::{Address, AssetId, ContractId, Identity};
+use fuels::types::{AssetId, ContractId, Identity};
 use serde::Deserialize;
 use std::path::PathBuf;
-
-use crate::get_symbol_hash;
+use token::*;
 
 #[derive(Deserialize)]
 pub struct TokenConfig {
@@ -96,13 +94,13 @@ impl TokenAsset {
 
     pub async fn mint(
         &self,
-        recipient: Address,
+        recipient: Identity,
         amount: u64,
     ) -> Result<CallResponse<()>, fuels::types::errors::Error> {
         let symbol_hash = get_symbol_hash(&self.symbol);
         self.instance
             .methods()
-            .mint(Identity::Address(recipient), Some(symbol_hash), amount)
+            .mint(recipient, Some(symbol_hash), amount)
             .with_variable_output_policy(VariableOutputPolicy::Exactly(1))
             .with_tx_policies(TxPolicies::default().with_tip(1))
             .call()

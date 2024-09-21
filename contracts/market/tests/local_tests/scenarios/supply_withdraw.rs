@@ -10,7 +10,7 @@ async fn supply_withdraw_test() {
     let TestData {
         wallets,
         alice,
-        alice_address,
+        alice_account,
         usdc_contract,
         usdc,
         market,
@@ -38,7 +38,7 @@ async fn supply_withdraw_test() {
     let mint_amount = parse_units(1000, usdc.decimals);
     // transfer of 1000 USDC to the Alice's wallet
     usdc_contract
-        .mint(alice_address, mint_amount)
+        .mint(alice_account, mint_amount)
         .await
         .unwrap();
 

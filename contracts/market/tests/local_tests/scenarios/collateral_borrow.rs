@@ -12,9 +12,9 @@ async fn collateral_borrow_test() {
     let TestData {
         wallets,
         bob,
-        bob_address,
+        bob_account,
         alice,
-        alice_address,
+        alice_account,
         market,
         assets,
         usdc,
@@ -46,7 +46,7 @@ async fn collateral_borrow_test() {
     print_case_title(0, "Alice", "supply_base", alice_supply_log_amount.as_str());
     println!("💸 Alice + {alice_supply_log_amount}");
     usdc_contract
-        .mint(alice_address, alice_mint_amount)
+        .mint(alice_account, alice_mint_amount)
         .await
         .unwrap();
     let balance = alice.get_asset_balance(&usdc.asset_id).await.unwrap();
@@ -72,7 +72,7 @@ async fn collateral_borrow_test() {
     print_case_title(1, "Bob", "supply_collateral", bob_mint_log_amount.as_str());
     println!("💸 Bob + {bob_mint_log_amount}");
     uni_contract
-        .mint(bob_address, bob_mint_amount)
+        .mint(bob_account, bob_mint_amount)
         .await
         .unwrap();
     let bob_balance = bob.get_asset_balance(&uni.asset_id).await.unwrap();
@@ -86,7 +86,7 @@ async fn collateral_borrow_test() {
     assert!(bob_supply_res.is_ok());
 
     let bob_user_collateral = market
-        .get_user_collateral(bob_address, uni.asset_id)
+        .get_user_collateral(bob_account, uni.asset_id)
         .await
         .unwrap()
         .value;
@@ -181,7 +181,7 @@ async fn collateral_borrow_test() {
     // 🤙 Call: withdraw_collateral
     // 💰 Amount: 40.00 UNI
     let bob_withdraw_amount = market
-        .get_user_collateral(bob_address, uni.asset_id)
+        .get_user_collateral(bob_account, uni.asset_id)
         .await
         .unwrap()
         .value;
@@ -203,7 +203,7 @@ async fn collateral_borrow_test() {
     assert!(withdraw_collateral_fail_res.is_err());
 
     usdc_contract
-        .mint(bob_address, alice_mint_amount)
+        .mint(bob_account, alice_mint_amount)
         .await
         .unwrap();
 
@@ -231,9 +231,9 @@ async fn collateral_borrow_timeskip_test() {
     let TestData {
         wallets,
         bob,
-        bob_address,
+        bob_account,
         alice,
-        alice_address,
+        alice_account,
         market,
         assets,
         usdc,
@@ -265,7 +265,7 @@ async fn collateral_borrow_timeskip_test() {
     print_case_title(0, "Alice", "supply_base", alice_supply_log_amount.as_str());
     println!("💸 Alice + {alice_supply_log_amount}");
     usdc_contract
-        .mint(alice_address, alice_mint_amount)
+        .mint(alice_account, alice_mint_amount)
         .await
         .unwrap();
     let balance = alice.get_asset_balance(&usdc.asset_id).await.unwrap();
@@ -291,7 +291,7 @@ async fn collateral_borrow_timeskip_test() {
     print_case_title(1, "Bob", "supply_collateral", bob_mint_log_amount.as_str());
     println!("💸 Bob + {bob_mint_log_amount}");
     uni_contract
-        .mint(bob_address, bob_mint_amount)
+        .mint(bob_account, bob_mint_amount)
         .await
         .unwrap();
     let bob_balance = bob.get_asset_balance(&uni.asset_id).await.unwrap();
@@ -305,7 +305,7 @@ async fn collateral_borrow_timeskip_test() {
     assert!(bob_supply_res.is_ok());
 
     let bob_user_collateral = market
-        .get_user_collateral(bob_address, uni.asset_id)
+        .get_user_collateral(bob_account, uni.asset_id)
         .await
         .unwrap()
         .value;
@@ -351,7 +351,7 @@ async fn collateral_borrow_timeskip_test() {
     // 💰 Amount: 151.00 USDC
     usdc_contract
         .mint(
-            bob_address,
+            bob_account,
             parse_units(1 * AMOUNT_COEFFICIENT, usdc.decimals),
         )
         .await
@@ -379,7 +379,7 @@ async fn collateral_borrow_timeskip_test() {
     // 🤙 Call: withdraw_collateral
     // 💰 Amount: 40.00 UNI
     let bob_withdraw_amount = market
-        .get_user_collateral(bob_address, uni.asset_id)
+        .get_user_collateral(bob_account, uni.asset_id)
         .await
         .unwrap()
         .value;
@@ -388,7 +388,7 @@ async fn collateral_borrow_timeskip_test() {
     print_case_title(3, "Bob", "withdraw_collateral", &log_amount.as_str());
 
     usdc_contract
-        .mint(bob_address, alice_mint_amount)
+        .mint(bob_account, alice_mint_amount)
         .await
         .unwrap();
 

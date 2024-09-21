@@ -15,9 +15,9 @@ async fn price_changes() {
     let TestData {
         wallets,
         alice,
-        alice_address,
+        alice_account,
         bob,
-        bob_address,
+        bob_account,
         market,
         assets,
         usdc,
@@ -48,7 +48,7 @@ async fn price_changes() {
     print_case_title(0, "Alice", "supply_base", alice_supply_log_amount.as_str());
     println!("💸 Alice + {alice_supply_log_amount}");
     usdc_contract
-        .mint(alice_address, alice_mint_amount)
+        .mint(alice_account, alice_mint_amount)
         .await
         .unwrap();
     let balance = alice.get_asset_balance(&usdc.asset_id).await.unwrap();
@@ -78,7 +78,7 @@ async fn price_changes() {
     assert!(bob_supply_res.is_ok());
 
     let bob_user_collateral = market
-        .get_user_collateral(bob_address, eth.asset_id)
+        .get_user_collateral(bob_account, eth.asset_id)
         .await
         .unwrap()
         .value;
@@ -96,7 +96,7 @@ async fn price_changes() {
     // 🤙 Call: withdraw_base
     // 💰 Amount: <MAX HE CAN BORROW>
     let max_borrow_amount_before = market
-        .available_to_borrow(&[&oracle.instance], bob_address)
+        .available_to_borrow(&[&oracle.instance], bob_account)
         .await
         .unwrap();
     let log_amount_before = format!("{} USDC", max_borrow_amount_before as f64 / SCALE_6);
@@ -165,7 +165,7 @@ async fn price_changes() {
     // 🤙 Call: withdraw_base
     // 💰 Amount: <MAX HE CAN BORROW AFTER PRICE INCREASE>
     let max_borrow_amount_after = market
-        .available_to_borrow(&[&oracle.instance], bob_address)
+        .available_to_borrow(&[&oracle.instance], bob_account)
         .await
         .unwrap();
     let log_amount_after = format!("{} USDC", max_borrow_amount_after as f64 / SCALE_6);

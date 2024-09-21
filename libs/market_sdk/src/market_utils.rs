@@ -8,8 +8,8 @@ use fuels::{
     },
     types::{
         bech32::Bech32ContractId, transaction::TxPolicies,
-        transaction_builders::VariableOutputPolicy, Address, AssetId, Bits256, Bytes, Bytes32,
-        ContractId,
+        transaction_builders::VariableOutputPolicy, AssetId, Bits256, Bytes, Bytes32, ContractId,
+        Identity,
     },
 };
 use market::*;
@@ -44,8 +44,8 @@ struct MarketConfig {
 }
 
 pub fn get_market_config(
-    governor: Address,
-    pause_guardian: Address,
+    governor: Identity,
+    pause_guardian: Identity,
     base_token: AssetId,
     base_token_decimals: u32,
     base_token_price_feed_id: Bits256,
@@ -293,7 +293,7 @@ impl MarketContract {
 
     pub async fn get_user_collateral(
         &self,
-        address: Address,
+        account: Identity,
         asset_id: AssetId,
     ) -> anyhow::Result<CallResponse<u64>> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
@@ -301,7 +301,7 @@ impl MarketContract {
         Ok(self
             .instance
             .methods()
-            .get_user_collateral(address, asset_id)
+            .get_user_collateral(account, asset_id)
             .with_tx_policies(tx_policies)
             .call()
             .await?)
@@ -309,14 +309,14 @@ impl MarketContract {
 
     pub async fn get_all_user_collateral(
         &self,
-        address: Address,
+        account: Identity,
     ) -> anyhow::Result<CallResponse<Vec<(AssetId, u64)>>> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
 
         Ok(self
             .instance
             .methods()
-            .get_all_user_collateral(address)
+            .get_all_user_collateral(account)
             .with_tx_policies(tx_policies)
             .call()
             .await?)
@@ -387,13 +387,13 @@ impl MarketContract {
             .await?)
     }
 
-    pub async fn get_user_supply_borrow(&self, address: Address) -> anyhow::Result<(u128, u128)> {
+    pub async fn get_user_supply_borrow(&self, account: Identity) -> anyhow::Result<(u128, u128)> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
 
         let (supply, borrow) = self
             .instance
             .methods()
-            .get_user_supply_borrow(address)
+            .get_user_supply_borrow(account)
             .with_tx_policies(tx_policies)
             .call()
             .await?
@@ -405,14 +405,14 @@ impl MarketContract {
     pub async fn available_to_borrow(
         &self,
         contract_ids: &[&dyn ContractDependency],
-        address: Address,
+        account: Identity,
     ) -> anyhow::Result<u128> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
 
         let res = self
             .instance
             .methods()
-            .available_to_borrow(address)
+            .available_to_borrow(account)
             .with_tx_policies(tx_policies)
             .with_contracts(contract_ids)
             .call()
@@ -426,7 +426,7 @@ impl MarketContract {
     pub async fn absorb(
         &self,
         contract_ids: &[&dyn ContractDependency],
-        addresses: Vec<Address>,
+        accounts: Vec<Identity>,
         price_data_update: &PriceDataUpdate,
     ) -> anyhow::Result<CallResponse<()>> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
@@ -435,7 +435,7 @@ impl MarketContract {
         Ok(self
             .instance
             .methods()
-            .absorb(addresses, price_data_update.clone())
+            .absorb(accounts, price_data_update.clone())
             .with_tx_policies(tx_policies)
             .with_contracts(contract_ids)
             .call_params(call_params)?
@@ -446,14 +446,14 @@ impl MarketContract {
     pub async fn is_liquidatable(
         &self,
         contract_ids: &[&dyn ContractDependency],
-        address: Address,
+        account: Identity,
     ) -> anyhow::Result<CallResponse<bool>> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
 
         Ok(self
             .instance
             .methods()
-            .is_liquidatable(address)
+            .is_liquidatable(account)
             .with_tx_policies(tx_policies)
             .with_contracts(contract_ids)
             .call()
@@ -468,7 +468,7 @@ impl MarketContract {
         amount: u64,
         asset_id: AssetId,
         min_amount: u64,
-        recipient: Address,
+        recipient: Identity,
     ) -> anyhow::Result<CallResponse<()>> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
 
@@ -539,7 +539,7 @@ impl MarketContract {
 
     pub async fn withdraw_reserves(
         &self,
-        to: Address,
+        to: Identity,
         amount: u64,
     ) -> anyhow::Result<CallResponse<()>> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
@@ -625,14 +625,14 @@ impl MarketContract {
 
     pub async fn get_user_basic(
         &self,
-        address: Address,
+        account: Identity,
     ) -> anyhow::Result<CallResponse<UserBasic>> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
 
         Ok(self
             .instance
             .methods()
-            .get_user_basic(address)
+            .get_user_basic(account)
             .with_tx_policies(tx_policies)
             .call()
             .await?)
@@ -640,14 +640,14 @@ impl MarketContract {
 
     pub async fn get_user_balance_with_interest(
         &self,
-        address: Address,
+        account: Identity,
     ) -> anyhow::Result<CallResponse<I256>> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
 
         Ok(self
             .instance
             .methods()
-            .get_user_balance_with_interest(address)
+            .get_user_balance_with_interest(account)
             .with_tx_policies(tx_policies)
             .call()
             .await?)
@@ -808,13 +808,13 @@ impl MarketContract {
         let collateral_symbol = collateral.symbol.clone();
 
         let alice = wallets[1].clone();
-        let alice_address = Address::from(alice.address());
+        let alice_account: Identity = alice.address().into();
 
         let bob = wallets[2].clone();
-        let bob_address = Address::from(bob.address());
+        let bob_account: Identity = bob.address().into();
 
         let chad = wallets[3].clone();
-        let chad_address = Address::from(chad.address());
+        let chad_account = chad.address().into();
 
         let scale15 = 10u64.pow(15) as f64;
         let scale18 = 10u64.pow(18) as f64;
@@ -858,8 +858,8 @@ impl MarketContract {
         );
         println!("  Utilization {utilization} | Last accrual time {last_accrual_time}",);
 
-        let basic = self.get_user_basic(alice_address).await?.value;
-        let (supply, borrow) = self.get_user_supply_borrow(alice_address).await?;
+        let basic = self.get_user_basic(alice_account).await?.value;
+        let (supply, borrow) = self.get_user_supply_borrow(alice_account).await?;
         let supply = format_units_u128(supply, 6);
         let borrow = format_units_u128(borrow, 6);
         let usdc_balance =
@@ -867,7 +867,7 @@ impl MarketContract {
         let collateral_balance = alice.get_asset_balance(&collateral_asset_id).await? as f64
             / 10u64.pow(collateral_decimals as u32) as f64;
         let collateral_amount = self
-            .get_user_collateral(alice_address, collateral.asset_id)
+            .get_user_collateral(alice_account, collateral.asset_id)
             .await?
             .value;
         println!("\nAlice 🦹");
@@ -879,8 +879,8 @@ impl MarketContract {
         );
         println!("  Balance {usdc_balance} USDC | {collateral_balance} {collateral_symbol}");
 
-        let basic = self.get_user_basic(bob_address).await?.value;
-        let (supply, borrow) = self.get_user_supply_borrow(bob_address).await?;
+        let basic = self.get_user_basic(bob_account).await?.value;
+        let (supply, borrow) = self.get_user_supply_borrow(bob_account).await?;
         let supply = format_units_u128(supply, 6);
         let borrow = format_units_u128(borrow, 6);
         let usdc_balance =
@@ -888,7 +888,7 @@ impl MarketContract {
         let collateral_balance = bob.get_asset_balance(&collateral_asset_id).await? as f64
             / 10u64.pow(collateral_decimals as u32) as f64;
         let collateral_amount = self
-            .get_user_collateral(bob_address, collateral.asset_id)
+            .get_user_collateral(bob_account, collateral.asset_id)
             .await?
             .value;
         println!("\nBob 🧛");
@@ -901,8 +901,8 @@ impl MarketContract {
         );
         println!("  Balance {usdc_balance} USDC | {collateral_balance} {collateral_symbol}");
 
-        let basic = self.get_user_basic(chad_address).await?.value;
-        let (supply, borrow) = self.get_user_supply_borrow(chad_address).await?;
+        let basic = self.get_user_basic(chad_account).await?.value;
+        let (supply, borrow) = self.get_user_supply_borrow(chad_account).await?;
         let supply = format_units_u128(supply, 6);
         let borrow = format_units_u128(borrow, 6);
         let usdc_balance =
@@ -910,7 +910,7 @@ impl MarketContract {
         let collateral_balance = chad.get_asset_balance(&collateral_asset_id).await? as f64
             / 10u64.pow(collateral_decimals as u32) as f64;
         let collateral_amount = self
-            .get_user_collateral(chad_address, collateral.asset_id)
+            .get_user_collateral(chad_account, collateral.asset_id)
             .await?
             .value;
         println!("\nChad 🤵");

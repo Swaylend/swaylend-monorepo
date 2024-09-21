@@ -3,7 +3,7 @@ use fuels::accounts::wallet::WalletUnlocked;
 use fuels::test_helpers::{
     launch_custom_provider_and_get_wallets, NodeConfig, Trigger, WalletsConfig,
 };
-use fuels::types::{Address, Bits256, ContractId};
+use fuels::types::{Bits256, ContractId, Identity};
 use market_sdk::{get_market_config, MarketContract};
 use pyth_mock_sdk::PythMockContract;
 use std::collections::HashMap;
@@ -39,13 +39,13 @@ pub async fn init_wallets() -> Vec<WalletUnlocked> {
 
 pub struct TestData {
     pub admin: WalletUnlocked,
-    pub admin_address: Address,
+    pub admin_account: Identity,
     pub alice: WalletUnlocked,
-    pub alice_address: Address,
+    pub alice_account: Identity,
     pub bob: WalletUnlocked,
-    pub bob_address: Address,
+    pub bob_account: Identity,
     pub chad: WalletUnlocked,
-    pub chad_address: Address,
+    pub chad_account: Identity,
     pub oracle: PythMockContract,
     pub market: MarketContract,
     pub usdc: Asset,
@@ -151,13 +151,13 @@ pub async fn setup() -> TestData {
     TestData {
         wallets: wallets.clone(),
         admin: admin.clone(),
-        admin_address: Address::from(admin.address()),
+        admin_account: admin.address().into(),
         alice: alice.clone(),
-        alice_address: Address::from(alice.address()),
+        alice_account: alice.address().into(),
         bob: bob.clone(),
-        bob_address: Address::from(bob.address()),
+        bob_account: bob.address().into(),
         chad: chad.clone(),
-        chad_address: Address::from(chad.address()),
+        chad_account: chad.address().into(),
         oracle,
         market,
         usdc: usdc.clone(),
