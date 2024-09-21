@@ -7,5 +7,7 @@ export const metadata: Metadata = {
 
 export default function Page({ params }: { params: { pair: string } }) {
   // TODO - use params to parse network and base asset from available combinations
-  return <MarketOverview network="fuel" baseAsset="usdc" />;
+  const [network, baseAsset] = params.pair.split('-');
+
+  return <MarketOverview network={network} baseAsset={baseAsset} />;
 }

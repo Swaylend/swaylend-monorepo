@@ -1,33 +1,38 @@
 'use client';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
   type ChartConfig,
   ChartContainer,
   ChartTooltip,
-  ChartTooltipContent,
 } from '@/components/ui/chart';
-import { Progress } from '@/components/ui/progress';
-import { SYMBOL_TO_ICON } from '@/utils';
-import { ArrowLeft, ChevronLeft, ExternalLink } from 'lucide-react';
+import {
+  useBorrowRate,
+  useMarketBalanceOfBase,
+  useMarketConfiguration,
+  useSupplyRate,
+  useUtilization,
+} from '@/hooks';
+import {
+  type DeployedMarket,
+  SYMBOL_TO_ICON,
+  getBorrowApr,
+  getSupplyApr,
+} from '@/utils';
+import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   Area,
   AreaChart,
-  CartesianGrid,
-  Line,
-  LineChart,
   Rectangle,
   ResponsiveContainer,
-  Tooltip,
   XAxis,
-  YAxis,
 } from 'recharts';
 import { IconPair } from '../IconPair';
-import { Title } from '../Title';
 import { KinkChart } from './KinkChart';
 import { MarketCollateralsTable } from './MarketCollateralsTable';
+import { formatCurrency } from '@/utils/format';
 
 type MarketOverviewProps = {
   network: string;
@@ -47,6 +52,14 @@ export default function MarketOverview({
     { month: 'May', desktop: 209, mobile: 130 },
     { month: 'June', desktop: 214, mobile: 140 },
   ];
+
+  const { data: borrowRate } = useBorrowRate(baseAsset as DeployedMarket);
+  const { data: supplyRate } = useSupplyRate(baseAsset as DeployedMarket);
+  const borrowApr = useMemo(() => getBorrowApr(borrowRate), [borrowRate]);
+  const supplyApr = useMemo(() => getSupplyApr(supplyRate), [supplyRate]);
+  const availableLiquidity = useMarketBalanceOfBase(
+    baseAsset as DeployedMarket
+  );
 
   const chartConfig = {
     desktop: {
@@ -124,21 +137,23 @@ export default function MarketOverview({
           <IconPair
             icons={[
               {
-                id: 'usdc',
-                name: 'USDC',
-                path: SYMBOL_TO_ICON.USDC,
-              },
-              {
                 id: 'fuel',
                 name: 'Fuel',
-                path: SYMBOL_TO_ICON.ETH,
+                path: SYMBOL_TO_ICON.FUEL,
+              },
+              {
+                id: baseAsset.toLowerCase(),
+                name: baseAsset,
+                path: SYMBOL_TO_ICON[baseAsset],
               },
             ]}
           />
           <div className="mt-[36px]">
-            <span className="text-xl text-white font-semibold">USDC</span>
             <span className="text-moon text-xl font-semibold ml-2">
-              · Fuel Network
+              Fuel Network
+            </span>
+            <span className="text-xl text-white font-semibold">
+              {` · ${baseAsset}`}
             </span>
           </div>
         </div>
@@ -305,7 +320,7 @@ export default function MarketOverview({
               Available Liquidity
             </div>
             <div className="text-xl font-semibold text-white mt-2">
-              $147.37M
+              {formatCurrency(Number(availableLiquidity.formatted))}
             </div>
           </div>
           <div>
@@ -343,21 +358,25 @@ export default function MarketOverview({
               <div className="text-purple text-lg font-semibold">
                 Net Borrow APR
               </div>
-              <div className="text-xl text-white font-semibold">2.37%</div>
+              <div className="text-xl text-white font-semibold">
+                {borrowApr}
+              </div>
 
               <div className="text-primary text-lg font-semibold mt-8">
                 Net Earn APR
               </div>
-              <div className="text-xl text-white font-semibold">2.37%</div>
+              <div className="text-xl text-white font-semibold">
+                {supplyApr}
+              </div>
             </div>
             <div className="w-3/4">
-              <KinkChart />
+              <KinkChart marketName={baseAsset} />
             </div>
           </div>
         </CardContent>
       </Card>
 
-      <MarketCollateralsTable />
+      <MarketCollateralsTable marketName={baseAsset} />
     </div>
   );
 }

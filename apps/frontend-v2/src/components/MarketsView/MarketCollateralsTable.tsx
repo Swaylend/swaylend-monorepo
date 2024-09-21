@@ -7,49 +7,44 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { useCollateralConfigurations, useUserCollateralAssets } from '@/hooks';
-import { type ACTION_TYPE, useMarketStore } from '@/stores';
+import {
+  useCollateralConfigurations,
+  usePrice,
+  useTotalCollateral,
+} from '@/hooks';
 import {
   ASSET_ID_TO_SYMBOL,
+  type DeployedMarket,
   SYMBOL_TO_ICON,
   SYMBOL_TO_NAME,
   formatUnits,
 } from '@/utils';
-import { useAccount, useBalance } from '@fuels/react';
-import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import BigNumber from 'bignumber.js';
 import React, { useMemo } from 'react';
 
 type TableRowProps = {
-  account: string | undefined;
-  assetId: string;
   symbol: string;
   decimals: number;
-  protocolBalance: BigNumber;
-  protocolBalancePending: boolean;
-  handleAssetClick: (action: ACTION_TYPE, assetId: string) => void;
+  totalSupply: BigNumber | undefined;
+  price: BigNumber;
+  collateralFactor: BigNumber;
+  liquidationFactor: BigNumber;
+  liquidationPenalty: BigNumber;
 };
 
 const MarketCollateralsTableRow = ({
-  account,
-  assetId,
   symbol,
   decimals,
-  protocolBalance,
-  handleAssetClick,
+  totalSupply,
+  price,
+  collateralFactor,
+  liquidationFactor,
+  liquidationPenalty,
 }: TableRowProps) => {
-  const { balance } = useBalance({
-    address: account,
-    assetId: assetId,
-  });
+  const formattedTotalSupply = totalSupply
+    ? formatUnits(totalSupply, decimals).toFixed(2)
+    : '0.00';
 
-  const formattedBalance = formatUnits(
-    BigNumber(balance ? balance.toString() : '0'),
-    decimals
-  ).toFormat(4);
-
-  const canSupply = balance?.gt(0);
-  const canWithdraw = protocolBalance.gt(0);
   return (
     <TableRow>
       <TableCell>
@@ -60,32 +55,30 @@ const MarketCollateralsTableRow = ({
         />
       </TableCell>
       <TableCell className="text-white">
-        {formattedBalance} {symbol}
+        {formattedTotalSupply} {symbol}
       </TableCell>
       <TableCell className="text-white">
-        {formatUnits(protocolBalance, decimals).toFixed(4)} {symbol}
+        {/* {formatUnits(protocolBalance, decimals).toFixed(4)} {symbol} */}
       </TableCell>
-      <TableCell className="text-white">100</TableCell>
-      <TableCell className="text-white">80%</TableCell>
-      <TableCell className="text-white">85%</TableCell>
-      <TableCell className="text-white">5%</TableCell>
+      <TableCell className="text-white">
+        {price.toFixed(2).toString()} $
+      </TableCell>
+      <TableCell className="text-white">
+        {formatUnits(collateralFactor, 16).toString()}%
+      </TableCell>
+      <TableCell className="text-white">
+        {formatUnits(liquidationFactor, 16).toString()}%
+      </TableCell>
+      <TableCell className="text-white">
+        {BigNumber(100).minus(formatUnits(liquidationPenalty, 16)).toString()}%
+      </TableCell>
     </TableRow>
   );
 };
 
-export const MarketCollateralsTable = () => {
-  const { account } = useAccount();
-  const {
-    changeAction,
-    changeTokenAmount,
-    changeMode,
-    changeActionTokenAssetId,
-    changeInputDialogOpen,
-  } = useMarketStore();
-
-  const { data: userCollateralAssets, isLoading: userCollateralAssetsLoading } =
-    useUserCollateralAssets();
-
+export const MarketCollateralsTable = ({
+  marketName,
+}: { marketName: string }) => {
   const { data: collateralConfigurations } = useCollateralConfigurations();
 
   const collaterals = useMemo(() => {
@@ -93,14 +86,11 @@ export const MarketCollateralsTable = () => {
 
     return Object.values(collateralConfigurations);
   }, [collateralConfigurations]);
+  const { data: totalCollateral } = useTotalCollateral(
+    marketName as DeployedMarket
+  );
 
-  const handleAssetClick = (action: ACTION_TYPE, assetId: string) => {
-    changeTokenAmount(new BigNumber(0));
-    changeAction(action);
-    changeMode(0);
-    changeActionTokenAssetId(assetId);
-    changeInputDialogOpen(true);
-  };
+  const { data: priceData } = usePrice(marketName as DeployedMarket);
 
   return (
     <div className="w-full mt-8 border bg-gradient-to-b from-white/10 to-card rounded-lg ">
@@ -143,15 +133,19 @@ export const MarketCollateralsTable = () => {
           {collaterals.map((collateral) => (
             <MarketCollateralsTableRow
               key={collateral.asset_id}
-              account={account ?? undefined}
-              assetId={collateral.asset_id}
               symbol={ASSET_ID_TO_SYMBOL[collateral.asset_id]}
               decimals={collateral.decimals}
-              protocolBalance={
-                userCollateralAssets?.[collateral.asset_id] ?? new BigNumber(0)
-              }
-              protocolBalancePending={userCollateralAssetsLoading}
-              handleAssetClick={handleAssetClick}
+              totalSupply={totalCollateral?.get(collateral.asset_id)}
+              price={priceData?.prices[collateral.asset_id] ?? BigNumber(0)}
+              collateralFactor={BigNumber(
+                collateral.borrow_collateral_factor.toString()
+              )}
+              liquidationFactor={BigNumber(
+                collateral.liquidate_collateral_factor.toString()
+              )}
+              liquidationPenalty={BigNumber(
+                collateral.liquidation_penalty.toString()
+              )}
             />
           ))}
         </TableBody>
