@@ -15,6 +15,7 @@ import {
 import { cn } from '@/lib/utils';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import {
+  ChartLine,
   ChevronDown,
   Coins,
   ExternalLink,

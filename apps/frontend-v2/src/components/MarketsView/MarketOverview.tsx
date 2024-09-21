@@ -19,6 +19,7 @@ import {
   getBorrowApr,
   getSupplyApr,
 } from '@/utils';
+import { formatCurrency } from '@/utils/format';
 import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 import React, { useMemo } from 'react';
@@ -32,7 +33,6 @@ import {
 import { IconPair } from '../IconPair';
 import { KinkChart } from './KinkChart';
 import { MarketCollateralsTable } from './MarketCollateralsTable';
-import { formatCurrency } from '@/utils/format';
 
 type MarketOverviewProps = {
   network: string;

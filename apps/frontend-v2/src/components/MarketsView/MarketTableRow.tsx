@@ -24,6 +24,7 @@ import type { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import Image from 'next/image';
 import type React from 'react';
 
+import { formatCurrency } from '@/utils/format';
 import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 import ETHEREUM from '/public/tokens/ethereum.svg?url';
@@ -33,7 +34,6 @@ import USDT from '/public/tokens/usdt.svg?url';
 import { CircularProgressBar } from '../CircularProgressBar';
 import { type Point, PointIcons } from '../PointIcons';
 import { Skeleton } from '../ui/skeleton';
-import { formatCurrency } from '@/utils/format';
 
 const SYMBOL_TO_LOGO: Record<string, StaticImport> = {
   USDC: USDC,
