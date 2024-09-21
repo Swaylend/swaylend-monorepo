@@ -19,7 +19,6 @@ use std::asset::{mint_to, transfer};
 use std::auth::{AuthError, msg_sender};
 use std::call_frames::msg_asset_id;
 use std::contract_id::ContractId;
-use std::constants::ZERO_B256;
 use std::context::{msg_amount, this_balance};
 use std::hash::{Hash, sha256};
 use std::logging::log;
@@ -59,7 +58,7 @@ storage {
     // debug timestamp (for testing purposes)
     debug_timestamp: u64 = 0,
     // pyth contract id
-    pyth_contract_id: b256 = ZERO_B256,
+    pyth_contract_id: b256 = b256::zero(),
 }
 
 // Market contract implementation
@@ -979,7 +978,7 @@ impl Market for Contract {
 #[storage(read)]
 fn get_price_internal(price_feed_id: PriceFeedId) -> Price {
     let contract_id = storage.pyth_contract_id.read();
-    require(contract_id != ZERO_B256, Error::OracleContractIdNotSet);
+    require(contract_id != b256::zero(), Error::OracleContractIdNotSet);
 
     let oracle = abi(PythCore, contract_id);
     let price = oracle.price(price_feed_id);
@@ -1004,7 +1003,7 @@ fn get_price_internal(price_feed_id: PriceFeedId) -> Price {
 #[storage(read)]
 fn update_fee_internal(update_data: Vec<Bytes>) -> u64 {
     let contract_id = storage.pyth_contract_id.read();
-    require(contract_id != ZERO_B256, Error::OracleContractIdNotSet);
+    require(contract_id != b256::zero(), Error::OracleContractIdNotSet);
 
     let oracle = abi(PythCore, contract_id);
     let fee = oracle.update_fee(update_data);
@@ -1014,7 +1013,7 @@ fn update_fee_internal(update_data: Vec<Bytes>) -> u64 {
 #[payable, storage(read)]
 fn update_price_feeds_if_necessary_internal(price_data_update: PriceDataUpdate) {
     let contract_id = storage.pyth_contract_id.read();
-    require(contract_id != ZERO_B256, Error::OracleContractIdNotSet);
+    require(contract_id != b256::zero(), Error::OracleContractIdNotSet);
 
     // check if the payment is sufficient
     require(
