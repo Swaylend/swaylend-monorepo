@@ -18,22 +18,19 @@ impl PythCore for Contract {
     #[storage(read)]
     fn ema_price(price_feed_id: PriceFeedId) -> Price {
         let price = storage.latest_price_feed.get(price_feed_id).try_read();
-        require(price.is_some(), PythError::PriceFeedNotFound);
-        price.unwrap()
+        price.expect(PythError::PriceFeedNotFound)
     }
 
     #[storage(read)]
     fn ema_price_no_older_than(time_period: u64, price_feed_id: PriceFeedId) -> Price {
         let price = storage.latest_price_feed.get(price_feed_id).try_read();
-        require(price.is_some(), PythError::PriceFeedNotFound);
-        price.unwrap()
+        price.expect(PythError::PriceFeedNotFound)
     }
 
     #[storage(read)]
     fn ema_price_unsafe(price_feed_id: PriceFeedId) -> Price {
         let price = storage.latest_price_feed.get(price_feed_id).try_read();
-        require(price.is_some(), PythError::PriceFeedNotFound);
-        price.unwrap()
+        price.expect(PythError::PriceFeedNotFound)
     }
 
     #[storage(read), payable]
@@ -50,22 +47,19 @@ impl PythCore for Contract {
     #[storage(read)]
     fn price(price_feed_id: PriceFeedId) -> Price {
         let price = storage.latest_price_feed.get(price_feed_id).try_read();
-        require(price.is_some(), PythError::PriceFeedNotFound);
-        price.unwrap()
+        price.expect(PythError::PriceFeedNotFound)
     }
 
     #[storage(read)]
     fn price_no_older_than(time_period: u64, price_feed_id: PriceFeedId) -> Price {
         let price = storage.latest_price_feed.get(price_feed_id).try_read();
-        require(price.is_some(), PythError::PriceFeedNotFound);
-        price.unwrap()
+        price.expect(PythError::PriceFeedNotFound)
     }
 
     #[storage(read)]
     fn price_unsafe(price_feed_id: PriceFeedId) -> Price {
         let price = storage.latest_price_feed.get(price_feed_id).try_read();
-        require(price.is_some(), PythError::PriceFeedNotFound);
-        price.unwrap() 
+        price.expect(PythError::PriceFeedNotFound)
     }
 
     #[storage(read)]
