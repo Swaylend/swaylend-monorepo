@@ -61,8 +61,6 @@ pub struct TestData {
 }
 
 pub async fn setup() -> TestData {
-    const BASE_ASSET_ID: &str =
-        "0x0000000000000000000000000000000000000000000000000000000000000000";
     //--------------- WALLETS ---------------
     let wallets = init_wallets().await;
     let admin = &wallets[0];
@@ -93,8 +91,6 @@ pub async fn setup() -> TestData {
     let eth = assets.get("ETH").unwrap().clone();
 
     //--------------- MARKET ---------------
-    let fuel_eth_base_asset_id = Bits256::from_hex_str(BASE_ASSET_ID).unwrap();
-
     let market_config = get_market_config(
         admin.address().into(),
         admin.address().into(),
@@ -106,7 +102,7 @@ pub async fn setup() -> TestData {
 
     // debug step
     let debug_step: u64 = 10_000;
-    let market = MarketContract::deploy(&admin, debug_step, fuel_eth_base_asset_id, false)
+    let market = MarketContract::deploy(&admin, debug_step, false)
         .await
         .unwrap();
 

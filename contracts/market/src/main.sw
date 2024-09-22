@@ -33,7 +33,6 @@ use std::convert::TryFrom;
 // This is set during deployment of the contract
 configurable {
     DEBUG_STEP: u64 = 0,
-    FUEL_ETH_BASE_ASSET_ID: b256 = 0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07,
     ORACLE_MAX_STALENESS: u64 = 30, // 30 seconds
     ORACLE_MAX_AHEADNESS: u64 = 60, // 60 seconds
     ORACLE_MAX_CONF_WIDTH: u256 = 100, // 100 / 10000 = 1 % 
@@ -1019,14 +1018,14 @@ fn update_price_feeds_if_necessary_internal(price_data_update: PriceDataUpdate) 
     // check if the payment is sufficient
     require(
         msg_amount() >= price_data_update.update_fee && msg_asset_id()
-            .bits() == FUEL_ETH_BASE_ASSET_ID,
+            .bits() == AssetId::base().bits(),
         Error::InvalidPayment,
     );
 
     let oracle = abi(PythCore, contract_id);
     oracle
         .update_price_feeds_if_necessary {
-            asset_id: FUEL_ETH_BASE_ASSET_ID,
+            asset_id: AssetId::base().bits(),
             coins: price_data_update.update_fee,
         }(
             price_data_update

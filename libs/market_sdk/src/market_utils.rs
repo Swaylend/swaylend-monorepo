@@ -94,12 +94,10 @@ impl MarketContract {
     pub async fn deploy(
         wallet: &WalletUnlocked,
         debug_step: u64, // only for local test
-        fuel_eth_base_asset_id: Bits256,
         random_address: bool,
     ) -> anyhow::Result<Self> {
         let configurables = MarketConfigurables::default()
-            .with_DEBUG_STEP(debug_step)?
-            .with_FUEL_ETH_BASE_ASSET_ID(fuel_eth_base_asset_id)?;
+            .with_DEBUG_STEP(debug_step)?;
 
         let root = PathBuf::from(env!("CARGO_WORKSPACE_DIR"));
 
