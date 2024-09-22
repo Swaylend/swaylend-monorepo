@@ -23,13 +23,43 @@ If you don't want to see all the standard output and only want to see the test r
 
 ## Deploying contracts (with proxy)
 
+The following command will do the following:
+
+- deploy proxy contract (owner of the proxy will be the deployer)
+- deploy loader contract (which loads multiple blobs since our contract is bigger than 100 KB)
+
+```bash
+forc deploy 
+forc deploy --testnet
+```
+
+Address of the proxy will be added to the ``Forc.toml``.
+
+**Note:** Make sure the address is not wrriten in ``Forc.toml`` when deploying the contracts.
+
+## Activating contracts
+
+Next we need to call the function ``activate_contract`` on the market contract:
+
+``bash
+SIGNING_KEY=<SIGNING_KEY> cargo run --bin activate_market -- --proxy-contract-id <PROXY_CONTRACT_ADDRESS> --target-contract-id <TARGET_CONTRACT_ADDRESS>
+``
+
+## Upgrading contracts (with proxy)
+
+This deploys the new market contract (loader/implementation contract) and updates the proxy contract to point to the new market contract:
+
 TODO
 
-## Upgrading contracts
+## Change proxy owner
 
 TODO
 
 ## Pausing contracts
+
+TODO
+
+## Unpausing contracts
 
 TODO
 

@@ -3,8 +3,10 @@ entry = "main.sw"
 license = "Apache-2.0"
 name = "market"
 
+# address will be the addres of the proxy contract
 [proxy]
 enabled = true
+address = "0x3885111adac50b951bc27813702be8ef63f9947dc58a7322c057bf908798cc68"
 
 [dependencies]
 market_abi = { path = "../../abis/market_abi" }

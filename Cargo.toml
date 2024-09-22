@@ -40,3 +40,4 @@ rand = "0.8.5"
 chrono = "0.4.38"
 anyhow = "1.0.86"
 tai64 = "4.0.0"
+clap = { version = "4.5.17", features = ["env", "derive"] }

@@ -9,8 +9,16 @@ license = "Apache-2.0"
 path = "core/lib.rs"
 
 [[bin]]
-name = "deploy_market"
-path = "scripts/deploy_market.rs"
+name = "activate_market"
+path = "scripts/activate_market.rs"
+
+[[bin]]
+name = "change_proxy_owner"
+path = "scripts/change_proxy_owner.rs"
+
+[[bin]]
+name = "upgrade_market"
+path = "scripts/upgrade_market.rs"
 
 [[test]]
 harness = true
@@ -19,18 +27,18 @@ path = "tests/harness.rs"
 
 [dependencies]
 fuels = { workspace = true }
+clap = { workspace = true }
+tokio = { workspace = true }
+anyhow = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
 
 [dev-dependencies]
 market_sdk = { workspace = true }
 token_sdk = { workspace = true }
 pyth_mock_sdk = { workspace = true }
 pyth_sdk = { workspace = true }
-fuels = { workspace = true }
-tokio = { workspace = true }
 dotenv = { workspace = true }
-serde = { workspace = true }
-serde_json = { workspace = true }
 rand = { workspace = true }
 chrono = { workspace = true }
-anyhow = { workspace = true }
 tai64 = { workspace = true }
