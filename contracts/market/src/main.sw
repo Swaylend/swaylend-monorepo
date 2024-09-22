@@ -129,7 +129,7 @@ impl Market for Contract {
     fn add_collateral_asset(configuration: CollateralConfiguration) {
         // Only governor can add new collateral asset
         require(
-            msg_sender_address() == storage
+            msg_sender().unwrap().as_address().unwrap() == storage
                 .market_configuration
                 .read()
                 .governor,
@@ -165,7 +165,7 @@ impl Market for Contract {
     fn pause_collateral_asset(asset_id: b256) {
         // Only governor can pause collateral asset
         require(
-            msg_sender_address() == storage
+            msg_sender().unwrap().as_address().unwrap() == storage
                 .market_configuration
                 .read()
                 .governor,
@@ -190,7 +190,7 @@ impl Market for Contract {
     fn resume_collateral_asset(asset_id: b256) {
         // only governor can resume collateral asset
         require(
-            msg_sender_address() == storage
+            msg_sender().unwrap().as_address().unwrap() == storage
                 .market_configuration
                 .read()
                 .governor,
@@ -216,7 +216,7 @@ impl Market for Contract {
     fn update_collateral_asset(asset_id: b256, configuration: CollateralConfiguration) {
         // Only governor can update collateral asset
         require(
-            msg_sender_address() == storage
+            msg_sender().unwrap().as_address().unwrap() == storage
                 .market_configuration
                 .read()
                 .governor,
@@ -285,7 +285,7 @@ impl Market for Contract {
         );
 
         // Get the caller's address and calculate the new user collateral
-        let caller = msg_sender_address();
+        let caller = msg_sender().unwrap().as_address().unwrap();
         let user_collateral = storage.user_collateral.get((caller, asset_id)).try_read().unwrap_or(0) + amount;
 
         // Update the storage values (total collateral, user collateral)
@@ -314,7 +314,7 @@ impl Market for Contract {
         price_data_update: PriceDataUpdate,
     ) {
         // Get the caller's address and calculate the new user and total collateral
-        let caller = msg_sender_address();
+        let caller = msg_sender().unwrap().as_address().unwrap();
         let user_collateral = storage.user_collateral.get((caller, asset_id)).try_read().unwrap_or(0) - amount;
         let total_collateral = storage.totals_collateral.get(asset_id).try_read().unwrap_or(0) - amount;
 
@@ -399,7 +399,7 @@ impl Market for Contract {
         accrue_internal();
 
         // Get caller's user basic state
-        let caller = msg_sender_address();
+        let caller = msg_sender().unwrap().as_address().unwrap();
         let user_basic = storage.user_basic.get(caller).try_read().unwrap_or(UserBasic::default());
         let user_principal = user_basic.principal;
 
@@ -448,7 +448,7 @@ impl Market for Contract {
         accrue_internal();
 
         // Get caller's user basic state
-        let caller = msg_sender_address();
+        let caller = msg_sender().unwrap().as_address().unwrap();
         let user_basic = storage.user_basic.get(caller).try_read().unwrap_or(UserBasic::default());
         let user_principal = user_basic.principal;
 
@@ -655,7 +655,7 @@ impl Market for Contract {
         // Note: Pre-transfer hook can re-enter buyCollateral with a stale collateral ERC20 balance.
         // Assets should not be listed which allow re-entry from pre-transfer now, as too much collateral could be bought.
         // This is also a problem if quoteCollateral derives its discount from the collateral ERC20 balance.
-        let caller = msg_sender_address();
+        let caller = msg_sender().unwrap().as_address().unwrap();
 
         // Emit buy collateral event
         log(BuyCollateralEvent {
@@ -735,8 +735,8 @@ impl Market for Contract {
     // - `to`: The address to which the reserves will be sent
     // - `amount`: The amount of reserves to be withdrawn
     #[storage(read)]
-    fn withdraw_reserves(to: Address, amount: u64) {
-        let caller = msg_sender_address();
+    fn withdraw_reserves(to: Address, amount: u256) {
+        let caller = msg_sender().unwrap().as_address().unwrap();
 
         // Only governor can withdraw reserves
         require(
@@ -788,7 +788,7 @@ impl Market for Contract {
     // - `pause_config`: The pause configuration to be set
     #[storage(write, read)]
     fn pause(pause_config: PauseConfiguration) {
-        let caller = msg_sender_address();
+        let caller = msg_sender().unwrap().as_address().unwrap();
         require(
             caller == storage
                 .market_configuration
@@ -920,7 +920,7 @@ impl Market for Contract {
     fn set_pyth_contract_id(contract_id: ContractId) {
         // Only governor can set the Pyth contract ID
         require(
-            msg_sender_address() == storage
+            msg_sender().unwrap().as_address().unwrap() == storage
                 .market_configuration
                 .read()
                 .governor,
@@ -949,7 +949,7 @@ impl Market for Contract {
     fn update_market_configuration(configuration: MarketConfiguration) {
         // Only governor can update the market configuration
         require(
-            msg_sender_address() == storage
+            msg_sender().unwrap().as_address().unwrap() == storage
                 .market_configuration
                 .read()
                 .governor,
@@ -1043,16 +1043,6 @@ fn timestamp() -> u64 {
         storage.debug_timestamp.read()
     } else {
         std::block::timestamp()
-    }
-}
-
-// ## Get the message sender's address
-// ### Description:
-// - Returns the message sender's address, reverting if the message sender is a contract
-fn msg_sender_address() -> Address {
-    match msg_sender().unwrap() {
-        Identity::Address(identity) => identity,
-        _ => revert(0),
     }
 }
 
@@ -1515,7 +1505,7 @@ fn absorb_internal(account: Address) {
     // Check that the account is liquidatable
     require(is_liquidatable_internal(account), Error::NotLiquidatable);
 
-    let caller = msg_sender_address();
+    let caller = msg_sender().unwrap().as_address().unwrap();
 
     // Get the user's basic information
     let account_user = storage.user_basic.get(account).try_read().unwrap_or(UserBasic::default());
