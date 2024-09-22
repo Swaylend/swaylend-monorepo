@@ -57,7 +57,7 @@ storage {
     // debug timestamp (for testing purposes)
     debug_timestamp: u64 = 0,
     // pyth contract id
-    pyth_contract_id: b256 = b256::zero(),
+    pyth_contract_id: ContractId = ContractId::zero(),
 }
 
 // Market contract implementation
@@ -926,7 +926,7 @@ impl Market for Contract {
                 .governor,
             Error::Unauthorized,
         );
-        storage.pyth_contract_id.write(contract_id.into());
+        storage.pyth_contract_id.write(contract_id);
     }
 
     #[storage(read)]
@@ -976,13 +976,12 @@ impl Market for Contract {
 #[storage(read)]
 fn get_price_internal(price_feed_id: PriceFeedId) -> Price {
     let contract_id = storage.pyth_contract_id.read();
-    require(contract_id != b256::zero(), Error::OracleContractIdNotSet);
+    require(contract_id != ContractId::zero(), Error::OracleContractIdNotSet);
 
-    let oracle = abi(PythCore, contract_id);
+    let oracle = abi(PythCore, contract_id.bits());
     let price = oracle.price(price_feed_id);
 
     // validate values
-
     if price.publish_time < std::block::timestamp() {
         let staleness = std::block::timestamp() - price.publish_time;
         require(staleness <= ORACLE_MAX_STALENESS, Error::OraclePriceValidationError);
@@ -1001,9 +1000,9 @@ fn get_price_internal(price_feed_id: PriceFeedId) -> Price {
 #[storage(read)]
 fn update_fee_internal(update_data: Vec<Bytes>) -> u64 {
     let contract_id = storage.pyth_contract_id.read();
-    require(contract_id != b256::zero(), Error::OracleContractIdNotSet);
+    require(contract_id != ContractId::zero(), Error::OracleContractIdNotSet);
 
-    let oracle = abi(PythCore, contract_id);
+    let oracle = abi(PythCore, contract_id.bits());
     let fee = oracle.update_fee(update_data);
     fee
 }
@@ -1011,7 +1010,7 @@ fn update_fee_internal(update_data: Vec<Bytes>) -> u64 {
 #[payable, storage(read)]
 fn update_price_feeds_if_necessary_internal(price_data_update: PriceDataUpdate) {
     let contract_id = storage.pyth_contract_id.read();
-    require(contract_id != b256::zero(), Error::OracleContractIdNotSet);
+    require(contract_id != ContractId::zero(), Error::OracleContractIdNotSet);
 
     // check if the payment is sufficient
     require(
@@ -1020,7 +1019,7 @@ fn update_price_feeds_if_necessary_internal(price_data_update: PriceDataUpdate) 
         Error::InvalidPayment,
     );
 
-    let oracle = abi(PythCore, contract_id);
+    let oracle = abi(PythCore, contract_id.bits());
     oracle
         .update_price_feeds_if_necessary {
             asset_id: AssetId::base().bits(),
