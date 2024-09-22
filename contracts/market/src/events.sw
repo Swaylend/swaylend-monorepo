@@ -36,13 +36,13 @@ pub struct MarketBasicEvent {
 pub struct UserSupplyCollateralEvent {
     pub address: Address,
     pub asset_id: b256,
-    pub amount: u256,
+    pub amount: u64,
 }
 
 pub struct UserWithdrawCollateralEvent {
     pub address: Address,
     pub asset_id: b256,
-    pub amount: u256,
+    pub amount: u64,
 }
 
 // User Base Asset Events
@@ -62,7 +62,7 @@ pub struct UserWithdrawBaseEvent {
 pub struct AbsorbCollateralEvent {
     pub address: Address,
     pub asset_id: b256,
-    pub amount: u256,
+    pub amount: u64,
     pub seize_value: u256,
     pub decimals: u32,
 }
@@ -82,14 +82,14 @@ pub struct BuyCollateralEvent {
     pub caller: Address,
     pub recipient: Address,
     pub asset_id: b256,
-    pub amount: u256,
-    pub price: u256,
+    pub amount: u64,
+    pub price: u64,
 }
 
 // Reserves Withdrawn Event
 pub struct ReservesWithdrawnEvent {
     pub address: Address,
-    pub amount: u256,
+    pub amount: u64,
 }
 
 // Pause configuration event

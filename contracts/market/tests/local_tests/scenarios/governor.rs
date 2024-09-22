@@ -37,7 +37,7 @@ async fn governor_test() {
         borrow_collateral_factor: U256::from(18), // decimals: 18
         liquidate_collateral_factor: U256::from(18), // decimals: 18
         liquidation_penalty: U256::from(18),      // decimals: 18
-        supply_cap: U256::from(10),               // decimals: asset decimals
+        supply_cap: 10,               // decimals: asset decimals
         paused: false,
     };
 

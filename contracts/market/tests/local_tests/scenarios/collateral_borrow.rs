@@ -88,8 +88,9 @@ async fn collateral_borrow_test() {
     let bob_user_collateral = market
         .get_user_collateral(bob_address, uni.bits256)
         .await
-        .unwrap();
-    assert!(bob_user_collateral == bob_supply_amount as u128);
+        .unwrap()
+        .value;
+    assert!(bob_user_collateral == bob_supply_amount);
 
     market
         .print_debug_state(&wallets, &usdc, &uni)
@@ -182,7 +183,8 @@ async fn collateral_borrow_test() {
     let bob_withdraw_amount = market
         .get_user_collateral(bob_address, uni.bits256)
         .await
-        .unwrap();
+        .unwrap()
+        .value;
     let bob_withdraw_amount_fail = parse_units(41 * AMOUNT_COEFFICIENT, uni.decimals);
     let log_amount = format!("{} UNI", bob_withdraw_amount as f64 / SCALE_9);
     print_case_title(3, "Bob", "withdraw_collateral", &log_amount.as_str());
@@ -305,8 +307,9 @@ async fn collateral_borrow_timeskip_test() {
     let bob_user_collateral = market
         .get_user_collateral(bob_address, uni.bits256)
         .await
-        .unwrap();
-    assert!(bob_user_collateral == bob_supply_amount as u128);
+        .unwrap()
+        .value;
+    assert!(bob_user_collateral == bob_supply_amount);
 
     market
         .print_debug_state(&wallets, &usdc, &uni)
@@ -378,7 +381,8 @@ async fn collateral_borrow_timeskip_test() {
     let bob_withdraw_amount = market
         .get_user_collateral(bob_address, uni.bits256)
         .await
-        .unwrap();
+        .unwrap()
+        .value;
 
     let log_amount = format!("{} UNI", bob_withdraw_amount as f64 / SCALE_9);
     print_case_title(3, "Bob", "withdraw_collateral", &log_amount.as_str());
@@ -395,7 +399,7 @@ async fn collateral_borrow_timeskip_test() {
         .withdraw_collateral(
             &[&oracle.instance],
             uni.bits256,
-            bob_withdraw_amount.try_into().unwrap(),
+            bob_withdraw_amount,
             &price_data_update,
         )
         .await;
