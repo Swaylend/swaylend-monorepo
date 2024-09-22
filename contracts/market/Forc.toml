@@ -3,6 +3,9 @@ entry = "main.sw"
 license = "Apache-2.0"
 name = "market"
 
+[proxy]
+enabled = true
+
 [dependencies]
 market_abi = { path = "../../abis/market_abi" }
 pyth_interface = { git = "https://github.com/pyth-network/pyth-crosschain", rev = "aa9509ccd37cf5dc73fee891a5730c351d15235f" }

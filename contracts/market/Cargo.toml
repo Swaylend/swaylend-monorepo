@@ -8,6 +8,10 @@ license = "Apache-2.0"
 [lib]
 path = "core/lib.rs"
 
+[[bin]]
+name = "deploy_market"
+path = "scripts/deploy_market.rs"
+
 [[test]]
 harness = true
 name = "integration_tests"
