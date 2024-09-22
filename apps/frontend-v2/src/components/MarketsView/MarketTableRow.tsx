@@ -194,6 +194,7 @@ export const MarketTableRow = ({
         </div>
       </TableCell>
       <TableCell>
+        $
         {formatCurrency(
           Number(
             formatUnits(
@@ -204,6 +205,7 @@ export const MarketTableRow = ({
         )}
       </TableCell>
       <TableCell>
+        $
         {formatCurrency(
           Number(
             formatUnits(
@@ -213,7 +215,7 @@ export const MarketTableRow = ({
           )
         )}
       </TableCell>
-      <TableCell>{formatCurrency(Number(formattedTotalCollateral))}</TableCell>
+      <TableCell>${formatCurrency(Number(formattedTotalCollateral))}</TableCell>
     </TableRow>
   );
 };

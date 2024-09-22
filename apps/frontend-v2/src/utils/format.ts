@@ -14,12 +14,14 @@ export function formatCurrency(
       maximumFractionDigits: 2,
     }).format(million);
 
-    return `${formattedMillion}M`;
+    return `${formattedMillion.replace('$', '')}M`;
   }
   return new Intl.NumberFormat(locale, {
     style: 'currency',
     currency: currency,
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
-  }).format(value);
+  })
+    .format(value)
+    .replace('$', '');
 }

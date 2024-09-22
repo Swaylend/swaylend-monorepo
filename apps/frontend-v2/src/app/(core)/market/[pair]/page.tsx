@@ -9,5 +9,7 @@ export default function Page({ params }: { params: { pair: string } }) {
   // TODO - use params to parse network and base asset from available combinations
   const [network, baseAsset] = params.pair.split('-');
 
-  return <MarketOverview network={network} baseAsset={baseAsset} />;
+  return (
+    <MarketOverview network={network} baseAsset={baseAsset.toUpperCase()} />
+  );
 }

@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/table';
 import {
   useCollateralConfigurations,
+  useCollateralReserves,
   usePrice,
   useTotalCollateral,
 } from '@/hooks';
@@ -23,6 +24,7 @@ import BigNumber from 'bignumber.js';
 import React, { useMemo } from 'react';
 
 type TableRowProps = {
+  assetId: string;
   symbol: string;
   decimals: number;
   totalSupply: BigNumber | undefined;
@@ -33,6 +35,7 @@ type TableRowProps = {
 };
 
 const MarketCollateralsTableRow = ({
+  assetId,
   symbol,
   decimals,
   totalSupply,
@@ -41,6 +44,8 @@ const MarketCollateralsTableRow = ({
   liquidationFactor,
   liquidationPenalty,
 }: TableRowProps) => {
+  const { data: reserves } = useCollateralReserves(assetId) ?? BigNumber(0);
+
   const formattedTotalSupply = totalSupply
     ? formatUnits(totalSupply, decimals).toFixed(2)
     : '0.00';
@@ -58,7 +63,7 @@ const MarketCollateralsTableRow = ({
         {formattedTotalSupply} {symbol}
       </TableCell>
       <TableCell className="text-white">
-        {/* {formatUnits(protocolBalance, decimals).toFixed(4)} {symbol} */}
+        {formatUnits(reserves ?? BigNumber(0), decimals).toFixed(2)} {symbol}
       </TableCell>
       <TableCell className="text-white">
         {price.toFixed(2).toString()} $
@@ -133,6 +138,7 @@ export const MarketCollateralsTable = ({
           {collaterals.map((collateral) => (
             <MarketCollateralsTableRow
               key={collateral.asset_id}
+              assetId={collateral.asset_id}
               symbol={ASSET_ID_TO_SYMBOL[collateral.asset_id]}
               decimals={collateral.decimals}
               totalSupply={totalCollateral?.get(collateral.asset_id)}

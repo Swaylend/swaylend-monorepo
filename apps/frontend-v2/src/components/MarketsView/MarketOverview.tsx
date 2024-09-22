@@ -8,18 +8,24 @@ import {
 } from '@/components/ui/chart';
 import {
   useBorrowRate,
+  useCollateralConfigurations,
   useMarketBalanceOfBase,
+  useMarketBasics,
   useMarketConfiguration,
+  usePrice,
   useSupplyRate,
-  useUtilization,
+  useTotalCollateral,
+  useTotalReserves,
 } from '@/hooks';
 import {
   type DeployedMarket,
   SYMBOL_TO_ICON,
+  formatUnits,
   getBorrowApr,
   getSupplyApr,
 } from '@/utils';
 import { formatCurrency } from '@/utils/format';
+import BigNumber from 'bignumber.js';
 import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 import React, { useMemo } from 'react';
@@ -55,11 +61,59 @@ export default function MarketOverview({
 
   const { data: borrowRate } = useBorrowRate(baseAsset as DeployedMarket);
   const { data: supplyRate } = useSupplyRate(baseAsset as DeployedMarket);
+  const { data: totalReserves } = useTotalReserves(baseAsset as DeployedMarket);
+
+  const { data: collateralConfigurations } = useCollateralConfigurations();
+  const { data: marketConfiguration } = useMarketConfiguration(
+    baseAsset as DeployedMarket
+  );
   const borrowApr = useMemo(() => getBorrowApr(borrowRate), [borrowRate]);
   const supplyApr = useMemo(() => getSupplyApr(supplyRate), [supplyRate]);
   const availableLiquidity = useMarketBalanceOfBase(
     baseAsset as DeployedMarket
   );
+
+  const { data: totalCollateral } = useTotalCollateral(
+    baseAsset as DeployedMarket
+  );
+  const { data: marketBasics } = useMarketBasics(baseAsset as DeployedMarket);
+
+  const { data: priceData } = usePrice(baseAsset as DeployedMarket);
+
+  const totalCollateralValue = useMemo(() => {
+    if (!priceData || !totalCollateral || !collateralConfigurations) {
+      return BigNumber(0);
+    }
+
+    return Array.from(totalCollateral.entries()).reduce(
+      (sum, [assetId, value]) => {
+        if (!collateralConfigurations[assetId]) return sum;
+        const assetPrice = priceData.prices[assetId] ?? BigNumber(0);
+        return sum.plus(assetPrice.times(value));
+      },
+      BigNumber(0)
+    );
+  }, [totalCollateral, priceData]);
+
+  const formattedTotalCollateral = formatUnits(
+    totalCollateralValue,
+    marketConfiguration?.baseTokenDecimals
+  );
+
+  const collateralization = useMemo(() => {
+    if (!totalCollateralValue || !marketBasics) {
+      return BigNumber(0);
+    }
+
+    return formattedTotalCollateral
+      .minus(
+        formatUnits(
+          BigNumber(marketBasics?.total_borrow_base.toString()),
+          marketConfiguration?.baseTokenDecimals
+        )
+      )
+      .div(BigNumber(100));
+  }, [totalCollateralValue, marketBasics]);
 
   const chartConfig = {
     desktop: {
@@ -166,7 +220,9 @@ export default function MarketOverview({
             <div className="text-primary text-md font-semibold">
               Total Collateral
             </div>
-            <div className="text-white font-bold text-[20px]">$123.45M</div>
+            <div className="text-white font-bold text-[20px]">
+              ${formatCurrency(Number(formattedTotalCollateral))}
+            </div>
           </div>
           <ResponsiveContainer width="100%" height={200}>
             <ChartContainer config={chartConfig}>
@@ -234,7 +290,17 @@ export default function MarketOverview({
             <div className="text-purple text-md font-semibold">
               Total Borrowing
             </div>
-            <div className="text-white font-bold text-[20px]">$123.45M</div>
+            <div className="text-white font-bold text-[20px]">
+              $
+              {formatCurrency(
+                Number(
+                  formatUnits(
+                    BigNumber(marketBasics?.total_borrow_base.toString()!),
+                    marketConfiguration?.baseTokenDecimals
+                  )
+                )
+              )}
+            </div>
           </div>
           <ResponsiveContainer width="100%" height={200}>
             <ChartContainer config={chartConfig}>
@@ -312,7 +378,15 @@ export default function MarketOverview({
               Total Earning
             </div>
             <div className="text-xl font-semibold text-white mt-2">
-              $456.05M
+              $
+              {formatCurrency(
+                Number(
+                  formatUnits(
+                    BigNumber(marketBasics?.total_supply_base.toString()!),
+                    marketConfiguration?.baseTokenDecimals
+                  )
+                )
+              )}
             </div>
           </div>
           <div>
@@ -320,20 +394,32 @@ export default function MarketOverview({
               Available Liquidity
             </div>
             <div className="text-xl font-semibold text-white mt-2">
-              {formatCurrency(Number(availableLiquidity.formatted))}
+              ${formatCurrency(Number(availableLiquidity.formatted))}
             </div>
           </div>
           <div>
             <div className="text-sm text-primary font-semibold">
               Total Reserves
             </div>
-            <div className="text-xl font-semibold text-white mt-2">$9.77M</div>
+            <div className="text-xl font-semibold text-white mt-2">
+              $
+              {formatCurrency(
+                Number(
+                  formatUnits(
+                    totalReserves ?? BigNumber(0),
+                    marketConfiguration?.baseTokenDecimals
+                  )
+                )
+              )}
+            </div>
           </div>
           <div>
             <div className="text-sm text-primary font-semibold">
               Collateralization
             </div>
-            <div className="text-xl font-semibold text-white mt-2">143.21%</div>
+            <div className="text-xl font-semibold text-white mt-2">
+              {formatCurrency(Number(collateralization))}%
+            </div>
           </div>
           <div>
             <div className="text-sm text-primary font-semibold">
