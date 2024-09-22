@@ -735,7 +735,7 @@ impl Market for Contract {
     // - `to`: The address to which the reserves will be sent
     // - `amount`: The amount of reserves to be withdrawn
     #[storage(read)]
-    fn withdraw_reserves(to: Address, amount: u256) {
+    fn withdraw_reserves(to: Address, amount: u64) {
         let caller = msg_sender().unwrap().as_address().unwrap();
 
         // Only governor can withdraw reserves
