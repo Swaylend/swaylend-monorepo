@@ -80,8 +80,9 @@ async fn price_changes() {
     let bob_user_collateral = market
         .get_user_collateral(bob_address, eth.bits256)
         .await
-        .unwrap();
-    assert!(bob_user_collateral == bob_supply_amount as u128);
+        .unwrap()
+        .value;
+    assert!(bob_user_collateral == bob_supply_amount);
 
     market
         .print_debug_state(&wallets, &usdc, &eth)

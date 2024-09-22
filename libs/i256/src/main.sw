@@ -87,7 +87,7 @@ impl core::ops::OrdEq for I256 {}
 impl I256 {
     /// The size of this type in bits.
     pub fn bits() -> u32 {
-        256
+        257
     }
 
     /// Helper function to get a signed number from with an underlying
@@ -220,7 +220,7 @@ impl core::ops::Divide for I256 {
         } else if !self.negative == !divisor.negative {
             Self::from(self.value / divisor.value)
         } else if !self.negative != !divisor.negative {
-            Self::neg_from(self.value * divisor.value)
+            Self::neg_from(self.value / divisor.value)
         } else {
             revert(0)
         }

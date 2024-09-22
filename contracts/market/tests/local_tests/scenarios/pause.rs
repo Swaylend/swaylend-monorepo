@@ -90,8 +90,9 @@ async fn pause_test() {
     let res = market
         .get_user_collateral(alice_address, uni.bits256)
         .await
-        .unwrap();
-    assert!(res == amount as u128);
+        .unwrap()
+        .value;
+    assert!(res == amount);
 
     market.debug_increment_timestamp().await.unwrap();
 
@@ -179,7 +180,8 @@ async fn pause_test() {
     let amount = market
         .get_user_collateral(alice_address, uni.bits256)
         .await
-        .unwrap();
+        .unwrap()
+        .value;
     assert!(amount == 0);
 
     market.debug_increment_timestamp().await.unwrap();
@@ -207,17 +209,15 @@ async fn pause_test() {
             reserves.value.try_into().unwrap(),
         )
         .await
-        .unwrap();
+        .unwrap()
+        .value;
 
     // Transfer of amount to the wallet
-    usdc_contract
-        .mint(bob_address, amount.try_into().unwrap())
-        .await
-        .unwrap();
+    usdc_contract.mint(bob_address, amount).await.unwrap();
 
     // Сheck balance
     let balance = bob.get_asset_balance(&usdc.asset_id).await.unwrap();
-    assert!(balance == amount as u64);
+    assert!(balance == amount);
 
     // Bob calls buy_collateral
     market
@@ -388,7 +388,8 @@ async fn pause_test() {
             reserves.value.try_into().unwrap(),
         )
         .await
-        .unwrap();
+        .unwrap()
+        .value;
 
     // Bob calls buy_collateral
     let res = market
@@ -398,7 +399,7 @@ async fn pause_test() {
         .buy_collateral(
             &[&oracle.instance],
             usdc.asset_id,
-            amount as u64,
+            amount,
             uni.bits256,
             1,
             bob_address,

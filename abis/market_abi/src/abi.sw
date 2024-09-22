@@ -42,16 +42,16 @@ abi Market {
     fn supply_collateral(); // Payment is required: any collateral asset
 
     #[payable, storage(read, write)]
-    fn withdraw_collateral(asset: b256, amount: u256, price_data_update: PriceDataUpdate);
+    fn withdraw_collateral(asset: b256, amount: u64, price_data_update: PriceDataUpdate);
 
     #[storage(read)]
-    fn get_user_collateral(address: Address, asset_id: b256) -> u256;
+    fn get_user_collateral(address: Address, asset_id: b256) -> u64;
 
     #[storage(read)]
-    fn get_all_user_collateral(address: Address) -> Vec<(b256, u256)>;
+    fn get_all_user_collateral(address: Address) -> Vec<(b256, u64)>;
 
     #[storage(read)]
-    fn totals_collateral(asset_id: b256) -> u256;
+    fn totals_collateral(asset_id: b256) -> u64;
 
     // # 4. Base asset management (Supply and Withdrawal)
     // If the user has enough collateral, `withdraw_base` performs the borrow function
@@ -59,7 +59,7 @@ abi Market {
     fn supply_base(); // Payment is required: base asset (USDC)
 
     #[payable, storage(read, write)]
-    fn withdraw_base(amount: u256, price_data_update: PriceDataUpdate);
+    fn withdraw_base(amount: u64, price_data_update: PriceDataUpdate);
 
     #[storage(read)]
     fn get_user_supply_borrow(account: Address) -> (u256, u256); 
@@ -77,20 +77,20 @@ abi Market {
 
     // # 6. Protocol collateral management
     #[payable, storage(read)]
-    fn buy_collateral(asset_id: b256, min_amount: u256, recipient: Address); // Payment is required: base asset (USDC)
+    fn buy_collateral(asset_id: b256, min_amount: u64, recipient: Address); // Payment is required: base asset (USDC)
 
     #[storage(read)]
-    fn collateral_value_to_sell(asset_id: b256, collateral_amount: u256) -> u256;
+    fn collateral_value_to_sell(asset_id: b256, collateral_amount: u64) -> u64;
 
     #[storage(read)]
-    fn quote_collateral(asset_id: b256, base_amount: u256) -> u256;
+    fn quote_collateral(asset_id: b256, base_amount: u64) -> u64;
 
     // ## 7. Reserves management
     #[storage(read)]
     fn get_reserves() -> I256;
     
     #[storage(read)]
-    fn withdraw_reserves(to: Address, amount: u256);
+    fn withdraw_reserves(to: Address, amount: u64);
 
     #[storage(read)]
     fn get_collateral_reserves(asset_id: b256) -> I256;

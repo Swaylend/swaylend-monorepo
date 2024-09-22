@@ -86,8 +86,9 @@ async fn absorb_and_liquidate() {
     let bob_user_collateral = market
         .get_user_collateral(bob_address, eth.bits256)
         .await
-        .unwrap();
-    assert!(bob_user_collateral == bob_supply_amount as u128);
+        .unwrap()
+        .value;
+    assert!(bob_user_collateral == bob_supply_amount);
 
     market
         .print_debug_state(&wallets, &usdc, &eth)
@@ -194,7 +195,8 @@ async fn absorb_and_liquidate() {
     let amount = market
         .get_user_collateral(bob_address, eth.bits256)
         .await
-        .unwrap();
+        .unwrap()
+        .value;
     assert!(amount == 0);
 
     market
@@ -224,7 +226,8 @@ async fn absorb_and_liquidate() {
             reserves.value.try_into().unwrap(),
         )
         .await
-        .unwrap();
+        .unwrap()
+        .value;
 
     let log_amount = format!("{} USDC", amount as f64 / SCALE_6);
     print_case_title(5, "Alice", "buy_collateral", log_amount.as_str());
@@ -371,8 +374,9 @@ async fn all_assets_liquidated() {
     let bob_user_collateral = market
         .get_user_collateral(bob_address, eth.bits256)
         .await
-        .unwrap();
-    assert!(bob_user_collateral == bob_supply_amount as u128);
+        .unwrap()
+        .value;
+    assert!(bob_user_collateral == bob_supply_amount);
 
     market
         .print_debug_state(&wallets, &usdc, &eth)
@@ -480,7 +484,8 @@ async fn all_assets_liquidated() {
     let amount = market
         .get_user_collateral(bob_address, eth.bits256)
         .await
-        .unwrap();
+        .unwrap()
+        .value;
     assert!(amount == 0);
 
     market
@@ -510,7 +515,8 @@ async fn all_assets_liquidated() {
             reserves.value.try_into().unwrap(),
         )
         .await
-        .unwrap();
+        .unwrap()
+        .value;
 
     let log_amount = format!("{} USDC", amount as f64 / SCALE_6);
     print_case_title(5, "Alice", "buy_collateral", log_amount.as_str());
