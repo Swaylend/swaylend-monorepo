@@ -1,7 +1,6 @@
 library;
 
 use i256::I256;
-use std::constants::ZERO_B256;
 use std::bytes::Bytes;
 use pyth_interface::{data_structures::price::{PriceFeedId}};
 
@@ -47,11 +46,11 @@ pub struct MarketConfiguration {
 impl MarketConfiguration {
     pub fn default() -> Self {
         MarketConfiguration {
-            governor: Address::from(ZERO_B256),
-            pause_guardian: Address::from(ZERO_B256),
-            base_token: ZERO_B256,
+            governor: Address::zero(),
+            pause_guardian: Address::zero(),
+            base_token: b256::zero(),
             base_token_decimals: 0,
-            base_token_price_feed_id: ZERO_B256,
+            base_token_price_feed_id: b256::zero(),
             supply_kink: 0,
             borrow_kink: 0,
             supply_per_second_interest_rate_slope_low: 0,
