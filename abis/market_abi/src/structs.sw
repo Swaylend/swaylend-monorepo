@@ -17,7 +17,7 @@ pub struct CollateralConfiguration {
     pub borrow_collateral_factor: u256, // decimals: 18
     pub liquidate_collateral_factor: u256, // decimals: 18
     pub liquidation_penalty: u256, // decimals: 18
-    pub supply_cap: u256, // decimals: asset decimals
+    pub supply_cap: u64, // decimals: asset decimals
     pub paused: bool,
 }
 
