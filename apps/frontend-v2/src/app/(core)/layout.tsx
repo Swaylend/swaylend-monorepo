@@ -1,7 +1,6 @@
 import { Footer } from '@/components/Footer';
 import { Navbar } from '@/components/Navbar';
 import { Providers } from '@/components/Providers';
-import { TermsAndConditions } from '@/components/TermsAndConditionsDialog';
 
 export default function AppLayout({
   children,
@@ -14,7 +13,6 @@ export default function AppLayout({
         <Navbar />
         <div className="bg-background flex-1">{children}</div>
         <Footer />
-        <TermsAndConditions />
       </div>
     </Providers>
   );
