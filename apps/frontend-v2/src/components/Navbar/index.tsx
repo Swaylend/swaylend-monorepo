@@ -35,7 +35,7 @@ import { MarketSwitcher } from './MarketSwitcher';
 import { Points } from './Points';
 
 const NAVBAR_LINKS = [
-  { href: '/', label: 'Dashboard', icon: <LayoutDashboard /> },
+  { href: '/', label: 'All Markets', icon: <LayoutDashboard /> },
   // { href: '/market', label: 'Market', icon: <ChartLine /> },
   { href: '/faucet', label: 'Faucet', icon: <Coins /> },
 ];
@@ -59,14 +59,14 @@ export const Navbar = () => {
                   className={cn(
                     pathname === href ? 'text-primary' : 'text-lavender',
                     pathname !== href && 'hover:text-lavender/80',
-                    'flex items-center w-[80px] justify-center text-md font-semibold gap-x-1 h-full relative'
+                    'flex items-center w-[90px] justify-center text-md font-semibold gap-x-1 h-full relative'
                   )}
                 >
                   {label}
                   <div
                     className={cn(
                       pathname === href &&
-                        '-z-10 absolute blur-[30px] top-[35px] left-[calc(50%-30px)] w-16 h-10 bg-primary'
+                        '-z-10 absolute blur-[30px] top-[35px] left-[calc(50%-40px)] w-16 h-10 bg-primary'
                     )}
                   />
                 </div>

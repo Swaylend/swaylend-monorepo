@@ -35,6 +35,7 @@ import {
   SYMBOL_TO_ICON,
   formatUnits,
   getBorrowApr,
+  getFormattedNumber,
 } from '@/utils';
 import { useAccount, useIsConnected } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
@@ -209,10 +210,14 @@ export const BorrowTable = () => {
                       {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
                     </div>
                     <div>
-                      {formatUnits(
-                        balance ? BigNumber(balance.toString()) : BigNumber(0),
-                        marketConfiguration?.baseTokenDecimals ?? 9
-                      ).toFixed(2)}{' '}
+                      {getFormattedNumber(
+                        formatUnits(
+                          balance
+                            ? BigNumber(balance.toString())
+                            : BigNumber(0),
+                          marketConfiguration?.baseTokenDecimals ?? 9
+                        )
+                      )}{' '}
                       {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
                       {' in wallet'}
                     </div>
@@ -227,7 +232,10 @@ export const BorrowTable = () => {
               >
                 {getBorrowApr(borrowRate)}
               </TableCell>
-              <TableCell>{borrowedBalance}</TableCell>
+              <TableCell>
+                {getFormattedNumber(BigNumber(borrowedBalance))}{' '}
+                {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
+              </TableCell>
               <TableCell>
                 <PointIcons points={POINTS_BORROW} />
               </TableCell>
@@ -324,12 +332,14 @@ export const BorrowTable = () => {
                         }
                       </div>
                       <div className="text-moon text-sm">
-                        {formatUnits(
-                          balance
-                            ? BigNumber(balance.toString())
-                            : BigNumber(0),
-                          marketConfiguration?.baseTokenDecimals ?? 9
-                        ).toFixed(2)}
+                        {getFormattedNumber(
+                          formatUnits(
+                            balance
+                              ? BigNumber(balance.toString())
+                              : BigNumber(0),
+                            marketConfiguration?.baseTokenDecimals ?? 9
+                          )
+                        )}
                         {' in wallet'}
                       </div>
                     </div>
@@ -352,7 +362,9 @@ export const BorrowTable = () => {
                   <div className="w-1/2 text-moon font-medium">
                     Borrowed Assets
                   </div>
-                  <div className="text-moon">{borrowedBalance}</div>
+                  <div className="text-moon">
+                    {getFormattedNumber(BigNumber(borrowedBalance))}
+                  </div>
                 </div>
                 <div className="w-full flex items-center">
                   <div className="w-1/2 text-moon font-medium">
