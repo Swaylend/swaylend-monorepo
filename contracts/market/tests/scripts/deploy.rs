@@ -42,7 +42,7 @@ async fn deploy() {
     let market_config = get_market_config(
         wallet.address().into(),
         wallet.address().into(),
-        usdc.bits256,
+        usdc.asset_id,
         usdc.decimals as u32,
         usdc_price_feed,
     )

@@ -25,13 +25,13 @@ abi Market {
     fn add_collateral_asset(configuration: CollateralConfiguration);
 
     #[storage(read, write)]
-    fn pause_collateral_asset(asset_id: b256);
+    fn pause_collateral_asset(asset_id: AssetId);
 
     #[storage(read, write)]
-    fn resume_collateral_asset(asset_id: b256);
+    fn resume_collateral_asset(asset_id: AssetId);
 
     #[storage(read, write)]
-    fn update_collateral_asset(asset_id: b256, configuration: CollateralConfiguration);    
+    fn update_collateral_asset(asset_id: AssetId, configuration: CollateralConfiguration);    
 
     #[storage(read)]
     fn get_collateral_configurations() -> Vec<CollateralConfiguration>;
@@ -42,16 +42,16 @@ abi Market {
     fn supply_collateral(); // Payment is required: any collateral asset
 
     #[payable, storage(read, write)]
-    fn withdraw_collateral(asset: b256, amount: u64, price_data_update: PriceDataUpdate);
+    fn withdraw_collateral(asset_id: AssetId, amount: u64, price_data_update: PriceDataUpdate);
 
     #[storage(read)]
-    fn get_user_collateral(address: Address, asset_id: b256) -> u64;
+    fn get_user_collateral(address: Address, asset_id: AssetId) -> u64;
 
     #[storage(read)]
-    fn get_all_user_collateral(address: Address) -> Vec<(b256, u64)>;
+    fn get_all_user_collateral(address: Address) -> Vec<(AssetId, u64)>;
 
     #[storage(read)]
-    fn totals_collateral(asset_id: b256) -> u64;
+    fn totals_collateral(asset_id: AssetId) -> u64;
 
     // # 4. Base asset management (Supply and Withdrawal)
     // If the user has enough collateral, `withdraw_base` performs the borrow function
@@ -77,13 +77,13 @@ abi Market {
 
     // # 6. Protocol collateral management
     #[payable, storage(read)]
-    fn buy_collateral(asset_id: b256, min_amount: u64, recipient: Address); // Payment is required: base asset (USDC)
+    fn buy_collateral(asset_id: AssetId, min_amount: u64, recipient: Address); // Payment is required: base asset (USDC)
 
     #[storage(read)]
-    fn collateral_value_to_sell(asset_id: b256, collateral_amount: u64) -> u64;
+    fn collateral_value_to_sell(asset_id: AssetId, collateral_amount: u64) -> u64;
 
     #[storage(read)]
-    fn quote_collateral(asset_id: b256, base_amount: u64) -> u64;
+    fn quote_collateral(asset_id: AssetId, base_amount: u64) -> u64;
 
     // ## 7. Reserves management
     #[storage(read)]
@@ -93,7 +93,7 @@ abi Market {
     fn withdraw_reserves(to: Address, amount: u64);
 
     #[storage(read)]
-    fn get_collateral_reserves(asset_id: b256) -> I256;
+    fn get_collateral_reserves(asset_id: AssetId) -> I256;
 
     // # 8. Pause management
     #[storage(write, read)]
@@ -118,7 +118,7 @@ abi Market {
     #[storage(read)]
     fn get_utilization() -> u256;
 
-    fn balance_of(asset: b256) -> u64;
+    fn balance_of(asset_id: AssetId) -> u64;
 
     // Formulas to help calculate supply and borrow rates
     #[storage(read)]

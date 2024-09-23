@@ -94,7 +94,7 @@ pub async fn setup() -> TestData {
     let market_config = get_market_config(
         admin.address().into(),
         admin.address().into(),
-        usdc.bits256,
+        usdc.asset_id,
         usdc.decimals as u32,
         usdc.price_feed_id,
     )

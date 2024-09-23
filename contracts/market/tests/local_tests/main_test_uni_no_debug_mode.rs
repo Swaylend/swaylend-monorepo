@@ -108,7 +108,7 @@ async fn main_test_no_debug() {
 
     // Сheck supply balance equal to 40 UNI
     let res = market
-        .get_user_collateral(alice_address, uni.bits256)
+        .get_user_collateral(alice_address, uni.asset_id)
         .await
         .unwrap()
         .value;
@@ -175,7 +175,7 @@ async fn main_test_no_debug() {
 
     // Сheck supply balance equal to 60 UNI
     let res = market
-        .get_user_collateral(chad_address, uni.bits256)
+        .get_user_collateral(chad_address, uni.asset_id)
         .await
         .unwrap()
         .value;
@@ -353,7 +353,7 @@ async fn main_test_no_debug() {
     assert!(borrow == 0);
 
     let amount = market
-        .get_user_collateral(alice_address, uni.bits256)
+        .get_user_collateral(alice_address, uni.asset_id)
         .await
         .unwrap()
         .value;
@@ -374,7 +374,7 @@ async fn main_test_no_debug() {
         .with_account(&bob)
         .await
         .unwrap()
-        .get_collateral_reserves(uni.bits256)
+        .get_collateral_reserves(uni.asset_id)
         .await
         .unwrap()
         .value;
@@ -383,7 +383,7 @@ async fn main_test_no_debug() {
     let amount = market
         .collateral_value_to_sell(
             &[&oracle.instance],
-            uni.bits256,
+            uni.asset_id,
             reserves.value.try_into().unwrap(),
         )
         .await
@@ -433,7 +433,7 @@ async fn main_test_no_debug() {
     let buy_collateral_call = market
         .instance
         .methods()
-        .buy_collateral(uni.bits256, 1u64.into(), bob_address)
+        .buy_collateral(uni.asset_id, 1u64.into(), bob_address)
         .with_contracts(&[&oracle.instance])
         .with_tx_policies(tx_policies)
         .call_params(call_params_base_asset)
@@ -568,7 +568,7 @@ async fn main_test_no_debug() {
     // 💰 Amount: 270 UNI
 
     let amount = market
-        .get_user_collateral(chad_address, uni.bits256)
+        .get_user_collateral(chad_address, uni.asset_id)
         .await
         .unwrap()
         .value;
@@ -580,7 +580,7 @@ async fn main_test_no_debug() {
         .with_account(&chad)
         .await
         .unwrap()
-        .withdraw_collateral(&[&oracle.instance], uni.bits256, amount, &price_data_update)
+        .withdraw_collateral(&[&oracle.instance], uni.asset_id, amount, &price_data_update)
         .await
         .unwrap();
 
