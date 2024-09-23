@@ -24,6 +24,10 @@ path = "tokens/configure_tokens.rs"
 name = "mint_tokens"
 path = "tokens/mint_tokens.rs"
 
+[[bin]]
+name = "bootstrap_collateral"
+path = "market/bootstrap_collateral.rs"
+
 [dependencies]
 fuels = { workspace = true }
 clap = { workspace = true }

@@ -4,9 +4,9 @@ license = "Apache-2.0"
 name = "market"
 
 # address will be the addres of the proxy contract
-[proxy]
-enabled = true
-address = "0x5f74026efe43632d3be4659a91904270ed539ffbd140d38b0435747945c3646a"
+# [proxy]
+# enabled = true
+# address = "0x5f74026efe43632d3be4659a91904270ed539ffbd140d38b0435747945c3646a"
 
 [dependencies]
 market_abi = { path = "../../abis/market_abi" }

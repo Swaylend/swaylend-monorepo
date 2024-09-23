@@ -18,7 +18,7 @@ use serde::Deserialize;
 use std::path::PathBuf;
 use token_sdk::Asset;
 
-const DEFAULT_GAS_LIMIT: u64 = 1_000_000;
+const DEFAULT_GAS_LIMIT: u64 = 2_000_000;
 
 pub struct MarketContract {
     pub instance: Market<WalletUnlocked>,

@@ -83,8 +83,6 @@ pub struct Args {
     #[arg(short, long, required = true, env = "SIGNING_KEY")]
     pub signing_key: String,
     #[arg(long, required = true)]
-    pub proxy_contract_id: String,
-    #[arg(long, required = true)]
     pub target_contract_id: String,
     #[arg(long, required = true)]
     pub oracle_contract_id: String,
@@ -100,6 +98,11 @@ pub struct Args {
         default_value = "0xeaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a"
     )]
     pub base_token_price_feed: String,
+
+    #[arg(long)]
+    pub is_upgradeable: bool,
+    #[arg(long, requires_if("true", "is_upgradeable"))]
+    pub proxy_contract_id: Option<String>,
 }
 
 #[tokio::main]
@@ -110,11 +113,16 @@ async fn main() -> anyhow::Result<()> {
     let secret = SecretKey::from_str(&args.signing_key).unwrap();
     let signing_wallet = WalletUnlocked::new_from_private_key(secret, Some(provider));
 
-    let proxy_contract_id: Bech32ContractId = ContractId::from_str(&args.proxy_contract_id)
+    let mut contract_id: Bech32ContractId = ContractId::from_str(&args.target_contract_id)
         .unwrap()
         .into();
+    if args.is_upgradeable && args.proxy_contract_id.is_some() {
+        contract_id = ContractId::from_str(&args.proxy_contract_id.unwrap())
+            .unwrap()
+            .into();
+    }
 
-    let contract_instance = MarketContract::new(proxy_contract_id, signing_wallet.clone());
+    let contract_instance = MarketContract::new(contract_id, signing_wallet.clone());
 
     let oracle_id = ContractId::from_str(&args.oracle_contract_id).unwrap();
 

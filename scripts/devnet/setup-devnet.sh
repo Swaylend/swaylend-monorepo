@@ -39,3 +39,8 @@ cargo run --bin activate_market -- --signing-key $SIGNING_KEY \
     --oracle-contract-id 0x51b52248d0f329f2e2de63932d1bc9b72c66539c69766ec84c2478766d89857f \
     --base-token-id 0xdb012cf2f31dcb9b46ed0ef619abe040db24172deb8f7c1ef573097b2225d8b6 \
     --base-token-price-feed 0xeaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a
+
+# bootstrap collateral
+cargo run --bin bootstrap_collateral -- --signing-key $SIGNING_KEY \
+    --token-contract-id 0xab0dc5c65212c0d062101b986e18a251f15317c934c1196ccf78fa761eecb394 \
+    --target-contract-id 0x5e562f51f507b4c784b3c7673c4dbfeeb461d3318099812db7347f45dd1f8d8a
