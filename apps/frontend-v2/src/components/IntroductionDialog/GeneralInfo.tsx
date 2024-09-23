@@ -5,14 +5,11 @@ import { Button } from '../ui/button';
 
 export const GeneralInfo = ({
   setOpen,
-  setActiveStep,
 }: {
   setOpen: (val: boolean) => void;
-  setActiveStep: (step: number) => void;
 }) => {
   const handleClose = () => {
     setOpen(false);
-    //setActiveStep(0);
   };
 
   return (

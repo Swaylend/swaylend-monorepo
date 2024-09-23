@@ -1,6 +1,6 @@
 import { Checkbox } from '@/components/ui/checkbox';
 import { useAccount } from '@fuels/react';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Button } from '../ui/button';
 
 export const TermsAndConditions = ({
@@ -13,13 +13,6 @@ export const TermsAndConditions = ({
     localStorage.setItem(`t&c-${account}`, 'true');
     setActiveStep(1);
   };
-
-  //   useEffect(() => {
-  //     const termsAndConditions = localStorage.getItem('termsAndConditions');
-  //     if (termsAndConditions) {
-  //       setActiveStep(1);
-  //     }
-  //   }, []);
 
   const handleDecline = () => {
     // On decline redirect user to `swaylend.com`

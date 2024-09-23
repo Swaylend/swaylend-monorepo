@@ -1,9 +1,8 @@
 'use client';
 
-import { cn } from '@/lib/utils';
 import { useAccount, useIsConnected } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Step, Stepper } from 'react-form-stepper';
 import { Dialog, DialogContent, DialogTitle } from '../ui/dialog';
 import { FundWallet } from './FundWallet';
@@ -30,22 +29,30 @@ const STEP_CONFIG = {
 };
 
 export const IntroductionDialog = () => {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
   const { isConnected } = useIsConnected();
   const { account } = useAccount();
+  const scrollDivRef = useRef<HTMLDivElement>(null);
 
-  // OPEN if T&C missing || new account?
-
+  // OPEN modal if T&C missing or new account is connected
   useEffect(() => {
     // Check local storage for terms and conditions (if user has accepted them)
     const termsAndConditions = localStorage.getItem(`t&c-${account}`);
 
-    if (isConnected && !termsAndConditions) {
+    if (isConnected && account && termsAndConditions !== 'true') {
       setActiveStep(0);
       setOpen(true);
     }
   }, [isConnected, account]);
+
+  const handleNextStep = (step: number) => {
+    setActiveStep(step);
+
+    if (scrollDivRef.current) {
+      scrollDivRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -61,14 +68,14 @@ export const IntroductionDialog = () => {
         <div className="h-full w-full flex flex-col overflow-hidden">
           <div className="w-full overflow-hidden relative">
             <div
-              className={cn(
+              className={
                 '-z-10 w-[90%] top-[62px] h-2 bg-gradient-to-r from-popover via-primary to-popover absolute left-[calc(5%)]'
-              )}
+              }
             />
             <div
-              className={cn(
+              className={
                 '-z-10 absolute blur-2xl top-[61px] left-[calc(33%)] rounded-full w-[33%] h-8 bg-primary'
-              )}
+              }
             />
             <div className="w-full text-lg h-16 flex items-center justify-center">
               <h1 className="text-lavender font-semibold text-lg">
@@ -76,7 +83,10 @@ export const IntroductionDialog = () => {
               </h1>
             </div>
           </div>
-          <div className="p-4 overflow-auto scrollbar scrollbar-thumb-primary scrollbar-track-card h-[calc(100%-64px)]">
+          <div
+            ref={scrollDivRef}
+            className="p-4 overflow-auto scrollbar scrollbar-thumb-primary scrollbar-track-card h-[calc(100%-64px)]"
+          >
             <Stepper
               activeStep={activeStep}
               connectorStateColors
@@ -95,12 +105,12 @@ export const IntroductionDialog = () => {
 
             <div className="px-8 mt-4 mb-4">
               {activeStep === 0 && (
-                <TermsAndConditions setActiveStep={setActiveStep} />
+                <TermsAndConditions setActiveStep={handleNextStep} />
               )}
-              {activeStep === 1 && <FundWallet setActiveStep={setActiveStep} />}
-              {activeStep === 2 && (
-                <GeneralInfo setOpen={setOpen} setActiveStep={setActiveStep} />
+              {activeStep === 1 && (
+                <FundWallet setActiveStep={handleNextStep} />
               )}
+              {activeStep === 2 && <GeneralInfo setOpen={setOpen} />}
             </div>
           </div>
         </div>
