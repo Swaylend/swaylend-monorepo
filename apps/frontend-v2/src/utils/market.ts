@@ -35,7 +35,7 @@ export function calculateSupplyRate(
     marketConfiguration.supplyPerSecondInterestRateBase.toString()
   );
   const supplyPerSecondInterestRateSlopeLow = BigNumber(
-    marketConfiguration.supplyPerSecondInterestRateBase.toString()
+    marketConfiguration.supplyPerSecondInterestRateSlopeLow.toString()
   );
   const supplyPerSecondInterestRateSlopeHigh = BigNumber(
     marketConfiguration.supplyPerSecondInterestRateSlopeHigh.toString()
