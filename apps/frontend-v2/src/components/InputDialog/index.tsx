@@ -198,7 +198,7 @@ export const InputDialog = () => {
         changeTokenAmount(BigNumber(finalBalance.toFixed(decimals)));
         break;
       case ACTION_TYPE.BORROW:
-        if (marketBalanceOfBase?.formatted.lt(finalBalance)) {
+        if (marketBalanceOfBase.formatted.lt(finalBalance)) {
           changeTokenAmount(
             BigNumber(marketBalanceOfBase.formatted.toFixed(decimals))
           );
