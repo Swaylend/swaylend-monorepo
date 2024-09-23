@@ -425,7 +425,12 @@ export default function MarketOverview({
             <div className="text-sm text-primary font-semibold">
               Oracle Price
             </div>
-            <div className="text-xl font-semibold text-white mt-2">$1.00</div>
+            <div className="text-xl font-semibold text-white mt-2">
+              $
+              {formatCurrency(
+                Number(priceData!.prices[marketConfiguration?.baseToken!])
+              )}
+            </div>
           </div>
         </CardContent>
       </Card>

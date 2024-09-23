@@ -10,6 +10,7 @@ import {
 import {
   useCollateralConfigurations,
   useCollateralReserves,
+  useMarketConfiguration,
   usePrice,
   useTotalCollateral,
 } from '@/hooks';
@@ -20,11 +21,16 @@ import {
   SYMBOL_TO_NAME,
   formatUnits,
 } from '@/utils';
+import { formatCurrency } from '@/utils/format';
 import BigNumber from 'bignumber.js';
 import React, { useMemo } from 'react';
 
 type TableRowProps = {
   assetId: string;
+  baseAsset: {
+    symbol: string;
+    decimals: number;
+  };
   symbol: string;
   decimals: number;
   totalSupply: BigNumber | undefined;
@@ -36,6 +42,7 @@ type TableRowProps = {
 
 const MarketCollateralsTableRow = ({
   assetId,
+  baseAsset,
   symbol,
   decimals,
   totalSupply,
@@ -63,7 +70,10 @@ const MarketCollateralsTableRow = ({
         {formattedTotalSupply} {symbol}
       </TableCell>
       <TableCell className="text-white">
-        {formatUnits(reserves ?? BigNumber(0), decimals).toFixed(2)} {symbol}
+        {formatCurrency(
+          Number(formatUnits(reserves ?? BigNumber(0), baseAsset.decimals))
+        )}{' '}
+        ${/* {baseAsset.symbol} */}
       </TableCell>
       <TableCell className="text-white">
         {price.toFixed(2).toString()} $
@@ -85,6 +95,9 @@ export const MarketCollateralsTable = ({
   marketName,
 }: { marketName: string }) => {
   const { data: collateralConfigurations } = useCollateralConfigurations();
+  const { data: marketConfiguration } = useMarketConfiguration(
+    marketName as DeployedMarket
+  );
 
   const collaterals = useMemo(() => {
     if (!collateralConfigurations) return [];
@@ -139,6 +152,10 @@ export const MarketCollateralsTable = ({
             <MarketCollateralsTableRow
               key={collateral.asset_id}
               assetId={collateral.asset_id}
+              baseAsset={{
+                symbol: ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken!],
+                decimals: marketConfiguration?.baseTokenDecimals ?? 6,
+              }}
               symbol={ASSET_ID_TO_SYMBOL[collateral.asset_id]}
               decimals={collateral.decimals}
               totalSupply={totalCollateral?.get(collateral.asset_id)}
