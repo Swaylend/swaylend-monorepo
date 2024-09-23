@@ -30,7 +30,7 @@ const STEP_CONFIG = {
 };
 
 export const IntroductionDialog = () => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const [activeStep, setActiveStep] = useState(0);
   const { isConnected } = useIsConnected();
   const { account } = useAccount();
@@ -76,31 +76,32 @@ export const IntroductionDialog = () => {
               </h1>
             </div>
           </div>
+          <div className="p-4 overflow-auto scrollbar scrollbar-thumb-primary scrollbar-track-card h-[calc(100%-64px)]">
+            <Stepper
+              activeStep={activeStep}
+              connectorStateColors
+              connectorStyleConfig={{
+                activeColor: '#3FE8BD',
+                disabledColor: '#666E79',
+                completedColor: '#2D8972',
+                size: 2,
+                style: 'solid',
+              }}
+            >
+              <Step label="Terms & Conditions" styleConfig={STEP_CONFIG} />
+              <Step label="Fund Wallet" styleConfig={STEP_CONFIG} />
+              <Step label="Finish" styleConfig={STEP_CONFIG} />
+            </Stepper>
 
-          <Stepper
-            activeStep={activeStep}
-            connectorStateColors
-            connectorStyleConfig={{
-              activeColor: '#3FE8BD',
-              disabledColor: '#666E79',
-              completedColor: '#2D8972',
-              size: 2,
-              style: 'solid',
-            }}
-          >
-            <Step label="Terms & Conditions" styleConfig={STEP_CONFIG} />
-            <Step label="Fund Wallet" styleConfig={STEP_CONFIG} />
-            <Step label="Finish" styleConfig={STEP_CONFIG} />
-          </Stepper>
-
-          <div className="px-8 mt-4 min-h-[70%]">
-            {activeStep === 0 && (
-              <TermsAndConditions setActiveStep={setActiveStep} />
-            )}
-            {activeStep === 1 && <FundWallet setActiveStep={setActiveStep} />}
-            {activeStep === 2 && (
-              <GeneralInfo setOpen={setOpen} setActiveStep={setActiveStep} />
-            )}
+            <div className="px-8 mt-4 mb-4">
+              {activeStep === 0 && (
+                <TermsAndConditions setActiveStep={setActiveStep} />
+              )}
+              {activeStep === 1 && <FundWallet setActiveStep={setActiveStep} />}
+              {activeStep === 2 && (
+                <GeneralInfo setOpen={setOpen} setActiveStep={setActiveStep} />
+              )}
+            </div>
           </div>
         </div>
       </DialogContent>
