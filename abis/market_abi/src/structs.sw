@@ -10,7 +10,7 @@ pub const FACTOR_SCALE_18: u256 = 1_000_000_000_000_000_000; // 1e18
 pub const ORACLE_CONF_BASIS_POINTS: u256 = 10_000; // 1e4
 
 pub struct CollateralConfiguration {
-    pub asset_id: b256,
+    pub asset_id: AssetId,
     pub price_feed_id: b256,
     pub decimals: u32,
     pub borrow_collateral_factor: u256, // decimals: 18
@@ -23,7 +23,7 @@ pub struct CollateralConfiguration {
 pub struct MarketConfiguration {
     pub governor: Address,
     pub pause_guardian: Address,
-    pub base_token: b256,
+    pub base_token: AssetId,
     pub base_token_decimals: u32,
     pub base_token_price_feed_id: b256,
     pub supply_kink: u256, // decimals: 18
@@ -48,7 +48,7 @@ impl MarketConfiguration {
         MarketConfiguration {
             governor: Address::zero(),
             pause_guardian: Address::zero(),
-            base_token: b256::zero(),
+            base_token: AssetId::zero(),
             base_token_decimals: 0,
             base_token_price_feed_id: b256::zero(),
             supply_kink: 0,

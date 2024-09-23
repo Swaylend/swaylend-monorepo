@@ -130,7 +130,7 @@ async fn collateral_configuration_test() {
     // change collat config for eth
     let config = collateral_config
         .iter_mut()
-        .find(|config: &&mut CollateralConfiguration| config.asset_id == eth.bits256);
+        .find(|config: &&mut CollateralConfiguration| config.asset_id == eth.asset_id);
 
     let config = match config {
         Some(config) => config,
@@ -186,7 +186,7 @@ async fn market_configuration_test() {
         target_reserves: 2000000000000u64.into(),
         governor: admin_address,
         pause_guardian: admin_address,
-        base_token: usdc.bits256,
+        base_token: usdc.asset_id,
         base_token_decimals: usdc.decimals.try_into().unwrap(),
         base_token_price_feed_id: usdc.price_feed_id,
     };

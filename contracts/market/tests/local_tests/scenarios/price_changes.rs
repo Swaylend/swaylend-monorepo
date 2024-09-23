@@ -78,7 +78,7 @@ async fn price_changes() {
     assert!(bob_supply_res.is_ok());
 
     let bob_user_collateral = market
-        .get_user_collateral(bob_address, eth.bits256)
+        .get_user_collateral(bob_address, eth.asset_id)
         .await
         .unwrap()
         .value;

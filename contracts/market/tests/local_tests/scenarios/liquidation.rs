@@ -84,7 +84,7 @@ async fn absorb_and_liquidate() {
     assert!(bob_supply_res.is_ok());
 
     let bob_user_collateral = market
-        .get_user_collateral(bob_address, eth.bits256)
+        .get_user_collateral(bob_address, eth.asset_id)
         .await
         .unwrap()
         .value;
@@ -193,7 +193,7 @@ async fn absorb_and_liquidate() {
     assert!(borrow == 0);
 
     let amount = market
-        .get_user_collateral(bob_address, eth.bits256)
+        .get_user_collateral(bob_address, eth.asset_id)
         .await
         .unwrap()
         .value;
@@ -213,7 +213,7 @@ async fn absorb_and_liquidate() {
         .with_account(&alice)
         .await
         .unwrap()
-        .get_collateral_reserves(eth.bits256)
+        .get_collateral_reserves(eth.asset_id)
         .await
         .unwrap()
         .value;
@@ -222,7 +222,7 @@ async fn absorb_and_liquidate() {
     let amount = market
         .collateral_value_to_sell(
             &[&oracle.instance],
-            eth.bits256,
+            eth.asset_id,
             reserves.value.try_into().unwrap(),
         )
         .await
@@ -263,7 +263,7 @@ async fn absorb_and_liquidate() {
     let buy_collateral_call = market
         .instance
         .methods()
-        .buy_collateral(eth.bits256, 1u64.into(), alice_address)
+        .buy_collateral(eth.asset_id, 1u64.into(), alice_address)
         .with_contracts(&[&oracle.instance])
         .with_tx_policies(tx_policies)
         .call_params(call_params_base_asset)
@@ -287,7 +287,7 @@ async fn absorb_and_liquidate() {
         .with_account(&alice)
         .await
         .unwrap()
-        .get_collateral_reserves(eth.bits256)
+        .get_collateral_reserves(eth.asset_id)
         .await
         .unwrap()
         .value;
@@ -372,7 +372,7 @@ async fn all_assets_liquidated() {
     assert!(bob_supply_res.is_ok());
 
     let bob_user_collateral = market
-        .get_user_collateral(bob_address, eth.bits256)
+        .get_user_collateral(bob_address, eth.asset_id)
         .await
         .unwrap()
         .value;
@@ -482,7 +482,7 @@ async fn all_assets_liquidated() {
     assert!(borrow == 0);
 
     let amount = market
-        .get_user_collateral(bob_address, eth.bits256)
+        .get_user_collateral(bob_address, eth.asset_id)
         .await
         .unwrap()
         .value;
@@ -502,7 +502,7 @@ async fn all_assets_liquidated() {
         .with_account(&alice)
         .await
         .unwrap()
-        .get_collateral_reserves(eth.bits256)
+        .get_collateral_reserves(eth.asset_id)
         .await
         .unwrap()
         .value;
@@ -511,7 +511,7 @@ async fn all_assets_liquidated() {
     let amount = market
         .collateral_value_to_sell(
             &[&oracle.instance],
-            eth.bits256,
+            eth.asset_id,
             reserves.value.try_into().unwrap(),
         )
         .await
@@ -547,7 +547,7 @@ async fn all_assets_liquidated() {
     let buy_collateral_call = market
         .instance
         .methods()
-        .buy_collateral(eth.bits256, 1u64.into(), alice_address)
+        .buy_collateral(eth.asset_id, 1u64.into(), alice_address)
         .with_contracts(&[&oracle.instance])
         .with_tx_policies(tx_policies)
         .call_params(call_params_base_asset)

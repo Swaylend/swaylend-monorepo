@@ -27,5 +27,7 @@ export const useLeaderboardPoints = () => {
     retry: 3,
     refetchInterval: false,
     refetchOnWindowFocus: false,
+    gcTime: 60 * 60 * 1000, // Run GC every hour
+    staleTime: 60 * 60 * 1000, // Cache for 1 hour
   });
 };
