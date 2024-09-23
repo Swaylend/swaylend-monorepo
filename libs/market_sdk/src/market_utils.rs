@@ -93,8 +93,7 @@ impl MarketContract {
         debug_step: u64, // only for local test
         random_address: bool,
     ) -> anyhow::Result<Self> {
-        let configurables = MarketConfigurables::default()
-            .with_DEBUG_STEP(debug_step)?;
+        let configurables = MarketConfigurables::default().with_DEBUG_STEP(debug_step)?;
 
         let root = PathBuf::from(env!("CARGO_WORKSPACE_DIR"));
 
@@ -331,6 +330,17 @@ impl MarketContract {
             .methods()
             .totals_collateral(asset_id)
             .with_tx_policies(tx_policies)
+            .call()
+            .await?)
+    }
+
+    pub async fn get_all_totals_collateral(
+        &self,
+    ) -> anyhow::Result<CallResponse<Vec<(AssetId, u64)>>> {
+        Ok(self
+            .instance
+            .methods()
+            .get_all_totals_collateral()
             .call()
             .await?)
     }

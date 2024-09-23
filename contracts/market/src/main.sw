@@ -376,6 +376,21 @@ impl Market for Contract {
         storage.totals_collateral.get(asset_id).try_read().unwrap_or(0)
     }
 
+    // ## 3.6 Get Total Collateral for all collateral assets
+    // ### Returns:
+    // - `Vec<(AssetId, u64)>`: A list of tuples containing the asset ID and total collateral for each collateral asset
+    #[storage(read)]
+    fn get_all_totals_collateral() -> Vec<(AssetId, u64)> {
+        let mut result = Vec::new();
+        let mut index = 0;
+        while index < storage.collateral_configurations_keys.len() {
+            let asset_id = storage.collateral_configurations_keys.get(index).unwrap().read();
+            result.push((asset_id, storage.totals_collateral.get(asset_id).try_read().unwrap_or(0)));
+            index += 1;
+        }
+        result
+    }
+
     // # 4. Base asset management (Supply and Withdrawal)
 
     // ## 4.1 Supply Base
