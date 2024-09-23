@@ -11,6 +11,8 @@ members = [
     "libs/market_sdk",
     "libs/token_sdk",
     "libs/pyth_mock_sdk",
+    # Scripts
+    "scripts",
 ]
 resolver = "2"
 

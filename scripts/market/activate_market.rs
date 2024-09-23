@@ -86,6 +86,20 @@ pub struct Args {
     pub proxy_contract_id: String,
     #[arg(long, required = true)]
     pub target_contract_id: String,
+    #[arg(long, required = true)]
+    pub oracle_contract_id: String,
+    #[arg(
+        long,
+        required = true,
+        default_value = "0x36a5d3c64c0a26af42a0d3e6cfbfd81e543036433a67770dbfbe57579b30b7a2"
+    )]
+    pub base_token_id: String,
+    #[arg(
+        long,
+        required = true,
+        default_value = "0xeaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a"
+    )]
+    pub base_token_price_feed: String,
 }
 
 #[tokio::main]
@@ -102,6 +116,8 @@ async fn main() -> anyhow::Result<()> {
 
     let contract_instance = MarketContract::new(proxy_contract_id, signing_wallet.clone());
 
+    let oracle_id = ContractId::from_str(&args.oracle_contract_id).unwrap();
+
     let target_contract_id: Bech32ContractId = ContractId::from_str(&args.target_contract_id)
         .unwrap()
         .into();
@@ -116,12 +132,17 @@ async fn main() -> anyhow::Result<()> {
 
     let tx_policies = TxPolicies::default().with_script_gas_limit(2_000_000);
 
+    let base_token_bits256 = Bits256::from_hex_str(&args.base_token_id).unwrap();
+    // TODO[urban,vid]: take in consideration the decimals when mainnet is ready
+    let base_token_decimals = 6;
+    let base_token_price_feed_id = Bits256::from_hex_str(&args.base_token_price_feed).unwrap();
+
     let market_configuration = get_market_config(
         signing_wallet.address().into(),
         signing_wallet.address().into(),
-        Bits256::zeroed(),
-        Default::default(),
-        Bits256::zeroed(),
+        base_token_bits256,
+        base_token_decimals,
+        base_token_price_feed_id,
     );
 
     println!("Market configuration: {:?}", market_configuration);
@@ -134,6 +155,15 @@ async fn main() -> anyhow::Result<()> {
         .await;
 
     println!("Contract activation result: {:?}", result);
+
+    let result = contract_instance
+        .methods()
+        .set_pyth_contract_id(oracle_id)
+        .with_tx_policies(tx_policies)
+        .call()
+        .await?;
+
+    println!("Set Pyth contract ID result: {:?}", result);
 
     println!(
         "Active market configuration: {:?}",

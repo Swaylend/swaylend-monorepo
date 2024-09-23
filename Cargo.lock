@@ -6041,6 +6041,26 @@ dependencies = [
 ]
 
 [[package]]
+name = "swaylend-scripts"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "chrono",
+ "clap",
+ "dotenv",
+ "fuels 0.66.4 (git+https://github.com/FuelLabs/fuels-rs?rev=57d0909396fb0b0a8c77f9e635d27dd3a64b9414)",
+ "market_sdk",
+ "pyth_mock_sdk",
+ "pyth_sdk",
+ "rand",
+ "serde",
+ "serde_json",
+ "tai64",
+ "token_sdk",
+ "tokio",
+]
+
+[[package]]
 name = "syn"
 version = "1.0.109"
 source = "registry+https://github.com/rust-lang/crates.io-index"
