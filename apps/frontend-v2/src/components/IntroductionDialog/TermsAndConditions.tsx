@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Button } from '../ui/button';
 import { useAccount } from '@fuels/react';
+import React, { useEffect, useState } from 'react';
+import { Button } from '../ui/button';
 
 export const TermsAndConditions = ({
   setActiveStep,

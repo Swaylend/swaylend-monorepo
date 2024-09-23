@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
-import { Button } from '../ui/button';
 import { useBalance } from '@/hooks';
 import { FUEL_ETH_BASE_ASSET_ID } from '@/utils';
 import { useAccount } from '@fuels/react';
 import { ExternalLink } from 'lucide-react';
+import React, { useEffect } from 'react';
+import { Button } from '../ui/button';
 
 export const FundWallet = ({
   setActiveStep,

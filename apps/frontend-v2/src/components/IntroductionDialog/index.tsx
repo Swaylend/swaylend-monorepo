@@ -1,14 +1,14 @@
 'use client';
 
 import { cn } from '@/lib/utils';
+import { useAccount, useIsConnected } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import { useEffect, useState } from 'react';
+import { Step, Stepper } from 'react-form-stepper';
 import { Dialog, DialogContent, DialogTitle } from '../ui/dialog';
-import { Stepper, Step } from 'react-form-stepper';
-import { TermsAndConditions } from './TermsAndConditions';
 import { FundWallet } from './FundWallet';
 import { GeneralInfo } from './GeneralInfo';
-import { useAccount, useIsConnected } from '@fuels/react';
+import { TermsAndConditions } from './TermsAndConditions';
 
 const STEP_CONFIG = {
   activeBgColor: '#3FE8BD',

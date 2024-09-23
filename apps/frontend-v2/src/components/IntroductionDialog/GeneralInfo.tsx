@@ -1,7 +1,7 @@
-import React from 'react';
-import { Button } from '../ui/button';
 import Image from 'next/image';
+import React from 'react';
 import Banner from '/public/banner.png';
+import { Button } from '../ui/button';
 
 export const GeneralInfo = ({
   setOpen,
