@@ -72,7 +72,7 @@ export const Navbar = () => {
                 </div>
               </Link>
             ))}
-            <DropdownMenu>
+            {/* <DropdownMenu>
               <DropdownMenuTrigger>
                 <div className="text-lavender outline-none border-none focus:outline-none focus:border-none hover:text-lavender/80 text-md font-semibold flex items-center gap-x-1">
                   Bridges
@@ -143,10 +143,10 @@ export const Navbar = () => {
                   </a>
                 </DropdownMenuItem>
               </DropdownMenuContent>
-            </DropdownMenu>
+            </DropdownMenu> */}
           </div>
           <div className="flex items-center gap-x-2">
-            <Points />
+            {/* <Points /> */}
             <MarketSwitcher />
             <ConnectButton />
           </div>
@@ -161,7 +161,7 @@ export const Navbar = () => {
             <Image src={LogoIcon} alt="logo" />
           </Link>
           <div className="flex items-center gap-x-2">
-            <Points />
+            {/* <Points /> */}
             <div className="hidden md:block">
               <MarketSwitcher />
             </div>
