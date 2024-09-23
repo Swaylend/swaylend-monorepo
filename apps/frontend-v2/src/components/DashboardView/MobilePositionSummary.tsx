@@ -5,12 +5,12 @@ import {
   useUserSupplyBorrow,
 } from '@/hooks';
 import { useUserLiquidationPoint } from '@/hooks/useUserLiquidationPoint';
+import { getFormattedPrice } from '@/utils';
 import { useIsConnected } from '@fuels/react';
+import BigNumber from 'bignumber.js';
 import { CircleXIcon, PlusCircleIcon } from 'lucide-react';
 import React, { useState } from 'react';
 import { Line } from '../Line';
-import { getFormattedPrice } from '@/utils';
-import BigNumber from 'bignumber.js';
 
 export const MobilePositionSummary = () => {
   const { isConnected } = useIsConnected();
