@@ -313,10 +313,6 @@ export class BasePoolSnapshot extends AbstractEntity  {
 
 	@Required
 	@Column("BigDecimal")
-	nonRecursiveSuppliedAmount: BigDecimal
-
-	@Required
-	@Column("BigDecimal")
 	collateralAmount: BigDecimal
 
 	@Column("BigDecimal")
@@ -449,10 +445,6 @@ export class CollateralPool extends AbstractEntity  {
 
 	@Column("BigDecimal")
 	suppliedAmountUsd?: BigDecimal
-
-	@Required
-	@Column("BigDecimal")
-	nonRecursiveSuppliedAmount: BigDecimal
 
 	@Required
 	@Column("BigDecimal")
@@ -607,10 +599,6 @@ export class CollateralPoolSnapshot extends AbstractEntity  {
 
 	@Required
 	@Column("BigDecimal")
-	nonRecursiveSuppliedAmount: BigDecimal
-
-	@Required
-	@Column("BigDecimal")
 	collateralAmount: BigDecimal
 
 	@Column("BigDecimal")
@@ -742,7 +730,6 @@ type BasePoolSnapshot @entity {
     availableAmountUsd: BigDecimal
     suppliedAmount: BigDecimal!
     suppliedAmountUsd: BigDecimal
-    nonRecursiveSuppliedAmount: BigDecimal!
     collateralAmount: BigDecimal!
     collateralAmountUsd: BigDecimal
     collateralFactor: BigDecimal!
@@ -783,7 +770,6 @@ type CollateralPool @entity {
     availableAmountUsd: BigDecimal
     suppliedAmount: BigDecimal!
     suppliedAmountUsd: BigDecimal
-    nonRecursiveSuppliedAmount: BigDecimal!
     collateralAmount: BigDecimal!
     collateralAmountUsd: BigDecimal
     collateralFactor: BigDecimal!
@@ -828,7 +814,6 @@ type CollateralPoolSnapshot @entity {
     availableAmountUsd: BigDecimal
     suppliedAmount: BigDecimal!
     suppliedAmountUsd: BigDecimal
-    nonRecursiveSuppliedAmount: BigDecimal!
     collateralAmount: BigDecimal!
     collateralAmountUsd: BigDecimal
     collateralFactor: BigDecimal!

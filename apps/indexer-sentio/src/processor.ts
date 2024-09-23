@@ -320,42 +320,35 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
 
       // Collateral pool
       const collateralPoolId = `${chainId}_${ctx.contractAddress}_${asset_id}`;
-      const collateralPool = await ctx.store.get(
-        CollateralPool,
-        collateralPoolId
-      );
 
-      if (!collateralPool) {
-        const poolSnapshot = new CollateralPool({
-          id: collateralPoolId,
-          chainId: chainId,
-          poolAddress: ctx.contractAddress,
-          underlyingTokenAddress: asset_id,
-          underlyingTokenSymbol: ASSET_ID_TO_SYMBOL[asset_id],
-          underlyingTokenPriceUsd: BigDecimal(0),
-          availableAmount: BigDecimal(0),
-          availableAmountUsd: BigDecimal(0),
-          suppliedAmount: BigDecimal(0),
-          suppliedAmountUsd: BigDecimal(0),
-          nonRecursiveSuppliedAmount: BigDecimal(0),
-          collateralAmount: BigDecimal(0),
-          collateralAmountUsd: BigDecimal(0),
-          collateralFactor: BigDecimal(
-            borrow_collateral_factor.toString()
-          ).dividedBy(FACTOR_SCALE_18),
-          supplyIndex: BigDecimal(0),
-          supplyApr: BigDecimal(0),
-          borrowedAmount: BigDecimal(0),
-          borrowedAmountUsd: BigDecimal(0),
-          borrowIndex: BigDecimal(0),
-          borrowApr: BigDecimal(0),
-          totalFeesUsd: BigDecimal(0),
-          userFeesUsd: BigDecimal(0),
-          protocolFeesUsd: BigDecimal(0),
-        });
+      const poolSnapshot = new CollateralPool({
+        id: collateralPoolId,
+        chainId: chainId,
+        poolAddress: ctx.contractAddress,
+        underlyingTokenAddress: asset_id,
+        underlyingTokenSymbol: ASSET_ID_TO_SYMBOL[asset_id],
+        underlyingTokenPriceUsd: BigDecimal(0),
+        availableAmount: BigDecimal(0),
+        availableAmountUsd: BigDecimal(0),
+        suppliedAmount: BigDecimal(0),
+        suppliedAmountUsd: BigDecimal(0),
+        collateralAmount: BigDecimal(0),
+        collateralAmountUsd: BigDecimal(0),
+        collateralFactor: BigDecimal(
+          borrow_collateral_factor.toString()
+        ).dividedBy(FACTOR_SCALE_18),
+        supplyIndex: BigDecimal(0),
+        supplyApr: BigDecimal(0),
+        borrowedAmount: BigDecimal(0),
+        borrowedAmountUsd: BigDecimal(0),
+        borrowIndex: BigDecimal(0),
+        borrowApr: BigDecimal(0),
+        totalFeesUsd: BigDecimal(0),
+        userFeesUsd: BigDecimal(0),
+        protocolFeesUsd: BigDecimal(0),
+      });
 
-        await ctx.store.upsert(poolSnapshot);
-      }
+      await ctx.store.upsert(poolSnapshot);
     })
     .onLogCollateralAssetUpdated(async (event, ctx) => {
       const {
@@ -453,7 +446,9 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
           underlyingTokenSymbol:
             ASSET_ID_TO_SYMBOL[collateralConfiguration.assetAddress],
           suppliedAmount: BigDecimal(0),
+          suppliedAmountUsd: BigDecimal(0),
           borrowedAmount: BigDecimal(0),
+          borrowedAmountUsd: BigDecimal(0),
           collateralAmount: BigDecimal(amount.toString()).dividedBy(
             BigDecimal(10).pow(collateralConfiguration.decimals)
           ),
@@ -482,9 +477,7 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
         );
       }
 
-      collateralPool.collateralAmount = BigDecimal(
-        collateralPool.collateralAmount
-      ).plus(
+      collateralPool.collateralAmount = collateralPool.collateralAmount.plus(
         BigDecimal(amount.toString()).dividedBy(
           BigDecimal(10).pow(collateralConfiguration.decimals)
         )
@@ -551,9 +544,7 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
         );
       }
 
-      collateralPool.collateralAmount = BigDecimal(
-        collateralPool.collateralAmount
-      ).minus(
+      collateralPool.collateralAmount = collateralPool.collateralAmount.minus(
         BigDecimal(amount.toString()).dividedBy(
           BigDecimal(10).pow(collateralConfiguration.decimals)
         )
@@ -862,7 +853,6 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
               .times(basePrice),
             suppliedAmount: totalSupplyBase,
             suppliedAmountUsd: totalSupplyBase.times(basePrice),
-            nonRecursiveSuppliedAmount: totalSupplyBase,
             collateralAmount: BigDecimal(0),
             collateralAmountUsd: BigDecimal(0),
             collateralFactor: BigDecimal(0),
@@ -883,7 +873,6 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
             totalSupplyBase.minus(totalBorrowBase);
           basePoolSnapshot.borrowedAmount = totalBorrowBase;
           basePoolSnapshot.suppliedAmount = totalSupplyBase;
-          basePoolSnapshot.nonRecursiveSuppliedAmount = totalSupplyBase;
           basePoolSnapshot.supplyIndex =
             marketBasic.baseSupplyIndex.dividedBy(FACTOR_SCALE_15);
           basePoolSnapshot.borrowIndex =
