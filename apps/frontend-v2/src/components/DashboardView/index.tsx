@@ -7,6 +7,7 @@ import { AssetsTable } from './AssetsTable';
 import { MarketSwitch } from './MarketSwitch';
 import { MobilePositionSummary } from './MobilePositionSummary';
 import { Stats } from './Stats';
+import { IntroductionDialog } from '../IntroductionDialog';
 
 export const DashboardView = () => {
   return (
@@ -18,6 +19,7 @@ export const DashboardView = () => {
       <InputDialog />
       <SuccessDialog />
       <RedeemReferralDialog />
+      <IntroductionDialog />
     </div>
   );
 };
