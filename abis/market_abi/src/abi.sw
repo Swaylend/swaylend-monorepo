@@ -53,6 +53,9 @@ abi Market {
     #[storage(read)]
     fn totals_collateral(asset_id: AssetId) -> u64;
 
+    #[storage(read)]
+    fn get_all_totals_collateral() -> Vec<(AssetId, u64)>;
+
     // # 4. Base asset management (Supply and Withdrawal)
     // If the user has enough collateral, `withdraw_base` performs the borrow function
     #[payable, storage(read, write)]
