@@ -33,6 +33,7 @@ import {
   ASSET_ID_TO_SYMBOL,
   SYMBOL_TO_ICON,
   formatUnits,
+  getFormattedNumber,
   getSupplyApr,
 } from '@/utils';
 import { useAccount } from '@fuels/react';
@@ -190,10 +191,14 @@ export const LendTable = () => {
                       </div>
                     )}
                     <div>
-                      {formatUnits(
-                        balance ? BigNumber(balance.toString()) : BigNumber(0),
-                        marketConfiguration?.baseTokenDecimals ?? 9
-                      ).toFixed(2)}{' '}
+                      {getFormattedNumber(
+                        formatUnits(
+                          balance
+                            ? BigNumber(balance.toString())
+                            : BigNumber(0),
+                          marketConfiguration?.baseTokenDecimals ?? 9
+                        )
+                      )}{' '}
                       {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
                       {' in wallet'}
                     </div>
@@ -209,10 +214,12 @@ export const LendTable = () => {
                 {getSupplyApr(supplyRate)}
               </TableCell>
               <TableCell>
-                {formatUnits(
-                  userSupplyBorrow?.supplied ?? BigNumber(0),
-                  marketConfiguration?.baseTokenDecimals ?? 9
-                ).toFormat(2)}{' '}
+                {getFormattedNumber(
+                  formatUnits(
+                    userSupplyBorrow?.supplied ?? BigNumber(0),
+                    marketConfiguration?.baseTokenDecimals ?? 9
+                  )
+                )}{' '}
                 {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
               </TableCell>
               <TableCell>
@@ -305,12 +312,14 @@ export const LendTable = () => {
                         </div>
                       )}
                       <div className="text-moon text-sm">
-                        {formatUnits(
-                          balance
-                            ? BigNumber(balance.toString())
-                            : BigNumber(0),
-                          marketConfiguration?.baseTokenDecimals ?? 9
-                        ).toFixed(2)}
+                        {getFormattedNumber(
+                          formatUnits(
+                            balance
+                              ? BigNumber(balance.toString())
+                              : BigNumber(0),
+                            marketConfiguration?.baseTokenDecimals ?? 9
+                          )
+                        )}
                         {' in wallet'}
                       </div>
                     </div>
@@ -332,10 +341,12 @@ export const LendTable = () => {
                     Supplied Assets
                   </div>
                   <div className="text-moon">
-                    {formatUnits(
-                      userSupplyBorrow?.supplied ?? BigNumber(0),
-                      marketConfiguration?.baseTokenDecimals ?? 9
-                    ).toFormat(2)}{' '}
+                    {getFormattedNumber(
+                      formatUnits(
+                        userSupplyBorrow?.supplied ?? BigNumber(0),
+                        marketConfiguration?.baseTokenDecimals ?? 9
+                      )
+                    )}{' '}
                     {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
                   </div>
                 </div>

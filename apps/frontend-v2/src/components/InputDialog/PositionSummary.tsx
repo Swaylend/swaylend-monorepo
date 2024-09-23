@@ -8,7 +8,7 @@ import {
 } from '@/hooks';
 import { useUserLiquidationPoint } from '@/hooks/useUserLiquidationPoint';
 import { cn } from '@/lib/utils';
-import { formatUnits } from '@/utils';
+import { formatUnits, getFormattedNumber, getFormattedPrice } from '@/utils';
 import BigNumber from 'bignumber.js';
 import { ArrowDown, ArrowUp, InfoIcon } from 'lucide-react';
 import React, { useMemo } from 'react';
@@ -54,9 +54,9 @@ export const PositionSummary = () => {
     return [
       {
         title: 'Collateral Value',
-        value: `$${collateralValue?.toFixed(2)}`,
+        value: `${getFormattedPrice(collateralValue ?? BigNumber(0))}`,
         changeValue: possibleCollateralValue
-          ? `$${possibleCollateralValue.toFixed(2)}`
+          ? `${getFormattedPrice(possibleCollateralValue)}`
           : null,
         color: possibleCollateralValue?.lte(collateralValue ?? BigNumber(0))
           ? 0
@@ -67,9 +67,9 @@ export const PositionSummary = () => {
       },
       {
         title: 'Liquidation Point',
-        value: `$${(liquidationPoint ?? BigNumber(0)).toFixed(2)}`,
+        value: `$${getFormattedPrice(liquidationPoint ?? BigNumber(0))}`,
         changeValue: possibleLiquidationPoint
-          ? `$${possibleLiquidationPoint.toFixed(2)}`
+          ? `${getFormattedPrice(possibleLiquidationPoint)}`
           : null,
         color: possibleLiquidationPoint?.lte(liquidationPoint ?? BigNumber(0))
           ? 1
@@ -82,9 +82,9 @@ export const PositionSummary = () => {
       },
       {
         title: 'Borrow Capacity',
-        value: `${(totalBorrowCapacity ?? BigNumber(0)).toFormat(2)} USDC`,
+        value: `${getFormattedNumber(totalBorrowCapacity)} USDC`,
         changeValue: possibleBorrowCapacity
-          ? `${possibleBorrowCapacity.toFormat(2)} USDC`
+          ? `${getFormattedNumber(possibleBorrowCapacity)} USDC`
           : null,
         color: possibleBorrowCapacity?.lte(totalBorrowCapacity ?? BigNumber(0))
           ? 0
@@ -97,9 +97,9 @@ export const PositionSummary = () => {
       },
       {
         title: 'Available to Borrow',
-        value: `${(borrowCapacity ?? BigNumber(0)).toFormat(2)} USDC`,
+        value: `${getFormattedNumber(borrowCapacity ?? BigNumber(0))} USDC`,
         changeValue: possibleAvailableToBorrow
-          ? `${possibleAvailableToBorrow.toFixed(2)} USDC`
+          ? `${getFormattedNumber(possibleAvailableToBorrow)} USDC`
           : null,
         color: possibleAvailableToBorrow?.lte(borrowCapacity ?? BigNumber(0))
           ? 0

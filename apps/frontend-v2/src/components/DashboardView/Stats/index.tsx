@@ -9,7 +9,7 @@ import {
 
 import { Skeleton } from '@/components/ui/skeleton';
 import { useMarketStore } from '@/stores';
-import { formatUnits } from '@/utils';
+import { formatUnits, getFormattedPrice } from '@/utils';
 import { useIsConnected } from '@fuels/react';
 import BigNumber from 'bignumber.js';
 import { Repeat } from 'lucide-react';
@@ -58,7 +58,7 @@ export const Stats = () => {
       !userCollateralAssets ||
       !colateralConfigurations
     ) {
-      return BigNumber(0).toFormat(2);
+      return BigNumber(0);
     }
     if (marketMode === 'lend') {
       return formatUnits(
@@ -66,20 +66,21 @@ export const Stats = () => {
           priceData.prices[marketConfiguration.baseToken]
         ),
         marketConfiguration.baseTokenDecimals
-      ).toFormat(2);
+      );
     }
 
     if (marketMode === 'borrow') {
-      return Object.entries(userCollateralAssets)
-        .reduce((acc, [key, value]) => {
+      return Object.entries(userCollateralAssets).reduce(
+        (acc, [key, value]) => {
           return acc.plus(
             formatUnits(
               value.times(priceData.prices[key]),
               colateralConfigurations[key].decimals
             )
           );
-        }, new BigNumber(0))
-        .toFormat(2);
+        },
+        new BigNumber(0)
+      );
     }
   }, [
     userSupplyBorrow,
@@ -99,18 +100,18 @@ export const Stats = () => {
       !userSupplyBorrow ||
       !marketConfiguration
     ) {
-      return { title: '', value: '' };
+      return { title: '', value: 0 };
     }
     // Borrowed + Available to Borrow
     if (userSupplyBorrow.borrowed.gt(0)) {
       // Available to Borrow
       if (borrowedMode === 0) {
         if (borrowCapacity.lt(1) && borrowCapacity.gt(0)) {
-          return { title: 'Available to Borrow', value: '< $1' };
+          return { title: 'Available to Borrow', value: 0.5 };
         }
         return {
           title: 'Available to Borrow',
-          value: `$${borrowCapacity.toFormat(2)}`,
+          value: borrowCapacity,
         };
       }
       // Borrowed
@@ -119,17 +120,17 @@ export const Stats = () => {
         marketConfiguration.baseTokenDecimals
       );
       if (val.lt(1) && val.gt(0)) {
-        return { title: 'Borrowed', value: '< $1' };
+        return { title: 'Borrowed', value: 0.5 };
       }
-      return { title: 'Borrowed', value: `$${val.toFormat(2)}` };
+      return { title: 'Borrowed', value: val };
     }
     // Available to borrow
     if (borrowCapacity.lt(1) && borrowCapacity.gt(0)) {
-      return { title: 'Available to Borrow', value: '< $1' };
+      return { title: 'Available to Borrow', value: 0.5 };
     }
     return {
       title: 'Available to Borrow',
-      value: `$${borrowCapacity.toFormat(2)}`,
+      value: borrowCapacity,
     };
   }, [isConnected, borrowCapacity, userSupplyBorrow, borrowedMode]);
 
@@ -146,7 +147,7 @@ export const Stats = () => {
                 <Skeleton className="w-[60%] h-[25px] mt-2 sm:h-[40px] bg-primary/20" />
               ) : (
                 <div className="text-lavender font-semibold text-lg sm:text-xl lg:text-2xl">
-                  ${totalSuppliedBalance}
+                  {getFormattedPrice(BigNumber(totalSuppliedBalance ?? 0))}
                 </div>
               )}
             </div>
@@ -177,7 +178,7 @@ export const Stats = () => {
                 </div>
               ) : (
                 <div className="text-lavender font-semibold text-lg sm:text-xl lg:text-2xl">
-                  {borrowedBalanceText.value}
+                  {getFormattedPrice(BigNumber(borrowedBalanceText.value))}
                 </div>
               )}
             </div>
