@@ -10,9 +10,9 @@ async fn pause_test() {
     let TestData {
         admin,
         alice,
-        alice_address,
+        alice_account,
         bob,
-        bob_address,
+        bob_account,
         usdc_contract,
         usdc,
         market,
@@ -42,7 +42,7 @@ async fn pause_test() {
     let amount = parse_units(400, usdc.decimals);
 
     // Transfer of 400 USDC to the Bob's wallet
-    usdc_contract.mint(bob_address, amount).await.unwrap();
+    usdc_contract.mint(bob_account, amount).await.unwrap();
 
     let balance = bob.get_asset_balance(&usdc.asset_id).await.unwrap();
     assert!(balance == amount);
@@ -57,7 +57,7 @@ async fn pause_test() {
         .unwrap();
 
     // Сheck supply balance equal to 400 USDC
-    let (supply_balance, _) = market.get_user_supply_borrow(bob_address).await.unwrap();
+    let (supply_balance, _) = market.get_user_supply_borrow(bob_account).await.unwrap();
 
     assert!(supply_balance == (amount as u128));
 
@@ -72,7 +72,7 @@ async fn pause_test() {
     let amount = parse_units(40, uni.decimals);
 
     // Transfer of 40 UNI to the Alice's wallet
-    uni_contract.mint(alice_address, amount).await.unwrap();
+    uni_contract.mint(alice_account, amount).await.unwrap();
 
     let balance = alice.get_asset_balance(&uni.asset_id).await.unwrap();
     assert!(balance == amount);
@@ -88,7 +88,7 @@ async fn pause_test() {
 
     // Сheck supply balance equal to 40 UNI
     let res = market
-        .get_user_collateral(alice_address, uni.asset_id)
+        .get_user_collateral(alice_account, uni.asset_id)
         .await
         .unwrap()
         .value;
@@ -159,7 +159,7 @@ async fn pause_test() {
 
     assert!(
         market
-            .is_liquidatable(&[&oracle.instance], alice_address)
+            .is_liquidatable(&[&oracle.instance], alice_account)
             .await
             .unwrap()
             .value
@@ -169,16 +169,16 @@ async fn pause_test() {
         .with_account(&bob)
         .await
         .unwrap()
-        .absorb(&[&oracle.instance], vec![alice_address], &price_data_update)
+        .absorb(&[&oracle.instance], vec![alice_account], &price_data_update)
         .await
         .unwrap();
 
     // Check if absorb was ok
-    let (_, borrow) = market.get_user_supply_borrow(alice_address).await.unwrap();
+    let (_, borrow) = market.get_user_supply_borrow(alice_account).await.unwrap();
     assert!(borrow == 0);
 
     let amount = market
-        .get_user_collateral(alice_address, uni.asset_id)
+        .get_user_collateral(alice_account, uni.asset_id)
         .await
         .unwrap()
         .value;
@@ -213,7 +213,7 @@ async fn pause_test() {
         .value;
 
     // Transfer of amount to the wallet
-    usdc_contract.mint(bob_address, amount).await.unwrap();
+    usdc_contract.mint(bob_account, amount).await.unwrap();
 
     // Сheck balance
     let balance = bob.get_asset_balance(&usdc.asset_id).await.unwrap();
@@ -230,7 +230,7 @@ async fn pause_test() {
             amount as u64,
             uni.asset_id,
             1,
-            bob_address,
+            bob_account,
         )
         .await
         .unwrap();
@@ -292,7 +292,7 @@ async fn pause_test() {
     let amount = parse_units(400, usdc.decimals);
 
     // Transfer of 400 USDC to the Bob's wallet
-    usdc_contract.mint(bob_address, amount).await.unwrap();
+    usdc_contract.mint(bob_account, amount).await.unwrap();
 
     let balance = bob.get_asset_balance(&usdc.asset_id).await.unwrap();
     assert!(balance == amount);
@@ -316,7 +316,7 @@ async fn pause_test() {
     let amount = parse_units(40, uni.decimals);
 
     // Transfer of 40 UNI to the Alice's wallet
-    uni_contract.mint(alice_address, amount).await.unwrap();
+    uni_contract.mint(alice_account, amount).await.unwrap();
 
     let balance = alice.get_asset_balance(&uni.asset_id).await.unwrap();
     assert!(balance == amount);
@@ -360,7 +360,7 @@ async fn pause_test() {
         .with_account(&bob)
         .await
         .unwrap()
-        .absorb(&[&oracle.instance], vec![alice_address], &price_data_update)
+        .absorb(&[&oracle.instance], vec![alice_account], &price_data_update)
         .await
         .is_err();
     assert!(res);
@@ -402,7 +402,7 @@ async fn pause_test() {
             amount,
             uni.asset_id,
             1,
-            bob_address,
+            bob_account,
         )
         .await
         .is_err();

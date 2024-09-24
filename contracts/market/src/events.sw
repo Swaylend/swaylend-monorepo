@@ -23,7 +23,7 @@ pub struct CollateralAssetResumed {
 
 // User Basic Event
 pub struct UserBasicEvent {
-    pub address: Address,
+    pub account: Identity,
     pub user_basic: UserBasic
 }
 
@@ -34,33 +34,33 @@ pub struct MarketBasicEvent {
 
 // User Collateral Events
 pub struct UserSupplyCollateralEvent {
-    pub address: Address,
+    pub account: Identity,
     pub asset_id: AssetId,
     pub amount: u64,
 }
 
 pub struct UserWithdrawCollateralEvent {
-    pub address: Address,
+    pub account: Identity,
     pub asset_id: AssetId,
     pub amount: u64,
 }
 
 // User Base Asset Events
 pub struct UserSupplyBaseEvent {
-    pub address: Address,
+    pub account: Identity,
     pub supply_amount: u256,
     pub repay_amount: u256,
 }
 
 pub struct UserWithdrawBaseEvent {
-    pub address: Address,
+    pub account: Identity,
     pub withdraw_amount: u256,
     pub borrow_amount: u256,
 }
 
 // Liquidation Events
 pub struct AbsorbCollateralEvent {
-    pub address: Address,
+    pub account: Identity,
     pub asset_id: AssetId,
     pub amount: u64,
     pub seize_value: u256,
@@ -68,8 +68,8 @@ pub struct AbsorbCollateralEvent {
 }
 
 pub struct UserLiquidatedEvent {
-    pub address: Address,
-    pub liquidator: Address,
+    pub account: Identity,
+    pub liquidator: Identity,
     pub base_paid_out: u256,
     pub base_paid_out_value: u256,
     pub total_base: u256,
@@ -79,8 +79,8 @@ pub struct UserLiquidatedEvent {
 
 // Buy Collateral Event
 pub struct BuyCollateralEvent {
-    pub caller: Address,
-    pub recipient: Address,
+    pub caller: Identity,
+    pub recipient: Identity,
     pub asset_id: AssetId,
     pub amount: u64,
     pub price: u64,
@@ -88,7 +88,7 @@ pub struct BuyCollateralEvent {
 
 // Reserves Withdrawn Event
 pub struct ReservesWithdrawnEvent {
-    pub address: Address,
+    pub account: Identity,
     pub amount: u64,
 }
 
