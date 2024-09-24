@@ -233,3 +233,123 @@ impl I256 {
         self * Self::neg_from(1)
     }
 }
+
+#[test]
+fn i256_add() {
+    // 1 + 2
+    let a = I256::from(1_u64);
+    let b = I256::from(2_u64);
+    let c = a + b;
+    assert_eq(c, I256::from(3_u64));
+
+    // -10 + 15
+    let a = I256::neg_from(u256::from(10_u64));
+    let b = I256::from(15_u64);
+    let c = a + b;
+    assert_eq(c, I256::from(5_u64));
+
+    // 15 + -25
+    let a = I256::from(15_u64);
+    let b = I256::neg_from(u256::from(25_u64));
+    let c = a + b;
+    assert_eq(c, I256::neg_from(u256::from(10_u64)));
+
+    // -10 + -20
+    let a = I256::neg_from(u256::from(10_u64));
+    let b = I256::neg_from(u256::from(20_u64));
+    let c = a + b;
+    assert_eq(c, I256::neg_from(u256::from(30_u64)));
+}
+
+#[test]
+fn i256_sub() {
+    // 1 - 2
+    let a = I256::from(1_u64);
+    let b = I256::from(2_u64);
+    let c = a - b;
+    assert_eq(c, I256::neg_from(u256::from(1_u64)));
+
+    // -10 - 15
+    let a = I256::neg_from(u256::from(10_u64));
+    let b = I256::from(15_u64);
+    let c = a - b;
+    assert_eq(c, I256::neg_from(u256::from(25_u64)));
+
+    // 15 - -25
+    let a = I256::from(15_u64);
+    let b = I256::neg_from(u256::from(25_u64));
+    let c = a - b;
+    assert_eq(c, I256::from(40_u64));
+
+    // -10 - -20
+    let a = I256::neg_from(u256::from(10_u64));
+    let b = I256::neg_from(u256::from(20_u64));
+    let c = a - b;
+    assert_eq(c, I256::from(10_u64));
+}
+
+#[test]
+fn i256_mul() {
+    // 1 * 2
+    let a = I256::from(1_u64);
+    let b = I256::from(2_u64);
+    let c = a * b;
+    assert_eq(c, I256::from(2_u64));
+
+    // -10 * 15
+    let a = I256::neg_from(u256::from(10_u64));
+    let b = I256::from(15_u64);
+    let c = a * b;
+    assert_eq(c, I256::neg_from(u256::from(150_u64)));
+
+    // 15 * -25
+    let a = I256::from(15_u64);
+    let b = I256::neg_from(u256::from(25_u64));
+    let c = a * b;
+    assert_eq(c, I256::neg_from(u256::from(375_u64)));
+
+    // -10 * -20
+    let a = I256::neg_from(u256::from(10_u64));
+    let b = I256::neg_from(u256::from(20_u64));
+    let c = a * b;
+    assert_eq(c, I256::from(200_u64));
+}
+
+#[test]
+fn i256_div() {
+    // 1 / 2
+    let a = I256::from(1_u64);
+    let b = I256::from(2_u64);
+    let c = a / b;
+    assert_eq(c, I256::zero());
+
+    // 40 / 9
+    let a = I256::from(40_u64);
+    let b = I256::from(9_u64);
+    let c = a / b;
+    assert_eq(c, I256::from(4_u64));
+
+    // 40 / 10
+    let a = I256::from(40_u64);
+    let b = I256::from(10_u64);
+    let c = a / b;
+    assert_eq(c, I256::from(4_u64));
+
+    // -100 / 33
+    let a = I256::neg_from(u256::from(100_u64));
+    let b = I256::from(33_u64);
+    let c = a / b;
+    assert_eq(c, I256::neg_from(u256::from(3_u64)));
+
+    // 120 / -40
+    let a = I256::from(120_u64);
+    let b = I256::neg_from(u256::from(40_u64));
+    let c = a / b;
+    assert_eq(c, I256::neg_from(u256::from(3_u64)));
+
+    // -400 / -120
+    let a = I256::neg_from(u256::from(400_u64));
+    let b = I256::neg_from(u256::from(120_u64));
+    let c = a / b;
+    assert_eq(c, I256::from(3_u64));
+}
