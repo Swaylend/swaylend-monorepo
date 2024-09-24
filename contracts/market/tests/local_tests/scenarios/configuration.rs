@@ -161,7 +161,6 @@ async fn collateral_configuration_test() {
 async fn market_configuration_test() {
     let TestData {
         admin,
-        admin_account,
         market,
         usdc,
         ..
@@ -184,8 +183,6 @@ async fn market_configuration_test() {
         base_min_for_rewards: 2000000000.into(),
         base_borrow_min: 2000.into(),
         target_reserves: 2000000000000u64.into(),
-        governor: admin_account,
-        pause_guardian: admin_account,
         base_token: usdc.asset_id,
         base_token_decimals: usdc.decimals.try_into().unwrap(),
         base_token_price_feed_id: usdc.price_feed_id,

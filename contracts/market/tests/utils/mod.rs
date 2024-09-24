@@ -91,14 +91,8 @@ pub async fn setup() -> TestData {
     let eth = assets.get("ETH").unwrap().clone();
 
     //--------------- MARKET ---------------
-    let market_config = get_market_config(
-        admin.address().into(),
-        admin.address().into(),
-        usdc.asset_id,
-        usdc.decimals as u32,
-        usdc.price_feed_id,
-    )
-    .unwrap();
+    let market_config =
+        get_market_config(usdc.asset_id, usdc.decimals as u32, usdc.price_feed_id).unwrap();
 
     // debug step
     let debug_step: u64 = 10_000;
@@ -107,7 +101,10 @@ pub async fn setup() -> TestData {
         .unwrap();
 
     // Activate contract
-    market.activate_contract(market_config).await.unwrap();
+    market
+        .activate_contract(market_config, admin.address().into())
+        .await
+        .unwrap();
 
     // Set Pyth contract ID
     market
