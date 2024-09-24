@@ -85,7 +85,6 @@ type BasePoolSnapshot @entity {
     availableAmountUsd: BigDecimal
     suppliedAmount: BigDecimal!
     suppliedAmountUsd: BigDecimal
-    nonRecursiveSuppliedAmount: BigDecimal!
     collateralAmount: BigDecimal!
     collateralAmountUsd: BigDecimal
     collateralFactor: BigDecimal!
@@ -126,7 +125,6 @@ type CollateralPool @entity {
     availableAmountUsd: BigDecimal
     suppliedAmount: BigDecimal!
     suppliedAmountUsd: BigDecimal
-    nonRecursiveSuppliedAmount: BigDecimal!
     collateralAmount: BigDecimal!
     collateralAmountUsd: BigDecimal
     collateralFactor: BigDecimal!
@@ -171,7 +169,6 @@ type CollateralPoolSnapshot @entity {
     availableAmountUsd: BigDecimal
     suppliedAmount: BigDecimal!
     suppliedAmountUsd: BigDecimal
-    nonRecursiveSuppliedAmount: BigDecimal!
     collateralAmount: BigDecimal!
     collateralAmountUsd: BigDecimal
     collateralFactor: BigDecimal!

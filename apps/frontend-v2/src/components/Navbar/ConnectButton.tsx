@@ -54,8 +54,17 @@ export const ConnectButton = () => {
             </div>
           </div>
           <div className="mt-10">
+            <a
+              href={`https://app.fuel.network/account/${account}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <Button className="w-full" variant="secondary">
+                View on Fuel Explorer
+              </Button>
+            </a>
             <Button
-              className="w-full"
+              className="w-full mt-2"
               variant="destructive"
               onMouseDown={() => disconnect()}
             >

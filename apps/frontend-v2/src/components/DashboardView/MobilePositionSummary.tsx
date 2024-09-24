@@ -5,7 +5,9 @@ import {
   useUserSupplyBorrow,
 } from '@/hooks';
 import { useUserLiquidationPoint } from '@/hooks/useUserLiquidationPoint';
+import { getFormattedPrice } from '@/utils';
 import { useIsConnected } from '@fuels/react';
+import BigNumber from 'bignumber.js';
 import { CircleXIcon, PlusCircleIcon } from 'lucide-react';
 import React, { useState } from 'react';
 import { Line } from '../Line';
@@ -44,13 +46,13 @@ export const MobilePositionSummary = () => {
               <div className="text-md font-semibold text-lavender flex justify-between">
                 <div>Available to Borrow</div>
                 <div className="text-primary text-right">
-                  {borrowCapacity?.toFormat(2)} USD
+                  {getFormattedPrice(borrowCapacity ?? BigNumber(0))}
                 </div>
               </div>
               <div className="text-md font-semibold flex text-lavender justify-between">
                 <div>Liquidation point</div>
                 <div className="text-primary text-right">
-                  ${userLiquidationPoint?.toFormat(2)}
+                  {getFormattedPrice(userLiquidationPoint ?? BigNumber(0))}
                 </div>
               </div>
               <div className="text-md font-semibold flex text-lavender justify-between">
@@ -62,7 +64,7 @@ export const MobilePositionSummary = () => {
               <div className="text-md font-semibold flex text-lavender justify-between">
                 <div>Collateral Value</div>
                 <div className="text-primary text-right">
-                  ${collateralValue?.toFormat(2)}
+                  {getFormattedPrice(collateralValue ?? BigNumber(0))}
                 </div>
               </div>
             </div>

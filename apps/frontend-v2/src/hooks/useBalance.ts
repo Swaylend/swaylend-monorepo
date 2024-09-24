@@ -25,5 +25,6 @@ export const useBalance = ({ address, assetId }: UseBalanceParams) => {
     initialData: null,
     enabled: !!provider,
     placeholderData: keepPreviousData,
+    staleTime: 0,
   });
 };

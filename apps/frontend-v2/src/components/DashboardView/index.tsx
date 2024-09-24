@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
 import { InputDialog } from '../InputDialog';
+import { IntroductionDialog } from '../IntroductionDialog';
 import { RedeemReferralDialog } from '../RedeemReferralDialog';
 import { SuccessDialog } from '../SuccessDialog';
 import { AssetsTable } from './AssetsTable';
@@ -18,6 +19,7 @@ export const DashboardView = () => {
       <InputDialog />
       <SuccessDialog />
       <RedeemReferralDialog />
+      <IntroductionDialog />
     </div>
   );
 };

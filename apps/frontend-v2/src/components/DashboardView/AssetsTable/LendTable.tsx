@@ -33,6 +33,7 @@ import {
   ASSET_ID_TO_SYMBOL,
   SYMBOL_TO_ICON,
   formatUnits,
+  getFormattedNumber,
   getSupplyApr,
 } from '@/utils';
 import { useAccount } from '@fuels/react';
@@ -143,7 +144,7 @@ export const LendTable = () => {
             <TableHead className="w-3/12">
               <div className="flex items-center gap-x-2">
                 Earn Asset
-                <InfoIcon text={'Assets you lend to the market.'} />
+                <InfoIcon text={'Base asset available for lending.'} />
               </div>
             </TableHead>
             <TableHead className="w-1/6">Earn APY</TableHead>
@@ -153,7 +154,7 @@ export const LendTable = () => {
                 Earn Points
                 <InfoIcon
                   text={
-                    'Points earned by supplying these assets. Hover over the points to learn more.'
+                    'Points earned for maintaining an active lending position. Hover over the points to learn more.'
                   }
                 />
               </div>
@@ -190,10 +191,14 @@ export const LendTable = () => {
                       </div>
                     )}
                     <div>
-                      {formatUnits(
-                        balance ? BigNumber(balance.toString()) : BigNumber(0),
-                        marketConfiguration?.baseTokenDecimals ?? 9
-                      ).toFixed(2)}{' '}
+                      {getFormattedNumber(
+                        formatUnits(
+                          balance
+                            ? BigNumber(balance.toString())
+                            : BigNumber(0),
+                          marketConfiguration?.baseTokenDecimals ?? 9
+                        )
+                      )}{' '}
                       {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
                       {' in wallet'}
                     </div>
@@ -209,10 +214,12 @@ export const LendTable = () => {
                 {getSupplyApr(supplyRate)}
               </TableCell>
               <TableCell>
-                {formatUnits(
-                  userSupplyBorrow?.supplied ?? BigNumber(0),
-                  marketConfiguration?.baseTokenDecimals ?? 9
-                ).toFormat(2)}{' '}
+                {getFormattedNumber(
+                  formatUnits(
+                    userSupplyBorrow?.supplied ?? BigNumber(0),
+                    marketConfiguration?.baseTokenDecimals ?? 9
+                  )
+                )}{' '}
                 {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
               </TableCell>
               <TableCell>
@@ -220,8 +227,16 @@ export const LendTable = () => {
               </TableCell>
               <TableCell>
                 {userRole === USER_ROLE.BORROWER ? (
-                  <div className="text-lavender text-md font-medium text-center w-full">
-                    Repay your debt to supply base asset!
+                  <div className=" text-lavender bg-primary/20 rounded-lg px-4 py-2 text-sm font-medium text-center w-full">
+                    You cannot Lend assets while you have an active borrowing
+                    position. Learn more about how{' '}
+                    <a
+                      // biome-ignore lint/a11y/useValidAnchor: <explanation>
+                      href="#"
+                      className="underline hover:opacity-90 text-white"
+                    >
+                      Sweylend works.
+                    </a>
                   </div>
                 ) : (
                   <div className="flex gap-x-2 w-full">
@@ -297,12 +312,14 @@ export const LendTable = () => {
                         </div>
                       )}
                       <div className="text-moon text-sm">
-                        {formatUnits(
-                          balance
-                            ? BigNumber(balance.toString())
-                            : BigNumber(0),
-                          marketConfiguration?.baseTokenDecimals ?? 9
-                        ).toFixed(2)}
+                        {getFormattedNumber(
+                          formatUnits(
+                            balance
+                              ? BigNumber(balance.toString())
+                              : BigNumber(0),
+                            marketConfiguration?.baseTokenDecimals ?? 9
+                          )
+                        )}
                         {' in wallet'}
                       </div>
                     </div>
@@ -324,10 +341,12 @@ export const LendTable = () => {
                     Supplied Assets
                   </div>
                   <div className="text-moon">
-                    {formatUnits(
-                      userSupplyBorrow?.supplied ?? BigNumber(0),
-                      marketConfiguration?.baseTokenDecimals ?? 9
-                    ).toFormat(2)}{' '}
+                    {getFormattedNumber(
+                      formatUnits(
+                        userSupplyBorrow?.supplied ?? BigNumber(0),
+                        marketConfiguration?.baseTokenDecimals ?? 9
+                      )
+                    )}{' '}
                     {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
                   </div>
                 </div>
@@ -342,8 +361,13 @@ export const LendTable = () => {
           )}
           <CardFooter>
             {userRole === USER_ROLE.BORROWER ? (
-              <div className="text-lavender text-md font-medium text-center w-full">
-                Repay your debt to supply base asset!
+              <div className=" text-lavender bg-primary/20 rounded-lg px-4 py-2 text-sm font-medium text-center w-full">
+                You cannot Lend assets while you have an active borrowing
+                position. Learn more about how{' '}
+                {/* biome-ignore lint/a11y/useValidAnchor: <explanation> */}
+                <a href="#" className="underline hover:opacity-90 text-white">
+                  Sweylend works.
+                </a>
               </div>
             ) : (
               <div className="flex gap-x-2 w-full">

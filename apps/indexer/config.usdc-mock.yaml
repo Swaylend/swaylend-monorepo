@@ -2,7 +2,7 @@ name: SwayLend USDC Mock Market
 ecosystem: fuel
 networks:
   - id: 0
-    start_block: 10539673
+    start_block: 286883447
     contracts:
       - name: Market
         address: 0xda73b47e8b29a523ac5577746ad7ef6565371d70e8d908b43bb96d17cb9bf202
