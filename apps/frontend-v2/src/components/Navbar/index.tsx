@@ -60,20 +60,20 @@ export const Navbar = () => {
                   className={cn(
                     pathname === href ? 'text-primary' : 'text-lavender',
                     pathname !== href && 'hover:text-lavender/80',
-                    'flex items-center w-[80px] justify-center text-md font-semibold gap-x-1 h-full relative'
+                    'flex items-center w-[90px] justify-center text-md font-semibold gap-x-1 h-full relative'
                   )}
                 >
                   {label}
                   <div
                     className={cn(
                       pathname === href &&
-                        '-z-10 absolute blur-[30px] top-[35px] left-[calc(50%-30px)] w-16 h-10 bg-primary'
+                        '-z-10 absolute blur-[30px] top-[35px] left-[calc(50%-40px)] w-16 h-10 bg-primary'
                     )}
                   />
                 </div>
               </Link>
             ))}
-            <DropdownMenu>
+            {/* <DropdownMenu>
               <DropdownMenuTrigger>
                 <div className="text-lavender outline-none border-none focus:outline-none focus:border-none hover:text-lavender/80 text-md font-semibold flex items-center gap-x-1">
                   Bridges
@@ -144,10 +144,10 @@ export const Navbar = () => {
                   </a>
                 </DropdownMenuItem>
               </DropdownMenuContent>
-            </DropdownMenu>
+            </DropdownMenu> */}
           </div>
           <div className="flex items-center gap-x-2">
-            <Points />
+            {/* <Points /> */}
             <MarketSwitcher />
             <ConnectButton />
           </div>
@@ -162,7 +162,7 @@ export const Navbar = () => {
             <Image src={LogoIcon} alt="logo" />
           </Link>
           <div className="flex items-center gap-x-2">
-            <Points />
+            {/* <Points /> */}
             <div className="hidden md:block">
               <MarketSwitcher />
             </div>

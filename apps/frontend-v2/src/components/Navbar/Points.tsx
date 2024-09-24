@@ -44,7 +44,7 @@ export const Points = () => {
         className="flex flex-col gap-y-2 items-center w-[258px] px-[24px]"
       >
         <div className="flex flex-col gap-y-2 items-center">
-          <div className="text-moon">SwayLend Pts</div>
+          <div className="text-moon">SwayPoints</div>
           <div
             className={cn(
               'text-lg font-semibold text-yellow-400',

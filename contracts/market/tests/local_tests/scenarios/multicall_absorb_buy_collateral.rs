@@ -6,7 +6,7 @@ use fuels::{
         calls::{CallHandler, CallParameters},
         responses::CallResponse,
     },
-    types::{transaction::TxPolicies, transaction_builders::VariableOutputPolicy, U256},
+    types::{transaction::TxPolicies, transaction_builders::VariableOutputPolicy},
 };
 use market::PriceDataUpdate;
 use market_sdk::parse_units;
@@ -20,11 +20,11 @@ async fn multicall_absorb_buy_collateral_test() {
     let TestData {
         wallets,
         alice,
-        alice_address,
+        alice_account,
         bob,
-        bob_address,
+        bob_account,
         chad,
-        chad_address,
+        chad_account,
         market,
         usdc,
         usdc_contract,
@@ -55,7 +55,7 @@ async fn multicall_absorb_buy_collateral_test() {
     print_case_title(0, "Alice", "supply_base", alice_supply_log_amount.as_str());
     println!("💸 Alice + {alice_supply_log_amount}");
     usdc_contract
-        .mint(alice_address, alice_mint_amount)
+        .mint(alice_account, alice_mint_amount)
         .await
         .unwrap();
     let balance = alice.get_asset_balance(&usdc.asset_id).await.unwrap();
@@ -157,7 +157,7 @@ async fn multicall_absorb_buy_collateral_test() {
 
     assert!(
         market
-            .is_liquidatable(&[&oracle.instance], bob_address)
+            .is_liquidatable(&[&oracle.instance], bob_account)
             .await
             .unwrap()
             .value
@@ -167,7 +167,7 @@ async fn multicall_absorb_buy_collateral_test() {
     let absorb_call = market
         .instance
         .methods()
-        .absorb(vec![bob_address], price_data_update.clone())
+        .absorb(vec![bob_account], price_data_update.clone())
         .with_contracts(&[&oracle.instance])
         .call_params(CallParameters::default().with_amount(price_data_update.update_fee))
         .unwrap();
@@ -177,7 +177,7 @@ async fn multicall_absorb_buy_collateral_test() {
         .with_account(&chad)
         .await
         .unwrap()
-        .get_collateral_reserves(eth.bits256)
+        .get_collateral_reserves(eth.asset_id)
         .await
         .unwrap()
         .value;
@@ -189,14 +189,14 @@ async fn multicall_absorb_buy_collateral_test() {
     println!("💸 Chad - {log_amount}");
 
     usdc_contract
-        .mint(chad_address, amount.try_into().unwrap())
+        .mint(chad_account, amount.try_into().unwrap())
         .await
         .unwrap();
 
     let buy_collateral_call = market
         .instance
         .methods()
-        .buy_collateral(eth.bits256, U256::from(amount), chad_address)
+        .buy_collateral(eth.asset_id, amount, chad_account)
         .with_contracts(&[&oracle.instance])
         .call_params(
             CallParameters::default()

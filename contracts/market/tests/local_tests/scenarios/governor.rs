@@ -19,9 +19,9 @@ use market_sdk::get_market_config;
 async fn governor_test() {
     let TestData {
         admin,
-        admin_address,
+        admin_account,
         alice,
-        alice_address,
+        alice_account,
         market,
         assets,
         usdc,
@@ -37,7 +37,7 @@ async fn governor_test() {
         borrow_collateral_factor: U256::from(18), // decimals: 18
         liquidate_collateral_factor: U256::from(18), // decimals: 18
         liquidation_penalty: U256::from(18),      // decimals: 18
-        supply_cap: U256::from(10),               // decimals: asset decimals
+        supply_cap: 10,               // decimals: asset decimals
         paused: false,
     };
 
@@ -109,13 +109,13 @@ async fn governor_test() {
         .with_account(&alice)
         .await
         .unwrap()
-        .withdraw_reserves(alice_address, 100_000_000)
+        .withdraw_reserves(alice_account, 100_000_000)
         .await;
     let admin_withdraw_reserves_res = market
         .with_account(&admin)
         .await
         .unwrap()
-        .withdraw_reserves(admin_address, 0)
+        .withdraw_reserves(admin_account, 0)
         .await;
 
     // make sure withdraw_reserves was ok
@@ -170,9 +170,9 @@ async fn governor_test() {
     assert!(alice_set_pyth_contract_id_res.is_err());
 
     let market_config = get_market_config(
-        alice_address,
-        alice_address,
-        usdc.bits256,
+        alice_account,
+        alice_account,
+        usdc.asset_id,
         usdc.decimals as u32,
         assets["USDC"].price_feed_id,
     )

@@ -16,8 +16,9 @@ import { useUserCollateralUtilization } from '@/hooks/useUserCollateralUtilizati
 import { useUserLiquidationPoint } from '@/hooks/useUserLiquidationPoint';
 import { cn } from '@/lib/utils';
 import { useMarketStore } from '@/stores';
-import { getBorrowApr, getSupplyApr } from '@/utils';
+import { getBorrowApr, getFormattedPrice, getSupplyApr } from '@/utils';
 import { useIsConnected } from '@fuels/react';
+import BigNumber from 'bignumber.js';
 import React, { useMemo } from 'react';
 import Wave from 'react-wavify';
 
@@ -191,13 +192,13 @@ export const InfoBowl = () => {
               <div className="text-sm flex justify-between">
                 <div className="text-lavender">Available to Borrow</div>
                 <div className="font-semibold text-moon">
-                  {borrowCapacity?.toFormat(2)} USD
+                  {getFormattedPrice(borrowCapacity ?? BigNumber(0))}
                 </div>
               </div>
               <div className="text-sm flex justify-between">
                 <div className="text-lavender">Liquidation point</div>
                 <div className="font-semibold text-moon">
-                  ${userLiquidationPoint?.toFormat(2)}
+                  {getFormattedPrice(userLiquidationPoint ?? BigNumber(0))}
                 </div>
               </div>
               <div className="text-sm flex justify-between">
@@ -209,7 +210,7 @@ export const InfoBowl = () => {
               <div className="text-sm flex justify-between">
                 <div className="text-lavender">Collateral Value</div>
                 <div className="font-semibold text-moon">
-                  ${collateralValue?.toFormat(2)}
+                  {getFormattedPrice(collateralValue ?? BigNumber(0))}
                 </div>
               </div>
             </div>

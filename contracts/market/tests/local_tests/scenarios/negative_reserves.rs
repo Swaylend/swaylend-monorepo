@@ -13,9 +13,9 @@ async fn negative_reserves_test() {
     let TestData {
         wallets,
         alice,
-        alice_address,
+        alice_account,
         bob,
-        bob_address,
+        bob_account,
         chad,
         market,
         usdc,
@@ -47,7 +47,7 @@ async fn negative_reserves_test() {
     print_case_title(0, "Alice", "supply_base", alice_supply_log_amount.as_str());
     println!("💸 Alice + {alice_supply_log_amount}");
     usdc_contract
-        .mint(alice_address, alice_mint_amount)
+        .mint(alice_account, alice_mint_amount)
         .await
         .unwrap();
     let balance = alice.get_asset_balance(&usdc.asset_id).await.unwrap();
@@ -153,7 +153,7 @@ async fn negative_reserves_test() {
 
     assert!(
         market
-            .is_liquidatable(&[&oracle.instance], bob_address)
+            .is_liquidatable(&[&oracle.instance], bob_account)
             .await
             .unwrap()
             .value
@@ -163,18 +163,19 @@ async fn negative_reserves_test() {
         .with_account(&chad)
         .await
         .unwrap()
-        .absorb(&[&oracle.instance], vec![bob_address], &price_data_update)
+        .absorb(&[&oracle.instance], vec![bob_account], &price_data_update)
         .await
         .unwrap();
 
     // Check if absorb was ok
-    let (_, borrow) = market.get_user_supply_borrow(bob_address).await.unwrap();
+    let (_, borrow) = market.get_user_supply_borrow(bob_account).await.unwrap();
     assert!(borrow == 0);
 
     let amount = market
-        .get_user_collateral(bob_address, eth.bits256)
+        .get_user_collateral(bob_account, eth.asset_id)
         .await
-        .unwrap();
+        .unwrap()
+        .value;
     assert!(amount == 0);
 
     market
