@@ -108,12 +108,7 @@ export const useWithdrawCollateral = ({
     onSettled: () => {
       // Invalidate queries
       queryClient.invalidateQueries({
-        queryKey: [
-          'collateralAssets',
-          account,
-          market,
-          collateralConfigurations,
-        ],
+        queryKey: ['collateralAssets', account, market],
       });
 
       // Invalidate Fuel balance query

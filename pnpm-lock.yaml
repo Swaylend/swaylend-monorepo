@@ -496,8 +496,8 @@ importers:
         specifier: 20.8.8
         version: 20.8.8
       envio:
-        specifier: 0.0.0-main-20240924100907-dabd985e
-        version: 0.0.0-main-20240924100907-dabd985e
+        specifier: 2.3.2
+        version: 2.3.2
       mocha:
         specifier: 10.2.0
         version: 10.2.0
@@ -6964,18 +6964,28 @@ packages:
     engines: {node: '>=4'}
     hasBin: true
 
-  envio-darwin-arm64@0.0.0-main-20240924100907-dabd985e:
-    resolution: {integrity: sha512-Q+EDBj2aSu1KfDZ6q4xAUXFwpM14V5FXLaFVKi7pAIo+kCozJvHUhpaYSepfshvJycdivnQ2RE3RQq5e5O2gFQ==}
+  envio-darwin-arm64@2.3.2:
+    resolution: {integrity: sha512-CmyG796jrfnvMx/p/JrS6HiqPjyXR8sPmo8TKMSpuEFsM30r0iSRM1+2AJw1+w/3uyfgP/E6GsHPZyD55tsBRg==}
     cpu: [arm64]
     os: [darwin]
 
-  envio-linux-x64@0.0.0-main-20240924100907-dabd985e:
-    resolution: {integrity: sha512-1t0bNDNmnFKIXf+kbQX7Khu8fnc/xlhCtScIzw3mvJI5OcZZWZpMSzdx4o2GaDAO8vawd3dHp65DB3zjvyuICA==}
+  envio-darwin-x64@2.3.2:
+    resolution: {integrity: sha512-cYgOSgY6qUPV733oORmEQk12nEShaz2E2Js72L3mh3djGrZmTQaIb0whl9uIptYO8B4vmpRPM9j1ox4eoihydA==}
+    cpu: [x64]
+    os: [darwin]
+
+  envio-linux-arm64@2.3.2:
+    resolution: {integrity: sha512-PAgWkP1AVdfBFt1NCH1gsnRAqev2nNjJZhh1zaNJikUOMjBsj1qQDXSgvnji7DyoqbjCPldQTxGBWP9CRTPqOQ==}
+    cpu: [arm64]
+    os: [linux]
+
+  envio-linux-x64@2.3.2:
+    resolution: {integrity: sha512-oadisYezSR+MOjsQ1hWl3jGNy2vU7EvtX3UBMuU5yx9qnJj+APx8eSo3EZKjUbhRwodBIPg+P667S/UvmvXoFQ==}
     cpu: [x64]
     os: [linux]
 
-  envio@0.0.0-main-20240924100907-dabd985e:
-    resolution: {integrity: sha512-VZetKMBgjt0ywHatwPRFWKmGLAF2y31M8n2JTVdHPWuKsUEMhJX8oO/AVWBQxnx1dQKI8V1K6JSp8JCuqnzw5w==}
+  envio@2.3.2:
+    resolution: {integrity: sha512-WI9JEZyHri/xx2E0Rdu5PNXioWZiNIncT3ukYMxS2kbUgb1qLBMSPDb5Ffrsb7j1yaI9vVuYciEalxrRv7k7vg==}
     hasBin: true
 
   err-code@3.0.1:
@@ -22468,16 +22478,24 @@ snapshots:
 
   envinfo@7.13.0: {}
 
-  envio-darwin-arm64@0.0.0-main-20240924100907-dabd985e:
+  envio-darwin-arm64@2.3.2:
     optional: true
 
-  envio-linux-x64@0.0.0-main-20240924100907-dabd985e:
+  envio-darwin-x64@2.3.2:
     optional: true
 
-  envio@0.0.0-main-20240924100907-dabd985e:
+  envio-linux-arm64@2.3.2:
+    optional: true
+
+  envio-linux-x64@2.3.2:
+    optional: true
+
+  envio@2.3.2:
     optionalDependencies:
-      envio-darwin-arm64: 0.0.0-main-20240924100907-dabd985e
-      envio-linux-x64: 0.0.0-main-20240924100907-dabd985e
+      envio-darwin-arm64: 2.3.2
+      envio-darwin-x64: 2.3.2
+      envio-linux-arm64: 2.3.2
+      envio-linux-x64: 2.3.2
 
   err-code@3.0.1: {}
 
