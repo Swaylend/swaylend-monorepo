@@ -144,7 +144,7 @@ async fn reserves_test() {
 async fn add_reserves_test() {
     let TestData {
         alice,
-        alice_address,
+        alice_account,
         market,
         usdc,
         usdc_contract,
@@ -153,7 +153,7 @@ async fn add_reserves_test() {
 
     let mint_amount = parse_units(150, usdc.decimals);
     usdc_contract
-        .mint(alice_address, mint_amount)
+        .mint(alice_account, mint_amount)
         .await
         .unwrap();
 
