@@ -1,11 +1,12 @@
 name: SwayLend USDC Mock Market
+ecosystem: fuel
 networks:
   - id: 0
     start_block: 286883447
     contracts:
       - name: Market
-        address: 0x0aa56ed11894d472bbe9339ba147346f542a1e3ff1c7daf1602dc423c39aa746
-        abi_file_path: ../../contracts/market/out/release/market-abi.json
+        address: 0xda73b47e8b29a523ac5577746ad7ef6565371d70e8d908b43bb96d17cb9bf202
+        abi_file_path: ./abi/market-abi.json
         handler: ./src/EventHandlers.ts
         events:
           - name: CollateralAssetAdded
