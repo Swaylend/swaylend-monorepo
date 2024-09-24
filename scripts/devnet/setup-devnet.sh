@@ -24,7 +24,7 @@ forc deploy --node-url http://localhost:4000 \
     --salt pyth-mock:0x0000000000000000000000000000000000000000000000000000000000000003 \
     --salt src-20:0x0000000000000000000000000000000000000000000000000000000000000004
 
-# deploy tokens
+# configure with test tokens
 cargo run --bin configure_tokens -- --signing-key $SIGNING_KEY \
     --token-contract-id 0xab0dc5c65212c0d062101b986e18a251f15317c934c1196ccf78fa761eecb394
 
