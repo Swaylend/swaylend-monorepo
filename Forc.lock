@@ -15,6 +15,7 @@ dependencies = [
     "market_abi",
     "pyth_interface",
     "std",
+    "sway_libs",
 ]
 
 [[package]]
@@ -69,6 +70,14 @@ dependencies = ["std"]
 name = "std"
 source = "git+https://github.com/fuellabs/sway?tag=v0.63.5#31a1d6f98395f571cd3674b492d9bf4773c55f65"
 dependencies = ["core"]
+
+[[package]]
+name = "sway_libs"
+source = "git+https://github.com/FuelLabs/sway-libs?tag=v0.24.0#e19f96f85ae12426d20adc176b70aa38fd9a2a5b"
+dependencies = [
+    "standards git+https://github.com/FuelLabs/sway-standards?tag=v0.6.0#65e09f95ea8b9476b171a66c8a47108f352fa32c",
+    "std",
+]
 
 [[package]]
 name = "token"
