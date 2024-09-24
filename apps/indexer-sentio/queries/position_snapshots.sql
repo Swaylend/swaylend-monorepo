@@ -1,5 +1,4 @@
-SELECT id,
-    timestamp,
+SELECT timestamp,
     blockDate as block_date,
     chainId as chain_id,
     poolAddress as pool_address,
@@ -15,8 +14,7 @@ SELECT id,
 FROM `BasePositionSnapshot_raw`
 WHERE timestamp > timestamp('{{timestamp}}')
 UNION ALL
-SELECT id,
-    timestamp,
+SELECT timestamp,
     blockDate as block_date,
     chainId as chain_id,
     poolAddress as pool_address,
