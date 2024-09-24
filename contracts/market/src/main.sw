@@ -649,7 +649,6 @@ impl Market for Contract {
             Error::NotForSale,
         );
 
-        // TODO[Martin]: Checkout what these 2 notes do/mean and if we need a re-entrancy guard
         // Note: Re-entrancy can skip the reserves check above on a second buyCollateral call.
         let reserves = get_collateral_reserves_internal(asset_id);
 
