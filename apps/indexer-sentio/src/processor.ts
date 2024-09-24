@@ -19,6 +19,7 @@ import {
   UserBasic,
 } from './schema/store.js';
 import { MarketProcessor } from './types/fuel/MarketProcessor.js';
+import { GLOBAL_CONFIG } from '@sentio/runtime';
 
 dayjs.extend(utc);
 
@@ -139,6 +140,10 @@ const DEPLOYED_MARKETS: Record<
       '0x5a22498724036fa16887731686c756aacf26e422ba64c826c5e521f47751f12b',
     startBlock: BigInt(10675000),
   },
+};
+
+GLOBAL_CONFIG.execution = {
+  sequential: true,
 };
 
 Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
