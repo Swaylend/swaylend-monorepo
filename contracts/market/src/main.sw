@@ -29,6 +29,9 @@ use std::vec::Vec;
 use std::bytes::Bytes;
 use std::convert::TryFrom;
 use sway_libs::reentrancy::reentrancy_guard;
+use standards::src5::{SRC5, State};
+use sway_libs::ownership::*;
+
 
 // This is set during deployment of the contract
 configurable {
@@ -65,7 +68,7 @@ storage {
 impl Market for Contract {
     // # 0. Activate contract
     #[storage(write)]
-    fn activate_contract(market_configuration: MarketConfiguration) {
+    fn activate_contract(market_configuration: MarketConfiguration, owner: Identity) {
         require(
             storage
                 .market_basic
@@ -73,6 +76,9 @@ impl Market for Contract {
                 .read() == 0,
             Error::AlreadyActive,
         );
+
+        // Set owner
+        initialize_ownership(owner);
 
         // Set market configuration
         storage.market_configuration.write(market_configuration);
@@ -126,14 +132,9 @@ impl Market for Contract {
     // - `configuration`: The collateral configuration to be added
     #[storage(write)]
     fn add_collateral_asset(configuration: CollateralConfiguration) {
-        // Only governor can add new collateral asset
-        require(
-            msg_sender().unwrap() == storage
-                .market_configuration
-                .read()
-                .governor,
-            Error::Unauthorized,
-        );
+        // Only owner can add new collateral asset
+        only_owner();
+
         // Check if asset already exists
         require(
             storage
@@ -162,14 +163,8 @@ impl Market for Contract {
     // - `asset_id`: The asset ID of the collateral asset to be paused
     #[storage(write)]
     fn pause_collateral_asset(asset_id: AssetId) {
-        // Only governor can pause collateral asset
-        require(
-            msg_sender().unwrap() == storage
-                .market_configuration
-                .read()
-                .governor,
-            Error::Unauthorized,
-        );
+        // Only owner can pause collateral asset
+        only_owner();
 
         let mut configuration = storage.collateral_configurations.get(asset_id).read();
         configuration.paused = true;
@@ -187,14 +182,8 @@ impl Market for Contract {
     // - `asset_id`: The asset ID of the collateral asset to be resumed
     #[storage(write)]
     fn resume_collateral_asset(asset_id: AssetId) {
-        // only governor can resume collateral asset
-        require(
-            msg_sender().unwrap() == storage
-                .market_configuration
-                .read()
-                .governor,
-            Error::Unauthorized,
-        );
+        // Only owner can resume collateral asset
+        only_owner();
 
         let mut configuration = storage.collateral_configurations.get(asset_id).read();
         configuration.paused = false;
@@ -213,14 +202,9 @@ impl Market for Contract {
     // - `configuration`: The new collateral configuration
     #[storage(write)]
     fn update_collateral_asset(asset_id: AssetId, configuration: CollateralConfiguration) {
-        // Only governor can update collateral asset
-        require(
-            msg_sender().unwrap() == storage
-                .market_configuration
-                .read()
-                .governor,
-            Error::Unauthorized,
-        );
+        // Only owner can update collateral asset
+        only_owner();
+
         // Check if asset exists
         require(
             storage
@@ -757,16 +741,9 @@ impl Market for Contract {
     // - `amount`: The amount of reserves to be withdrawn
     #[storage(read)]
     fn withdraw_reserves(to: Identity, amount: u64) {
-        let caller = msg_sender().unwrap();
-
-        // Only governor can withdraw reserves
-        require(
-            caller == storage
-                .market_configuration
-                .read()
-                .governor,
-            Error::Unauthorized,
-        );
+        // Only owner can withdraw reserves
+        only_owner();
+        
         let reserves = get_reserves_internal();
 
         // Check that the reserves are greater than 0 and that the amount is less than or equal to the reserves
@@ -778,7 +755,7 @@ impl Market for Contract {
 
         // Emit reserves withdrawn event
         log(ReservesWithdrawnEvent {
-            account: caller,
+            account: to,
             amount,
         });
 
@@ -809,17 +786,8 @@ impl Market for Contract {
     // - `pause_config`: The pause configuration to be set
     #[storage(write)]
     fn pause(pause_config: PauseConfiguration) {
-        let caller = msg_sender().unwrap();
-        require(
-            caller == storage
-                .market_configuration
-                .read()
-                .governor || caller == storage
-                .market_configuration
-                .read()
-                .pause_guardian,
-            Error::Unauthorized,
-        );
+        // Only owner can change the pause configuration
+        only_owner();
 
         // Emit pause configuration updated event
         log(PauseConfigurationEvent { pause_config });
@@ -938,14 +906,8 @@ impl Market for Contract {
     // # 10. Pyth Oracle management
     #[storage(write)]
     fn set_pyth_contract_id(contract_id: ContractId) {
-        // Only governor can set the Pyth contract ID
-        require(
-            msg_sender().unwrap() == storage
-                .market_configuration
-                .read()
-                .governor,
-            Error::Unauthorized,
-        );
+        // Only owner can set the Pyth contract ID
+        only_owner();
         storage.pyth_contract_id.write(contract_id);
     }
 
@@ -968,14 +930,8 @@ impl Market for Contract {
     // # 11. Changing market configuration
     #[storage(write)]
     fn update_market_configuration(configuration: MarketConfiguration) {
-        // Only governor can update the market configuration
-        require(
-            msg_sender().unwrap() == storage
-                .market_configuration
-                .read()
-                .governor,
-            Error::Unauthorized,
-        );
+        // Only owner can update the market configuration
+        only_owner();
 
         let mut configuration = configuration;
 
@@ -990,6 +946,24 @@ impl Market for Contract {
         log(MarketConfigurationEvent {
             market_config: configuration,
         });
+    }
+
+    // # 12. Ownership management
+    #[storage(write)]
+    fn transfer_ownership(new_owner: Identity) {
+        transfer_ownership(new_owner);
+    }
+
+    #[storage(write)]
+    fn renounce_ownership() {
+        renounce_ownership();
+    }
+}
+
+impl SRC5 for Contract {
+    #[storage(read)]
+    fn owner() -> State {
+        _owner()
     }
 }
 
