@@ -209,9 +209,7 @@ const CollateralTableRow = ({
       </TableCell>
       <TableCell>
         <div className="w-[48px] h-[48px]">
-          <CircularProgressBar
-            percent={Number(supplyUsed.div(100).toFixed(2, 1))}
-          />
+          <CircularProgressBar percent={supplyUsed.div(100)} />
         </div>
       </TableCell>
       <TableCell>

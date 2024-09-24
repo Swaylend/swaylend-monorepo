@@ -1,13 +1,14 @@
+import type BigNumber from 'bignumber.js';
 import React from 'react';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
-export const CircularProgressBar = ({ percent }: { percent: number }) => {
+export const CircularProgressBar = ({ percent }: { percent: BigNumber }) => {
   return (
     <CircularProgressbar
-      value={percent}
+      value={percent.toNumber()}
       maxValue={1}
-      text={`${percent * 100}%`}
+      text={`${percent.times(100).decimalPlaces(1)}%`}
       strokeWidth={10}
       styles={buildStyles({
         textSize: 28,
