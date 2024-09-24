@@ -28,6 +28,7 @@ use std::u128::U128;
 use std::vec::Vec;
 use std::bytes::Bytes;
 use std::convert::TryFrom;
+use sway_libs::reentrancy::reentrancy_guard;
 
 // This is set during deployment of the contract
 configurable {
@@ -311,6 +312,8 @@ impl Market for Contract {
         amount: u64,
         price_data_update: PriceDataUpdate,
     ) {
+        reentrancy_guard();
+
         // Get the caller's account and calculate the new user and total collateral
         let caller = msg_sender().unwrap();
         let user_collateral = storage.user_collateral.get((caller, asset_id)).try_read().unwrap_or(0) - amount;
@@ -451,6 +454,8 @@ impl Market for Contract {
     // - `price_data_update`: The price data update struct to be used for updating the price feeds
     #[payable, storage(write)]
     fn withdraw_base(amount: u64, price_data_update: PriceDataUpdate) {
+        reentrancy_guard();
+
         // Only allow withdrawing if paused flag is not set
         require(!storage.pause_config.withdraw_paused.read(), Error::Paused);
 
@@ -582,6 +587,8 @@ impl Market for Contract {
     // - `accounts`: The list of underwater accounts to be absorbed
     #[payable, storage(write)]
     fn absorb(accounts: Vec<Identity>, price_data_update: PriceDataUpdate) {
+        reentrancy_guard();
+
         // Check that the pause flag is not set
         require(!storage.pause_config.absorb_paused.read(), Error::Paused);
 
@@ -623,6 +630,8 @@ impl Market for Contract {
     // - `recipient`: The account of the recipient of the collateral
     #[payable, storage(read)]
     fn buy_collateral(asset_id: AssetId, min_amount: u64, recipient: Identity) {
+        reentrancy_guard();
+
         // Only allow buying collateral if paused flag is not set
         require(!storage.pause_config.buy_paused.read(), Error::Paused);
         let payment_amount = msg_amount();
@@ -649,7 +658,6 @@ impl Market for Contract {
             Error::NotForSale,
         );
 
-        // Note: Re-entrancy can skip the reserves check above on a second buyCollateral call.
         let reserves = get_collateral_reserves_internal(asset_id);
 
         // Calculate the quote for a collateral asset in exchange for an amount of the base asset
@@ -664,9 +672,6 @@ impl Market for Contract {
             Error::InsufficientReserves,
         );
 
-        // Note: Pre-transfer hook can re-enter buyCollateral with a stale collateral ERC20 balance.
-        // Assets should not be listed which allow re-entry from pre-transfer now, as too much collateral could be bought.
-        // This is also a problem if quoteCollateral derives its discount from the collateral ERC20 balance.
         let caller = msg_sender().unwrap();
 
         // Emit buy collateral event
@@ -893,7 +898,6 @@ impl Market for Contract {
         present_value
     }
 
-
     // ## 9.7 Get utilization
     // ### Returns:
     // - `u256`: The utilization of the market
@@ -953,6 +957,7 @@ impl Market for Contract {
 
     #[payable, storage(read)]
     fn update_price_feeds_if_necessary(price_data_update: PriceDataUpdate) {
+        reentrancy_guard();
         update_price_feeds_if_necessary_internal(price_data_update)
     }
 
