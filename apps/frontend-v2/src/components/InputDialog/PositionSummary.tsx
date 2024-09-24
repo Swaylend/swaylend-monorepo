@@ -10,8 +10,9 @@ import { useUserLiquidationPoint } from '@/hooks/useUserLiquidationPoint';
 import { cn } from '@/lib/utils';
 import { formatUnits, getFormattedNumber, getFormattedPrice } from '@/utils';
 import BigNumber from 'bignumber.js';
-import { ArrowDown, ArrowUp, InfoIcon } from 'lucide-react';
+import { ArrowDown, ArrowUp } from 'lucide-react';
 import React, { useMemo } from 'react';
+import { InfoIcon } from '../InfoIcon';
 
 export const PositionSummary = () => {
   const { data: marketConfiguration } = useMarketConfiguration();
@@ -54,6 +55,7 @@ export const PositionSummary = () => {
     return [
       {
         title: 'Collateral Value',
+        tooltip: 'The total value of your collateral in USDC',
         value: `${getFormattedPrice(collateralValue ?? BigNumber(0))}`,
         changeValue: possibleCollateralValue
           ? `${getFormattedPrice(possibleCollateralValue)}`
@@ -67,7 +69,9 @@ export const PositionSummary = () => {
       },
       {
         title: 'Liquidation Point',
-        value: `$${getFormattedPrice(liquidationPoint ?? BigNumber(0))}`,
+        tooltip:
+          'The price of supplied collateral at which your position will be liquidated',
+        value: `${getFormattedPrice(liquidationPoint ?? BigNumber(0))}`,
         changeValue: possibleLiquidationPoint
           ? `${getFormattedPrice(possibleLiquidationPoint)}`
           : null,
@@ -82,6 +86,8 @@ export const PositionSummary = () => {
       },
       {
         title: 'Borrow Capacity',
+        tooltip:
+          'The total amount of base asset you can borrow (including borrowed amount)',
         value: `${getFormattedNumber(totalBorrowCapacity)} USDC`,
         changeValue: possibleBorrowCapacity
           ? `${getFormattedNumber(possibleBorrowCapacity)} USDC`
@@ -97,6 +103,7 @@ export const PositionSummary = () => {
       },
       {
         title: 'Available to Borrow',
+        tooltip: 'The amount of base asset you can borrow',
         value: `${getFormattedNumber(borrowCapacity ?? BigNumber(0))} USDC`,
         changeValue: possibleAvailableToBorrow
           ? `${getFormattedNumber(possibleAvailableToBorrow)} USDC`
@@ -125,13 +132,15 @@ export const PositionSummary = () => {
   return (
     <div className="w-full flex-col flex justify-center items-center">
       <div className="text-moon flex items-center gap-x-2">
-        Position Summary <InfoIcon className="w-4 h-4" />
+        Position Summary
       </div>
       <div className="w-full mt-4 flex flex-col gap-y-2">
         {stats.map((stat) => {
           return (
             <div key={stat.title} className="flex w-full justify-between">
-              <div className="text-moon">{stat.title}</div>
+              <div className="text-moon flex gap-x-1">
+                {stat.title} <InfoIcon text={stat.tooltip} />
+              </div>
               {stat.changeValue === null ? (
                 <div className="text-lavender font-semibold">{stat.value}</div>
               ) : (
