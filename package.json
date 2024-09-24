@@ -13,12 +13,12 @@
     "@graphql-typed-document-node/core": "^3.2.0",
     "graphql": "^16.9.0"
   },
-  "packageManager": "pnpm@9.10.0",
+  "packageManager": "pnpm@9.0.6",
   "engines": {
     "node": ">=20.17.0"
   },
   "volta": {
     "node": "20.17.0",
-    "pnpm": "9.10.0"
+    "pnpm": "9.0.6"
   }
 }
