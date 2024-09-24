@@ -14,6 +14,7 @@ dependencies = [
     "i256",
     "market_abi",
     "pyth_interface",
+    "standards git+https://github.com/FuelLabs/sway-standards?tag=v0.6.1#792639cdf391565e6e6a02482ea8a46d9604a6f5",
     "std",
     "sway_libs",
 ]
