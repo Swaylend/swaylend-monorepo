@@ -25,3 +25,14 @@ export function formatCurrency(
     .format(value)
     .replace('$', '');
 }
+
+export function removeDuplicatesByProperty(arr: any[], prop: string) {
+  const seen = new Set();
+  return arr.filter((item) => {
+    if (!seen.has(item[prop])) {
+      seen.add(item[prop]);
+      return true;
+    }
+    return false;
+  });
+}
