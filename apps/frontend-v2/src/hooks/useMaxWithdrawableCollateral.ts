@@ -46,35 +46,31 @@ export const useMaxWithdrawableCollateral = (
 
       if (!supplyBorrow.borrowed || supplyBorrow.borrowed.isZero()) {
         return formatUnits(
-          BigNumber(
-            collateralBalances?.[assetId ?? ''] ?? new BigNumber(0) ?? 0
-          ),
-          assetsConfigs?.[assetId ?? '']?.decimals ?? 9
+          BigNumber(collateralBalances[assetId]),
+          assetsConfigs[assetId].decimals
         );
       }
 
-      // Borrowed amount ✓
-      // Borrow Collateral value of other assets ✓
+      // Borrowed amount
+      // Borrow Collateral value of other assets
       const borrowCollateralValueOthers = Object.entries(
         collateralBalances
-      ).reduce((acc, [_assetId, v]) => {
-        if (_assetId === assetId) {
+      ).reduce((acc, [id, v]) => {
+        if (id === assetId) {
           return acc;
         }
-        const token = collateralConfig[_assetId];
+        const token = collateralConfig[id];
         const collateralFactor = formatUnits(
-          BigNumber(
-            assetsConfigs![_assetId].borrow_collateral_factor.toString()
-          ),
+          BigNumber(assetsConfigs![id].borrow_collateral_factor.toString()),
           18
         );
         const balance = formatUnits(v, token.decimals);
-        const dollBalance = priceData.prices[_assetId].times(balance);
+        const dollBalance = priceData.prices[id].times(balance);
         const trueDollBalance = dollBalance.times(collateralFactor);
         return acc.plus(trueDollBalance);
       }, BigNumber(0));
 
-      // BorrowCollateral Asset balance ✓
+      // BorrowCollateral Asset balance
       const currentBalance = formatUnits(
         BigNumber(collateralBalances?.[assetId ?? ''] ?? new BigNumber(0)),
         assetsConfigs?.[assetId ?? '']?.decimals
@@ -92,7 +88,7 @@ export const useMaxWithdrawableCollateral = (
         marketConfiguration.baseTokenDecimals
       ).times(priceData.prices[marketConfiguration.baseToken]);
 
-      // Collateral value needed to be covered by the current asset ✓
+      // Collateral value needed to be covered by the current asset
       const collateralValueNeeded = currentBorrowValue;
 
       // If Other Assets are enough to cover the collateral value needed
@@ -100,36 +96,28 @@ export const useMaxWithdrawableCollateral = (
         return currentBalance;
       }
 
-      // Collateral value needed to be covered by this Asset ✓
+      // Collateral value needed to be covered by this Asset
       const neededBorrowCollateralValue = collateralValueNeeded.minus(
         borrowCollateralValueOthers
       );
 
-      // Convert neededCollateralValue to the amount of current asset ✓
-      const neededCollateralAmount = borrowCollateralValueCurrent.minus(
-        neededBorrowCollateralValue
-      );
+      // Calculate the amount of collateral that can be withdrawn
+      const allowedCollateralValueToWithdraw =
+        borrowCollateralValueCurrent.minus(neededBorrowCollateralValue);
 
-      // get 100.1% of the neededCollateralAmount
-      const modifiedNeededCollateralAmount = neededCollateralAmount.times(1);
-
-      // Convert neededCollateralAmount to actual token amount
-      const modifiedNeededCollateralValue = modifiedNeededCollateralAmount.div(
-        borrowCollateralFactor
-      );
-
-      // Convert value to tokenAmount
-      const finalTokenAmountNeeded = modifiedNeededCollateralValue.div(
-        priceData.prices[assetId]
-      );
+      // Convert allowedCollateralValueToWithdraw to the corresponding token amount
+      const allowedCollateralAmountToWithdraw = allowedCollateralValueToWithdraw
+        .div(borrowCollateralFactor)
+        .div(priceData.prices[assetId]);
 
       if (
-        finalTokenAmountNeeded.isNaN() ||
-        finalTokenAmountNeeded.isNegative()
+        allowedCollateralAmountToWithdraw.isNaN() ||
+        allowedCollateralAmountToWithdraw.isNegative()
       ) {
         return BigNumber(0);
       }
-      return finalTokenAmountNeeded;
+
+      return allowedCollateralAmountToWithdraw;
     },
     enabled:
       !!collateralBalances &&
