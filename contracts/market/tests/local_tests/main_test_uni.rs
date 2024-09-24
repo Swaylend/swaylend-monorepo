@@ -23,11 +23,11 @@ async fn main_test() {
     let TestData {
         wallets,
         alice,
-        alice_address,
+        alice_account,
         bob,
-        bob_address,
+        bob_account,
         chad,
-        chad_address,
+        chad_account,
         usdc_contract,
         usdc,
         market,
@@ -60,7 +60,7 @@ async fn main_test() {
     println!("💸 Bob + {log_amount}");
 
     // Transfer of 100 USDC to the Bob's wallet
-    usdc_contract.mint(bob_address, amount).await.unwrap();
+    usdc_contract.mint(bob_account, amount).await.unwrap();
 
     let balance = bob.get_asset_balance(&usdc.asset_id).await.unwrap();
     assert!(balance == amount);
@@ -75,7 +75,7 @@ async fn main_test() {
         .unwrap();
 
     // Сheck supply balance equal to 400 USDC
-    let (supply_balance, _) = market.get_user_supply_borrow(bob_address).await.unwrap();
+    let (supply_balance, _) = market.get_user_supply_borrow(bob_account).await.unwrap();
     assert!(supply_balance == amount as u128);
 
     market
@@ -96,7 +96,7 @@ async fn main_test() {
     println!("💸 Alice + {log_amount}");
 
     // Transfer of 40 UNI to the Alice's wallet
-    uni_contract.mint(alice_address, amount).await.unwrap();
+    uni_contract.mint(alice_account, amount).await.unwrap();
 
     let balance = alice.get_asset_balance(&uni.asset_id).await.unwrap();
     assert!(balance == amount);
@@ -112,10 +112,11 @@ async fn main_test() {
 
     // Сheck supply balance equal to 40 UNI
     let res = market
-        .get_user_collateral(alice_address, uni.bits256)
+        .get_user_collateral(alice_account, uni.asset_id)
         .await
-        .unwrap();
-    assert!(res == amount as u128);
+        .unwrap()
+        .value;
+    assert!(res == amount);
 
     market
         .print_debug_state(&wallets, &usdc, &uni)
@@ -164,7 +165,7 @@ async fn main_test() {
     println!("💸 Chad + {log_amount}");
 
     // Transfer of 60 UNI to the Chad's wallet
-    uni_contract.mint(chad_address, amount).await.unwrap();
+    uni_contract.mint(chad_account, amount).await.unwrap();
 
     let balance = chad.get_asset_balance(&uni.asset_id).await.unwrap();
     assert!(balance == amount);
@@ -180,10 +181,11 @@ async fn main_test() {
 
     // Сheck supply balance equal to 60 UNI
     let res = market
-        .get_user_collateral(chad_address, uni.bits256)
+        .get_user_collateral(chad_account, uni.asset_id)
         .await
-        .unwrap();
-    assert!(res == amount as u128);
+        .unwrap()
+        .value;
+    assert!(res == amount);
 
     market
         .print_debug_state(&wallets, &usdc, &uni)
@@ -203,7 +205,7 @@ async fn main_test() {
     println!("💸 Chad + {log_amount}");
 
     // Transfer of 200 USDC to the Chad's wallet
-    usdc_contract.mint(chad_address, amount).await.unwrap();
+    usdc_contract.mint(chad_account, amount).await.unwrap();
 
     let balance = chad.get_asset_balance(&usdc.asset_id).await.unwrap();
     assert!(balance == amount);
@@ -218,7 +220,7 @@ async fn main_test() {
         .unwrap();
 
     // Сheck supply balance equal to 200 USDC
-    let (supply_balance, _) = market.get_user_supply_borrow(chad_address).await.unwrap();
+    let (supply_balance, _) = market.get_user_supply_borrow(chad_account).await.unwrap();
     assert!((amount as u128) - 5 < supply_balance);
 
     market
@@ -233,7 +235,7 @@ async fn main_test() {
     // 🤙 Call: withdraw_base
     // 💰 Amount: ~99.96 USDC (available_to_borrow)
     let amount = market
-        .available_to_borrow(&[&oracle.instance], alice_address)
+        .available_to_borrow(&[&oracle.instance], alice_account)
         .await
         .unwrap();
     let log_amount = format!("{} USDC", amount as f64 / scale_6);
@@ -256,7 +258,7 @@ async fn main_test() {
 
     // available_to_borrow should be 1 USDC
     let res = market
-        .available_to_borrow(&[&oracle.instance], alice_address)
+        .available_to_borrow(&[&oracle.instance], alice_account)
         .await
         .unwrap();
 
@@ -344,7 +346,7 @@ async fn main_test() {
 
     assert!(
         market
-            .is_liquidatable(&[&oracle.instance], alice_address)
+            .is_liquidatable(&[&oracle.instance], alice_account)
             .await
             .unwrap()
             .value
@@ -354,18 +356,19 @@ async fn main_test() {
         .with_account(&bob)
         .await
         .unwrap()
-        .absorb(&[&oracle.instance], vec![alice_address], &price_data_update)
+        .absorb(&[&oracle.instance], vec![alice_account], &price_data_update)
         .await
         .unwrap();
 
     // Check if absorb was ok
-    let (_, borrow) = market.get_user_supply_borrow(alice_address).await.unwrap();
+    let (_, borrow) = market.get_user_supply_borrow(alice_account).await.unwrap();
     assert!(borrow == 0);
 
     let amount = market
-        .get_user_collateral(alice_address, uni.bits256)
+        .get_user_collateral(alice_account, uni.asset_id)
         .await
-        .unwrap();
+        .unwrap()
+        .value;
     assert!(amount == 0);
 
     market
@@ -384,7 +387,7 @@ async fn main_test() {
         .with_account(&bob)
         .await
         .unwrap()
-        .get_collateral_reserves(uni.bits256)
+        .get_collateral_reserves(uni.asset_id)
         .await
         .unwrap()
         .value;
@@ -393,20 +396,18 @@ async fn main_test() {
     let amount = market
         .collateral_value_to_sell(
             &[&oracle.instance],
-            uni.bits256,
+            uni.asset_id,
             reserves.value.try_into().unwrap(),
         )
         .await
-        .unwrap();
+        .unwrap()
+        .value;
 
     let log_amount = format!("{} USDC", amount as f64 / scale_6);
     print_case_title(8, "Bob", "buy_collateral", log_amount.as_str());
 
     // Transfer of amount to the wallet
-    usdc_contract
-        .mint(bob_address, amount.try_into().unwrap())
-        .await
-        .unwrap();
+    usdc_contract.mint(bob_account, amount).await.unwrap();
 
     // Сheck balance
     let balance = bob.get_asset_balance(&usdc.asset_id).await.unwrap();
@@ -445,7 +446,7 @@ async fn main_test() {
     let buy_collateral_call = market
         .instance
         .methods()
-        .buy_collateral(uni.bits256, 1u64.into(), bob_address)
+        .buy_collateral(uni.asset_id, 1u64.into(), bob_account)
         .with_contracts(&[&oracle.instance])
         .with_tx_policies(tx_policies)
         .call_params(call_params_base_asset)
@@ -478,7 +479,7 @@ async fn main_test() {
     // 🤙 Call: withdraw_base
     // 💰 Amount: 100.021671 USDC
 
-    let (amount, _) = market.get_user_supply_borrow(bob_address).await.unwrap();
+    let (amount, _) = market.get_user_supply_borrow(bob_account).await.unwrap();
     let log_amount = format!("{} USDC", amount as f64 / scale_6);
     print_case_title(9, "Bob", "withdraw_base", log_amount.as_str());
 
@@ -496,7 +497,7 @@ async fn main_test() {
         .unwrap();
 
     // Check supplied is 0
-    let (supplied, _) = market.get_user_supply_borrow(bob_address).await.unwrap();
+    let (supplied, _) = market.get_user_supply_borrow(bob_account).await.unwrap();
     assert!(supplied == 0);
 
     // USDC balance check
@@ -514,7 +515,7 @@ async fn main_test() {
     // 🤙 Call: withdraw_base
     // 💰 Amount: 200.0233392 USDC
 
-    let (amount, _) = market.get_user_supply_borrow(chad_address).await.unwrap();
+    let (amount, _) = market.get_user_supply_borrow(chad_account).await.unwrap();
     let log_amount = format!("{} USDC", amount as f64 / scale_6);
     print_case_title(10, "Chad", "withdraw_base", log_amount.as_str());
 
@@ -532,7 +533,7 @@ async fn main_test() {
         .unwrap();
 
     // Check supplied is 0
-    let (supplied, _) = market.get_user_supply_borrow(chad_address).await.unwrap();
+    let (supplied, _) = market.get_user_supply_borrow(chad_account).await.unwrap();
     assert!(supplied == 0);
 
     // USDC balance check
@@ -550,7 +551,7 @@ async fn main_test() {
     // 🤙 Call: withdraw_base
     // 💰 Amount: 17.276598 USDC
 
-    let (amount, _) = market.get_user_supply_borrow(alice_address).await.unwrap();
+    let (amount, _) = market.get_user_supply_borrow(alice_account).await.unwrap();
     let log_amount = format!("{} USDC", amount as f64 / scale_6);
     print_case_title(11, "Alice", "withdraw_base", log_amount.as_str());
 
@@ -568,7 +569,7 @@ async fn main_test() {
         .unwrap();
 
     // USDC balance check
-    let (supplied, _) = market.get_user_supply_borrow(alice_address).await.unwrap();
+    let (supplied, _) = market.get_user_supply_borrow(alice_account).await.unwrap();
     assert!(supplied == 0);
 
     market
@@ -584,9 +585,10 @@ async fn main_test() {
     // 💰 Amount: 270 UNI
 
     let amount = market
-        .get_user_collateral(chad_address, uni.bits256)
+        .get_user_collateral(chad_account, uni.asset_id)
         .await
-        .unwrap();
+        .unwrap()
+        .value;
     let log_amount = format!("{} UNI", amount as f64 / scale_9);
     print_case_title(12, "Chad", "withdraw_collateral", log_amount.as_str());
 
@@ -597,7 +599,7 @@ async fn main_test() {
         .unwrap()
         .withdraw_collateral(
             &[&oracle.instance],
-            uni.bits256,
+            uni.asset_id,
             amount.try_into().unwrap(),
             &price_data_update,
         )
@@ -606,7 +608,7 @@ async fn main_test() {
 
     // UNI balance check
     let balance = chad.get_asset_balance(&uni.asset_id).await.unwrap();
-    assert!(balance as u128 == amount);
+    assert!(balance == amount);
 
     market
         .print_debug_state(&wallets, &usdc, &uni)

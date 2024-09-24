@@ -42,6 +42,7 @@ export const useUserCollateralValue = () => {
       !!assetsConfigs &&
       !!priceData &&
       !!collateralConfig,
+    refetchOnWindowFocus: false,
     placeholderData: keepPreviousData,
   });
 };

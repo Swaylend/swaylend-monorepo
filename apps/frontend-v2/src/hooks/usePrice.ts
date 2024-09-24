@@ -16,7 +16,9 @@ import { useMarketConfiguration } from './useMarketConfiguration';
 import { useProvider } from './useProvider';
 
 export const usePrice = () => {
-  const hermesClient = new HermesClient('https://hermes.pyth.network');
+  const hermesClient = new HermesClient(
+    process.env.NEXT_PUBLIC_HERMES_API ?? 'https://hermes.pyth.network'
+  );
   const provider = useProvider();
 
   const { market } = useMarketStore();
@@ -107,8 +109,9 @@ export const usePrice = () => {
         priceUpdateData,
       };
     },
-    refetchInterval: 5000,
+    refetchInterval: 10000,
     enabled: !!provider && !!priceFeedIdToAssetId,
-    refetchOnWindowFocus: true,
+    staleTime: 10000,
+    refetchOnWindowFocus: false,
   });
 };

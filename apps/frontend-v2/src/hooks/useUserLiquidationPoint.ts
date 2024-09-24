@@ -18,6 +18,7 @@ export const useUserLiquidationPoint = () => {
       return collateralValue.times(userCollateralUtilization);
     },
     enabled: !!collateralValue && !!userCollateralUtilization,
+    refetchOnWindowFocus: false,
     placeholderData: keepPreviousData,
   });
 };

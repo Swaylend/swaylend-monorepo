@@ -47,6 +47,7 @@ export const useUserCollateralUtilization = () => {
       !!marketConfiguration &&
       !!trueCollateralValue &&
       !!priceData,
+    refetchOnWindowFocus: false,
     placeholderData: keepPreviousData,
   });
 };

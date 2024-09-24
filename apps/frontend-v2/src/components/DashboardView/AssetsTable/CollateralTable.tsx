@@ -29,6 +29,7 @@ import {
 } from '@/components/ui/tooltip';
 import type { CollateralConfigurationOutput } from '@/contract-types/Market';
 import {
+  useBalance,
   useCollateralConfigurations,
   usePrice,
   useTotalCollateral,
@@ -40,8 +41,10 @@ import {
   SYMBOL_TO_ICON,
   SYMBOL_TO_NAME,
   formatUnits,
+  getFormattedNumber,
+  getFormattedPrice,
 } from '@/utils';
-import { useAccount, useBalance } from '@fuels/react';
+import { useAccount } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import BigNumber from 'bignumber.js';
 import React, { useMemo } from 'react';
@@ -85,17 +88,15 @@ const CollateralTableRow = ({
   collateralAmount,
   price,
 }: TableRowProps) => {
-  const { balance } = useBalance({
+  const { data: balance } = useBalance({
     address: account,
     assetId: assetId,
   });
 
-  const formattedBalance = formatUnits(
-    BigNumber(balance ? balance.toString() : '0'),
-    decimals
-  ).toFormat(4);
+  const formattedBalance = getFormattedNumber(
+    formatUnits(BigNumber(balance ? balance.toString() : '0'), decimals)
+  );
 
-  const canSupply = balance?.gt(0);
   const canWithdraw = protocolBalance.gt(0);
 
   let supplyUsed = BigNumber(0);
@@ -109,6 +110,8 @@ const CollateralTableRow = ({
       )
       .times(100);
   }
+
+  const canSupply = balance?.gt(0) && supplyUsed.lt(100);
 
   return (
     <TableRow>
@@ -212,9 +215,11 @@ const CollateralTableRow = ({
       <TableCell>
         <div className=" h-full flex items-center gap-x-2">
           <span className="text-lavender font-medium">
-            ${formatUnits(protocolBalance, decimals).times(price).toFixed(2)}
+            {getFormattedPrice(
+              formatUnits(protocolBalance, decimals).times(price)
+            )}
           </span>
-          {formatUnits(protocolBalance, decimals).toFixed(4)} {symbol}
+          {getFormattedNumber(formatUnits(protocolBalance, decimals))} {symbol}
         </div>
       </TableCell>
       <TableCell>
@@ -258,15 +263,14 @@ const CollateralCard = ({
   collateralConfiguration,
   price,
 }: TableRowProps) => {
-  const { balance } = useBalance({
+  const { data: balance } = useBalance({
     address: account,
     assetId: assetId,
   });
 
-  const formattedBalance = formatUnits(
-    BigNumber(balance ? balance.toString() : '0'),
-    decimals
-  ).toFormat(4);
+  const formattedBalance = getFormattedNumber(
+    formatUnits(BigNumber(balance ? balance.toString() : '0'), decimals)
+  );
 
   let supplyUsed = BigNumber(0);
   if (collateralAmount.gt(0)) {
@@ -280,7 +284,7 @@ const CollateralCard = ({
       .times(100);
   }
 
-  const canSupply = balance?.gt(0);
+  const canSupply = balance?.gt(0) && supplyUsed.lt(100);
   const canWithdraw = protocolBalance.gt(0);
   return (
     <Card>
@@ -316,10 +320,12 @@ const CollateralCard = ({
             <div className="w-1/2 text-moon font-medium">Supplied Assets</div>
             <div className=" text-moon flex items-center gap-x-2">
               <span className="text-lavender font-medium">
-                $
-                {formatUnits(protocolBalance, decimals).times(price).toFixed(2)}
+                {getFormattedPrice(
+                  formatUnits(protocolBalance, decimals).times(price)
+                )}
               </span>
-              {formatUnits(protocolBalance, decimals).toFixed(4)} {symbol}
+              {getFormattedNumber(formatUnits(protocolBalance, decimals))}{' '}
+              {symbol}
             </div>
           </div>
           <div className="w-full flex items-center">
@@ -458,7 +464,11 @@ export const CollateralTable = () => {
             <TableHead className="w-2/12">
               <div className="flex items-center gap-x-2">
                 Collateral Asset
-                <InfoIcon text={'Assets used as collateral'} />
+                <InfoIcon
+                  text={
+                    'Assets you can deposit to secure borrowing positions and back your loans.'
+                  }
+                />
               </div>
             </TableHead>
             <TableHead className="w-2/12">Wallet Balance</TableHead>
@@ -466,7 +476,9 @@ export const CollateralTable = () => {
               <div className="flex items-center gap-x-2">
                 Supply Cap Filled
                 <InfoIcon
-                  text={'Percentage of the supply cap that has been filled.'}
+                  text={
+                    'Percentage of the limited supply that has been filled.'
+                  }
                 />
               </div>
             </TableHead>
@@ -476,7 +488,7 @@ export const CollateralTable = () => {
                 Points
                 <InfoIcon
                   text={
-                    'Points earned by supplying these assets. Hover over the points to learn more.'
+                    'Points earned for providing incentivized asset as a collateral. Hover over the points to learn more.'
                   }
                 />
               </div>

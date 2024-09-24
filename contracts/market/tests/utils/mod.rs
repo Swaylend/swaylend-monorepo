@@ -3,7 +3,7 @@ use fuels::accounts::wallet::WalletUnlocked;
 use fuels::test_helpers::{
     launch_custom_provider_and_get_wallets, NodeConfig, Trigger, WalletsConfig,
 };
-use fuels::types::{Address, Bits256, ContractId};
+use fuels::types::{Bits256, ContractId, Identity};
 use market_sdk::{get_market_config, MarketContract};
 use pyth_mock_sdk::PythMockContract;
 use std::collections::HashMap;
@@ -39,13 +39,13 @@ pub async fn init_wallets() -> Vec<WalletUnlocked> {
 
 pub struct TestData {
     pub admin: WalletUnlocked,
-    pub admin_address: Address,
+    pub admin_account: Identity,
     pub alice: WalletUnlocked,
-    pub alice_address: Address,
+    pub alice_account: Identity,
     pub bob: WalletUnlocked,
-    pub bob_address: Address,
+    pub bob_account: Identity,
     pub chad: WalletUnlocked,
-    pub chad_address: Address,
+    pub chad_account: Identity,
     pub oracle: PythMockContract,
     pub market: MarketContract,
     pub usdc: Asset,
@@ -61,8 +61,6 @@ pub struct TestData {
 }
 
 pub async fn setup() -> TestData {
-    const BASE_ASSET_ID: &str =
-        "0x0000000000000000000000000000000000000000000000000000000000000000";
     //--------------- WALLETS ---------------
     let wallets = init_wallets().await;
     let admin = &wallets[0];
@@ -93,12 +91,10 @@ pub async fn setup() -> TestData {
     let eth = assets.get("ETH").unwrap().clone();
 
     //--------------- MARKET ---------------
-    let fuel_eth_base_asset_id = Bits256::from_hex_str(BASE_ASSET_ID).unwrap();
-
     let market_config = get_market_config(
         admin.address().into(),
         admin.address().into(),
-        usdc.bits256,
+        usdc.asset_id,
         usdc.decimals as u32,
         usdc.price_feed_id,
     )
@@ -106,7 +102,7 @@ pub async fn setup() -> TestData {
 
     // debug step
     let debug_step: u64 = 10_000;
-    let market = MarketContract::deploy(&admin, debug_step, fuel_eth_base_asset_id, false)
+    let market = MarketContract::deploy(&admin, debug_step, false)
         .await
         .unwrap();
 
@@ -155,13 +151,13 @@ pub async fn setup() -> TestData {
     TestData {
         wallets: wallets.clone(),
         admin: admin.clone(),
-        admin_address: Address::from(admin.address()),
+        admin_account: admin.address().into(),
         alice: alice.clone(),
-        alice_address: Address::from(alice.address()),
+        alice_account: alice.address().into(),
         bob: bob.clone(),
-        bob_address: Address::from(bob.address()),
+        bob_account: bob.address().into(),
         chad: chad.clone(),
-        chad_address: Address::from(chad.address()),
+        chad_account: chad.address().into(),
         oracle,
         market,
         usdc: usdc.clone(),

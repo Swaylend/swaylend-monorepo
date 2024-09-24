@@ -8,15 +8,25 @@ import type { PriceDataUpdateInput } from '@/contract-types/Market';
 import { useMarketStore } from '@/stores';
 import { DEPLOYED_MARKETS, FUEL_ETH_BASE_ASSET_ID } from '@/utils';
 import { useAccount, useWallet } from '@fuels/react';
-import { useMutation } from '@tanstack/react-query';
+import {
+  PYTH_CONTRACT_ADDRESS_SEPOLIA,
+  PythContract,
+} from '@pythnetwork/pyth-fuel-js';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
-import { LoaderCircleIcon } from 'lucide-react';
 import { toast } from 'react-toastify';
-import { useMarketConfiguration } from './useMarketConfiguration';
+import { useCollateralConfigurations } from './useCollateralConfigurations';
 
-export const useBorrowBase = () => {
+type useWithdrawCollateralProps = {
+  actionTokenAssetId: string | null | undefined;
+};
+
+export const useWithdrawCollateral = ({
+  actionTokenAssetId,
+}: useWithdrawCollateralProps) => {
   const { wallet } = useWallet();
   const { account } = useAccount();
+  const { data: collateralConfigurations } = useCollateralConfigurations();
   const {
     market,
     changeTokenAmount,
@@ -24,10 +34,11 @@ export const useBorrowBase = () => {
     changeSuccessDialogOpen,
     changeSuccessDialogTransactionId,
   } = useMarketStore();
-  const { data: marketConfiguration } = useMarketConfiguration();
+
+  const queryClient = useQueryClient();
 
   return useMutation({
-    mutationKey: ['borrowBase', account, marketConfiguration, market],
+    mutationKey: ['withdrawCollateral', actionTokenAssetId, account, market],
     mutationFn: async ({
       tokenAmount,
       priceUpdateData,
@@ -35,25 +46,42 @@ export const useBorrowBase = () => {
       tokenAmount: BigNumber;
       priceUpdateData: PriceDataUpdateInput;
     }) => {
-      if (!wallet || !account || !marketConfiguration) {
+      if (
+        !wallet ||
+        !account ||
+        !actionTokenAssetId ||
+        !collateralConfigurations
+      ) {
         return null;
       }
+
+      const pythContract = new PythContract(
+        PYTH_CONTRACT_ADDRESS_SEPOLIA,
+        wallet
+      );
 
       const marketContract = new Market(
         DEPLOYED_MARKETS[market].marketAddress,
         wallet
       );
+
       const amount = new BigNumber(tokenAmount).times(
-        10 ** marketConfiguration.baseTokenDecimals
+        10 ** collateralConfigurations[actionTokenAssetId].decimals
       );
+
       const { waitForResult } = await marketContract.functions
-        .withdraw_base(amount.toFixed(0), priceUpdateData)
+        .withdraw_collateral(
+          actionTokenAssetId,
+          amount.toFixed(0),
+          priceUpdateData
+        )
         .callParams({
           forward: {
             amount: priceUpdateData.update_fee,
             assetId: FUEL_ETH_BASE_ASSET_ID,
           },
         })
+        .addContracts([pythContract])
         .call();
 
       const transactionResult = await toast.promise(waitForResult(), {
@@ -64,6 +92,7 @@ export const useBorrowBase = () => {
 
       return transactionResult.transactionId;
     },
+
     onSuccess: (data) => {
       if (data) {
         TransactionSuccessToast({ transactionId: data });
@@ -75,6 +104,23 @@ export const useBorrowBase = () => {
     },
     onError: (error) => {
       ErrorToast({ error: error.message });
+    },
+    onSettled: () => {
+      // Invalidate queries
+      queryClient.invalidateQueries({
+        queryKey: [
+          'collateralAssets',
+          account,
+          market,
+          collateralConfigurations,
+        ],
+      });
+
+      // Invalidate Fuel balance query
+      queryClient.invalidateQueries({
+        exact: true,
+        queryKey: ['balance', account, actionTokenAssetId],
+      });
     },
   });
 };

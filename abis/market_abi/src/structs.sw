@@ -1,7 +1,6 @@
 library;
 
 use i256::I256;
-use std::constants::ZERO_B256;
 use std::bytes::Bytes;
 use pyth_interface::{data_structures::price::{PriceFeedId}};
 
@@ -11,20 +10,20 @@ pub const FACTOR_SCALE_18: u256 = 1_000_000_000_000_000_000; // 1e18
 pub const ORACLE_CONF_BASIS_POINTS: u256 = 10_000; // 1e4
 
 pub struct CollateralConfiguration {
-    pub asset_id: b256,
+    pub asset_id: AssetId,
     pub price_feed_id: b256,
     pub decimals: u32,
     pub borrow_collateral_factor: u256, // decimals: 18
     pub liquidate_collateral_factor: u256, // decimals: 18
     pub liquidation_penalty: u256, // decimals: 18
-    pub supply_cap: u256, // decimals: asset decimals
+    pub supply_cap: u64, // decimals: asset decimals
     pub paused: bool,
 }
 
 pub struct MarketConfiguration {
-    pub governor: Address,
-    pub pause_guardian: Address,
-    pub base_token: b256,
+    pub governor: Identity,
+    pub pause_guardian: Identity,
+    pub base_token: AssetId,
     pub base_token_decimals: u32,
     pub base_token_price_feed_id: b256,
     pub supply_kink: u256, // decimals: 18
@@ -47,11 +46,11 @@ pub struct MarketConfiguration {
 impl MarketConfiguration {
     pub fn default() -> Self {
         MarketConfiguration {
-            governor: Address::from(ZERO_B256),
-            pause_guardian: Address::from(ZERO_B256),
-            base_token: ZERO_B256,
+            governor: Identity::Address(Address::zero()),
+            pause_guardian: Identity::Address(Address::zero()),
+            base_token: AssetId::zero(),
             base_token_decimals: 0,
-            base_token_price_feed_id: ZERO_B256,
+            base_token_price_feed_id: b256::zero(),
             supply_kink: 0,
             borrow_kink: 0,
             supply_per_second_interest_rate_slope_low: 0,

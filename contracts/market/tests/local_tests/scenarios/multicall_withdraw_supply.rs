@@ -19,9 +19,9 @@ async fn multicall_withdraw_supply_test() {
     let TestData {
         wallets,
         alice,
-        alice_address,
+        alice_account,
         bob,
-        bob_address,
+        bob_account,
         market,
         usdc,
         usdc_contract,
@@ -52,7 +52,7 @@ async fn multicall_withdraw_supply_test() {
     print_case_title(0, "Alice", "supply_base", alice_supply_log_amount.as_str());
     println!("💸 Alice + {alice_supply_log_amount}");
     usdc_contract
-        .mint(alice_address, alice_mint_amount)
+        .mint(alice_account, alice_mint_amount)
         .await
         .unwrap();
     let balance = alice.get_asset_balance(&usdc.asset_id).await.unwrap();
@@ -98,7 +98,7 @@ async fn multicall_withdraw_supply_test() {
     // 💰 Amount: 500.00 USDC
     let bob_mint_amount = parse_units(500 * AMOUNT_COEFFICIENT, usdc.decimals);
     usdc_contract
-        .mint(bob_address, bob_mint_amount)
+        .mint(bob_account, bob_mint_amount)
         .await
         .unwrap();
     let balance = bob.get_asset_balance(&usdc.asset_id).await.unwrap();

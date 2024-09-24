@@ -29,8 +29,8 @@ function makeQueryClient() {
       queries: {
         // With SSR, we usually want to set some default staleTime
         // above 0 to avoid refetching immediately on the client
-        // staleTime: 15 * 1000,
-        refetchInterval: 10 * 1000,
+        gcTime: 5 * 60 * 1000, // Run GC every 5 mins
+        staleTime: 1 * 60 * 1000, // Cache for 1 mins
       },
     },
   });
@@ -52,6 +52,17 @@ function getQueryClient() {
   return browserQueryClient;
 }
 
+const connectors = [
+  new FuelWalletConnector(),
+  new FueletWalletConnector(),
+  new WalletConnectConnector({
+    projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
+  }),
+  new SolanaConnector({
+    projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
+  }),
+];
+
 export const Providers = ({ children }: { children: ReactNode }) => {
   const queryClient = getQueryClient();
 
@@ -63,6 +74,7 @@ export const Providers = ({ children }: { children: ReactNode }) => {
       person_profiles: 'always',
       autocapture: false,
       capture_pageview: true,
+      capture_pageleave: false,
       loaded: (posthog) => {
         if (process.env.NODE_ENV === 'development') posthog.debug(); // debug mode in development
       },
@@ -82,17 +94,7 @@ export const Providers = ({ children }: { children: ReactNode }) => {
           <FuelProvider
             theme="dark"
             fuelConfig={{
-              connectors: [
-                new FuelWalletConnector(),
-                new FueletWalletConnector(),
-                new WalletConnectConnector({
-                  // TODO: setup walletconnect project and add project id
-                  projectId: '972bec1eae519664815444d4b7a7578a',
-                }),
-                new SolanaConnector({
-                  projectId: '972bec1eae519664815444d4b7a7578a',
-                }),
-              ],
+              connectors: connectors,
             }}
           >
             <>
@@ -115,7 +117,7 @@ export const Providers = ({ children }: { children: ReactNode }) => {
               />
             </>
           </FuelProvider>
-          <ReactQueryDevtools initialIsOpen />
+          <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </PostHogProvider>
     </ThemeProvider>

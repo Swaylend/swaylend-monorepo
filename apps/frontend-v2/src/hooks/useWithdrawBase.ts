@@ -12,22 +12,14 @@ import {
   PYTH_CONTRACT_ADDRESS_SEPOLIA,
   PythContract,
 } from '@pythnetwork/pyth-fuel-js';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
-import { LoaderCircleIcon } from 'lucide-react';
 import { toast } from 'react-toastify';
-import { useCollateralConfigurations } from './useCollateralConfigurations';
+import { useMarketConfiguration } from './useMarketConfiguration';
 
-type useWithdrawCollateralProps = {
-  actionTokenAssetId: string | null | undefined;
-};
-
-export const useWithdrawCollateral = ({
-  actionTokenAssetId,
-}: useWithdrawCollateralProps) => {
+export const useWithdrawBase = () => {
   const { wallet } = useWallet();
   const { account } = useAccount();
-  const { data: collateralConfigurations } = useCollateralConfigurations();
   const {
     market,
     changeTokenAmount,
@@ -35,9 +27,12 @@ export const useWithdrawCollateral = ({
     changeSuccessDialogOpen,
     changeSuccessDialogTransactionId,
   } = useMarketStore();
+  const { data: marketConfiguration } = useMarketConfiguration();
+
+  const queryClient = useQueryClient();
 
   return useMutation({
-    mutationKey: ['withdrawCollateral', actionTokenAssetId, account, market],
+    mutationKey: ['withdrawBase', account, market, marketConfiguration],
     mutationFn: async ({
       tokenAmount,
       priceUpdateData,
@@ -45,12 +40,7 @@ export const useWithdrawCollateral = ({
       tokenAmount: BigNumber;
       priceUpdateData: PriceDataUpdateInput;
     }) => {
-      if (
-        !wallet ||
-        !account ||
-        !actionTokenAssetId ||
-        !collateralConfigurations
-      ) {
+      if (!wallet || !account || !marketConfiguration) {
         return null;
       }
 
@@ -65,15 +55,11 @@ export const useWithdrawCollateral = ({
       );
 
       const amount = new BigNumber(tokenAmount).times(
-        10 ** collateralConfigurations[actionTokenAssetId].decimals
+        10 ** marketConfiguration.baseTokenDecimals
       );
 
       const { waitForResult } = await marketContract.functions
-        .withdraw_collateral(
-          actionTokenAssetId,
-          amount.toFixed(0),
-          priceUpdateData
-        )
+        .withdraw_base(amount.toFixed(0), priceUpdateData)
         .callParams({
           forward: {
             amount: priceUpdateData.update_fee,
@@ -102,6 +88,18 @@ export const useWithdrawCollateral = ({
     },
     onError: (error) => {
       ErrorToast({ error: error.message });
+    },
+    onSettled: () => {
+      // Invalidate queries
+      queryClient.invalidateQueries({
+        queryKey: ['userSupplyBorrow', account, market],
+      });
+
+      // Invalidate Fuel balance query
+      queryClient.invalidateQueries({
+        exact: true,
+        queryKey: ['balance', account, marketConfiguration?.baseToken],
+      });
     },
   });
 };

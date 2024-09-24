@@ -1,4 +1,5 @@
 name: SwayLend USDC Market
+ecosystem: fuel
 networks:
   - id: 0
     start_block: 10670000

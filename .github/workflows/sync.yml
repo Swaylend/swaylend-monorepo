@@ -25,6 +25,7 @@ jobs:
           git remote add fork git@github.com:lutralabs/swaylend-monorepo.git
           git config --global user.email "info@lutralabs.io"
           git config --global user.name "Lutra Labs Bot"
+          git commit --amend --author="Lutra Labs Bot <info@lutralabs.io>" --no-edit
           git push fork --force
       - name: Push to Lutra Labs Bot fork repo
         env:
@@ -33,4 +34,5 @@ jobs:
           git remote add bot-fork git@github.com:lutralabs-bot/swaylend-monorepo.git
           git config --global user.email "info@lutralabs.io"
           git config --global user.name "Lutra Labs Bot"
+          git commit --amend --author="Lutra Labs Bot <info@lutralabs.io>" --no-edit
           git push bot-fork --force

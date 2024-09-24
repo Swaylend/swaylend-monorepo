@@ -8,9 +8,9 @@ async fn reserves_test() {
     let TestData {
         wallets,
         bob,
-        bob_address,
+        bob_account,
         alice,
-        alice_address,
+        alice_account,
         market,
         assets,
         usdc,
@@ -21,7 +21,7 @@ async fn reserves_test() {
         prices,
         eth,
         admin,
-        admin_address,
+        admin_account,
         ..
     } = setup().await;
 
@@ -37,7 +37,7 @@ async fn reserves_test() {
         // Step 0: Alice supplies 4000 USDC
         let alice_supply_amount = parse_units(4000 * AMOUNT_COEFFICIENT, usdc.decimals);
         usdc_contract
-            .mint(alice_address, alice_supply_amount)
+            .mint(alice_account, alice_supply_amount)
             .await
             .unwrap();
         let res = market
@@ -74,11 +74,11 @@ async fn reserves_test() {
         market.debug_increment_timestamp().await.unwrap();
 
         // Step 3: Bob repays 4000 USDC
-        let res = market.get_user_basic(bob_address).await.unwrap();
+        let res = market.get_user_basic(bob_account).await.unwrap();
         let principal_value: u64 = res.value.principal.value.try_into().unwrap();
         let repay_amount: u64 = principal_value + parse_units(10, usdc.decimals);
 
-        usdc_contract.mint(bob_address, repay_amount).await.unwrap();
+        usdc_contract.mint(bob_account, repay_amount).await.unwrap();
         let res = market
             .with_account(&bob)
             .await
@@ -95,7 +95,7 @@ async fn reserves_test() {
             .unwrap()
             .withdraw_collateral(
                 &[&oracle.instance],
-                eth.bits256,
+                eth.asset_id,
                 bob_supply_amount,
                 &price_data_update,
             )
@@ -119,7 +119,7 @@ async fn reserves_test() {
         .with_account(&admin)
         .await
         .unwrap()
-        .withdraw_reserves(admin_address, normalized_reserves)
+        .withdraw_reserves(admin_account, normalized_reserves)
         .await;
     assert!(res.is_ok());
 

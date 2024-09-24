@@ -28,6 +28,7 @@ export const useSupplyRate = () => {
       if (!value) throw new Error('Failed to fetch supplyRate');
       return new BigNumber(value.toString());
     },
+    refetchOnWindowFocus: false,
     enabled: !!utilization && !!provider,
   });
 };

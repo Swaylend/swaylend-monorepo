@@ -6,6 +6,7 @@ type User = {
   inviteCode: string;
   redeemedInviteCode: boolean;
   points: number;
+  rank: number;
 };
 
 export const useUser = () => {

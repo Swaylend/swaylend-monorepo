@@ -77,6 +77,7 @@ export const useBorrowCapacity = () => {
       !!userCollateralAssets &&
       !!priceData &&
       !!marketConfiguration,
+    refetchOnWindowFocus: false,
     placeholderData: keepPreviousData,
   });
 };

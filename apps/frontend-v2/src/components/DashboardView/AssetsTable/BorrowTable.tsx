@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/table';
 import {
   USER_ROLE,
+  useBalance,
   useBorrowCapacity,
   useBorrowRate,
   useMarketConfiguration,
@@ -34,8 +35,9 @@ import {
   SYMBOL_TO_ICON,
   formatUnits,
   getBorrowApr,
+  getFormattedNumber,
 } from '@/utils';
-import { useAccount, useBalance, useIsConnected } from '@fuels/react';
+import { useAccount, useIsConnected } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import BigNumber from 'bignumber.js';
 import Image from 'next/image';
@@ -130,7 +132,7 @@ export const BorrowTable = () => {
 
   const { isConnected } = useIsConnected();
 
-  const { balance } = useBalance({
+  const { data: balance } = useBalance({
     address: account ?? undefined,
     assetId: marketConfiguration?.baseToken,
   });
@@ -161,7 +163,7 @@ export const BorrowTable = () => {
                 Borrow Assets
                 <InfoIcon
                   text={
-                    'Borrow assets using your supplied assets as collateral.'
+                    "Base asset available for borrowing once you've provided at least one collateral asset."
                   }
                 />
               </div>
@@ -173,7 +175,7 @@ export const BorrowTable = () => {
                 Borrow Points
                 <InfoIcon
                   text={
-                    'Points earned by borrowing these assets. Hover over the points to learn more.'
+                    'Points earned for maintaining an active borrowing position. Hover over the points to learn more.'
                   }
                 />
               </div>
@@ -208,10 +210,14 @@ export const BorrowTable = () => {
                       {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
                     </div>
                     <div>
-                      {formatUnits(
-                        balance ? BigNumber(balance.toString()) : BigNumber(0),
-                        marketConfiguration?.baseTokenDecimals ?? 9
-                      ).toFixed(2)}{' '}
+                      {getFormattedNumber(
+                        formatUnits(
+                          balance
+                            ? BigNumber(balance.toString())
+                            : BigNumber(0),
+                          marketConfiguration?.baseTokenDecimals ?? 9
+                        )
+                      )}{' '}
                       {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
                       {' in wallet'}
                     </div>
@@ -226,15 +232,25 @@ export const BorrowTable = () => {
               >
                 {getBorrowApr(borrowRate)}
               </TableCell>
-              <TableCell>{borrowedBalance}</TableCell>
+              <TableCell>
+                {getFormattedNumber(BigNumber(borrowedBalance))}{' '}
+                {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
+              </TableCell>
               <TableCell>
                 <PointIcons points={POINTS_BORROW} />
               </TableCell>
               <TableCell>
                 {userRole === USER_ROLE.LENDER ? (
-                  <div className="text-lavender text-md font-medium text-center w-full">
-                    You are already lending{' '}
-                    {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}!
+                  <div className=" text-lavender bg-primary/20 rounded-lg px-4 py-2 text-sm font-medium text-center w-full">
+                    You cannot Borrow assets while you have an active Earn
+                    position. Learn more about how{' '}
+                    <a
+                      // biome-ignore lint/a11y/useValidAnchor: <explanation>
+                      href="#"
+                      className="underline hover:opacity-90 text-white"
+                    >
+                      Sweylend works.
+                    </a>
                   </div>
                 ) : (
                   <div className="flex gap-x-2 w-full">
@@ -316,12 +332,14 @@ export const BorrowTable = () => {
                         }
                       </div>
                       <div className="text-moon text-sm">
-                        {formatUnits(
-                          balance
-                            ? BigNumber(balance.toString())
-                            : BigNumber(0),
-                          marketConfiguration?.baseTokenDecimals ?? 9
-                        ).toFixed(2)}
+                        {getFormattedNumber(
+                          formatUnits(
+                            balance
+                              ? BigNumber(balance.toString())
+                              : BigNumber(0),
+                            marketConfiguration?.baseTokenDecimals ?? 9
+                          )
+                        )}
                         {' in wallet'}
                       </div>
                     </div>
@@ -344,7 +362,9 @@ export const BorrowTable = () => {
                   <div className="w-1/2 text-moon font-medium">
                     Borrowed Assets
                   </div>
-                  <div className="text-moon">{borrowedBalance}</div>
+                  <div className="text-moon">
+                    {getFormattedNumber(BigNumber(borrowedBalance))}
+                  </div>
                 </div>
                 <div className="w-full flex items-center">
                   <div className="w-1/2 text-moon font-medium">
@@ -357,9 +377,13 @@ export const BorrowTable = () => {
           )}
           <CardFooter>
             {userRole === USER_ROLE.LENDER ? (
-              <div className="text-lavender text-md font-medium text-center w-full">
-                You are already lending{' '}
-                {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}!
+              <div className=" text-lavender bg-primary/20 rounded-lg px-4 py-2 text-sm font-medium text-center w-full">
+                You cannot Borrow assets while you have an active Earn position.
+                Learn more about how{' '}
+                {/* biome-ignore lint/a11y/useValidAnchor: <explanation> */}
+                <a href="#" className="underline hover:opacity-90 text-white">
+                  Sweylend works.
+                </a>
               </div>
             ) : (
               <div className="flex gap-x-2 w-full">

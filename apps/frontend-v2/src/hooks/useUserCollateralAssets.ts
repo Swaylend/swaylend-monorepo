@@ -1,32 +1,39 @@
-import { getCollateralAssets } from '@/lib/queries';
+import { Market } from '@/contract-types';
 import { useMarketStore } from '@/stores';
-import { useAccount } from '@fuels/react';
+import { DEPLOYED_MARKETS } from '@/utils';
+import { useAccount, useWallet } from '@fuels/react';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
+import { useCollateralConfigurations } from './useCollateralConfigurations';
 
 export const useUserCollateralAssets = () => {
+  const { wallet } = useWallet();
   const { account } = useAccount();
   const { market } = useMarketStore();
+  const { data: collateralConfigurations } = useCollateralConfigurations();
 
   return useQuery({
-    queryKey: ['collateralAssets', account, market],
+    queryKey: ['collateralAssets', account, market, collateralConfigurations],
     queryFn: async () => {
-      if (!account) return null;
+      if (!account || !collateralConfigurations || !wallet) return null;
 
-      const assets = await getCollateralAssets(account, market);
+      const marketContract = new Market(
+        DEPLOYED_MARKETS[market].marketAddress,
+        wallet
+      );
 
       const formattedCollaterals: Record<string, BigNumber> = {};
 
-      if (assets.length > 0) {
-        assets[0].collateralAssets.forEach((asset) => {
-          formattedCollaterals[asset.collateralAsset_id] = new BigNumber(
-            asset.amount
-          );
-        });
+      const { value: balances } = await marketContract.functions
+        .get_all_user_collateral({ bits: account })
+        .get();
+
+      for (const [assetId, balance] of balances) {
+        formattedCollaterals[assetId] = new BigNumber(balance.toString());
       }
 
       return formattedCollaterals;
     },
-    enabled: !!account,
+    enabled: !!account && !!wallet && !!collateralConfigurations,
   });
 };

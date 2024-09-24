@@ -7,17 +7,22 @@ import { Market } from '@/contract-types';
 import { useMarketStore } from '@/stores';
 import { DEPLOYED_MARKETS } from '@/utils';
 import { useAccount, useWallet } from '@fuels/react';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
-import { LoaderCircleIcon } from 'lucide-react';
 import { toast } from 'react-toastify';
-import { useMarketConfiguration } from './useMarketConfiguration';
+import { useCollateralConfigurations } from './useCollateralConfigurations';
 
-export const useSupplyBase = () => {
+type useSupplyCollateralProps = {
+  actionTokenAssetId: string | null | undefined;
+};
+
+export const useSupplyCollateral = ({
+  actionTokenAssetId,
+}: useSupplyCollateralProps) => {
   const { wallet } = useWallet();
   const { account } = useAccount();
   const { market } = useMarketStore();
-  const { data: marketConfiguration } = useMarketConfiguration();
+  const { data: collateralConfigurations } = useCollateralConfigurations();
   const {
     changeTokenAmount,
     changeInputDialogOpen,
@@ -25,10 +30,23 @@ export const useSupplyBase = () => {
     changeSuccessDialogTransactionId,
   } = useMarketStore();
 
+  const queryClient = useQueryClient();
+
   return useMutation({
-    mutationKey: ['supplyBase', account, marketConfiguration, market],
+    mutationKey: [
+      'supplyCollateral',
+      actionTokenAssetId,
+      account,
+      market,
+      collateralConfigurations,
+    ],
     mutationFn: async (tokenAmount: BigNumber) => {
-      if (!wallet || !account || !marketConfiguration) {
+      if (
+        !wallet ||
+        !account ||
+        !actionTokenAssetId ||
+        !collateralConfigurations
+      ) {
         return null;
       }
 
@@ -38,14 +56,14 @@ export const useSupplyBase = () => {
       );
 
       const amount = new BigNumber(tokenAmount).times(
-        10 ** marketConfiguration.baseTokenDecimals
+        10 ** collateralConfigurations[actionTokenAssetId].decimals
       );
 
       const { waitForResult } = await marketContract.functions
-        .supply_base()
+        .supply_collateral()
         .callParams({
           forward: {
-            assetId: marketConfiguration.baseToken,
+            assetId: actionTokenAssetId,
             amount: amount.toFixed(0),
           },
         })
@@ -70,6 +88,23 @@ export const useSupplyBase = () => {
     },
     onError: (error) => {
       ErrorToast({ error: error.message });
+    },
+    onSettled: () => {
+      // Invalidate queries
+      queryClient.invalidateQueries({
+        queryKey: [
+          'collateralAssets',
+          account,
+          market,
+          collateralConfigurations,
+        ],
+      });
+
+      // Invalidate Fuel balance query
+      queryClient.invalidateQueries({
+        exact: true,
+        queryKey: ['balance', account, actionTokenAssetId],
+      });
     },
   });
 };
