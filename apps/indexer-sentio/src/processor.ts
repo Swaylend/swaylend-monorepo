@@ -1,3 +1,4 @@
+import { GLOBAL_CONFIG } from '@sentio/runtime';
 import { BigDecimal } from '@sentio/sdk';
 import { FuelNetwork } from '@sentio/sdk/fuel';
 import { getPriceBySymbol } from '@sentio/sdk/utils';
@@ -19,7 +20,6 @@ import {
   UserBasic,
 } from './schema/store.js';
 import { MarketProcessor } from './types/fuel/MarketProcessor.js';
-import { GLOBAL_CONFIG } from '@sentio/runtime';
 
 dayjs.extend(utc);
 

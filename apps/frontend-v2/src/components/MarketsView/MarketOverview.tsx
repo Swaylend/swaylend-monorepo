@@ -12,6 +12,7 @@ import {
   useTotalCollateral,
   useTotalReserves,
 } from '@/hooks';
+import { type ChartData, useChartsData } from '@/hooks/useChartsData';
 import {
   type DeployedMarket,
   SYMBOL_TO_ICON,
@@ -26,9 +27,8 @@ import Link from 'next/link';
 import React, { useMemo } from 'react';
 import { IconPair } from '../IconPair';
 import { KinkChart } from './KinkChart';
-import { MarketCollateralsTable } from './MarketCollateralsTable';
-import { useChartsData, type ChartData } from '@/hooks/useChartsData';
 import { MarketChart } from './MarketChart';
+import { MarketCollateralsTable } from './MarketCollateralsTable';
 
 type MarketOverviewProps = {
   network: string;

@@ -1,3 +1,5 @@
+import type { ChartData } from '@/hooks/useChartsData';
+import { formatCurrency } from '@/utils/format';
 import {
   Area,
   AreaChart,
@@ -5,10 +7,8 @@ import {
   ResponsiveContainer,
   XAxis,
 } from 'recharts';
-import { type ChartConfig, ChartContainer, ChartTooltip } from '../ui/chart';
-import type { ChartData } from '@/hooks/useChartsData';
-import { formatCurrency } from '@/utils/format';
 import type { DataKey } from 'recharts/types/util/types';
+import { type ChartConfig, ChartContainer, ChartTooltip } from '../ui/chart';
 
 const chartConfig = {
   desktop: {

@@ -14,8 +14,8 @@ import {
   ChartContainer,
   ChartTooltip,
 } from '@/components/ui/chart';
-import { formatCurrency, removeDuplicatesByProperty } from '@/utils/format';
 import type { ChartData } from '@/hooks/useChartsData';
+import { formatCurrency, removeDuplicatesByProperty } from '@/utils/format';
 
 export const MultiMarketChart = ({
   chartData,

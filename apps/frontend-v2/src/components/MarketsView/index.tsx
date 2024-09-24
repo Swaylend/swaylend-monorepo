@@ -1,7 +1,7 @@
 'use client';
+import { type ChartData, useChartsData } from '@/hooks/useChartsData';
 import React, { useMemo } from 'react';
 import { MarketsTable } from './MarketsTable';
-import { type ChartData, useChartsData } from '@/hooks/useChartsData';
 import { MultiMarketChart } from './MultiMarketChart';
 
 export const MarketsView = () => {
