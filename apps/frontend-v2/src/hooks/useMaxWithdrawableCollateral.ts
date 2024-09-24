@@ -1,12 +1,12 @@
+import { useMarketStore } from '@/stores';
 import { formatUnits } from '@/utils';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
+import { useMarketConfiguration } from './useMarketConfiguration';
 import { usePrice } from './usePrice';
 import { useUserCollateralAssets } from './useUserCollateralAssets';
 import { useUserSupplyBorrow } from './useUserSupplyBorrow';
-import { useMarketStore } from '@/stores';
-import { useMarketConfiguration } from './useMarketConfiguration';
 
 // Value of collateral in USD times the liquidation factor
 export const useMaxWithdrawableCollateral = (
