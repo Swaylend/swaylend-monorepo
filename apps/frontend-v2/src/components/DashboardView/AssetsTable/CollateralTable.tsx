@@ -138,19 +138,21 @@ const CollateralTableRow = ({
                   <div className="text-md flex justify-between">
                     <div className="text-lavender">Supply Cap</div>
                     <div className="font-semibold text-moon">
-                      {formatUnits(
-                        BigNumber(
-                          collateralConfiguration.supply_cap.toString()
-                        ),
-                        decimals
-                      ).toFormat(2)}
+                      {getFormattedNumber(
+                        formatUnits(
+                          BigNumber(
+                            collateralConfiguration.supply_cap.toString()
+                          ),
+                          decimals
+                        )
+                      )}{' '}
                       {ASSET_ID_TO_SYMBOL[assetId]}
                     </div>
                   </div>
                   <div className="text-md flex justify-between">
                     <div className="text-lavender">Total Supplied</div>
                     <div className="font-semibold text-moon">
-                      {collateralAmount.toFixed(2)}
+                      {getFormattedNumber(collateralAmount)}{' '}
                       {ASSET_ID_TO_SYMBOL[assetId]}
                     </div>
                   </div>
@@ -208,7 +210,7 @@ const CollateralTableRow = ({
       <TableCell>
         <div className="w-[48px] h-[48px]">
           <CircularProgressBar
-            percent={Number(supplyUsed.div(100).toFormat(2))}
+            percent={Number(supplyUsed.div(100).toFixed(2, 1))}
           />
         </div>
       </TableCell>

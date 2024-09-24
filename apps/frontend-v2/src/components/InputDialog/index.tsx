@@ -11,6 +11,7 @@ import {
   useCollateralConfigurations,
   useMarketBalanceOfBase,
   useMarketConfiguration,
+  useMaxWithdrawableCollateral,
   usePrice,
   useSupplyBase,
   useSupplyCollateral,
@@ -22,7 +23,7 @@ import {
 } from '@/hooks';
 import { cn } from '@/lib/utils';
 import { ACTION_TYPE, useMarketStore } from '@/stores';
-import { ASSET_ID_TO_SYMBOL, formatUnits } from '@/utils';
+import { ASSET_ID_TO_SYMBOL, formatUnits, getFormattedNumber } from '@/utils';
 import { useAccount, useIsConnected } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import BigNumber from 'bignumber.js';
@@ -68,6 +69,9 @@ export const InputDialog = () => {
   const { mutate: borrowBase } = useBorrowBase();
 
   const [error, setError] = useState<string | null>(null);
+
+  const { data: maxWithdrawableCollateral } =
+    useMaxWithdrawableCollateral(actionTokenAssetId);
 
   const handleSubmit = () => {
     if (!marketConfiguration) return;
@@ -149,14 +153,8 @@ export const InputDialog = () => {
           marketConfiguration?.baseTokenDecimals
         );
       }
-      return formatUnits(
-        BigNumber(
-          userCollateralAssets?.[actionTokenAssetId ?? ''] ??
-            new BigNumber(0) ??
-            0
-        ),
-        collateralConfigurations?.[actionTokenAssetId ?? '']?.decimals ?? 9
-      );
+      // Use max withdrawable value instead...
+      return maxWithdrawableCollateral;
     }
 
     if (action === 'BORROW') {
@@ -195,7 +193,14 @@ export const InputDialog = () => {
         break;
       }
       case ACTION_TYPE.WITHDRAW:
-        changeTokenAmount(BigNumber(finalBalance.toFixed(decimals)));
+        if (actionTokenAssetId === marketConfiguration.baseToken) {
+          changeTokenAmount(BigNumber(finalBalance.toFixed(decimals)));
+        } else {
+          // Check max withdrawable collateral amount...
+
+          // Get borrowed amount
+          changeTokenAmount(BigNumber(finalBalance.toFixed(decimals)));
+        }
         break;
       case ACTION_TYPE.BORROW:
         if (marketBalanceOfBase.formatted.lt(finalBalance)) {
@@ -512,7 +517,7 @@ export const InputDialog = () => {
               </div>
               <div className="flex mt-2 justify-between items-center w-full">
                 <div className="text-moon text-sm">
-                  {finalBalance.toFormat(4)}
+                  {getFormattedNumber(finalBalance)}
                   {action === ACTION_TYPE.BORROW
                     ? ' available to borrow'
                     : ' available'}

@@ -231,8 +231,9 @@ export const LendTable = () => {
                     You cannot Lend assets while you have an active borrowing
                     position. Learn more about how{' '}
                     <a
-                      // biome-ignore lint/a11y/useValidAnchor: <explanation>
-                      href="#"
+                      href="https://docs.swaylend.com/"
+                      target="_blank"
+                      rel="noreferrer"
                       className="underline hover:opacity-90 text-white"
                     >
                       Sweylend works.
@@ -365,7 +366,12 @@ export const LendTable = () => {
                 You cannot Lend assets while you have an active borrowing
                 position. Learn more about how{' '}
                 {/* biome-ignore lint/a11y/useValidAnchor: <explanation> */}
-                <a href="#" className="underline hover:opacity-90 text-white">
+                <a
+                  href="https://docs.swaylend.com/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="underline hover:opacity-90 text-white"
+                >
                   Sweylend works.
                 </a>
               </div>
