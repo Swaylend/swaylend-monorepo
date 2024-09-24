@@ -1,4 +1,3 @@
-import { useMarketStore } from '@/stores';
 import { formatUnits } from '@/utils';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
@@ -12,7 +11,6 @@ import { useUserSupplyBorrow } from './useUserSupplyBorrow';
 export const useMaxWithdrawableCollateral = (
   assetId: string | null | undefined
 ) => {
-  const { inputDialogOpen } = useMarketStore();
   const { data: assetsConfigs } = useCollateralConfigurations();
   const { data: collateralBalances } = useUserCollateralAssets();
   const { data: collateralConfig } = useCollateralConfigurations();
