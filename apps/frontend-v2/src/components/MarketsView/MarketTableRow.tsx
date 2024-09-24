@@ -121,16 +121,17 @@ export const MarketTableRow = ({
       (sum, [assetId, value]) => {
         if (!collateralConfigurations[assetId]) return sum;
         const assetPrice = priceData.prices[assetId] ?? BigNumber(0);
-        return sum.plus(assetPrice.times(value));
+        return sum.plus(
+          assetPrice.times(
+            value.div(
+              BigNumber(10).pow(collateralConfigurations[assetId].decimals)
+            )
+          )
+        );
       },
       BigNumber(0)
     );
   }, [totalCollateral, priceData]);
-
-  const formattedTotalCollateral = formatUnits(
-    totalCollateralValue,
-    marketConfiguration?.baseTokenDecimals
-  );
 
   return isPendingCollateralConfigurations ? (
     SkeletonRow
@@ -215,7 +216,7 @@ export const MarketTableRow = ({
           )
         )}
       </TableCell>
-      <TableCell>${formatCurrency(Number(formattedTotalCollateral))}</TableCell>
+      <TableCell>${formatCurrency(Number(totalCollateralValue))}</TableCell>
     </TableRow>
   );
 };

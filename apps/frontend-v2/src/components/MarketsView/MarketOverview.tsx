@@ -2,11 +2,6 @@
 
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
-  type ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-} from '@/components/ui/chart';
-import {
   useBorrowRate,
   useCollateralConfigurations,
   useMarketBalanceOfBase,
@@ -29,16 +24,11 @@ import BigNumber from 'bignumber.js';
 import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 import React, { useMemo } from 'react';
-import {
-  Area,
-  AreaChart,
-  Rectangle,
-  ResponsiveContainer,
-  XAxis,
-} from 'recharts';
 import { IconPair } from '../IconPair';
 import { KinkChart } from './KinkChart';
 import { MarketCollateralsTable } from './MarketCollateralsTable';
+import { useChartsData, type ChartData } from '@/hooks/useChartsData';
+import { MarketChart } from './MarketChart';
 
 type MarketOverviewProps = {
   network: string;
@@ -49,16 +39,6 @@ export default function MarketOverview({
   network,
   baseAsset,
 }: MarketOverviewProps) {
-  // Tmp data
-  const chartData = [
-    { month: 'January', desktop: 186, mobile: 80 },
-    { month: 'February', desktop: 305, mobile: 200 },
-    { month: 'March', desktop: 237, mobile: 120 },
-    { month: 'April', desktop: 73, mobile: 190 },
-    { month: 'May', desktop: 209, mobile: 130 },
-    { month: 'June', desktop: 214, mobile: 140 },
-  ];
-
   const { data: borrowRate } = useBorrowRate(baseAsset as DeployedMarket);
   const { data: supplyRate } = useSupplyRate(baseAsset as DeployedMarket);
   const { data: totalReserves } = useTotalReserves(baseAsset as DeployedMarket);
@@ -80,6 +60,8 @@ export default function MarketOverview({
 
   const { data: priceData } = usePrice(baseAsset as DeployedMarket);
 
+  const { data: chartsData } = useChartsData();
+
   const totalCollateralValue = useMemo(() => {
     if (!priceData || !totalCollateral || !collateralConfigurations) {
       return BigNumber(0);
@@ -89,23 +71,24 @@ export default function MarketOverview({
       (sum, [assetId, value]) => {
         if (!collateralConfigurations[assetId]) return sum;
         const assetPrice = priceData.prices[assetId] ?? BigNumber(0);
-        return sum.plus(assetPrice.times(value));
+        return sum.plus(
+          assetPrice.times(
+            value.div(
+              BigNumber(10).pow(collateralConfigurations[assetId].decimals)
+            )
+          )
+        );
       },
       BigNumber(0)
     );
   }, [totalCollateral, priceData]);
-
-  const formattedTotalCollateral = formatUnits(
-    totalCollateralValue,
-    marketConfiguration?.baseTokenDecimals
-  );
 
   const collateralization = useMemo(() => {
     if (!totalCollateralValue || !marketBasics) {
       return BigNumber(0);
     }
 
-    return formattedTotalCollateral
+    return totalCollateralValue
       .minus(
         formatUnits(
           BigNumber(marketBasics?.total_borrow_base.toString()),
@@ -114,66 +97,6 @@ export default function MarketOverview({
       )
       .div(BigNumber(100));
   }, [totalCollateralValue, marketBasics]);
-
-  const chartConfig = {
-    desktop: {
-      label: 'Desktop',
-      color: 'hsl(var(--chart-1))',
-    },
-  } satisfies ChartConfig;
-
-  const CustomTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="flex flex-col gap-y-2 items-start p-2 bg-card/40 shadow-md rounded-lg">
-          <div className="text-white text-md font-semibold">
-            ${payload[0].value}
-          </div>
-          <div className="text-moon text-sm font-semibold">Earn APR</div>
-          <div className="text-white text-md font-semibold">5.17%</div>
-        </div>
-      );
-    }
-
-    return null;
-  };
-
-  function CustomCursor(props: any) {
-    const { stroke, pointerEvents, height, points, className } = props;
-
-    const { x, y } = points[0];
-    return (
-      <>
-        <Rectangle
-          x={x - 0.5}
-          y={y}
-          fillOpacity={0}
-          stroke="#FFFFFF"
-          strokeOpacity={0.4}
-          pointerEvents={pointerEvents}
-          width={0.5}
-          height={height}
-          points={points}
-          className={className}
-          type="linear"
-        />
-        <Rectangle
-          x={x - 23}
-          y={y}
-          fillOpacity={0.4}
-          style={{
-            fill: 'url(#color4)',
-          }}
-          pointerEvents={pointerEvents}
-          width={46}
-          height={height}
-          points={points}
-          className={className}
-          type="linear"
-        />
-      </>
-    );
-  }
 
   return (
     <div className="pt-[60px] pb-[55px] px-[88px] flex flex-col w-full items-center justify-center">
@@ -221,68 +144,16 @@ export default function MarketOverview({
               Total Collateral
             </div>
             <div className="text-white font-bold text-[20px]">
-              ${formatCurrency(Number(formattedTotalCollateral))}
+              ${formatCurrency(Number(totalCollateralValue))}
             </div>
           </div>
-          <ResponsiveContainer width="100%" height={200}>
-            <ChartContainer config={chartConfig}>
-              <AreaChart
-                accessibilityLayer
-                data={chartData}
-                margin={{
-                  left: 12,
-                  right: 12,
-                }}
-              >
-                <XAxis
-                  dataKey="month"
-                  tickLine={true}
-                  axisLine={true}
-                  tickMargin={8}
-                  tickFormatter={(value: string) => value.slice(0, 3)}
-                  // tick={<CustomTick />}
-                  style={{
-                    fill: '#FFFFFF',
-                    opacity: 0.6,
-                    fontSize: '12px',
-                    fontFamily: 'Inter',
-                    fontWeight: '400',
-                  }}
-                  stroke="#FFFFFF"
-                />
-                <ChartTooltip
-                  content={<CustomTooltip />}
-                  cursor={<CustomCursor />}
-                />
-                <defs>
-                  <linearGradient id="color1" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#3FE8BD" stopOpacity={0.2} />
-                    <stop offset="50%" stopColor="#3FE8BD" stopOpacity={0.1} />
-                    <stop offset="70%" stopColor="#3FE8BD" stopOpacity={0.03} />
-                    <stop offset="90%" stopColor="#3FE8BD" stopOpacity={0.0} />
-                  </linearGradient>
-                  <linearGradient id="color4" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#FFFFFF" stopOpacity={0} />
-                    <stop offset="50%" stopColor="#FFFFFF" stopOpacity={0.1} />
-                    <stop
-                      offset="100%"
-                      stopColor="#FFFFFF"
-                      stopOpacity={0.35}
-                    />
-                  </linearGradient>
-                </defs>
-                <Area
-                  dataKey="desktop"
-                  type="natural"
-                  fill="url(#color1)"
-                  fillOpacity={1}
-                  strokeWidth={3}
-                  stroke="#3FE8BD"
-                  stackId="a"
-                />
-              </AreaChart>
-            </ChartContainer>
-          </ResponsiveContainer>
+          <MarketChart
+            chartData={chartsData?.[baseAsset].sort(
+              (a, b) => a.timestamp - b.timestamp
+            )}
+            dataKey="collateralValueUsd"
+            color="#3FE8BD"
+          />
         </div>
 
         <div className="w-[47%]">
@@ -302,65 +173,13 @@ export default function MarketOverview({
               )}
             </div>
           </div>
-          <ResponsiveContainer width="100%" height={200}>
-            <ChartContainer config={chartConfig}>
-              <AreaChart
-                accessibilityLayer
-                data={chartData}
-                margin={{
-                  left: 12,
-                  right: 12,
-                }}
-              >
-                <XAxis
-                  dataKey="month"
-                  tickLine={true}
-                  axisLine={true}
-                  tickMargin={8}
-                  tickFormatter={(value: string) => value.slice(0, 3)}
-                  // tick={<CustomTick />}
-                  style={{
-                    fill: '#FFFFFF',
-                    opacity: 0.6,
-                    fontSize: '12px',
-                    fontFamily: 'Inter',
-                    fontWeight: '400',
-                  }}
-                  stroke="#FFFFFF"
-                />
-                <ChartTooltip
-                  content={<CustomTooltip />}
-                  cursor={<CustomCursor />}
-                />
-                <defs>
-                  <linearGradient id="color2" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#8b5cf6" stopOpacity={0.2} />
-                    <stop offset="50%" stopColor="#8b5cf6" stopOpacity={0.1} />
-                    <stop offset="70%" stopColor="#8b5cf6" stopOpacity={0.03} />
-                    <stop offset="90%" stopColor="#8b5cf6" stopOpacity={0.0} />
-                  </linearGradient>
-                  <linearGradient id="color4" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#FFFFFF" stopOpacity={0} />
-                    <stop offset="50%" stopColor="#FFFFFF" stopOpacity={0.1} />
-                    <stop
-                      offset="100%"
-                      stopColor="#FFFFFF"
-                      stopOpacity={0.35}
-                    />
-                  </linearGradient>
-                </defs>
-                <Area
-                  dataKey="desktop"
-                  type="natural"
-                  fill="url(#color2)"
-                  fillOpacity={1}
-                  strokeWidth={3}
-                  stroke="#8b5cf6"
-                  stackId="a"
-                />
-              </AreaChart>
-            </ChartContainer>
-          </ResponsiveContainer>
+          <MarketChart
+            chartData={chartsData?.[baseAsset].sort(
+              (a, b) => a.timestamp - b.timestamp
+            )}
+            dataKey="borrowedValueUsd"
+            color="#8b5cf6"
+          />
         </div>
       </div>
 
@@ -428,7 +247,7 @@ export default function MarketOverview({
             <div className="text-xl font-semibold text-white mt-2">
               $
               {formatCurrency(
-                Number(priceData!.prices[marketConfiguration?.baseToken!])
+                Number(priceData?.prices[marketConfiguration?.baseToken!])
               )}
             </div>
           </div>
