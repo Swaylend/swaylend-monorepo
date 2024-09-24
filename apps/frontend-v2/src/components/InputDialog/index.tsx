@@ -115,7 +115,6 @@ export const InputDialog = () => {
       default:
         break;
     }
-    // setOpen(false);
   };
 
   const handleModeChange = (action: ACTION_TYPE) => {
@@ -128,33 +127,43 @@ export const InputDialog = () => {
   });
 
   const finalBalance = useMemo(() => {
+    if (
+      !collateralConfigurations ||
+      !balance ||
+      !marketConfiguration ||
+      !actionTokenAssetId ||
+      !userSupplyBorrow
+    ) {
+      return BigNumber(0);
+    }
+
     if (action === 'REPAY') {
       return formatUnits(
-        BigNumber(balance?.toString() ?? 0),
-        marketConfiguration?.baseTokenDecimals
+        BigNumber(balance.toString()),
+        marketConfiguration.baseTokenDecimals
       );
     }
     if (action === 'SUPPLY') {
       if (actionTokenAssetId === marketConfiguration?.baseToken) {
         return formatUnits(
-          BigNumber(balance?.toString() ?? 0),
-          marketConfiguration?.baseTokenDecimals
+          BigNumber(balance.toString()),
+          marketConfiguration.baseTokenDecimals
         );
       }
       return formatUnits(
-        BigNumber(balance?.toString() ?? 0),
-        collateralConfigurations?.[actionTokenAssetId ?? '']?.decimals ?? 9
+        BigNumber(balance.toString()),
+        collateralConfigurations[actionTokenAssetId].decimals
       );
     }
     if (action === 'WITHDRAW') {
       if (actionTokenAssetId === marketConfiguration?.baseToken) {
         return formatUnits(
-          BigNumber(userSupplyBorrow?.supplied ?? new BigNumber(0) ?? 0),
-          marketConfiguration?.baseTokenDecimals
+          userSupplyBorrow.supplied,
+          marketConfiguration.baseTokenDecimals
         );
       }
-      // Use max withdrawable value instead...
-      return maxWithdrawableCollateral;
+
+      return maxWithdrawableCollateral ?? BigNumber(0);
     }
 
     if (action === 'BORROW') {
@@ -197,7 +206,7 @@ export const InputDialog = () => {
         if (actionTokenAssetId === marketConfiguration.baseToken) {
           changeTokenAmount(BigNumber(finalBalance.toFixed(decimals)));
         } else {
-          // Check max withdrawable collateral amount...
+          // TODO: Check max withdrawable collateral amount...
 
           // Get borrowed amount
           changeTokenAmount(BigNumber(finalBalance.toFixed(decimals)));
