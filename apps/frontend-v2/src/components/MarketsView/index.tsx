@@ -1,17 +1,18 @@
 'use client';
-import { type ChartData, useChartsData } from '@/hooks/useChartsData';
+import type { ChartData, MarketData } from '@/hooks/useChartsData';
 import React, { useMemo } from 'react';
 import { MarketsTable } from './MarketsTable';
 import { MultiMarketChart } from './MultiMarketChart';
 
-export const MarketsView = () => {
-  const { data: chartData } = useChartsData();
-
+export const MarketsView = ({
+  chartsData,
+}: { chartsData: MarketData | undefined }) => {
   const chartData1 = useMemo(() => {
-    const usdcChartData = chartData?.USDC.sort(
+    if (!chartsData) return undefined;
+    const usdcChartData = chartsData?.USDC.sort(
       (a, b) => a.timestamp - b.timestamp
     );
-    const usdtChartData = chartData?.USDT.sort(
+    const usdtChartData = chartsData?.USDT.sort(
       (a, b) => a.timestamp - b.timestamp
     );
     if (!usdcChartData || !usdtChartData) return [];

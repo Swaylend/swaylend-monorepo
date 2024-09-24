@@ -12,7 +12,7 @@ import {
   useTotalCollateral,
   useTotalReserves,
 } from '@/hooks';
-import { type ChartData, useChartsData } from '@/hooks/useChartsData';
+import type { MarketData } from '@/hooks/useChartsData';
 import {
   type DeployedMarket,
   SYMBOL_TO_ICON,
@@ -33,11 +33,13 @@ import { MarketCollateralsTable } from './MarketCollateralsTable';
 type MarketOverviewProps = {
   network: string;
   baseAsset: string;
+  chartsData: MarketData | undefined;
 };
 
 export default function MarketOverview({
   network,
   baseAsset,
+  chartsData,
 }: MarketOverviewProps) {
   const { data: borrowRate } = useBorrowRate(baseAsset as DeployedMarket);
   const { data: supplyRate } = useSupplyRate(baseAsset as DeployedMarket);
@@ -59,8 +61,6 @@ export default function MarketOverview({
   const { data: marketBasics } = useMarketBasics(baseAsset as DeployedMarket);
 
   const { data: priceData } = usePrice(baseAsset as DeployedMarket);
-
-  const { data: chartsData } = useChartsData();
 
   const totalCollateralValue = useMemo(() => {
     if (!priceData || !totalCollateral || !collateralConfigurations) {

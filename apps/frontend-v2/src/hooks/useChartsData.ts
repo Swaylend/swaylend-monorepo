@@ -12,41 +12,123 @@ export type MarketData = {
   [market: string]: ChartData[];
 };
 
-export const useChartsData = () => {
-  return useQuery({
-    queryKey: ['chartsData'],
-    queryFn: async () => {
-      const chartDataArray = await Promise.all(
-        Object.entries(DEPLOYED_MARKETS).map(async ([key, value]) => {
-          const chartData = await fetch(
-            `/api?poolAddress=${value.marketAddress}`
-          )
-            .then((res) => res.json())
-            .then((data) => data.data.rows);
-          return { market: key, chartData };
-        })
-      );
+export const useChartsData = async () => {
+  const url = process.env.SENTIO_API_URL;
+  const apiKey = process.env.SENTIO_API_KEY;
 
-      return chartDataArray.reduce(
-        (
-          acc,
-          { market, chartData }: { market: string; chartData: ChartData[] }
-        ) => {
-          acc[market] = chartData.map((row: ChartData) => {
-            return {
-              timestamp: row.timestamp,
-              suppliedValueUsd: Number(row.suppliedValueUsd),
-              borrowedValueUsd: Number(row.borrowedValueUsd),
-              collateralValueUsd: Number(row.collateralValueUsd),
-            };
-          });
-          return acc;
+  if (!apiKey || !url) {
+    return;
+  }
+
+  const chartDataArray = await Promise.all(
+    Object.entries(DEPLOYED_MARKETS).map(async ([key, value]) => {
+      const poolAddress = value.marketAddress;
+
+      const query = {
+        sqlQuery: {
+          sql: `
+            SELECT 
+              COALESCE(a.timestamp, b.timestamp) AS timestamp,
+              COALESCE(a.suppliedValueUsd, 0) AS suppliedValueUsd,
+              COALESCE(b.collateralValueUsd, 0) AS collateralValueUsd,
+              COALESCE(a.borrowedValueUsd, 0) AS borrowedValueUsd
+              FROM (
+                  SELECT 
+                  timestamp,
+                  FLOOR(SUM(suppliedAmountUsd)) AS suppliedValueUsd,
+                  NULL AS collateralValueUsd,
+                  FLOOR(SUM(borrowedAmountUsd)) AS borrowedValueUsd
+              FROM \`BasePoolSnapshot_raw\`
+              WHERE 
+                  chainId = 0 
+                  AND 
+                  poolAddress = "${poolAddress}"
+              GROUP BY timestamp, chainId, poolAddress
+              ) a
+              LEFT JOIN (
+                  SELECT 
+                    timestamp,
+                  NULL AS suppliedValueUsd,
+                  FLOOR(SUM(collateralAmountUsd)) AS collateralValueUsd,
+                  NULL AS borrowedValueUsd
+              FROM \`CollateralPoolSnapshot_raw\`
+              WHERE 
+                  chainId = 0 
+                  AND 
+                  poolAddress = "${poolAddress}"
+              GROUP BY timestamp, chainId, poolAddress
+              ) b
+              ON a.timestamp = b.timestamp
+
+              UNION ALL
+
+              SELECT 
+                  COALESCE(a.timestamp, b.timestamp) AS timestamp,
+                  COALESCE(a.suppliedValueUsd, 0) AS suppliedValueUsd,
+                  COALESCE(b.collateralValueUsd, 0) AS collateralValueUsd,
+                  COALESCE(a.borrowedValueUsd, 0) AS borrowedValueUsd
+              FROM (
+                      SELECT 
+                  timestamp,
+                  FLOOR(SUM(suppliedAmountUsd)) AS suppliedValueUsd,
+                  NULL AS collateralValueUsd,
+                  FLOOR(SUM(borrowedAmountUsd)) AS borrowedValueUsd
+              FROM \`BasePoolSnapshot_raw\`
+              WHERE 
+                  chainId = 0 
+                  AND 
+                  poolAddress = "${poolAddress}"
+              GROUP BY timestamp, chainId, poolAddress
+              ) a
+              RIGHT JOIN (
+                  SELECT 
+                      timestamp,
+                  FLOOR(SUM(collateralAmountUsd)) AS collateralValueUsd,
+                  NULL AS suppliedValueUsd,
+                  NULL AS borrowedValueUsd
+              FROM \`CollateralPoolSnapshot_raw\`
+              WHERE 
+                  chainId = 0 
+                  AND 
+                  poolAddress = "${poolAddress}"
+                  GROUP BY timestamp, chainId, poolAddress
+              ) b
+              ON a.timestamp = b.timestamp
+              ORDER BY timestamp ASC;
+          `,
+          size: 10000,
         },
-        {} as MarketData
-      );
+      };
+
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'api-key': apiKey,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(query),
+        next: { revalidate: 60 },
+      });
+      const data = await response.json();
+      return { market: key, chartData: data.result.rows };
+    })
+  );
+
+  return chartDataArray.reduce(
+    (
+      acc,
+      { market, chartData }: { market: string; chartData: ChartData[] }
+    ) => {
+      acc[market] = chartData.map((row: ChartData) => {
+        return {
+          timestamp: row.timestamp,
+          suppliedValueUsd: Number(row.suppliedValueUsd),
+          borrowedValueUsd: Number(row.borrowedValueUsd),
+          collateralValueUsd: Number(row.collateralValueUsd),
+        };
+      });
+      return acc;
     },
-    retry: 3,
-    refetchInterval: false,
-    refetchOnWindowFocus: false,
-  });
+    {} as MarketData
+  );
 };
