@@ -658,7 +658,6 @@ impl Market for Contract {
             Error::NotForSale,
         );
 
-        // Note: Re-entrancy can skip the reserves check above on a second buyCollateral call.
         let reserves = get_collateral_reserves_internal(asset_id);
 
         // Calculate the quote for a collateral asset in exchange for an amount of the base asset
@@ -673,9 +672,6 @@ impl Market for Contract {
             Error::InsufficientReserves,
         );
 
-        // Note: Pre-transfer hook can re-enter buyCollateral with a stale collateral ERC20 balance.
-        // Assets should not be listed which allow re-entry from pre-transfer now, as too much collateral could be bought.
-        // This is also a problem if quoteCollateral derives its discount from the collateral ERC20 balance.
         let caller = msg_sender().unwrap();
 
         // Emit buy collateral event
