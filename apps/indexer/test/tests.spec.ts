@@ -428,12 +428,12 @@ describe('Market contract event tests', () => {
 
       // Expected entity that should be created
       let expectedUserCollateralEvent: UserCollateralEvent = {
-        id: `${mockUserSupplyCollateralEvent.transactionId}_${mockUserSupplyCollateralEvent.receiptIndex}`,
+        id: `${mockUserSupplyCollateralEvent.transaction.id}_${mockUserSupplyCollateralEvent.logIndex}`,
         user_id: userAddress,
         collateralAsset_id: TEST_ASSET_ID,
         amount: BigInt(100),
         actionType: 'Supply',
-        timestamp: mockUserSupplyCollateralEvent.time,
+        timestamp: mockUserSupplyCollateralEvent.block.time,
       };
 
       // Getting the entity from the mock database
@@ -479,12 +479,12 @@ describe('Market contract event tests', () => {
 
       // Expected entity that should be created
       expectedUserCollateralEvent = {
-        id: `${mockUserWithdrawCollateralEvent.transactionId}_${mockUserWithdrawCollateralEvent.receiptIndex}`,
+        id: `${mockUserWithdrawCollateralEvent.transaction.id}_${mockUserWithdrawCollateralEvent.logIndex}`,
         user_id: userAddress,
         collateralAsset_id: TEST_ASSET_ID,
         amount: BigInt(77),
         actionType: 'Withdraw',
-        timestamp: mockUserWithdrawCollateralEvent.time,
+        timestamp: mockUserWithdrawCollateralEvent.block.time,
       };
 
       // Getting the entity from the mock database
@@ -558,10 +558,10 @@ describe('Market contract event tests', () => {
 
       // Expected entity that should be created (supply)
       const expectedBaseEventSupply: UserBaseEvent = {
-        id: `${mockUserSupplyBaseEvent.transactionId}_${mockUserSupplyBaseEvent.receiptIndex}_2`,
+        id: `${mockUserSupplyBaseEvent.transaction.id}_${mockUserSupplyBaseEvent.logIndex}_2`,
         actionType: 'Supply',
         amount: BigInt(66),
-        timestamp: mockUserSupplyBaseEvent.time,
+        timestamp: mockUserSupplyBaseEvent.block.time,
         user_id: userAddress,
       };
 
@@ -575,10 +575,10 @@ describe('Market contract event tests', () => {
 
       // Expected entity that should be created (repay)
       const expectedBaseEventRepay: UserBaseEvent = {
-        id: `${mockUserSupplyBaseEvent.transactionId}_${mockUserSupplyBaseEvent.receiptIndex}_1`,
+        id: `${mockUserSupplyBaseEvent.transaction.id}_${mockUserSupplyBaseEvent.logIndex}_1`,
         actionType: 'Repay',
         amount: BigInt(33),
-        timestamp: mockUserSupplyBaseEvent.time,
+        timestamp: mockUserSupplyBaseEvent.block.time,
         user_id: userAddress,
       };
 
@@ -607,10 +607,10 @@ describe('Market contract event tests', () => {
 
       // Expected entity that should be created (withdraw)
       const expectedBaseEventWithdraw: UserBaseEvent = {
-        id: `${mockUserWithdrawBaseEvent.transactionId}_${mockUserWithdrawBaseEvent.receiptIndex}_1`,
+        id: `${mockUserWithdrawBaseEvent.transaction.id}_${mockUserWithdrawBaseEvent.logIndex}_1`,
         actionType: 'Withdraw',
         amount: BigInt(55),
-        timestamp: mockUserWithdrawBaseEvent.time,
+        timestamp: mockUserWithdrawBaseEvent.block.time,
         user_id: userAddress,
       };
 
@@ -624,10 +624,10 @@ describe('Market contract event tests', () => {
 
       // Expected entity that should be created (borrow)
       const expectedBaseEventBorrow: UserBaseEvent = {
-        id: `${mockUserWithdrawBaseEvent.transactionId}_${mockUserWithdrawBaseEvent.receiptIndex}_2`,
+        id: `${mockUserWithdrawBaseEvent.transaction.id}_${mockUserWithdrawBaseEvent.logIndex}_2`,
         actionType: 'Borrow',
         amount: BigInt(44),
-        timestamp: mockUserWithdrawBaseEvent.time,
+        timestamp: mockUserWithdrawBaseEvent.block.time,
         user_id: userAddress,
       };
 
@@ -711,7 +711,7 @@ describe('Market contract event tests', () => {
 
       // Expected entity that should be created
       const expectedLiquidationEvent: LiquidationEvent = {
-        id: `${mockLiquidationEvent.transactionId}_${mockLiquidationEvent.receiptIndex}`,
+        id: `${mockLiquidationEvent.transaction.id}_${mockLiquidationEvent.logIndex}`,
         liquidator_id: liquidator,
         liquidated_id: liquidated,
         basePaidOut: BigInt(111),
@@ -719,7 +719,7 @@ describe('Market contract event tests', () => {
         totalBase: BigInt(222),
         totalBaseValue: BigInt(222),
         decimals: 1,
-        timestamp: mockLiquidationEvent.time,
+        timestamp: mockLiquidationEvent.block.time,
       };
 
       // Getting the entity from the mock database
@@ -811,13 +811,13 @@ describe('Market contract event tests', () => {
 
       // Expected entity that should be created
       const expectedAbsorbCollateralEvent: AbsorbCollateralEvent = {
-        id: `${mockAbsorbCollateralEvent.transactionId}_${mockAbsorbCollateralEvent.receiptIndex}`,
+        id: `${mockAbsorbCollateralEvent.transaction.id}_${mockAbsorbCollateralEvent.logIndex}`,
         user_id: address,
         collateralAsset_id: TEST_ASSET_ID,
         amount: BigInt(100),
         seizeValue: BigInt(333),
         decimals: 3,
-        timestamp: mockAbsorbCollateralEvent.time,
+        timestamp: mockAbsorbCollateralEvent.block.time,
       };
 
       // Getting the entity from the mock database
@@ -882,13 +882,13 @@ describe('Market contract event tests', () => {
 
       // Expected entity that should be created
       const expectedBuyCollateralEvent: BuyCollateralEvent = {
-        id: `${mockBuyCollateralEvent.transactionId}_${mockBuyCollateralEvent.receiptIndex}`,
+        id: `${mockBuyCollateralEvent.transaction.id}_${mockBuyCollateralEvent.logIndex}`,
         user_id: address,
         recipient: address,
         collateralAsset_id: TEST_ASSET_ID,
         amount: BigInt(100),
         price: BigInt(333),
-        timestamp: mockBuyCollateralEvent.time,
+        timestamp: mockBuyCollateralEvent.block.time,
       };
 
       // Getting the entity from the mock database
@@ -965,13 +965,13 @@ describe('Market contract event tests', () => {
 
       // Expected entity that should be created
       let expectedBuyCollateralEvent: BuyCollateralEvent = {
-        id: `${mockBuyCollateralEvent.transactionId}_${mockBuyCollateralEvent.receiptIndex}`,
+        id: `${mockBuyCollateralEvent.transaction.id}_${mockBuyCollateralEvent.logIndex}`,
         user_id: address,
         recipient: address,
         collateralAsset_id: TEST_ASSET_ID,
         amount: BigInt(100),
         price: BigInt(333),
-        timestamp: mockBuyCollateralEvent.time,
+        timestamp: mockBuyCollateralEvent.block.time,
       };
 
       // Getting the entity from the mock database
@@ -1021,13 +1021,13 @@ describe('Market contract event tests', () => {
 
       // Expected entity that should be created
       expectedBuyCollateralEvent = {
-        id: `${mockBuyCollateralEvent.transactionId}_${mockBuyCollateralEvent.receiptIndex}`,
+        id: `${mockBuyCollateralEvent.transaction.id}_${mockBuyCollateralEvent.logIndex}`,
         user_id: address,
         recipient: address,
         collateralAsset_id: TEST_ASSET_ID,
         amount: BigInt(111),
         price: BigInt(444),
-        timestamp: mockBuyCollateralEvent.time,
+        timestamp: mockBuyCollateralEvent.block.time,
       };
 
       // Getting the entity from the mock database
@@ -1083,10 +1083,10 @@ describe('Market contract event tests', () => {
 
       // Expected entity that should be created
       const expectedReservesWithdrawnEvent: ReservesWithdrawnEvent = {
-        id: `${mockReservesWithdrawnEvent.transactionId}_${mockReservesWithdrawnEvent.receiptIndex}`,
+        id: `${mockReservesWithdrawnEvent.transaction.id}_${mockReservesWithdrawnEvent.logIndex}`,
         recipient: address,
         amount: BigInt(100),
-        timestamp: mockReservesWithdrawnEvent.time,
+        timestamp: mockReservesWithdrawnEvent.block.time,
       };
 
       // Getting the entity from the mock database

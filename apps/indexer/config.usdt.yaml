@@ -1,11 +1,12 @@
 name: SwayLend USDT Market
+ecosystem: fuel
 networks:
   - id: 0
     start_block: 10675000
     contracts:
       - name: Market
         address: 0x5a22498724036fa16887731686c756aacf26e422ba64c826c5e521f47751f12b
-        abi_file_path: ../../contracts/market/out/release/market-abi.json
+        abi_file_path: ./abi/market-abi.json
         handler: ./src/EventHandlers.ts
         events:
           - name: CollateralAssetAdded

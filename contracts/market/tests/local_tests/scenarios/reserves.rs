@@ -1,4 +1,5 @@
 use crate::utils::{setup, TestData};
+use fuels::{accounts::Account, types::transaction::TxPolicies};
 use market::PriceDataUpdate;
 use market_sdk::{convert_i256_to_i128, parse_units};
 const AMOUNT_COEFFICIENT: u64 = 10u64.pow(0);
@@ -137,4 +138,38 @@ async fn reserves_test() {
         .print_debug_state(&wallets, &usdc, &eth)
         .await
         .unwrap();
+}
+
+#[tokio::test]
+async fn add_reserves_test() {
+    let TestData {
+        alice,
+        alice_account,
+        market,
+        usdc,
+        usdc_contract,
+        ..
+    } = setup().await;
+
+    let mint_amount = parse_units(150, usdc.decimals);
+    usdc_contract
+        .mint(alice_account, mint_amount)
+        .await
+        .unwrap();
+
+    let reserves = market.get_reserves().await.unwrap().value;
+    let normalized_reserves: u64 = convert_i256_to_i128(reserves).try_into().unwrap();
+    assert!(normalized_reserves == 0);
+    alice
+        .force_transfer_to_contract(
+            &market.contract_id(),
+            mint_amount,
+            usdc.asset_id,
+            TxPolicies::default(),
+        )
+        .await
+        .unwrap();
+    let new_reserves = market.get_reserves().await.unwrap().value;
+    let normalized_reserves: u64 = convert_i256_to_i128(new_reserves).try_into().unwrap();
+    assert!(normalized_reserves == mint_amount);
 }
