@@ -88,7 +88,8 @@ pub struct BuyCollateralEvent {
 
 // Reserves Withdrawn Event
 pub struct ReservesWithdrawnEvent {
-    pub account: Identity,
+    pub caller: Identity,
+    pub to: Identity,
     pub amount: u64,
 }
 

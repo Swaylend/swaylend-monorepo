@@ -744,6 +744,8 @@ impl Market for Contract {
         // Only owner can withdraw reserves
         only_owner();
         
+        let caller = msg_sender().unwrap();
+
         let reserves = get_reserves_internal();
 
         // Check that the reserves are greater than 0 and that the amount is less than or equal to the reserves
@@ -755,7 +757,8 @@ impl Market for Contract {
 
         // Emit reserves withdrawn event
         log(ReservesWithdrawnEvent {
-            account: to,
+            caller,
+            to,
             amount,
         });
 
