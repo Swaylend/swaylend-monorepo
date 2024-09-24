@@ -530,11 +530,7 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
       );
 
       // If user withdraws all collateral, delete the collateral position
-      if (collateralPosition.collateralAmount.lte(0)) {
-        await ctx.store.delete(collateralPosition, id);
-      } else {
-        await ctx.store.upsert(collateralPosition);
-      }
+      await ctx.store.upsert(collateralPosition);
 
       // Collateral pool
       const collateralPoolId = `${chainId}_${ctx.contractAddress}_${collateralConfiguration.assetAddress}`;
@@ -597,10 +593,11 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
         );
       }
 
-      await ctx.store.delete(collateralPosition, collateralPositionId);
+      collateralPosition.collateralAmount = BigDecimal(0);
+
+      await ctx.store.upsert(collateralPosition);
     })
     .onLogMarketBasicEvent(async (event, ctx) => {
-      2;
       const {
         data: {
           market_basic: {
