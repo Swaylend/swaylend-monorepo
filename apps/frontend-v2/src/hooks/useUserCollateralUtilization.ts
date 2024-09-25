@@ -36,7 +36,8 @@ export const useUserCollateralUtilization = () => {
         userSupplyBorrow.borrowed,
         marketConfiguration.baseTokenDecimals
       );
-      const baseTokenPrice = priceData.prices[marketConfiguration.baseToken];
+      const baseTokenPrice =
+        priceData.prices[marketConfiguration.baseToken.bits];
 
       return borrowedBalance
         .times(baseTokenPrice)

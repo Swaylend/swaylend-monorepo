@@ -26,7 +26,7 @@ export const useTotalCollateral = () => {
         async (assetId) => ({
           assetId,
           value: await marketContract.functions
-            .totals_collateral(assetId)
+            .totals_collateral({ bits: assetId })
             .get(),
         })
       );

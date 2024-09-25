@@ -126,7 +126,7 @@ export const BorrowTable = () => {
   const handleBaseTokenClick = (action: ACTION_TYPE) => {
     changeAction(action);
     changeTokenAmount(BigNumber(0));
-    changeActionTokenAssetId(marketConfiguration?.baseToken);
+    changeActionTokenAssetId(marketConfiguration?.baseToken.bits);
     changeInputDialogOpen(true);
   };
 
@@ -134,12 +134,12 @@ export const BorrowTable = () => {
 
   const { data: balance } = useBalance({
     address: account ?? undefined,
-    assetId: marketConfiguration?.baseToken,
+    assetId: marketConfiguration?.baseToken.bits,
   });
 
   const borrowedBalance = useMemo(() => {
     if (!marketConfiguration || !userSupplyBorrow || !isConnected) {
-      return `${BigNumber(0).toFormat(4)} ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}`;
+      return `${BigNumber(0).toFormat(4)} ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken.bits ?? '']}`;
     }
 
     const val = formatUnits(
@@ -147,9 +147,9 @@ export const BorrowTable = () => {
       marketConfiguration.baseTokenDecimals
     );
     if (val.lt(1) && val.gt(0)) {
-      return `< 1 ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}`;
+      return `< 1 ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken.bits ?? '']}`;
     }
-    return `${val.toFormat(4)} ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}`;
+    return `${val.toFormat(4)} ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken.bits ?? '']}`;
   }, [marketConfiguration, userSupplyBorrow, isConnected]);
 
   return (
@@ -195,10 +195,14 @@ export const BorrowTable = () => {
                       <Image
                         src={
                           SYMBOL_TO_ICON[
-                            ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]
+                            ASSET_ID_TO_SYMBOL[
+                              marketConfiguration.baseToken.bits
+                            ]
                           ]
                         }
-                        alt={ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]}
+                        alt={
+                          ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken.bits]
+                        }
                         width={32}
                         height={32}
                         className="rounded-full"
@@ -207,7 +211,11 @@ export const BorrowTable = () => {
                   </div>
                   <div>
                     <div className="text-white font-medium">
-                      {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
+                      {
+                        ASSET_ID_TO_SYMBOL[
+                          marketConfiguration?.baseToken.bits ?? ''
+                        ]
+                      }
                     </div>
                     <div>
                       {getFormattedNumber(
@@ -218,7 +226,11 @@ export const BorrowTable = () => {
                           marketConfiguration?.baseTokenDecimals ?? 9
                         )
                       )}{' '}
-                      {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
+                      {
+                        ASSET_ID_TO_SYMBOL[
+                          marketConfiguration?.baseToken.bits ?? ''
+                        ]
+                      }
                       {' in wallet'}
                     </div>
                   </div>
@@ -234,7 +246,7 @@ export const BorrowTable = () => {
               </TableCell>
               <TableCell>
                 {getFormattedNumber(BigNumber(borrowedBalance))}{' '}
-                {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
+                {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken.bits ?? '']}
               </TableCell>
               <TableCell>
                 <PointIcons points={POINTS_BORROW} />
@@ -312,11 +324,15 @@ export const BorrowTable = () => {
                         <Image
                           src={
                             SYMBOL_TO_ICON[
-                              ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]
+                              ASSET_ID_TO_SYMBOL[
+                                marketConfiguration.baseToken.bits
+                              ]
                             ]
                           }
                           alt={
-                            ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]
+                            ASSET_ID_TO_SYMBOL[
+                              marketConfiguration.baseToken.bits
+                            ]
                           }
                           width={32}
                           height={32}
@@ -328,7 +344,7 @@ export const BorrowTable = () => {
                       <div className="text-white font-medium">
                         {
                           ASSET_ID_TO_SYMBOL[
-                            marketConfiguration?.baseToken ?? ''
+                            marketConfiguration?.baseToken.bits ?? ''
                           ]
                         }
                       </div>

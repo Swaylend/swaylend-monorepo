@@ -63,7 +63,7 @@ export const Stats = () => {
     if (marketMode === 'lend') {
       return formatUnits(
         userSupplyBorrow.supplied.times(
-          priceData.prices[marketConfiguration.baseToken]
+          priceData.prices[marketConfiguration.baseToken.bits]
         ),
         marketConfiguration.baseTokenDecimals
       );
