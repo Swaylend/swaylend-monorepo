@@ -3,6 +3,8 @@ use chrono::Utc;
 use fuels::prelude::ViewOnlyAccount;
 use market::PauseConfiguration;
 use market::PriceDataUpdate;
+use market_sdk::convert_i256_to_u64;
+use market_sdk::is_i256_negative;
 use market_sdk::parse_units;
 
 #[tokio::test]
@@ -200,13 +202,13 @@ async fn pause_test() {
         .await
         .unwrap()
         .value;
-    assert!(!reserves.negative);
+    assert!(!is_i256_negative(&reserves));
 
     let amount = market
         .collateral_value_to_sell(
             &[&oracle.instance],
             uni.asset_id,
-            reserves.value.try_into().unwrap(),
+            convert_i256_to_u64(&reserves),
         )
         .await
         .unwrap()
@@ -379,13 +381,13 @@ async fn pause_test() {
         .await
         .unwrap()
         .value;
-    assert!(!reserves.negative);
+    assert!(!is_i256_negative(&reserves));
 
     let amount = market
         .collateral_value_to_sell(
             &[&oracle.instance],
             uni.asset_id,
-            reserves.value.try_into().unwrap(),
+            convert_i256_to_u64(&reserves),
         )
         .await
         .unwrap()

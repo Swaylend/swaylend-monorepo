@@ -9,7 +9,7 @@ use fuels::{
     types::{transaction::TxPolicies, transaction_builders::VariableOutputPolicy},
 };
 use market::PriceDataUpdate;
-use market_sdk::parse_units;
+use market_sdk::{is_i256_negative, parse_units};
 
 const AMOUNT_COEFFICIENT: u64 = 10u64.pow(0);
 const SCALE_6: f64 = 10u64.pow(6) as f64;
@@ -181,7 +181,7 @@ async fn multicall_absorb_buy_collateral_test() {
         .await
         .unwrap()
         .value;
-    assert!(!reserves.negative);
+    assert!(!is_i256_negative(&reserves));
 
     let amount = parse_units(986 * AMOUNT_COEFFICIENT, usdc.decimals);
 

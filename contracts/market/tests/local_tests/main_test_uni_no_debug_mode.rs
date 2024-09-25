@@ -6,7 +6,7 @@ use fuels::programs::responses::CallResponse;
 use fuels::types::transaction::TxPolicies;
 use fuels::types::transaction_builders::VariableOutputPolicy;
 use market::PriceDataUpdate;
-use market_sdk::parse_units;
+use market_sdk::{convert_i256_to_u64, is_i256_negative, parse_units};
 
 // Multiplies all values by this number
 // It is necessary in order to test how the protocol works with large amounts
@@ -378,14 +378,10 @@ async fn main_test_no_debug() {
         .await
         .unwrap()
         .value;
-    assert!(!reserves.negative);
+    assert!(!is_i256_negative(&reserves));
 
     let amount = market
-        .collateral_value_to_sell(
-            &[&oracle.instance],
-            uni.asset_id,
-            reserves.value.try_into().unwrap(),
-        )
+        .collateral_value_to_sell(&[&oracle.instance], uni.asset_id, convert_i256_to_u64(&reserves))
         .await
         .unwrap()
         .value;
@@ -580,7 +576,12 @@ async fn main_test_no_debug() {
         .with_account(&chad)
         .await
         .unwrap()
-        .withdraw_collateral(&[&oracle.instance], uni.asset_id, amount, &price_data_update)
+        .withdraw_collateral(
+            &[&oracle.instance],
+            uni.asset_id,
+            amount,
+            &price_data_update,
+        )
         .await
         .unwrap();
 
