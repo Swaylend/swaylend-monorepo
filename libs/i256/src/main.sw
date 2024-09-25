@@ -315,6 +315,8 @@ fn i256_mul() {
     assert_eq(c, I256::from(200_u64));
 }
 
+
+
 #[test]
 fn i256_div() {
     // 1 / 2
@@ -352,4 +354,98 @@ fn i256_div() {
     let b = I256::neg_from(u256::from(120_u64));
     let c = a / b;
     assert_eq(c, I256::from(3_u64));
+}
+
+#[test]
+fn i256_eq() {
+    // 1 < 2 is true
+    let a = I256::from(1_u64);
+    let b = I256::from(2_u64);
+    assert_eq(a < b, true);
+
+    // 2 < 1 is false
+    assert_eq(b < a, false);
+
+    // 1 == 1 is true
+    let a = I256::from(1_u64);
+    let b = I256::from(1_u64);
+    assert_eq(a == b, true);
+
+    // 1 == 2 is false
+    let a = I256::from(1_u64);
+    let b = I256::from(2_u64);
+    assert_eq(a == b, false);
+
+    // -100000000000000 is less than 0
+    let a = I256::neg_from(u256::from(100000000000000_u64));
+    assert_eq(a < I256::zero(), true);
+
+    // 0 is not less than -1
+    let a = I256::zero();
+    assert_eq(a < I256::neg_from(u256::from(1_u64)), false);
+}
+
+#[test]
+fn i256_flip() {
+    // Flip positive to negative
+    let a = I256::from(10_u64);
+    let b = a.flip();
+    assert_eq(b, I256::neg_from(u256::from(10_u64)));
+
+    // Flip negative to positive
+    let a = I256::neg_from(u256::from(10_u64));
+    let b = a.flip();
+    assert_eq(b, I256::from(10_u64));
+}
+
+#[test]
+fn i256_edge_cases() {
+    // Adding zero
+    let a = I256::from(10_u64);
+    let b = I256::zero();
+    let c = a + b;
+    assert_eq(c, a);
+
+    // Subtracting zero
+    let a = I256::from(10_u64);
+    let b = I256::zero();
+    let c = a - b;
+    assert_eq(c, a);
+
+    // Multiplying by zero
+    let a = I256::from(10_u64);
+    let b = I256::zero();
+    let c = a * b;
+    assert_eq(c, I256::zero());
+
+    // Dividing by one
+    let a = I256::from(10_u64);
+    let b = I256::from(1_u64);
+    let c = a / b;
+    assert_eq(c, a);
+    
+}
+
+#[test]
+fn i256_order_of_operations() {
+    // 2 + 3 * 4 should be 14
+    let a = I256::from(2_u64);
+    let b = I256::from(3_u64);
+    let c = I256::from(4_u64);
+    let result = a + (b * c);
+    assert_eq(result, I256::from(14_u64));
+
+    // (2 + 3) * 4 should be 20
+    let result = (a + b) * c;
+    assert_eq(result, I256::from(20_u64));
+
+    // 10 - 2 / 2 should be 9
+    let a = I256::from(10_u64);
+    let b = I256::from(2_u64);
+    let result = a - (b / b);
+    assert_eq(result, I256::from(9_u64));
+
+    // (10 - 2) / 2 should be 4
+    let result = (a - b) / b;
+    assert_eq(result, I256::from(4_u64));
 }
