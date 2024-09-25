@@ -1,6 +1,6 @@
 library;
 
-use i256::I256;
+use sway_libs::signed_integers::i256::I256;
 use std::bytes::Bytes;
 use pyth_interface::{data_structures::price::{PriceFeedId}};
 

@@ -3,15 +3,9 @@ name = "core"
 source = "path+from-root-C485BFF5467B6B6C"
 
 [[package]]
-name = "i256"
-source = "member"
-dependencies = ["std"]
-
-[[package]]
 name = "market"
 source = "member"
 dependencies = [
-    "i256",
     "market_abi",
     "pyth_interface",
     "standards git+https://github.com/FuelLabs/sway-standards?tag=v0.6.1#792639cdf391565e6e6a02482ea8a46d9604a6f5",
@@ -23,9 +17,9 @@ dependencies = [
 name = "market_abi"
 source = "member"
 dependencies = [
-    "i256",
     "pyth_interface",
     "std",
+    "sway_libs",
 ]
 
 [[package]]
