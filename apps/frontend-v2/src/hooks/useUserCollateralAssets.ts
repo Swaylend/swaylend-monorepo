@@ -25,11 +25,11 @@ export const useUserCollateralAssets = () => {
       const formattedCollaterals: Record<string, BigNumber> = {};
 
       const { value: balances } = await marketContract.functions
-        .get_all_user_collateral({ bits: account })
+        .get_all_user_collateral({ Address: { bits: account } })
         .get();
 
       for (const [assetId, balance] of balances) {
-        formattedCollaterals[assetId] = new BigNumber(balance.toString());
+        formattedCollaterals[assetId.bits] = new BigNumber(balance.toString());
       }
 
       return formattedCollaterals;

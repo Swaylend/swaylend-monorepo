@@ -23,8 +23,6 @@ export const useMarketConfiguration = () => {
         .get();
 
       return {
-        governor: marketConfiguration.governor,
-        pause_guardian: marketConfiguration.pause_guardian,
         baseToken: marketConfiguration.base_token,
         baseTokenDecimals: marketConfiguration.base_token_decimals,
         baseTokenPriceFeedId: marketConfiguration.base_token_price_feed_id,
