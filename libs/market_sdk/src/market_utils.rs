@@ -549,7 +549,7 @@ impl MarketContract {
             .methods()
             .withdraw_reserves(to, amount.into())
             .with_tx_policies(tx_policies)
-            .with_variable_output_policy(VariableOutputPolicy::Exactly(2))
+            .with_variable_output_policy(VariableOutputPolicy::Exactly(1))
             .call()
             .await?)
     }
