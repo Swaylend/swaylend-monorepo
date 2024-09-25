@@ -132,8 +132,8 @@ const DEPLOYED_MARKETS: Record<
 > = {
   USDC: {
     marketAddress:
-      '0x9acd98624f163187a3dd558cb8e215d417f6c0ac291b78ba20f6df3c07a352e0',
-    startBlock: BigInt(10670000),
+      '0x689bfaf54edfc433f62d06f3581998f9cb32ce864da5ff99f4be7bed3556529d',
+    startBlock: BigInt(11200000),
   },
   USDT: {
     marketAddress:
