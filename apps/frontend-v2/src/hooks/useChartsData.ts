@@ -114,21 +114,61 @@ export const useChartsData = async () => {
     })
   );
 
-  return chartDataArray.reduce(
+  const chartsData = chartDataArray.reduce(
     (
       acc,
       { market, chartData }: { market: string; chartData: ChartData[] }
     ) => {
-      acc[market] = chartData.map((row: ChartData) => {
-        return {
-          timestamp: row.timestamp,
-          suppliedValueUsd: Number(row.suppliedValueUsd),
-          borrowedValueUsd: Number(row.borrowedValueUsd),
-          collateralValueUsd: Number(row.collateralValueUsd),
-        };
-      });
+      acc[market] = chartData
+        .map((row: ChartData) => {
+          return {
+            timestamp: row.timestamp,
+            suppliedValueUsd: Number(row.suppliedValueUsd),
+            borrowedValueUsd: Number(row.borrowedValueUsd),
+            collateralValueUsd: Number(row.collateralValueUsd),
+          };
+        })
+        .sort((a, b) => a.timestamp - b.timestamp);
       return acc;
     },
     {} as MarketData
   );
+
+  const usdcChartData = chartsData?.USDC.sort(
+    (a, b) => a.timestamp - b.timestamp
+  );
+  const usdtChartData = chartsData?.USDT.sort(
+    (a, b) => a.timestamp - b.timestamp
+  );
+  if (!usdcChartData || !usdtChartData) return chartsData;
+  const mergedData: ChartData[] = [];
+
+  usdcChartData.forEach((usdcRow) => {
+    const usdtRow = usdtChartData.find(
+      (row) => row.timestamp === usdcRow.timestamp
+    );
+
+    if (usdtRow) {
+      mergedData.push({
+        timestamp: usdcRow.timestamp,
+        suppliedValueUsd:
+          Number(usdcRow.suppliedValueUsd) + Number(usdtRow.suppliedValueUsd),
+        borrowedValueUsd:
+          Number(usdcRow.borrowedValueUsd) + Number(usdtRow.borrowedValueUsd),
+        collateralValueUsd:
+          Number(usdcRow.collateralValueUsd) +
+          Number(usdtRow.collateralValueUsd),
+      });
+    } else {
+      mergedData.push({
+        timestamp: usdcRow.timestamp,
+        suppliedValueUsd: Number(usdcRow.suppliedValueUsd),
+        borrowedValueUsd: Number(usdcRow.borrowedValueUsd),
+        collateralValueUsd: Number(usdcRow.collateralValueUsd),
+      });
+    }
+  });
+
+  chartsData.merged = mergedData.sort((a, b) => a.timestamp - b.timestamp);
+  return chartsData;
 };

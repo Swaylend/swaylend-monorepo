@@ -1,3 +1,5 @@
+'use client';
+
 import type { ChartData } from '@/hooks/useChartsData';
 import { formatCurrency } from '@/utils/format';
 import {
@@ -11,8 +13,8 @@ import type { DataKey } from 'recharts/types/util/types';
 import { type ChartConfig, ChartContainer, ChartTooltip } from '../ui/chart';
 
 const chartConfig = {
-  desktop: {
-    label: 'Desktop',
+  value: {
+    label: 'Value',
     color: 'hsl(var(--chart-1))',
   },
 } satisfies ChartConfig;
@@ -93,7 +95,8 @@ export const MarketChart = ({
             dataKey="timestamp"
             tickLine={true}
             axisLine={true}
-            tickMargin={8}
+            tickMargin={12}
+            minTickGap={30}
             tickFormatter={(value: number) =>
               new Date(value * 1000).toLocaleDateString()
             }

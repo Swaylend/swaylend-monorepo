@@ -1,3 +1,4 @@
+import { MarketChart } from '@/components/MarketsView/MarketChart';
 import MarketOverview from '@/components/MarketsView/MarketOverview';
 import { useChartsData } from '@/hooks/useChartsData';
 import type { Metadata } from 'next';
@@ -15,7 +16,20 @@ export default async function Page({ params }: { params: { pair: string } }) {
     <MarketOverview
       network={network}
       baseAsset={baseAsset.toUpperCase()}
-      chartsData={chartData}
+      marketChartCollateral={
+        <MarketChart
+          chartData={chartData?.[baseAsset]}
+          dataKey="collateralValueUsd"
+          color="#3FE8BD"
+        />
+      }
+      marketChartBorrow={
+        <MarketChart
+          chartData={chartData?.[baseAsset]}
+          dataKey="borrowedValueUsd"
+          color="#8b5cf6"
+        />
+      }
     />
   );
 }

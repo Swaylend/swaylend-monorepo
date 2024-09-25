@@ -24,22 +24,24 @@ import { formatCurrency } from '@/utils/format';
 import BigNumber from 'bignumber.js';
 import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
-import React, { useMemo } from 'react';
+import type React from 'react';
+import { useMemo } from 'react';
 import { IconPair } from '../IconPair';
 import { KinkChart } from './KinkChart';
-import { MarketChart } from './MarketChart';
 import { MarketCollateralsTable } from './MarketCollateralsTable';
 
 type MarketOverviewProps = {
   network: string;
   baseAsset: string;
-  chartsData: MarketData | undefined;
+  marketChartCollateral: React.ReactNode;
+  marketChartBorrow: React.ReactNode;
 };
 
 export default function MarketOverview({
   network,
   baseAsset,
-  chartsData,
+  marketChartCollateral,
+  marketChartBorrow,
 }: MarketOverviewProps) {
   const { data: borrowRate } = useBorrowRate(baseAsset as DeployedMarket);
   const { data: supplyRate } = useSupplyRate(baseAsset as DeployedMarket);
@@ -147,13 +149,7 @@ export default function MarketOverview({
               ${formatCurrency(Number(totalCollateralValue))}
             </div>
           </div>
-          <MarketChart
-            chartData={chartsData?.[baseAsset].sort(
-              (a, b) => a.timestamp - b.timestamp
-            )}
-            dataKey="collateralValueUsd"
-            color="#3FE8BD"
-          />
+          {marketChartCollateral}
         </div>
 
         <div className="w-[47%]">
@@ -173,13 +169,7 @@ export default function MarketOverview({
               )}
             </div>
           </div>
-          <MarketChart
-            chartData={chartsData?.[baseAsset].sort(
-              (a, b) => a.timestamp - b.timestamp
-            )}
-            dataKey="borrowedValueUsd"
-            color="#8b5cf6"
-          />
+          {marketChartBorrow}
         </div>
       </div>
 
