@@ -529,7 +529,7 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
           .toString()
       );
 
-      // If user withdraws all collateral, delete the collateral position
+      // If user withdraws all collatera
       await ctx.store.upsert(collateralPosition);
 
       // Collateral pool
@@ -580,7 +580,7 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
 
       await ctx.store.upsert(collateralPool);
 
-      // Get collateral position (and delete it as all collateral has been absorbed/seized)
+      // Get collateral position
       const collateralPositionId = `${chainId}_${ctx.contractAddress}_${address.bits}_${asset_id}`;
       const collateralPosition = await ctx.store.get(
         CollateralPosition,
