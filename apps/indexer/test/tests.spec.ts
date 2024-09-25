@@ -39,9 +39,9 @@ describe('Market contract event tests', () => {
       // Creating a mock collateral asset added event
       const mockCollateralAssetAddedEvent =
         Market.CollateralAssetAdded.mockData({
-          asset_id: assetId,
+          asset_id: { bits: assetId },
           configuration: {
-            asset_id: assetId,
+            asset_id: { bits: assetId },
             price_feed_id: TEST_PRICE_FEED_ID,
             decimals: 0,
             borrow_collateral_factor: BigInt(0),
@@ -80,9 +80,9 @@ describe('Market contract event tests', () => {
       // Creating a mock collateral asset updated event
       const mockCollateralAssetUpdatedEvent =
         Market.CollateralAssetUpdated.mockData({
-          asset_id: assetId,
+          asset_id: { bits: assetId },
           configuration: {
-            asset_id: assetId,
+            asset_id: { bits: assetId },
             price_feed_id: TEST_PRICE_FEED_ID,
             decimals: 1,
             borrow_collateral_factor: BigInt(2),
@@ -121,7 +121,7 @@ describe('Market contract event tests', () => {
       // Creating a mock collateral asset paused event
       const mockCollateralAssetPausedEvent =
         Market.CollateralAssetPaused.mockData({
-          asset_id: assetId,
+          asset_id: { bits: assetId },
         });
 
       // Processing the mock event on the mock database
@@ -152,7 +152,7 @@ describe('Market contract event tests', () => {
       // Create a mock collateral resumed event
       const mockCollateralAssetResumedEvent =
         Market.CollateralAssetResumed.mockData({
-          asset_id: assetId,
+          asset_id: { bits: assetId },
         });
 
       // Processing the mock event on the mock database
@@ -191,8 +191,9 @@ describe('Market contract event tests', () => {
 
       // Creating a mock event
       const mockUserBasicEvent = Market.UserBasicEvent.mockData({
-        address: {
-          bits: address,
+        account: {
+          case: 'Address',
+          payload: { bits: address },
         },
         user_basic: {
           principal: {
@@ -236,8 +237,9 @@ describe('Market contract event tests', () => {
 
       // Creating a mock event
       const mockUserBasicEvent = Market.UserBasicEvent.mockData({
-        address: {
-          bits: address,
+        account: {
+          case: 'Address',
+          payload: { bits: address },
         },
         user_basic: {
           principal: {
@@ -281,8 +283,9 @@ describe('Market contract event tests', () => {
 
       // Creating a mock user basic event
       let mockUserBasicEvent = Market.UserBasicEvent.mockData({
-        address: {
-          bits: address,
+        account: {
+          case: 'Address',
+          payload: { bits: address },
         },
         user_basic: {
           principal: {
@@ -320,8 +323,9 @@ describe('Market contract event tests', () => {
 
       // Creating a mock user basic event
       mockUserBasicEvent = Market.UserBasicEvent.mockData({
-        address: {
-          bits: address,
+        account: {
+          case: 'Address',
+          payload: { bits: address },
         },
         user_basic: {
           principal: {
@@ -413,10 +417,11 @@ describe('Market contract event tests', () => {
       // Create a mock user collateral event
       const mockUserSupplyCollateralEvent =
         Market.UserSupplyCollateralEvent.mockData({
-          address: {
-            bits: userAddress,
+          account: {
+            case: 'Address',
+            payload: { bits: userAddress },
           },
-          asset_id: TEST_ASSET_ID,
+          asset_id: { bits: TEST_ASSET_ID },
           amount: BigInt(100),
         });
 
@@ -464,10 +469,11 @@ describe('Market contract event tests', () => {
       // Create a mock user withdraw collateral event
       const mockUserWithdrawCollateralEvent =
         Market.UserWithdrawCollateralEvent.mockData({
-          address: {
-            bits: userAddress,
+          account: {
+            case: 'Address',
+            payload: { bits: userAddress },
           },
-          asset_id: TEST_ASSET_ID,
+          asset_id: { bits: TEST_ASSET_ID },
           amount: BigInt(77),
         });
 
@@ -523,8 +529,9 @@ describe('Market contract event tests', () => {
 
       // We first need to initialize a mock user entity
       const mockUserBasicEvent = Market.UserBasicEvent.mockData({
-        address: {
-          bits: userAddress,
+        account: {
+          case: 'Address',
+          payload: { bits: userAddress },
         },
         user_basic: {
           principal: {
@@ -543,8 +550,9 @@ describe('Market contract event tests', () => {
 
       // Creating a mock user supply base event
       const mockUserSupplyBaseEvent = Market.UserSupplyBaseEvent.mockData({
-        address: {
-          bits: userAddress,
+        account: {
+          case: 'Address',
+          payload: { bits: userAddress },
         },
         supply_amount: BigInt(66),
         repay_amount: BigInt(33),
@@ -592,8 +600,9 @@ describe('Market contract event tests', () => {
 
       // Create a mock user withdraw base event
       const mockUserWithdrawBaseEvent = Market.UserWithdrawBaseEvent.mockData({
-        address: {
-          bits: userAddress,
+        account: {
+          case: 'Address',
+          payload: { bits: userAddress },
         },
         withdraw_amount: BigInt(55),
         borrow_amount: BigInt(44),
@@ -651,8 +660,9 @@ describe('Market contract event tests', () => {
 
       // We first need to initialize the liquidator and liquidated user entities
       let mockUserBasicEvent = Market.UserBasicEvent.mockData({
-        address: {
-          bits: liquidator,
+        account: {
+          case: 'Address',
+          payload: { bits: liquidator },
         },
         user_basic: {
           principal: {
@@ -670,8 +680,9 @@ describe('Market contract event tests', () => {
       });
 
       mockUserBasicEvent = Market.UserBasicEvent.mockData({
-        address: {
-          bits: liquidated,
+        account: {
+          case: 'Address',
+          payload: { bits: liquidated },
         },
         user_basic: {
           principal: {
@@ -691,10 +702,12 @@ describe('Market contract event tests', () => {
       // Create a mock liquidate event
       const mockLiquidationEvent = Market.UserLiquidatedEvent.mockData({
         liquidator: {
-          bits: liquidator,
+          case: 'Address',
+          payload: { bits: liquidator },
         },
-        address: {
-          bits: liquidated,
+        account: {
+          case: 'Address',
+          payload: { bits: liquidated },
         },
         base_paid_out: BigInt(111),
         base_paid_out_value: BigInt(111),
@@ -759,8 +772,9 @@ describe('Market contract event tests', () => {
 
       // We first need to initialize a mock user entity
       const mockUserBasicEvent = Market.UserBasicEvent.mockData({
-        address: {
-          bits: address,
+        account: {
+          case: 'Address',
+          payload: { bits: address },
         },
         user_basic: {
           principal: {
@@ -780,10 +794,11 @@ describe('Market contract event tests', () => {
       // Create a mock user supply collateral event
       const mockUserSupplyCollateralEvent =
         Market.UserSupplyCollateralEvent.mockData({
-          address: {
-            bits: address,
+          account: {
+            case: 'Address',
+            payload: { bits: address },
           },
-          asset_id: TEST_ASSET_ID,
+          asset_id: { bits: TEST_ASSET_ID },
           amount: BigInt(100),
         });
 
@@ -794,10 +809,11 @@ describe('Market contract event tests', () => {
       });
 
       const mockAbsorbCollateralEvent = Market.AbsorbCollateralEvent.mockData({
-        address: {
-          bits: address,
+        account: {
+          case: 'Address',
+          payload: { bits: address },
         },
-        asset_id: TEST_ASSET_ID,
+        asset_id: { bits: TEST_ASSET_ID },
         amount: BigInt(100),
         seize_value: BigInt(333),
         decimals: 3,
@@ -864,12 +880,14 @@ describe('Market contract event tests', () => {
       // Create a mock buy collateral event
       const mockBuyCollateralEvent = Market.BuyCollateralEvent.mockData({
         caller: {
-          bits: address,
+          case: 'Address',
+          payload: { bits: address },
         },
         recipient: {
-          bits: address,
+          case: 'Address',
+          payload: { bits: address },
         },
-        asset_id: TEST_ASSET_ID,
+        asset_id: { bits: TEST_ASSET_ID },
         amount: BigInt(100),
         price: BigInt(333),
       });
@@ -926,8 +944,9 @@ describe('Market contract event tests', () => {
 
       // We first need to initialize a mock user entity
       const mockUserBasicEvent = Market.UserBasicEvent.mockData({
-        address: {
-          bits: address,
+        account: {
+          case: 'Address',
+          payload: { bits: address },
         },
         user_basic: {
           principal: {
@@ -947,12 +966,14 @@ describe('Market contract event tests', () => {
       // Create a mock buy collateral event
       let mockBuyCollateralEvent = Market.BuyCollateralEvent.mockData({
         caller: {
-          bits: address,
+          case: 'Address',
+          payload: { bits: address },
         },
         recipient: {
-          bits: address,
+          case: 'Address',
+          payload: { bits: address },
         },
-        asset_id: TEST_ASSET_ID,
+        asset_id: { bits: TEST_ASSET_ID },
         amount: BigInt(100),
         price: BigInt(333),
       });
@@ -1003,12 +1024,14 @@ describe('Market contract event tests', () => {
       // Create another mock buy collateral event
       mockBuyCollateralEvent = Market.BuyCollateralEvent.mockData({
         caller: {
-          bits: address,
+          case: 'Address',
+          payload: { bits: address },
         },
         recipient: {
-          bits: address,
+          case: 'Address',
+          payload: { bits: address },
         },
-        asset_id: TEST_ASSET_ID,
+        asset_id: { bits: TEST_ASSET_ID },
         amount: BigInt(111),
         price: BigInt(444),
       });
@@ -1068,8 +1091,13 @@ describe('Market contract event tests', () => {
       // Create a mock reserves withdrawn event
       const mockReservesWithdrawnEvent = Market.ReservesWithdrawnEvent.mockData(
         {
-          address: {
-            bits: address,
+          caller: {
+            case: 'Address',
+            payload: { bits: address },
+          },
+          to: {
+            case: 'Address',
+            payload: { bits: address },
           },
           amount: BigInt(100),
         }
@@ -1085,6 +1113,7 @@ describe('Market contract event tests', () => {
       const expectedReservesWithdrawnEvent: ReservesWithdrawnEvent = {
         id: `${mockReservesWithdrawnEvent.transaction.id}_${mockReservesWithdrawnEvent.logIndex}`,
         recipient: address,
+        caller: address,
         amount: BigInt(100),
         timestamp: mockReservesWithdrawnEvent.block.time,
       };
@@ -1155,10 +1184,8 @@ describe('Market contract event tests', () => {
       const mockMarketConfigurationEvent =
         Market.MarketConfigurationEvent.mockData({
           market_config: {
-            governor: { bits: ALICE_ADDRESS },
-            pause_guardian: { bits: BOB_ADDRESS },
             base_token_decimals: 6,
-            base_token: TEST_ASSET_ID,
+            base_token: { bits: TEST_ASSET_ID },
             base_token_price_feed_id: TEST_PRICE_FEED_ID,
             supply_kink: BigInt('850000000000000000'),
             borrow_kink: BigInt('850000000000000000'),
@@ -1187,8 +1214,6 @@ describe('Market contract event tests', () => {
       // Expected entity that should be created
       const expectedMarketConfigurationEvent: MarketConfiguartion = {
         id: MARKET_CONFIGURATION_ID,
-        governor: ALICE_ADDRESS,
-        pause_guardian: BOB_ADDRESS,
         baseToken: TEST_ASSET_ID,
         baseTokenDecimals: 6,
         baseTokenPriceFeedId: TEST_PRICE_FEED_ID,
