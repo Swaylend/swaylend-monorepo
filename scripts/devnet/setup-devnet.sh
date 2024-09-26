@@ -1,15 +1,16 @@
 #!/bin/bash
 
 # deploys to
-# token: 0xab0dc5c65212c0d062101b986e18a251f15317c934c1196ccf78fa761eecb394
-# src-20: 0x02a2e4643e3a8c41ab7aa39a29ea60142a8e1d857775ae116ce60a4eeb9039e8
-# pyth_mock: 0x51b52248d0f329f2e2de63932d1bc9b72c66539c69766ec84c2478766d89857f
-# loader contract: 0x5e562f51f507b4c784b3c7673c4dbfeeb461d3318099812db7347f45dd1f8d8a
-# proxy contract: 0x5f74026efe43632d3be4659a91904270ed539ffbd140d38b0435747945c3646a
+TOKEN_CONTRACT_ID="0xab0dc5c65212c0d062101b986e18a251f15317c934c1196ccf78fa761eecb394"
+SRC_20_CONTRACT_ID="0x2442977986968c3091c0b5bc5cabf20c4dffaa57f2dc7d2a90caf8d91fd41825"
+ORACLE_CONTRACT_ID="0xd162dfc8b22cedc427afe8e88640520cb1828627633085beed8e0c78442ba428"
+TARGET_CONTRACT_ID="0x19fb90cd10df6c35056d4f20c1dccc235afed70b5f285f7cb19948f6cb3b1ea0"
+PROXY_CONTRACT_ID="0x4f1814444f2e995803d88179476421f04f774b5c4c40956b0655b1e62b1c695d"
+BASE_TOKEN_PRICE_FEED="0xeaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a"
 
-# USDC: 0xdb012cf2f31dcb9b46ed0ef619abe040db24172deb8f7c1ef573097b2225d8b6
-# BTC: 0x50ec3fd9d54db44697b4613b2b6d6f16df5b9f8e3e7a6fba3c51896cfaeec3a7
-# UNI: 0x2cc3e9fa1a1009342165b57d375790f91959346a6558f9bceb378a31bd4ca992
+USDC_CONTRACT_ID="0xdb012cf2f31dcb9b46ed0ef619abe040db24172deb8f7c1ef573097b2225d8b6"
+BTC_CONTRACT_ID="0x50ec3fd9d54db44697b4613b2b6d6f16df5b9f8e3e7a6fba3c51896cfaeec3a7"
+UNI_CONTRACT_ID="0x2cc3e9fa1a1009342165b57d375790f91959346a6558f9bceb378a31bd4ca992"
 
 read -p "Have you deleted proxy address from contracts/market/Forc.toml? (y/n): " answer
 if [ "$answer" != "y" ]; then
@@ -26,21 +27,21 @@ forc deploy --node-url http://localhost:4000 \
 
 # configure with test tokens
 cargo run --bin configure_tokens -- --signing-key $SIGNING_KEY \
-    --token-contract-id 0xab0dc5c65212c0d062101b986e18a251f15317c934c1196ccf78fa761eecb394
+    --token-contract-id $TOKEN_CONTRACT_ID
 
 # mint tokens
 cargo run --bin mint_tokens -- --signing-key $SIGNING_KEY \
-    --token-contract-id 0xab0dc5c65212c0d062101b986e18a251f15317c934c1196ccf78fa761eecb394
+    --token-contract-id $TOKEN_CONTRACT_ID
 
 # activate market
 cargo run --bin activate_market -- --signing-key $SIGNING_KEY \
-    --proxy-contract-id 0x5f74026efe43632d3be4659a91904270ed539ffbd140d38b0435747945c3646a \
-    --target-contract-id 0x5e562f51f507b4c784b3c7673c4dbfeeb461d3318099812db7347f45dd1f8d8a \
-    --oracle-contract-id 0x51b52248d0f329f2e2de63932d1bc9b72c66539c69766ec84c2478766d89857f \
-    --base-token-id 0xdb012cf2f31dcb9b46ed0ef619abe040db24172deb8f7c1ef573097b2225d8b6 \
-    --base-token-price-feed 0xeaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a
+    --proxy-contract-id $PROXY_CONTRACT_ID \
+    --target-contract-id $TARGET_CONTRACT_ID \
+    --oracle-contract-id $ORACLE_CONTRACT_ID \
+    --base-token-id $USDC_CONTRACT_ID \
+    --base-token-price-feed $BASE_TOKEN_PRICE_FEED
 
 # bootstrap collateral
 cargo run --bin bootstrap_collateral -- --signing-key $SIGNING_KEY \
-    --token-contract-id 0xab0dc5c65212c0d062101b986e18a251f15317c934c1196ccf78fa761eecb394 \
-    --target-contract-id 0x5e562f51f507b4c784b3c7673c4dbfeeb461d3318099812db7347f45dd1f8d8a
+    --token-contract-id $TOKEN_CONTRACT_ID \
+    --target-contract-id $TARGET_CONTRACT_ID
