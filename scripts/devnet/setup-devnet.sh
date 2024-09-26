@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# deploys to
+# deploys to those addresses on local devnet
 TOKEN_CONTRACT_ID="0xab0dc5c65212c0d062101b986e18a251f15317c934c1196ccf78fa761eecb394"
 SRC_20_CONTRACT_ID="0x2442977986968c3091c0b5bc5cabf20c4dffaa57f2dc7d2a90caf8d91fd41825"
 ORACLE_CONTRACT_ID="0xd162dfc8b22cedc427afe8e88640520cb1828627633085beed8e0c78442ba428"
