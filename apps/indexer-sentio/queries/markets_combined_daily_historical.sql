@@ -4,12 +4,13 @@ WITH CollateralPoolData AS (
     from (
             SELECT poolAddress,
                 DATE(timestamp) as date,
-                FLOOR(AVG(collateralAmountUsd)) as collateralValueUsd
+                FLOOR(argMax(collateralAmountUsd, timestamp)) as collateralValueUsd
             FROM CollateralPoolSnapshot_raw
             WHERE chainId = 0
                 AND timestamp >= DATE_SUB(NOW(), INTERVAL 1 MONTH)
             GROUP BY date,
-                poolAddress
+                poolAddress,
+                underlyingTokenAddress
         )
     group by date
 ),
@@ -20,8 +21,8 @@ BasePoolData AS (
     from (
             SELECT poolAddress,
                 DATE(timestamp) as date,
-                AVG(suppliedAmountUsd) as suppliedValueUsd,
-                AVG(borrowedAmountUsd) as borrowedValueUsd
+                argMax(suppliedAmountUsd, timestamp) as suppliedValueUsd,
+                argMax(borrowedAmountUsd, timestamp) as borrowedValueUsd
             FROM BasePoolSnapshot_raw
             WHERE chainId = 0
                 AND timestamp >= DATE_SUB(NOW(), INTERVAL 1 MONTH)
