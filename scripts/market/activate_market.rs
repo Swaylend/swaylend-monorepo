@@ -3,7 +3,7 @@ use fuels::{
     accounts::{provider::Provider, wallet::WalletUnlocked},
     crypto::SecretKey,
     macros::abigen,
-    types::{bech32::Bech32ContractId, transaction::TxPolicies, Address, Bits256, ContractId},
+    types::{bech32::Bech32ContractId, transaction::TxPolicies, AssetId, Bits256, ContractId},
 };
 use serde::Deserialize;
 use std::{path::PathBuf, str::FromStr};
@@ -33,9 +33,7 @@ struct MarketConfig {
 }
 
 pub fn get_market_config(
-    governor: Address,
-    pause_guardian: Address,
-    base_token_bits256: Bits256,
+    base_token: AssetId,
     base_token_decimals: u32,
     base_token_price_feed_id: Bits256,
 ) -> anyhow::Result<MarketConfiguration> {
@@ -45,9 +43,7 @@ pub fn get_market_config(
     let config: MarketConfig = serde_json::from_str(&config_json_str)?;
 
     Ok(MarketConfiguration {
-        governor,
-        pause_guardian,
-        base_token: base_token_bits256,
+        base_token,
         base_token_decimals,
         base_token_price_feed_id,
         supply_kink: config.supply_kink.into(),
@@ -140,15 +136,12 @@ async fn main() -> anyhow::Result<()> {
 
     let tx_policies = TxPolicies::default().with_script_gas_limit(2_000_000);
 
-    let base_token_bits256 = Bits256::from_hex_str(&args.base_token_id).unwrap();
     // TODO[urban,vid]: take in consideration the decimals when mainnet is ready
     let base_token_decimals = 6;
     let base_token_price_feed_id = Bits256::from_hex_str(&args.base_token_price_feed).unwrap();
 
     let market_configuration = get_market_config(
-        signing_wallet.address().into(),
-        signing_wallet.address().into(),
-        base_token_bits256,
+        AssetId::from_str(&args.base_token_id).unwrap(),
         base_token_decimals,
         base_token_price_feed_id,
     );
@@ -157,7 +150,10 @@ async fn main() -> anyhow::Result<()> {
 
     let result = contract_instance
         .methods()
-        .activate_contract(market_configuration.unwrap())
+        .activate_contract(
+            market_configuration.unwrap(),
+            signing_wallet.address().into(),
+        )
         .with_contract_ids(&[target_contract_id.clone()])
         .call()
         .await;
@@ -188,7 +184,7 @@ async fn main() -> anyhow::Result<()> {
         "Active market configuration: {:?}",
         contract_instance
             .methods()
-            .balance_of(Bits256::zeroed())
+            .balance_of(AssetId::zeroed())
             .with_contract_ids(&[target_contract_id])
             .with_tx_policies(tx_policies)
             .call()
