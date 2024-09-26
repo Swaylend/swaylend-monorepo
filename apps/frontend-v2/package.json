@@ -37,7 +37,7 @@
     "encoding": "^0.1.13",
     "fuels": "^0.94.6",
     "lucide-react": "^0.428.0",
-    "next": "14.2.9",
+    "next": "14.2.11",
     "next-themes": "^0.3.0",
     "pino-pretty": "^11.2.2",
     "posthog-js": "^1.161.3",

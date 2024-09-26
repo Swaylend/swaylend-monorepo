@@ -5,7 +5,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { DEPLOYED_MARKETS } from '@/utils';
+import { DEPLOYED_MARKETS, type DeployedMarket } from '@/utils';
 import React from 'react';
 import { MarketTableRow } from './MarketTableRow';
 
@@ -14,7 +14,7 @@ export const MarketsTable = () => {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead colSpan={8} className="">
+          <TableHead colSpan={8}>
             <div className="w-full flex justify-center text-white font-semibold">
               Fuel Network
             </div>
@@ -49,7 +49,12 @@ export const MarketsTable = () => {
       </TableHeader>
       <TableBody>
         {Object.entries(DEPLOYED_MARKETS).map(([marketName, _]) => {
-          return <MarketTableRow key={marketName} marketName={marketName} />;
+          return (
+            <MarketTableRow
+              key={marketName}
+              marketName={marketName as DeployedMarket}
+            />
+          );
         })}
       </TableBody>
     </Table>

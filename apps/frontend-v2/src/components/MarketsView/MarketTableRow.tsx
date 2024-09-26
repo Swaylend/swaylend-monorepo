@@ -14,6 +14,7 @@ import {
 import {
   ASSET_ID_TO_SYMBOL,
   type DeployedMarket,
+  SYMBOL_TO_ICON,
   SYMBOL_TO_NAME,
   formatUnits,
   getBorrowApr,
@@ -21,25 +22,15 @@ import {
   getSupplyApr,
 } from '@/utils';
 import BigNumber from 'bignumber.js';
-import type { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import Image from 'next/image';
 import type React from 'react';
 
 import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
-import ETHEREUM from '/public/tokens/ethereum.svg?url';
 import SWAY from '/public/tokens/sway.svg?url';
-import USDC from '/public/tokens/usdc.svg?url';
-import USDT from '/public/tokens/usdt.svg?url';
 import { CircularProgressBar } from '../CircularProgressBar';
 import { type Point, PointIcons } from '../PointIcons';
 import { Skeleton } from '../ui/skeleton';
-
-const SYMBOL_TO_LOGO: Record<string, StaticImport> = {
-  USDC: USDC,
-  USDT: USDT,
-  ETH: ETHEREUM,
-};
 
 const SkeletonRow = (
   <TableRow>
@@ -73,7 +64,7 @@ const SkeletonRow = (
 export const MarketTableRow = ({
   marketName,
 }: {
-  marketName: string;
+  marketName: DeployedMarket;
 }): React.ReactElement => {
   const router = useRouter();
   const { data: marketConfiguration } = useMarketConfiguration();
@@ -97,7 +88,7 @@ export const MarketTableRow = ({
       name: ASSET_ID_TO_SYMBOL[collateral.asset_id.bits],
       description: '',
       icon:
-        SYMBOL_TO_LOGO[ASSET_ID_TO_SYMBOL[collateral.asset_id.bits]] || SWAY,
+        SYMBOL_TO_ICON[ASSET_ID_TO_SYMBOL[collateral.asset_id.bits]] || SWAY,
     }));
   }, [collateralConfigurations]);
 
@@ -141,7 +132,7 @@ export const MarketTableRow = ({
         <div className="flex gap-x-2 items-center">
           <div>
             <Image
-              src={SYMBOL_TO_LOGO[marketName]}
+              src={SYMBOL_TO_ICON[marketName]}
               alt={marketName}
               width={32}
               height={32}

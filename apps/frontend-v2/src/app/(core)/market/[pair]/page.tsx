@@ -1,23 +1,22 @@
 import { MarketChart } from '@/components/MarketsView/MarketChart';
 import MarketOverview from '@/components/MarketsView/MarketOverview';
+import { NotFound } from '@/components/NotFound';
 import { getChartData } from '@/lib/charts';
 import { DEPLOYED_MARKETS } from '@/utils';
 import type { Metadata } from 'next';
-import { redirect } from 'next/navigation';
 
 export const metadata: Metadata = {
   title: 'MarketOverview',
 };
 
 export default async function Page({ params }: { params: { pair: string } }) {
-  // TODO - use params to parse network and base asset from available combinations
   const [network, baseAsset] = params.pair.split('-');
   if (
     !network ||
     !baseAsset ||
     !Object.keys(DEPLOYED_MARKETS).includes(baseAsset.toUpperCase())
   ) {
-    redirect('/');
+    return <NotFound />;
   }
   const chartData = await getChartData();
 
