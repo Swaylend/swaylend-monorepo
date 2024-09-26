@@ -6,27 +6,7 @@ license = "Apache-2.0"
 
 [[bin]]
 name = "activate_market"
-path = "market/activate_market.rs"
-
-[[bin]]
-name = "change_proxy_owner"
-path = "market/change_proxy_owner.rs"
-
-[[bin]]
-name = "upgrade_market"
-path = "market/upgrade_market.rs"
-
-[[bin]]
-name = "configure_tokens"
-path = "tokens/configure_tokens.rs"
-
-[[bin]]
-name = "mint_tokens"
-path = "tokens/mint_tokens.rs"
-
-[[bin]]
-name = "bootstrap_collateral"
-path = "market/bootstrap_collateral.rs"
+path = "src/bin/activate_market.rs"
 
 [dependencies]
 fuels = { workspace = true }
