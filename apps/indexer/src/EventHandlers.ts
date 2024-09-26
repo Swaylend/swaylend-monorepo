@@ -1,8 +1,9 @@
 import { Market } from 'generated';
-
 const MARKET_ID = 'MARKET_ID';
 const PUASE_CONFIGURATION_ID = 'PUASE_CONFIGURATION_ID';
 const MARKET_CONFIGURATION_ID = 'MARKET_CONFIGURATION_ID';
+
+const I256_INDENT = 2n ** 255n;
 
 // Add Collateral Asset
 Market.CollateralAssetAdded.handler(async ({ event, context }) => {
@@ -86,9 +87,8 @@ Market.UserBasicEvent.handlerWithLoader({
     const { user } = loaderReturn;
 
     if (!user) {
-      const principalValue = event.params.user_basic.principal.negative
-        ? -event.params.user_basic.principal.value
-        : event.params.user_basic.principal.value;
+      const principalValue =
+        event.params.user_basic.principal.underlying - I256_INDENT;
 
       const address = event.params.account.payload.bits;
 
@@ -107,9 +107,7 @@ Market.UserBasicEvent.handlerWithLoader({
 
     context.User.set({
       ...user,
-      principal: event.params.user_basic.principal.negative
-        ? -event.params.user_basic.principal.value
-        : event.params.user_basic.principal.value,
+      principal: event.params.user_basic.principal.underlying - I256_INDENT,
       baseTrackingIndex: event.params.user_basic.base_tracking_index,
       baseTrackingAccrued: event.params.user_basic.base_tracking_accrued,
     });
