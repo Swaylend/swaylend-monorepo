@@ -1,6 +1,6 @@
 'use client';
 
-import type { ChartData } from '@/hooks/useChartsData';
+import type { ChartData } from '@/lib/charts';
 import { formatCurrency } from '@/utils/format';
 import {
   Area,

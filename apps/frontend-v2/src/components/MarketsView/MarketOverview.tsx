@@ -12,7 +12,6 @@ import {
   useTotalCollateral,
   useTotalReserves,
 } from '@/hooks';
-import type { MarketData } from '@/hooks/useChartsData';
 import {
   type DeployedMarket,
   SYMBOL_TO_ICON,
