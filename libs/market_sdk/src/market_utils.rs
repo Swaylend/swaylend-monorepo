@@ -546,7 +546,7 @@ impl MarketContract {
             .methods()
             .withdraw_reserves(to, amount.into())
             .with_tx_policies(tx_policies)
-            .with_variable_output_policy(VariableOutputPolicy::Exactly(2))
+            .with_variable_output_policy(VariableOutputPolicy::Exactly(1))
             .call()
             .await?)
     }
@@ -854,11 +854,12 @@ impl MarketContract {
         let b_rate = convert_u256_to_u128(market_basic.base_borrow_index) as f64 / scale15;
         let total_collateral = self.totals_collateral(collateral.asset_id).await?.value;
         let last_accrual_time = market_basic.last_accrual_time;
-        let usdc_reserves = convert_i256_to_i128(self.get_reserves().await?.value);
+        let usdc_reserves = convert_i256_to_i128(&self.get_reserves().await?.value);
 
         let usdc_reserves = format!("{} USDC", usdc_reserves as f64 / 10u64.pow(6) as f64);
         let collateral_reserves = convert_i256_to_i128(
-            self.get_collateral_reserves(collateral.asset_id)
+            &self
+                .get_collateral_reserves(collateral.asset_id)
                 .await?
                 .value,
         );
@@ -895,7 +896,7 @@ impl MarketContract {
             .await?
             .value;
         println!("\nAlice 🦹");
-        println!("  Principal = {}", convert_i256_to_i128(basic.principal));
+        println!("  Principal = {}", convert_i256_to_i128(&basic.principal));
         println!("  Present supply = {supply} USDC | borrow = {borrow} USDC");
         println!(
             "  Supplied collateral {} {collateral_symbol}",
@@ -917,7 +918,7 @@ impl MarketContract {
             .value;
         println!("\nBob 🧛");
 
-        println!("  Principal = {}", convert_i256_to_i128(basic.principal));
+        println!("  Principal = {}", convert_i256_to_i128(&basic.principal));
         println!("  Present supply = {supply} USDC | borrow = {borrow} USDC");
         println!(
             "  Supplied collateral {} {collateral_symbol}",
@@ -938,7 +939,7 @@ impl MarketContract {
             .await?
             .value;
         println!("\nChad 🤵");
-        println!("  Principal = {}", convert_i256_to_i128(basic.principal));
+        println!("  Principal = {}", convert_i256_to_i128(&basic.principal));
         println!("  Present supply = {supply} USDC | borrow = {borrow} USDC");
         println!(
             "  Supplied collateral {} {collateral_symbol}",

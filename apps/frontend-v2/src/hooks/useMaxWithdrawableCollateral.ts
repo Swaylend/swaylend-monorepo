@@ -84,7 +84,7 @@ export const useMaxWithdrawableCollateral = (
       const currentBorrowValue = formatUnits(
         supplyBorrow.borrowed,
         marketConfiguration.baseTokenDecimals
-      ).times(priceData.prices[marketConfiguration.baseToken]);
+      ).times(priceData.prices[marketConfiguration.baseToken.bits]);
 
       // Collateral value needed to be covered by the current asset
       const collateralValueNeeded = currentBorrowValue;

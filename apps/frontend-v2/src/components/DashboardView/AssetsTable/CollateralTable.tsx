@@ -510,30 +510,30 @@ export const CollateralTable = () => {
               ) : (
                 collaterals.map((collateral) => {
                   const collateralAmount =
-                    collateralBalances?.get(collateral.asset_id) ??
+                    collateralBalances?.get(collateral.asset_id.bits) ??
                     BigNumber(0);
                   return (
                     <CollateralTableRow
-                      key={collateral.asset_id}
+                      key={collateral.asset_id.bits}
                       account={account ?? undefined}
-                      assetId={collateral.asset_id}
-                      symbol={ASSET_ID_TO_SYMBOL[collateral.asset_id]}
+                      assetId={collateral.asset_id.bits}
+                      symbol={ASSET_ID_TO_SYMBOL[collateral.asset_id.bits]}
                       decimals={collateral.decimals}
                       protocolBalance={
-                        userCollateralAssets?.[collateral.asset_id] ??
+                        userCollateralAssets?.[collateral.asset_id.bits] ??
                         new BigNumber(0)
                       }
                       protocolBalancePending={isPendingUserCollateralAssets}
                       handleAssetClick={handleAssetClick}
                       collateralConfiguration={
-                        collateralConfigurations![collateral.asset_id]
+                        collateralConfigurations![collateral.asset_id.bits]
                       }
                       collateralAmount={formatUnits(
                         collateralAmount,
                         collateral.decimals
                       )}
                       price={
-                        priceData?.prices[collateral.asset_id] ??
+                        priceData?.prices[collateral.asset_id.bits] ??
                         new BigNumber(0)
                       }
                     />
@@ -553,29 +553,31 @@ export const CollateralTable = () => {
           <div className="flex flex-col gap-y-4">
             {collaterals.map((collateral) => {
               const collateralAmount =
-                collateralBalances?.get(collateral.asset_id) ?? BigNumber(0);
+                collateralBalances?.get(collateral.asset_id.bits) ??
+                BigNumber(0);
               return (
                 <CollateralCard
-                  key={collateral.asset_id}
+                  key={collateral.asset_id.bits}
                   account={account ?? undefined}
-                  assetId={collateral.asset_id}
-                  symbol={ASSET_ID_TO_SYMBOL[collateral.asset_id]}
+                  assetId={collateral.asset_id.bits}
+                  symbol={ASSET_ID_TO_SYMBOL[collateral.asset_id.bits]}
                   decimals={collateral.decimals}
                   protocolBalance={
-                    userCollateralAssets?.[collateral.asset_id] ??
+                    userCollateralAssets?.[collateral.asset_id.bits] ??
                     new BigNumber(0)
                   }
                   protocolBalancePending={isPendingUserCollateralAssets}
                   handleAssetClick={handleAssetClick}
                   collateralConfiguration={
-                    collateralConfigurations![collateral.asset_id]
+                    collateralConfigurations![collateral.asset_id.bits]
                   }
                   collateralAmount={formatUnits(
                     collateralAmount,
                     collateral.decimals
                   )}
                   price={
-                    priceData?.prices[collateral.asset_id] ?? new BigNumber(0)
+                    priceData?.prices[collateral.asset_id.bits] ??
+                    new BigNumber(0)
                   }
                 />
               );

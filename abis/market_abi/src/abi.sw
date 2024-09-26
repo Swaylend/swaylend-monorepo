@@ -4,8 +4,8 @@ pub mod structs;
 
 use pyth_interface::{data_structures::price::{Price, PriceFeedId}};
 use structs::*;
-use i256::I256;
 use std::bytes::Bytes;
+use sway_libs::signed_integers::i256::I256;
 
 abi Market {
     // # 0. Activate contract (un-pause)
