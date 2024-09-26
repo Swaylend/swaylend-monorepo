@@ -421,7 +421,11 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
     })
     .onLogUserSupplyCollateralEvent(async (event, ctx) => {
       const {
-        data: { account, asset_id, amount },
+        data: {
+          account,
+          asset_id: { bits: asset_id },
+          amount,
+        },
       } = event;
 
       const address = (account.Address?.bits ?? account.ContractId?.bits)!;
@@ -494,7 +498,11 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
     })
     .onLogUserWithdrawCollateralEvent(async (event, ctx) => {
       const {
-        data: { account, asset_id, amount },
+        data: {
+          account,
+          asset_id: { bits: asset_id },
+          amount,
+        },
       } = event;
 
       const address = (account.Address?.bits ?? account.ContractId?.bits)!;
