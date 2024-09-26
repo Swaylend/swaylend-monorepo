@@ -24,7 +24,7 @@ pub struct CollateralAssetResumed {
 // User Basic Event
 pub struct UserBasicEvent {
     pub account: Identity,
-    pub user_basic: UserBasic
+    pub user_basic: UserBasic,
 }
 
 // Market Basic Event
@@ -88,7 +88,8 @@ pub struct BuyCollateralEvent {
 
 // Reserves Withdrawn Event
 pub struct ReservesWithdrawnEvent {
-    pub account: Identity,
+    pub caller: Identity,
+    pub to: Identity,
     pub amount: u64,
 }
 

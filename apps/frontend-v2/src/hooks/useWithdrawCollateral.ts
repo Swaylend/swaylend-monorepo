@@ -71,7 +71,7 @@ export const useWithdrawCollateral = ({
 
       const { waitForResult } = await marketContract.functions
         .withdraw_collateral(
-          actionTokenAssetId,
+          { bits: actionTokenAssetId },
           amount.toFixed(0),
           priceUpdateData
         )
@@ -108,12 +108,7 @@ export const useWithdrawCollateral = ({
     onSettled: () => {
       // Invalidate queries
       queryClient.invalidateQueries({
-        queryKey: [
-          'collateralAssets',
-          account,
-          market,
-          collateralConfigurations,
-        ],
+        queryKey: ['collateralAssets', account, market],
       });
 
       // Invalidate Fuel balance query

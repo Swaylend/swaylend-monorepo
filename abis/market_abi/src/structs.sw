@@ -1,6 +1,6 @@
 library;
 
-use i256::I256;
+use sway_libs::signed_integers::i256::I256;
 use std::bytes::Bytes;
 use pyth_interface::{data_structures::price::{PriceFeedId}};
 
@@ -21,8 +21,6 @@ pub struct CollateralConfiguration {
 }
 
 pub struct MarketConfiguration {
-    pub governor: Identity,
-    pub pause_guardian: Identity,
     pub base_token: AssetId,
     pub base_token_decimals: u32,
     pub base_token_price_feed_id: b256,
@@ -46,8 +44,6 @@ pub struct MarketConfiguration {
 impl MarketConfiguration {
     pub fn default() -> Self {
         MarketConfiguration {
-            governor: Identity::Address(Address::zero()),
-            pause_guardian: Identity::Address(Address::zero()),
             base_token: AssetId::zero(),
             base_token_decimals: 0,
             base_token_price_feed_id: b256::zero(),

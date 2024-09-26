@@ -40,6 +40,8 @@ export const GeneralInfo = ({
             <a
               href="https://www.halborn.com/"
               className="text-primary underline"
+              target="_blank"
+              rel="noreferrer"
             >
               Halborn
             </a>

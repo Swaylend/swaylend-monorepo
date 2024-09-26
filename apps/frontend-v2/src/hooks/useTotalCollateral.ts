@@ -27,7 +27,7 @@ export const useTotalCollateral = (marketParam?: DeployedMarket) => {
         async (assetId) => ({
           assetId,
           value: await marketContract.functions
-            .totals_collateral(assetId)
+            .totals_collateral({ bits: assetId })
             .get(),
         })
       );

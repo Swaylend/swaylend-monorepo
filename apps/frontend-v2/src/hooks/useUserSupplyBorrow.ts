@@ -21,7 +21,7 @@ export const useUserSupplyBorrow = () => {
       );
 
       const { value } = await marketContract.functions
-        .get_user_supply_borrow({ bits: account })
+        .get_user_supply_borrow({ Address: { bits: account } })
         .get();
 
       return {

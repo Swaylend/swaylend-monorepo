@@ -14,7 +14,6 @@ use events::*;
 
 use pyth_interface::{data_structures::price::{Price, PriceFeedId}, PythCore};
 use market_abi::{Market, structs::*,};
-use i256::I256;
 use std::asset::{mint_to, transfer};
 use std::auth::{AuthError, msg_sender};
 use std::call_frames::msg_asset_id;
@@ -29,6 +28,9 @@ use std::vec::Vec;
 use std::bytes::Bytes;
 use std::convert::TryFrom;
 use sway_libs::reentrancy::reentrancy_guard;
+use standards::src5::{SRC5, State};
+use sway_libs::ownership::*;
+use sway_libs::signed_integers::i256::I256;
 
 // This is set during deployment of the contract
 configurable {
@@ -65,7 +67,7 @@ storage {
 impl Market for Contract {
     // # 0. Activate contract
     #[storage(write)]
-    fn activate_contract(market_configuration: MarketConfiguration) {
+    fn activate_contract(market_configuration: MarketConfiguration, owner: Identity) {
         require(
             storage
                 .market_basic
@@ -73,6 +75,9 @@ impl Market for Contract {
                 .read() == 0,
             Error::AlreadyActive,
         );
+
+        // Set owner
+        initialize_ownership(owner);
 
         // Set market configuration
         storage.market_configuration.write(market_configuration);
@@ -126,14 +131,9 @@ impl Market for Contract {
     // - `configuration`: The collateral configuration to be added
     #[storage(write)]
     fn add_collateral_asset(configuration: CollateralConfiguration) {
-        // Only governor can add new collateral asset
-        require(
-            msg_sender().unwrap() == storage
-                .market_configuration
-                .read()
-                .governor,
-            Error::Unauthorized,
-        );
+        // Only owner can add new collateral asset
+        only_owner();
+
         // Check if asset already exists
         require(
             storage
@@ -162,14 +162,8 @@ impl Market for Contract {
     // - `asset_id`: The asset ID of the collateral asset to be paused
     #[storage(write)]
     fn pause_collateral_asset(asset_id: AssetId) {
-        // Only governor can pause collateral asset
-        require(
-            msg_sender().unwrap() == storage
-                .market_configuration
-                .read()
-                .governor,
-            Error::Unauthorized,
-        );
+        // Only owner can pause collateral asset
+        only_owner();
 
         let mut configuration = storage.collateral_configurations.get(asset_id).read();
         configuration.paused = true;
@@ -187,14 +181,8 @@ impl Market for Contract {
     // - `asset_id`: The asset ID of the collateral asset to be resumed
     #[storage(write)]
     fn resume_collateral_asset(asset_id: AssetId) {
-        // only governor can resume collateral asset
-        require(
-            msg_sender().unwrap() == storage
-                .market_configuration
-                .read()
-                .governor,
-            Error::Unauthorized,
-        );
+        // Only owner can resume collateral asset
+        only_owner();
 
         let mut configuration = storage.collateral_configurations.get(asset_id).read();
         configuration.paused = false;
@@ -213,14 +201,9 @@ impl Market for Contract {
     // - `configuration`: The new collateral configuration
     #[storage(write)]
     fn update_collateral_asset(asset_id: AssetId, configuration: CollateralConfiguration) {
-        // Only governor can update collateral asset
-        require(
-            msg_sender().unwrap() == storage
-                .market_configuration
-                .read()
-                .governor,
-            Error::Unauthorized,
-        );
+        // Only owner can update collateral asset
+        only_owner();
+
         // Check if asset exists
         require(
             storage
@@ -332,11 +315,7 @@ impl Market for Contract {
         // Check if the user is borrow collateralized
         require(is_borrow_collateralized(caller), Error::NotCollateralized);
 
-        transfer(
-            caller,
-            asset_id,
-            amount,
-        );
+        transfer(caller, asset_id, amount);
 
         // Log user withdraw collateral event
         log(UserWithdrawCollateralEvent {
@@ -406,8 +385,7 @@ impl Market for Contract {
         let amount = msg_amount();
         let base_asset_id = storage.market_configuration.read().base_token;
         require(
-            amount > 0 && msg_asset_id()
-                 == base_asset_id,
+            amount > 0 && msg_asset_id() == base_asset_id,
             Error::InvalidPayment,
         );
 
@@ -420,7 +398,7 @@ impl Market for Contract {
         let user_principal = user_basic.principal;
 
         // Calculate new balance and principal value
-        let user_balance = present_value(user_principal) + I256::from(amount);
+        let user_balance = present_value(user_principal) + I256::try_from(u256::from(amount)).unwrap();
         let user_principal_new = principal_value(user_balance);
 
         // Calculate repay and supply amounts
@@ -471,7 +449,7 @@ impl Market for Contract {
         let user_principal = user_basic.principal;
 
         // Calculate new balance and principal value
-        let user_balance = present_value(user_principal) - I256::from(amount);
+        let user_balance = present_value(user_principal) - I256::try_from(u256::from(amount)).unwrap();
         let user_principal_new = principal_value(user_balance);
 
         // Calculate withdraw and borrow amounts
@@ -497,12 +475,11 @@ impl Market for Contract {
         // Update and write principal to storage
         update_base_principal(caller, user_basic, user_principal_new);
 
-        if user_balance.negative {
+        if user_balance < I256::zero() {
             // Check that the borrow amount is greater than the minimum allowed
             require(
-                user_balance
-                    .flip()
-                    .value >= storage
+                u256::try_from(user_balance.wrapping_neg())
+                    .unwrap() >= storage
                     .market_configuration
                     .read()
                     .base_borrow_min,
@@ -519,7 +496,10 @@ impl Market for Contract {
         // Transfer base asset to the caller
         transfer(
             caller,
-            storage.market_configuration.read().base_token,
+            storage
+                .market_configuration
+                .read()
+                .base_token,
             amount,
         );
     }
@@ -638,23 +618,19 @@ impl Market for Contract {
 
         // Only allow payment in the base token and check that the payment amount is greater than 0
         require(
-            msg_asset_id()
-                 == storage
+            msg_asset_id() == storage
                 .market_configuration
                 .read()
                 .base_token && payment_amount > 0,
             Error::InvalidPayment,
         );
 
-        let reserves = get_reserves_internal();
+        let reserves = get_reserves_internal() - I256::try_from(u256::from(payment_amount)).unwrap();
 
         // Only allow purchases if reserves are negative or if the reserves are less than the target reserves
         require(
-            reserves < I256::zero() || reserves
-                .value < storage
-                .market_configuration
-                .read()
-                .target_reserves,
+            reserves < I256::zero() || reserves < I256::try_from(storage.market_configuration.read().target_reserves)
+                .unwrap(),
             Error::NotForSale,
         );
 
@@ -668,7 +644,8 @@ impl Market for Contract {
 
         // Check that the quote is less than or equal to the reserves
         require(
-            I256::from(collateral_amount) <= reserves,
+            I256::try_from(u256::from(collateral_amount))
+                .unwrap() <= reserves,
             Error::InsufficientReserves,
         );
 
@@ -684,11 +661,7 @@ impl Market for Contract {
         });
 
         // Transfer the collateral asset to the recipient
-        transfer(
-            recipient,
-            asset_id,
-            collateral_amount,
-        );
+        transfer(recipient, asset_id, collateral_amount);
     }
 
     // Get base asset value for selling a collateral asset
@@ -753,37 +726,29 @@ impl Market for Contract {
     // - `amount`: The amount of reserves to be withdrawn
     #[storage(read)]
     fn withdraw_reserves(to: Identity, amount: u64) {
+        // Only owner can withdraw reserves
+        only_owner();
+
         let caller = msg_sender().unwrap();
 
-        // Only governor can withdraw reserves
-        require(
-            caller == storage
-                .market_configuration
-                .read()
-                .governor,
-            Error::Unauthorized,
-        );
         let reserves = get_reserves_internal();
 
-        // Check that the reserves are greater than 0 and that the amount is less than or equal to the reserves
+        // Check that the amount is less than or equal to the reserves
         require(
-            reserves >= I256::zero() && reserves
-                .value >= amount.into(),
+            reserves >= I256::try_from(u256::from(amount))
+                .unwrap(),
             Error::InsufficientReserves,
         );
 
         // Emit reserves withdrawn event
         log(ReservesWithdrawnEvent {
-            account: caller,
+            caller,
+            to,
             amount,
         });
 
         // Transfer the reserves to the recipient
-        transfer(
-            to,
-            storage.market_configuration.read().base_token,
-            amount,
-        )
+        transfer(to, storage.market_configuration.read().base_token, amount)
     }
 
     // ## 7.3 Get the collateral reserves of an asset
@@ -805,17 +770,8 @@ impl Market for Contract {
     // - `pause_config`: The pause configuration to be set
     #[storage(write)]
     fn pause(pause_config: PauseConfiguration) {
-        let caller = msg_sender().unwrap();
-        require(
-            caller == storage
-                .market_configuration
-                .read()
-                .governor || caller == storage
-                .market_configuration
-                .read()
-                .pause_guardian,
-            Error::Unauthorized,
-        );
+        // Only owner can change the pause configuration
+        only_owner();
 
         // Emit pause configuration updated event
         log(PauseConfigurationEvent { pause_config });
@@ -857,8 +813,18 @@ impl Market for Contract {
         market_basic.last_accrual_time = current_time.into();
         market_basic.base_supply_index = supply_index;
         market_basic.base_borrow_index = borrow_index;
-        market_basic.total_supply_base = present_value_supply(market_basic.base_supply_index, market_basic.total_supply_base);
-        market_basic.total_borrow_base = present_value_borrow(market_basic.base_borrow_index, market_basic.total_borrow_base);
+        market_basic.total_supply_base = present_value_supply(
+            market_basic
+                .base_supply_index,
+            market_basic
+                .total_supply_base,
+        );
+        market_basic.total_borrow_base = present_value_borrow(
+            market_basic
+                .base_borrow_index,
+            market_basic
+                .total_borrow_base,
+        );
 
         market_basic
     }
@@ -888,11 +854,18 @@ impl Market for Contract {
         let mut present_value = I256::zero();
 
         // Set latest values (the principal is now the present value of the user's supply or borrow)
-        if !user_basic.principal.negative {
-            present_value = present_value_supply(supply_index, user_basic.principal.try_into().unwrap() ).into();
+        if user_basic.principal >= I256::zero() {
+            present_value = present_value_supply(supply_index, user_basic.principal.try_into().unwrap()).try_into().unwrap();
         } else {
-            present_value = present_value_borrow(borrow_index, user_basic.principal.flip().try_into().unwrap()).into();
-            present_value = present_value.flip();
+            present_value = present_value_borrow(
+                borrow_index,
+                user_basic
+                    .principal
+                    .wrapping_neg()
+                    .try_into()
+                    .unwrap(),
+            ).try_into().unwrap();
+            present_value = present_value.wrapping_neg();
         }
 
         present_value
@@ -934,14 +907,8 @@ impl Market for Contract {
     // # 10. Pyth Oracle management
     #[storage(write)]
     fn set_pyth_contract_id(contract_id: ContractId) {
-        // Only governor can set the Pyth contract ID
-        require(
-            msg_sender().unwrap() == storage
-                .market_configuration
-                .read()
-                .governor,
-            Error::Unauthorized,
-        );
+        // Only owner can set the Pyth contract ID
+        only_owner();
         storage.pyth_contract_id.write(contract_id);
     }
 
@@ -964,14 +931,8 @@ impl Market for Contract {
     // # 11. Changing market configuration
     #[storage(write)]
     fn update_market_configuration(configuration: MarketConfiguration) {
-        // Only governor can update the market configuration
-        require(
-            msg_sender().unwrap() == storage
-                .market_configuration
-                .read()
-                .governor,
-            Error::Unauthorized,
-        );
+        // Only owner can update the market configuration
+        only_owner();
 
         let mut configuration = configuration;
 
@@ -987,12 +948,33 @@ impl Market for Contract {
             market_config: configuration,
         });
     }
+
+    // # 12. Ownership management
+    #[storage(write)]
+    fn transfer_ownership(new_owner: Identity) {
+        transfer_ownership(new_owner);
+    }
+
+    #[storage(write)]
+    fn renounce_ownership() {
+        renounce_ownership();
+    }
+}
+
+impl SRC5 for Contract {
+    #[storage(read)]
+    fn owner() -> State {
+        _owner()
+    }
 }
 
 #[storage(read)]
 fn get_price_internal(price_feed_id: PriceFeedId) -> Price {
     let contract_id = storage.pyth_contract_id.read();
-    require(contract_id != ContractId::zero(), Error::OracleContractIdNotSet);
+    require(
+        contract_id != ContractId::zero(),
+        Error::OracleContractIdNotSet,
+    );
 
     let oracle = abi(PythCore, contract_id.bits());
     let price = oracle.price(price_feed_id);
@@ -1000,15 +982,24 @@ fn get_price_internal(price_feed_id: PriceFeedId) -> Price {
     // validate values
     if price.publish_time < std::block::timestamp() {
         let staleness = std::block::timestamp() - price.publish_time;
-        require(staleness <= ORACLE_MAX_STALENESS, Error::OraclePriceValidationError);
+        require(
+            staleness <= ORACLE_MAX_STALENESS,
+            Error::OraclePriceValidationError,
+        );
     } else {
         let aheadness = price.publish_time - std::block::timestamp();
-        require(aheadness <= ORACLE_MAX_AHEADNESS, Error::OraclePriceValidationError);
+        require(
+            aheadness <= ORACLE_MAX_AHEADNESS,
+            Error::OraclePriceValidationError,
+        );
     }
 
     require(price.price > 0, Error::OraclePriceValidationError);
 
-    require(u256::from(price.confidence) <= (u256::from(price.price) * ORACLE_MAX_CONF_WIDTH / ORACLE_CONF_BASIS_POINTS), Error::OraclePriceValidationError);
+    require(
+        u256::from(price.confidence) <= (u256::from(price.price) * ORACLE_MAX_CONF_WIDTH / ORACLE_CONF_BASIS_POINTS),
+        Error::OraclePriceValidationError,
+    );
 
     price
 }
@@ -1016,7 +1007,10 @@ fn get_price_internal(price_feed_id: PriceFeedId) -> Price {
 #[storage(read)]
 fn update_fee_internal(update_data: Vec<Bytes>) -> u64 {
     let contract_id = storage.pyth_contract_id.read();
-    require(contract_id != ContractId::zero(), Error::OracleContractIdNotSet);
+    require(
+        contract_id != ContractId::zero(),
+        Error::OracleContractIdNotSet,
+    );
 
     let oracle = abi(PythCore, contract_id.bits());
     let fee = oracle.update_fee(update_data);
@@ -1026,12 +1020,15 @@ fn update_fee_internal(update_data: Vec<Bytes>) -> u64 {
 #[payable, storage(read)]
 fn update_price_feeds_if_necessary_internal(price_data_update: PriceDataUpdate) {
     let contract_id = storage.pyth_contract_id.read();
-    require(contract_id != ContractId::zero(), Error::OracleContractIdNotSet);
+    require(
+        contract_id != ContractId::zero(),
+        Error::OracleContractIdNotSet,
+    );
 
     // check if the payment is sufficient
     require(
-        msg_amount() >= price_data_update.update_fee && msg_asset_id()
-             == AssetId::base(),
+        msg_amount() >= price_data_update
+            .update_fee && msg_asset_id() == AssetId::base(),
         Error::InvalidPayment,
     );
 
@@ -1113,11 +1110,24 @@ pub fn principal_value_borrow(base_borrow_index: u256, present: u256) -> u256 {
 fn present_value(principal: I256) -> I256 {
     let market_basic = storage.market_basic.read();
     if principal >= I256::zero() {
-        let present_value = present_value_supply(market_basic.base_supply_index, principal.try_into().unwrap());
-        I256::from(present_value)
+        let present_value = present_value_supply(
+            market_basic
+                .base_supply_index,
+            principal
+                .try_into()
+                .unwrap(),
+        );
+        I256::try_from(present_value).unwrap()
     } else {
-        let present_value = present_value_borrow(market_basic.base_borrow_index, principal.flip().try_into().unwrap());
-        I256::from(present_value).flip()
+        let present_value = present_value_borrow(
+            market_basic
+                .base_borrow_index,
+            principal
+                .wrapping_neg()
+                .try_into()
+                .unwrap(),
+        );
+        I256::neg_try_from(present_value).unwrap()
     }
 }
 
@@ -1130,11 +1140,24 @@ fn present_value(principal: I256) -> I256 {
 fn principal_value(present_value: I256) -> I256 {
     let market_basic = storage.market_basic.read();
     if present_value >= I256::zero() {
-        let principal_value = principal_value_supply(market_basic.base_supply_index, present_value.try_into().unwrap());
-        I256::from(principal_value)
+        let principal_value = principal_value_supply(
+            market_basic
+                .base_supply_index,
+            present_value
+                .try_into()
+                .unwrap(),
+        );
+        I256::try_from(principal_value).unwrap()
     } else {
-        let principal_value = principal_value_borrow(market_basic.base_borrow_index, present_value.flip().try_into().unwrap());
-        I256::from(principal_value).flip()
+        let principal_value = principal_value_borrow(
+            market_basic
+                .base_borrow_index,
+            present_value
+                .wrapping_neg()
+                .try_into()
+                .unwrap(),
+        );
+        I256::neg_try_from(principal_value).unwrap()
     }
 }
 
@@ -1207,11 +1230,11 @@ fn get_user_supply_borrow_internal(account: Identity) -> (u256, u256) {
     let principal = storage.user_basic.get(account).try_read().unwrap_or(UserBasic::default()).principal;
     let last_accrual_time = storage.market_basic.last_accrual_time.read();
     let (supply_index, borrow_index) = accrued_interest_indices(timestamp().into(), last_accrual_time);
-    if !principal.negative {
+    if principal >= I256::zero() {
         let supply = present_value_supply(supply_index, principal.try_into().unwrap());
         (supply, 0)
     } else {
-        let borrow = present_value_borrow(borrow_index, principal.flip().try_into().unwrap());
+        let borrow = present_value_borrow(borrow_index, principal.wrapping_neg().try_into().unwrap());
         (0, borrow)
     }
 }
@@ -1256,7 +1279,7 @@ fn accrued_interest_indices(now: u256, last_accrual_time: u256) -> (u256, u256) 
 #[storage(read)]
 fn is_borrow_collateralized(account: Identity) -> bool {
     let principal = storage.user_basic.get(account).try_read().unwrap_or(UserBasic::default()).principal; // decimals: base_asset_decimal
-    if !principal.negative {
+    if principal >= I256::zero() {
         return true
     };
 
@@ -1283,7 +1306,7 @@ fn is_borrow_collateralized(account: Identity) -> bool {
     let base_token_price_scale = u256::from(10_u64).pow(base_token_price.exponent);
     let base_token_price = u256::from(base_token_price.price);
 
-    let borrow_amount = present.value * base_token_price / base_token_price_scale; // decimals: base_token_decimals
+    let borrow_amount = u256::try_from(present.wrapping_neg()).unwrap() * base_token_price / base_token_price_scale; // decimals: base_token_decimals
     borrow_amount <= borrow_limit
 }
 
@@ -1295,11 +1318,11 @@ fn is_borrow_collateralized(account: Identity) -> bool {
 #[storage(read)]
 fn is_liquidatable_internal(account: Identity) -> bool {
     let principal = storage.user_basic.get(account).try_read().unwrap_or(UserBasic::default()).principal; // decimals: base_asset_decimal
-    if !principal.negative {
+    if principal >= I256::zero() {
         return false
     };
 
-    let present: u256 = present_value(principal.flip()).try_into().unwrap(); // decimals: base_token_decimals
+    let present: u256 = present_value(principal.wrapping_neg()).try_into().unwrap(); // decimals: base_token_decimals
     let mut liquidation_treshold: u256 = 0;
 
     let mut index = 0;
@@ -1332,7 +1355,7 @@ fn is_liquidatable_internal(account: Identity) -> bool {
 // - `reserves`: The reserves (asset decimals)
 #[storage(read)]
 fn get_collateral_reserves_internal(asset_id: AssetId) -> I256 {
-    I256::from(this_balance(asset_id)) - I256::from(storage.totals_collateral.get(asset_id).try_read().unwrap_or(0))
+    I256::try_from(u256::from(this_balance(asset_id))).unwrap() - I256::try_from(u256::from(storage.totals_collateral.get(asset_id).try_read().unwrap_or(0))).unwrap()
 }
 
 // ## Get the total amount of protocol reserves of the base asset
@@ -1346,7 +1369,7 @@ fn get_reserves_internal() -> I256 {
     let balance = this_balance(storage.market_configuration.read().base_token); // decimals: base_token_decimals
     let total_supply = present_value_supply(base_supply_index, market_basic.total_supply_base); // decimals: base_token_decimals
     let total_borrow = present_value_borrow(base_borrow_index, market_basic.total_borrow_base); // decimals: base_token_decimals
-    I256::from(balance) - I256::from(total_supply) + I256::from(total_borrow)
+    I256::try_from(u256::from(balance)).unwrap() - I256::try_from(total_supply).unwrap() + I256::try_from(total_borrow).unwrap()
 }
 
 // ## Accrue interest
@@ -1407,11 +1430,11 @@ fn update_base_principal(account: Identity, basic: UserBasic, principal_new: I25
     // Calculate accrued base interest
     if principal >= I256::zero() {
         let index_delta: u256 = market_basic.tracking_supply_index - basic.base_tracking_index;
-        let base_tracking_accrued_delta = index_delta * principal.try_into().unwrap()  / storage.market_configuration.read().base_tracking_index_scale / accrual_descale_factor;
+        let base_tracking_accrued_delta = index_delta * principal.try_into().unwrap() / storage.market_configuration.read().base_tracking_index_scale / accrual_descale_factor;
         basic.base_tracking_accrued += base_tracking_accrued_delta;
     } else {
         let index_delta: u256 = market_basic.tracking_borrow_index - basic.base_tracking_index;
-        let base_tracking_accrued_delta = index_delta * principal.flip().try_into().unwrap() / storage.market_configuration.read().base_tracking_index_scale / accrual_descale_factor;
+        let base_tracking_accrued_delta = index_delta * principal.wrapping_neg().try_into().unwrap() / storage.market_configuration.read().base_tracking_index_scale / accrual_descale_factor;
         basic.base_tracking_accrued += base_tracking_accrued_delta;
     }
 
@@ -1428,7 +1451,7 @@ fn update_base_principal(account: Identity, basic: UserBasic, principal_new: I25
     // Emit user basic event
     log(UserBasicEvent {
         account,
-        user_basic: basic
+        user_basic: basic,
     });
 }
 
@@ -1452,7 +1475,10 @@ fn repay_and_supply_amount(old_principal: I256, new_principal: I256) -> (u256, u
     } else if old_principal >= I256::zero() {
         return (u256::zero(), (new_principal - old_principal).try_into().unwrap());
     } else {
-        return (old_principal.flip().try_into().unwrap(), new_principal.try_into().unwrap() );
+        return (
+            old_principal.wrapping_neg().try_into().unwrap(),
+            new_principal.try_into().unwrap(),
+        );
     }
 }
 
@@ -1476,7 +1502,10 @@ fn withdraw_and_borrow_amount(old_principal: I256, new_principal: I256) -> (u256
     } else if old_principal <= I256::zero() {
         return (u256::zero(), (old_principal - new_principal).try_into().unwrap());
     } else {
-        return ((old_principal).try_into().unwrap(), (new_principal).flip().try_into().unwrap());
+        return (
+            old_principal.try_into().unwrap(),
+            new_principal.wrapping_neg().try_into().unwrap(),
+        );
     }
 }
 
@@ -1592,7 +1621,7 @@ fn absorb_internal(account: Identity) {
     // Calculate the new balance of the user
     let delta_balance = delta_value * base_price_scale * base_scale / base_price / FACTOR_SCALE_18; // decimals: base_token_decimals
     let delta_balance_value = delta_balance * base_price / base_scale; // decimals: price.exponent
-    let mut new_balance = old_balance + I256::from(delta_balance); // decimals: base_token_decimals
+    let mut new_balance = old_balance + I256::try_from(delta_balance).unwrap(); // decimals: base_token_decimals
     if new_balance < I256::zero() {
         new_balance = I256::zero();
     }

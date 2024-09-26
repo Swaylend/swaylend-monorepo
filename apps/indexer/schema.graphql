@@ -59,8 +59,6 @@ type MarketState {
 # MarketConfiguration Schema
 type MarketConfiguartion {
   id: ID!
-  governor: String!
-  pause_guardian: String!
   baseToken: String!
   baseTokenDecimals: Int!
   baseTokenPriceFeedId: String!
@@ -163,6 +161,7 @@ type BuyCollateralEvent {
 type ReservesWithdrawnEvent {
   id: ID! # random ?
   recipient: String!
+  caller: String!
   amount: BigInt!
   timestamp: Int!
 }

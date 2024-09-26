@@ -8,7 +8,7 @@ import {
 } from '@/hooks';
 
 import { Skeleton } from '@/components/ui/skeleton';
-import { useMarketStore } from '@/stores';
+import { MARKET_MODE, useMarketStore } from '@/stores';
 import { formatUnits, getFormattedPrice } from '@/utils';
 import { useIsConnected } from '@fuels/react';
 import BigNumber from 'bignumber.js';
@@ -63,7 +63,7 @@ export const Stats = () => {
     if (marketMode === 'lend') {
       return formatUnits(
         userSupplyBorrow.supplied.times(
-          priceData.prices[marketConfiguration.baseToken]
+          priceData.prices[marketConfiguration.baseToken.bits]
         ),
         marketConfiguration.baseTokenDecimals
       );
@@ -141,7 +141,9 @@ export const Stats = () => {
           {isConnected && (
             <div>
               <div className="text-moon text-xs sm:text-md lg:text-lg font-semibold">
-                Supplied Balance
+                {marketMode === MARKET_MODE.BORROW
+                  ? 'Supplied Collateral'
+                  : 'Supplied Balance'}
               </div>
               {isLoading ? (
                 <Skeleton className="w-[60%] h-[25px] mt-2 sm:h-[40px] bg-primary/20" />

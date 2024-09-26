@@ -44,8 +44,6 @@ struct MarketConfig {
 }
 
 pub fn get_market_config(
-    governor: Identity,
-    pause_guardian: Identity,
     base_token: AssetId,
     base_token_decimals: u32,
     base_token_price_feed_id: Bits256,
@@ -56,8 +54,6 @@ pub fn get_market_config(
     let config: MarketConfig = serde_json::from_str(&config_json_str)?;
 
     Ok(MarketConfiguration {
-        governor,
-        pause_guardian,
         base_token,
         base_token_decimals,
         base_token_price_feed_id,
@@ -149,11 +145,12 @@ impl MarketContract {
     pub async fn activate_contract(
         &self,
         market_configuration: MarketConfiguration,
+        owner: Identity,
     ) -> anyhow::Result<CallResponse<()>> {
         Ok(self
             .instance
             .methods()
-            .activate_contract(market_configuration)
+            .activate_contract(market_configuration, owner)
             .call()
             .await?)
     }
@@ -549,7 +546,7 @@ impl MarketContract {
             .methods()
             .withdraw_reserves(to, amount.into())
             .with_tx_policies(tx_policies)
-            .with_variable_output_policy(VariableOutputPolicy::Exactly(2))
+            .with_variable_output_policy(VariableOutputPolicy::Exactly(1))
             .call()
             .await?)
     }
@@ -780,7 +777,6 @@ impl MarketContract {
     }
 
     // # 11. Changing market configuration
-
     pub async fn update_market_configuration(
         &self,
         configuration: &MarketConfiguration,
@@ -791,6 +787,34 @@ impl MarketContract {
             .instance
             .methods()
             .update_market_configuration(configuration.clone())
+            .with_tx_policies(tx_policies)
+            .call()
+            .await?)
+    }
+
+    // # 12. Ownership management
+    pub async fn transfer_ownership(
+        &self,
+        new_owner: Identity,
+    ) -> anyhow::Result<CallResponse<()>> {
+        let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
+
+        Ok(self
+            .instance
+            .methods()
+            .transfer_ownership(new_owner)
+            .with_tx_policies(tx_policies)
+            .call()
+            .await?)
+    }
+
+    pub async fn renounce_ownership(&self) -> anyhow::Result<CallResponse<()>> {
+        let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
+
+        Ok(self
+            .instance
+            .methods()
+            .renounce_ownership()
             .with_tx_policies(tx_policies)
             .call()
             .await?)
@@ -830,11 +854,12 @@ impl MarketContract {
         let b_rate = convert_u256_to_u128(market_basic.base_borrow_index) as f64 / scale15;
         let total_collateral = self.totals_collateral(collateral.asset_id).await?.value;
         let last_accrual_time = market_basic.last_accrual_time;
-        let usdc_reserves = convert_i256_to_i128(self.get_reserves().await?.value);
+        let usdc_reserves = convert_i256_to_i128(&self.get_reserves().await?.value);
 
         let usdc_reserves = format!("{} USDC", usdc_reserves as f64 / 10u64.pow(6) as f64);
         let collateral_reserves = convert_i256_to_i128(
-            self.get_collateral_reserves(collateral.asset_id)
+            &self
+                .get_collateral_reserves(collateral.asset_id)
                 .await?
                 .value,
         );
@@ -871,7 +896,7 @@ impl MarketContract {
             .await?
             .value;
         println!("\nAlice 🦹");
-        println!("  Principal = {}", convert_i256_to_i128(basic.principal));
+        println!("  Principal = {}", convert_i256_to_i128(&basic.principal));
         println!("  Present supply = {supply} USDC | borrow = {borrow} USDC");
         println!(
             "  Supplied collateral {} {collateral_symbol}",
@@ -893,7 +918,7 @@ impl MarketContract {
             .value;
         println!("\nBob 🧛");
 
-        println!("  Principal = {}", convert_i256_to_i128(basic.principal));
+        println!("  Principal = {}", convert_i256_to_i128(&basic.principal));
         println!("  Present supply = {supply} USDC | borrow = {borrow} USDC");
         println!(
             "  Supplied collateral {} {collateral_symbol}",
@@ -914,7 +939,7 @@ impl MarketContract {
             .await?
             .value;
         println!("\nChad 🤵");
-        println!("  Principal = {}", convert_i256_to_i128(basic.principal));
+        println!("  Principal = {}", convert_i256_to_i128(&basic.principal));
         println!("  Present supply = {supply} USDC | borrow = {borrow} USDC");
         println!(
             "  Supplied collateral {} {collateral_symbol}",

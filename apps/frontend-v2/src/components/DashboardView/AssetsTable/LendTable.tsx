@@ -124,13 +124,13 @@ export const LendTable = () => {
   const handleBaseTokenClick = (action: ACTION_TYPE) => {
     changeAction(action);
     changeTokenAmount(BigNumber(0));
-    changeActionTokenAssetId(marketConfiguration?.baseToken);
+    changeActionTokenAssetId(marketConfiguration?.baseToken.bits);
     changeInputDialogOpen(true);
   };
 
   const { data: balance } = useBalance({
     address: account ?? undefined,
-    assetId: marketConfiguration?.baseToken,
+    assetId: marketConfiguration?.baseToken.bits,
   });
 
   const userRole = useUserRole();
@@ -174,10 +174,14 @@ export const LendTable = () => {
                       <Image
                         src={
                           SYMBOL_TO_ICON[
-                            ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]
+                            ASSET_ID_TO_SYMBOL[
+                              marketConfiguration.baseToken.bits
+                            ]
                           ]
                         }
-                        alt={ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]}
+                        alt={
+                          ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken.bits]
+                        }
                         width={32}
                         height={32}
                         className="rounded-full"
@@ -187,7 +191,7 @@ export const LendTable = () => {
                   <div>
                     {marketConfiguration && (
                       <div className="text-white font-medium">
-                        {ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]}
+                        {ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken.bits]}
                       </div>
                     )}
                     <div>
@@ -199,7 +203,11 @@ export const LendTable = () => {
                           marketConfiguration?.baseTokenDecimals ?? 9
                         )
                       )}{' '}
-                      {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
+                      {
+                        ASSET_ID_TO_SYMBOL[
+                          marketConfiguration?.baseToken.bits ?? ''
+                        ]
+                      }
                       {' in wallet'}
                     </div>
                   </div>
@@ -220,7 +228,7 @@ export const LendTable = () => {
                     marketConfiguration?.baseTokenDecimals ?? 9
                   )
                 )}{' '}
-                {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
+                {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken.bits ?? '']}
               </TableCell>
               <TableCell>
                 <PointIcons points={POINTS_LEND} />
@@ -231,8 +239,9 @@ export const LendTable = () => {
                     You cannot Lend assets while you have an active borrowing
                     position. Learn more about how{' '}
                     <a
-                      // biome-ignore lint/a11y/useValidAnchor: <explanation>
-                      href="#"
+                      href="https://docs.swaylend.com/"
+                      target="_blank"
+                      rel="noreferrer"
                       className="underline hover:opacity-90 text-white"
                     >
                       Sweylend works.
@@ -293,11 +302,15 @@ export const LendTable = () => {
                         <Image
                           src={
                             SYMBOL_TO_ICON[
-                              ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]
+                              ASSET_ID_TO_SYMBOL[
+                                marketConfiguration.baseToken.bits
+                              ]
                             ]
                           }
                           alt={
-                            ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]
+                            ASSET_ID_TO_SYMBOL[
+                              marketConfiguration.baseToken.bits
+                            ]
                           }
                           width={32}
                           height={32}
@@ -308,7 +321,11 @@ export const LendTable = () => {
                     <div>
                       {marketConfiguration && (
                         <div className="text-white font-medium">
-                          {ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]}
+                          {
+                            ASSET_ID_TO_SYMBOL[
+                              marketConfiguration.baseToken.bits
+                            ]
+                          }
                         </div>
                       )}
                       <div className="text-moon text-sm">
@@ -347,7 +364,11 @@ export const LendTable = () => {
                         marketConfiguration?.baseTokenDecimals ?? 9
                       )
                     )}{' '}
-                    {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
+                    {
+                      ASSET_ID_TO_SYMBOL[
+                        marketConfiguration?.baseToken.bits ?? ''
+                      ]
+                    }
                   </div>
                 </div>
                 <div className="w-full flex items-center">
@@ -364,8 +385,12 @@ export const LendTable = () => {
               <div className=" text-lavender bg-primary/20 rounded-lg px-4 py-2 text-sm font-medium text-center w-full">
                 You cannot Lend assets while you have an active borrowing
                 position. Learn more about how{' '}
-                {/* biome-ignore lint/a11y/useValidAnchor: <explanation> */}
-                <a href="#" className="underline hover:opacity-90 text-white">
+                <a
+                  href="https://docs.swaylend.com/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="underline hover:opacity-90 text-white"
+                >
                   Sweylend works.
                 </a>
               </div>

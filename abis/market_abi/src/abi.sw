@@ -4,13 +4,13 @@ pub mod structs;
 
 use pyth_interface::{data_structures::price::{Price, PriceFeedId}};
 use structs::*;
-use i256::I256;
 use std::bytes::Bytes;
+use sway_libs::signed_integers::i256::I256;
 
 abi Market {
     // # 0. Activate contract (un-pause)
     #[storage(write)]
-    fn activate_contract(market_configuration: MarketConfiguration);
+    fn activate_contract(market_configuration: MarketConfiguration, owner: Identity);
 
     // # 1. Debug functionality (for testing purposes)
     // This functionality is exclusively utilized in local tests to evaluate interest accrual. 
@@ -19,7 +19,7 @@ abi Market {
     fn debug_increment_timestamp();
 
     // # 2. Collateral asset management
-    // This is an administrative function that allows the system's governor to set up new collateral assets. 
+    // This is an administrative function that allows the system's owner to set up new collateral assets. 
     // Each collateral assets may have different characteristics.
     #[storage(write)]
     fn add_collateral_asset(configuration: CollateralConfiguration);
@@ -146,4 +146,11 @@ abi Market {
     // ## 11. Changing market configuration
     #[storage(write)]
     fn update_market_configuration(configuration: MarketConfiguration);
+
+    // ## 12. Ownership management
+    #[storage(write)]
+    fn transfer_ownership(new_owner: Identity);
+
+    #[storage(write)]
+    fn renounce_ownership();
 }

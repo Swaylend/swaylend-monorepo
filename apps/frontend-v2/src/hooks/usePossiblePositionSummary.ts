@@ -65,7 +65,8 @@ export const usePossiblePositionSummary = () => {
         return;
       }
 
-      const baseTokenPrice = priceData.prices[marketConfiguration.baseToken];
+      const baseTokenPrice =
+        priceData.prices[marketConfiguration.baseToken.bits];
 
       loanAmount = loanAmount
         .plus(tokenAmount.times(action === ACTION_TYPE.BORROW ? 1 : -1))
@@ -97,7 +98,7 @@ export const usePossiblePositionSummary = () => {
 
     if (action === ACTION_TYPE.SUPPLY || action === ACTION_TYPE.WITHDRAW) {
       if (
-        actionTokenAssetId === marketConfiguration.baseToken ||
+        actionTokenAssetId === marketConfiguration.baseToken.bits ||
         !collateralValue
       ) {
         setPossibleBorrowCapacity(null);

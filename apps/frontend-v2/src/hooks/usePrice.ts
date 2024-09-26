@@ -36,7 +36,7 @@ export const usePrice = (marketParam?: DeployedMarket) => {
 
     assets.set(
       marketConfiguration.baseTokenPriceFeedId,
-      marketConfiguration.baseToken
+      marketConfiguration.baseToken.bits
     );
 
     for (const [assetId, collateralConfiguration] of Object.entries(

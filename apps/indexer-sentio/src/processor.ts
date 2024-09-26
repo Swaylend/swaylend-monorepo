@@ -132,13 +132,13 @@ const DEPLOYED_MARKETS: Record<
 > = {
   USDC: {
     marketAddress:
-      '0x9acd98624f163187a3dd558cb8e215d417f6c0ac291b78ba20f6df3c07a352e0',
-    startBlock: BigInt(10670000),
+      '0x689bfaf54edfc433f62d06f3581998f9cb32ce864da5ff99f4be7bed3556529d',
+    startBlock: BigInt(11200000),
   },
   USDT: {
     marketAddress:
-      '0x5a22498724036fa16887731686c756aacf26e422ba64c826c5e521f47751f12b',
-    startBlock: BigInt(10675000),
+      '0x0891579ef65509eeba9c66742931cc21218cdb93dd2239dfec794e9d57f87286',
+    startBlock: BigInt(11200000),
   },
 };
 
@@ -156,7 +156,7 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
       const {
         data: {
           market_config: {
-            base_token,
+            base_token: { bits: base_token },
             base_token_decimals,
             borrow_kink,
             supply_kink,
@@ -265,7 +265,7 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
     .onLogCollateralAssetAdded(async (event, ctx) => {
       const {
         data: {
-          asset_id,
+          asset_id: { bits: asset_id },
           configuration: { decimals, borrow_collateral_factor },
         },
       } = event;
@@ -358,7 +358,7 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
     .onLogCollateralAssetUpdated(async (event, ctx) => {
       const {
         data: {
-          asset_id,
+          asset_id: { bits: asset_id },
           configuration: { decimals },
         },
       } = event;
@@ -390,15 +390,16 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
     .onLogUserBasicEvent(async (event, ctx) => {
       const {
         data: {
-          address,
+          account,
           user_basic: {
             principal: { value, negative },
           },
         },
       } = event;
 
+      const address = (account.Address?.bits ?? account.ContractId?.bits)!;
       const chainId = CHAIN_ID_MAP[ctx.chainId as keyof typeof CHAIN_ID_MAP];
-      const userBasicId = `${chainId}_${ctx.contractAddress}_${address.bits}`;
+      const userBasicId = `${chainId}_${ctx.contractAddress}_${address}`;
 
       let userBasic = await ctx.store.get(UserBasic, userBasicId);
 
@@ -407,7 +408,7 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
           id: userBasicId,
           chainId: chainId,
           contractAddress: ctx.contractAddress,
-          address: address.bits,
+          address: address,
           principal: BigDecimal(value.toString()),
           isNegative: negative,
         });
@@ -420,9 +421,14 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
     })
     .onLogUserSupplyCollateralEvent(async (event, ctx) => {
       const {
-        data: { address, asset_id, amount },
+        data: {
+          account,
+          asset_id: { bits: asset_id },
+          amount,
+        },
       } = event;
 
+      const address = (account.Address?.bits ?? account.ContractId?.bits)!;
       const chainId = CHAIN_ID_MAP[ctx.chainId as keyof typeof CHAIN_ID_MAP];
 
       const collateralConfigurationId = `${chainId}_${ctx.contractAddress}_${asset_id}`;
@@ -437,7 +443,7 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
         );
       }
 
-      const id = `${chainId}_${ctx.contractAddress}_${address.bits}_${asset_id}`;
+      const id = `${chainId}_${ctx.contractAddress}_${address}_${asset_id}`;
 
       let collateralPosition = await ctx.store.get(CollateralPosition, id);
 
@@ -446,7 +452,7 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
           id,
           chainId: chainId,
           poolAddress: ctx.contractAddress,
-          userAddress: address.bits,
+          userAddress: address,
           underlyingTokenAddress: collateralConfiguration.assetAddress,
           underlyingTokenSymbol:
             ASSET_ID_TO_SYMBOL[collateralConfiguration.assetAddress],
@@ -492,9 +498,14 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
     })
     .onLogUserWithdrawCollateralEvent(async (event, ctx) => {
       const {
-        data: { address, asset_id, amount },
+        data: {
+          account,
+          asset_id: { bits: asset_id },
+          amount,
+        },
       } = event;
 
+      const address = (account.Address?.bits ?? account.ContractId?.bits)!;
       const chainId = CHAIN_ID_MAP[ctx.chainId as keyof typeof CHAIN_ID_MAP];
 
       const collateralConfigurationId = `${chainId}_${ctx.contractAddress}_${asset_id}`;
@@ -509,13 +520,13 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
         );
       }
 
-      const id = `${chainId}_${ctx.contractAddress}_${address.bits}_${asset_id}`;
+      const id = `${chainId}_${ctx.contractAddress}_${address}_${asset_id}`;
 
       const collateralPosition = await ctx.store.get(CollateralPosition, id);
 
       if (!collateralPosition) {
         throw new Error(
-          `Collateral position (${id}) not found for user ${address.bits} on chain ${chainId}`
+          `Collateral position (${id}) not found for user ${address} on chain ${chainId}`
         );
       }
 
@@ -529,12 +540,8 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
           .toString()
       );
 
-      // If user withdraws all collateral, delete the collateral position
-      if (collateralPosition.collateralAmount.lte(0)) {
-        await ctx.store.delete(collateralPosition, id);
-      } else {
-        await ctx.store.upsert(collateralPosition);
-      }
+      // If user withdraws all collatera
+      await ctx.store.upsert(collateralPosition);
 
       // Collateral pool
       const collateralPoolId = `${chainId}_${ctx.contractAddress}_${collateralConfiguration.assetAddress}`;
@@ -559,10 +566,11 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
     })
     .onLogAbsorbCollateralEvent(async (event, ctx) => {
       const {
-        data: { address, asset_id, amount, decimals },
+        data: { account, asset_id, amount, decimals },
       } = event;
 
       // Collateral pool reduced for absorbed collateral
+      const address = (account.Address?.bits ?? account.ContractId?.bits)!;
       const chainId = CHAIN_ID_MAP[ctx.chainId as keyof typeof CHAIN_ID_MAP];
       const collateralPoolId = `${chainId}_${ctx.contractAddress}_${asset_id}`;
       const collateralPool = await ctx.store.get(
@@ -584,8 +592,8 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
 
       await ctx.store.upsert(collateralPool);
 
-      // Get collateral position (and delete it as all collateral has been absorbed/seized)
-      const collateralPositionId = `${chainId}_${ctx.contractAddress}_${address.bits}_${asset_id}`;
+      // Get collateral position
+      const collateralPositionId = `${chainId}_${ctx.contractAddress}_${address}_${asset_id}`;
       const collateralPosition = await ctx.store.get(
         CollateralPosition,
         collateralPositionId
@@ -593,14 +601,15 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
 
       if (!collateralPosition) {
         throw new Error(
-          `Collateral position (${collateralPositionId}) not found for user ${address.bits} on chain ${chainId}`
+          `Collateral position (${collateralPositionId}) not found for user ${address} on chain ${chainId}`
         );
       }
 
-      await ctx.store.delete(collateralPosition, collateralPositionId);
+      collateralPosition.collateralAmount = BigDecimal(0);
+
+      await ctx.store.upsert(collateralPosition);
     })
     .onLogMarketBasicEvent(async (event, ctx) => {
-      2;
       const {
         data: {
           market_basic: {
