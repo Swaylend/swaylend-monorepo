@@ -28,6 +28,8 @@ const TEST_PRICE_FEED_ID =
 const ALICE_ADDRESS = Addresses.mockAddresses[1];
 const BOB_ADDRESS = Addresses.mockAddresses[2];
 
+const I256_INDENT = 2n ** 255n;
+
 describe('Market contract event tests', () => {
   describe('CollateralAsset events', async () => {
     it('CollateralAssetAdded -> CollateralAssetUpdated -> CollateralAssetPaused -> CollateralAssetResumed', async () => {
@@ -197,8 +199,7 @@ describe('Market contract event tests', () => {
         },
         user_basic: {
           principal: {
-            negative: false,
-            value: BigInt(100),
+            underlying: I256_INDENT + BigInt(100),
           },
           base_tracking_index: BigInt(0),
           base_tracking_accrued: BigInt(0),
@@ -243,8 +244,7 @@ describe('Market contract event tests', () => {
         },
         user_basic: {
           principal: {
-            negative: true,
-            value: BigInt(100),
+            underlying: I256_INDENT - BigInt(100),
           },
           base_tracking_index: BigInt(0),
           base_tracking_accrued: BigInt(0),
@@ -289,8 +289,7 @@ describe('Market contract event tests', () => {
         },
         user_basic: {
           principal: {
-            negative: false,
-            value: BigInt(100),
+            underlying: I256_INDENT + BigInt(100),
           },
           base_tracking_index: BigInt(0),
           base_tracking_accrued: BigInt(0),
@@ -329,8 +328,7 @@ describe('Market contract event tests', () => {
         },
         user_basic: {
           principal: {
-            negative: false,
-            value: BigInt(333),
+            underlying: I256_INDENT + BigInt(333),
           },
           base_tracking_index: BigInt(0),
           base_tracking_accrued: BigInt(0),
@@ -535,8 +533,7 @@ describe('Market contract event tests', () => {
         },
         user_basic: {
           principal: {
-            negative: false,
-            value: BigInt(0),
+            underlying: I256_INDENT,
           },
           base_tracking_index: BigInt(0),
           base_tracking_accrued: BigInt(0),
@@ -666,8 +663,7 @@ describe('Market contract event tests', () => {
         },
         user_basic: {
           principal: {
-            negative: false,
-            value: BigInt(0),
+            underlying: I256_INDENT,
           },
           base_tracking_index: BigInt(0),
           base_tracking_accrued: BigInt(0),
@@ -686,8 +682,7 @@ describe('Market contract event tests', () => {
         },
         user_basic: {
           principal: {
-            negative: false,
-            value: BigInt(0),
+            underlying: I256_INDENT,
           },
           base_tracking_index: BigInt(0),
           base_tracking_accrued: BigInt(0),
@@ -778,8 +773,7 @@ describe('Market contract event tests', () => {
         },
         user_basic: {
           principal: {
-            negative: false,
-            value: BigInt(0),
+            underlying: I256_INDENT,
           },
           base_tracking_index: BigInt(0),
           base_tracking_accrued: BigInt(0),
@@ -950,8 +944,7 @@ describe('Market contract event tests', () => {
         },
         user_basic: {
           principal: {
-            negative: false,
-            value: BigInt(0),
+            underlying: I256_INDENT,
           },
           base_tracking_index: BigInt(0),
           base_tracking_accrued: BigInt(0),

@@ -26,6 +26,7 @@ dayjs.extend(utc);
 const FACTOR_SCALE_15 = BigDecimal(10).pow(15);
 const FACTOR_SCALE_18 = BigDecimal(10).pow(18);
 const SECONDS_PER_YEAR = BigDecimal(365).times(24).times(60).times(60);
+const I256_INDENT = BigDecimal(2).pow(255);
 
 const getBorrowRate = (
   marketConfig: MarketConfiguration,
@@ -132,13 +133,13 @@ const DEPLOYED_MARKETS: Record<
 > = {
   USDC: {
     marketAddress:
-      '0x689bfaf54edfc433f62d06f3581998f9cb32ce864da5ff99f4be7bed3556529d',
-    startBlock: BigInt(11200000),
+      '0xd4a6a92bedda0c9ebd5c82805b7573795532411ebb1503f3adacb59714d7fd35',
+    startBlock: BigInt(11380000),
   },
   USDT: {
     marketAddress:
-      '0x0891579ef65509eeba9c66742931cc21218cdb93dd2239dfec794e9d57f87286',
-    startBlock: BigInt(11200000),
+      '0x0239b371a4f817933c65907b078ff77064427a50752683cba78d143349cdf598',
+    startBlock: BigInt(11380000),
   },
 };
 
@@ -392,10 +393,12 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
         data: {
           account,
           user_basic: {
-            principal: { value, negative },
+            principal: { underlying },
           },
         },
       } = event;
+
+      const value = BigDecimal(underlying.toString()).minus(I256_INDENT);
 
       const address = (account.Address?.bits ?? account.ContractId?.bits)!;
       const chainId = CHAIN_ID_MAP[ctx.chainId as keyof typeof CHAIN_ID_MAP];
@@ -410,11 +413,11 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
           contractAddress: ctx.contractAddress,
           address: address,
           principal: BigDecimal(value.toString()),
-          isNegative: negative,
+          isNegative: value.isNegative(),
         });
       } else {
         userBasic.principal = BigDecimal(value.toString());
-        userBasic.isNegative = negative;
+        userBasic.isNegative = value.isNegative();
       }
 
       await ctx.store.upsert(userBasic);
