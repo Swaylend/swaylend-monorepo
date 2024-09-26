@@ -167,11 +167,9 @@ export const MarketTableRow = ({
         <div className="w-[48px] h-[48px]">
           {
             <CircularProgressBar
-              percent={Number(
-                formatUnits(BigNumber(utilization?.toString()!), 18)
-                  .div(100)
-                  .toFormat(2)
-              )}
+              percent={BigNumber(utilization?.toString() ?? 0)
+                .div(BigNumber(10).pow(18))
+                .div(100)}
             />
           }
         </div>
@@ -180,7 +178,7 @@ export const MarketTableRow = ({
         <div className="w-[48px] h-[48px]">
           {
             <CircularProgressBar
-              percent={Number(supplyApr.slice(0, -1)) / 100}
+              percent={BigNumber(supplyApr.slice(0, -1)).div(100)}
             />
           }
         </div>
@@ -189,7 +187,7 @@ export const MarketTableRow = ({
         <div className="w-[48px] h-[48px]">
           {
             <CircularProgressBar
-              percent={Number(borrowApr.slice(0, -1)) / 100}
+              percent={BigNumber(borrowApr.slice(0, -1)).div(100)}
             />
           }
         </div>
