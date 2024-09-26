@@ -315,11 +315,7 @@ impl Market for Contract {
         // Check if the user is borrow collateralized
         require(is_borrow_collateralized(caller), Error::NotCollateralized);
 
-        transfer(
-            caller,
-            asset_id,
-            amount,
-        );
+        transfer(caller, asset_id, amount);
 
         // Log user withdraw collateral event
         log(UserWithdrawCollateralEvent {
@@ -389,8 +385,7 @@ impl Market for Contract {
         let amount = msg_amount();
         let base_asset_id = storage.market_configuration.read().base_token;
         require(
-            amount > 0 && msg_asset_id()
-                 == base_asset_id,
+            amount > 0 && msg_asset_id() == base_asset_id,
             Error::InvalidPayment,
         );
 
@@ -483,9 +478,8 @@ impl Market for Contract {
         if user_balance < I256::zero() {
             // Check that the borrow amount is greater than the minimum allowed
             require(
-                u256::try_from(
-                    user_balance.wrapping_neg()).unwrap()
-                     >= storage
+                u256::try_from(user_balance.wrapping_neg())
+                    .unwrap() >= storage
                     .market_configuration
                     .read()
                     .base_borrow_min,
@@ -502,7 +496,10 @@ impl Market for Contract {
         // Transfer base asset to the caller
         transfer(
             caller,
-            storage.market_configuration.read().base_token,
+            storage
+                .market_configuration
+                .read()
+                .base_token,
             amount,
         );
     }
@@ -621,8 +618,7 @@ impl Market for Contract {
 
         // Only allow payment in the base token and check that the payment amount is greater than 0
         require(
-            msg_asset_id()
-                 == storage
+            msg_asset_id() == storage
                 .market_configuration
                 .read()
                 .base_token && payment_amount > 0,
@@ -633,12 +629,8 @@ impl Market for Contract {
 
         // Only allow purchases if reserves are negative or if the reserves are less than the target reserves
         require(
-            reserves < I256::zero() || reserves
-              < I256::try_from(storage
-                .market_configuration
-                .read()
-                .target_reserves
-                ).unwrap(),
+            reserves < I256::zero() || reserves < I256::try_from(storage.market_configuration.read().target_reserves)
+                .unwrap(),
             Error::NotForSale,
         );
 
@@ -652,7 +644,8 @@ impl Market for Contract {
 
         // Check that the quote is less than or equal to the reserves
         require(
-            I256::try_from(u256::from(collateral_amount)).unwrap() <= reserves,
+            I256::try_from(u256::from(collateral_amount))
+                .unwrap() <= reserves,
             Error::InsufficientReserves,
         );
 
@@ -668,11 +661,7 @@ impl Market for Contract {
         });
 
         // Transfer the collateral asset to the recipient
-        transfer(
-            recipient,
-            asset_id,
-            collateral_amount,
-        );
+        transfer(recipient, asset_id, collateral_amount);
     }
 
     // Get base asset value for selling a collateral asset
@@ -739,14 +728,15 @@ impl Market for Contract {
     fn withdraw_reserves(to: Identity, amount: u64) {
         // Only owner can withdraw reserves
         only_owner();
-        
+
         let caller = msg_sender().unwrap();
 
         let reserves = get_reserves_internal();
 
         // Check that the amount is less than or equal to the reserves
         require(
-            reserves >= I256::try_from(u256::from(amount)).unwrap(),
+            reserves >= I256::try_from(u256::from(amount))
+                .unwrap(),
             Error::InsufficientReserves,
         );
 
@@ -758,11 +748,7 @@ impl Market for Contract {
         });
 
         // Transfer the reserves to the recipient
-        transfer(
-            to,
-            storage.market_configuration.read().base_token,
-            amount,
-        )
+        transfer(to, storage.market_configuration.read().base_token, amount)
     }
 
     // ## 7.3 Get the collateral reserves of an asset
@@ -827,8 +813,18 @@ impl Market for Contract {
         market_basic.last_accrual_time = current_time.into();
         market_basic.base_supply_index = supply_index;
         market_basic.base_borrow_index = borrow_index;
-        market_basic.total_supply_base = present_value_supply(market_basic.base_supply_index, market_basic.total_supply_base);
-        market_basic.total_borrow_base = present_value_borrow(market_basic.base_borrow_index, market_basic.total_borrow_base);
+        market_basic.total_supply_base = present_value_supply(
+            market_basic
+                .base_supply_index,
+            market_basic
+                .total_supply_base,
+        );
+        market_basic.total_borrow_base = present_value_borrow(
+            market_basic
+                .base_borrow_index,
+            market_basic
+                .total_borrow_base,
+        );
 
         market_basic
     }
@@ -861,7 +857,14 @@ impl Market for Contract {
         if user_basic.principal >= I256::zero() {
             present_value = present_value_supply(supply_index, user_basic.principal.try_into().unwrap()).try_into().unwrap();
         } else {
-            present_value = present_value_borrow(borrow_index, user_basic.principal.wrapping_neg().try_into().unwrap()).try_into().unwrap();
+            present_value = present_value_borrow(
+                borrow_index,
+                user_basic
+                    .principal
+                    .wrapping_neg()
+                    .try_into()
+                    .unwrap(),
+            ).try_into().unwrap();
             present_value = present_value.wrapping_neg();
         }
 
@@ -968,7 +971,10 @@ impl SRC5 for Contract {
 #[storage(read)]
 fn get_price_internal(price_feed_id: PriceFeedId) -> Price {
     let contract_id = storage.pyth_contract_id.read();
-    require(contract_id != ContractId::zero(), Error::OracleContractIdNotSet);
+    require(
+        contract_id != ContractId::zero(),
+        Error::OracleContractIdNotSet,
+    );
 
     let oracle = abi(PythCore, contract_id.bits());
     let price = oracle.price(price_feed_id);
@@ -976,15 +982,24 @@ fn get_price_internal(price_feed_id: PriceFeedId) -> Price {
     // validate values
     if price.publish_time < std::block::timestamp() {
         let staleness = std::block::timestamp() - price.publish_time;
-        require(staleness <= ORACLE_MAX_STALENESS, Error::OraclePriceValidationError);
+        require(
+            staleness <= ORACLE_MAX_STALENESS,
+            Error::OraclePriceValidationError,
+        );
     } else {
         let aheadness = price.publish_time - std::block::timestamp();
-        require(aheadness <= ORACLE_MAX_AHEADNESS, Error::OraclePriceValidationError);
+        require(
+            aheadness <= ORACLE_MAX_AHEADNESS,
+            Error::OraclePriceValidationError,
+        );
     }
 
     require(price.price > 0, Error::OraclePriceValidationError);
 
-    require(u256::from(price.confidence) <= (u256::from(price.price) * ORACLE_MAX_CONF_WIDTH / ORACLE_CONF_BASIS_POINTS), Error::OraclePriceValidationError);
+    require(
+        u256::from(price.confidence) <= (u256::from(price.price) * ORACLE_MAX_CONF_WIDTH / ORACLE_CONF_BASIS_POINTS),
+        Error::OraclePriceValidationError,
+    );
 
     price
 }
@@ -992,7 +1007,10 @@ fn get_price_internal(price_feed_id: PriceFeedId) -> Price {
 #[storage(read)]
 fn update_fee_internal(update_data: Vec<Bytes>) -> u64 {
     let contract_id = storage.pyth_contract_id.read();
-    require(contract_id != ContractId::zero(), Error::OracleContractIdNotSet);
+    require(
+        contract_id != ContractId::zero(),
+        Error::OracleContractIdNotSet,
+    );
 
     let oracle = abi(PythCore, contract_id.bits());
     let fee = oracle.update_fee(update_data);
@@ -1002,12 +1020,15 @@ fn update_fee_internal(update_data: Vec<Bytes>) -> u64 {
 #[payable, storage(read)]
 fn update_price_feeds_if_necessary_internal(price_data_update: PriceDataUpdate) {
     let contract_id = storage.pyth_contract_id.read();
-    require(contract_id != ContractId::zero(), Error::OracleContractIdNotSet);
+    require(
+        contract_id != ContractId::zero(),
+        Error::OracleContractIdNotSet,
+    );
 
     // check if the payment is sufficient
     require(
-        msg_amount() >= price_data_update.update_fee && msg_asset_id()
-             == AssetId::base(),
+        msg_amount() >= price_data_update
+            .update_fee && msg_asset_id() == AssetId::base(),
         Error::InvalidPayment,
     );
 
@@ -1089,10 +1110,23 @@ pub fn principal_value_borrow(base_borrow_index: u256, present: u256) -> u256 {
 fn present_value(principal: I256) -> I256 {
     let market_basic = storage.market_basic.read();
     if principal >= I256::zero() {
-        let present_value = present_value_supply(market_basic.base_supply_index, principal.try_into().unwrap());
+        let present_value = present_value_supply(
+            market_basic
+                .base_supply_index,
+            principal
+                .try_into()
+                .unwrap(),
+        );
         I256::try_from(present_value).unwrap()
     } else {
-        let present_value = present_value_borrow(market_basic.base_borrow_index, principal.wrapping_neg().try_into().unwrap());
+        let present_value = present_value_borrow(
+            market_basic
+                .base_borrow_index,
+            principal
+                .wrapping_neg()
+                .try_into()
+                .unwrap(),
+        );
         I256::neg_try_from(present_value).unwrap()
     }
 }
@@ -1106,10 +1140,23 @@ fn present_value(principal: I256) -> I256 {
 fn principal_value(present_value: I256) -> I256 {
     let market_basic = storage.market_basic.read();
     if present_value >= I256::zero() {
-        let principal_value = principal_value_supply(market_basic.base_supply_index, present_value.try_into().unwrap());
+        let principal_value = principal_value_supply(
+            market_basic
+                .base_supply_index,
+            present_value
+                .try_into()
+                .unwrap(),
+        );
         I256::try_from(principal_value).unwrap()
     } else {
-        let principal_value = principal_value_borrow(market_basic.base_borrow_index, present_value.wrapping_neg().try_into().unwrap());
+        let principal_value = principal_value_borrow(
+            market_basic
+                .base_borrow_index,
+            present_value
+                .wrapping_neg()
+                .try_into()
+                .unwrap(),
+        );
         I256::neg_try_from(principal_value).unwrap()
     }
 }
@@ -1383,7 +1430,7 @@ fn update_base_principal(account: Identity, basic: UserBasic, principal_new: I25
     // Calculate accrued base interest
     if principal >= I256::zero() {
         let index_delta: u256 = market_basic.tracking_supply_index - basic.base_tracking_index;
-        let base_tracking_accrued_delta = index_delta * principal.try_into().unwrap()  / storage.market_configuration.read().base_tracking_index_scale / accrual_descale_factor;
+        let base_tracking_accrued_delta = index_delta * principal.try_into().unwrap() / storage.market_configuration.read().base_tracking_index_scale / accrual_descale_factor;
         basic.base_tracking_accrued += base_tracking_accrued_delta;
     } else {
         let index_delta: u256 = market_basic.tracking_borrow_index - basic.base_tracking_index;
@@ -1404,7 +1451,7 @@ fn update_base_principal(account: Identity, basic: UserBasic, principal_new: I25
     // Emit user basic event
     log(UserBasicEvent {
         account,
-        user_basic: basic
+        user_basic: basic,
     });
 }
 
@@ -1428,7 +1475,10 @@ fn repay_and_supply_amount(old_principal: I256, new_principal: I256) -> (u256, u
     } else if old_principal >= I256::zero() {
         return (u256::zero(), (new_principal - old_principal).try_into().unwrap());
     } else {
-        return (old_principal.wrapping_neg().try_into().unwrap(), new_principal.try_into().unwrap());
+        return (
+            old_principal.wrapping_neg().try_into().unwrap(),
+            new_principal.try_into().unwrap(),
+        );
     }
 }
 
@@ -1452,7 +1502,10 @@ fn withdraw_and_borrow_amount(old_principal: I256, new_principal: I256) -> (u256
     } else if old_principal <= I256::zero() {
         return (u256::zero(), (old_principal - new_principal).try_into().unwrap());
     } else {
-        return (old_principal.try_into().unwrap(), new_principal.wrapping_neg().try_into().unwrap());
+        return (
+            old_principal.try_into().unwrap(),
+            new_principal.wrapping_neg().try_into().unwrap(),
+        );
     }
 }
 
