@@ -629,7 +629,7 @@ impl Market for Contract {
             Error::InvalidPayment,
         );
 
-        let reserves = get_reserves_internal();
+        let reserves = get_reserves_internal() - I256::try_from(u256::from(payment_amount)).unwrap();
 
         // Only allow purchases if reserves are negative or if the reserves are less than the target reserves
         require(
