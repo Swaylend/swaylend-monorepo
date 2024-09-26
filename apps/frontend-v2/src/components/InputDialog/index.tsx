@@ -144,19 +144,22 @@ export const InputDialog = () => {
       );
     }
     if (action === 'SUPPLY') {
-      if (actionTokenAssetId === marketConfiguration?.baseToken.bits) {
+      if (actionTokenAssetId === marketConfiguration.baseToken.bits) {
         return formatUnits(
           BigNumber(balance.toString()),
           marketConfiguration.baseTokenDecimals
         );
       }
+
+      if (!collateralConfigurations[actionTokenAssetId]) return BigNumber(0);
+
       return formatUnits(
         BigNumber(balance.toString()),
         collateralConfigurations[actionTokenAssetId].decimals
       );
     }
     if (action === 'WITHDRAW') {
-      if (actionTokenAssetId === marketConfiguration?.baseToken.bits) {
+      if (actionTokenAssetId === marketConfiguration.baseToken.bits) {
         return formatUnits(
           userSupplyBorrow.supplied,
           marketConfiguration.baseTokenDecimals
