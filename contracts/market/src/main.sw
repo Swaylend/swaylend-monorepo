@@ -32,13 +32,12 @@ use standards::src5::{SRC5, State};
 use sway_libs::ownership::*;
 use sway_libs::signed_integers::i256::I256;
 
-
 // This is set during deployment of the contract
 configurable {
     DEBUG_STEP: u64 = 0,
-    ORACLE_MAX_STALENESS: u64 = 30, // 30 seconds
-    ORACLE_MAX_AHEADNESS: u64 = 60, // 60 seconds
-    ORACLE_MAX_CONF_WIDTH: u256 = 100, // 100 / 10000 = 1 % 
+    ORACLE_MAX_STALENESS: u64 = 30,
+    ORACLE_MAX_AHEADNESS: u64 = 60,
+    ORACLE_MAX_CONF_WIDTH: u256 = 100,
 }
 
 storage {
@@ -484,9 +483,8 @@ impl Market for Contract {
         if user_balance < I256::zero() {
             // Check that the borrow amount is greater than the minimum allowed
             require(
-                u256::try_from(user_balance
-                    .wrapping_neg()).unwrap()
-                    
+                u256::try_from(
+                    user_balance.wrapping_neg()).unwrap()
                      >= storage
                     .market_configuration
                     .read()
@@ -1095,7 +1093,7 @@ fn present_value(principal: I256) -> I256 {
         I256::try_from(present_value).unwrap()
     } else {
         let present_value = present_value_borrow(market_basic.base_borrow_index, principal.wrapping_neg().try_into().unwrap());
-        I256::try_from(present_value).unwrap().wrapping_neg()
+        I256::neg_try_from(present_value).unwrap()
     }
 }
 
@@ -1112,7 +1110,7 @@ fn principal_value(present_value: I256) -> I256 {
         I256::try_from(principal_value).unwrap()
     } else {
         let principal_value = principal_value_borrow(market_basic.base_borrow_index, present_value.wrapping_neg().try_into().unwrap());
-        I256::try_from(principal_value).unwrap().wrapping_neg()
+        I256::neg_try_from(principal_value).unwrap()
     }
 }
 
