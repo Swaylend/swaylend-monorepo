@@ -237,7 +237,7 @@ export default function MarketOverview({
             <div className="text-xl font-semibold text-white mt-2">
               $
               {formatCurrency(
-                Number(priceData?.prices[marketConfiguration?.baseToken!])
+                Number(priceData?.prices[marketConfiguration?.baseToken.bits!])
               )}
             </div>
           </div>

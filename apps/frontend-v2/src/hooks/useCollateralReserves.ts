@@ -24,7 +24,7 @@ export const useCollateralReserves = (
       );
 
       const { value } = await marketContract.functions
-        .get_collateral_reserves(assetId)
+        .get_collateral_reserves({ bits: assetId })
         .get();
 
       return BigNumber(value.value.toString());
