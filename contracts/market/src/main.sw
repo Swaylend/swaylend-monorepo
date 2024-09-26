@@ -746,9 +746,9 @@ impl Market for Contract {
 
         let reserves = get_reserves_internal();
 
-        // Check that the reserves are greater than 0 and that the amount is less than or equal to the reserves
+        // Check that the amount is less than or equal to the reserves
         require(
-            reserves >= I256::zero() && reserves >= I256::try_from(u256::from(amount)).unwrap(),
+            reserves >= I256::try_from(u256::from(amount)).unwrap(),
             Error::InsufficientReserves,
         );
 
