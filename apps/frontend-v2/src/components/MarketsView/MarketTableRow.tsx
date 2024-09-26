@@ -93,7 +93,7 @@ export const MarketTableRow = ({
     if (!collateralConfigurations) return [];
 
     return Object.values(collateralConfigurations).map((collateral) => ({
-      symbol: ASSET_ID_TO_SYMBOL[collateral.asset_id],
+      symbol: ASSET_ID_TO_SYMBOL[collateral.asset_id.bits],
     }));
   }, [collateralConfigurations]);
 

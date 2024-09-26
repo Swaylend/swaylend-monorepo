@@ -150,16 +150,19 @@ export const MarketCollateralsTable = ({
         <TableBody>
           {collaterals.map((collateral) => (
             <MarketCollateralsTableRow
-              key={collateral.asset_id}
-              assetId={collateral.asset_id}
+              key={collateral.asset_id.bits}
+              assetId={collateral.asset_id.bits}
               baseAsset={{
-                symbol: ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken!],
+                symbol:
+                  ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken.bits!],
                 decimals: marketConfiguration?.baseTokenDecimals ?? 6,
               }}
-              symbol={ASSET_ID_TO_SYMBOL[collateral.asset_id]}
+              symbol={ASSET_ID_TO_SYMBOL[collateral.asset_id.bits]}
               decimals={collateral.decimals}
-              totalSupply={totalCollateral?.get(collateral.asset_id)}
-              price={priceData?.prices[collateral.asset_id] ?? BigNumber(0)}
+              totalSupply={totalCollateral?.get(collateral.asset_id.bits)}
+              price={
+                priceData?.prices[collateral.asset_id.bits] ?? BigNumber(0)
+              }
               collateralFactor={BigNumber(
                 collateral.borrow_collateral_factor.toString()
               )}
