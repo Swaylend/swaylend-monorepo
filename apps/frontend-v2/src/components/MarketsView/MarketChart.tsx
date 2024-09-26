@@ -1,7 +1,8 @@
 'use client';
 
 import type { ChartData } from '@/lib/charts';
-import { formatCurrency } from '@/utils/format';
+import { getFormattedPrice } from '@/utils';
+import BigNumber from 'bignumber.js';
 import {
   Area,
   AreaChart,
@@ -24,7 +25,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
     return (
       <div className="flex flex-col gap-y-2 items-start p-2 bg-card/40 shadow-md rounded-lg">
         <div className="text-white text-md font-semibold">
-          ${formatCurrency(payload[0].value)}
+          {getFormattedPrice(BigNumber(payload[0].value))}
         </div>
       </div>
     );
@@ -100,7 +101,6 @@ export const MarketChart = ({
             tickFormatter={(value: number) =>
               new Date(value * 1000).toLocaleDateString()
             }
-            // tick={<CustomTick />}
             style={{
               fill: '#FFFFFF',
               opacity: 0.6,

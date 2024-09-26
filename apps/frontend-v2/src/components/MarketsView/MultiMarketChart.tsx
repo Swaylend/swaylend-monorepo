@@ -17,7 +17,8 @@ import {
   ChartTooltip,
 } from '@/components/ui/chart';
 import type { ChartData } from '@/lib/charts';
-import { formatCurrency, removeDuplicatesByProperty } from '@/utils/format';
+import { getFormattedPrice, removeDuplicatesByProperty } from '@/utils';
+import BigNumber from 'bignumber.js';
 
 export const MultiMarketChart = ({
   chartData,
@@ -50,7 +51,7 @@ export const MultiMarketChart = ({
               <div className="w-2 h-2 rounded-full bg-primary" />
               <div className="text-white/60 text-xs font-normal">Earning</div>
             </div>
-            <div>${formatCurrency(payload[0].value)}</div>
+            <div>{getFormattedPrice(BigNumber(payload[0].value))}</div>
           </div>
           <div className="flex justify-between gap-x-2 items-center mt-2">
             <div className="flex gap-x-2 items-center">
@@ -59,14 +60,14 @@ export const MultiMarketChart = ({
                 Collateral
               </div>
             </div>
-            <div>${formatCurrency(payload[2].value)}</div>
+            <div>{getFormattedPrice(BigNumber(payload[2].value))}</div>
           </div>
           <div className="flex justify-between gap-x-2 items-center mt-2">
             <div className="flex gap-x-2 items-center">
               <div className="w-2 h-2 rounded-full bg-purple" />
               <div className="text-white/60 text-xs font-normal">Borrowing</div>
             </div>
-            <div>${formatCurrency(payload[1].value)}</div>
+            <div>{getFormattedPrice(BigNumber(payload[1].value))}</div>
           </div>
         </div>
       );
@@ -134,7 +135,6 @@ export const MultiMarketChart = ({
               tickFormatter={(value: number) => {
                 return new Date(value * 1000).toDateString();
               }}
-              // tick={<CustomTick />}
               style={{
                 fill: '#FFFFFF',
                 opacity: 0.6,
@@ -148,7 +148,7 @@ export const MultiMarketChart = ({
               axisLine={false}
               tickLine={false}
               tickFormatter={(value: number) => {
-                return `$${formatCurrency(value)}`;
+                return `${getFormattedPrice(BigNumber(value))}`;
               }}
               style={{
                 fill: '#FFFFFF',

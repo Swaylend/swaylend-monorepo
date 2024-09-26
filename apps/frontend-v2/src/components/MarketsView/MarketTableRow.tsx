@@ -17,6 +17,7 @@ import {
   SYMBOL_TO_NAME,
   formatUnits,
   getBorrowApr,
+  getFormattedPrice,
   getSupplyApr,
 } from '@/utils';
 import BigNumber from 'bignumber.js';
@@ -24,7 +25,6 @@ import type { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import Image from 'next/image';
 import type React from 'react';
 
-import { formatCurrency } from '@/utils/format';
 import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 import ETHEREUM from '/public/tokens/ethereum.svg?url';
@@ -89,20 +89,17 @@ export const MarketTableRow = ({
     isPending: isPendingCollateralConfigurations,
   } = useCollateralConfigurations(marketName as DeployedMarket);
 
-  const collaterals = useMemo(() => {
+  const collateralIcons: Point[] = useMemo(() => {
     if (!collateralConfigurations) return [];
 
     return Object.values(collateralConfigurations).map((collateral) => ({
-      symbol: ASSET_ID_TO_SYMBOL[collateral.asset_id.bits],
+      id: ASSET_ID_TO_SYMBOL[collateral.asset_id.bits],
+      name: ASSET_ID_TO_SYMBOL[collateral.asset_id.bits],
+      description: '',
+      icon:
+        SYMBOL_TO_LOGO[ASSET_ID_TO_SYMBOL[collateral.asset_id.bits]] || SWAY,
     }));
   }, [collateralConfigurations]);
-
-  const collateralIcons: Point[] = collaterals.map((collateral) => ({
-    id: collateral.symbol,
-    name: collateral.symbol,
-    description: '',
-    icon: SYMBOL_TO_LOGO[collateral.symbol] || SWAY,
-  }));
 
   const { data: marketBasics } = useMarketBasics(marketName as DeployedMarket);
 
@@ -136,7 +133,10 @@ export const MarketTableRow = ({
   return isPendingCollateralConfigurations ? (
     SkeletonRow
   ) : (
-    <TableRow onClick={() => router.push(`/market/fuel-${marketName}`)}>
+    <TableRow
+      onClick={() => router.push(`/market/fuel-${marketName}`)}
+      className="cursor-pointer hover:bg-white/5 transition-colors duration-200"
+    >
       <TableCell>
         <div className="flex gap-x-2 items-center">
           <div>
@@ -193,28 +193,22 @@ export const MarketTableRow = ({
         </div>
       </TableCell>
       <TableCell>
-        $
-        {formatCurrency(
-          Number(
-            formatUnits(
-              BigNumber(marketBasics?.total_supply_base.toString()!),
-              marketConfiguration?.baseTokenDecimals
-            )
+        {getFormattedPrice(
+          formatUnits(
+            BigNumber(marketBasics?.total_supply_base.toString()!),
+            marketConfiguration?.baseTokenDecimals
           )
         )}
       </TableCell>
       <TableCell>
-        $
-        {formatCurrency(
-          Number(
-            formatUnits(
-              BigNumber(marketBasics?.total_borrow_base.toString()!),
-              marketConfiguration?.baseTokenDecimals
-            )
+        {getFormattedPrice(
+          formatUnits(
+            BigNumber(marketBasics?.total_borrow_base.toString()!),
+            marketConfiguration?.baseTokenDecimals
           )
         )}
       </TableCell>
-      <TableCell>${formatCurrency(Number(totalCollateralValue))}</TableCell>
+      <TableCell>{getFormattedPrice(totalCollateralValue)}</TableCell>
     </TableRow>
   );
 };

@@ -20,8 +20,8 @@ import {
   SYMBOL_TO_ICON,
   SYMBOL_TO_NAME,
   formatUnits,
+  getFormattedPrice,
 } from '@/utils';
-import { formatCurrency } from '@/utils/format';
 import BigNumber from 'bignumber.js';
 import React, { useMemo } from 'react';
 
@@ -70,10 +70,9 @@ const MarketCollateralsTableRow = ({
         {formattedTotalSupply} {symbol}
       </TableCell>
       <TableCell className="text-white">
-        {formatCurrency(
-          Number(formatUnits(reserves ?? BigNumber(0), baseAsset.decimals))
-        )}{' '}
-        ${/* {baseAsset.symbol} */}
+        {getFormattedPrice(
+          formatUnits(reserves ?? BigNumber(0), baseAsset.decimals)
+        )}
       </TableCell>
       <TableCell className="text-white">
         {price.toFixed(2).toString()} $

@@ -17,9 +17,10 @@ import {
   SYMBOL_TO_ICON,
   formatUnits,
   getBorrowApr,
+  getFormattedNumber,
+  getFormattedPrice,
   getSupplyApr,
 } from '@/utils';
-import { formatCurrency } from '@/utils/format';
 import BigNumber from 'bignumber.js';
 import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
@@ -128,7 +129,7 @@ export default function MarketOverview({
           />
           <div className="mt-[36px]">
             <span className="text-moon text-xl font-semibold ml-2">
-              Fuel Network
+              {network.toUpperCase()} Network
             </span>
             <span className="text-xl text-white font-semibold">
               {` · ${baseAsset}`}
@@ -145,7 +146,7 @@ export default function MarketOverview({
               Total Collateral
             </div>
             <div className="text-white font-bold text-[20px]">
-              ${formatCurrency(Number(totalCollateralValue))}
+              {getFormattedPrice(totalCollateralValue)}
             </div>
           </div>
           {marketChartCollateral}
@@ -157,13 +158,10 @@ export default function MarketOverview({
               Total Borrowing
             </div>
             <div className="text-white font-bold text-[20px]">
-              $
-              {formatCurrency(
-                Number(
-                  formatUnits(
-                    BigNumber(marketBasics?.total_borrow_base.toString()!),
-                    marketConfiguration?.baseTokenDecimals
-                  )
+              {getFormattedPrice(
+                formatUnits(
+                  BigNumber(marketBasics?.total_borrow_base.toString()!),
+                  marketConfiguration?.baseTokenDecimals
                 )
               )}
             </div>
@@ -186,13 +184,10 @@ export default function MarketOverview({
               Total Earning
             </div>
             <div className="text-xl font-semibold text-white mt-2">
-              $
-              {formatCurrency(
-                Number(
-                  formatUnits(
-                    BigNumber(marketBasics?.total_supply_base.toString()!),
-                    marketConfiguration?.baseTokenDecimals
-                  )
+              {getFormattedPrice(
+                formatUnits(
+                  BigNumber(marketBasics?.total_supply_base.toString()!),
+                  marketConfiguration?.baseTokenDecimals
                 )
               )}
             </div>
@@ -202,7 +197,7 @@ export default function MarketOverview({
               Available Liquidity
             </div>
             <div className="text-xl font-semibold text-white mt-2">
-              ${formatCurrency(Number(availableLiquidity.formatted))}
+              {getFormattedPrice(availableLiquidity.formatted)}
             </div>
           </div>
           <div>
@@ -210,9 +205,8 @@ export default function MarketOverview({
               Total Reserves
             </div>
             <div className="text-xl font-semibold text-white mt-2">
-              $
-              {formatCurrency(
-                Number(
+              {getFormattedPrice(
+                formatUnits(
                   formatUnits(
                     totalReserves ?? BigNumber(0),
                     marketConfiguration?.baseTokenDecimals
@@ -226,7 +220,7 @@ export default function MarketOverview({
               Collateralization
             </div>
             <div className="text-xl font-semibold text-white mt-2">
-              {formatCurrency(Number(collateralization))}%
+              {getFormattedNumber(collateralization)}%
             </div>
           </div>
           <div>
@@ -234,9 +228,10 @@ export default function MarketOverview({
               Oracle Price
             </div>
             <div className="text-xl font-semibold text-white mt-2">
-              $
-              {formatCurrency(
-                Number(priceData?.prices[marketConfiguration?.baseToken.bits!])
+              {getFormattedPrice(
+                BigNumber(
+                  priceData?.prices[marketConfiguration?.baseToken.bits!] ?? 0
+                )
               )}
             </div>
           </div>
@@ -269,7 +264,7 @@ export default function MarketOverview({
               </div>
             </div>
             <div className="w-3/4">
-              <KinkChart marketName={baseAsset} />
+              <KinkChart marketName={baseAsset as DeployedMarket} />
             </div>
           </div>
         </CardContent>

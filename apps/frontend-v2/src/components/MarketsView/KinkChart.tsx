@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import {
   CartesianGrid,
@@ -9,26 +11,22 @@ import {
   XAxis,
 } from 'recharts';
 
+import type { MarketConfiguartion } from '@/__generated__/swaylend/graphql';
 import {
   type ChartConfig,
   ChartContainer,
   ChartTooltip,
 } from '@/components/ui/chart';
 import { useMarketConfiguration, useUtilization } from '@/hooks';
-import {
-  type DeployedMarket,
-  calculateBorrowRate,
-  calculateSupplyRate,
-  formatUnits,
-  getBorrowApr,
-  getSupplyApr,
-} from '@/utils';
+import { useCreateChartData } from '@/hooks/useCreateChartData';
+import { type DeployedMarket, formatUnits, getFormattedNumber } from '@/utils';
 import BigNumber from 'bignumber.js';
+import { Skeleton } from '../ui/skeleton';
 
 export const KinkChart = ({
   marketName,
 }: {
-  marketName: string;
+  marketName: DeployedMarket;
 }) => {
   const chartConfig = {
     desktop: {
@@ -38,7 +36,10 @@ export const KinkChart = ({
   } satisfies ChartConfig;
 
   const { data: marketConfiguration } = useMarketConfiguration();
-
+  const { data: rateData } = useCreateChartData(
+    marketName as DeployedMarket,
+    (marketConfiguration as unknown as MarketConfiguartion) ?? undefined
+  );
   const { data: utilization } = useUtilization(marketName as DeployedMarket);
   const currentUtilization = BigNumber(
     formatUnits(
@@ -46,29 +47,6 @@ export const KinkChart = ({
       18
     )
   ).toNumber();
-
-  const rateData = [];
-  for (let i = 1; i <= 100; i++) {
-    const borrowRateForIteration = BigNumber(
-      calculateBorrowRate(
-        BigNumber(i).times(BigNumber(10).pow(16)),
-        marketConfiguration!
-      ).toString()
-    );
-    const borrowRateAPR = getBorrowApr(borrowRateForIteration);
-    const supplyRateForIteration = BigNumber(
-      calculateSupplyRate(
-        BigNumber(i).times(BigNumber(10).pow(16)),
-        marketConfiguration!
-      ).toString()
-    );
-    const supplyRateAPR = getSupplyApr(supplyRateForIteration);
-    rateData.push({
-      percent: i,
-      borrowValue: Number(borrowRateAPR.slice(0, -1)),
-      earn: Number(supplyRateAPR.slice(0, -1)),
-    });
-  }
 
   let utilizationPosition = 15;
   if (currentUtilization >= 15 && currentUtilization <= 85) {
@@ -128,58 +106,61 @@ export const KinkChart = ({
 
   return (
     <div className="w-full">
-      <ResponsiveContainer width="100%" height={200}>
-        <ChartContainer config={chartConfig}>
-          <LineChart
-            width={500}
-            height={300}
-            data={rateData}
-            margin={{
-              top: 5,
-              right: 30,
-              left: 20,
-              bottom: 5,
-            }}
-          >
-            <CartesianGrid strokeDasharray="3 3" vertical={false} />
-            <XAxis dataKey="percent" tick={false} />
-            <ChartTooltip
-              content={<CustomTooltip />}
-              // content={<ChartTooltipContent />}
-              cursor={<CustomCursor />}
-              // cursor={false}
-              // position={{ x: 0, y: 0 }}
-            />
-            <ReferenceLine
-              x={currentUtilization < 1 ? 1 : currentUtilization}
-              isFront
-              stroke="#FFFFFF"
-              label={{
-                value: 'Current Utilization',
-                position: 'insideTopLeft',
-                fill: '#FFFFFF',
-                fontSize: '12px',
-                fontFamily: 'Inter',
-                fontWeight: '400',
+      {rateData ? (
+        <ResponsiveContainer width="100%" height={200}>
+          <ChartContainer config={chartConfig}>
+            <LineChart
+              width={500}
+              height={300}
+              data={rateData}
+              margin={{
+                top: 5,
+                right: 30,
+                left: 20,
+                bottom: 5,
               }}
-            />
-            <Line
-              type="monotone"
-              dataKey="borrowValue"
-              stroke="#8b5cf6"
-              strokeWidth={2}
-              dot={false}
-            />
-            <Line
-              type="monotone"
-              dataKey="earn"
-              stroke="#3FE8BD"
-              strokeWidth={2}
-              dot={false}
-            />
-          </LineChart>
-        </ChartContainer>
-      </ResponsiveContainer>
+            >
+              <CartesianGrid strokeDasharray="3 3" vertical={false} />
+              <XAxis dataKey="percent" tick={false} />
+              <ChartTooltip
+                content={<CustomTooltip />}
+                cursor={<CustomCursor />}
+              />
+              <ReferenceLine
+                x={currentUtilization < 1 ? 1 : currentUtilization}
+                isFront
+                stroke="#FFFFFF"
+                label={{
+                  value: 'Current Utilization',
+                  position: 'insideTopLeft',
+                  fill: '#FFFFFF',
+                  fontSize: '12px',
+                  fontFamily: 'Inter',
+                  fontWeight: '400',
+                }}
+              />
+              <Line
+                type="monotone"
+                dataKey="borrowValue"
+                stroke="#8b5cf6"
+                strokeWidth={2}
+                dot={false}
+              />
+              <Line
+                type="monotone"
+                dataKey="earn"
+                stroke="#3FE8BD"
+                strokeWidth={2}
+                dot={false}
+              />
+            </LineChart>
+          </ChartContainer>
+        </ResponsiveContainer>
+      ) : (
+        <ResponsiveContainer width="100%" height={200}>
+          <Skeleton className="w-full h-5/6 bg-primary/20 rounded-md mb-4" />
+        </ResponsiveContainer>
+      )}
       <div className="w-full relative flex justify-between px-6 -mt-4 text-white/60">
         <div>0%</div>
         <div>100%</div>
@@ -190,7 +171,7 @@ export const KinkChart = ({
         >
           <span className="text-moon font-medium">Utilization</span>
           <span className="text-white font-semibold">
-            {currentUtilization}%
+            {getFormattedNumber(BigNumber(currentUtilization))}%
           </span>
         </div>
       </div>
