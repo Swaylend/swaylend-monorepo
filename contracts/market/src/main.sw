@@ -35,9 +35,9 @@ use sway_libs::signed_integers::i256::I256;
 // This is set during deployment of the contract
 configurable {
     DEBUG_STEP: u64 = 0,
-    ORACLE_MAX_STALENESS: u64 = 30,
-    ORACLE_MAX_AHEADNESS: u64 = 60,
-    ORACLE_MAX_CONF_WIDTH: u256 = 100,
+    ORACLE_MAX_STALENESS: u64 = 30, // 30 seconds
+    ORACLE_MAX_AHEADNESS: u64 = 60, // 60 seconds
+    ORACLE_MAX_CONF_WIDTH: u256 = 100, // 100 / 10000 = 1 % 
 }
 
 storage {
