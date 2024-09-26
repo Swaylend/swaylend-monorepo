@@ -8,6 +8,10 @@ license = "Apache-2.0"
 name = "activate_market"
 path = "src/bin/activate_market.rs"
 
+[[bin]]
+name = "update_collateral_assets"
+path = "src/bin/update_collateral_assets.rs"
+
 [dependencies]
 fuels = { workspace = true }
 clap = { workspace = true }

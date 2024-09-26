@@ -15,23 +15,21 @@ Before we begin, you need to do a few things:
 
 Below, we have all the necessary scripts for operations on the mainnet. If you're testing on testnet/devnet, make sure to check the testnet scripts in the end as well.
 
-### Smart contracts
-
-#### Deploy market contract with proxy
+### Deploy market contract with proxy
 
 Market contract is deploy with the proxy (proxy contract + loader contract with 2 blobs because market contract is bigger than 100 KB). The owner of the proxy contract is the deployer. You have to run this command in the CLI.
 
 ```bash
 cd ../contracts/market && forc deploy                                  && cd ../../scripts # mainnet
 cd ../contracts/market && forc deploy --testnet                        && cd ../../scripts # testnet
-cd ../contracts/market && forc deploy --node-url http://127.0.0.1:4000 && cd ../../scripts # devnet
+cd ../contracts/market && /home/vid/Documents/Company/fuel/sway/target/debug/forc-deploy --node-url http://127.0.0.1:4000 && cd ../../scripts # devnet
 ```
 
 In the output you can see proxy contract id (proxy contract) and target contract id (loader contract). Add them to the `.env`.
 
 **Note:** This command will add proxy address in the `Forc.toml` in the `../contracts/market` folder. Make sure the address is not wrriten in ``Forc.toml`` when deploying the contracts again.
 
-#### Activate market contract
+### Activate market contract
 
 This script will activate the contract - setup the market configuration, owner of the market contract, and Pyth contract id.
 
@@ -39,104 +37,42 @@ This script will activate the contract - setup the market configuration, owner o
 cargo run --bin activate_market -- --config-path ./configs/testnet_usdc_config.json
 ```
 
-#### Upgrade market contract
+### Update collateral assets
 
-#### Change proxy owner
-
-#### Change market owner
-
-### Market
-
-#### Update market configuration
-
-#### Pause market
-
-#### Unpause market
-
-#### Withdraw reserves
-
-#### Change Pyth contract
-
-### Collateral assets
-
-#### Add collateral asset
-
-#### Pause collateral asset
-
-#### Unpause collateral asset
-
-#### Update collateral configuration
-
-### Testnet-specific scripts
-
-#### Deploy tokens contract
-
-#### Deploy Pyth contract
-
-#### Mint various tokens
-
-#### Bootstrap collateral assets on the market contract
-
-### Deploying contracts
-
-### Activating market
-
-###
-
-### Testnet
-
-### Testnet
-
-### Testnet
-
-## Deploying contracts (with proxy)
-
-The following command will do the following:
-
-- deploy proxy contract (owner of the proxy will be the deployer)
-- deploy loader contract (which loads multiple blobs since our contract is bigger than 100 KB)
+This script will update the collateral asset configuration (add new collateral assets, pause collateral assets, unpause collateral assets, update collateral asset configuration ...).
 
 ```bash
-forc deploy 
-forc deploy --testnet
+cargo run --bin update_collateral_assets -- --config-path ./configs/testnet_usdc_config.json
 ```
 
-Address of the proxy will be added to the ``Forc.toml``.
-
-## Activating contracts
-
-Next we need to call the function ``activate_contract`` on the market contract:
-
-``bash
-SIGNING_KEY=<SIGNING_KEY> cargo run --bin activate_market -- --proxy-contract-id <PROXY_CONTRACT_ADDRESS> --target-contract-id <TARGET_CONTRACT_ADDRESS>
-``
-
-## Upgrading contracts (with proxy)
-
-This deploys the new market contract (loader/implementation contract) and updates the proxy contract to point to the new market contract:
+### Upgrade market contract
 
 TODO
 
-## Change proxy owner
+### Change proxy owner
 
 TODO
 
-## Pausing contracts
+### Change market owner
 
 TODO
 
-## Unpausing contracts
+### Update market configuration
 
 TODO
 
-## Adding collateral assets
+### Withdraw reserves
 
 TODO
 
-## Changing market configuration
+### Testnet: deploy tokens contract
 
 TODO
 
-## Changing collateral configuration
+### Testnet: deploy Pyth oracle contract
+
+TODO
+
+### Testnet: mint tokens
 
 TODO

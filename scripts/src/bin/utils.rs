@@ -3,15 +3,35 @@ use dotenv::dotenv;
 use fuels::{
     accounts::{provider::Provider, wallet::WalletUnlocked},
     macros::abigen,
-    types::{bech32::Bech32ContractId, ContractId},
+    types::{bech32::Bech32ContractId, AssetId, Bits256, ContractId},
 };
 use serde::Deserialize;
-use std::{path::PathBuf, str::FromStr};
+use std::{io::Write, path::PathBuf, str::FromStr};
 
 abigen!(Contract(
     name = "MarketContract",
     abi = "contracts/market/out/release/market-abi.json"
 ));
+
+pub fn get_yes_no_input(prompt: &str) -> bool {
+    loop {
+        print!("{}", prompt);
+        std::io::stdout().flush().unwrap(); // Ensure prompt is shown before reading input
+
+        let mut input = String::new();
+        std::io::stdin()
+            .read_line(&mut input)
+            .expect("Failed to read input");
+
+        let input = input.trim().to_lowercase(); // Trim spaces and normalize to lowercase
+
+        match input.as_str() {
+            "yes" | "y" => return true,
+            "no" | "n" => return false,
+            _ => println!("Please enter 'yes' or 'no'."),
+        }
+    }
+}
 
 #[derive(clap::ValueEnum, Clone, Debug, Eq, PartialEq)]
 pub enum Network {
@@ -39,7 +59,7 @@ pub fn read_env() {
     dotenv().ok();
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Clone, Debug)]
 pub struct BaseAssetConfig {
     pub asset_id: String,
     pub price_feed_id: String,
@@ -48,7 +68,7 @@ pub struct BaseAssetConfig {
     pub decimals: u32,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Clone, Debug)]
 pub struct CollateralAssetConfig {
     pub asset_id: String,
     pub price_feed_id: String,
@@ -59,10 +79,12 @@ pub struct CollateralAssetConfig {
     pub liquidate_collateral_factor: u128,
     pub liquidation_penalty: u128,
     pub supply_cap: u64,
+    pub is_active: bool,
 }
 
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Clone, Debug)]
 pub struct MarketConfig {
+    pub is_active: bool,
     pub supply_kink: u128,
     pub borrow_kink: u128,
     pub supply_per_second_interest_rate_slope_low: u128,
@@ -81,6 +103,87 @@ pub struct MarketConfig {
     pub pyth_contract_id: String,
     pub base_asset: BaseAssetConfig,
     pub collateral_assets: Vec<CollateralAssetConfig>,
+}
+
+impl From<MarketConfig> for MarketConfiguration {
+    fn from(config: MarketConfig) -> Self {
+        MarketConfiguration {
+            supply_kink: config.supply_kink.into(),
+            borrow_kink: config.borrow_kink.into(),
+            supply_per_second_interest_rate_slope_low: config
+                .supply_per_second_interest_rate_slope_low
+                .into(),
+            supply_per_second_interest_rate_slope_high: config
+                .supply_per_second_interest_rate_slope_high
+                .into(),
+            supply_per_second_interest_rate_base: config
+                .supply_per_second_interest_rate_base
+                .into(),
+            borrow_per_second_interest_rate_slope_low: config
+                .borrow_per_second_interest_rate_slope_low
+                .into(),
+            borrow_per_second_interest_rate_slope_high: config
+                .borrow_per_second_interest_rate_slope_high
+                .into(),
+            borrow_per_second_interest_rate_base: config
+                .borrow_per_second_interest_rate_base
+                .into(),
+            store_front_price_factor: config.store_front_price_factor.into(),
+            base_tracking_index_scale: config.base_tracking_index_scale.into(),
+            base_tracking_supply_speed: config.base_tracking_supply_speed.into(),
+            base_tracking_borrow_speed: config.base_tracking_borrow_speed.into(),
+            base_min_for_rewards: config.base_min_for_rewards.into(),
+            base_borrow_min: config.base_borrow_min.into(),
+            target_reserves: config.target_reserves.into(),
+            base_token: AssetId::from_str(config.base_asset.asset_id.as_str()).unwrap(),
+            base_token_decimals: config.base_asset.decimals,
+            base_token_price_feed_id: Bits256::from_hex_str(
+                config.base_asset.price_feed_id.as_str(),
+            )
+            .unwrap(),
+        }
+    }
+}
+
+impl From<CollateralAssetConfig> for CollateralConfiguration {
+    fn from(value: CollateralAssetConfig) -> Self {
+        CollateralConfiguration {
+            asset_id: AssetId::from_str(value.asset_id.as_str()).unwrap(),
+            price_feed_id: Bits256::from_hex_str(value.price_feed_id.as_str()).unwrap(),
+            decimals: value.decimals,
+            borrow_collateral_factor: value.borrow_collateral_factor.into(),
+            liquidate_collateral_factor: value.liquidate_collateral_factor.into(),
+            liquidation_penalty: value.liquidation_penalty.into(),
+            supply_cap: value.supply_cap.into(),
+            paused: !value.is_active,
+        }
+    }
+}
+
+impl PartialEq<CollateralAssetConfig> for CollateralConfiguration {
+    fn eq(&self, other: &CollateralAssetConfig) -> bool {
+        self.asset_id == AssetId::from_str(other.asset_id.as_str()).unwrap()
+            && self.price_feed_id == Bits256::from_hex_str(other.price_feed_id.as_str()).unwrap()
+            && self.decimals == other.decimals
+            && self.borrow_collateral_factor == other.borrow_collateral_factor.into()
+            && self.liquidate_collateral_factor == other.liquidate_collateral_factor.into()
+            && self.liquidation_penalty == other.liquidation_penalty.into()
+            && self.supply_cap == other.supply_cap
+            && self.paused == !other.is_active
+    }
+}
+
+impl PartialEq<CollateralConfiguration> for CollateralAssetConfig {
+    fn eq(&self, other: &CollateralConfiguration) -> bool {
+        AssetId::from_str(self.asset_id.as_str()).unwrap() == other.asset_id
+            && Bits256::from_hex_str(self.price_feed_id.as_str()).unwrap() == other.price_feed_id
+            && self.decimals == other.decimals
+            && other.borrow_collateral_factor == self.borrow_collateral_factor.into()
+            && other.liquidate_collateral_factor == self.liquidate_collateral_factor.into()
+            && other.liquidation_penalty == self.liquidation_penalty.into()
+            && self.supply_cap == other.supply_cap
+            && self.is_active == !other.paused
+    }
 }
 
 pub fn read_market_config(path: &str) -> anyhow::Result<MarketConfig> {
@@ -105,7 +208,7 @@ pub async fn verify_connected_network(
 }
 
 pub async fn get_market_instance(
-    wallet: WalletUnlocked,
+    wallet: &WalletUnlocked,
     proxy_contract_id: String,
     target_contract_id: String,
 ) -> anyhow::Result<(MarketContract<WalletUnlocked>, Bech32ContractId)> {
