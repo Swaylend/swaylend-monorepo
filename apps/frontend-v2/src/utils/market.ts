@@ -1,5 +1,4 @@
 import BigNumber from 'bignumber.js';
-import { BN, bn } from 'fuels';
 import { formatUnits } from './BigNumber';
 
 export function getBorrowApr(borrowRate: BigNumber | null | undefined) {

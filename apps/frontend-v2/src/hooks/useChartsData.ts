@@ -1,5 +1,4 @@
 import { DEPLOYED_MARKETS } from '@/utils';
-import { useQuery } from '@tanstack/react-query';
 
 export type ChartData = {
   timestamp: number;
@@ -107,7 +106,9 @@ export const useChartsData = async () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(query),
-        next: { revalidate: 60 },
+        next: {
+          revalidate: 60 * 60, // Cache for 1 hour
+        },
       });
       const data = await response.json();
       return { market: key, chartData: data.result.rows };
