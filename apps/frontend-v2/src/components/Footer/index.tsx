@@ -7,6 +7,8 @@ import React from 'react';
 import Logo from '/public/icons/dark-logo.svg?url';
 import Sway from '/public/tokens/sway.svg?url';
 import { Line } from '../Line';
+import HalbornLogo from '/public/icons/halborn-logo.svg?url';
+import OttersecLogo from '/public/icons/ottersec-logo.svg?url';
 
 export const Footer = () => {
   const { changeMarketMode } = useMarketStore();
@@ -80,19 +82,19 @@ export const Footer = () => {
               <Link href="/">
                 <Image src={Logo} alt="logo" />
               </Link>
-              <div className="text-primary items-center text-sm flex gap-x-2">
+              <div className="text-primary items-center text-md flex gap-x-2">
                 Secured by
-                <a
-                  href="https://www.halborn.com/"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <Image src={Sway} height={24} width={24} alt="logo" />
-                </a>
-                <a href="https://osec.io/" target="_blank" rel="noreferrer">
-                  <Image src={Sway} height={24} width={24} alt="logo" />
-                </a>
               </div>
+              <a
+                href="https://www.halborn.com/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Image src={HalbornLogo} height={96} width={96} alt="logo" />
+              </a>
+              {/* <a href="https://osec.io/" target="_blank" rel="noreferrer">
+                <Image src={OttersecLogo} height={96} width={96} alt="logo" />
+              </a> */}
             </div>
           </div>
         </div>
