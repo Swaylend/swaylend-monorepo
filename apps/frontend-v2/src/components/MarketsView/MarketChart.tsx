@@ -119,10 +119,16 @@ export const MarketChart = ({
           <ChartTooltip content={<CustomTooltip />} cursor={<CustomCursor />} />
           <defs>
             <linearGradient id="color1" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor={color} stopOpacity={0.2} />
-              <stop offset="50%" stopColor={color} stopOpacity={0.1} />
-              <stop offset="70%" stopColor={color} stopOpacity={0.03} />
-              <stop offset="90%" stopColor={color} stopOpacity={0.0} />
+              <stop offset="0%" stopColor={'#3FE8BD'} stopOpacity={0.2} />
+              <stop offset="50%" stopColor={'#3FE8BD'} stopOpacity={0.1} />
+              <stop offset="70%" stopColor={'#3FE8BD'} stopOpacity={0.03} />
+              <stop offset="90%" stopColor={'#3FE8BD'} stopOpacity={0.0} />
+            </linearGradient>
+            <linearGradient id="color2" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor={'#8B5CF6'} stopOpacity={0.2} />
+              <stop offset="50%" stopColor={'#8B5CF6'} stopOpacity={0.1} />
+              <stop offset="70%" stopColor={'#8B5CF6'} stopOpacity={0.03} />
+              <stop offset="90%" stopColor={'#8B5CF6'} stopOpacity={0.0} />
             </linearGradient>
             <linearGradient id="color4" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0%" stopColor="#FFFFFF" stopOpacity={0} />
@@ -133,7 +139,7 @@ export const MarketChart = ({
           <Area
             dataKey={dataKey as DataKey<string>}
             type="natural"
-            fill="url(#color1)"
+            fill={`url(#${color === '#3FE8BD' ? 'color1' : 'color2'})`}
             fillOpacity={1}
             strokeWidth={3}
             stroke={color}

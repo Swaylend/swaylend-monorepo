@@ -87,19 +87,22 @@ export default function MarketOverview({
   }, [totalCollateral, priceData]);
 
   const collateralization = useMemo(() => {
-    if (!totalCollateralValue || !marketBasics) {
+    if (!marketBasics || !marketConfiguration) {
       return BigNumber(0);
     }
 
-    return totalCollateralValue
-      .minus(
-        formatUnits(
-          BigNumber(marketBasics?.total_borrow_base.toString()),
-          marketConfiguration?.baseTokenDecimals
-        )
-      )
-      .div(BigNumber(100));
-  }, [totalCollateralValue, marketBasics]);
+    const totalEarning = formatUnits(
+      BigNumber(marketBasics?.total_supply_base.toString()!),
+      marketConfiguration?.baseTokenDecimals
+    );
+
+    const totalBorrowing = formatUnits(
+      BigNumber(marketBasics?.total_borrow_base.toString()!),
+      marketConfiguration?.baseTokenDecimals
+    );
+
+    return totalEarning.div(totalBorrowing).times(100);
+  }, [marketConfiguration, marketBasics]);
 
   return (
     <div className="pt-[60px] pb-[55px] px-[88px] flex flex-col w-full items-center justify-center">
@@ -128,7 +131,7 @@ export default function MarketOverview({
               },
             ]}
           />
-          <div className="mt-[36px]">
+          <div className="mt-[24px]">
             <span className="text-moon text-xl font-semibold ml-2">
               {network.toUpperCase()} Network
             </span>
@@ -140,7 +143,7 @@ export default function MarketOverview({
         <div className="w-1/3" />
       </div>
 
-      <div className="w-full flex justify-between mt-[55px]">
+      <div className="w-full flex justify-between mt-[80px]">
         <div className="w-[47%]">
           <div>
             <div className="text-primary text-md font-semibold">
@@ -221,7 +224,7 @@ export default function MarketOverview({
               Collateralization
             </div>
             <div className="text-xl font-semibold text-white mt-2">
-              {getFormattedNumber(collateralization)}%
+              {collateralization.toFixed(2, 1)}%
             </div>
           </div>
           <div>
@@ -229,7 +232,8 @@ export default function MarketOverview({
               Oracle Price
             </div>
             <div className="text-xl font-semibold text-white mt-2">
-              {getFormattedPrice(
+              $
+              {getFormattedNumber(
                 BigNumber(
                   priceData?.prices[marketConfiguration?.baseToken.bits!] ?? 0
                 )

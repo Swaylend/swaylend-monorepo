@@ -125,6 +125,7 @@ export const KinkChart = ({
               <ChartTooltip
                 content={<CustomTooltip />}
                 cursor={<CustomCursor />}
+                position={{ x: 20, y: 12 }}
               />
               <ReferenceLine
                 x={currentUtilization < 1 ? 1 : currentUtilization}

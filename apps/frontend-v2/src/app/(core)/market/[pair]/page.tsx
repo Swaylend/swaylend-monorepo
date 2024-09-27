@@ -35,7 +35,7 @@ export default async function Page({ params }: { params: { pair: string } }) {
         <MarketChart
           chartData={chartData?.singleMarketData[baseAsset]}
           dataKey="borrowedValueUsd"
-          color="#8b5cf6"
+          color="#8B5CF6"
         />
       }
     />

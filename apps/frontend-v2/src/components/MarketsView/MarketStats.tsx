@@ -12,7 +12,6 @@ export const MarketStats = ({
   if (!chartData) return;
   <Skeleton className="w-full h-[30px]" />;
 
-  console.log(chartData[chartData.length - 1]);
   const borrowed = BigNumber(chartData[chartData.length - 1].borrowedValueUsd);
   const supplied = BigNumber(chartData[chartData.length - 1].suppliedValueUsd);
   const collateral = BigNumber(
