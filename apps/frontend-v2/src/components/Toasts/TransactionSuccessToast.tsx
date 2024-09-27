@@ -9,7 +9,6 @@ type TransactionSuccessToastProps = {
 export const TransactionSuccessToast = ({
   transactionId,
 }: TransactionSuccessToastProps) => {
-  console.log(transactionId);
   return toast(
     <div className="flex w-full gap-x-4 h-full items-center">
       <div>

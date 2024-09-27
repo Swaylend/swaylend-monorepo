@@ -1,6 +1,6 @@
 import { Market, type PriceDataUpdateInput } from '@/contract-types/Market';
 import { useMarketStore } from '@/stores';
-import { DEPLOYED_MARKETS } from '@/utils';
+import { DEPLOYED_MARKETS, type DeployedMarket } from '@/utils';
 import { HermesClient } from '@pythnetwork/hermes-client';
 import {
   PYTH_CONTRACT_ADDRESS_SEPOLIA,
@@ -15,16 +15,18 @@ import { useCollateralConfigurations } from './useCollateralConfigurations';
 import { useMarketConfiguration } from './useMarketConfiguration';
 import { useProvider } from './useProvider';
 
-export const usePrice = () => {
+export const usePrice = (marketParam?: DeployedMarket) => {
   const hermesClient = new HermesClient(
     process.env.NEXT_PUBLIC_HERMES_API ?? 'https://hermes.pyth.network'
   );
   const provider = useProvider();
 
-  const { market } = useMarketStore();
+  const { market: storeMarket } = useMarketStore();
+  const market = marketParam ?? storeMarket;
 
-  const { data: marketConfiguration } = useMarketConfiguration();
-  const { data: collateralConfigurations } = useCollateralConfigurations();
+  const { data: marketConfiguration } = useMarketConfiguration(market);
+  const { data: collateralConfigurations } =
+    useCollateralConfigurations(market);
 
   // Create a map of priceFeedId to assetId
   const priceFeedIdToAssetId = useMemo(() => {
@@ -53,7 +55,7 @@ export const usePrice = () => {
 
       const priceFeedIds = Array.from(priceFeedIdToAssetId.keys());
 
-      // Fetch price udpates from Hermes client
+      // Fetch price updates from Hermes client
       const priceUpdates =
         await hermesClient.getLatestPriceUpdates(priceFeedIds);
 

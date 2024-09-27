@@ -1,15 +1,17 @@
 import { Market } from '@/contract-types';
 import { useMarketStore } from '@/stores';
-import { DEPLOYED_MARKETS } from '@/utils';
+import { DEPLOYED_MARKETS, type DeployedMarket } from '@/utils';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
 import { useProvider } from './useProvider';
 
-export const useTotalCollateral = () => {
+export const useTotalCollateral = (marketParam?: DeployedMarket) => {
   const provider = useProvider();
-  const { market } = useMarketStore();
-  const { data: collateralConfigurations } = useCollateralConfigurations();
+  const { market: storeMarket } = useMarketStore();
+  const market = marketParam ?? storeMarket;
+  const { data: collateralConfigurations } =
+    useCollateralConfigurations(market);
 
   return useQuery({
     queryKey: ['totalCollateral', market, collateralConfigurations],

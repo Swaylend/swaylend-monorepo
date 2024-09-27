@@ -16,6 +16,7 @@ import { cn } from '@/lib/utils';
 import { MARKET_MODE, useMarketStore } from '@/stores';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import {
+  ChartLine,
   ChevronDown,
   Coins,
   ExternalLink,
@@ -36,9 +37,7 @@ import { MarketSwitcher } from './MarketSwitcher';
 import { Points } from './Points';
 
 const NAVBAR_LINKS = [
-  // { href: '/', label: 'Borrow', icon: <LayoutDashboard /> },
-  // {href: '/', label: 'Earn', icon: <LayoutDashboard /> },
-  // { href: '/market', label: 'Market', icon: <ChartLine /> },
+  { href: '/market', label: 'Market', icon: <ChartLine /> },
   { href: '/faucet', label: 'Faucet', icon: <Coins /> },
 ];
 
