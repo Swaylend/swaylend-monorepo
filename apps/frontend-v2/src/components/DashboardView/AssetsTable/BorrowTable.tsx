@@ -155,7 +155,7 @@ export const BorrowTable = () => {
   return (
     <>
       {/* DESKTOP */}
-      <Table className="max-sm:hidden">
+      <Table className="max-lg:hidden">
         <TableHeader>
           <TableRow>
             <TableHead className="w-3/12">
@@ -300,7 +300,7 @@ export const BorrowTable = () => {
         </TableBody>
       </Table>
       {/* MOBILE */}
-      <div className="flex flex-col gap-y-4 px-4 sm:hidden">
+      <div className="flex flex-col gap-y-4 px-4 lg:hidden">
         <Title>Borrow Assets</Title>
         <Card>
           <VisuallyHidden.Root asChild>

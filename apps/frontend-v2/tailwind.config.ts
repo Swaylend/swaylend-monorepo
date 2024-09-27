@@ -76,6 +76,7 @@ const config = {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
+        purple: '#8B5CF6',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         primary: {
