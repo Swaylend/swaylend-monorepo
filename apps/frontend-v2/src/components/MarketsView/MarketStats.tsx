@@ -1,4 +1,4 @@
-import type { ChartData } from '@/hooks/useChartsData';
+import type { ChartData } from '@/lib/charts';
 import React from 'react';
 import { Skeleton } from '../ui/skeleton';
 import BigNumber from 'bignumber.js';

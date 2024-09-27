@@ -40,7 +40,7 @@ export default async function Page({ params }: { params: { pair: string } }) {
           />
         }
       />
-      <div className="lg:hidden text-center w-full">
+      <div className="lg:hidden text-center w-full flex justify-center items-center text-primary">
         This page is not available on mobile devices.
       </div>
     </>

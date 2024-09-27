@@ -158,7 +158,7 @@ export const MarketTableRow = ({
         <div className="w-[48px] h-[48px]">
           {
             <CircularProgressBar
-              percent={formatUnits(BigNumber(utilization?.toString()!), 18)}
+              percent={formatUnits(BigNumber(utilization?.toString() ?? 0), 18)}
             />
           }
         </div>
