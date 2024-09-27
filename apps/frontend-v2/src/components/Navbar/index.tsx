@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
+import { MARKET_MODE, useMarketStore } from '@/stores';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import {
   ChevronDown,
@@ -33,7 +34,6 @@ import { Button } from '../ui/button';
 import { ConnectButton } from './ConnectButton';
 import { MarketSwitcher } from './MarketSwitcher';
 import { Points } from './Points';
-import { MARKET_MODE, useMarketStore } from '@/stores';
 
 const NAVBAR_LINKS = [
   // { href: '/', label: 'Borrow', icon: <LayoutDashboard /> },

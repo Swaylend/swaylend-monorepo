@@ -1,12 +1,12 @@
 'use client';
 
-import React from 'react';
-import { Line } from '../Line';
-import Link from 'next/link';
 import { MARKET_MODE, useMarketStore } from '@/stores';
+import Image from 'next/image';
+import Link from 'next/link';
+import React from 'react';
 import Logo from '/public/icons/dark-logo.svg?url';
 import Sway from '/public/tokens/sway.svg?url';
-import Image from 'next/image';
+import { Line } from '../Line';
 
 export const Footer = () => {
   const { changeMarketMode } = useMarketStore();
