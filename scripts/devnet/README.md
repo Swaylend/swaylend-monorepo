@@ -12,7 +12,7 @@ Account #0:
 ## Start devnet
 
 ``bash
-./devnet.sh
+./run.sh
 ``
 
 ## Deploy contracts (oracle, tokens, market)
@@ -24,9 +24,9 @@ This will deploy the pyth mock oracle, tokens, mint tokens, and deploy the marke
 ``
 
 * Token factory contract: `0xab0dc5c65212c0d062101b986e18a251f15317c934c1196ccf78fa761eecb394`
-* Pyth mock oracle: `0x51b52248d0f329f2e2de63932d1bc9b72c66539c69766ec84c2478766d89857f`
-* Loader contract: `0x5e562f51f507b4c784b3c7673c4dbfeeb461d3318099812db7347f45dd1f8d8a`
-* Proxy contract: `0x5f74026efe43632d3be4659a91904270ed539ffbd140d38b0435747945c3646a`
+* Pyth mock oracle: `0xd162dfc8b22cedc427afe8e88640520cb1828627633085beed8e0c78442ba428`
+* Loader contract: `0x19fb90cd10df6c35056d4f20c1dccc235afed70b5f285f7cb19948f6cb3b1ea0` (this is basically the main logic contract)
+* Proxy contract: `0x4f1814444f2e995803d88179476421f04f774b5c4c40956b0655b1e62b1c695d`
 
 Tokens: 
 * ETH: `f8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07`
@@ -35,19 +35,3 @@ Tokens:
 * UNI: `0x2cc3e9fa1a1009342165b57d375790f91959346a6558f9bceb378a31bd4ca992`
 
 > Also deploys src-20 on 0x02a2e4643e3a8c41ab7aa39a29ea60142a8e1d857775ae116ce60a4eeb9039e8, for now useless.
-
-## Start frontend
-
-``bash
-./start_frontend.sh
-``
-
-## Start oracle service
-
-``bash
-./start_oracle_service.sh
-``
-
-## Rebuilding ABIs
-
-When rebuilding the ABIs using the ` ` rebuild_contracts.sh ` ` script, first set the swaylend folder path
