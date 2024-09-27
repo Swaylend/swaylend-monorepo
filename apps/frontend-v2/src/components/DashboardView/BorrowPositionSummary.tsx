@@ -9,12 +9,12 @@ import { getFormattedPrice } from '@/utils';
 import { useIsConnected } from '@fuels/react';
 import BigNumber from 'bignumber.js';
 import { CircleXIcon, PlusCircleIcon } from 'lucide-react';
-import React, { useState } from 'react';
-import { Line } from '../Line';
 import Image from 'next/image';
+import React, { useState } from 'react';
 import PlusIcon from '/public/icons/plus-filled.svg?url';
 import XIcon from '/public/icons/x-filled.svg?url';
 import { InfoIcon } from '../InfoIcon';
+import { Line } from '../Line';
 
 export const BorrowPositionSummary = () => {
   const { isConnected } = useIsConnected();

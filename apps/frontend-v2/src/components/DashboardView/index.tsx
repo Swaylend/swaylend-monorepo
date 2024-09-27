@@ -5,8 +5,8 @@ import { IntroductionDialog } from '../IntroductionDialog';
 import { RedeemReferralDialog } from '../RedeemReferralDialog';
 import { SuccessDialog } from '../SuccessDialog';
 import { AssetsTable } from './AssetsTable';
-import { MarketSwitch } from './MarketSwitch';
 import { BorrowPositionSummary } from './BorrowPositionSummary';
+import { MarketSwitch } from './MarketSwitch';
 import { Stats } from './Stats';
 
 export const DashboardView = () => {
