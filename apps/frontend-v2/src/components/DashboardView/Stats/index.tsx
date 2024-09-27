@@ -165,7 +165,7 @@ export const Stats = () => {
                   <button
                     className=""
                     type="button"
-                    onClick={() => {
+                    onMouseDown={() => {
                       setBorrowedMode(borrowedMode === 0 ? 1 : 0);
                     }}
                   >

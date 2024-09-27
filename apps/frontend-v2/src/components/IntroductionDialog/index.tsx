@@ -4,6 +4,7 @@ import { useAccount, useIsConnected } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import { useEffect, useRef, useState } from 'react';
 import { Step, Stepper } from 'react-form-stepper';
+import { Button } from '../ui/button';
 import { Dialog, DialogContent, DialogTitle } from '../ui/dialog';
 import { FundWallet } from './FundWallet';
 import { GeneralInfo } from './GeneralInfo';
@@ -33,7 +34,6 @@ export const IntroductionDialog = () => {
   const [activeStep, setActiveStep] = useState(0);
   const { isConnected } = useIsConnected();
   const { account } = useAccount();
-  const scrollDivRef = useRef<HTMLDivElement>(null);
 
   // OPEN modal if T&C missing or new account is connected
   useEffect(() => {
@@ -48,16 +48,12 @@ export const IntroductionDialog = () => {
 
   const handleNextStep = (step: number) => {
     setActiveStep(step);
-
-    if (scrollDivRef.current) {
-      scrollDivRef.current.scrollTo({ top: 0, behavior: 'smooth' });
-    }
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent
-        className="p-0 h-[80%] max-h-[80%] max-md:w-[90%] max-sm:rounded-xl max-w-[800px] overflow-hidden"
+        className="p-0 h-full max-h-full sm:h-[80%] sm:max-h-[80%] w-full max-w-[800px] overflow-hidden"
         onInteractOutside={(e) => {
           e.preventDefault();
         }}
@@ -83,10 +79,7 @@ export const IntroductionDialog = () => {
               </h1>
             </div>
           </div>
-          <div
-            ref={scrollDivRef}
-            className="p-4 overflow-auto scrollbar scrollbar-thumb-primary scrollbar-track-card h-[calc(100%-64px)]"
-          >
+          <div className="w-full py-4">
             <Stepper
               activeStep={activeStep}
               connectorStateColors
@@ -102,16 +95,13 @@ export const IntroductionDialog = () => {
               <Step label="Fund Wallet" styleConfig={STEP_CONFIG} />
               <Step label="Finish" styleConfig={STEP_CONFIG} />
             </Stepper>
-
-            <div className="px-8 mt-4 mb-4">
-              {activeStep === 0 && (
-                <TermsAndConditions setActiveStep={handleNextStep} />
-              )}
-              {activeStep === 1 && (
-                <FundWallet setActiveStep={handleNextStep} />
-              )}
-              {activeStep === 2 && <GeneralInfo setOpen={setOpen} />}
-            </div>
+          </div>
+          <div className="max-sm:px-2 px-4 overflow-hidden h-full flex-1 flex flex-col">
+            {activeStep === 0 && (
+              <TermsAndConditions setActiveStep={handleNextStep} />
+            )}
+            {activeStep === 1 && <FundWallet setActiveStep={handleNextStep} />}
+            {activeStep === 2 && <GeneralInfo setOpen={setOpen} />}
           </div>
         </div>
       </DialogContent>
