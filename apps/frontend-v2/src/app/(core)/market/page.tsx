@@ -20,7 +20,7 @@ export default async function Page() {
         </div>
         <MarketsTable />
       </div>
-      <div className="lg:hidden text-center w-full text-primary absolute mt-[-200px]">
+      <div className="lg:hidden text-center w-full text-primary absolute mt-[-400px]">
         This page is not available on mobile devices.
       </div>
     </div>
