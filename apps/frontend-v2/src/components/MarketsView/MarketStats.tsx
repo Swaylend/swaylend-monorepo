@@ -2,6 +2,7 @@ import type { ChartData } from '@/hooks/useChartsData';
 import React from 'react';
 import { Skeleton } from '../ui/skeleton';
 import BigNumber from 'bignumber.js';
+import { getFormattedPrice } from '@/utils';
 
 export const MarketStats = ({
   chartData,
@@ -23,7 +24,7 @@ export const MarketStats = ({
       <div>
         <div className="text-moon text-sm font-semibold">Total Supply</div>
         <div className="text-white font-bold text-2xl">
-          ${collateral.plus(supplied).toFixed(2, 1)}
+          {getFormattedPrice(collateral.plus(supplied))}
         </div>
       </div>
       <div className="flex gap-x-16">
@@ -33,7 +34,7 @@ export const MarketStats = ({
             <div className=" text-sm font-semibold text-primary">Earning</div>
           </div>
           <div className="text-white font-bold text-xl">
-            ${supplied.toFixed(2, 1)}
+            {getFormattedPrice(supplied)}
           </div>
         </div>
         <div>
@@ -42,7 +43,7 @@ export const MarketStats = ({
             <div className=" text-sm font-semibold text-purple">Borrowing </div>
           </div>
           <div className="text-white font-bold text-xl">
-            ${borrowed.toFixed(2, 1)}
+            {getFormattedPrice(borrowed)}
           </div>
         </div>
         <div>
@@ -51,7 +52,7 @@ export const MarketStats = ({
             <div className="text-moon text-sm font-semibold">Collateral</div>
           </div>
           <div className="text-white font-bold text-xl">
-            ${collateral.toFixed(2, 1)}
+            {getFormattedPrice(collateral)}
           </div>
         </div>
       </div>

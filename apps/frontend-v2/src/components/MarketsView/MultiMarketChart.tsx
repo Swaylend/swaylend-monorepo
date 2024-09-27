@@ -53,7 +53,11 @@ export const MultiMarketChart = ({
         <div className="bg-card/80 p-4 rounded-md border-[1px] border-white/20 shadow-md">
           <div className="flex justify-between text-sm gap-x-4 font-semibold">
             <div>Total Supply</div>
-            <div>${formatCurrency(payload[0].value + payload[2].value)}</div>
+            <div>
+              {getFormattedPrice(
+                BigNumber(payload[0].value).plus(payload[2].value)
+              )}
+            </div>
           </div>
           <div className="flex justify-between gap-x-2 items-center mt-2">
             <div className="flex gap-x-2 items-center">
@@ -67,7 +71,7 @@ export const MultiMarketChart = ({
               <div className="w-2 h-2 rounded-full bg-purple" />
               <div className="text-white/60 text-xs font-normal">Borrowing</div>
             </div>
-            <div>${formatCurrency(payload[1].value)}</div>
+            <div>{getFormattedPrice(BigNumber(payload[1].value))}</div>
           </div>
           <div className="flex justify-between gap-x-2 items-center mt-2">
             <div className="flex gap-x-2 items-center">
@@ -77,13 +81,6 @@ export const MultiMarketChart = ({
               </div>
             </div>
             <div>{getFormattedPrice(BigNumber(payload[2].value))}</div>
-          </div>
-          <div className="flex justify-between gap-x-2 items-center mt-2">
-            <div className="flex gap-x-2 items-center">
-              <div className="w-2 h-2 rounded-full bg-purple" />
-              <div className="text-white/60 text-xs font-normal">Borrowing</div>
-            </div>
-            <div>{getFormattedPrice(BigNumber(payload[1].value))}</div>
           </div>
         </div>
       );

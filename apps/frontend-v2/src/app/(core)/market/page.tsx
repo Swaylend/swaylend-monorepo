@@ -13,10 +13,10 @@ export default async function Page() {
 
   return (
     <div className="pt-[60px] pb-[55px] px-[88px] flex flex-col w-full items-center justify-center">
-      <MarketStats chartData={chartsData?.merged} />
+      <MarketStats chartData={chartsData?.marketsCombinedData} />
 
       <div className="w-full h-[320px] mt-12 mb-[55px]">
-        <MultiMarketChart chartData={chartsData?.merged} />
+        <MultiMarketChart chartData={chartsData?.marketsCombinedData} />
       </div>
       <MarketsTable />
     </div>

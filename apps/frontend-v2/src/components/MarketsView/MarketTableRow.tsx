@@ -15,7 +15,6 @@ import {
   ASSET_ID_TO_SYMBOL,
   type DeployedMarket,
   SYMBOL_TO_ICON,
-  SYMBOL_TO_ICON,
   SYMBOL_TO_NAME,
   formatUnits,
   getBorrowApr,
@@ -30,9 +29,8 @@ import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 import SWAY from '/public/tokens/sway.svg?url';
 import { CircularProgressBar } from '../CircularProgressBar';
-import { type Point, PointIcons } from '../PointIcons';
 import { Skeleton } from '../ui/skeleton';
-import { CollateralIcons } from '../CollateralIcons';
+import { type Collateral, CollateralIcons } from '../CollateralIcons';
 
 const SkeletonRow = (
   <TableRow>
@@ -82,7 +80,7 @@ export const MarketTableRow = ({
     isPending: isPendingCollateralConfigurations,
   } = useCollateralConfigurations(marketName as DeployedMarket);
 
-  const collateralIcons: Point[] = useMemo(() => {
+  const collateralIcons: Collateral[] = useMemo(() => {
     if (!collateralConfigurations) return [];
 
     return Object.values(collateralConfigurations).map((collateral) => ({
@@ -93,13 +91,6 @@ export const MarketTableRow = ({
         SYMBOL_TO_ICON[ASSET_ID_TO_SYMBOL[collateral.asset_id.bits]] || SWAY,
     }));
   }, [collateralConfigurations]);
-
-  const collateralIcons: Point[] = collaterals.map((collateral) => ({
-    id: collateral.symbol,
-    name: collateral.symbol,
-    description: '',
-    icon: SYMBOL_TO_ICON[collateral.symbol] || SWAY,
-  }));
 
   const { data: marketBasics } = useMarketBasics(marketName as DeployedMarket);
 
@@ -167,12 +158,7 @@ export const MarketTableRow = ({
         <div className="w-[48px] h-[48px]">
           {
             <CircularProgressBar
-              percent={Number(
-                formatUnits(BigNumber(utilization?.toString()!), 18).toFixed(
-                  2,
-                  1
-                )
-              )}
+              percent={formatUnits(BigNumber(utilization?.toString()!), 18)}
             />
           }
         </div>
@@ -183,7 +169,7 @@ export const MarketTableRow = ({
       <TableCell>
         <div className="text-lavender font-medium">{borrowApr}</div>
       </TableCell>
-      <TableCell>
+      <TableCell className="text-lavender font-medium">
         {getFormattedPrice(
           formatUnits(
             BigNumber(marketBasics?.total_supply_base.toString()!),
@@ -191,7 +177,7 @@ export const MarketTableRow = ({
           )
         )}
       </TableCell>
-      <TableCell>
+      <TableCell className="text-lavender font-medium">
         {getFormattedPrice(
           formatUnits(
             BigNumber(marketBasics?.total_borrow_base.toString()!),
@@ -199,7 +185,9 @@ export const MarketTableRow = ({
           )
         )}
       </TableCell>
-      <TableCell>{getFormattedPrice(totalCollateralValue)}</TableCell>
+      <TableCell className="text-lavender font-medium">
+        {getFormattedPrice(totalCollateralValue)}
+      </TableCell>
     </TableRow>
   );
 };
