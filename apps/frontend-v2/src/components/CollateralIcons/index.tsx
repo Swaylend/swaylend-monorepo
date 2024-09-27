@@ -25,7 +25,7 @@ export const CollateralIcons = ({ collaterals }: CollateralIconsProps) => {
         {collaterals.length ?? 0}
       </div>
       <div className="flex items-center">
-        {collaterals.map((collateral: Collateral) => {
+        {collaterals.slice(0, 3).map((collateral: Collateral) => {
           return (
             <div
               key={collateral.id}
@@ -52,6 +52,16 @@ export const CollateralIcons = ({ collaterals }: CollateralIconsProps) => {
             </div>
           );
         })}
+        {collaterals.length > 3 && (
+          <div
+            key="others"
+            className="flex items-center rounded-full bg-card p-1 [&:nth-child(n+2)]:ml-[-12px]"
+          >
+            <div className="w-[28px] h-[28px] text-lavender font-semibold bg-white/20 rounded-full flex items-center pl-1">
+              +{collaterals.slice(2).length}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

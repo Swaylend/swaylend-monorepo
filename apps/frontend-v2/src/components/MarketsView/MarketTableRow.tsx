@@ -14,32 +14,24 @@ import {
 import {
   ASSET_ID_TO_SYMBOL,
   type DeployedMarket,
+  SYMBOL_TO_ICON,
   SYMBOL_TO_NAME,
   formatUnits,
   getBorrowApr,
   getSupplyApr,
 } from '@/utils';
 import BigNumber from 'bignumber.js';
-import type { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import Image from 'next/image';
 import type React from 'react';
 
 import { formatCurrency } from '@/utils/format';
 import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
-import ETHEREUM from '/public/tokens/ethereum.svg?url';
 import SWAY from '/public/tokens/sway.svg?url';
-import USDC from '/public/tokens/usdc.svg?url';
-import USDT from '/public/tokens/usdt.svg?url';
 import { CircularProgressBar } from '../CircularProgressBar';
 import { type Point, PointIcons } from '../PointIcons';
 import { Skeleton } from '../ui/skeleton';
-
-const SYMBOL_TO_LOGO: Record<string, StaticImport> = {
-  USDC: USDC,
-  USDT: USDT,
-  ETH: ETHEREUM,
-};
+import { CollateralIcons } from '../CollateralIcons';
 
 const SkeletonRow = (
   <TableRow>
@@ -101,7 +93,7 @@ export const MarketTableRow = ({
     id: collateral.symbol,
     name: collateral.symbol,
     description: '',
-    icon: SYMBOL_TO_LOGO[collateral.symbol] || SWAY,
+    icon: SYMBOL_TO_ICON[collateral.symbol] || SWAY,
   }));
 
   const { data: marketBasics } = useMarketBasics(marketName as DeployedMarket);
@@ -136,12 +128,15 @@ export const MarketTableRow = ({
   return isPendingCollateralConfigurations ? (
     SkeletonRow
   ) : (
-    <TableRow onClick={() => router.push(`/market/fuel-${marketName}`)}>
+    <TableRow
+      className="hover:bg-secondary cursor-pointer"
+      onClick={() => router.push(`/market/fuel-${marketName}`)}
+    >
       <TableCell>
         <div className="flex gap-x-2 items-center">
           <div>
             <Image
-              src={SYMBOL_TO_LOGO[marketName]}
+              src={SYMBOL_TO_ICON[marketName]}
               alt={marketName}
               width={32}
               height={32}
@@ -150,7 +145,7 @@ export const MarketTableRow = ({
           </div>
           <div>
             <div className="flex gap-x-2 items-baseline">
-              <div className="text-white text-lg font-semibold">
+              <div className="text-white text-md font-semibold">
                 {SYMBOL_TO_NAME[marketName]}
               </div>
               <div className="text-sm font-semibold text-moon">
@@ -161,40 +156,29 @@ export const MarketTableRow = ({
         </div>
       </TableCell>
       <TableCell>
-        <PointIcons points={collateralIcons} />
+        <CollateralIcons collaterals={collateralIcons} />
       </TableCell>
       <TableCell>
         <div className="w-[48px] h-[48px]">
           {
             <CircularProgressBar
               percent={Number(
-                formatUnits(BigNumber(utilization?.toString()!), 18)
-                  .div(100)
-                  .toFormat(2)
+                formatUnits(BigNumber(utilization?.toString()!), 18).toFixed(
+                  2,
+                  1
+                )
               )}
             />
           }
         </div>
       </TableCell>
       <TableCell>
-        <div className="w-[48px] h-[48px]">
-          {
-            <CircularProgressBar
-              percent={Number(supplyApr.slice(0, -1)) / 100}
-            />
-          }
-        </div>
+        <div className="text-lavender font-medium">{supplyApr}</div>
       </TableCell>
       <TableCell>
-        <div className="w-[48px] h-[48px]">
-          {
-            <CircularProgressBar
-              percent={Number(borrowApr.slice(0, -1)) / 100}
-            />
-          }
-        </div>
+        <div className="text-lavender font-medium">{borrowApr}</div>
       </TableCell>
-      <TableCell>
+      <TableCell className="text-lavender font-medium">
         $
         {formatCurrency(
           Number(
@@ -205,7 +189,7 @@ export const MarketTableRow = ({
           )
         )}
       </TableCell>
-      <TableCell>
+      <TableCell className="text-lavender font-medium">
         $
         {formatCurrency(
           Number(
@@ -216,7 +200,9 @@ export const MarketTableRow = ({
           )
         )}
       </TableCell>
-      <TableCell>${formatCurrency(Number(totalCollateralValue))}</TableCell>
+      <TableCell className="text-lavender font-medium">
+        ${formatCurrency(Number(totalCollateralValue))}
+      </TableCell>
     </TableRow>
   );
 };

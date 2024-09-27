@@ -80,6 +80,12 @@ export const MarketChart = ({
   color: string | undefined;
 }) => {
   if (!chartData || !color) return null;
+
+  const dateFormatter = new Intl.DateTimeFormat('en-US', {
+    day: '2-digit',
+    month: '2-digit',
+  });
+
   return (
     <ResponsiveContainer width="100%" height={200}>
       <ChartContainer config={chartConfig}>
@@ -98,7 +104,7 @@ export const MarketChart = ({
             tickMargin={12}
             minTickGap={30}
             tickFormatter={(value: number) =>
-              new Date(value * 1000).toLocaleDateString()
+              dateFormatter.format(new Date(value * 1000))
             }
             // tick={<CustomTick />}
             style={{
