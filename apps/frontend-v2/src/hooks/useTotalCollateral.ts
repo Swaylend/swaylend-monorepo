@@ -10,7 +10,8 @@ export const useTotalCollateral = (marketParam?: DeployedMarket) => {
   const provider = useProvider();
   const { market: storeMarket } = useMarketStore();
   const market = marketParam ?? storeMarket;
-  const { data: collateralConfigurations } = useCollateralConfigurations();
+  const { data: collateralConfigurations } =
+    useCollateralConfigurations(market);
 
   return useQuery({
     queryKey: ['totalCollateral', market, collateralConfigurations],

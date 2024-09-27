@@ -48,7 +48,9 @@ export default function MarketOverview({
   const { data: supplyRate } = useSupplyRate(baseAsset as DeployedMarket);
   const { data: totalReserves } = useTotalReserves(baseAsset as DeployedMarket);
 
-  const { data: collateralConfigurations } = useCollateralConfigurations();
+  const { data: collateralConfigurations } = useCollateralConfigurations(
+    baseAsset as DeployedMarket
+  );
   const { data: marketConfiguration } = useMarketConfiguration(
     baseAsset as DeployedMarket
   );
@@ -74,17 +76,15 @@ export default function MarketOverview({
       (sum, [assetId, value]) => {
         if (!collateralConfigurations[assetId]) return sum;
         const assetPrice = priceData.prices[assetId] ?? BigNumber(0);
-        return sum.plus(
-          assetPrice.times(
-            value.div(
-              BigNumber(10).pow(collateralConfigurations[assetId].decimals)
-            )
-          )
+        const balance = formatUnits(
+          value,
+          collateralConfigurations[assetId].decimals
         );
+        return sum.plus(assetPrice.times(balance));
       },
       BigNumber(0)
     );
-  }, [totalCollateral, priceData]);
+  }, [totalCollateral, priceData, collateralConfigurations]);
 
   const collateralization = useMemo(() => {
     if (!marketBasics || !marketConfiguration) {
@@ -105,7 +105,7 @@ export default function MarketOverview({
   }, [marketConfiguration, marketBasics]);
 
   return (
-    <div className="pt-[60px] pb-[55px] px-[88px] flex flex-col w-full items-center justify-center">
+    <div className="pt-[60px] pb-[55px] px-[88px] flex flex-col gap-y-8 w-full items-center justify-center">
       <div className="flex items-start justify-between w-full">
         <div className="flex items-center space-x-4 text-white/60 w-1/3">
           <Link href="/market">
@@ -143,7 +143,7 @@ export default function MarketOverview({
         <div className="w-1/3" />
       </div>
 
-      <div className="w-full flex justify-between mt-[80px]">
+      <div className="w-full mt-12 flex justify-between">
         <div className="w-[47%]">
           <div>
             <div className="text-primary text-md font-semibold">
@@ -174,7 +174,7 @@ export default function MarketOverview({
         </div>
       </div>
 
-      <Card className="mt-[125px] w-full">
+      <Card className="mt-8 w-full">
         <CardHeader className="bg-white/5">
           <div className="w-full items-center justify-center gap-x-2 font-semibold text-lg flex">
             <div className="w-[260px] rounded-full h-[1px] bg-gradient-to-r from-white/0 to-primary" />
@@ -243,7 +243,7 @@ export default function MarketOverview({
         </CardContent>
       </Card>
 
-      <Card className="w-full mt-[55px]">
+      <Card className="w-full">
         <CardHeader className="bg-white/5">
           <div className="w-full items-center justify-center gap-x-2 font-semibold text-lg flex">
             <div className="w-[260px] rounded-full h-[1px] bg-gradient-to-r from-white/0 to-primary" />

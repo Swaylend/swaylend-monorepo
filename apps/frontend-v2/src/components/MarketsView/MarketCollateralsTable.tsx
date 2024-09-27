@@ -20,6 +20,7 @@ import {
   SYMBOL_TO_ICON,
   SYMBOL_TO_NAME,
   formatUnits,
+  getFormattedNumber,
   getFormattedPrice,
 } from '@/utils';
 import BigNumber from 'bignumber.js';
@@ -53,10 +54,6 @@ const MarketCollateralsTableRow = ({
 }: TableRowProps) => {
   const { data: reserves } = useCollateralReserves(assetId) ?? BigNumber(0);
 
-  const formattedTotalSupply = totalSupply
-    ? formatUnits(totalSupply, decimals).toFixed(2)
-    : '0.00';
-
   return (
     <TableRow>
       <TableCell>
@@ -66,24 +63,34 @@ const MarketCollateralsTableRow = ({
           src={SYMBOL_TO_ICON[symbol]}
         />
       </TableCell>
-      <TableCell className="text-white">
-        {formattedTotalSupply} {symbol}
+      <TableCell className="text-lavender font-medium">
+        <div className=" text-moon flex items-center gap-x-2">
+          <span className="text-lavender font-medium">
+            {getFormattedPrice(
+              formatUnits(totalSupply ?? BigNumber(0), decimals).times(price)
+            )}
+          </span>
+          {getFormattedNumber(
+            formatUnits(totalSupply ?? BigNumber(0), decimals)
+          )}{' '}
+          {symbol}
+        </div>
       </TableCell>
-      <TableCell className="text-white">
+      <TableCell className="text-lavender font-medium">
         {getFormattedPrice(
           formatUnits(reserves ?? BigNumber(0), baseAsset.decimals)
         )}
       </TableCell>
-      <TableCell className="text-white">
+      <TableCell className="text-lavender font-medium">
         {price.toFixed(2).toString()} $
       </TableCell>
-      <TableCell className="text-white">
+      <TableCell className="text-lavender font-medium">
         {formatUnits(collateralFactor, 16).toString()}%
       </TableCell>
-      <TableCell className="text-white">
+      <TableCell className="text-lavender font-medium">
         {formatUnits(liquidationFactor, 16).toString()}%
       </TableCell>
-      <TableCell className="text-white">
+      <TableCell className="text-lavender font-medium">
         {BigNumber(100).minus(formatUnits(liquidationPenalty, 16)).toString()}%
       </TableCell>
     </TableRow>
@@ -93,10 +100,16 @@ const MarketCollateralsTableRow = ({
 export const MarketCollateralsTable = ({
   marketName,
 }: { marketName: string }) => {
-  const { data: collateralConfigurations } = useCollateralConfigurations();
+  const { data: collateralConfigurations } = useCollateralConfigurations(
+    marketName as DeployedMarket
+  );
   const { data: marketConfiguration } = useMarketConfiguration(
     marketName as DeployedMarket
   );
+
+  // if (marketName === 'USDT') {
+  //   console.log('collateralConfigurations', collateralConfigurations);
+  // }
 
   const collaterals = useMemo(() => {
     if (!collateralConfigurations) return [];
@@ -107,10 +120,16 @@ export const MarketCollateralsTable = ({
     marketName as DeployedMarket
   );
 
+  // if (marketName === 'USDT') {
+  //   totalCollateral?.forEach((value, key) => {
+  //     console.log('totalCollateral', key, value.toFixed(2));
+  //   });
+  // }
+
   const { data: priceData } = usePrice(marketName as DeployedMarket);
 
   return (
-    <div className="w-full mt-8 border bg-gradient-to-b from-white/10 to-card rounded-lg ">
+    <div className="w-full border bg-gradient-to-b from-white/10 to-card rounded-lg ">
       <Table className="max-sm:hidden">
         <TableHeader>
           <TableRow>

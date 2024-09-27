@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import {
   CartesianGrid,
   Line,
@@ -41,19 +41,17 @@ export const KinkChart = ({
     (marketConfiguration as unknown as MarketConfiguartion) ?? undefined
   );
   const { data: utilization } = useUtilization(marketName as DeployedMarket);
-  const currentUtilization = BigNumber(
-    formatUnits(
-      BigNumber(utilization?.toString()!).div(BigNumber(10).pow(18)),
-      18
-    )
-  ).toNumber();
 
-  let utilizationPosition = 15;
-  if (currentUtilization >= 15 && currentUtilization <= 85) {
-    utilizationPosition = currentUtilization;
-  } else if (currentUtilization > 85) {
-    utilizationPosition = 85;
-  }
+  const currentUtilization = useMemo(() => {
+    if (!utilization) return 0;
+
+    return formatUnits(BigNumber(utilization?.toString()), 18)
+      .times(100)
+      .toNumber();
+  }, [utilization]);
+
+  const utilizationPosition =
+    currentUtilization < 1 ? 1 : Number(currentUtilization.toFixed(0));
 
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
@@ -125,19 +123,20 @@ export const KinkChart = ({
               <ChartTooltip
                 content={<CustomTooltip />}
                 cursor={<CustomCursor />}
-                position={{ x: 20, y: 12 }}
+                position={{ y: 16 }}
               />
               <ReferenceLine
-                x={currentUtilization < 1 ? 1 : currentUtilization}
+                x={utilizationPosition}
                 isFront
-                stroke="#FFFFFF"
+                stroke="#3FE8BD"
+                strokeWidth={2}
                 label={{
                   value: 'Current Utilization',
                   position: 'insideTopLeft',
-                  fill: '#FFFFFF',
-                  fontSize: '12px',
+                  fill: '#3FE8BD',
+                  fontSize: '16px',
                   fontFamily: 'Inter',
-                  fontWeight: '400',
+                  fontWeight: '500',
                 }}
               />
               <Line
