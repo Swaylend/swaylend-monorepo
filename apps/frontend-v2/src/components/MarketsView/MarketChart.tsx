@@ -54,14 +54,14 @@ function CustomCursor(props: any) {
         type="linear"
       />
       <Rectangle
-        x={x - 23}
+        x={x - 10}
         y={y}
         fillOpacity={0.4}
         style={{
           fill: 'url(#color4)',
         }}
         pointerEvents={pointerEvents}
-        width={46}
+        width={20}
         height={height}
         points={points}
         className={className}
@@ -83,8 +83,8 @@ export const MarketChart = ({
   if (!chartData || !color) return null;
 
   const dateFormatter = new Intl.DateTimeFormat('en-US', {
-    day: '2-digit',
-    month: '2-digit',
+    day: 'numeric',
+    month: 'short',
   });
 
   return (
@@ -95,8 +95,8 @@ export const MarketChart = ({
           accessibilityLayer
           data={chartData}
           margin={{
-            left: 12,
-            right: 12,
+            left: 16,
+            right: 16,
           }}
         >
           <XAxis
@@ -104,7 +104,9 @@ export const MarketChart = ({
             tickLine={true}
             axisLine={true}
             tickMargin={12}
+            padding={{ left: 10, right: 10 }}
             minTickGap={30}
+            interval="preserveStartEnd"
             tickFormatter={(value: number) =>
               dateFormatter.format(new Date(value * 1000))
             }

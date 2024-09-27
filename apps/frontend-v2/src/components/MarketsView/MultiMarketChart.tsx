@@ -43,8 +43,8 @@ export const MultiMarketChart = ({
   } satisfies ChartConfig;
 
   const dateFormatter = new Intl.DateTimeFormat('en-US', {
-    day: '2-digit',
-    month: '2-digit',
+    day: 'numeric',
+    month: 'short',
   });
 
   const CustomTooltip = ({ active, payload }: any) => {
@@ -109,14 +109,14 @@ export const MultiMarketChart = ({
           type="linear"
         />
         <Rectangle
-          x={x - 23}
+          x={x - 10}
           y={y}
           fillOpacity={0.4}
           style={{
             fill: 'url(#color4)',
           }}
           pointerEvents={pointerEvents}
-          width={46}
+          width={20}
           height={height}
           points={points}
           className={className}
@@ -146,6 +146,8 @@ export const MultiMarketChart = ({
               axisLine={true}
               tickMargin={10}
               minTickGap={30}
+              padding={{ left: 10, right: 10 }}
+              interval="preserveStartEnd"
               tickFormatter={(value: number) => {
                 return dateFormatter.format(new Date(value * 1000));
               }}
