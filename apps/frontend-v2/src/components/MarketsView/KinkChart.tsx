@@ -11,7 +11,6 @@ import {
   XAxis,
 } from 'recharts';
 
-import type { MarketConfiguartion } from '@/__generated__/swaylend/graphql';
 import {
   type ChartConfig,
   ChartContainer,
@@ -38,7 +37,7 @@ export const KinkChart = ({
   const { data: marketConfiguration } = useMarketConfiguration();
   const { data: rateData } = useCreateChartData(
     marketName as DeployedMarket,
-    (marketConfiguration as unknown as MarketConfiguartion) ?? undefined
+    marketConfiguration
   );
   const { data: utilization } = useUtilization(marketName as DeployedMarket);
 
@@ -80,7 +79,7 @@ export const KinkChart = ({
   };
 
   function CustomCursor(props: any) {
-    const { stroke, pointerEvents, height, points, className } = props;
+    const { pointerEvents, height, points, className } = props;
 
     const { x, y } = points[0];
     return (

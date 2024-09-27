@@ -6,22 +6,22 @@ import {
   getSupplyApr,
 } from '@/utils';
 import BigNumber from 'bignumber.js';
-import { useMarketConfiguration } from './useMarketConfiguration';
 
-import type { MarketConfiguartion } from '@/__generated__/swaylend/graphql';
 import { useQuery } from '@tanstack/react-query';
 
 export const useCreateChartData = (
   marketName: DeployedMarket,
-  marketConfiguration: MarketConfiguartion | undefined
+  marketConfiguration: any
 ) => {
   return useQuery({
-    queryKey: ['chartData', marketName],
+    queryKey: ['chartData', marketName, marketConfiguration],
     queryFn: async () => {
       try {
         if (!marketConfiguration) {
-          throw new Error('Market configuration data not available');
+          return null;
         }
+
+        console.log(marketName);
 
         const rateData = [];
         for (let i = 1; i <= 100; i++) {
