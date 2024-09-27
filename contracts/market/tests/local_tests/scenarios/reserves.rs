@@ -1,6 +1,7 @@
 use crate::utils::{setup, TestData};
+use fuels::{accounts::Account, types::transaction::TxPolicies};
 use market::PriceDataUpdate;
-use market_sdk::{convert_i256_to_i128, parse_units};
+use market_sdk::{convert_i256_to_i128, convert_i256_to_i64, parse_units};
 const AMOUNT_COEFFICIENT: u64 = 10u64.pow(0);
 
 #[tokio::test]
@@ -8,9 +9,9 @@ async fn reserves_test() {
     let TestData {
         wallets,
         bob,
-        bob_address,
+        bob_account,
         alice,
-        alice_address,
+        alice_account,
         market,
         assets,
         usdc,
@@ -21,7 +22,7 @@ async fn reserves_test() {
         prices,
         eth,
         admin,
-        admin_address,
+        admin_account,
         ..
     } = setup().await;
 
@@ -37,7 +38,7 @@ async fn reserves_test() {
         // Step 0: Alice supplies 4000 USDC
         let alice_supply_amount = parse_units(4000 * AMOUNT_COEFFICIENT, usdc.decimals);
         usdc_contract
-            .mint(alice_address, alice_supply_amount)
+            .mint(alice_account, alice_supply_amount)
             .await
             .unwrap();
         let res = market
@@ -74,11 +75,13 @@ async fn reserves_test() {
         market.debug_increment_timestamp().await.unwrap();
 
         // Step 3: Bob repays 4000 USDC
-        let res = market.get_user_basic(bob_address).await.unwrap();
-        let principal_value: u64 = res.value.principal.value.try_into().unwrap();
+        let res = market.get_user_basic(bob_account).await.unwrap();
+        let abc = convert_i256_to_i64(&res.value.principal);
+        println!("abc: {abc}");
+        let principal_value: u64 = convert_i256_to_i64(&res.value.principal).abs() as u64;
         let repay_amount: u64 = principal_value + parse_units(10, usdc.decimals);
 
-        usdc_contract.mint(bob_address, repay_amount).await.unwrap();
+        usdc_contract.mint(bob_account, repay_amount).await.unwrap();
         let res = market
             .with_account(&bob)
             .await
@@ -95,7 +98,7 @@ async fn reserves_test() {
             .unwrap()
             .withdraw_collateral(
                 &[&oracle.instance],
-                eth.bits256,
+                eth.asset_id,
                 bob_supply_amount,
                 &price_data_update,
             )
@@ -111,7 +114,7 @@ async fn reserves_test() {
 
     // Check reserves
     let reserves = market.get_reserves().await.unwrap().value;
-    let normalized_reserves: u64 = convert_i256_to_i128(reserves).try_into().unwrap();
+    let normalized_reserves: u64 = convert_i256_to_i128(&reserves).try_into().unwrap();
     assert!(normalized_reserves == 71628);
 
     // Governor withdraws reserves;
@@ -119,7 +122,7 @@ async fn reserves_test() {
         .with_account(&admin)
         .await
         .unwrap()
-        .withdraw_reserves(admin_address, normalized_reserves)
+        .withdraw_reserves(admin_account, normalized_reserves)
         .await;
     assert!(res.is_ok());
 
@@ -130,11 +133,45 @@ async fn reserves_test() {
 
     // Check if reserves are withdrawn
     let new_reserves = market.get_reserves().await.unwrap().value;
-    let normalized_reserves: u64 = convert_i256_to_i128(new_reserves).try_into().unwrap();
+    let normalized_reserves: u64 = convert_i256_to_i128(&new_reserves).try_into().unwrap();
     assert!(normalized_reserves == 0);
 
     market
         .print_debug_state(&wallets, &usdc, &eth)
         .await
         .unwrap();
+}
+
+#[tokio::test]
+async fn add_reserves_test() {
+    let TestData {
+        alice,
+        alice_account,
+        market,
+        usdc,
+        usdc_contract,
+        ..
+    } = setup().await;
+
+    let mint_amount = parse_units(150, usdc.decimals);
+    usdc_contract
+        .mint(alice_account, mint_amount)
+        .await
+        .unwrap();
+
+    let reserves = market.get_reserves().await.unwrap().value;
+    let normalized_reserves: u64 = convert_i256_to_i128(&reserves).try_into().unwrap();
+    assert!(normalized_reserves == 0);
+    alice
+        .force_transfer_to_contract(
+            &market.contract_id(),
+            mint_amount,
+            usdc.asset_id,
+            TxPolicies::default(),
+        )
+        .await
+        .unwrap();
+    let new_reserves = market.get_reserves().await.unwrap().value;
+    let normalized_reserves: u64 = convert_i256_to_i128(&new_reserves).try_into().unwrap();
+    assert!(normalized_reserves == mint_amount);
 }

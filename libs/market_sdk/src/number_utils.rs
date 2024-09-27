@@ -14,11 +14,42 @@ pub fn format_units_u128(num: u128, decimals: u64) -> f64 {
     format_units(num, decimals)
 }
 
-pub fn convert_i256_to_i128(value: I256) -> i128 {
-    let val: i128 = value.value.try_into().unwrap();
-    val * if value.negative { -1 } else { 1 }
+pub fn convert_i256_to_i128(value: &I256) -> i128 {
+    let value = if is_i256_negative(value) {
+        i256_indent() - value.underlying
+    } else {
+        value.underlying - i256_indent()
+    };
+
+    i128::try_from(value).unwrap()
+}
+
+pub fn convert_i256_to_i64(value: &I256) -> i64 {
+    let value = if is_i256_negative(value) {
+        i256_indent() - value.underlying
+    } else {
+        value.underlying - i256_indent()
+    };
+
+    i64::try_from(value).unwrap()
 }
 
 pub fn convert_u256_to_u128(value: U256) -> u128 {
     value.low_u128()
+}
+
+pub fn i256_indent() -> U256 {
+    U256::from_big_endian(
+        &hex::decode("8000000000000000000000000000000000000000000000000000000000000000").unwrap(),
+    )
+}
+
+pub fn is_i256_negative(value: &I256) -> bool {
+    value.underlying < i256_indent()
+}
+
+pub fn convert_i256_to_u64(value: &I256) -> u64 {
+    let value = value.underlying - i256_indent();
+
+    u64::try_from(value).unwrap()
 }

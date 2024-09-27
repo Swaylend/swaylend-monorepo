@@ -1,29 +1,25 @@
 [[package]]
 name = "core"
-source = "path+from-root-4BB20845430AF9CF"
-
-[[package]]
-name = "i256"
-source = "member"
-dependencies = ["std"]
+source = "path+from-root-C485BFF5467B6B6C"
 
 [[package]]
 name = "market"
 source = "member"
 dependencies = [
-    "i256",
     "market_abi",
     "pyth_interface",
+    "standards git+https://github.com/FuelLabs/sway-standards?tag=v0.6.1#792639cdf391565e6e6a02482ea8a46d9604a6f5",
     "std",
+    "sway_libs",
 ]
 
 [[package]]
 name = "market_abi"
 source = "member"
 dependencies = [
-    "i256",
     "pyth_interface",
     "std",
+    "sway_libs",
 ]
 
 [[package]]
@@ -46,7 +42,7 @@ dependencies = [
 name = "src-20"
 source = "member"
 dependencies = [
-    "standards git+https://github.com/FuelLabs/sway-standards?tag=v0.6.0#65e09f95ea8b9476b171a66c8a47108f352fa32c",
+    "standards git+https://github.com/FuelLabs/sway-standards?tag=v0.6.1#792639cdf391565e6e6a02482ea8a46d9604a6f5",
     "std",
 ]
 
@@ -61,14 +57,27 @@ source = "git+https://github.com/FuelLabs/sway-standards?tag=v0.6.0#65e09f95ea8b
 dependencies = ["std"]
 
 [[package]]
+name = "standards"
+source = "git+https://github.com/FuelLabs/sway-standards?tag=v0.6.1#792639cdf391565e6e6a02482ea8a46d9604a6f5"
+dependencies = ["std"]
+
+[[package]]
 name = "std"
-source = "git+https://github.com/fuellabs/sway?tag=v0.63.5#31a1d6f98395f571cd3674b492d9bf4773c55f65"
+source = "git+https://github.com/fuellabs/sway?tag=v0.63.6#cba9a005ef2a5b61e13eb02ba6e9e93ebd19a31a"
 dependencies = ["core"]
+
+[[package]]
+name = "sway_libs"
+source = "git+https://github.com/FuelLabs/sway-libs?tag=v0.24.0#e19f96f85ae12426d20adc176b70aa38fd9a2a5b"
+dependencies = [
+    "standards git+https://github.com/FuelLabs/sway-standards?tag=v0.6.0#65e09f95ea8b9476b171a66c8a47108f352fa32c",
+    "std",
+]
 
 [[package]]
 name = "token"
 source = "member"
 dependencies = [
-    "standards git+https://github.com/FuelLabs/sway-standards?tag=v0.6.0#65e09f95ea8b9476b171a66c8a47108f352fa32c",
+    "standards git+https://github.com/FuelLabs/sway-standards?tag=v0.6.1#792639cdf391565e6e6a02482ea8a46d9604a6f5",
     "std",
 ]

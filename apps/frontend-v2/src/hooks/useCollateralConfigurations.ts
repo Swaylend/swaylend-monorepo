@@ -31,7 +31,7 @@ export const useCollateralConfigurations = () => {
       > = {};
 
       for (const config of collateralConfigurations) {
-        formattedConfigurations[config.asset_id] = {
+        formattedConfigurations[config.asset_id.bits] = {
           asset_id: config.asset_id,
           paused: config.paused,
           price_feed_id: config.price_feed_id,

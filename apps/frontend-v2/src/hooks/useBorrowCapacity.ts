@@ -62,7 +62,7 @@ export const useBorrowCapacity = () => {
         .minus(
           formatUnits(
             supplyBorrow.borrowed.times(
-              priceData.prices[marketConfiguration.baseToken]
+              priceData.prices[marketConfiguration.baseToken.bits]
             ),
             marketConfiguration.baseTokenDecimals
           )

@@ -4,7 +4,7 @@ contract;
 
 use standards::src3::SRC3;
 use standards::src5::{AccessError, SRC5, State};
-use standards::src20::SRC20;
+use standards::src20::{SRC20, SetDecimalsEvent, SetNameEvent, SetSymbolEvent, TotalSupplyEvent};
 use std::{
     asset::{
         burn,
@@ -137,10 +137,13 @@ impl SRC3 for Contract {
             "max-supply-reached",
         );
 
-        storage
-            .total_supply
-            .write(amount + storage.total_supply.read());
+        let new_supply = storage.total_supply.read() + amount;
+        storage.total_supply.write(new_supply);
+
         mint_to(recipient, DEFAULT_SUB_ID, amount);
+
+        TotalSupplyEvent::new(AssetId::default(), new_supply, msg_sender().unwrap())
+            .log();
     }
 
     #[payable]
@@ -153,9 +156,33 @@ impl SRC3 for Contract {
             "incorrect-asset-provided",
         );
 
-        storage
-            .total_supply
-            .write(storage.total_supply.read() - amount);
+        let new_supply = storage.total_supply.read() - amount;
+        storage.total_supply.write(new_supply);
+
         burn(DEFAULT_SUB_ID, amount);
+
+        TotalSupplyEvent::new(AssetId::default(), new_supply, msg_sender().unwrap())
+            .log();
+    }
+}
+
+abi EmitSRC20Events {
+    #[storage(read)]
+    fn emit_src20_events();
+}
+
+impl EmitSRC20Events for Contract {
+    #[storage(read)]
+    fn emit_src20_events() {
+        // Metadata that is stored as a configurable should only be emitted once.
+        let asset = AssetId::default();
+        let sender = msg_sender().unwrap();
+        let name = Some(String::from_ascii_str(from_str_array(NAME)));
+        let symbol = Some(String::from_ascii_str(from_str_array(SYMBOL)));
+ 
+        SetNameEvent::new(asset, name, sender).log();
+        SetSymbolEvent::new(asset, symbol, sender).log();
+        SetDecimalsEvent::new(asset, DECIMALS, sender).log();
+        TotalSupplyEvent::new(asset, storage.total_supply.read(), sender).log();
     }
 }

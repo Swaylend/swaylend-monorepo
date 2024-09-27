@@ -9,9 +9,9 @@ async fn collateral_configuration_test() {
         wallets,
         admin,
         bob,
-        bob_address,
+        bob_account,
         alice,
-        alice_address,
+        alice_account,
         market,
         assets,
         usdc,
@@ -32,12 +32,12 @@ async fn collateral_configuration_test() {
     };
 
     usdc_contract
-        .mint(alice_address, parse_units(10000, usdc.decimals))
+        .mint(alice_account, parse_units(10000, usdc.decimals))
         .await
         .unwrap();
 
     usdc_contract
-        .mint(bob_address, parse_units(10000, usdc.decimals))
+        .mint(bob_account, parse_units(10000, usdc.decimals))
         .await
         .unwrap();
 
@@ -63,7 +63,7 @@ async fn collateral_configuration_test() {
         .with_account(&bob)
         .await
         .unwrap()
-        .available_to_borrow(&[&oracle.instance], bob_address)
+        .available_to_borrow(&[&oracle.instance], bob_account)
         .await
         .unwrap();
     println!("Bob available_to_borrow: {:?}", res);
@@ -88,7 +88,7 @@ async fn collateral_configuration_test() {
             .with_account(&bob)
             .await
             .unwrap()
-            .available_to_borrow(&[&oracle.instance], bob_address)
+            .available_to_borrow(&[&oracle.instance], bob_account)
             .await
             .unwrap()
     );
@@ -130,7 +130,7 @@ async fn collateral_configuration_test() {
     // change collat config for eth
     let config = collateral_config
         .iter_mut()
-        .find(|config: &&mut CollateralConfiguration| config.asset_id == eth.bits256);
+        .find(|config: &&mut CollateralConfiguration| config.asset_id == eth.asset_id);
 
     let config = match config {
         Some(config) => config,
@@ -150,7 +150,7 @@ async fn collateral_configuration_test() {
         .unwrap();
 
     let res = market
-        .available_to_borrow(&[&oracle.instance], bob_address)
+        .available_to_borrow(&[&oracle.instance], bob_account)
         .await
         .unwrap();
     // Res should equal 350 USDC because of the new collateral factor
@@ -161,7 +161,6 @@ async fn collateral_configuration_test() {
 async fn market_configuration_test() {
     let TestData {
         admin,
-        admin_address,
         market,
         usdc,
         ..
@@ -184,9 +183,7 @@ async fn market_configuration_test() {
         base_min_for_rewards: 2000000000.into(),
         base_borrow_min: 2000.into(),
         target_reserves: 2000000000000u64.into(),
-        governor: admin_address,
-        pause_guardian: admin_address,
-        base_token: usdc.bits256,
+        base_token: usdc.asset_id,
         base_token_decimals: usdc.decimals.try_into().unwrap(),
         base_token_price_feed_id: usdc.price_feed_id,
     };

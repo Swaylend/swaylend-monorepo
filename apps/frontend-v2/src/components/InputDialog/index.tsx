@@ -11,9 +11,11 @@ import {
   useCollateralConfigurations,
   useMarketBalanceOfBase,
   useMarketConfiguration,
+  useMaxWithdrawableCollateral,
   usePrice,
   useSupplyBase,
   useSupplyCollateral,
+  useTotalCollateral,
   useUserCollateralAssets,
   useUserSupplyBorrow,
   useWithdrawBase,
@@ -21,7 +23,7 @@ import {
 } from '@/hooks';
 import { cn } from '@/lib/utils';
 import { ACTION_TYPE, useMarketStore } from '@/stores';
-import { ASSET_ID_TO_SYMBOL, formatUnits } from '@/utils';
+import { ASSET_ID_TO_SYMBOL, formatUnits, getFormattedNumber } from '@/utils';
 import { useAccount, useIsConnected } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import BigNumber from 'bignumber.js';
@@ -36,6 +38,7 @@ export const InputDialog = () => {
   const { data: marketConfiguration } = useMarketConfiguration();
   const { data: userCollateralAssets } = useUserCollateralAssets();
   const { data: collateralConfigurations } = useCollateralConfigurations();
+  const { data: collateralBalances } = useTotalCollateral();
   const { data: borrowCapacity } = useBorrowCapacity();
   const { data: userSupplyBorrow } = useUserSupplyBorrow();
   const {
@@ -67,12 +70,15 @@ export const InputDialog = () => {
 
   const [error, setError] = useState<string | null>(null);
 
+  const { data: maxWithdrawableCollateral } =
+    useMaxWithdrawableCollateral(actionTokenAssetId);
+
   const handleSubmit = () => {
     if (!marketConfiguration) return;
 
     switch (action) {
       case ACTION_TYPE.SUPPLY: {
-        if (actionTokenAssetId === marketConfiguration.baseToken) {
+        if (actionTokenAssetId === marketConfiguration.baseToken.bits) {
           supplyBase(tokenAmount);
         } else {
           supplyCollateral(tokenAmount);
@@ -82,7 +88,7 @@ export const InputDialog = () => {
       case ACTION_TYPE.WITHDRAW: {
         if (!priceData) return;
 
-        if (actionTokenAssetId === marketConfiguration.baseToken) {
+        if (actionTokenAssetId === marketConfiguration.baseToken.bits) {
           withdrawBase({
             tokenAmount,
             priceUpdateData: priceData.priceUpdateData,
@@ -109,7 +115,6 @@ export const InputDialog = () => {
       default:
         break;
     }
-    // setOpen(false);
   };
 
   const handleModeChange = (action: ACTION_TYPE) => {
@@ -122,39 +127,46 @@ export const InputDialog = () => {
   });
 
   const finalBalance = useMemo(() => {
+    if (
+      !collateralConfigurations ||
+      !balance ||
+      !marketConfiguration ||
+      !actionTokenAssetId ||
+      !userSupplyBorrow
+    ) {
+      return BigNumber(0);
+    }
+
     if (action === 'REPAY') {
       return formatUnits(
-        BigNumber(balance?.toString() ?? 0),
-        marketConfiguration?.baseTokenDecimals
+        BigNumber(balance.toString()),
+        marketConfiguration.baseTokenDecimals
       );
     }
     if (action === 'SUPPLY') {
-      if (actionTokenAssetId === marketConfiguration?.baseToken) {
+      if (actionTokenAssetId === marketConfiguration.baseToken.bits) {
         return formatUnits(
-          BigNumber(balance?.toString() ?? 0),
-          marketConfiguration?.baseTokenDecimals
+          BigNumber(balance.toString()),
+          marketConfiguration.baseTokenDecimals
         );
       }
+
+      if (!collateralConfigurations[actionTokenAssetId]) return BigNumber(0);
+
       return formatUnits(
-        BigNumber(balance?.toString() ?? 0),
-        collateralConfigurations?.[actionTokenAssetId ?? '']?.decimals ?? 9
+        BigNumber(balance.toString()),
+        collateralConfigurations[actionTokenAssetId].decimals
       );
     }
     if (action === 'WITHDRAW') {
-      if (actionTokenAssetId === marketConfiguration?.baseToken) {
+      if (actionTokenAssetId === marketConfiguration.baseToken.bits) {
         return formatUnits(
-          BigNumber(userSupplyBorrow?.supplied ?? new BigNumber(0) ?? 0),
-          marketConfiguration?.baseTokenDecimals
+          userSupplyBorrow.supplied,
+          marketConfiguration.baseTokenDecimals
         );
       }
-      return formatUnits(
-        BigNumber(
-          userCollateralAssets?.[actionTokenAssetId ?? ''] ??
-            new BigNumber(0) ??
-            0
-        ),
-        collateralConfigurations?.[actionTokenAssetId ?? '']?.decimals ?? 9
-      );
+
+      return maxWithdrawableCollateral ?? BigNumber(0);
     }
 
     if (action === 'BORROW') {
@@ -168,6 +180,7 @@ export const InputDialog = () => {
     action,
     marketConfiguration,
     collateralConfigurations,
+    maxWithdrawableCollateral,
   ]);
 
   const onMaxBtnClick = () => {
@@ -183,7 +196,7 @@ export const InputDialog = () => {
     }
 
     const decimals =
-      actionTokenAssetId === marketConfiguration.baseToken
+      actionTokenAssetId === marketConfiguration.baseToken.bits
         ? marketConfiguration.baseTokenDecimals
         : collateralConfigurations[actionTokenAssetId].decimals;
 
@@ -193,10 +206,17 @@ export const InputDialog = () => {
         break;
       }
       case ACTION_TYPE.WITHDRAW:
-        changeTokenAmount(BigNumber(finalBalance.toFixed(decimals)));
+        if (actionTokenAssetId === marketConfiguration.baseToken.bits) {
+          changeTokenAmount(BigNumber(finalBalance.toFixed(decimals)));
+        } else {
+          // TODO: Check max withdrawable collateral amount...
+
+          // Get borrowed amount
+          changeTokenAmount(BigNumber(finalBalance.toFixed(decimals)));
+        }
         break;
       case ACTION_TYPE.BORROW:
-        if (marketBalanceOfBase?.formatted.lt(finalBalance)) {
+        if (marketBalanceOfBase.formatted.lt(finalBalance)) {
           changeTokenAmount(
             BigNumber(marketBalanceOfBase.formatted.toFixed(decimals))
           );
@@ -231,7 +251,7 @@ export const InputDialog = () => {
 
   const { data: baseTokenBalance } = useBalance({
     address: account ?? undefined,
-    assetId: marketConfiguration?.baseToken,
+    assetId: marketConfiguration?.baseToken.bits,
   });
 
   const tokenInputError = (): string | null => {
@@ -251,7 +271,7 @@ export const InputDialog = () => {
 
     if (action === ACTION_TYPE.SUPPLY) {
       let balance = BigNumber(0);
-      if (actionTokenAssetId === marketConfiguration?.baseToken) {
+      if (actionTokenAssetId === marketConfiguration?.baseToken.bits) {
         balance = formatUnits(
           BigNumber(actionTokenBalance.toString()),
           marketConfiguration?.baseTokenDecimals
@@ -261,13 +281,28 @@ export const InputDialog = () => {
           BigNumber(actionTokenBalance.toString()),
           collateralConfigurations?.[actionTokenAssetId ?? '']?.decimals
         );
+        const collateralBalance =
+          collateralBalances?.get(actionTokenAssetId) ?? BigNumber(0);
+        const supplyCapLeft = formatUnits(
+          BigNumber(
+            collateralConfigurations?.[
+              actionTokenAssetId ?? ''
+            ]?.supply_cap.toString() ?? '0'
+          ).minus(collateralBalance),
+          collateralConfigurations?.[actionTokenAssetId ?? '']?.decimals
+        );
+
+        if (supplyCapLeft.eq(0)) return 'Supply cap reached';
+        if (supplyCapLeft.minus(tokenAmount).lt(0)) {
+          return 'Amount is higher than the supply cap available';
+        }
       }
       if (balance == null) return null;
       if (balance.lt(tokenAmount)) return 'Insufficient balance';
     }
 
     if (action === ACTION_TYPE.WITHDRAW) {
-      if (actionTokenAssetId === marketConfiguration?.baseToken) {
+      if (actionTokenAssetId === marketConfiguration?.baseToken.bits) {
         if (tokenAmount.gt(userSupplyBorrow.supplied ?? BigNumber(0))) {
           return 'Insufficient balance';
         }
@@ -284,15 +319,15 @@ export const InputDialog = () => {
 
     if (action === ACTION_TYPE.BORROW) {
       if (marketBalanceOfBase?.formatted.eq(0)) {
-        return `There is no ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken]} to borrow`;
+        return `There is no ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken.bits]} to borrow`;
       }
 
       if (marketBalanceOfBase?.formatted.lt(tokenAmount)) {
-        return `There is not enough ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken]} to borrow`;
+        return `There is not enough ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken.bits]} to borrow`;
       }
 
       if (tokenAmount.lt(new BigNumber(10))) {
-        return `Minimum borrow amount is 10 ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken]}`;
+        return `Minimum borrow amount is 10 ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken.bits]}`;
       }
 
       if (tokenAmount.gt(borrowCapacity)) {
@@ -338,7 +373,7 @@ export const InputDialog = () => {
     if (action === ACTION_TYPE.SUPPLY || action === ACTION_TYPE.WITHDRAW) {
       // Supply collateral/withdraw
       if (
-        actionTokenAssetId !== marketConfiguration?.baseToken &&
+        actionTokenAssetId !== marketConfiguration?.baseToken.bits &&
         (!account || balance?.eq(0))
       ) {
         return true;
@@ -364,7 +399,7 @@ export const InputDialog = () => {
   const disabledRightTab = useMemo(() => {
     if (action === ACTION_TYPE.SUPPLY || action === ACTION_TYPE.WITHDRAW) {
       // Lend/Withdraw
-      if (actionTokenAssetId === marketConfiguration?.baseToken) {
+      if (actionTokenAssetId === marketConfiguration?.baseToken.bits) {
         if (!account || !userSupplyBorrow || userSupplyBorrow?.supplied.eq(0)) {
           return true;
         }
@@ -495,7 +530,7 @@ export const InputDialog = () => {
               </div>
               <div className="flex mt-2 justify-between items-center w-full">
                 <div className="text-moon text-sm">
-                  {finalBalance.toFormat(4)}
+                  {getFormattedNumber(finalBalance)}
                   {action === ACTION_TYPE.BORROW
                     ? ' available to borrow'
                     : ' available'}
@@ -521,7 +556,8 @@ export const InputDialog = () => {
                 onMouseDown={handleSubmit}
                 className="w-1/2"
               >
-                Submit
+                {action &&
+                  `${action.slice(0, 1)}${action.slice(1).toLowerCase()}`}
               </Button>
             </div>
             <div className="w-full flex justify-center">

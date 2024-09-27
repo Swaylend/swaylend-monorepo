@@ -31,7 +31,7 @@ token = { path = "contracts/token" }
 # External
 pyth_sdk = { git = "https://github.com/pyth-network/pyth-crosschain", rev = "aa9509ccd37cf5dc73fee891a5730c351d15235f" }
 tokio = { version = "1.12", features = ["full"] }
-fuels = { version = "0.66.4", features = ["fuel-core-lib"] }
+fuels = { version = "0.66.5", features = ["fuel-core-lib"] }
 dotenv = "0.15.0"
 serde = "1.0.197"
 serde_json = "1.0.114"

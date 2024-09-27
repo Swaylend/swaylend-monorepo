@@ -46,7 +46,7 @@ export const useSupplyBase = () => {
         .supply_base()
         .callParams({
           forward: {
-            assetId: marketConfiguration.baseToken,
+            assetId: marketConfiguration.baseToken.bits,
             amount: amount.toFixed(0),
           },
         })
@@ -81,7 +81,7 @@ export const useSupplyBase = () => {
       // Invalidate Fuel balance query
       queryClient.invalidateQueries({
         exact: true,
-        queryKey: ['balance', account, marketConfiguration?.baseToken],
+        queryKey: ['balance', account, marketConfiguration?.baseToken.bits],
       });
     },
   });

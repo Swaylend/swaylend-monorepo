@@ -38,25 +38,19 @@ async fn deploy() {
 
     //--------------- MARKET ---------------
     let usdc_price_feed = Bits256::from_hex_str(USDC_USD_PRICE_FEED_ID).unwrap();
-    let fuel_eth_base_asset_id =
-        Bits256::from_hex_str("0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07")
-            .unwrap();
 
-    let market_config = get_market_config(
-        wallet.address().into(),
-        wallet.address().into(),
-        usdc.bits256,
-        usdc.decimals as u32,
-        usdc_price_feed,
-    )
-    .unwrap();
+    let market_config =
+        get_market_config(usdc.asset_id, usdc.decimals as u32, usdc_price_feed).unwrap();
 
-    let market = MarketContract::deploy(&wallet, 0, fuel_eth_base_asset_id, use_random_address)
+    let market = MarketContract::deploy(&wallet, 0, use_random_address)
         .await
         .unwrap();
 
     // Activate contract
-    market.activate_contract(market_config).await.unwrap();
+    market
+        .activate_contract(market_config, wallet.address().into())
+        .await
+        .unwrap();
 
     // Set Pyth contract ID
     market.set_pyth_contract_id(oracle_id).await.unwrap();

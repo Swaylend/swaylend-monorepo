@@ -29,7 +29,9 @@ jobs:
         uses: Swatinem/rust-cache@v2.7.3
       - name: Build contracts
         run: ~/.fuelup/bin/forc build --release
-      - name: Run contract tests
+      - name: Run contracts tests (FORC)
+        run: forc test --release
+      - name: Run contracts tests (RUST)
         run: cargo test --release local_tests
       - name: Install pnpm
         uses: pnpm/action-setup@v4

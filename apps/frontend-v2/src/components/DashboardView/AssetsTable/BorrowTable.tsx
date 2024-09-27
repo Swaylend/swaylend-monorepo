@@ -35,6 +35,7 @@ import {
   SYMBOL_TO_ICON,
   formatUnits,
   getBorrowApr,
+  getFormattedNumber,
 } from '@/utils';
 import { useAccount, useIsConnected } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
@@ -125,7 +126,7 @@ export const BorrowTable = () => {
   const handleBaseTokenClick = (action: ACTION_TYPE) => {
     changeAction(action);
     changeTokenAmount(BigNumber(0));
-    changeActionTokenAssetId(marketConfiguration?.baseToken);
+    changeActionTokenAssetId(marketConfiguration?.baseToken.bits);
     changeInputDialogOpen(true);
   };
 
@@ -133,12 +134,12 @@ export const BorrowTable = () => {
 
   const { data: balance } = useBalance({
     address: account ?? undefined,
-    assetId: marketConfiguration?.baseToken,
+    assetId: marketConfiguration?.baseToken.bits,
   });
 
   const borrowedBalance = useMemo(() => {
     if (!marketConfiguration || !userSupplyBorrow || !isConnected) {
-      return `${BigNumber(0).toFormat(4)} ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}`;
+      return `${BigNumber(0).toFormat(4)} ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken.bits ?? '']}`;
     }
 
     const val = formatUnits(
@@ -146,9 +147,9 @@ export const BorrowTable = () => {
       marketConfiguration.baseTokenDecimals
     );
     if (val.lt(1) && val.gt(0)) {
-      return `< 1 ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}`;
+      return `< 1 ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken.bits ?? '']}`;
     }
-    return `${val.toFormat(4)} ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}`;
+    return `${val.toFormat(4)} ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken.bits ?? '']}`;
   }, [marketConfiguration, userSupplyBorrow, isConnected]);
 
   return (
@@ -162,7 +163,7 @@ export const BorrowTable = () => {
                 Borrow Assets
                 <InfoIcon
                   text={
-                    'Borrow assets using your supplied assets as collateral.'
+                    "Base asset available for borrowing once you've provided at least one collateral asset."
                   }
                 />
               </div>
@@ -174,7 +175,7 @@ export const BorrowTable = () => {
                 Borrow Points
                 <InfoIcon
                   text={
-                    'Points earned by borrowing these assets. Hover over the points to learn more.'
+                    'Points earned for maintaining an active borrowing position. Hover over the points to learn more.'
                   }
                 />
               </div>
@@ -194,10 +195,14 @@ export const BorrowTable = () => {
                       <Image
                         src={
                           SYMBOL_TO_ICON[
-                            ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]
+                            ASSET_ID_TO_SYMBOL[
+                              marketConfiguration.baseToken.bits
+                            ]
                           ]
                         }
-                        alt={ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]}
+                        alt={
+                          ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken.bits]
+                        }
                         width={32}
                         height={32}
                         className="rounded-full"
@@ -206,14 +211,26 @@ export const BorrowTable = () => {
                   </div>
                   <div>
                     <div className="text-white font-medium">
-                      {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
+                      {
+                        ASSET_ID_TO_SYMBOL[
+                          marketConfiguration?.baseToken.bits ?? ''
+                        ]
+                      }
                     </div>
                     <div>
-                      {formatUnits(
-                        balance ? BigNumber(balance.toString()) : BigNumber(0),
-                        marketConfiguration?.baseTokenDecimals ?? 9
-                      ).toFixed(2)}{' '}
-                      {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}
+                      {getFormattedNumber(
+                        formatUnits(
+                          balance
+                            ? BigNumber(balance.toString())
+                            : BigNumber(0),
+                          marketConfiguration?.baseTokenDecimals ?? 9
+                        )
+                      )}{' '}
+                      {
+                        ASSET_ID_TO_SYMBOL[
+                          marketConfiguration?.baseToken.bits ?? ''
+                        ]
+                      }
                       {' in wallet'}
                     </div>
                   </div>
@@ -227,15 +244,26 @@ export const BorrowTable = () => {
               >
                 {getBorrowApr(borrowRate)}
               </TableCell>
-              <TableCell>{borrowedBalance}</TableCell>
+              <TableCell>
+                {getFormattedNumber(BigNumber(borrowedBalance))}{' '}
+                {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken.bits ?? '']}
+              </TableCell>
               <TableCell>
                 <PointIcons points={POINTS_BORROW} />
               </TableCell>
               <TableCell>
                 {userRole === USER_ROLE.LENDER ? (
-                  <div className="text-lavender text-md font-medium text-center w-full">
-                    You are already lending{' '}
-                    {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}!
+                  <div className=" text-lavender bg-primary/20 rounded-lg px-4 py-2 text-sm font-medium text-center w-full">
+                    You cannot Borrow assets while you have an active Earn
+                    position. Learn more about how{' '}
+                    <a
+                      href="https://docs.swaylend.com/"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="underline hover:opacity-90 text-white"
+                    >
+                      Sweylend works.
+                    </a>
                   </div>
                 ) : (
                   <div className="flex gap-x-2 w-full">
@@ -296,11 +324,15 @@ export const BorrowTable = () => {
                         <Image
                           src={
                             SYMBOL_TO_ICON[
-                              ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]
+                              ASSET_ID_TO_SYMBOL[
+                                marketConfiguration.baseToken.bits
+                              ]
                             ]
                           }
                           alt={
-                            ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken]
+                            ASSET_ID_TO_SYMBOL[
+                              marketConfiguration.baseToken.bits
+                            ]
                           }
                           width={32}
                           height={32}
@@ -312,17 +344,19 @@ export const BorrowTable = () => {
                       <div className="text-white font-medium">
                         {
                           ASSET_ID_TO_SYMBOL[
-                            marketConfiguration?.baseToken ?? ''
+                            marketConfiguration?.baseToken.bits ?? ''
                           ]
                         }
                       </div>
                       <div className="text-moon text-sm">
-                        {formatUnits(
-                          balance
-                            ? BigNumber(balance.toString())
-                            : BigNumber(0),
-                          marketConfiguration?.baseTokenDecimals ?? 9
-                        ).toFixed(2)}
+                        {getFormattedNumber(
+                          formatUnits(
+                            balance
+                              ? BigNumber(balance.toString())
+                              : BigNumber(0),
+                            marketConfiguration?.baseTokenDecimals ?? 9
+                          )
+                        )}
                         {' in wallet'}
                       </div>
                     </div>
@@ -345,7 +379,9 @@ export const BorrowTable = () => {
                   <div className="w-1/2 text-moon font-medium">
                     Borrowed Assets
                   </div>
-                  <div className="text-moon">{borrowedBalance}</div>
+                  <div className="text-moon">
+                    {getFormattedNumber(BigNumber(borrowedBalance))}
+                  </div>
                 </div>
                 <div className="w-full flex items-center">
                   <div className="w-1/2 text-moon font-medium">
@@ -358,9 +394,17 @@ export const BorrowTable = () => {
           )}
           <CardFooter>
             {userRole === USER_ROLE.LENDER ? (
-              <div className="text-lavender text-md font-medium text-center w-full">
-                You are already lending{' '}
-                {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken ?? '']}!
+              <div className=" text-lavender bg-primary/20 rounded-lg px-4 py-2 text-sm font-medium text-center w-full">
+                You cannot Borrow assets while you have an active Earn position.
+                Learn more about how{' '}
+                <a
+                  href="https://docs.swaylend.com/"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="underline hover:opacity-90 text-white"
+                >
+                  Sweylend works.
+                </a>
               </div>
             ) : (
               <div className="flex gap-x-2 w-full">

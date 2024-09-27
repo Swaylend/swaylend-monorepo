@@ -9,7 +9,7 @@ use fuels::{
     types::{transaction::TxPolicies, transaction_builders::VariableOutputPolicy},
 };
 use market::PriceDataUpdate;
-use market_sdk::{convert_i256_to_i128, parse_units};
+use market_sdk::{convert_i256_to_i128, convert_i256_to_u64, is_i256_negative, parse_units};
 
 const AMOUNT_COEFFICIENT: u64 = 10u64.pow(0);
 const SCALE_6: f64 = 10u64.pow(6) as f64;
@@ -20,9 +20,9 @@ async fn absorb_and_liquidate() {
     let TestData {
         wallets,
         alice,
-        alice_address,
+        alice_account,
         bob,
-        bob_address,
+        bob_account,
         chad,
         market,
         assets,
@@ -54,7 +54,7 @@ async fn absorb_and_liquidate() {
     print_case_title(0, "Alice", "supply_base", alice_supply_log_amount.as_str());
     println!("💸 Alice + {alice_supply_log_amount}");
     usdc_contract
-        .mint(alice_address, alice_mint_amount)
+        .mint(alice_account, alice_mint_amount)
         .await
         .unwrap();
     let balance = alice.get_asset_balance(&usdc.asset_id).await.unwrap();
@@ -84,10 +84,11 @@ async fn absorb_and_liquidate() {
     assert!(bob_supply_res.is_ok());
 
     let bob_user_collateral = market
-        .get_user_collateral(bob_address, eth.bits256)
+        .get_user_collateral(bob_account, eth.asset_id)
         .await
-        .unwrap();
-    assert!(bob_user_collateral == bob_supply_amount as u128);
+        .unwrap()
+        .value;
+    assert!(bob_user_collateral == bob_supply_amount);
 
     market
         .print_debug_state(&wallets, &usdc, &eth)
@@ -101,7 +102,7 @@ async fn absorb_and_liquidate() {
     // 🤙 Call: withdraw_base
     // 💰 Amount: <MAX HE CAN BORROW>
     let max_borrow_amount = market
-        .available_to_borrow(&[&oracle.instance], bob_address)
+        .available_to_borrow(&[&oracle.instance], bob_account)
         .await
         .unwrap();
     let log_amount = format!("{} USDC", max_borrow_amount as f64 / SCALE_6);
@@ -173,7 +174,7 @@ async fn absorb_and_liquidate() {
 
     assert!(
         market
-            .is_liquidatable(&[&oracle.instance], bob_address)
+            .is_liquidatable(&[&oracle.instance], bob_account)
             .await
             .unwrap()
             .value
@@ -183,18 +184,19 @@ async fn absorb_and_liquidate() {
         .with_account(&chad)
         .await
         .unwrap()
-        .absorb(&[&oracle.instance], vec![bob_address], &price_data_update)
+        .absorb(&[&oracle.instance], vec![bob_account], &price_data_update)
         .await;
     assert!(chad_absorb_bob_res.is_ok());
 
     // Check if absorb was ok
-    let (_, borrow) = market.get_user_supply_borrow(bob_address).await.unwrap();
+    let (_, borrow) = market.get_user_supply_borrow(bob_account).await.unwrap();
     assert!(borrow == 0);
 
     let amount = market
-        .get_user_collateral(bob_address, eth.bits256)
+        .get_user_collateral(bob_account, eth.asset_id)
         .await
-        .unwrap();
+        .unwrap()
+        .value;
     assert!(amount == 0);
 
     market
@@ -211,20 +213,21 @@ async fn absorb_and_liquidate() {
         .with_account(&alice)
         .await
         .unwrap()
-        .get_collateral_reserves(eth.bits256)
+        .get_collateral_reserves(eth.asset_id)
         .await
         .unwrap()
         .value;
-    assert!(!reserves.negative);
+    assert!(!is_i256_negative(&reserves));
 
     let amount = market
         .collateral_value_to_sell(
             &[&oracle.instance],
-            eth.bits256,
-            reserves.value.try_into().unwrap(),
+            eth.asset_id,
+            convert_i256_to_u64(&reserves),
         )
         .await
-        .unwrap();
+        .unwrap()
+        .value;
 
     let log_amount = format!("{} USDC", amount as f64 / SCALE_6);
     print_case_title(5, "Alice", "buy_collateral", log_amount.as_str());
@@ -253,14 +256,14 @@ async fn absorb_and_liquidate() {
 
     // Buy collateral with base asset
     usdc_contract
-        .mint(alice_address, amount.try_into().unwrap())
+        .mint(alice_account, amount.try_into().unwrap())
         .await
         .unwrap();
 
     let buy_collateral_call = market
         .instance
         .methods()
-        .buy_collateral(eth.bits256, 1u64.into(), alice_address)
+        .buy_collateral(eth.asset_id, 1u64.into(), alice_account)
         .with_contracts(&[&oracle.instance])
         .with_tx_policies(tx_policies)
         .call_params(call_params_base_asset)
@@ -284,11 +287,11 @@ async fn absorb_and_liquidate() {
         .with_account(&alice)
         .await
         .unwrap()
-        .get_collateral_reserves(eth.bits256)
+        .get_collateral_reserves(eth.asset_id)
         .await
         .unwrap()
         .value;
-    let normalized_reserves: u64 = convert_i256_to_i128(reserves).try_into().unwrap();
+    let normalized_reserves: u64 = convert_i256_to_i128(&reserves).try_into().unwrap();
     assert!(normalized_reserves == 0);
 
     market
@@ -302,9 +305,9 @@ async fn all_assets_liquidated() {
     let TestData {
         wallets,
         alice,
-        alice_address,
+        alice_account,
         bob,
-        bob_address,
+        bob_account,
         chad,
         market,
         assets,
@@ -336,7 +339,7 @@ async fn all_assets_liquidated() {
     print_case_title(0, "Alice", "supply_base", alice_supply_log_amount.as_str());
     println!("💸 Alice + {alice_supply_log_amount}");
     usdc_contract
-        .mint(alice_address, alice_mint_amount)
+        .mint(alice_account, alice_mint_amount)
         .await
         .unwrap();
     let balance = alice.get_asset_balance(&usdc.asset_id).await.unwrap();
@@ -369,10 +372,11 @@ async fn all_assets_liquidated() {
     assert!(bob_supply_res.is_ok());
 
     let bob_user_collateral = market
-        .get_user_collateral(bob_address, eth.bits256)
+        .get_user_collateral(bob_account, eth.asset_id)
         .await
-        .unwrap();
-    assert!(bob_user_collateral == bob_supply_amount as u128);
+        .unwrap()
+        .value;
+    assert!(bob_user_collateral == bob_supply_amount);
 
     market
         .print_debug_state(&wallets, &usdc, &eth)
@@ -386,7 +390,7 @@ async fn all_assets_liquidated() {
     // 🤙 Call: withdraw_base
     // 💰 Amount: <MAX HE CAN BORROW>
     let max_borrow_amount = market
-        .available_to_borrow(&[&oracle.instance], bob_address)
+        .available_to_borrow(&[&oracle.instance], bob_account)
         .await
         .unwrap();
     println!("Bob can borrow {max_borrow_amount} USDC");
@@ -459,7 +463,7 @@ async fn all_assets_liquidated() {
 
     assert!(
         market
-            .is_liquidatable(&[&oracle.instance], bob_address)
+            .is_liquidatable(&[&oracle.instance], bob_account)
             .await
             .unwrap()
             .value
@@ -469,18 +473,19 @@ async fn all_assets_liquidated() {
         .with_account(&chad)
         .await
         .unwrap()
-        .absorb(&[&oracle.instance], vec![bob_address], &price_data_update)
+        .absorb(&[&oracle.instance], vec![bob_account], &price_data_update)
         .await;
     assert!(chad_absorb_bob_res.is_ok());
 
     // Check if absorb was ok
-    let (_, borrow) = market.get_user_supply_borrow(bob_address).await.unwrap();
+    let (_, borrow) = market.get_user_supply_borrow(bob_account).await.unwrap();
     assert!(borrow == 0);
 
     let amount = market
-        .get_user_collateral(bob_address, eth.bits256)
+        .get_user_collateral(bob_account, eth.asset_id)
         .await
-        .unwrap();
+        .unwrap()
+        .value;
     assert!(amount == 0);
 
     market
@@ -497,20 +502,21 @@ async fn all_assets_liquidated() {
         .with_account(&alice)
         .await
         .unwrap()
-        .get_collateral_reserves(eth.bits256)
+        .get_collateral_reserves(eth.asset_id)
         .await
         .unwrap()
         .value;
-    assert!(!reserves.negative);
+    assert!(!is_i256_negative(&reserves));
 
     let amount = market
         .collateral_value_to_sell(
             &[&oracle.instance],
-            eth.bits256,
-            reserves.value.try_into().unwrap(),
+            eth.asset_id,
+            convert_i256_to_u64(&reserves),
         )
         .await
-        .unwrap();
+        .unwrap()
+        .value;
 
     let log_amount = format!("{} USDC", amount as f64 / SCALE_6);
     print_case_title(5, "Alice", "buy_collateral", log_amount.as_str());
@@ -541,7 +547,7 @@ async fn all_assets_liquidated() {
     let buy_collateral_call = market
         .instance
         .methods()
-        .buy_collateral(eth.bits256, 1u64.into(), alice_address)
+        .buy_collateral(eth.asset_id, 1u64.into(), alice_account)
         .with_contracts(&[&oracle.instance])
         .with_tx_policies(tx_policies)
         .call_params(call_params_base_asset)

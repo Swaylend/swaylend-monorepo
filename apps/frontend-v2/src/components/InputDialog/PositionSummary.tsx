@@ -8,10 +8,11 @@ import {
 } from '@/hooks';
 import { useUserLiquidationPoint } from '@/hooks/useUserLiquidationPoint';
 import { cn } from '@/lib/utils';
-import { formatUnits } from '@/utils';
+import { formatUnits, getFormattedNumber, getFormattedPrice } from '@/utils';
 import BigNumber from 'bignumber.js';
-import { ArrowDown, ArrowUp, InfoIcon } from 'lucide-react';
+import { ArrowDown, ArrowUp } from 'lucide-react';
 import React, { useMemo } from 'react';
+import { InfoIcon } from '../InfoIcon';
 
 export const PositionSummary = () => {
   const { data: marketConfiguration } = useMarketConfiguration();
@@ -54,9 +55,10 @@ export const PositionSummary = () => {
     return [
       {
         title: 'Collateral Value',
-        value: `$${collateralValue?.toFixed(2)}`,
+        tooltip: 'The total value of your collateral in USDC',
+        value: `${getFormattedPrice(collateralValue ?? BigNumber(0))}`,
         changeValue: possibleCollateralValue
-          ? `$${possibleCollateralValue.toFixed(2)}`
+          ? `${getFormattedPrice(possibleCollateralValue)}`
           : null,
         color: possibleCollateralValue?.lte(collateralValue ?? BigNumber(0))
           ? 0
@@ -67,9 +69,11 @@ export const PositionSummary = () => {
       },
       {
         title: 'Liquidation Point',
-        value: `$${(liquidationPoint ?? BigNumber(0)).toFixed(2)}`,
+        tooltip:
+          'The price of supplied collateral at which your position will be liquidated',
+        value: `${getFormattedPrice(liquidationPoint ?? BigNumber(0))}`,
         changeValue: possibleLiquidationPoint
-          ? `$${possibleLiquidationPoint.toFixed(2)}`
+          ? `${getFormattedPrice(possibleLiquidationPoint)}`
           : null,
         color: possibleLiquidationPoint?.lte(liquidationPoint ?? BigNumber(0))
           ? 1
@@ -82,9 +86,11 @@ export const PositionSummary = () => {
       },
       {
         title: 'Borrow Capacity',
-        value: `${(totalBorrowCapacity ?? BigNumber(0)).toFormat(2)} USDC`,
+        tooltip:
+          'The total amount of base asset you can borrow (including borrowed amount)',
+        value: `${getFormattedNumber(totalBorrowCapacity)} USDC`,
         changeValue: possibleBorrowCapacity
-          ? `${possibleBorrowCapacity.toFormat(2)} USDC`
+          ? `${getFormattedNumber(possibleBorrowCapacity)} USDC`
           : null,
         color: possibleBorrowCapacity?.lte(totalBorrowCapacity ?? BigNumber(0))
           ? 0
@@ -97,9 +103,10 @@ export const PositionSummary = () => {
       },
       {
         title: 'Available to Borrow',
-        value: `${(borrowCapacity ?? BigNumber(0)).toFormat(2)} USDC`,
+        tooltip: 'The amount of base asset you can borrow',
+        value: `${getFormattedNumber(borrowCapacity ?? BigNumber(0))} USDC`,
         changeValue: possibleAvailableToBorrow
-          ? `${possibleAvailableToBorrow.toFixed(2)} USDC`
+          ? `${getFormattedNumber(possibleAvailableToBorrow)} USDC`
           : null,
         color: possibleAvailableToBorrow?.lte(borrowCapacity ?? BigNumber(0))
           ? 0
@@ -125,13 +132,15 @@ export const PositionSummary = () => {
   return (
     <div className="w-full flex-col flex justify-center items-center">
       <div className="text-moon flex items-center gap-x-2">
-        Position Summary <InfoIcon className="w-4 h-4" />
+        Position Summary
       </div>
       <div className="w-full mt-4 flex flex-col gap-y-2">
         {stats.map((stat) => {
           return (
             <div key={stat.title} className="flex w-full justify-between">
-              <div className="text-moon">{stat.title}</div>
+              <div className="text-moon flex gap-x-1">
+                {stat.title} <InfoIcon text={stat.tooltip} />
+              </div>
               {stat.changeValue === null ? (
                 <div className="text-lavender font-semibold">{stat.value}</div>
               ) : (

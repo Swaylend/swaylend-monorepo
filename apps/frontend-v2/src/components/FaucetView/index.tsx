@@ -107,17 +107,17 @@ export const FaucetView = () => {
       ...Object.values(collateralConfigurations).map(
         (collateralConfiguration) => {
           return {
-            assetId: collateralConfiguration.asset_id,
-            symbol: ASSET_ID_TO_SYMBOL[collateralConfiguration.asset_id],
+            assetId: collateralConfiguration.asset_id.bits,
+            symbol: ASSET_ID_TO_SYMBOL[collateralConfiguration.asset_id.bits],
             decimals:
-              collateralConfigurations[collateralConfiguration.asset_id]
+              collateralConfigurations[collateralConfiguration.asset_id.bits]
                 .decimals,
           };
         }
       ),
       {
-        assetId: marketConfiguration.baseToken,
-        symbol: ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken],
+        assetId: marketConfiguration.baseToken.bits,
+        symbol: ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken.bits],
         decimals: marketConfiguration.baseTokenDecimals,
       },
     ];
