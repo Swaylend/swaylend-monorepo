@@ -15,6 +15,7 @@ import {
   ASSET_ID_TO_SYMBOL,
   type DeployedMarket,
   SYMBOL_TO_ICON,
+  SYMBOL_TO_ICON,
   SYMBOL_TO_NAME,
   formatUnits,
   getBorrowApr,
@@ -31,6 +32,7 @@ import SWAY from '/public/tokens/sway.svg?url';
 import { CircularProgressBar } from '../CircularProgressBar';
 import { type Point, PointIcons } from '../PointIcons';
 import { Skeleton } from '../ui/skeleton';
+import { CollateralIcons } from '../CollateralIcons';
 
 const SkeletonRow = (
   <TableRow>
@@ -92,6 +94,13 @@ export const MarketTableRow = ({
     }));
   }, [collateralConfigurations]);
 
+  const collateralIcons: Point[] = collaterals.map((collateral) => ({
+    id: collateral.symbol,
+    name: collateral.symbol,
+    description: '',
+    icon: SYMBOL_TO_ICON[collateral.symbol] || SWAY,
+  }));
+
   const { data: marketBasics } = useMarketBasics(marketName as DeployedMarket);
 
   const { data: totalCollateral } = useTotalCollateral(
@@ -141,7 +150,7 @@ export const MarketTableRow = ({
           </div>
           <div>
             <div className="flex gap-x-2 items-baseline">
-              <div className="text-white text-lg font-semibold">
+              <div className="text-white text-md font-semibold">
                 {SYMBOL_TO_NAME[marketName]}
               </div>
               <div className="text-sm font-semibold text-moon">
@@ -152,36 +161,27 @@ export const MarketTableRow = ({
         </div>
       </TableCell>
       <TableCell>
-        <PointIcons points={collateralIcons} />
+        <CollateralIcons collaterals={collateralIcons} />
       </TableCell>
       <TableCell>
         <div className="w-[48px] h-[48px]">
           {
             <CircularProgressBar
-              percent={BigNumber(utilization?.toString() ?? 0)
-                .div(BigNumber(10).pow(18))
-                .div(100)}
+              percent={Number(
+                formatUnits(BigNumber(utilization?.toString()!), 18).toFixed(
+                  2,
+                  1
+                )
+              )}
             />
           }
         </div>
       </TableCell>
       <TableCell>
-        <div className="w-[48px] h-[48px]">
-          {
-            <CircularProgressBar
-              percent={BigNumber(supplyApr.slice(0, -1)).div(100)}
-            />
-          }
-        </div>
+        <div className="text-lavender font-medium">{supplyApr}</div>
       </TableCell>
       <TableCell>
-        <div className="w-[48px] h-[48px]">
-          {
-            <CircularProgressBar
-              percent={BigNumber(borrowApr.slice(0, -1)).div(100)}
-            />
-          }
-        </div>
+        <div className="text-lavender font-medium">{borrowApr}</div>
       </TableCell>
       <TableCell>
         {getFormattedPrice(

@@ -12,6 +12,7 @@ import {
   useTotalCollateral,
   useTotalReserves,
 } from '@/hooks';
+
 import {
   type DeployedMarket,
   SYMBOL_TO_ICON,
