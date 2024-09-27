@@ -131,6 +131,7 @@ export const MultiMarketChart = ({
       {chartData ? (
         <ChartContainer config={chartConfig}>
           <AreaChart
+            className="max-lg:hidden"
             accessibilityLayer
             data={removeDuplicatesByProperty(chartData, 'timestamp')}
             margin={{
@@ -224,7 +225,7 @@ export const MultiMarketChart = ({
           </AreaChart>
         </ChartContainer>
       ) : (
-        <div>Loading...</div>
+        <div className="max-md:hidden">Loading...</div>
       )}
     </ResponsiveContainer>
   );

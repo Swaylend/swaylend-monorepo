@@ -19,7 +19,7 @@ export const MarketStats = ({
   );
 
   return (
-    <div className="flex w-full justify-between">
+    <div className="max-lg:hidden flex w-full justify-between">
       <div>
         <div className="text-moon text-sm font-semibold">Total Supply</div>
         <div className="text-white font-bold text-2xl">

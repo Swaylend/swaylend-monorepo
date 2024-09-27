@@ -106,7 +106,7 @@ export default function MarketOverview({
 
   return (
     <div className="pt-[60px] pb-[55px] px-[88px] flex flex-col gap-y-8 w-full items-center justify-center">
-      <div className="flex items-start justify-between w-full">
+      <div className="max-lg:hidden flex items-start justify-between w-full">
         <div className="flex items-center space-x-4 text-white/60 w-1/3">
           <Link href="/market">
             <div className="flex gap-x-2 items-center">
@@ -145,7 +145,7 @@ export default function MarketOverview({
 
       <div className="w-full mt-12 flex justify-between">
         <div className="w-[47%]">
-          <div>
+          <div className="max-lg:hidden">
             <div className="text-primary text-md font-semibold">
               Total Collateral
             </div>
@@ -157,7 +157,7 @@ export default function MarketOverview({
         </div>
 
         <div className="w-[47%]">
-          <div>
+          <div className="max-lg:hidden">
             <div className="text-purple text-md font-semibold">
               Total Borrowing
             </div>
@@ -174,108 +174,110 @@ export default function MarketOverview({
         </div>
       </div>
 
-      <Card className="mt-8 w-full">
-        <CardHeader className="bg-white/5">
-          <div className="w-full items-center justify-center gap-x-2 font-semibold text-lg flex">
-            <div className="w-[260px] rounded-full h-[1px] bg-gradient-to-r from-white/0 to-primary" />
-            <div className="text-center text-white">Market Stats</div>
-            <div className="w-[260px] rounded-full h-[1px] bg-gradient-to-l from-white/0 to-primary" />
-          </div>
-        </CardHeader>
-        <CardContent className="flex justify-evenly pt-[55px]">
-          <div>
-            <div className="text-sm text-primary font-semibold">
-              Total Earning
+      <div className="max-lg:hidden flex flex-col gap-y-8 w-full items-center justify-center">
+        <Card className="mt-8 w-full">
+          <CardHeader className="bg-white/5">
+            <div className="w-full items-center justify-center gap-x-2 font-semibold text-lg flex">
+              <div className="w-[260px] rounded-full h-[1px] bg-gradient-to-r from-white/0 to-primary" />
+              <div className="text-center text-white">Market Stats</div>
+              <div className="w-[260px] rounded-full h-[1px] bg-gradient-to-l from-white/0 to-primary" />
             </div>
-            <div className="text-xl font-semibold text-white mt-2">
-              {getFormattedPrice(
-                formatUnits(
-                  BigNumber(marketBasics?.total_supply_base.toString()!),
-                  marketConfiguration?.baseTokenDecimals
-                )
-              )}
-            </div>
-          </div>
-          <div>
-            <div className="text-sm text-primary font-semibold">
-              Available Liquidity
-            </div>
-            <div className="text-xl font-semibold text-white mt-2">
-              {getFormattedPrice(availableLiquidity.formatted)}
-            </div>
-          </div>
-          <div>
-            <div className="text-sm text-primary font-semibold">
-              Total Reserves
-            </div>
-            <div className="text-xl font-semibold text-white mt-2">
-              {getFormattedPrice(
-                formatUnits(
+          </CardHeader>
+          <CardContent className="flex justify-evenly pt-[55px]">
+            <div>
+              <div className="text-sm text-primary font-semibold">
+                Total Earning
+              </div>
+              <div className="text-xl font-semibold text-white mt-2">
+                {getFormattedPrice(
                   formatUnits(
-                    totalReserves ?? BigNumber(0),
+                    BigNumber(marketBasics?.total_supply_base.toString()!),
                     marketConfiguration?.baseTokenDecimals
                   )
-                )
-              )}
+                )}
+              </div>
             </div>
-          </div>
-          <div>
-            <div className="text-sm text-primary font-semibold">
-              Collateralization
+            <div>
+              <div className="text-sm text-primary font-semibold">
+                Available Liquidity
+              </div>
+              <div className="text-xl font-semibold text-white mt-2">
+                {getFormattedPrice(availableLiquidity.formatted)}
+              </div>
             </div>
-            <div className="text-xl font-semibold text-white mt-2">
-              {collateralization.toFixed(2, 1)}%
+            <div>
+              <div className="text-sm text-primary font-semibold">
+                Total Reserves
+              </div>
+              <div className="text-xl font-semibold text-white mt-2">
+                {getFormattedPrice(
+                  formatUnits(
+                    formatUnits(
+                      totalReserves ?? BigNumber(0),
+                      marketConfiguration?.baseTokenDecimals
+                    )
+                  )
+                )}
+              </div>
             </div>
-          </div>
-          <div>
-            <div className="text-sm text-primary font-semibold">
-              Oracle Price
+            <div>
+              <div className="text-sm text-primary font-semibold">
+                Collateralization
+              </div>
+              <div className="text-xl font-semibold text-white mt-2">
+                {collateralization.toFixed(2, 1)}%
+              </div>
             </div>
-            <div className="text-xl font-semibold text-white mt-2">
-              $
-              {getFormattedNumber(
-                BigNumber(
-                  priceData?.prices[marketConfiguration?.baseToken.bits!] ?? 0
-                )
-              )}
+            <div>
+              <div className="text-sm text-primary font-semibold">
+                Oracle Price
+              </div>
+              <div className="text-xl font-semibold text-white mt-2">
+                $
+                {getFormattedNumber(
+                  BigNumber(
+                    priceData?.prices[marketConfiguration?.baseToken.bits!] ?? 0
+                  )
+                )}
+              </div>
             </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
 
-      <Card className="w-full">
-        <CardHeader className="bg-white/5">
-          <div className="w-full items-center justify-center gap-x-2 font-semibold text-lg flex">
-            <div className="w-[260px] rounded-full h-[1px] bg-gradient-to-r from-white/0 to-primary" />
-            <div className="text-center text-white">Interest Rate Model</div>
-            <div className="w-[260px] rounded-full h-[1px] bg-gradient-to-l from-white/0 to-primary" />
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="w-full flex justify-between pt-16 px-8">
-            <div className="w-1/4 ">
-              <div className="text-purple text-lg font-semibold">
-                Net Borrow APR
-              </div>
-              <div className="text-xl text-white font-semibold">
-                {borrowApr}
-              </div>
+        <Card className="w-full">
+          <CardHeader className="bg-white/5">
+            <div className="w-full items-center justify-center gap-x-2 font-semibold text-lg flex">
+              <div className="w-[260px] rounded-full h-[1px] bg-gradient-to-r from-white/0 to-primary" />
+              <div className="text-center text-white">Interest Rate Model</div>
+              <div className="w-[260px] rounded-full h-[1px] bg-gradient-to-l from-white/0 to-primary" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="w-full flex justify-between pt-16 px-8">
+              <div className="w-1/4 ">
+                <div className="text-purple text-lg font-semibold">
+                  Net Borrow APR
+                </div>
+                <div className="text-xl text-white font-semibold">
+                  {borrowApr}
+                </div>
 
-              <div className="text-primary text-lg font-semibold mt-8">
-                Net Earn APR
+                <div className="text-primary text-lg font-semibold mt-8">
+                  Net Earn APR
+                </div>
+                <div className="text-xl text-white font-semibold">
+                  {supplyApr}
+                </div>
               </div>
-              <div className="text-xl text-white font-semibold">
-                {supplyApr}
+              <div className="w-3/4">
+                <KinkChart marketName={baseAsset as DeployedMarket} />
               </div>
             </div>
-            <div className="w-3/4">
-              <KinkChart marketName={baseAsset as DeployedMarket} />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
 
-      <MarketCollateralsTable marketName={baseAsset} />
+        <MarketCollateralsTable marketName={baseAsset} />
+      </div>
     </div>
   );
 }

@@ -11,7 +11,7 @@ import { MarketTableRow } from './MarketTableRow';
 
 export const MarketsTable = () => {
   return (
-    <Table>
+    <Table className="max-lg:hidden">
       <TableHeader>
         <TableRow>
           <TableHead colSpan={8}>

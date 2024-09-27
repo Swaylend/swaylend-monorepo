@@ -91,6 +91,7 @@ export const MarketChart = ({
     <ResponsiveContainer width="100%" height={200}>
       <ChartContainer config={chartConfig}>
         <AreaChart
+          className="max-lg:hidden"
           accessibilityLayer
           data={chartData}
           margin={{
