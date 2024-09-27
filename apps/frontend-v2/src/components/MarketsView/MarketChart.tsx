@@ -20,7 +20,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-const CustomTooltip = ({ active, payload, label }: any) => {
+const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
     return (
       <div className="flex flex-col gap-y-2 items-start p-2 bg-card/40 shadow-md rounded-lg">
