@@ -21,6 +21,7 @@ import { useIsConnected } from '@fuels/react';
 import BigNumber from 'bignumber.js';
 import React, { useMemo } from 'react';
 import Wave from 'react-wavify';
+import { useMediaQuery } from 'usehooks-ts';
 
 const WAVE_COLORS = {
   normal: {
@@ -42,12 +43,11 @@ export const InfoBowl = () => {
   const { isConnected } = useIsConnected();
   const { data: borrowRate, isPending: isPendingBorrowRate } = useBorrowRate();
   const { data: supplyRate, isPending: isPendingSupplyRate } = useSupplyRate();
-  const { data: borrowCapacity } = useBorrowCapacity();
   const { data: userSupplyBorrow, isPending: isPendingUserSupplyBorrow } =
     useUserSupplyBorrow();
   const { data: collateralUtilization } = useUserCollateralUtilization();
-  const { data: collateralValue } = useUserCollateralValue();
-  const { data: userLiquidationPoint } = useUserLiquidationPoint();
+
+  const matches = useMediaQuery('(max-width:640px)');
 
   const bowlMode = useMemo(() => {
     if (userSupplyBorrow?.borrowed.gt(0) && isConnected) return 2;
@@ -57,6 +57,9 @@ export const InfoBowl = () => {
 
   const waveHeight = useMemo(() => {
     if (!collateralUtilization || collateralUtilization.eq(0)) return 0;
+    if (matches) {
+      return -1 * Number(collateralUtilization.times(100).toFixed(2)) + 100;
+    }
     return -1.5 * Number(collateralUtilization.times(100).toFixed(2)) + 150;
   }, [collateralUtilization]);
 
@@ -95,7 +98,7 @@ export const InfoBowl = () => {
             {isLoading ? (
               <Skeleton className="w-full h-full bg-primary/20 rounded-full ring-2 ring-white/20" />
             ) : (
-              <div className="w-full h-full relative">
+              <div className="w-full h-full relative z-10">
                 {bowlMode === 2 && (
                   <>
                     <Wave
@@ -187,33 +190,15 @@ export const InfoBowl = () => {
           side="bottom"
         >
           <div className="p-1">
-            <div className="font-bold">Position Summary</div>
-            <div className="flex flex-col gap-y-1 mt-2">
-              <div className="text-sm flex justify-between">
-                <div className="text-lavender">Available to Borrow</div>
-                <div className="font-semibold text-moon">
-                  {getFormattedPrice(borrowCapacity ?? BigNumber(0))}
-                </div>
-              </div>
-              <div className="text-sm flex justify-between">
-                <div className="text-lavender">Liquidation point</div>
-                <div className="font-semibold text-moon">
-                  {getFormattedPrice(userLiquidationPoint ?? BigNumber(0))}
-                </div>
-              </div>
-              <div className="text-sm flex justify-between">
-                <div className="text-lavender">Collateral Utilization</div>
-                <div className="font-semibold text-moon">
-                  {collateralUtilization?.times(100).toFormat(2)}%
-                </div>
-              </div>
-              <div className="text-sm flex justify-between">
-                <div className="text-lavender">Collateral Value</div>
-                <div className="font-semibold text-moon">
-                  {getFormattedPrice(collateralValue ?? BigNumber(0))}
-                </div>
-              </div>
-            </div>
+            <span className="font-semibold text-primary">
+              Liquidation Risk{' '}
+            </span>
+            is a measure of how close your position is to being{' '}
+            <span className="font-semibold text-red-500"> liquidated</span>. The
+            higher the percentage, the closer you are to liquidation. Upon
+            reaching <span className="font-semibold text-red-500"> 100%</span>,
+            your position will be{' '}
+            <span className="font-semibold text-red-500"> liquidated</span>.
           </div>
         </TooltipContent>
       </Tooltip>
