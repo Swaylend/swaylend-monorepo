@@ -268,7 +268,7 @@ export const Navbar = () => {
                         'flex font-bold text-xl items-center gap-x-2 h-full relative'
                       )}
                     >
-                      Lending
+                      Dashboard
                     </div>
                   </Link>
                   {NAVBAR_LINKS.map(({ href, label }) => (
@@ -290,7 +290,7 @@ export const Navbar = () => {
                   ))}
                 </div>
                 <div className="md:hidden flex-col flex gap-y-2 w-[160px] mt-16">
-                  <div className="pl-4">Market</div>
+                  <div className="pl-4">Switch Markets</div>
                   <MarketSwitcher />
                 </div>
               </div>

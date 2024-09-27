@@ -1,4 +1,5 @@
 import { Footer } from '@/components/Footer';
+import { IntroductionDialog } from '@/components/IntroductionDialog';
 import { Navbar } from '@/components/Navbar';
 import { Providers } from '@/components/Providers';
 
@@ -13,6 +14,7 @@ export default function AppLayout({
         <Navbar />
         <div className="bg-background flex-1">{children}</div>
         <Footer />
+        <IntroductionDialog />
       </div>
     </Providers>
   );
