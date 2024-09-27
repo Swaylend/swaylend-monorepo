@@ -268,7 +268,7 @@ export const Navbar = () => {
                         'flex font-bold text-xl items-center gap-x-2 h-full relative'
                       )}
                     >
-                      All Markets
+                      Lending
                     </div>
                   </Link>
                   {NAVBAR_LINKS.map(({ href, label }) => (

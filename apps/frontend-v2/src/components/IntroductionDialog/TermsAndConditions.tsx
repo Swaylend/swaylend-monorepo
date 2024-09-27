@@ -54,14 +54,16 @@ export const TermsAndConditions = ({
               checked={isChecked}
               onCheckedChange={(checked) => setIsChecked(checked as boolean)}
             />
-            <p>
+            <p
+              onClick={() => setIsChecked(!isChecked)}
+              className="cursor-pointer"
+            >
               I confirm that I have read, understand and accept the{' '}
-              {/* biome-ignore lint/a11y/useValidAnchor: <explanation> */}
-              <a href="#" className="underline text-primary">
-                Terms and Conditions
-              </a>
-              .
             </p>
+            {/* biome-ignore lint/a11y/useValidAnchor: <explanation> */}
+            <a href="#" className="underline text-primary -ml-1">
+              Terms and Conditions.
+            </a>
           </div>
         </div>
       </div>
