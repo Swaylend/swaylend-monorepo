@@ -181,6 +181,8 @@ export const InputDialog = () => {
     marketConfiguration,
     collateralConfigurations,
     maxWithdrawableCollateral,
+    borrowCapacity,
+    userSupplyBorrow,
   ]);
 
   const onMaxBtnClick = () => {

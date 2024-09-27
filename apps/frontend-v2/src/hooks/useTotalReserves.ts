@@ -24,7 +24,9 @@ export const useTotalReserves = (
       );
 
       const { value } = await marketContract.functions.get_reserves().get();
-      return BigNumber(value.value.toString());
+      return BigNumber(value.underlying.toString()).minus(
+        BigNumber(2).pow(255)
+      );
     },
     refetchOnWindowFocus: false,
     enabled: !!provider,

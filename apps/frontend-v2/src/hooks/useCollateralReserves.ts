@@ -27,7 +27,9 @@ export const useCollateralReserves = (
         .get_collateral_reserves({ bits: assetId })
         .get();
 
-      return BigNumber(value.value.toString());
+      return BigNumber(value.underlying.toString()).minus(
+        BigNumber(2).pow(255)
+      );
     },
     enabled: !!provider,
     refetchOnWindowFocus: false,
