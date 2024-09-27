@@ -398,7 +398,7 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
         },
       } = event;
 
-      const value = BigDecimal(underlying.toString()).minus(I256_INDENT).abs();
+      const value = BigDecimal(underlying.toString()).minus(I256_INDENT);
 
       const address = (account.Address?.bits ?? account.ContractId?.bits)!;
       const chainId = CHAIN_ID_MAP[ctx.chainId as keyof typeof CHAIN_ID_MAP];
@@ -412,11 +412,11 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
           chainId: chainId,
           contractAddress: ctx.contractAddress,
           address: address,
-          principal: BigDecimal(value.toString()),
+          principal: value.abs(),
           isNegative: value.isNegative(),
         });
       } else {
-        userBasic.principal = BigDecimal(value.toString());
+        userBasic.principal = value.abs();
         userBasic.isNegative = value.isNegative();
       }
 
