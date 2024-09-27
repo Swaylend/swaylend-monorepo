@@ -35,7 +35,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 };
 
 function CustomCursor(props: any) {
-  const { stroke, pointerEvents, height, points, className } = props;
+  const { pointerEvents, height, points, className } = props;
 
   const { x, y } = points[0];
   return (
