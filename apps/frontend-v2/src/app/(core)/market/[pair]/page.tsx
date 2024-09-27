@@ -4,6 +4,7 @@ import { NotFound } from '@/components/NotFound';
 import { getChartData } from '@/lib/charts';
 import { DEPLOYED_MARKETS } from '@/utils';
 import type { Metadata } from 'next';
+import { notFound } from 'next/navigation';
 
 export const metadata: Metadata = {
   title: 'MarketOverview',
@@ -16,7 +17,7 @@ export default async function Page({ params }: { params: { pair: string } }) {
     !baseAsset ||
     !Object.keys(DEPLOYED_MARKETS).includes(baseAsset.toUpperCase())
   ) {
-    return <NotFound />;
+    notFound();
   }
   const chartData = await getChartData();
 
