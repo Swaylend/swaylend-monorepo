@@ -28,18 +28,18 @@ export const DEPLOYED_MARKETS: Record<DeployedMarket, MarketConfiguration> = {
     oracleAddress:
       '0xe31e04946c67fb41923f93d50ee7fc1c6c99d6e07c02860c6bea5f4a13919277',
     marketAddress:
-      '0x689bfaf54edfc433f62d06f3581998f9cb32ce864da5ff99f4be7bed3556529d',
+      '0xd4a6a92bedda0c9ebd5c82805b7573795532411ebb1503f3adacb59714d7fd35',
     tokenFactoryAddress:
-      '0x9a781a698dcf09c4b201527fcc8ecde4f0e3ddc1bf0cedb11c61cbe3bf1add0c',
+      '0x6a1d626646995784eaad80b90732b9be884462d55241549b32c6161ea235978d',
     graphqlUrl: 'https://indexer.bigdevenergy.link/c755070/v1/graphql',
   },
   USDT: {
     oracleAddress:
       '0xe31e04946c67fb41923f93d50ee7fc1c6c99d6e07c02860c6bea5f4a13919277',
     marketAddress:
-      '0x0891579ef65509eeba9c66742931cc21218cdb93dd2239dfec794e9d57f87286',
+      '0x0239b371a4f817933c65907b078ff77064427a50752683cba78d143349cdf598',
     tokenFactoryAddress:
-      '0x2025b351d8f27d0c6604527d2d8fd2efaf37433ca23360871142e630425e20b2',
+      '0x44ca7a95b5e9e5eb6291b7bb26d078f059631535608eea2f0825f934b8365499',
     graphqlUrl: 'https://indexer.bigdevenergy.link/8ce655e/v1/graphql',
   },
 };
@@ -62,13 +62,13 @@ export const FUEL_ETH_BASE_ASSET_ID =
   '0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07';
 
 export const ASSET_ID_TO_SYMBOL: Record<string, string> = {
-  '0xed6b3b187ea656c16d455b35c33a1469f7ff6a439633293e8eb13ec03c3cf7e5': 'USDC',
-  '0x090b5962feec1b76c71f53cd8eaac7eb2fa48453d382fa04c907f9ca8378c10e': 'USDT',
+  '0x6bc6760474fd8473ec855cd53026b88929ce28336575cfda806ebfe284d2bb90': 'USDC',
+  '0xb81db75c68c9af091562123e06cb1f7270f3f62d3a13d3c665a0c5d2fac0e593': 'USDT',
   '0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07': 'ETH',
-  '0xe1a1e23b305a27c429af33d22f470b0c9f7f7e45064b5ef79a5e8b587f30b2fe': 'BTC',
-  '0xdc556f50f05d18f73bf9eb832a81c523037e230a3873279b563a0f05c6d5d3cb': 'UNI',
-  '0xe64cd1941eea4de6fa5a1db355f6ccacc555867724e2398066ec671d9efa8e6e': 'BTC',
-  '0xf10411c25a6838c3056f1767f6f07d76ab8c3bef9ff52ef121cb7e3c606e585a': 'BNB',
+  '0x82fba53ca24012613544c7698a23c9765760ce66413a8a04eec1577c77f53e8e': 'BTC',
+  '0x5222b5de2ae362219ed060428739f41b6f6897699ff591693365268d13d68a62': 'UNI',
+  '0x7e18820f90cf9f6ce6099a0ef6af99c21130fab8567d1eb7f8c75b07c64782fb': 'BTC',
+  '0x495f02ea80d6af96928f6ff355d891ab6b11f843c94d42fdd3f2a5768c4eff35': 'BNB',
 };
 
 export const SYMBOL_TO_ICON: Record<string, any> = {

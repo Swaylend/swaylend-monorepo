@@ -56,8 +56,8 @@ export type CollateralConfigurationInput = { asset_id: AssetIdInput, price_feed_
 export type CollateralConfigurationOutput = { asset_id: AssetIdOutput, price_feed_id: string, decimals: number, borrow_collateral_factor: BN, liquidate_collateral_factor: BN, liquidation_penalty: BN, supply_cap: BN, paused: boolean };
 export type ContractIdInput = { bits: string };
 export type ContractIdOutput = ContractIdInput;
-export type I256Input = { value: BigNumberish, negative: boolean };
-export type I256Output = { value: BN, negative: boolean };
+export type I256Input = { underlying: BigNumberish };
+export type I256Output = { underlying: BN };
 export type MarketBasicEventInput = { market_basic: MarketBasicsInput };
 export type MarketBasicEventOutput = { market_basic: MarketBasicsOutput };
 export type MarketBasicsInput = { base_supply_index: BigNumberish, base_borrow_index: BigNumberish, tracking_supply_index: BigNumberish, tracking_borrow_index: BigNumberish, total_supply_base: BigNumberish, total_borrow_base: BigNumberish, last_accrual_time: BigNumberish };
@@ -242,64 +242,59 @@ const abi = {
       "metadataTypeId": 25
     },
     {
-      "type": "struct i256::I256",
-      "concreteTypeId": "2c1b573de37da8020776e36206aa54a3020ad03063bf219d626b6c1cdd82c65d",
-      "metadataTypeId": 26
-    },
-    {
       "type": "struct market_abi::structs::CollateralConfiguration",
       "concreteTypeId": "027212d4a883f4144f8043ef93fee6aa9d766041c7735fa37fae71d45ab6d92d",
-      "metadataTypeId": 27
+      "metadataTypeId": 26
     },
     {
       "type": "struct market_abi::structs::MarketBasics",
       "concreteTypeId": "8f0ca9732dda82407f3d36328a5e4b89421c5f1c404a9568afa856df6efb5802",
-      "metadataTypeId": 28
+      "metadataTypeId": 27
     },
     {
       "type": "struct market_abi::structs::MarketConfiguration",
       "concreteTypeId": "788c494dd193488709eb7174a5299c17819b0c2e68089b18e0474d616080cc9c",
-      "metadataTypeId": 29
+      "metadataTypeId": 28
     },
     {
       "type": "struct market_abi::structs::PauseConfiguration",
       "concreteTypeId": "8ec71ec402ef77ffda0627839b31dd1444fad8b4a95507e86bfa89f0517dbc3d",
-      "metadataTypeId": 30
+      "metadataTypeId": 29
     },
     {
       "type": "struct market_abi::structs::PriceDataUpdate",
       "concreteTypeId": "60b16a7d7d88977a17d1cbc5d1d741c4872c833abbe5cd6eaa5e2d741cd8bf19",
-      "metadataTypeId": 31
+      "metadataTypeId": 30
     },
     {
       "type": "struct market_abi::structs::UserBasic",
       "concreteTypeId": "2878312d8fe9af45fe59b9252d6afa651128c8f755ca8f26ae4d67ede06b8ea1",
-      "metadataTypeId": 32
+      "metadataTypeId": 31
     },
     {
       "type": "struct pyth_interface::data_structures::price::Price",
       "concreteTypeId": "8aba92fff7345309d4313706ed7db3a811609f62da8f0d2859819db43d461ff8",
-      "metadataTypeId": 33
+      "metadataTypeId": 32
     },
     {
       "type": "struct std::asset_id::AssetId",
       "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974",
-      "metadataTypeId": 35
+      "metadataTypeId": 34
     },
     {
       "type": "struct std::bytes::Bytes",
       "concreteTypeId": "cdd87b7d12fe505416570c294c884bca819364863efe3bf539245fa18515fbbb",
-      "metadataTypeId": 36
+      "metadataTypeId": 35
     },
     {
       "type": "struct std::contract_id::ContractId",
       "concreteTypeId": "29c10735d33b5159f0c71ee1dbd17b36a3e69e41f00fab0d42e1bd9f428d8a54",
-      "metadataTypeId": 38
+      "metadataTypeId": 37
     },
     {
       "type": "struct std::vec::Vec<(struct std::asset_id::AssetId, u64)>",
       "concreteTypeId": "d0540b5a00688e21ad7a3f5d7db93636c18f3ef7aed40d4e48f0cffc74683bcb",
-      "metadataTypeId": 40,
+      "metadataTypeId": 39,
       "typeArguments": [
         "229de6686c9c66098e7188f64d380a851d5ebacacaf90d991adf5b5952a70f7b"
       ]
@@ -307,7 +302,7 @@ const abi = {
     {
       "type": "struct std::vec::Vec<enum std::identity::Identity>",
       "concreteTypeId": "2f79033d0d3729398611309f48578b56cf5162ba85e50f4d8fb79c9d9d1abc7b",
-      "metadataTypeId": 40,
+      "metadataTypeId": 39,
       "typeArguments": [
         "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
       ]
@@ -315,7 +310,7 @@ const abi = {
     {
       "type": "struct std::vec::Vec<struct market_abi::structs::CollateralConfiguration>",
       "concreteTypeId": "135bedc713ecdc7e568f13811c40a9df6a62b44f54789c3f87066e7ccaedcc14",
-      "metadataTypeId": 40,
+      "metadataTypeId": 39,
       "typeArguments": [
         "027212d4a883f4144f8043ef93fee6aa9d766041c7735fa37fae71d45ab6d92d"
       ]
@@ -323,7 +318,7 @@ const abi = {
     {
       "type": "struct std::vec::Vec<struct std::bytes::Bytes>",
       "concreteTypeId": "2601885b27af3627b8910876fc176d900cec2b16ec78c538f5f312e785d915f5",
-      "metadataTypeId": 40,
+      "metadataTypeId": 39,
       "typeArguments": [
         "cdd87b7d12fe505416570c294c884bca819364863efe3bf539245fa18515fbbb"
       ]
@@ -331,16 +326,21 @@ const abi = {
     {
       "type": "struct sway_libs::ownership::events::OwnershipRenounced",
       "concreteTypeId": "43c4fa7b3297401afbf300127e59ea913e5c8f0c7ae69abbec789ab0bb872bed",
-      "metadataTypeId": 41
+      "metadataTypeId": 40
     },
     {
       "type": "struct sway_libs::ownership::events::OwnershipSet",
       "concreteTypeId": "e1ef35033ea9d2956f17c3292dea4a46ce7d61fdf37bbebe03b7b965073f43b5",
-      "metadataTypeId": 42
+      "metadataTypeId": 41
     },
     {
       "type": "struct sway_libs::ownership::events::OwnershipTransferred",
       "concreteTypeId": "b3fffbcb3158d7c010c31b194b60fb7857adb4ad61bdcf4b8b42958951d9f308",
+      "metadataTypeId": 42
+    },
+    {
+      "type": "struct sway_libs::signed_integers::i256::I256",
+      "concreteTypeId": "1c791a2f63a6d482f33e38564a4c4f67f2351f36419d0c750ce825e233c86ae1",
       "metadataTypeId": 43
     },
     {
@@ -359,7 +359,7 @@ const abi = {
       "components": [
         {
           "name": "__tuple_element",
-          "typeId": 35
+          "typeId": 34
         },
         {
           "name": "__tuple_element",
@@ -493,11 +493,11 @@ const abi = {
       "components": [
         {
           "name": "Address",
-          "typeId": 34
+          "typeId": 33
         },
         {
           "name": "ContractId",
-          "typeId": 38
+          "typeId": 37
         }
       ]
     },
@@ -539,7 +539,7 @@ const abi = {
         },
         {
           "name": "asset_id",
-          "typeId": 35
+          "typeId": 34
         },
         {
           "name": "amount",
@@ -569,7 +569,7 @@ const abi = {
         },
         {
           "name": "asset_id",
-          "typeId": 35
+          "typeId": 34
         },
         {
           "name": "amount",
@@ -587,11 +587,11 @@ const abi = {
       "components": [
         {
           "name": "asset_id",
-          "typeId": 35
+          "typeId": 34
         },
         {
           "name": "configuration",
-          "typeId": 27
+          "typeId": 26
         }
       ]
     },
@@ -601,7 +601,7 @@ const abi = {
       "components": [
         {
           "name": "asset_id",
-          "typeId": 35
+          "typeId": 34
         }
       ]
     },
@@ -611,7 +611,7 @@ const abi = {
       "components": [
         {
           "name": "asset_id",
-          "typeId": 35
+          "typeId": 34
         }
       ]
     },
@@ -621,11 +621,11 @@ const abi = {
       "components": [
         {
           "name": "asset_id",
-          "typeId": 35
+          "typeId": 34
         },
         {
           "name": "configuration",
-          "typeId": 27
+          "typeId": 26
         }
       ]
     },
@@ -635,7 +635,7 @@ const abi = {
       "components": [
         {
           "name": "market_basic",
-          "typeId": 28
+          "typeId": 27
         }
       ]
     },
@@ -645,7 +645,7 @@ const abi = {
       "components": [
         {
           "name": "market_config",
-          "typeId": 29
+          "typeId": 28
         }
       ]
     },
@@ -655,7 +655,7 @@ const abi = {
       "components": [
         {
           "name": "pause_config",
-          "typeId": 30
+          "typeId": 29
         }
       ]
     },
@@ -687,7 +687,7 @@ const abi = {
         },
         {
           "name": "user_basic",
-          "typeId": 32
+          "typeId": 31
         }
       ]
     },
@@ -753,7 +753,7 @@ const abi = {
         },
         {
           "name": "asset_id",
-          "typeId": 35
+          "typeId": 34
         },
         {
           "name": "amount",
@@ -789,7 +789,7 @@ const abi = {
         },
         {
           "name": "asset_id",
-          "typeId": 35
+          "typeId": 34
         },
         {
           "name": "amount",
@@ -798,26 +798,12 @@ const abi = {
       ]
     },
     {
-      "type": "struct i256::I256",
+      "type": "struct market_abi::structs::CollateralConfiguration",
       "metadataTypeId": 26,
       "components": [
         {
-          "name": "value",
-          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
-        },
-        {
-          "name": "negative",
-          "typeId": "b760f44fa5965c2474a3b471467a22c43185152129295af588b022ae50b50903"
-        }
-      ]
-    },
-    {
-      "type": "struct market_abi::structs::CollateralConfiguration",
-      "metadataTypeId": 27,
-      "components": [
-        {
           "name": "asset_id",
-          "typeId": 35
+          "typeId": 34
         },
         {
           "name": "price_feed_id",
@@ -851,7 +837,7 @@ const abi = {
     },
     {
       "type": "struct market_abi::structs::MarketBasics",
-      "metadataTypeId": 28,
+      "metadataTypeId": 27,
       "components": [
         {
           "name": "base_supply_index",
@@ -885,11 +871,11 @@ const abi = {
     },
     {
       "type": "struct market_abi::structs::MarketConfiguration",
-      "metadataTypeId": 29,
+      "metadataTypeId": 28,
       "components": [
         {
           "name": "base_token",
-          "typeId": 35
+          "typeId": 34
         },
         {
           "name": "base_token_decimals",
@@ -963,7 +949,7 @@ const abi = {
     },
     {
       "type": "struct market_abi::structs::PauseConfiguration",
-      "metadataTypeId": 30,
+      "metadataTypeId": 29,
       "components": [
         {
           "name": "supply_paused",
@@ -985,7 +971,7 @@ const abi = {
     },
     {
       "type": "struct market_abi::structs::PriceDataUpdate",
-      "metadataTypeId": 31,
+      "metadataTypeId": 30,
       "components": [
         {
           "name": "update_fee",
@@ -993,7 +979,7 @@ const abi = {
         },
         {
           "name": "publish_times",
-          "typeId": 40,
+          "typeId": 39,
           "typeArguments": [
             {
               "name": "",
@@ -1003,7 +989,7 @@ const abi = {
         },
         {
           "name": "price_feed_ids",
-          "typeId": 40,
+          "typeId": 39,
           "typeArguments": [
             {
               "name": "",
@@ -1013,11 +999,11 @@ const abi = {
         },
         {
           "name": "update_data",
-          "typeId": 40,
+          "typeId": 39,
           "typeArguments": [
             {
               "name": "",
-              "typeId": 36
+              "typeId": 35
             }
           ]
         }
@@ -1025,11 +1011,11 @@ const abi = {
     },
     {
       "type": "struct market_abi::structs::UserBasic",
-      "metadataTypeId": 32,
+      "metadataTypeId": 31,
       "components": [
         {
           "name": "principal",
-          "typeId": 26
+          "typeId": 43
         },
         {
           "name": "base_tracking_index",
@@ -1043,7 +1029,7 @@ const abi = {
     },
     {
       "type": "struct pyth_interface::data_structures::price::Price",
-      "metadataTypeId": 33,
+      "metadataTypeId": 32,
       "components": [
         {
           "name": "confidence",
@@ -1065,7 +1051,7 @@ const abi = {
     },
     {
       "type": "struct std::address::Address",
-      "metadataTypeId": 34,
+      "metadataTypeId": 33,
       "components": [
         {
           "name": "bits",
@@ -1075,7 +1061,7 @@ const abi = {
     },
     {
       "type": "struct std::asset_id::AssetId",
-      "metadataTypeId": 35,
+      "metadataTypeId": 34,
       "components": [
         {
           "name": "bits",
@@ -1085,11 +1071,11 @@ const abi = {
     },
     {
       "type": "struct std::bytes::Bytes",
-      "metadataTypeId": 36,
+      "metadataTypeId": 35,
       "components": [
         {
           "name": "buf",
-          "typeId": 37
+          "typeId": 36
         },
         {
           "name": "len",
@@ -1099,7 +1085,7 @@ const abi = {
     },
     {
       "type": "struct std::bytes::RawBytes",
-      "metadataTypeId": 37,
+      "metadataTypeId": 36,
       "components": [
         {
           "name": "ptr",
@@ -1113,7 +1099,7 @@ const abi = {
     },
     {
       "type": "struct std::contract_id::ContractId",
-      "metadataTypeId": 38,
+      "metadataTypeId": 37,
       "components": [
         {
           "name": "bits",
@@ -1123,7 +1109,7 @@ const abi = {
     },
     {
       "type": "struct std::vec::RawVec",
-      "metadataTypeId": 39,
+      "metadataTypeId": 38,
       "components": [
         {
           "name": "ptr",
@@ -1140,11 +1126,11 @@ const abi = {
     },
     {
       "type": "struct std::vec::Vec",
-      "metadataTypeId": 40,
+      "metadataTypeId": 39,
       "components": [
         {
           "name": "buf",
-          "typeId": 39,
+          "typeId": 38,
           "typeArguments": [
             {
               "name": "",
@@ -1163,7 +1149,7 @@ const abi = {
     },
     {
       "type": "struct sway_libs::ownership::events::OwnershipRenounced",
-      "metadataTypeId": 41,
+      "metadataTypeId": 40,
       "components": [
         {
           "name": "previous_owner",
@@ -1173,7 +1159,7 @@ const abi = {
     },
     {
       "type": "struct sway_libs::ownership::events::OwnershipSet",
-      "metadataTypeId": 42,
+      "metadataTypeId": 41,
       "components": [
         {
           "name": "new_owner",
@@ -1183,7 +1169,7 @@ const abi = {
     },
     {
       "type": "struct sway_libs::ownership::events::OwnershipTransferred",
-      "metadataTypeId": 43,
+      "metadataTypeId": 42,
       "components": [
         {
           "name": "new_owner",
@@ -1192,6 +1178,16 @@ const abi = {
         {
           "name": "previous_owner",
           "typeId": 5
+        }
+      ]
+    },
+    {
+      "type": "struct sway_libs::signed_integers::i256::I256",
+      "metadataTypeId": 43,
+      "components": [
+        {
+          "name": "underlying",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
         }
       ]
     },
@@ -1431,7 +1427,7 @@ const abi = {
         }
       ],
       "name": "get_collateral_reserves",
-      "output": "2c1b573de37da8020776e36206aa54a3020ad03063bf219d626b6c1cdd82c65d",
+      "output": "1c791a2f63a6d482f33e38564a4c4f67f2351f36419d0c750ce825e233c86ae1",
       "attributes": [
         {
           "name": "storage",
@@ -1501,7 +1497,7 @@ const abi = {
     {
       "inputs": [],
       "name": "get_reserves",
-      "output": "2c1b573de37da8020776e36206aa54a3020ad03063bf219d626b6c1cdd82c65d",
+      "output": "1c791a2f63a6d482f33e38564a4c4f67f2351f36419d0c750ce825e233c86ae1",
       "attributes": [
         {
           "name": "storage",
@@ -1537,7 +1533,7 @@ const abi = {
         }
       ],
       "name": "get_user_balance_with_interest",
-      "output": "2c1b573de37da8020776e36206aa54a3020ad03063bf219d626b6c1cdd82c65d",
+      "output": "1c791a2f63a6d482f33e38564a4c4f67f2351f36419d0c750ce825e233c86ae1",
       "attributes": [
         {
           "name": "storage",
@@ -2084,22 +2080,22 @@ const abi = {
     {
       "name": "DEBUG_STEP",
       "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
-      "offset": 128944
+      "offset": 133152
     },
     {
       "name": "ORACLE_MAX_STALENESS",
       "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
-      "offset": 128992
+      "offset": 133200
     },
     {
       "name": "ORACLE_MAX_AHEADNESS",
       "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
-      "offset": 128952
+      "offset": 133160
     },
     {
       "name": "ORACLE_MAX_CONF_WIDTH",
       "concreteTypeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e",
-      "offset": 128960
+      "offset": 133168
     }
   ]
 };
