@@ -5,9 +5,9 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 import Logo from '/public/icons/dark-logo.svg?url';
-import { Line } from '../Line';
 import HalbornLogo from '/public/icons/halborn-logo.svg?url';
 import OttersecLogo from '/public/icons/ottersec-logo.svg?url';
+import { Line } from '../Line';
 
 export const Footer = () => {
   const { changeMarketMode } = useMarketStore();
