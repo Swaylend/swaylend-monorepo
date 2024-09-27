@@ -20,48 +20,54 @@ export const TermsAndConditions = ({
   };
 
   return (
-    <div className="flex flex-col w-full h-full px-6 py-4 gap-y-2.5 border-[1px] border-[#666E79] rounded-md text-lavender">
-      <div className="text-center text-white font-semibold text-lg">
-        Terms & Conditions
-      </div>
-      <div className="text-center text-moon">Last Updated: 01.09.2024</div>
-      <div className="mt-2">
-        <div className="text-lavender">
-          <p>
-            No representation or warranty is made concerning any aspect of the
-            SwayLend Protocol, including its suitability, quality, availability,
-            accessibility, accuracy or safety. As more fully explained in the
-            Terms and Conditions (available below), your access to and use of
-            the SwayLend Protocol through this Interface is entirely at your own
-            risk and could lead to substantial losses, for which you take full
-            responsibility.
-          </p>
-          <p>
-            This Interface is not available to residents of Belarus, Burundi,
-            the Central African Republic, the Democratic Republic of Congo, the
-            Democratic People’s Republic of Korea, the temporarily occupied
-            regions of Ukraine, Cuba, Iran, Libya, the People’s Republic of
-            China, the Russian Federation, Somalia, Sudan, South Sudan, Syria,
-            the United States of America, Venezuela, Yemen, and Zimbabwe or any
-            other jurisdiction in which accessing or using the SwayLend Protocol
-            is prohibited (“Prohibited Jurisdictions”). In using this Interface,
-            you confirm that you are not located in, incorporated or otherwise
-            established in, or resident of, a Prohibited Jurisdiction.
-          </p>
-          <div className="flex gap-x-2 items-center mt-4">
-            <Checkbox
-              id="terms"
-              checked={isChecked}
-              onCheckedChange={(checked) => setIsChecked(checked as boolean)}
-            />
+    <>
+      <div className="flex flex-col w-full h-full px-6 py-4 gap-y-2.5 border-[1px] border-[#666E79] rounded-md text-lavender overflow-auto">
+        <div className="text-center text-white font-semibold text-lg">
+          Terms & Conditions
+        </div>
+        <div className="text-center text-moon">Last Updated: 01.09.2024</div>
+        <div className="mt-2">
+          <div className="text-lavender">
             <p>
-              I confirm that I have read, understand and accept the{' '}
+              No representation or warranty is made concerning any aspect of the
+              SwayLend Protocol, including its suitability, quality,
+              availability, accessibility, accuracy or safety. As more fully
+              explained in the Terms and Conditions (available below), your
+              access to and use of the SwayLend Protocol through this Interface
+              is entirely at your own risk and could lead to substantial losses,
+              for which you take full responsibility.
+            </p>
+            <p>
+              This Interface is not available to residents of Belarus, Burundi,
+              the Central African Republic, the Democratic Republic of Congo,
+              the Democratic People’s Republic of Korea, the temporarily
+              occupied regions of Ukraine, Cuba, Iran, Libya, the People’s
+              Republic of China, the Russian Federation, Somalia, Sudan, South
+              Sudan, Syria, the United States of America, Venezuela, Yemen, and
+              Zimbabwe or any other jurisdiction in which accessing or using the
+              SwayLend Protocol is prohibited (“Prohibited Jurisdictions”). In
+              using this Interface, you confirm that you are not located in,
+              incorporated or otherwise established in, or resident of, a
+              Prohibited Jurisdiction.
+            </p>
+            <div className="flex max-md:flex-col max-md:gap-y-2 max-md:text-center md:gap-x-2 items-center mt-4">
+              <div
+                className="max-md:w-full flex justify-center"
+                onMouseDown={() => setIsChecked(!isChecked)}
+              >
+                <Checkbox id="terms" checked={isChecked} />
+              </div>
+              <p
+                onMouseDown={() => setIsChecked(!isChecked)}
+                className="cursor-pointer"
+              >
+                I confirm that I have read, understand and accept the{' '}
+              </p>
               {/* biome-ignore lint/a11y/useValidAnchor: <explanation> */}
               <a href="#" className="underline text-primary">
-                Terms and Conditions
+                Terms and Conditions.
               </a>
-              .
-            </p>
+            </div>
           </div>
         </div>
       </div>
@@ -82,6 +88,6 @@ export const TermsAndConditions = ({
           Next
         </Button>
       </div>
-    </div>
+    </>
   );
 };
