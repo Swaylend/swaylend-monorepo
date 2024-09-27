@@ -398,7 +398,7 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
         },
       } = event;
 
-      const value = BigDecimal(underlying.toString()).minus(I256_INDENT);
+      const value = BigDecimal(underlying.toString()).minus(I256_INDENT).abs();
 
       const address = (account.Address?.bits ?? account.ContractId?.bits)!;
       const chainId = CHAIN_ID_MAP[ctx.chainId as keyof typeof CHAIN_ID_MAP];
