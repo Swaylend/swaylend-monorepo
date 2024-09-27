@@ -244,7 +244,7 @@ export const LendTable = () => {
                       rel="noreferrer"
                       className="underline hover:opacity-90 text-white"
                     >
-                      Sweylend works.
+                      Swaylend works.
                     </a>
                   </div>
                 ) : (
@@ -391,7 +391,7 @@ export const LendTable = () => {
                   rel="noreferrer"
                   className="underline hover:opacity-90 text-white"
                 >
-                  Sweylend works.
+                  Swaylend works.
                 </a>
               </div>
             ) : (
