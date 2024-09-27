@@ -1,5 +1,5 @@
-import { MarketsTable } from '@/components/MarketsView/MarketsTable';
 import { MarketStats } from '@/components/MarketsView/MarketStats';
+import { MarketsTable } from '@/components/MarketsView/MarketsTable';
 import { MultiMarketChart } from '@/components/MarketsView/MultiMarketChart';
 import { getChartData } from '@/lib/charts';
 import type { Metadata } from 'next';

@@ -92,12 +92,12 @@ export default function MarketOverview({
     }
 
     const totalEarning = formatUnits(
-      BigNumber(marketBasics?.total_supply_base.toString()!),
+      BigNumber(marketBasics?.total_supply_base.toString() ?? 0),
       marketConfiguration?.baseTokenDecimals
     );
 
     const totalBorrowing = formatUnits(
-      BigNumber(marketBasics?.total_borrow_base.toString()!),
+      BigNumber(marketBasics?.total_borrow_base.toString() ?? 0),
       marketConfiguration?.baseTokenDecimals
     );
 
@@ -164,7 +164,7 @@ export default function MarketOverview({
             <div className="text-white font-bold text-[20px]">
               {getFormattedPrice(
                 formatUnits(
-                  BigNumber(marketBasics?.total_borrow_base.toString()!),
+                  BigNumber(marketBasics?.total_borrow_base.toString() ?? 0),
                   marketConfiguration?.baseTokenDecimals
                 )
               )}
@@ -191,7 +191,7 @@ export default function MarketOverview({
               <div className="text-xl font-semibold text-white mt-2">
                 {getFormattedPrice(
                   formatUnits(
-                    BigNumber(marketBasics?.total_supply_base.toString()!),
+                    BigNumber(marketBasics?.total_supply_base.toString() ?? 0),
                     marketConfiguration?.baseTokenDecimals
                   )
                 )}

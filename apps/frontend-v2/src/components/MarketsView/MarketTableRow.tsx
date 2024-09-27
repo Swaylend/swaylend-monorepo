@@ -29,8 +29,8 @@ import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 import SWAY from '/public/tokens/sway.svg?url';
 import { CircularProgressBar } from '../CircularProgressBar';
-import { Skeleton } from '../ui/skeleton';
 import { type Collateral, CollateralIcons } from '../CollateralIcons';
+import { Skeleton } from '../ui/skeleton';
 
 const SkeletonRow = (
   <TableRow>
@@ -172,7 +172,7 @@ export const MarketTableRow = ({
       <TableCell className="text-lavender font-medium">
         {getFormattedPrice(
           formatUnits(
-            BigNumber(marketBasics?.total_supply_base.toString()!),
+            BigNumber(marketBasics?.total_supply_base.toString() ?? 0),
             marketConfiguration?.baseTokenDecimals
           )
         )}
@@ -180,7 +180,7 @@ export const MarketTableRow = ({
       <TableCell className="text-lavender font-medium">
         {getFormattedPrice(
           formatUnits(
-            BigNumber(marketBasics?.total_borrow_base.toString()!),
+            BigNumber(marketBasics?.total_borrow_base.toString() ?? 0),
             marketConfiguration?.baseTokenDecimals
           )
         )}
