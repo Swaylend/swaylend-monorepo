@@ -62,9 +62,11 @@ export const PositionSummary = () => {
 
   const possibleCollateralUtilizationValue = useMemo(() => {
     if (possibleCollateralUtilization) {
-      if (possibleCollateralUtilization >= 0)
+      if (possibleCollateralUtilization >= 0) {
         return possibleCollateralUtilization.toFixed(2);
-      return 0;
+      }
+
+      return '0';
     }
     return currentCollateralUtilization.toFixed(2);
   }, [possibleCollateralUtilization, currentCollateralUtilization]);

@@ -1,14 +1,8 @@
-import {
-  useBorrowCapacity,
-  useUserCollateralUtilization,
-  useUserCollateralValue,
-  useUserSupplyBorrow,
-} from '@/hooks';
+import { useBorrowCapacity, useUserSupplyBorrow } from '@/hooks';
 import { useUserLiquidationPoint } from '@/hooks/useUserLiquidationPoint';
 import { getFormattedPrice } from '@/utils';
 import { useIsConnected } from '@fuels/react';
 import BigNumber from 'bignumber.js';
-import { CircleXIcon, PlusCircleIcon } from 'lucide-react';
 import Image from 'next/image';
 import React, { useState } from 'react';
 import PlusIcon from '/public/icons/plus-filled.svg?url';
@@ -20,13 +14,12 @@ export const BorrowPositionSummary = () => {
   const { isConnected } = useIsConnected();
   const { data: borrowCapacity } = useBorrowCapacity();
   const { data: userLiquidationPoint } = useUserLiquidationPoint();
-  const { data: collateralUtilization } = useUserCollateralUtilization();
-  const { data: collateralValue } = useUserCollateralValue();
   const { data: userSupplyBorrow } = useUserSupplyBorrow();
   const [open, setOpen] = useState(false);
 
-  if (!isConnected || !userSupplyBorrow || userSupplyBorrow.borrowed.eq(0))
+  if (!isConnected || !userSupplyBorrow || userSupplyBorrow.borrowed.eq(0)) {
     return null;
+  }
 
   return (
     <>
