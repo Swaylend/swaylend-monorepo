@@ -1,4 +1,4 @@
-import type BigNumber from 'bignumber.js';
+import BigNumber from 'bignumber.js';
 
 export const getFormattedPrice = (number: BigNumber): string => {
   if (!number || number.isNaN() || number.eq(0)) return '$ 0.00';
@@ -33,5 +33,5 @@ export const getFormattedNumber = (number: BigNumber): string => {
   if (number.gte(1)) {
     return `${number.toFixed(2, 1)}`;
   }
-  return number.toFixed(3);
+  return number.toFixed(3, BigNumber.ROUND_FLOOR);
 };
