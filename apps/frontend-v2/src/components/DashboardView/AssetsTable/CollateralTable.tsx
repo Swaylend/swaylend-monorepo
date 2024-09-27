@@ -314,7 +314,9 @@ const CollateralCard = ({
             <div className="w-1/2 text-moon font-medium">
               Supply Cap Reached
             </div>
-            <div className="text-moon">{supplyUsed.toFormat(2)}%</div>
+            <div className="w-[48px] h-[48px]">
+              <CircularProgressBar percent={supplyUsed.div(100)} />
+            </div>
           </div>
           <div className="w-full flex items-center">
             <div className="w-1/2 text-moon font-medium">Supplied Assets</div>
