@@ -20,17 +20,17 @@ export const MarketStats = ({
 
   return (
     <div className="max-lg:hidden flex w-full justify-between">
-      <div>
+      <div className="flex flex-col justify-end">
         <div className="text-moon text-sm font-semibold">Total Supply</div>
         <div className="text-white font-bold text-2xl">
           {getFormattedPrice(collateral.plus(supplied))}
         </div>
       </div>
-      <div className="flex gap-x-16">
+      <div className="flex items-end gap-x-16">
         <div>
           <div className="flex gap-x-2 items-center">
             <div className="w-2 h-2 rounded-full bg-primary" />
-            <div className=" text-sm font-semibold text-primary">Earning</div>
+            <div className="text-sm font-semibold text-primary">Earning</div>
           </div>
           <div className="text-white font-bold text-xl">
             {getFormattedPrice(supplied)}
@@ -39,7 +39,7 @@ export const MarketStats = ({
         <div>
           <div className="flex gap-x-2 items-center">
             <div className="w-2 h-2 rounded-full bg-purple" />
-            <div className=" text-sm font-semibold text-purple">Borrowing </div>
+            <div className="text-sm font-semibold text-purple">Borrowing </div>
           </div>
           <div className="text-white font-bold text-xl">
             {getFormattedPrice(borrowed)}

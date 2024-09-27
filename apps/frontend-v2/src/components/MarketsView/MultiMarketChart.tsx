@@ -47,7 +47,7 @@ export const MultiMarketChart = ({
     month: '2-digit',
   });
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-card/80 p-4 rounded-md border-[1px] border-white/20 shadow-md">
@@ -90,7 +90,7 @@ export const MultiMarketChart = ({
   };
 
   function CustomCursor(props: any) {
-    const { stroke, pointerEvents, height, points, className } = props;
+    const { pointerEvents, height, points, className } = props;
 
     const { x, y } = points[0];
     return (
