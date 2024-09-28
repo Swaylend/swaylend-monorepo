@@ -6027,21 +6027,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "13c2bddecc57b384dee18652358fb23172facb8a2c51ccc10d74c157bdea3292"
 
 [[package]]
-name = "swaylend-oracle"
-version = "0.1.0"
-dependencies = [
- "dotenv",
- "fuels",
- "hex",
- "market_sdk",
- "pyth_sdk",
- "reqwest",
- "serde",
- "serde_json",
- "tokio",
-]
-
-[[package]]
 name = "swaylend-scripts"
 version = "0.1.0"
 dependencies = [
@@ -6050,7 +6035,7 @@ dependencies = [
  "clap",
  "dotenv",
  "fuels",
- "market_sdk",
+ "market",
  "pyth_mock_sdk",
  "pyth_sdk",
  "rand",

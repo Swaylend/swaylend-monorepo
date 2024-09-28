@@ -19,11 +19,13 @@ tokio = { workspace = true }
 anyhow = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
-market_sdk = { workspace = true }
-token_sdk = { workspace = true }
-pyth_mock_sdk = { workspace = true }
-pyth_sdk = { workspace = true }
 dotenv = { workspace = true }
 rand = { workspace = true }
 chrono = { workspace = true }
 tai64 = { workspace = true }
+
+market = { workspace = true }
+
+token_sdk = { workspace = true }
+pyth_mock_sdk = { workspace = true }
+pyth_sdk = { workspace = true }

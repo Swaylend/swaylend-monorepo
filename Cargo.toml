@@ -1,7 +1,5 @@
 [workspace]
 members = [
-    # Apps
-    "apps/oracle",
     # Contracts (types)
     "contracts/market",
     "contracts/src-20",

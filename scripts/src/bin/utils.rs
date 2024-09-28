@@ -2,16 +2,11 @@ use clap::Parser;
 use dotenv::dotenv;
 use fuels::{
     accounts::{provider::Provider, wallet::WalletUnlocked},
-    macros::abigen,
     types::{bech32::Bech32ContractId, AssetId, Bits256, ContractId},
 };
+use market::{CollateralConfiguration, MarketConfiguration, MarketContract};
 use serde::Deserialize;
 use std::{io::Write, path::PathBuf, str::FromStr};
-
-abigen!(Contract(
-    name = "MarketContract",
-    abi = "contracts/market/out/release/market-abi.json"
-));
 
 pub fn get_yes_no_input(prompt: &str) -> bool {
     loop {
@@ -201,7 +196,7 @@ pub async fn verify_connected_network(
     println!("Connected to chain: {}", chain_name);
     match chain_name.as_str() {
         "Mainnet" => Ok(network == Network::Mainnet),
-        "Ignition" => Ok(network == Network::Testnet),
+        "Fuel Sepolia Testnet" => Ok(network == Network::Testnet),
         "Local network" => Ok(network == Network::Devnet),
         _ => Ok(false),
     }

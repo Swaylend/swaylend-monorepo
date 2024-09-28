@@ -1,15 +1,9 @@
 mod utils;
 
-abigen!(Contract(
-    name = "MarketContract",
-    abi = "contracts/market/out/release/market-abi.json"
-));
-
 use clap::Parser;
 use fuels::{
     accounts::{provider::Provider, wallet::WalletUnlocked},
     crypto::SecretKey,
-    macros::abigen,
     types::{transaction::TxPolicies, AssetId, ContractId},
 };
 use std::str::FromStr;

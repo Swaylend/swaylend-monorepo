@@ -3,7 +3,7 @@ use fuels::{
     prelude::{Provider, WalletUnlocked},
     types::{Bits256, ContractId},
 };
-use market_sdk::{get_market_config, MarketContract};
+use market_sdk::{get_market_config, Market};
 use pyth_sdk::constants::USDC_USD_PRICE_FEED_ID;
 use std::{path::PathBuf, str::FromStr};
 use token_sdk::TokenContract;
@@ -42,7 +42,7 @@ async fn deploy() {
     let market_config =
         get_market_config(usdc.asset_id, usdc.decimals as u32, usdc_price_feed).unwrap();
 
-    let market = MarketContract::deploy(&wallet, 0, use_random_address)
+    let market = Market::deploy(&wallet, 0, use_random_address)
         .await
         .unwrap();
 

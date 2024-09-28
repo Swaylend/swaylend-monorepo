@@ -20,8 +20,8 @@ use token_sdk::Asset;
 
 const DEFAULT_GAS_LIMIT: u64 = 2_000_000;
 
-pub struct MarketContract {
-    pub instance: Market<WalletUnlocked>,
+pub struct Market {
+    pub instance: MarketContract<WalletUnlocked>,
 }
 
 #[derive(Deserialize)]
@@ -83,13 +83,13 @@ pub fn get_market_config(
     })
 }
 
-impl MarketContract {
+impl Market {
     pub async fn deploy(
         wallet: &WalletUnlocked,
         debug_step: u64, // only for local test
         random_address: bool,
     ) -> anyhow::Result<Self> {
-        let configurables = MarketConfigurables::default().with_DEBUG_STEP(debug_step)?;
+        let configurables = MarketContractConfigurables::default().with_DEBUG_STEP(debug_step)?;
 
         let root = PathBuf::from(env!("CARGO_WORKSPACE_DIR"));
 
@@ -115,20 +115,20 @@ impl MarketContract {
                 .await?
         };
 
-        let market = Market::new(id.clone(), wallet.clone());
+        let market = MarketContract::new(id.clone(), wallet.clone());
 
         Ok(Self { instance: market })
     }
 
     pub async fn new(contract_id: ContractId, wallet: WalletUnlocked) -> Self {
         Self {
-            instance: Market::new(contract_id, wallet),
+            instance: MarketContract::new(contract_id, wallet),
         }
     }
 
     pub async fn with_account(&self, account: &WalletUnlocked) -> anyhow::Result<Self> {
         Ok(Self {
-            instance: Market::new(self.instance.contract_id().clone(), account.clone()),
+            instance: MarketContract::new(self.instance.contract_id().clone(), account.clone()),
         })
     }
 
