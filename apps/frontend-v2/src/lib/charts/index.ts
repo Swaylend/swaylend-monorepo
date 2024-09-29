@@ -1,7 +1,6 @@
 import { DEPLOYED_MARKETS } from '@/utils';
 import { getMarketsCombinedQuery } from './getMarketsCombinedQuery';
 import { getSingleMarketQuery } from './getSingleMarketQuery';
-import { version } from 'os';
 
 export type ChartData = {
   timestamp: number;
