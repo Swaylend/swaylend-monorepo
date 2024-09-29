@@ -32,6 +32,8 @@ use standards::src5::{SRC5, State};
 use sway_libs::ownership::*;
 use sway_libs::signed_integers::i256::I256;
 
+const VERSION: u8 = 1_u8;
+
 // This is set during deployment of the contract
 configurable {
     DEBUG_STEP: u64 = 0,
@@ -65,6 +67,11 @@ storage {
 
 // Market contract implementation
 impl Market for Contract {
+    // Get version of the smart contract
+    fn get_version() -> u8 {
+        VERSION
+    }
+
     // # 0. Activate contract
     #[storage(write)]
     fn activate_contract(market_configuration: MarketConfiguration, owner: Identity) {

@@ -2,12 +2,16 @@
 
 The core components of the SwayLend protocol are located here. The protocol implementation resides in [`main.sw`](src/main.sw).
 
+## Building contracts
+
 To build the contracts, run the following commands in the project root:
 
 ```bash
 forc build
 forc build --release
 ```
+
+## Testing contracts
 
 We use the release build for our tests. To run the tests, execute:
 

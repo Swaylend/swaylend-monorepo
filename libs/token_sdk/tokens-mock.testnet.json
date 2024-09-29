@@ -1,0 +1,54 @@
+[
+  {
+    "asset_id": "0x9317b620a5d5c6056b0cab9535992e68f029c24a2e7a2c8634113f4930ffa51b",
+    "price_feed_id": "0xeaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a",
+    "price_feed_decimals": 7,
+    "name": "USD Coin",
+    "symbol": "USDC",
+    "default_price": 1,
+    "decimals": 6,
+    "mint_amount": 10000
+  },
+  {
+    "asset_id": "0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07",
+    "price_feed_id": "0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace",
+    "price_feed_decimals": 8,
+    "name": "Ethereum",
+    "symbol": "ETH",
+    "default_price": 3500,
+    "decimals": 9,
+    "mint_amount": 5,
+    "borrow_collateral_factor": 800000000000000000,
+    "liquidate_collateral_factor": 850000000000000000,
+    "liquidation_penalty": 900000000000000000,
+    "supply_cap": 1000000000000
+  },
+  {
+    "asset_id": "0x9148af10af1964131e09dcfeec76952a16de18da89bbf5d933e48240096fb4b9",
+    "price_feed_id": "0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43",
+    "price_feed_decimals": 7,
+    "name": "Bitcoin",
+    "symbol": "BTC",
+    "default_price": 70000,
+    "decimals": 8,
+    "mint_amount": 1,
+    "borrow_collateral_factor": 700000000000000000,
+    "liquidate_collateral_factor": 770000000000000000,
+    "liquidation_penalty": 950000000000000000,
+    "supply_cap": 2000000000
+  },
+  {
+    "asset_id": "0x8dcca709f923ddb8a020647a864556dcfbb440575e233f05e30609c6c75b3d22",
+    "price_feed_id": "0x78d185a741d07edb3412b09008b7c5cfb9bbbd7d568bf00ba737b456ba171501",
+    "price_feed_decimals": 8,
+    "name": "Uniswap",
+    "symbol": "UNI",
+    "default_price": 5,
+    "decimals": 9,
+    "mint_amount": 1000,
+    "borrow_collateral_factor": 750000000000000000,
+    "liquidate_collateral_factor": 810000000000000000,
+    "liquidation_penalty": 930000000000000000,
+    "supply_cap": 400000000000000
+  }
+]

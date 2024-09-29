@@ -181,6 +181,8 @@ export const InputDialog = () => {
     marketConfiguration,
     collateralConfigurations,
     maxWithdrawableCollateral,
+    borrowCapacity,
+    userSupplyBorrow,
   ]);
 
   const onMaxBtnClick = () => {
@@ -221,7 +223,11 @@ export const InputDialog = () => {
             BigNumber(marketBalanceOfBase.formatted.toFixed(decimals))
           );
         } else {
-          changeTokenAmount(BigNumber(finalBalance.toFixed(decimals)));
+          changeTokenAmount(
+            BigNumber(finalBalance.toFixed(decimals)).minus(
+              BigNumber(10).pow(-decimals)
+            )
+          );
         }
         break;
       case ACTION_TYPE.REPAY: {

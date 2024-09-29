@@ -412,11 +412,11 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
           chainId: chainId,
           contractAddress: ctx.contractAddress,
           address: address,
-          principal: BigDecimal(value.toString()),
+          principal: value.abs(),
           isNegative: value.isNegative(),
         });
       } else {
-        userBasic.principal = BigDecimal(value.toString());
+        userBasic.principal = value.abs();
         userBasic.isNegative = value.isNegative();
       }
 

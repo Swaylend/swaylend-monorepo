@@ -88,11 +88,11 @@ const SkeletonCardContent = (
   <CardContent>
     <div className="flex flex-col gap-y-4 pt-8 px-4">
       <div className="w-full flex items-center">
-        <div className="w-1/2 text-moon font-medium">Lend Asset</div>
+        <div className="w-1/2 text-moon font-medium">Asset</div>
         <Skeleton className="w-1/2 h-[24px] bg-primary/20 rounded-md" />
       </div>
       <div className="w-full flex items-center">
-        <div className="w-1/2 text-moon font-medium">Lend APY</div>
+        <div className="w-1/2 text-moon font-medium">Supply APY</div>
         <Skeleton className="w-1/2 h-[24px] bg-primary/20 rounded-md" />
       </div>
       <div className="w-full flex items-center">
@@ -138,16 +138,16 @@ export const LendTable = () => {
   return (
     <>
       {/* DESKTOP */}
-      <Table className="max-sm:hidden">
+      <Table className="max-lg:hidden">
         <TableHeader>
           <TableRow>
             <TableHead className="w-3/12">
               <div className="flex items-center gap-x-2">
-                Earn Asset
+                Asset
                 <InfoIcon text={'Base asset available for lending.'} />
               </div>
             </TableHead>
-            <TableHead className="w-1/6">Earn APY</TableHead>
+            <TableHead className="w-1/6">Supply APY</TableHead>
             <TableHead className="w-1/6">Supplied Assets</TableHead>
             <TableHead className="w-1/6">
               <div className="flex items-center gap-x-2">
@@ -244,7 +244,7 @@ export const LendTable = () => {
                       rel="noreferrer"
                       className="underline hover:opacity-90 text-white"
                     >
-                      Sweylend works.
+                      Swaylend works.
                     </a>
                   </div>
                 ) : (
@@ -280,7 +280,7 @@ export const LendTable = () => {
         </TableBody>
       </Table>
       {/* MOBILE */}
-      <div className="flex flex-col gap-y-4 px-4 sm:hidden">
+      <div className="flex flex-col gap-y-4 px-4 lg:hidden">
         <Title>Earn Assets</Title>
         <Card>
           <VisuallyHidden.Root asChild>
@@ -295,7 +295,7 @@ export const LendTable = () => {
             <CardContent>
               <div className="flex flex-col gap-y-4 pt-8 px-4">
                 <div className="w-full flex items-center">
-                  <div className="w-1/2 text-moon font-medium">Lend Asset</div>
+                  <div className="w-1/2 text-moon font-medium">Asset</div>
                   <div className="flex gap-x-2 items-center">
                     <div>
                       {marketConfiguration && (
@@ -343,7 +343,7 @@ export const LendTable = () => {
                   </div>
                 </div>
                 <div className="w-full flex items-center">
-                  <div className="w-1/2 text-moon font-medium">Earn APY</div>
+                  <div className="w-1/2 text-moon font-medium">Supply APY</div>
                   <div
                     className={cn(
                       'text-white',
@@ -391,7 +391,7 @@ export const LendTable = () => {
                   rel="noreferrer"
                   className="underline hover:opacity-90 text-white"
                 >
-                  Sweylend works.
+                  Swaylend works.
                 </a>
               </div>
             ) : (

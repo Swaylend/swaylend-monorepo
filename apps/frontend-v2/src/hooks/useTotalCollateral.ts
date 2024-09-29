@@ -1,15 +1,17 @@
 import { Market } from '@/contract-types';
 import { useMarketStore } from '@/stores';
-import { DEPLOYED_MARKETS } from '@/utils';
+import { DEPLOYED_MARKETS, type DeployedMarket } from '@/utils';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
 import { useProvider } from './useProvider';
 
-export const useTotalCollateral = () => {
+export const useTotalCollateral = (marketParam?: DeployedMarket) => {
   const provider = useProvider();
-  const { market } = useMarketStore();
-  const { data: collateralConfigurations } = useCollateralConfigurations();
+  const { market: storeMarket } = useMarketStore();
+  const market = marketParam ?? storeMarket;
+  const { data: collateralConfigurations } =
+    useCollateralConfigurations(market);
 
   return useQuery({
     queryKey: ['totalCollateral', market, collateralConfigurations],
@@ -21,26 +23,14 @@ export const useTotalCollateral = () => {
         provider
       );
 
-      // FIXME: Add contract methods to fetch all data at once
-      const promises = Object.keys(collateralConfigurations).map(
-        async (assetId) => ({
-          assetId,
-          value: await marketContract.functions
-            .totals_collateral({ bits: assetId })
-            .get(),
-        })
-      );
-
-      const data = await Promise.all(promises);
-
-      if (data.length === 0) {
-        throw new Error('Failed to fetch totalsCollateral');
-      }
+      const totalsCollateral = await marketContract.functions
+        .get_all_totals_collateral()
+        .get();
 
       const totals = new Map<string, BigNumber>(
-        data.map(({ assetId, value }) => [
-          assetId,
-          new BigNumber(value.value.toString()),
+        totalsCollateral.value.map(([assetId, value]) => [
+          assetId.bits,
+          new BigNumber(value.toString()),
         ])
       );
 

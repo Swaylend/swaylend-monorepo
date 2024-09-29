@@ -31,6 +31,8 @@ export const usePossiblePositionSummary = () => {
     useState<BigNumber | null>(null);
   const [possibleAvailableToBorrow, setPossibleAvailableToBorrow] =
     useState<BigNumber | null>(null);
+  const [possibleCollateralUtilization, setPossibleCollateralUtilization] =
+    useState<number | null>(null);
 
   const calcPositionSummary = async () => {
     if (
@@ -48,6 +50,7 @@ export const usePossiblePositionSummary = () => {
       setPossibleCollateralValue(null);
       setPossibleLiquidationPoint(null);
       setPossibleAvailableToBorrow(null);
+      setPossibleCollateralUtilization(null);
       return;
     }
 
@@ -62,9 +65,9 @@ export const usePossiblePositionSummary = () => {
         setPossibleCollateralValue(null);
         setPossibleLiquidationPoint(null);
         setPossibleAvailableToBorrow(null);
+        setPossibleCollateralUtilization(null);
         return;
       }
-
       const baseTokenPrice =
         priceData.prices[marketConfiguration.baseToken.bits];
 
@@ -76,6 +79,9 @@ export const usePossiblePositionSummary = () => {
         ? BigNumber(0)
         : loanAmount.div(trueCollateralValue);
 
+      setPossibleCollateralUtilization(
+        collateralUtilization.times(100).toNumber()
+      );
       const userPositionLiquidationPoint = collateralValue.times(
         collateralUtilization
       );
@@ -105,6 +111,7 @@ export const usePossiblePositionSummary = () => {
         setPossibleCollateralValue(null);
         setPossibleLiquidationPoint(null);
         setPossibleAvailableToBorrow(null);
+        setPossibleCollateralUtilization(null);
         return;
       }
 
@@ -155,5 +162,6 @@ export const usePossiblePositionSummary = () => {
     possibleCollateralValue,
     possibleLiquidationPoint,
     possibleAvailableToBorrow,
+    possibleCollateralUtilization,
   };
 };

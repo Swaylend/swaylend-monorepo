@@ -27,4 +27,6 @@ export * from './useMarketBalanceOfBase';
 export * from './useMarketBasics';
 export * from './useBalance';
 export * from './useLeaderboardPoints';
+export * from './useTotalReserves';
+export * from './useCollateralReserves';
 export * from './useMaxWithdrawableCollateral';

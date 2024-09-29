@@ -3,6 +3,7 @@ import {
   useMarketBalanceOfBase,
   useMarketConfiguration,
   usePossiblePositionSummary,
+  useUserCollateralUtilization,
   useUserCollateralValue,
   useUserSupplyBorrow,
 } from '@/hooks';
@@ -13,6 +14,7 @@ import BigNumber from 'bignumber.js';
 import { ArrowDown, ArrowUp } from 'lucide-react';
 import React, { useMemo } from 'react';
 import { InfoIcon } from '../InfoIcon';
+import { Progress } from '../ui/progress';
 
 export const PositionSummary = () => {
   const { data: marketConfiguration } = useMarketConfiguration();
@@ -49,24 +51,34 @@ export const PositionSummary = () => {
     possibleCollateralValue,
     possibleLiquidationPoint,
     possibleAvailableToBorrow,
+    possibleCollateralUtilization,
   } = usePossiblePositionSummary();
+
+  const { data: collateralUtilization } = useUserCollateralUtilization();
+
+  const currentCollateralUtilization = useMemo(() => {
+    return collateralUtilization?.times(100).toNumber() ?? 0;
+  }, [collateralUtilization]);
+
+  const possibleCollateralUtilizationValue = useMemo(() => {
+    if (possibleCollateralUtilization) {
+      if (possibleCollateralUtilization >= 0) {
+        return possibleCollateralUtilization.toFixed(2);
+      }
+
+      return '0';
+    }
+    return currentCollateralUtilization.toFixed(2);
+  }, [possibleCollateralUtilization, currentCollateralUtilization]);
+
+  const meterColor = useMemo(() => {
+    if (Number(possibleCollateralUtilizationValue) < 60) return 'bg-primary';
+    if (Number(possibleCollateralUtilizationValue) < 80) return 'bg-yellow-500';
+    return 'bg-red-500';
+  }, [possibleCollateralUtilizationValue]);
 
   const stats = useMemo(() => {
     return [
-      {
-        title: 'Collateral Value',
-        tooltip: 'The total value of your collateral in USDC',
-        value: `${getFormattedPrice(collateralValue ?? BigNumber(0))}`,
-        changeValue: possibleCollateralValue
-          ? `${getFormattedPrice(possibleCollateralValue)}`
-          : null,
-        color: possibleCollateralValue?.lte(collateralValue ?? BigNumber(0))
-          ? 0
-          : 1,
-        direction: possibleCollateralValue?.lte(collateralValue ?? BigNumber(0))
-          ? 0
-          : 1,
-      },
       {
         title: 'Liquidation Point',
         tooltip:
@@ -81,6 +93,20 @@ export const PositionSummary = () => {
         direction: possibleLiquidationPoint?.lte(
           liquidationPoint ?? BigNumber(0)
         )
+          ? 0
+          : 1,
+      },
+      {
+        title: 'Collateral Value',
+        tooltip: 'The total value of your collateral in $',
+        value: `${getFormattedPrice(collateralValue ?? BigNumber(0))}`,
+        changeValue: possibleCollateralValue
+          ? `${getFormattedPrice(possibleCollateralValue)}`
+          : null,
+        color: possibleCollateralValue?.lte(collateralValue ?? BigNumber(0))
+          ? 0
+          : 1,
+        direction: possibleCollateralValue?.lte(collateralValue ?? BigNumber(0))
           ? 0
           : 1,
       },
@@ -135,6 +161,30 @@ export const PositionSummary = () => {
         Position Summary
       </div>
       <div className="w-full mt-4 flex flex-col gap-y-2">
+        <div>
+          <div className="w-full flex justify-between">
+            <div className="text-moon flex gap-x-1">
+              Risk Meter{' '}
+              <InfoIcon
+                text={
+                  'Shows the danger level of how close to liquidation (100%) this position is.'
+                }
+              />
+            </div>
+            <div className="text-lavender font-semibold">
+              {possibleCollateralUtilizationValue}%
+            </div>
+          </div>
+          <Progress
+            value={
+              possibleCollateralUtilization
+                ? possibleCollateralUtilization
+                : currentCollateralUtilization
+            }
+            className={'h-[6px] mt-2'}
+            indicatorColor={meterColor}
+          />
+        </div>
         {stats.map((stat) => {
           return (
             <div key={stat.title} className="flex w-full justify-between">
