@@ -21,8 +21,6 @@ export const useCreateChartData = (
           return null;
         }
 
-        console.log(marketName);
-
         const rateData = [];
         for (let i = 1; i <= 100; i++) {
           const borrowRateForIteration = BigNumber(
