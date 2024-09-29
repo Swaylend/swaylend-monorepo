@@ -1,4 +1,4 @@
-import { DEPLOYED_MARKETS } from '@/utils';
+import { appConfig } from '@/configs';
 import { getMarketsCombinedQuery } from './getMarketsCombinedQuery';
 import { getSingleMarketQuery } from './getSingleMarketQuery';
 
@@ -14,15 +14,15 @@ export type MarketData = {
 };
 
 export const getChartData = async () => {
-  const url = process.env.SENTIO_API_URL;
-  const apiKey = process.env.SENTIO_API_KEY;
+  const url = appConfig.server.sentioApi;
+  const apiKey = appConfig.server.sentioApiKey;
 
   if (!apiKey || !url) {
     return;
   }
 
   const singleMarketData = await Promise.all(
-    Object.entries(DEPLOYED_MARKETS).map(async ([key, value]) => {
+    Object.entries(appConfig.markets).map(async ([key, value]) => {
       const poolAddress = value.marketAddress;
 
       const response = await fetch(url, {

@@ -1,4 +1,4 @@
-import { DeployedMarket } from '@/utils';
+import { appConfig } from '@/configs';
 import BigNumber from 'bignumber.js';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
@@ -21,7 +21,7 @@ export enum MARKET_MODE {
 }
 
 interface MarketStore {
-  market: DeployedMarket;
+  market: string;
 
   mode: ACTION_MODE;
   marketMode: MARKET_MODE;
@@ -32,7 +32,7 @@ interface MarketStore {
   successDialogOpen: boolean;
   successDialogTransactionId: string | null;
 
-  changeMarket: (market: DeployedMarket) => void;
+  changeMarket: (market: string) => void;
   changeMode: (mode: ACTION_MODE) => void;
   changeMarketMode: (mode: MARKET_MODE) => void;
   changeAction: (action: ACTION_TYPE | null | undefined) => void;
@@ -44,7 +44,7 @@ interface MarketStore {
 }
 
 export const marketStoreInitialState = {
-  market: DeployedMarket.USDC,
+  market: Object.keys(appConfig.markets)[0],
   mode: 0,
   marketMode: MARKET_MODE.BORROW,
   action: null,
@@ -59,7 +59,7 @@ export const useMarketStore = createWithEqualityFn<MarketStore>()(
   (set) => ({
     ...marketStoreInitialState,
 
-    changeMarket: (market: DeployedMarket) => set({ market }),
+    changeMarket: (market: string) => set({ market }),
     changeInputDialogOpen: (open: boolean) => set({ inputDialogOpen: open }),
     changeMode: (mode: ACTION_MODE) => set({ mode }),
     changeMarketMode: (mode: MARKET_MODE) => set({ marketMode: mode }),

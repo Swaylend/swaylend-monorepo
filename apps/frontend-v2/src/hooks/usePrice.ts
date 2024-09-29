@@ -1,6 +1,7 @@
 import { Market, type PriceDataUpdateInput } from '@/contract-types/Market';
 import { useMarketStore } from '@/stores';
-import { DEPLOYED_MARKETS, type DeployedMarket } from '@/utils';
+
+import { appConfig } from '@/configs';
 import { HermesClient } from '@pythnetwork/hermes-client';
 import {
   PYTH_CONTRACT_ADDRESS_SEPOLIA,
@@ -15,7 +16,7 @@ import { useCollateralConfigurations } from './useCollateralConfigurations';
 import { useMarketConfiguration } from './useMarketConfiguration';
 import { useProvider } from './useProvider';
 
-export const usePrice = (marketParam?: DeployedMarket) => {
+export const usePrice = (marketParam?: string) => {
   const hermesClient = new HermesClient(
     process.env.NEXT_PUBLIC_HERMES_API ?? 'https://hermes.pyth.network'
   );
@@ -74,7 +75,7 @@ export const usePrice = (marketParam?: DeployedMarket) => {
       );
 
       const marketContract = new Market(
-        DEPLOYED_MARKETS[market].marketAddress,
+        appConfig.markets[market].marketAddress,
         provider
       );
 

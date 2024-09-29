@@ -1,7 +1,7 @@
 import { MarketChart } from '@/components/MarketsView/MarketChart';
 import MarketOverview from '@/components/MarketsView/MarketOverview';
+import { appConfig } from '@/configs';
 import { getChartData } from '@/lib/charts';
-import { DEPLOYED_MARKETS } from '@/utils';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
@@ -14,7 +14,7 @@ export default async function Page({ params }: { params: { pair: string } }) {
   if (
     !network ||
     !baseAsset ||
-    !Object.keys(DEPLOYED_MARKETS).includes(baseAsset.toUpperCase())
+    !Object.keys(appConfig.markets).includes(baseAsset.toUpperCase())
   ) {
     notFound();
   }

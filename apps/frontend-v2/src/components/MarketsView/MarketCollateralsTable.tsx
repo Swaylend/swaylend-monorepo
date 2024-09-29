@@ -7,6 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { appConfig } from '@/configs';
 import {
   useCollateralConfigurations,
   useCollateralReserves,
@@ -15,8 +16,6 @@ import {
   useTotalCollateral,
 } from '@/hooks';
 import {
-  ASSET_ID_TO_SYMBOL,
-  type DeployedMarket,
   SYMBOL_TO_ICON,
   SYMBOL_TO_NAME,
   formatUnits,
@@ -100,23 +99,18 @@ const MarketCollateralsTableRow = ({
 export const MarketCollateralsTable = ({
   marketName,
 }: { marketName: string }) => {
-  const { data: collateralConfigurations } = useCollateralConfigurations(
-    marketName as DeployedMarket
-  );
-  const { data: marketConfiguration } = useMarketConfiguration(
-    marketName as DeployedMarket
-  );
+  const { data: collateralConfigurations } =
+    useCollateralConfigurations(marketName);
+  const { data: marketConfiguration } = useMarketConfiguration(marketName);
 
   const collaterals = useMemo(() => {
     if (!collateralConfigurations) return [];
 
     return Object.values(collateralConfigurations);
   }, [collateralConfigurations]);
-  const { data: totalCollateral } = useTotalCollateral(
-    marketName as DeployedMarket
-  );
+  const { data: totalCollateral } = useTotalCollateral(marketName);
 
-  const { data: priceData } = usePrice(marketName as DeployedMarket);
+  const { data: priceData } = usePrice(marketName);
 
   return (
     <div className="w-full border bg-gradient-to-b from-white/10 to-card rounded-lg ">
@@ -161,11 +155,10 @@ export const MarketCollateralsTable = ({
               key={collateral.asset_id.bits}
               assetId={collateral.asset_id.bits}
               baseAsset={{
-                symbol:
-                  ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken.bits!],
+                symbol: appConfig.assets[marketConfiguration?.baseToken.bits!],
                 decimals: marketConfiguration?.baseTokenDecimals ?? 6,
               }}
-              symbol={ASSET_ID_TO_SYMBOL[collateral.asset_id.bits]}
+              symbol={appConfig.assets[collateral.asset_id.bits]}
               decimals={collateral.decimals}
               totalSupply={totalCollateral?.get(collateral.asset_id.bits)}
               price={

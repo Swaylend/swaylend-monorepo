@@ -1,10 +1,10 @@
+import { appConfig } from '@/configs';
 import { Market } from '@/contract-types';
 import { useMarketStore } from '@/stores';
-import { DEPLOYED_MARKETS, type DeployedMarket } from '@/utils';
 import { useQuery } from '@tanstack/react-query';
 import { useProvider } from './useProvider';
 
-export const useUtilization = (marketParam?: DeployedMarket) => {
+export const useUtilization = (marketParam?: string) => {
   const provider = useProvider();
 
   const { market: selectedMarket } = useMarketStore();
@@ -16,7 +16,7 @@ export const useUtilization = (marketParam?: DeployedMarket) => {
       if (!provider) return null;
 
       const marketContract = new Market(
-        DEPLOYED_MARKETS[currentMarket].marketAddress,
+        appConfig.markets[currentMarket].marketAddress,
         provider
       );
 

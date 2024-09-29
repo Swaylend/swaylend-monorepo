@@ -19,6 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { appConfig } from '@/configs';
 import {
   USER_ROLE,
   useBalance,
@@ -30,7 +31,6 @@ import {
 import { cn } from '@/lib/utils';
 import { ACTION_TYPE, useMarketStore } from '@/stores';
 import {
-  ASSET_ID_TO_SYMBOL,
   SYMBOL_TO_ICON,
   formatUnits,
   getFormattedNumber,
@@ -174,13 +174,11 @@ export const LendTable = () => {
                       <Image
                         src={
                           SYMBOL_TO_ICON[
-                            ASSET_ID_TO_SYMBOL[
-                              marketConfiguration.baseToken.bits
-                            ]
+                            appConfig.assets[marketConfiguration.baseToken.bits]
                           ]
                         }
                         alt={
-                          ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken.bits]
+                          appConfig.assets[marketConfiguration.baseToken.bits]
                         }
                         width={32}
                         height={32}
@@ -191,7 +189,7 @@ export const LendTable = () => {
                   <div>
                     {marketConfiguration && (
                       <div className="text-white font-medium">
-                        {ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken.bits]}
+                        {appConfig.assets[marketConfiguration.baseToken.bits]}
                       </div>
                     )}
                     <div>
@@ -204,7 +202,7 @@ export const LendTable = () => {
                         )
                       )}{' '}
                       {
-                        ASSET_ID_TO_SYMBOL[
+                        appConfig.assets[
                           marketConfiguration?.baseToken.bits ?? ''
                         ]
                       }
@@ -228,7 +226,7 @@ export const LendTable = () => {
                     marketConfiguration?.baseTokenDecimals ?? 9
                   )
                 )}{' '}
-                {ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken.bits ?? '']}
+                {appConfig.assets[marketConfiguration?.baseToken.bits ?? '']}
               </TableCell>
               <TableCell>
                 <PointIcons points={POINTS_LEND} />
@@ -302,15 +300,13 @@ export const LendTable = () => {
                         <Image
                           src={
                             SYMBOL_TO_ICON[
-                              ASSET_ID_TO_SYMBOL[
+                              appConfig.assets[
                                 marketConfiguration.baseToken.bits
                               ]
                             ]
                           }
                           alt={
-                            ASSET_ID_TO_SYMBOL[
-                              marketConfiguration.baseToken.bits
-                            ]
+                            appConfig.assets[marketConfiguration.baseToken.bits]
                           }
                           width={32}
                           height={32}
@@ -321,11 +317,7 @@ export const LendTable = () => {
                     <div>
                       {marketConfiguration && (
                         <div className="text-white font-medium">
-                          {
-                            ASSET_ID_TO_SYMBOL[
-                              marketConfiguration.baseToken.bits
-                            ]
-                          }
+                          {appConfig.assets[marketConfiguration.baseToken.bits]}
                         </div>
                       )}
                       <div className="text-moon text-sm">
@@ -365,7 +357,7 @@ export const LendTable = () => {
                       )
                     )}{' '}
                     {
-                      ASSET_ID_TO_SYMBOL[
+                      appConfig.assets[
                         marketConfiguration?.baseToken.bits ?? ''
                       ]
                     }

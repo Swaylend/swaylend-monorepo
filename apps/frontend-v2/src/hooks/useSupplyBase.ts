@@ -3,9 +3,9 @@ import {
   PendingToast,
   TransactionSuccessToast,
 } from '@/components/Toasts';
+import { appConfig } from '@/configs';
 import { Market } from '@/contract-types';
 import { useMarketStore } from '@/stores';
-import { DEPLOYED_MARKETS } from '@/utils';
 import { useAccount, useWallet } from '@fuels/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
@@ -34,7 +34,7 @@ export const useSupplyBase = () => {
       }
 
       const marketContract = new Market(
-        DEPLOYED_MARKETS[market].marketAddress,
+        appConfig.markets[market].marketAddress,
         wallet
       );
 

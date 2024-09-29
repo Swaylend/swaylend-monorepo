@@ -1,16 +1,12 @@
 'use client';
+import { appConfig } from '@/configs';
 import {
   useBalance,
   useCollateralConfigurations,
   useMarketConfiguration,
   useMintToken,
 } from '@/hooks';
-import {
-  ASSET_ID_TO_SYMBOL,
-  FAUCET_URL,
-  FUEL_ETH_BASE_ASSET_ID,
-  formatUnits,
-} from '@/utils';
+import { FAUCET_URL, FUEL_ETH_BASE_ASSET_ID, formatUnits } from '@/utils';
 import { useAccount } from '@fuels/react';
 import { useIsMutating } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
@@ -108,7 +104,7 @@ export const FaucetView = () => {
         (collateralConfiguration) => {
           return {
             assetId: collateralConfiguration.asset_id.bits,
-            symbol: ASSET_ID_TO_SYMBOL[collateralConfiguration.asset_id.bits],
+            symbol: appConfig.assets[collateralConfiguration.asset_id.bits],
             decimals:
               collateralConfigurations[collateralConfiguration.asset_id.bits]
                 .decimals,
@@ -117,7 +113,7 @@ export const FaucetView = () => {
       ),
       {
         assetId: marketConfiguration.baseToken.bits,
-        symbol: ASSET_ID_TO_SYMBOL[marketConfiguration.baseToken.bits],
+        symbol: appConfig.assets[marketConfiguration.baseToken.bits],
         decimals: marketConfiguration.baseTokenDecimals,
       },
     ];

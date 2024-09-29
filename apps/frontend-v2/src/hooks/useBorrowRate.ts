@@ -1,12 +1,13 @@
 import { Market } from '@/contract-types';
 import { useMarketStore } from '@/stores';
-import { DEPLOYED_MARKETS, type DeployedMarket } from '@/utils';
+
+import { appConfig } from '@/configs';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { useProvider } from './useProvider';
 import { useUtilization } from './useUtilization';
 
-export const useBorrowRate = (marketParam?: DeployedMarket) => {
+export const useBorrowRate = (marketParam?: string) => {
   const provider = useProvider();
   const { data: utilization } = useUtilization(marketParam);
   const { market: storeMarket } = useMarketStore();
@@ -18,7 +19,7 @@ export const useBorrowRate = (marketParam?: DeployedMarket) => {
       if (!provider || !utilization) return null;
 
       const marketContract = new Market(
-        DEPLOYED_MARKETS[market].marketAddress,
+        appConfig.markets[market].marketAddress,
         provider
       );
 

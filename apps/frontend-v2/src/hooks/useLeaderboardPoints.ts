@@ -1,4 +1,4 @@
-import { SWAYLEND_API } from '@/utils';
+import { appConfig } from '@/configs';
 import { useQuery } from '@tanstack/react-query';
 
 type User = {
@@ -14,7 +14,9 @@ export const useLeaderboardPoints = () => {
   return useQuery({
     queryKey: ['leaderboardPoints'],
     queryFn: async () => {
-      const response = await fetch(`${SWAYLEND_API}/api/points`);
+      const response = await fetch(
+        `${appConfig.client.swaylendApi}/api/points`
+      );
 
       const data = await response.json();
 
@@ -29,5 +31,6 @@ export const useLeaderboardPoints = () => {
     refetchOnWindowFocus: false,
     gcTime: 60 * 60 * 1000, // Run GC every hour
     staleTime: 60 * 60 * 1000, // Cache for 1 hour
+    enabled: false, // FIXME: Enable later
   });
 };

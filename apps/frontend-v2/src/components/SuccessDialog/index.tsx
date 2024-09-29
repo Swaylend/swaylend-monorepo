@@ -1,25 +1,19 @@
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
-import { useMarketConfiguration } from '@/hooks';
+import { appConfig } from '@/configs';
 import { cn } from '@/lib/utils';
 import { ACTION_TYPE, useMarketStore } from '@/stores';
-import { EXPLORER_URL, SYMBOL_TO_NAME } from '@/utils';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import { ArrowUpRightIcon, CheckCircleIcon } from 'lucide-react';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 
 export const SuccessDialog = () => {
   const {
     actionTokenAssetId,
-    tokenAmount,
     action,
     successDialogOpen: open,
-    changeAction,
-    changeTokenAmount,
     changeSuccessDialogOpen: setOpen,
     successDialogTransactionId,
   } = useMarketStore();
-
-  const { data: marketConfiguration } = useMarketConfiguration();
 
   const actionText = useMemo(() => {
     if (action === ACTION_TYPE.SUPPLY) {
@@ -66,7 +60,7 @@ export const SuccessDialog = () => {
               target="_blank"
               rel="noreferrer"
               className="cursor-pointer font-normal text-moon mt-12 flex items-center gap-x-2"
-              href={`${EXPLORER_URL}/${successDialogTransactionId}`}
+              href={`${appConfig.client.fuelExplorerUrl}/tx/${successDialogTransactionId}`}
             >
               Explorer <ArrowUpRightIcon className="w-4 h-4" />
             </a>

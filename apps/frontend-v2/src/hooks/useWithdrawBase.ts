@@ -3,10 +3,11 @@ import {
   PendingToast,
   TransactionSuccessToast,
 } from '@/components/Toasts';
+import { appConfig } from '@/configs';
 import { Market } from '@/contract-types';
 import type { PriceDataUpdateInput } from '@/contract-types/Market';
 import { useMarketStore } from '@/stores';
-import { DEPLOYED_MARKETS, FUEL_ETH_BASE_ASSET_ID } from '@/utils';
+import { FUEL_ETH_BASE_ASSET_ID } from '@/utils';
 import { useAccount, useWallet } from '@fuels/react';
 import {
   PYTH_CONTRACT_ADDRESS_SEPOLIA,
@@ -50,7 +51,7 @@ export const useWithdrawBase = () => {
       );
 
       const marketContract = new Market(
-        DEPLOYED_MARKETS[market].marketAddress,
+        appConfig.markets[market].marketAddress,
         wallet
       );
 

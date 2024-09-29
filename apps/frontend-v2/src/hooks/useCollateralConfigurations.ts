@@ -1,14 +1,13 @@
+import { appConfig } from '@/configs';
 import {
   type CollateralConfigurationOutput,
   Market,
 } from '@/contract-types/Market';
 import { useMarketStore } from '@/stores';
-import { DEPLOYED_MARKETS } from '@/utils';
-import type { DeployedMarket } from '@/utils';
 import { useQuery } from '@tanstack/react-query';
 import { useProvider } from './useProvider';
 
-export const useCollateralConfigurations = (marketParam?: DeployedMarket) => {
+export const useCollateralConfigurations = (marketParam?: string) => {
   const provider = useProvider();
   const { market: storeMarket } = useMarketStore();
   const market = marketParam ?? storeMarket;
@@ -19,7 +18,7 @@ export const useCollateralConfigurations = (marketParam?: DeployedMarket) => {
       if (!provider) return null;
 
       const marketContract = new Market(
-        DEPLOYED_MARKETS[market].marketAddress,
+        appConfig.markets[market].marketAddress,
         provider
       );
 

@@ -4,6 +4,7 @@ import {
   DialogContent,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { appConfig } from '@/configs';
 import {
   useBalance,
   useBorrowBase,
@@ -23,7 +24,7 @@ import {
 } from '@/hooks';
 import { cn } from '@/lib/utils';
 import { ACTION_TYPE, useMarketStore } from '@/stores';
-import { ASSET_ID_TO_SYMBOL, formatUnits, getFormattedNumber } from '@/utils';
+import { formatUnits, getFormattedNumber } from '@/utils';
 import { useAccount, useIsConnected } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import BigNumber from 'bignumber.js';
@@ -325,15 +326,15 @@ export const InputDialog = () => {
 
     if (action === ACTION_TYPE.BORROW) {
       if (marketBalanceOfBase?.formatted.eq(0)) {
-        return `There is no ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken.bits]} to borrow`;
+        return `There is no ${appConfig.assets[marketConfiguration?.baseToken.bits]} to borrow`;
       }
 
       if (marketBalanceOfBase?.formatted.lt(tokenAmount)) {
-        return `There is not enough ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken.bits]} to borrow`;
+        return `There is not enough ${appConfig.assets[marketConfiguration?.baseToken.bits]} to borrow`;
       }
 
       if (tokenAmount.lt(new BigNumber(10))) {
-        return `Minimum borrow amount is 10 ${ASSET_ID_TO_SYMBOL[marketConfiguration?.baseToken.bits]}`;
+        return `Minimum borrow amount is 10 ${appConfig.assets[marketConfiguration?.baseToken.bits]}`;
       }
 
       if (tokenAmount.gt(borrowCapacity)) {

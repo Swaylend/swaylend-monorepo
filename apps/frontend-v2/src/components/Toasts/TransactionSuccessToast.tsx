@@ -1,4 +1,3 @@
-import { EXPLORER_URL } from '@/utils';
 import { CheckCircleIcon } from 'lucide-react';
 import { toast } from 'react-toastify';
 
@@ -6,9 +5,7 @@ type TransactionSuccessToastProps = {
   transactionId: string;
 };
 
-export const TransactionSuccessToast = ({
-  transactionId,
-}: TransactionSuccessToastProps) => {
+export const TransactionSuccessToast = (_: TransactionSuccessToastProps) => {
   return toast(
     <div className="flex w-full gap-x-4 h-full items-center">
       <div>

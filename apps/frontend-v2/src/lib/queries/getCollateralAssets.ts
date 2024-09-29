@@ -2,13 +2,10 @@ import {
   GetCollateralAssetsDocument,
   type GetCollateralAssetsQuery,
 } from '@/__generated__/swaylend/graphql';
-import { DEPLOYED_MARKETS, type DeployedMarket } from '@/utils';
+import { appConfig } from '@/configs';
 
-export const getCollateralAssets = async (
-  address: string,
-  market: DeployedMarket
-) => {
-  const url = DEPLOYED_MARKETS[market].graphqlUrl;
+export const getCollateralAssets = async (address: string, market: string) => {
+  const url = appConfig.markets[market].graphqlUrl;
 
   const response = await fetch(url, {
     method: 'POST',
