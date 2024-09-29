@@ -17,7 +17,7 @@ import {
   ChartTooltip,
 } from '@/components/ui/chart';
 import type { ChartData } from '@/lib/charts';
-import { getFormattedPrice, removeDuplicatesByProperty } from '@/utils';
+import { getFormattedPrice } from '@/utils';
 import BigNumber from 'bignumber.js';
 
 export const MultiMarketChart = ({
@@ -133,7 +133,7 @@ export const MultiMarketChart = ({
           <AreaChart
             className="max-lg:hidden"
             accessibilityLayer
-            data={removeDuplicatesByProperty(chartData, 'timestamp')}
+            data={chartData}
             margin={{
               left: 16,
               right: 16,
