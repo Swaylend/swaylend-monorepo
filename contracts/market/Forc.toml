@@ -3,6 +3,11 @@ entry = "main.sw"
 license = "Apache-2.0"
 name = "market"
 
+# address will be the addres of the proxy contract
+[proxy]
+enabled = true
+address = "0xc0f8d0088c4824be0b2cf9b3dc8b0e51f9f0fbb0e225afdc4e49d96c46e245bd"
+
 [dependencies]
 market_abi = { path = "../../abis/market_abi" }
 pyth_interface = { git = "https://github.com/pyth-network/pyth-crosschain", rev = "aa9509ccd37cf5dc73fee891a5730c351d15235f" }

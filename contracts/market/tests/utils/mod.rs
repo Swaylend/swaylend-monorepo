@@ -4,7 +4,7 @@ use fuels::test_helpers::{
     launch_custom_provider_and_get_wallets, NodeConfig, Trigger, WalletsConfig,
 };
 use fuels::types::{Bits256, ContractId, Identity};
-use market_sdk::{get_market_config, MarketContract};
+use market_sdk::{get_market_config, Market};
 use pyth_mock_sdk::PythMockContract;
 use std::collections::HashMap;
 use std::result::Result::Ok;
@@ -47,7 +47,7 @@ pub struct TestData {
     pub chad: WalletUnlocked,
     pub chad_account: Identity,
     pub oracle: PythMockContract,
-    pub market: MarketContract,
+    pub market: Market,
     pub usdc: Asset,
     pub usdc_contract: TokenAsset,
     pub uni: Asset,
@@ -96,7 +96,7 @@ pub async fn setup() -> TestData {
 
     // debug step
     let debug_step: u64 = 10_000;
-    let market = MarketContract::deploy(&admin, debug_step, false)
+    let market = Market::deploy(&admin, debug_step, false)
         .await
         .unwrap();
 

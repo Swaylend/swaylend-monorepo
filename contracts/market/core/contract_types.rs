@@ -1,6 +1,6 @@
 use fuels::macros::abigen;
 
 abigen!(Contract(
-    name = "Market",
+    name = "MarketContract",
     abi = "contracts/market/out/release/market-abi.json"
 ));

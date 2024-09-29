@@ -17,6 +17,42 @@
       "owner": "49a4eef4570fe8effdb23f3d9c0b781ed6e81a7f409140a977af0d380ae3cf36",
       "amount": 100000,
       "asset_id": "0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07"
+    },
+    {
+      "tx_id": "0000000000000000000000000000000000000000000000000000000000000003",
+      "output_index": 0,
+      "tx_pointer_block_height": 0,
+      "tx_pointer_tx_idx": 0,
+      "owner": "cd2be20ae847aa71583d5cc60f70ba46b085fdeadafed018f4aab66951b1dc6b",
+      "amount": 1000000000,
+      "asset_id": "0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07"
+    },
+    {
+      "tx_id": "0000000000000000000000000000000000000000000000000000000000000004",
+      "output_index": 0,
+      "tx_pointer_block_height": 0,
+      "tx_pointer_tx_idx": 0,
+      "owner": "b1cc55604b4a3e7c8592647696d6bded365ce7406746e595ed860e7fe00c583a",
+      "amount": 100000000000,
+      "asset_id": "0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07"
+    },
+    {
+      "tx_id": "0000000000000000000000000000000000000000000000000000000000000005",
+      "output_index": 0,
+      "tx_pointer_block_height": 0,
+      "tx_pointer_tx_idx": 0,
+      "owner": "15e09fa368fbed3b8355d9356b74ec79a303fea190928f25c863fe374db909ea",
+      "amount": 100000000000,
+      "asset_id": "0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07"
+    },
+    {
+      "tx_id": "0000000000000000000000000000000000000000000000000000000000000006",
+      "output_index": 0,
+      "tx_pointer_block_height": 0,
+      "tx_pointer_tx_idx": 0,
+      "owner": "ff9db0322d67420567038c0f327322e32d809948db420d7bc9227d24bc42741a",
+      "amount": 100000000000,
+      "asset_id": "0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07"
     }
   ],
   "messages": [],

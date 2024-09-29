@@ -1,17 +1,16 @@
 [package]
-name = "market"
-description = "A cargo-generate template for Rust + Sway integration testing."
+name = "swaylend-scripts"
 version = "0.1.0"
 edition = "2021"
 license = "Apache-2.0"
 
-[lib]
-path = "core/lib.rs"
+[[bin]]
+name = "activate_market"
+path = "src/bin/activate_market.rs"
 
-[[test]]
-harness = true
-name = "integration_tests"
-path = "tests/harness.rs"
+[[bin]]
+name = "update_collateral_assets"
+path = "src/bin/update_collateral_assets.rs"
 
 [dependencies]
 fuels = { workspace = true }
@@ -20,13 +19,13 @@ tokio = { workspace = true }
 anyhow = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
-
-[dev-dependencies]
-market_sdk = { workspace = true }
-token_sdk = { workspace = true }
-pyth_mock_sdk = { workspace = true }
-pyth_sdk = { workspace = true }
 dotenv = { workspace = true }
 rand = { workspace = true }
 chrono = { workspace = true }
 tai64 = { workspace = true }
+
+market = { workspace = true }
+
+token_sdk = { workspace = true }
+pyth_mock_sdk = { workspace = true }
+pyth_sdk = { workspace = true }
