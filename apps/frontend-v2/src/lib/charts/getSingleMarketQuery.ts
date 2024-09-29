@@ -27,12 +27,16 @@ BasePoolData AS (
     GROUP BY date
 )
 SELECT toUnixTimestamp(COALESCE(c.date, b.date)) as timestamp,
-    c.collateralValueUsd,
-    b.suppliedValueUsd,
-    b.borrowedValueUsd,
-    b.supplyApr,
-    b.borrowApr
+    coalesce(c.collateralValueUsd, 0) as collateralValueUsd,
+    coalesce(b.suppliedValueUsd, 0) as suppliedValueUsd,
+    coalesce(b.borrowedValueUsd, 0) as borrowedValueUsd,
+    coalesce(b.supplyApr, 0) as supplyApr,
+    coalesce(b.borrowApr, 0) as borrowApr
 FROM CollateralPoolData c
     FULL OUTER JOIN BasePoolData b ON c.date = b.date
 ORDER BY timestamp ASC
+WITH FILL
+    FROM toUnixTimestamp(toDate(DATE_SUB(NOW(), INTERVAL 1 MONTH)))
+    TO toUnixTimestamp(toDate(NOW()))
+    STEP 86400
 `;
