@@ -786,6 +786,11 @@ impl Market for Contract {
         storage.pause_config.write(pause_config);
     }
 
+    #[storage(read)]
+    fn get_pause_configuration() -> PauseConfiguration {
+        storage.pause_config.read()
+    }
+
     // # 9. Getters
 
     // ## 9.1 Get market configuration
@@ -917,6 +922,11 @@ impl Market for Contract {
         // Only owner can set the Pyth contract ID
         only_owner();
         storage.pyth_contract_id.write(contract_id);
+    }
+
+    #[storage(read)]
+    fn get_pyth_contract_id() -> ContractId {
+        storage.pyth_contract_id.read()
     }
 
     #[storage(read)]

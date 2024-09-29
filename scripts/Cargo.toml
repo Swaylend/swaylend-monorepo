@@ -12,6 +12,10 @@ path = "src/bin/activate_market.rs"
 name = "update_collateral_assets"
 path = "src/bin/update_collateral_assets.rs"
 
+[[bin]]
+name = "update_market"
+path = "src/bin/update_market.rs"
+
 [dependencies]
 fuels = { workspace = true }
 clap = { workspace = true }

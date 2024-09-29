@@ -1,5 +1,8 @@
 {
-  "is_active": true,
+  "supply_paused": false,
+  "withdraw_paused": false,
+  "absorb_paused": false,
+  "buy_paused": false,
   "supply_kink": 850000000000000000,
   "borrow_kink": 850000000000000000,
   "supply_per_second_interest_rate_slope_low": 1141552511,

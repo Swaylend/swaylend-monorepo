@@ -4,7 +4,7 @@ use fuels::{
     accounts::{provider::Provider, wallet::WalletUnlocked},
     types::{bech32::Bech32ContractId, AssetId, Bits256, ContractId},
 };
-use market::{CollateralConfiguration, MarketConfiguration, MarketContract};
+use market::{CollateralConfiguration, MarketConfiguration, MarketContract, PauseConfiguration};
 use serde::Deserialize;
 use std::{io::Write, path::PathBuf, str::FromStr};
 
@@ -79,7 +79,10 @@ pub struct CollateralAssetConfig {
 
 #[derive(Deserialize, Clone, Debug)]
 pub struct MarketConfig {
-    pub is_active: bool,
+    pub supply_paused: bool,
+    pub withdraw_paused: bool,
+    pub absorb_paused: bool,
+    pub buy_paused: bool,
     pub supply_kink: u128,
     pub borrow_kink: u128,
     pub supply_per_second_interest_rate_slope_low: u128,
@@ -140,6 +143,17 @@ impl From<MarketConfig> for MarketConfiguration {
     }
 }
 
+impl From<MarketConfig> for PauseConfiguration {
+    fn from(config: MarketConfig) -> Self {
+        PauseConfiguration {
+            supply_paused: config.supply_paused,
+            withdraw_paused: config.withdraw_paused,
+            absorb_paused: config.absorb_paused,
+            buy_paused: config.buy_paused,
+        }
+    }
+}
+
 impl From<CollateralAssetConfig> for CollateralConfiguration {
     fn from(value: CollateralAssetConfig) -> Self {
         CollateralConfiguration {
@@ -152,6 +166,66 @@ impl From<CollateralAssetConfig> for CollateralConfiguration {
             supply_cap: value.supply_cap.into(),
             paused: !value.is_active,
         }
+    }
+}
+
+impl PartialEq<MarketConfig> for MarketConfiguration {
+    fn eq(&self, other: &MarketConfig) -> bool {
+        self.supply_kink == other.supply_kink.into()
+            && self.borrow_kink == other.borrow_kink.into()
+            && self.supply_per_second_interest_rate_slope_low
+                == other.supply_per_second_interest_rate_slope_low.into()
+            && self.supply_per_second_interest_rate_slope_high
+                == other.supply_per_second_interest_rate_slope_high.into()
+            && self.supply_per_second_interest_rate_base
+                == other.supply_per_second_interest_rate_base.into()
+            && self.borrow_per_second_interest_rate_slope_low
+                == other.borrow_per_second_interest_rate_slope_low.into()
+            && self.borrow_per_second_interest_rate_slope_high
+                == other.borrow_per_second_interest_rate_slope_high.into()
+            && self.borrow_per_second_interest_rate_base
+                == other.borrow_per_second_interest_rate_base.into()
+            && self.store_front_price_factor == other.store_front_price_factor.into()
+            && self.base_tracking_index_scale == other.base_tracking_index_scale.into()
+            && self.base_tracking_supply_speed == other.base_tracking_supply_speed.into()
+            && self.base_tracking_borrow_speed == other.base_tracking_borrow_speed.into()
+            && self.base_min_for_rewards == other.base_min_for_rewards.into()
+            && self.base_borrow_min == other.base_borrow_min.into()
+            && self.target_reserves == other.target_reserves.into()
+            && self.base_token == AssetId::from_str(other.base_asset.asset_id.as_str()).unwrap()
+            && self.base_token_decimals == other.base_asset.decimals
+            && self.base_token_price_feed_id
+                == Bits256::from_hex_str(other.base_asset.price_feed_id.as_str()).unwrap()
+    }
+}
+
+impl PartialEq<MarketConfiguration> for MarketConfig {
+    fn eq(&self, other: &MarketConfiguration) -> bool {
+        other.supply_kink == self.supply_kink.into()
+            && other.borrow_kink == self.borrow_kink.into()
+            && other.supply_per_second_interest_rate_slope_low
+                == self.supply_per_second_interest_rate_slope_low.into()
+            && other.supply_per_second_interest_rate_slope_high
+                == self.supply_per_second_interest_rate_slope_high.into()
+            && other.supply_per_second_interest_rate_base
+                == self.supply_per_second_interest_rate_base.into()
+            && other.borrow_per_second_interest_rate_slope_low
+                == self.borrow_per_second_interest_rate_slope_low.into()
+            && other.borrow_per_second_interest_rate_slope_high
+                == self.borrow_per_second_interest_rate_slope_high.into()
+            && other.borrow_per_second_interest_rate_base
+                == self.borrow_per_second_interest_rate_base.into()
+            && other.store_front_price_factor == self.store_front_price_factor.into()
+            && other.base_tracking_index_scale == self.base_tracking_index_scale.into()
+            && other.base_tracking_supply_speed == self.base_tracking_supply_speed.into()
+            && other.base_tracking_borrow_speed == self.base_tracking_borrow_speed.into()
+            && other.base_min_for_rewards == self.base_min_for_rewards.into()
+            && other.base_borrow_min == self.base_borrow_min.into()
+            && other.target_reserves == self.target_reserves.into()
+            && AssetId::from_str(self.base_asset.asset_id.as_str()).unwrap() == other.base_token
+            && self.base_asset.decimals == other.base_token_decimals
+            && Bits256::from_hex_str(self.base_asset.price_feed_id.as_str()).unwrap()
+                == other.base_token_price_feed_id
     }
 }
 
