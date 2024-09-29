@@ -1,13 +1,14 @@
 import { Market } from '@/contract-types';
 import { useMarketStore } from '@/stores';
-import { DEPLOYED_MARKETS, type DeployedMarket } from '@/utils';
+
+import { appConfig } from '@/configs';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { useProvider } from './useProvider';
 
 export const useCollateralReserves = (
   assetId: string,
-  marketParam?: DeployedMarket
+  marketParam?: string
 ) => {
   const provider = useProvider();
   const { market: storeMarket } = useMarketStore();
@@ -19,7 +20,7 @@ export const useCollateralReserves = (
       if (!provider || !assetId) return null;
 
       const marketContract = new Market(
-        DEPLOYED_MARKETS[market].marketAddress,
+        appConfig.markets[market].marketAddress,
         provider
       );
 

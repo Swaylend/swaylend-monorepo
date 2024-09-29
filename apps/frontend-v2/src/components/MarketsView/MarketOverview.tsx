@@ -14,7 +14,6 @@ import {
 } from '@/hooks';
 
 import {
-  type DeployedMarket,
   SYMBOL_TO_ICON,
   formatUnits,
   getBorrowApr,
@@ -44,28 +43,21 @@ export default function MarketOverview({
   marketChartCollateral,
   marketChartBorrow,
 }: MarketOverviewProps) {
-  const { data: borrowRate } = useBorrowRate(baseAsset as DeployedMarket);
-  const { data: supplyRate } = useSupplyRate(baseAsset as DeployedMarket);
-  const { data: totalReserves } = useTotalReserves(baseAsset as DeployedMarket);
+  const { data: borrowRate } = useBorrowRate(baseAsset);
+  const { data: supplyRate } = useSupplyRate(baseAsset);
+  const { data: totalReserves } = useTotalReserves(baseAsset);
 
-  const { data: collateralConfigurations } = useCollateralConfigurations(
-    baseAsset as DeployedMarket
-  );
-  const { data: marketConfiguration } = useMarketConfiguration(
-    baseAsset as DeployedMarket
-  );
+  const { data: collateralConfigurations } =
+    useCollateralConfigurations(baseAsset);
+  const { data: marketConfiguration } = useMarketConfiguration(baseAsset);
   const borrowApr = useMemo(() => getBorrowApr(borrowRate), [borrowRate]);
   const supplyApr = useMemo(() => getSupplyApr(supplyRate), [supplyRate]);
-  const availableLiquidity = useMarketBalanceOfBase(
-    baseAsset as DeployedMarket
-  );
+  const availableLiquidity = useMarketBalanceOfBase(baseAsset);
 
-  const { data: totalCollateral } = useTotalCollateral(
-    baseAsset as DeployedMarket
-  );
-  const { data: marketBasics } = useMarketBasics(baseAsset as DeployedMarket);
+  const { data: totalCollateral } = useTotalCollateral(baseAsset);
+  const { data: marketBasics } = useMarketBasics(baseAsset);
 
-  const { data: priceData } = usePrice(baseAsset as DeployedMarket);
+  const { data: priceData } = usePrice(baseAsset);
 
   const totalCollateralValue = useMemo(() => {
     if (!priceData || !totalCollateral || !collateralConfigurations) {
@@ -270,7 +262,7 @@ export default function MarketOverview({
                 </div>
               </div>
               <div className="w-3/4">
-                <KinkChart marketName={baseAsset as DeployedMarket} />
+                <KinkChart marketName={baseAsset} />
               </div>
             </div>
           </CardContent>

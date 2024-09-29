@@ -1,5 +1,4 @@
 import {
-  type DeployedMarket,
   calculateBorrowRate,
   calculateSupplyRate,
   getBorrowApr,
@@ -10,7 +9,7 @@ import BigNumber from 'bignumber.js';
 import { useQuery } from '@tanstack/react-query';
 
 export const useCreateChartData = (
-  marketName: DeployedMarket,
+  marketName: string,
   marketConfiguration: any
 ) => {
   return useQuery({

@@ -1,4 +1,4 @@
-import { SWAYLEND_API } from '@/utils';
+import { appConfig } from '@/configs';
 import { useAccount } from '@fuels/react';
 import { useQuery } from '@tanstack/react-query';
 
@@ -14,7 +14,9 @@ export const useUser = () => {
   return useQuery({
     queryKey: ['user', account],
     queryFn: async () => {
-      const response = await fetch(`${SWAYLEND_API}/api/users/${account}`);
+      const response = await fetch(
+        `${appConfig.client.swaylendApi}/api/users/${account}`
+      );
 
       const data = await response.json();
 
@@ -24,7 +26,8 @@ export const useUser = () => {
 
       return data as User;
     },
-    enabled: !!account,
+    // enabled: !!account,
+    enabled: false, // FIXME: Enable later
     retry: 3,
     refetchInterval: false,
     refetchOnWindowFocus: false,

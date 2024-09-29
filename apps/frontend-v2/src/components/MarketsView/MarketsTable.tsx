@@ -5,7 +5,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { DEPLOYED_MARKETS, type DeployedMarket } from '@/utils';
+import { appConfig } from '@/configs';
 import React from 'react';
 import { MarketTableRow } from './MarketTableRow';
 
@@ -48,13 +48,8 @@ export const MarketsTable = () => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {Object.entries(DEPLOYED_MARKETS).map(([marketName, _]) => {
-          return (
-            <MarketTableRow
-              key={marketName}
-              marketName={marketName as DeployedMarket}
-            />
-          );
+        {Object.keys(appConfig.markets).map((marketName) => {
+          return <MarketTableRow key={marketName} marketName={marketName} />;
         })}
       </TableBody>
     </Table>

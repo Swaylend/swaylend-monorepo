@@ -18,14 +18,14 @@ import {
 } from '@/components/ui/chart';
 import { useMarketConfiguration, useUtilization } from '@/hooks';
 import { useCreateChartData } from '@/hooks/useCreateChartData';
-import { type DeployedMarket, formatUnits, getFormattedNumber } from '@/utils';
+import { formatUnits, getFormattedNumber } from '@/utils';
 import BigNumber from 'bignumber.js';
 import { Skeleton } from '../ui/skeleton';
 
 export const KinkChart = ({
   marketName,
 }: {
-  marketName: DeployedMarket;
+  marketName: string;
 }) => {
   const chartConfig = {
     desktop: {
@@ -36,10 +36,10 @@ export const KinkChart = ({
 
   const { data: marketConfiguration } = useMarketConfiguration();
   const { data: rateData } = useCreateChartData(
-    marketName as DeployedMarket,
+    marketName,
     marketConfiguration
   );
-  const { data: utilization } = useUtilization(marketName as DeployedMarket);
+  const { data: utilization } = useUtilization(marketName);
 
   const currentUtilization = useMemo(() => {
     if (!utilization) return 0;

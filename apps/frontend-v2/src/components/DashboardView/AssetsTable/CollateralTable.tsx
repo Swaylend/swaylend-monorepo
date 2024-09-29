@@ -27,6 +27,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { appConfig } from '@/configs';
 import type { CollateralConfigurationOutput } from '@/contract-types/Market';
 import {
   useBalance,
@@ -37,7 +38,6 @@ import {
 } from '@/hooks';
 import { ACTION_TYPE, useMarketStore } from '@/stores';
 import {
-  ASSET_ID_TO_SYMBOL,
   SYMBOL_TO_ICON,
   SYMBOL_TO_NAME,
   formatUnits,
@@ -146,14 +146,14 @@ const CollateralTableRow = ({
                           decimals
                         )
                       )}{' '}
-                      {ASSET_ID_TO_SYMBOL[assetId]}
+                      {appConfig.assets[assetId]}
                     </div>
                   </div>
                   <div className="text-md flex justify-between">
                     <div className="text-lavender">Total Supplied</div>
                     <div className="font-semibold text-moon">
                       {getFormattedNumber(collateralAmount)}{' '}
-                      {ASSET_ID_TO_SYMBOL[assetId]}
+                      {appConfig.assets[assetId]}
                     </div>
                   </div>
                   <div className="text-md flex justify-between">
@@ -519,7 +519,7 @@ export const CollateralTable = () => {
                       key={collateral.asset_id.bits}
                       account={account ?? undefined}
                       assetId={collateral.asset_id.bits}
-                      symbol={ASSET_ID_TO_SYMBOL[collateral.asset_id.bits]}
+                      symbol={appConfig.assets[collateral.asset_id.bits]}
                       decimals={collateral.decimals}
                       protocolBalance={
                         userCollateralAssets?.[collateral.asset_id.bits] ??
@@ -562,7 +562,7 @@ export const CollateralTable = () => {
                   key={collateral.asset_id.bits}
                   account={account ?? undefined}
                   assetId={collateral.asset_id.bits}
-                  symbol={ASSET_ID_TO_SYMBOL[collateral.asset_id.bits]}
+                  symbol={appConfig.assets[collateral.asset_id.bits]}
                   decimals={collateral.decimals}
                   protocolBalance={
                     userCollateralAssets?.[collateral.asset_id.bits] ??

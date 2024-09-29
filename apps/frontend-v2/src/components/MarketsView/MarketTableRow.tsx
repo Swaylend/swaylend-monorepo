@@ -12,8 +12,6 @@ import {
   useUtilization,
 } from '@/hooks';
 import {
-  ASSET_ID_TO_SYMBOL,
-  type DeployedMarket,
   SYMBOL_TO_ICON,
   SYMBOL_TO_NAME,
   formatUnits,
@@ -25,6 +23,7 @@ import BigNumber from 'bignumber.js';
 import Image from 'next/image';
 import type React from 'react';
 
+import { appConfig } from '@/configs';
 import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 import SWAY from '/public/tokens/sway.svg?url';
@@ -64,41 +63,38 @@ const SkeletonRow = (
 export const MarketTableRow = ({
   marketName,
 }: {
-  marketName: DeployedMarket;
+  marketName: string;
 }): React.ReactElement => {
   const router = useRouter();
   const { data: marketConfiguration } = useMarketConfiguration();
 
-  const { data: utilization } = useUtilization(marketName as DeployedMarket);
-  const { data: borrowRate } = useBorrowRate(marketName as DeployedMarket);
-  const { data: supplyRate } = useSupplyRate(marketName as DeployedMarket);
+  const { data: utilization } = useUtilization(marketName);
+  const { data: borrowRate } = useBorrowRate(marketName);
+  const { data: supplyRate } = useSupplyRate(marketName);
   const borrowApr = useMemo(() => getBorrowApr(borrowRate), [borrowRate]);
   const supplyApr = useMemo(() => getSupplyApr(supplyRate), [supplyRate]);
 
   const {
     data: collateralConfigurations,
     isPending: isPendingCollateralConfigurations,
-  } = useCollateralConfigurations(marketName as DeployedMarket);
+  } = useCollateralConfigurations(marketName);
 
   const collateralIcons: Collateral[] = useMemo(() => {
     if (!collateralConfigurations) return [];
 
     return Object.values(collateralConfigurations).map((collateral) => ({
-      id: ASSET_ID_TO_SYMBOL[collateral.asset_id.bits],
-      name: ASSET_ID_TO_SYMBOL[collateral.asset_id.bits],
+      id: appConfig.assets[collateral.asset_id.bits],
+      name: appConfig.assets[collateral.asset_id.bits],
       description: '',
-      icon:
-        SYMBOL_TO_ICON[ASSET_ID_TO_SYMBOL[collateral.asset_id.bits]] || SWAY,
+      icon: SYMBOL_TO_ICON[appConfig.assets[collateral.asset_id.bits]] || SWAY,
     }));
   }, [collateralConfigurations]);
 
-  const { data: marketBasics } = useMarketBasics(marketName as DeployedMarket);
+  const { data: marketBasics } = useMarketBasics(marketName);
 
-  const { data: totalCollateral } = useTotalCollateral(
-    marketName as DeployedMarket
-  );
+  const { data: totalCollateral } = useTotalCollateral(marketName);
 
-  const { data: priceData } = usePrice(marketName as DeployedMarket);
+  const { data: priceData } = usePrice(marketName);
 
   const totalCollateralValue = useMemo(() => {
     if (!priceData || !totalCollateral || !collateralConfigurations) {

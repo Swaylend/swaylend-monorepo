@@ -3,9 +3,10 @@ import {
   PendingToast,
   TransactionSuccessToast,
 } from '@/components/Toasts';
+import { appConfig } from '@/configs';
 import { Token } from '@/contract-types';
 import { useMarketStore } from '@/stores';
-import { DEPLOYED_MARKETS, FAUCET_AMOUNTS } from '@/utils';
+import { FAUCET_AMOUNTS } from '@/utils';
 import { useAccount, useWallet } from '@fuels/react';
 import { useMutation } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
@@ -23,7 +24,7 @@ export const useMintToken = (symbol: string, decimals: number) => {
       if (!wallet || !account) return null;
 
       const tokenFactoryContract = new Token(
-        DEPLOYED_MARKETS[market].tokenFactoryAddress,
+        appConfig.markets[market].tokenFactoryAddress,
         wallet
       );
 

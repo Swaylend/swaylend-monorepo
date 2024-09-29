@@ -1,6 +1,7 @@
+import { appConfig } from '@/configs';
 import { cn } from '@/lib/utils';
 import { useMarketStore } from '@/stores';
-import { ASSET_ID_TO_SYMBOL, SYMBOL_TO_ICON } from '@/utils';
+import { SYMBOL_TO_ICON } from '@/utils';
 import BigNumber from 'bignumber.js';
 import Image from 'next/image';
 import type React from 'react';
@@ -89,7 +90,7 @@ export const InputField = ({ error }: { error: boolean }) => {
             <Image
               alt="token"
               className="rounded-full"
-              src={SYMBOL_TO_ICON[ASSET_ID_TO_SYMBOL[actionTokenAssetId]]}
+              src={SYMBOL_TO_ICON[appConfig.assets[actionTokenAssetId]]}
               width={32}
               height={32}
             />
@@ -97,7 +98,7 @@ export const InputField = ({ error }: { error: boolean }) => {
         </div>
         {actionTokenAssetId && (
           <div className="text-sm text-moon font-semibold">
-            {ASSET_ID_TO_SYMBOL[actionTokenAssetId]}
+            {appConfig.assets[actionTokenAssetId]}
           </div>
         )}
       </div>

@@ -1,10 +1,11 @@
-import { createTestnetConfig } from './envs/testnet';
 import { createMainnetConfig } from './envs/mainnet';
+import { createTestnetConfig } from './envs/testnet';
 
 export const appConfig = getConfig();
 
 function getConfig() {
-  switch (process.env.NEXT_PUBLIC_APP_ENV) {
+  const appEnv = process.env.NEXT_PUBLIC_APP_ENV ?? 'testnet';
+  switch (appEnv) {
     case 'mainnet':
       return createMainnetConfig();
     case 'testnet':

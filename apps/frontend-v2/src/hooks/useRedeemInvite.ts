@@ -1,6 +1,6 @@
 import { ErrorToast, InfoToast } from '@/components/Toasts';
+import { appConfig } from '@/configs';
 import { useReferralModalStore } from '@/stores/referralModalStore';
-import { SWAYLEND_API } from '@/utils';
 import { useAccount, useWallet } from '@fuels/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -21,16 +21,19 @@ export const useRedeemInvite = () => {
 
       const signature = await wallet.signMessage(getMessage(inviteCode));
 
-      const response = await fetch(`${SWAYLEND_API}/api/referrals`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          inviteCode,
-          signature,
-        }),
-      });
+      const response = await fetch(
+        `${appConfig.client.swaylendApi}/api/referrals`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            inviteCode,
+            signature,
+          }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error('Failed to redeem invite code');
