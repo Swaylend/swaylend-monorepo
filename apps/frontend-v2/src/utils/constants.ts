@@ -28,7 +28,7 @@ export const DEPLOYED_MARKETS: Record<DeployedMarket, MarketConfiguration> = {
     oracleAddress:
       '0xe31e04946c67fb41923f93d50ee7fc1c6c99d6e07c02860c6bea5f4a13919277',
     marketAddress:
-      '0xd4a6a92bedda0c9ebd5c82805b7573795532411ebb1503f3adacb59714d7fd35',
+      '0x8cd7937a7688b8856eb480cea41b9a04ef931cfd9fb7d1172e158be653b41577',
     tokenFactoryAddress:
       '0x6a1d626646995784eaad80b90732b9be884462d55241549b32c6161ea235978d',
     graphqlUrl: 'https://indexer.bigdevenergy.link/c755070/v1/graphql',
@@ -37,7 +37,7 @@ export const DEPLOYED_MARKETS: Record<DeployedMarket, MarketConfiguration> = {
     oracleAddress:
       '0xe31e04946c67fb41923f93d50ee7fc1c6c99d6e07c02860c6bea5f4a13919277',
     marketAddress:
-      '0x0239b371a4f817933c65907b078ff77064427a50752683cba78d143349cdf598',
+      '0xf75a4aa3a36e2031cdbf6528b109b8daa414eb8b36960c34e32a0e970b89dcd6',
     tokenFactoryAddress:
       '0x44ca7a95b5e9e5eb6291b7bb26d078f059631535608eea2f0825f934b8365499',
     graphqlUrl: 'https://indexer.bigdevenergy.link/8ce655e/v1/graphql',

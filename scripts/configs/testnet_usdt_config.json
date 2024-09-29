@@ -1,1 +1,64 @@
-{}
+{
+  "is_active": true,
+  "supply_kink": 850000000000000000,
+  "borrow_kink": 850000000000000000,
+  "supply_per_second_interest_rate_slope_low": 1141552511,
+  "supply_per_second_interest_rate_slope_high": 50735667174,
+  "supply_per_second_interest_rate_base": 0,
+  "borrow_per_second_interest_rate_slope_low": 1585489599,
+  "borrow_per_second_interest_rate_slope_high": 57077625570,
+  "borrow_per_second_interest_rate_base": 475646879,
+  "store_front_price_factor": 600000000000000000,
+  "base_tracking_index_scale": 1000000000000000,
+  "base_tracking_supply_speed": 810185185185,
+  "base_tracking_borrow_speed": 821759259259,
+  "base_min_for_rewards": 1000000000,
+  "base_borrow_min": 1000,
+  "target_reserves": 1000000000000,
+  "pyth_contract_id": "0xe31e04946c67fb41923f93d50ee7fc1c6c99d6e07c02860c6bea5f4a13919277",
+  "base_asset": {
+    "asset_id": "0xb81db75c68c9af091562123e06cb1f7270f3f62d3a13d3c665a0c5d2fac0e593",
+    "price_feed_id": "0x2b89b9dc8fdf9f34709a5b106b472f0f39bb6ca9ce04b0fd7f2e971688e2e53b",
+    "name": "Tether",
+    "symbol": "USDT",
+    "decimals": 6
+  },
+  "collateral_assets": [
+    {
+      "asset_id": "0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07",
+      "price_feed_id": "0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace",
+      "name": "Ethereum",
+      "symbol": "ETH",
+      "decimals": 9,
+      "borrow_collateral_factor": 800000000000000000,
+      "liquidate_collateral_factor": 850000000000000000,
+      "liquidation_penalty": 900000000000000000,
+      "supply_cap": 1000000000000,
+      "is_active": true
+    },
+    {
+      "asset_id": "0x7e18820f90cf9f6ce6099a0ef6af99c21130fab8567d1eb7f8c75b07c64782fb",
+      "price_feed_id": "0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43",
+      "name": "Bitcoin",
+      "symbol": "BTC",
+      "decimals": 8,
+      "borrow_collateral_factor": 700000000000000000,
+      "liquidate_collateral_factor": 770000000000000000,
+      "liquidation_penalty": 950000000000000000,
+      "supply_cap": 2000000000,
+      "is_active": true
+    },
+    {
+      "asset_id": "0x495f02ea80d6af96928f6ff355d891ab6b11f843c94d42fdd3f2a5768c4eff35",
+      "price_feed_id": "0x2f95862b045670cd22bee3114c39763a4a08beeb663b145d283c31d7d1101c4f",
+      "name": "BNB",
+      "symbol": "BNB",
+      "decimals": 9,
+      "borrow_collateral_factor": 750000000000000000,
+      "liquidate_collateral_factor": 810000000000000000,
+      "liquidation_penalty": 930000000000000000,
+      "supply_cap": 400000000000000,
+      "is_active": true
+    }
+  ]
+}

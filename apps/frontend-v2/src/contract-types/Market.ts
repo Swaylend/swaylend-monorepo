@@ -350,6 +350,10 @@ const abi = {
     {
       "type": "u64",
       "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+    },
+    {
+      "type": "u8",
+      "concreteTypeId": "c89951a24c6ca28c13fd1cfdc646b2b656d69e61a92b91023be7eb58eb914b6b"
     }
   ],
   "metadataTypes": [
@@ -1615,6 +1619,12 @@ const abi = {
       ]
     },
     {
+      "inputs": [],
+      "name": "get_version",
+      "output": "c89951a24c6ca28c13fd1cfdc646b2b656d69e61a92b91023be7eb58eb914b6b",
+      "attributes": null
+    },
+    {
       "inputs": [
         {
           "name": "account",
@@ -2080,22 +2090,22 @@ const abi = {
     {
       "name": "DEBUG_STEP",
       "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
-      "offset": 133152
+      "offset": 135016
     },
     {
       "name": "ORACLE_MAX_STALENESS",
       "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
-      "offset": 133200
+      "offset": 135064
     },
     {
       "name": "ORACLE_MAX_AHEADNESS",
       "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
-      "offset": 133160
+      "offset": 135024
     },
     {
       "name": "ORACLE_MAX_CONF_WIDTH",
       "concreteTypeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e",
-      "offset": 133168
+      "offset": 135032
     }
   ]
 };
@@ -2245,6 +2255,7 @@ export class MarketInterface extends Interface {
     get_user_collateral: FunctionFragment;
     get_user_supply_borrow: FunctionFragment;
     get_utilization: FunctionFragment;
+    get_version: FunctionFragment;
     is_liquidatable: FunctionFragment;
     pause: FunctionFragment;
     pause_collateral_asset: FunctionFragment;
@@ -2297,6 +2308,7 @@ export class Market extends Contract {
     get_user_collateral: InvokeFunction<[account: IdentityInput, asset_id: AssetIdInput], BN>;
     get_user_supply_borrow: InvokeFunction<[account: IdentityInput], [BN, BN]>;
     get_utilization: InvokeFunction<[], BN>;
+    get_version: InvokeFunction<[], number>;
     is_liquidatable: InvokeFunction<[account: IdentityInput], boolean>;
     pause: InvokeFunction<[pause_config: PauseConfigurationInput], void>;
     pause_collateral_asset: InvokeFunction<[asset_id: AssetIdInput], void>;
