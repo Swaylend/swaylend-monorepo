@@ -1,6 +1,7 @@
 import { DEPLOYED_MARKETS } from '@/utils';
 import { getMarketsCombinedQuery } from './getMarketsCombinedQuery';
 import { getSingleMarketQuery } from './getSingleMarketQuery';
+import { version } from 'os';
 
 export type ChartData = {
   timestamp: number;
@@ -36,6 +37,7 @@ export const getChartData = async () => {
             sql: getSingleMarketQuery(poolAddress),
             size: 10000,
           },
+          version: 16,
         }),
         next: {
           revalidate: 60 * 60, // Cache for 1 hour
@@ -69,6 +71,7 @@ export const getChartData = async () => {
         sql: getMarketsCombinedQuery(),
         size: 10000,
       },
+      version: 16,
     }),
     next: {
       revalidate: 60 * 60, // Cache for 1 hour

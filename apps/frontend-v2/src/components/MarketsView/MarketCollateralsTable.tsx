@@ -107,10 +107,6 @@ export const MarketCollateralsTable = ({
     marketName as DeployedMarket
   );
 
-  // if (marketName === 'USDT') {
-  //   console.log('collateralConfigurations', collateralConfigurations);
-  // }
-
   const collaterals = useMemo(() => {
     if (!collateralConfigurations) return [];
 
@@ -119,12 +115,6 @@ export const MarketCollateralsTable = ({
   const { data: totalCollateral } = useTotalCollateral(
     marketName as DeployedMarket
   );
-
-  // if (marketName === 'USDT') {
-  //   totalCollateral?.forEach((value, key) => {
-  //     console.log('totalCollateral', key, value.toFixed(2));
-  //   });
-  // }
 
   const { data: priceData } = usePrice(marketName as DeployedMarket);
 

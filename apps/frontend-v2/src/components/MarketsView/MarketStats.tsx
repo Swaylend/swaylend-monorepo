@@ -9,14 +9,22 @@ export const MarketStats = ({
 }: {
   chartData: ChartData[] | undefined;
 }) => {
-  if (!chartData) return;
-  <Skeleton className="w-full h-[30px]" />;
+  if (!chartData) {
+    return <Skeleton className="w-full h-[30px]" />;
+  }
 
-  const borrowed = BigNumber(chartData[chartData.length - 1].borrowedValueUsd);
-  const supplied = BigNumber(chartData[chartData.length - 1].suppliedValueUsd);
-  const collateral = BigNumber(
-    chartData[chartData.length - 1].collateralValueUsd
-  );
+  const borrowed =
+    chartData.length > 0
+      ? BigNumber(chartData[chartData.length - 1].borrowedValueUsd)
+      : BigNumber(0);
+  const supplied =
+    chartData.length > 0
+      ? BigNumber(chartData[chartData.length - 1].suppliedValueUsd)
+      : BigNumber(0);
+  const collateral =
+    chartData.length > 0
+      ? BigNumber(chartData[chartData.length - 1].collateralValueUsd)
+      : BigNumber(0);
 
   return (
     <div className="max-lg:hidden flex w-full justify-between">
