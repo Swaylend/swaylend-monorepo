@@ -19,7 +19,7 @@ import { CHAIN_IDS } from 'fuels';
 import posthog from 'posthog-js';
 import { PostHogProvider } from 'posthog-js/react';
 import { fallback } from 'viem';
-import { http, cookieStorage, createConfig, createStorage } from 'wagmi';
+import { http, createConfig } from 'wagmi';
 import { mainnet, sepolia } from 'wagmi/chains';
 import { coinbaseWallet, injected, walletConnect } from 'wagmi/connectors';
 import PostHogIdentify from './PostHogIdentify';
