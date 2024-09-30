@@ -9,6 +9,8 @@ export const metadata: Metadata = {
   title: 'MarketOverview',
 };
 
+export const revalidate = 3600;
+
 export default async function Page({ params }: { params: { pair: string } }) {
   const [network, baseAsset] = params.pair.split('-');
   if (

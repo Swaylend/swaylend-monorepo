@@ -25,6 +25,16 @@ import { appConfig } from '@/configs';
 import posthog from 'posthog-js';
 import { PostHogProvider } from 'posthog-js/react';
 import PostHogIdentify from './PostHogIdentify';
+import { mainnet, sepolia } from 'wagmi/chains';
+import {
+  http,
+  type CreateConnectorFn,
+  createConfig,
+  createStorage,
+  cookieStorage,
+} from 'wagmi';
+import { coinbaseWallet, walletConnect } from 'wagmi/connectors';
+import { fallback } from 'viem';
 
 function makeQueryClient() {
   return new QueryClient({
@@ -55,14 +65,44 @@ function getQueryClient() {
   return browserQueryClient;
 }
 
+const wagmiConfig = createConfig({
+  ssr: true,
+  // chains: appConfig.env === 'mainnet' ? [mainnet] : [sepolia], // TODO: Uncomment when mainnet is ready
+  chains: [sepolia],
+  connectors: [
+    walletConnect({
+      projectId: appConfig.client.walletConnectProjectId,
+      showQrModal: false,
+    }),
+    coinbaseWallet({
+      appName: 'Swaylend',
+      headlessMode: true,
+    }),
+  ],
+  transports: {
+    // ...((appConfig.env === 'mainnet'
+    //   ? {
+    //       [mainnet.id]: fallback([http(appConfig.client.alchemyUrl)]),
+    //     }
+    //   : {
+    //       [sepolia.id]: fallback([http(appConfig.client.alchemyUrl)]),
+    //     }) as any),
+    [sepolia.id]: fallback([http(appConfig.client.alchemyUrl)]),
+  },
+  storage: createStorage({
+    storage: cookieStorage,
+  }),
+});
+
 const connectors = [
   new FuelWalletConnector(),
   new FueletWalletConnector(),
   new WalletConnectConnector({
-    projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
+    projectId: appConfig.client.walletConnectProjectId,
+    wagmiConfig: wagmiConfig,
   }),
   new SolanaConnector({
-    projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
+    projectId: appConfig.client.walletConnectProjectId,
   }),
   new BakoSafeConnector(),
   ...(appConfig.useBurnerWallet ? [new BurnerWalletConnector()] : []),

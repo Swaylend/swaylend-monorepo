@@ -39,7 +39,7 @@ export const getChartData = async () => {
           version: 17,
         }),
         next: {
-          revalidate: 60 * 60, // Cache for 1 hour
+          revalidate: 3600, // Cache for 1 hour
         },
       });
 
@@ -73,7 +73,7 @@ export const getChartData = async () => {
       version: 17,
     }),
     next: {
-      revalidate: 60 * 60, // Cache for 1 hour
+      revalidate: 3600, // Cache for 1 hour
     },
   });
 
