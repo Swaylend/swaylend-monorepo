@@ -6,15 +6,15 @@ license = "Apache-2.0"
 
 [[bin]]
 name = "activate_market"
-path = "src/bin/activate_market.rs"
+path = "src/activate_market.rs"
 
 [[bin]]
 name = "update_collateral_assets"
-path = "src/bin/update_collateral_assets.rs"
+path = "src/update_collateral_assets.rs"
 
 [[bin]]
 name = "update_market"
-path = "src/bin/update_market.rs"
+path = "src/update_market.rs"
 
 [dependencies]
 fuels = { workspace = true }
