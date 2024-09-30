@@ -28,7 +28,7 @@ pub struct TokenAsset {
 impl TokenAsset {
     pub fn new(wallet: WalletUnlocked, token_contract_id: ContractId, symbol: &str) -> Self {
         let tokens_path =
-            PathBuf::from(env!("CARGO_WORKSPACE_DIR")).join("libs/token_sdk/tokens.testnet.json");
+            PathBuf::from(env!("CARGO_WORKSPACE_DIR")).join("contracts/market/tests/tokens.json");
 
         let tokens_json = std::fs::read_to_string(tokens_path).unwrap();
         let token_configs: Vec<TokenConfig> = serde_json::from_str(&tokens_json).unwrap();
