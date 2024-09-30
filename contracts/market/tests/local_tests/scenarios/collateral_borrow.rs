@@ -112,7 +112,7 @@ async fn collateral_borrow_test() {
         .await;
     assert!(withdraw_base_fail.is_err());
 
-    let amount = parse_units(150 * AMOUNT_COEFFICIENT, usdc.decimals);
+    let amount = parse_units(70 * AMOUNT_COEFFICIENT, usdc.decimals);
     let log_amount = format!("{} USDC", amount as f64 / SCALE_6);
     print_case_title(2, "Bob", "withdraw_base", &log_amount.as_str());
     let bob_withdraw_res = market
@@ -134,7 +134,7 @@ async fn collateral_borrow_test() {
     // 👛 Wallet: Bob 🧛
     // 🤙 Call: supply_base
     // 💰 Amount: 150.00 USDC
-    let bob_repay_amount = parse_units(100 * AMOUNT_COEFFICIENT, usdc.decimals);
+    let bob_repay_amount = parse_units(60 * AMOUNT_COEFFICIENT, usdc.decimals);
     let bob_collateral_amount = parse_units(40 * AMOUNT_COEFFICIENT, uni.decimals);
     let log_amount = format!("{} USDC", bob_repay_amount as f64 / SCALE_6);
     print_case_title(3, "Bob", "supply_base", &log_amount.as_str());
@@ -165,7 +165,7 @@ async fn collateral_borrow_test() {
     assert!(withdraw_collateral_res.is_err());
 
     // repay the remaining 50 USDC
-    let amount = parse_units(50 * AMOUNT_COEFFICIENT, usdc.decimals);
+    let amount = parse_units(10 * AMOUNT_COEFFICIENT, usdc.decimals);
     let bob_repay_res = market
         .with_account(&bob)
         .await
@@ -322,7 +322,7 @@ async fn collateral_borrow_timeskip_test() {
     // 👛 Wallet: Bob 🧛
     // 🤙 Call: withdraw_base
     // 💰 Amount: 150.00 USDC
-    let amount = parse_units(150 * AMOUNT_COEFFICIENT, usdc.decimals);
+    let amount = parse_units(70 * AMOUNT_COEFFICIENT, usdc.decimals);
     let log_amount = format!("{} USDC", amount as f64 / SCALE_6);
     print_case_title(2, "Bob", "withdraw_base", &log_amount.as_str());
     let bob_withdraw_res = market
@@ -356,7 +356,7 @@ async fn collateral_borrow_timeskip_test() {
         )
         .await
         .unwrap();
-    let bob_repay_amount = parse_units(151 * AMOUNT_COEFFICIENT, usdc.decimals);
+    let bob_repay_amount = parse_units(71 * AMOUNT_COEFFICIENT, usdc.decimals);
     let log_amount = format!("{} USDC", bob_repay_amount as f64 / SCALE_6);
     print_case_title(3, "Bob", "supply_base", &log_amount.as_str());
     let repay_res = market

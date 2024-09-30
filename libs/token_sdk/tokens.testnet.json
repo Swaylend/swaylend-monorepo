@@ -21,7 +21,7 @@
     "borrow_collateral_factor": 800000000000000000,
     "liquidate_collateral_factor": 850000000000000000,
     "liquidation_penalty": 900000000000000000,
-    "supply_cap": 1000000000000
+    "supply_cap": 5000000000000
   },
   {
     "asset_id": "0x82fba53ca24012613544c7698a23c9765760ce66413a8a04eec1577c77f53e8e",
@@ -32,10 +32,10 @@
     "default_price": 70000,
     "decimals": 8,
     "mint_amount": 1,
-    "borrow_collateral_factor": 700000000000000000,
-    "liquidate_collateral_factor": 770000000000000000,
-    "liquidation_penalty": 950000000000000000,
-    "supply_cap": 2000000000
+    "borrow_collateral_factor": 800000000000000000,
+    "liquidate_collateral_factor": 850000000000000000,
+    "liquidation_penalty": 900000000000000000,
+    "supply_cap": 10000000000
   },
   {
     "asset_id": "0x5222b5de2ae362219ed060428739f41b6f6897699ff591693365268d13d68a62",
@@ -46,9 +46,9 @@
     "default_price": 5,
     "decimals": 9,
     "mint_amount": 1000,
-    "borrow_collateral_factor": 750000000000000000,
-    "liquidate_collateral_factor": 810000000000000000,
-    "liquidation_penalty": 930000000000000000,
+    "borrow_collateral_factor": 500000000000000000,
+    "liquidate_collateral_factor": 700000000000000000,
+    "liquidation_penalty": 750000000000000000,
     "supply_cap": 400000000000000
   }
 ]
