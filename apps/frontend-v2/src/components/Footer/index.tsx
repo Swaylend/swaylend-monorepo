@@ -19,7 +19,7 @@ export const Footer = () => {
           <div className="w-full flex max-md:flex-col max-md:items-center justify-between mt-4">
             <div className="flex justify-center md:justify-start md:gap-x-12 gap-x-4 w-4/5">
               <div>
-                <div className="text-primary text-md">App</div>
+                <div className="text-primary font-semibold text-sm">App</div>
                 <div className="mt-2 flex flex-col gap-y-1">
                   <Link
                     href="/"
@@ -39,7 +39,9 @@ export const Footer = () => {
                 </div>
               </div>
               <div>
-                <div className="text-primary text-md">Resources</div>
+                <div className="text-primary font-semibold text-sm">
+                  Resources
+                </div>
                 <div className="mt-2 flex flex-col gap-y-1">
                   <a
                     href="https://docs.swaylend.com/"
@@ -58,7 +60,9 @@ export const Footer = () => {
                 </div>
               </div>
               <div>
-                <div className="text-primary text-md">Community</div>
+                <div className="text-primary font-semibold text-sm">
+                  Community
+                </div>
                 <div className="mt-2 flex flex-col gap-y-1">
                   <a
                     href="https://discord.gg/m9VcnNG2"
