@@ -91,7 +91,7 @@ impl TokenContract {
     ) -> (HashMap<String, Asset>, Vec<CollateralConfiguration>) {
         let local_tests = is_local_tests.unwrap_or(false);
         let tokens_json_path =
-            PathBuf::from(env!("CARGO_WORKSPACE_DIR")).join("libs/token_sdk/tokens.testnet.json");
+            PathBuf::from(env!("CARGO_WORKSPACE_DIR")).join("libs/token_sdk/tokens.json");
         let tokens_json = std::fs::read_to_string(tokens_json_path).unwrap();
         let token_configs: Vec<TokenConfig> = serde_json::from_str(&tokens_json).unwrap();
 
