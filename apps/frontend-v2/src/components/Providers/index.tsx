@@ -3,6 +3,7 @@
 import 'react-toastify/dist/ReactToastify.css';
 
 import {
+  BakoSafeConnector,
   BurnerWalletConnector,
   FuelWalletConnector,
   FueletWalletConnector,
@@ -63,6 +64,7 @@ const connectors = [
   new SolanaConnector({
     projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
   }),
+  new BakoSafeConnector(),
   ...(appConfig.useBurnerWallet ? [new BurnerWalletConnector()] : []),
 ];
 
