@@ -1,3 +1,7 @@
+import { fallback } from 'viem';
+import { http, type CreateConnectorFn, createConfig } from 'wagmi';
+import { sepolia } from 'wagmi/chains';
+import { coinbaseWallet, walletConnect } from 'wagmi/connectors';
 import fuel from '/public/icons/fuel-logo.svg?url';
 import btc from '/public/tokens/bitcoin.svg?url';
 import eth from '/public/tokens/ethereum.svg?url';
@@ -90,3 +94,32 @@ export const SYMBOL_TO_NAME: Record<string, string> = {
   UNI: 'Uniswap',
   BNB: 'Binance Coin',
 };
+
+const wagmiConnectors: CreateConnectorFn[] = [
+  coinbaseWallet({ appName: 'Swaylend', headlessMode: true }),
+];
+
+export const ALCHEMY_ID = process.env.NEXT_PUBLIC_ALCHEMY_ID;
+export const INFURA_ID = process.env.NEXT_PUBLIC_INFURA_ID;
+export const WC_PROJECT_ID = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID;
+
+// if (WALLETCONNECT_ID) {
+wagmiConnectors.push(
+  walletConnect({
+    projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
+    showQrModal: false,
+  })
+);
+// }
+
+export const DEFAULT_WAGMI_CONFIG = createConfig({
+  chains: [sepolia],
+  connectors: wagmiConnectors,
+  transports: {
+    [sepolia.id]: fallback([
+      http(`https://eth-${sepolia.name}.g.alchemy.com/v2/${ALCHEMY_ID}`),
+      http(`https://${sepolia.name}.infura.io/v3/${INFURA_ID}`),
+    ]),
+  },
+  ssr: true,
+});

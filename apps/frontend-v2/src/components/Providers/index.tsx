@@ -22,6 +22,7 @@ import { ToastContainer } from 'react-toastify';
 import posthog from 'posthog-js';
 import { PostHogProvider } from 'posthog-js/react';
 import PostHogIdentify from './PostHogIdentify';
+import { DEFAULT_WAGMI_CONFIG } from '@/utils';
 
 function makeQueryClient() {
   return new QueryClient({
@@ -52,12 +53,19 @@ function getQueryClient() {
   return browserQueryClient;
 }
 
+if (!process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID) {
+  throw new Error('NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID is not set');
+}
 const connectors = [
   new FuelWalletConnector(),
   new FueletWalletConnector(),
   new WalletConnectConnector({
     projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
+    wagmiConfig: DEFAULT_WAGMI_CONFIG as ConstructorParameters<
+      typeof WalletConnectConnector
+    >[0]['wagmiConfig'],
   }),
+
   new SolanaConnector({
     projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
   }),
