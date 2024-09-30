@@ -52,21 +52,20 @@ export const TermsAndConditions = ({
             </p>
             <div className="flex max-md:flex-col max-md:gap-y-2 max-md:text-center md:gap-x-2 items-center mt-4">
               <div
-                className="max-md:w-full flex justify-center"
+                className="max-md:w-full flex md:gap-x-2 items-center justify-center"
                 onMouseDown={() => setIsChecked(!isChecked)}
               >
                 <Checkbox id="terms" checked={isChecked} />
+                <p
+                  onMouseDown={() => setIsChecked(!isChecked)}
+                  className="cursor-pointer"
+                >
+                  I confirm that I have read, understand and accept the{' '}
+                  <a href="#" className="underline text-primary">
+                    Terms and Conditions.
+                  </a>
+                </p>
               </div>
-              <p
-                onMouseDown={() => setIsChecked(!isChecked)}
-                className="cursor-pointer"
-              >
-                I confirm that I have read, understand and accept the{' '}
-              </p>
-              {/* biome-ignore lint/a11y/useValidAnchor: <explanation> */}
-              <a href="#" className="underline text-primary">
-                Terms and Conditions.
-              </a>
             </div>
           </div>
         </div>
