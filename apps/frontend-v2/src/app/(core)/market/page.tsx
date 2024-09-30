@@ -8,6 +8,8 @@ export const metadata: Metadata = {
   title: 'Market',
 };
 
+export const revalidate = 3600;
+
 export default async function Page() {
   const chartsData = await getChartData();
 

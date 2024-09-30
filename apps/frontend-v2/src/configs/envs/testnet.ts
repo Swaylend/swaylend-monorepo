@@ -13,6 +13,7 @@ export function createTestnetConfig() {
         process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID ?? '',
       fuelExplorerUrl: process.env.NEXT_PUBLIC_FUEL_EXPLORER_URL ?? '',
       fuelNodeUrl: process.env.NEXT_PUBLIC_FUEL_NODE_URL ?? '',
+      alchemyId: process.env.NEXT_PUBLIC_ALCHEMY_ID ?? '',
     },
     server: {
       sentioApi: process.env.SENTIO_API_URL ?? '',

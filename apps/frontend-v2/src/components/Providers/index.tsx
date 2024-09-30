@@ -2,14 +2,7 @@
 
 import 'react-toastify/dist/ReactToastify.css';
 
-import {
-  BakoSafeConnector,
-  BurnerWalletConnector,
-  FuelWalletConnector,
-  FueletWalletConnector,
-  SolanaConnector,
-  WalletConnectConnector,
-} from '@fuels/connectors';
+import { defaultConnectors } from '@fuels/connectors';
 import { FuelProvider } from '@fuels/react';
 import {
   QueryClient,
@@ -22,8 +15,13 @@ import { type ReactNode, useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 
 import { appConfig } from '@/configs';
+import { CHAIN_IDS } from 'fuels';
 import posthog from 'posthog-js';
 import { PostHogProvider } from 'posthog-js/react';
+import { fallback } from 'viem';
+import { http, createConfig } from 'wagmi';
+import { mainnet, sepolia } from 'wagmi/chains';
+import { coinbaseWallet, injected, walletConnect } from 'wagmi/connectors';
 import PostHogIdentify from './PostHogIdentify';
 
 function makeQueryClient() {
@@ -55,18 +53,42 @@ function getQueryClient() {
   return browserQueryClient;
 }
 
-const connectors = [
-  new FuelWalletConnector(),
-  new FueletWalletConnector(),
-  new WalletConnectConnector({
-    projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
-  }),
-  new SolanaConnector({
-    projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
-  }),
-  new BakoSafeConnector(),
-  ...(appConfig.useBurnerWallet ? [new BurnerWalletConnector()] : []),
-];
+const METADATA = {
+  name: 'SwayLend',
+  description: 'SwayLend',
+  url: 'https://app.swaylend.com',
+  icons: ['https://app.swaylend.com/logo512.png'],
+};
+
+const wagmiConfig = createConfig({
+  chains: [mainnet, sepolia],
+  connectors: [
+    injected({ shimDisconnect: false }),
+    walletConnect({
+      projectId: appConfig.client.walletConnectProjectId,
+      metadata: METADATA,
+      showQrModal: false,
+    }),
+    coinbaseWallet({
+      appName: METADATA.name,
+      appLogoUrl: METADATA.icons[0],
+      darkMode: true,
+      reloadOnDisconnect: true,
+    }),
+  ],
+  transports: {
+    [mainnet.id]: fallback([
+      http(
+        `https://eth-mainnet.g.alchemy.com/v2/${appConfig.client.alchemyId}`
+      ),
+    ]),
+    [sepolia.id]: fallback([
+      http(
+        `https://eth-sepolia.g.alchemy.com/v2/${appConfig.client.alchemyId}`
+      ),
+    ]),
+  },
+});
 
 export const Providers = ({ children }: { children: ReactNode }) => {
   const queryClient = getQueryClient();
@@ -98,8 +120,18 @@ export const Providers = ({ children }: { children: ReactNode }) => {
         <QueryClientProvider client={queryClient}>
           <FuelProvider
             theme="dark"
+            networks={[
+              {
+                chainId: CHAIN_IDS.fuel.testnet,
+              },
+            ]}
             fuelConfig={{
-              connectors: connectors,
+              connectors: defaultConnectors({
+                devMode: appConfig.env === 'testnet',
+                wcProjectId: appConfig.client.walletConnectProjectId,
+                ethWagmiConfig: wagmiConfig,
+                chainId: CHAIN_IDS.fuel.testnet,
+              }),
             }}
           >
             <>
