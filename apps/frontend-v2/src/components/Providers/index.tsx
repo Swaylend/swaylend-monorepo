@@ -62,7 +62,9 @@ const connectors = [
   new SolanaConnector({
     projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
   }),
-  new BurnerWalletConnector(),
+  ...(process.env.NEXT_PUBLIC_APP_ENV === 'testnet'
+    ? [new BurnerWalletConnector()]
+    : []),
 ];
 
 export const Providers = ({ children }: { children: ReactNode }) => {
