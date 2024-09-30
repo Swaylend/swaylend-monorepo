@@ -28,6 +28,7 @@ export const AppConfigSchema = z.object({
   markets: DeployedMarketsSchema,
   assets: z.record(z.string(), z.string()),
   baseAssetId: z.string(),
+  useBurnerWallet: z.boolean(),
 });
 
 export type AppConfig = z.infer<typeof AppConfigSchema>;
