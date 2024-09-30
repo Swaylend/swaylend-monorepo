@@ -20,6 +20,7 @@ import { ThemeProvider } from 'next-themes';
 import { type ReactNode, useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 
+import { appConfig } from '@/configs';
 import posthog from 'posthog-js';
 import { PostHogProvider } from 'posthog-js/react';
 import PostHogIdentify from './PostHogIdentify';
@@ -62,9 +63,7 @@ const connectors = [
   new SolanaConnector({
     projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
   }),
-  ...(process.env.NEXT_PUBLIC_APP_ENV === 'testnet'
-    ? [new BurnerWalletConnector()]
-    : []),
+  ...(appConfig.useBurnerWallet ? [new BurnerWalletConnector()] : []),
 ];
 
 export const Providers = ({ children }: { children: ReactNode }) => {
