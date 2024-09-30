@@ -14,6 +14,7 @@ use std::str::FromStr;
 
 use crate::TokenAsset;
 
+#[derive(Clone)]
 pub struct TokenContract {
     pub instance: Token<WalletUnlocked>,
 }
