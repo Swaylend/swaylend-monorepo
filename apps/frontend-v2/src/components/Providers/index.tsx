@@ -3,6 +3,7 @@
 import 'react-toastify/dist/ReactToastify.css';
 
 import {
+  BurnerWalletConnector,
   FuelWalletConnector,
   FueletWalletConnector,
   SolanaConnector,
@@ -61,6 +62,7 @@ const connectors = [
   new SolanaConnector({
     projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID!,
   }),
+  new BurnerWalletConnector(),
 ];
 
 export const Providers = ({ children }: { children: ReactNode }) => {
