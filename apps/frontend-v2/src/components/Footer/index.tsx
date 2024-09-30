@@ -81,7 +81,7 @@ export const Footer = () => {
               <Link href="/">
                 <Image src={Logo} alt="logo" />
               </Link>
-              <div className="text-primary items-center font-semibold text-md flex gap-x-2">
+              <div className="text-primary items-center font-bold text-xs flex gap-x-2">
                 Secured by
               </div>
               <a
