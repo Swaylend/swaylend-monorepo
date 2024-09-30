@@ -141,7 +141,7 @@ export const MarketChart = ({
           </defs>
           <Area
             dataKey={dataKey as DataKey<string>}
-            type="natural"
+            type="monotone"
             fill={`url(#${color === '#3FE8BD' ? 'color1' : 'color2'})`}
             fillOpacity={1}
             strokeWidth={3}

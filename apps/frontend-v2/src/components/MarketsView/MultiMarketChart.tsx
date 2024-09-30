@@ -199,7 +199,7 @@ export const MultiMarketChart = ({
             </defs>
             <Area
               dataKey="suppliedValueUsd"
-              type="natural"
+              type="monotone"
               fill="url(#color2)"
               fillOpacity={0.4}
               stroke="url(#color2)"
@@ -208,7 +208,7 @@ export const MultiMarketChart = ({
             />
             <Area
               dataKey="borrowedValueUsd"
-              type="natural"
+              type="monotone"
               fill="url(#color1)"
               fillOpacity={0.4}
               strokeWidth={2}
@@ -217,7 +217,7 @@ export const MultiMarketChart = ({
             />
             <Area
               dataKey="collateralValueUsd"
-              type="natural"
+              type="monotone"
               fill="url(#color3)"
               fillOpacity={0.4}
               strokeWidth={2}
