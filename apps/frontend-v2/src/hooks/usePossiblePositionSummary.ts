@@ -105,7 +105,8 @@ export const usePossiblePositionSummary = () => {
     if (action === ACTION_TYPE.SUPPLY || action === ACTION_TYPE.WITHDRAW) {
       if (
         actionTokenAssetId === marketConfiguration.baseToken.bits ||
-        !collateralValue
+        !collateralValue ||
+        !trueCollateralValue
       ) {
         setPossibleBorrowCapacity(null);
         setPossibleCollateralValue(null);
@@ -120,6 +121,22 @@ export const usePossiblePositionSummary = () => {
         tokenAmount
           .times(priceData.prices[actionTokenAssetId])
           .times(action === ACTION_TYPE.SUPPLY ? 1 : -1)
+      );
+
+      const trueCollateralsValue = trueCollateralValue.plus(
+        tokenAmount
+          .times(priceData.prices[actionTokenAssetId])
+          .times(action === ACTION_TYPE.SUPPLY ? 1 : -1)
+          .times(
+            formatUnits(
+              BigNumber(
+                collateralConfigurations[
+                  actionTokenAssetId
+                ].liquidate_collateral_factor.toString()
+              ),
+              18
+            )
+          )
       );
 
       // Existing borrow capacity +/- (token supplied * price * borrow_collateral_factor) + borrwed_amount
@@ -141,6 +158,10 @@ export const usePossiblePositionSummary = () => {
 
       const newBorrowCapacity = newAvailableToBorrow.plus(loanAmount);
 
+      const collateralUtilization = trueCollateralsValue.eq(0)
+        ? BigNumber(0)
+        : loanAmount.div(trueCollateralsValue);
+
       setPossibleCollateralValue(
         collateralsValue.lt(0) ? BigNumber(0) : collateralsValue
       );
@@ -149,6 +170,10 @@ export const usePossiblePositionSummary = () => {
       );
       setPossibleAvailableToBorrow(
         newAvailableToBorrow.lt(0) ? BigNumber(0) : newAvailableToBorrow
+      );
+
+      setPossibleCollateralUtilization(
+        collateralUtilization.times(100).toNumber()
       );
     }
   };

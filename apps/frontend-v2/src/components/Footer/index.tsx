@@ -81,13 +81,14 @@ export const Footer = () => {
               <Link href="/">
                 <Image src={Logo} alt="logo" />
               </Link>
-              <div className="text-primary items-center text-md flex gap-x-2">
+              <div className="text-primary items-center font-semibold text-md flex gap-x-2">
                 Secured by
               </div>
               <a
                 href="https://www.halborn.com/"
                 target="_blank"
                 rel="noreferrer"
+                className="md:mt-[-8px]"
               >
                 <Image src={HalbornLogo} height={96} width={96} alt="logo" />
               </a>
