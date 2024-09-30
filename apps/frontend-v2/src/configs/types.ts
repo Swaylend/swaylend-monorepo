@@ -20,7 +20,7 @@ export const AppConfigSchema = z.object({
     walletConnectProjectId: z.string(),
     fuelNodeUrl: z.string(),
     fuelExplorerUrl: z.string(),
-    alchemyUrl: z.string(),
+    alchemyId: z.string(),
   }),
   server: z.object({
     sentioApi: z.string(),

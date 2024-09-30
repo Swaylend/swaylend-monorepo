@@ -2,14 +2,7 @@
 
 import 'react-toastify/dist/ReactToastify.css';
 
-import {
-  BakoSafeConnector,
-  BurnerWalletConnector,
-  FuelWalletConnector,
-  FueletWalletConnector,
-  SolanaConnector,
-  WalletConnectConnector,
-} from '@fuels/connectors';
+import { defaultConnectors } from '@fuels/connectors';
 import { FuelProvider } from '@fuels/react';
 import {
   QueryClient,
@@ -22,19 +15,14 @@ import { type ReactNode, useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 
 import { appConfig } from '@/configs';
+import { CHAIN_IDS } from 'fuels';
 import posthog from 'posthog-js';
 import { PostHogProvider } from 'posthog-js/react';
-import PostHogIdentify from './PostHogIdentify';
-import { mainnet, sepolia } from 'wagmi/chains';
-import {
-  http,
-  type CreateConnectorFn,
-  createConfig,
-  createStorage,
-  cookieStorage,
-} from 'wagmi';
-import { coinbaseWallet, walletConnect } from 'wagmi/connectors';
 import { fallback } from 'viem';
+import { http, cookieStorage, createConfig, createStorage } from 'wagmi';
+import { mainnet, sepolia } from 'wagmi/chains';
+import { coinbaseWallet, injected, walletConnect } from 'wagmi/connectors';
+import PostHogIdentify from './PostHogIdentify';
 
 function makeQueryClient() {
   return new QueryClient({
@@ -65,48 +53,42 @@ function getQueryClient() {
   return browserQueryClient;
 }
 
+const METADATA = {
+  name: 'SwayLend',
+  description: 'SwayLend',
+  url: 'https://app.swaylend.com',
+  icons: ['https://app.swaylend.com/logo512.png'],
+};
+
 const wagmiConfig = createConfig({
-  ssr: true,
-  // chains: appConfig.env === 'mainnet' ? [mainnet] : [sepolia], // TODO: Uncomment when mainnet is ready
-  chains: [sepolia],
+  chains: [mainnet, sepolia],
   connectors: [
+    injected({ shimDisconnect: false }),
     walletConnect({
       projectId: appConfig.client.walletConnectProjectId,
+      metadata: METADATA,
       showQrModal: false,
     }),
     coinbaseWallet({
-      appName: 'Swaylend',
-      headlessMode: true,
+      appName: METADATA.name,
+      appLogoUrl: METADATA.icons[0],
+      darkMode: true,
+      reloadOnDisconnect: true,
     }),
   ],
   transports: {
-    // ...((appConfig.env === 'mainnet'
-    //   ? {
-    //       [mainnet.id]: fallback([http(appConfig.client.alchemyUrl)]),
-    //     }
-    //   : {
-    //       [sepolia.id]: fallback([http(appConfig.client.alchemyUrl)]),
-    //     }) as any),
-    [sepolia.id]: fallback([http(appConfig.client.alchemyUrl)]),
+    [mainnet.id]: fallback([
+      http(
+        `https://eth-mainnet.g.alchemy.com/v2/${appConfig.client.alchemyId}`
+      ),
+    ]),
+    [sepolia.id]: fallback([
+      http(
+        `https://eth-sepolia.g.alchemy.com/v2/${appConfig.client.alchemyId}`
+      ),
+    ]),
   },
-  storage: createStorage({
-    storage: cookieStorage,
-  }),
 });
-
-const connectors = [
-  new FuelWalletConnector(),
-  new FueletWalletConnector(),
-  new WalletConnectConnector({
-    projectId: appConfig.client.walletConnectProjectId,
-    wagmiConfig: wagmiConfig,
-  }),
-  new SolanaConnector({
-    projectId: appConfig.client.walletConnectProjectId,
-  }),
-  new BakoSafeConnector(),
-  ...(appConfig.useBurnerWallet ? [new BurnerWalletConnector()] : []),
-];
 
 export const Providers = ({ children }: { children: ReactNode }) => {
   const queryClient = getQueryClient();
@@ -138,8 +120,18 @@ export const Providers = ({ children }: { children: ReactNode }) => {
         <QueryClientProvider client={queryClient}>
           <FuelProvider
             theme="dark"
+            networks={[
+              {
+                chainId: CHAIN_IDS.fuel.testnet,
+              },
+            ]}
             fuelConfig={{
-              connectors: connectors,
+              connectors: defaultConnectors({
+                devMode: appConfig.env === 'testnet',
+                wcProjectId: appConfig.client.walletConnectProjectId,
+                ethWagmiConfig: wagmiConfig,
+                chainId: CHAIN_IDS.fuel.testnet,
+              }),
             }}
           >
             <>
