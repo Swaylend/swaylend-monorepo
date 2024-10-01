@@ -14,7 +14,6 @@ import X from '/public/icons/x-logo-white.png';
 import { Line } from '../Line';
 
 export const Footer = () => {
-  const { changeMarketMode } = useMarketStore();
   return (
     <div>
       <div className="flex flex-col items-center overflow-hidden py-4 text-moon text-xs sm:text-md">
@@ -71,9 +70,9 @@ export const Footer = () => {
                 >
                   <Image src={HalbornLogo} height={96} width={96} alt="logo" />
                 </a>
-                <a href="https://osec.io/" target="_blank" rel="noreferrer">
+                {/* <a href="https://osec.io/" target="_blank" rel="noreferrer">
                   <Image src={OttersecLogo} height={96} width={96} alt="logo" />
-                </a>
+                </a> */}
               </div>
             </div>
           </div>
