@@ -4,6 +4,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { useUser } from '@/hooks';
+import { useFuelPoints } from '@/hooks/useFuelPoints';
 import { cn } from '@/lib/utils';
 import { useReferralModalStore } from '@/stores/referralModalStore';
 import { useIsConnected } from '@fuels/react';
@@ -11,7 +12,6 @@ import { Copy, Loader, Sparkle, Trophy } from 'lucide-react';
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { Button } from '../ui/button';
-import { useFuelPoints } from '@/hooks/useFuelPoints';
 
 export const Points = () => {
   // const { setOpen } = useReferralModalStore();
