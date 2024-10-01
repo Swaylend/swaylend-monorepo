@@ -11,23 +11,26 @@ import { Copy, Loader, Sparkle, Trophy } from 'lucide-react';
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { Button } from '../ui/button';
+import { useFuelPoints } from '@/hooks/useFuelPoints';
 
 export const Points = () => {
-  const { setOpen } = useReferralModalStore();
+  // const { setOpen } = useReferralModalStore();
 
-  const { data: user, isPending, isLoading, isError, refetch } = useUser();
+  // const { data: user, isPending, isLoading, isError, refetch } = useUser();
 
-  const [isCopied, setIsCopied] = useState(false);
+  // const [isCopied, setIsCopied] = useState(false);
 
   const { isConnected } = useIsConnected();
 
-  const handleCopy = async (value: string) => {
-    setIsCopied(true);
-    await navigator.clipboard.writeText(value);
-    setTimeout(() => {
-      setIsCopied(false);
-    }, 1000);
-  };
+  const { data: fuelPoints } = useFuelPoints();
+
+  // const handleCopy = async (value: string) => {
+  //   setIsCopied(true);
+  //   await navigator.clipboard.writeText(value);
+  //   setTimeout(() => {
+  //     setIsCopied(false);
+  //   }, 1000);
+  // };
 
   if (!isConnected) return null;
 
@@ -36,14 +39,14 @@ export const Points = () => {
       <PopoverTrigger>
         <div className="text-yellow-400 sm:px-3 sm:py-1.5 max-sm:p-1 flex items-center gap-x-1 rounded-full border-[3px] border-yellow-400">
           <Sparkle className="w-5 h-5" />
-          <span className="max-sm:hidden">{user?.points ?? 0}</span>
+          {/* <span className="max-sm:hidden">{user?.points ?? 0}</span> */}
         </div>
       </PopoverTrigger>
       <PopoverContent
         align="center"
         className="flex flex-col gap-y-2 items-center w-[258px] px-[24px]"
       >
-        <div className="flex flex-col gap-y-2 items-center">
+        {/* <div className="flex flex-col gap-y-2 items-center">
           <div className="text-moon">SwayPoints</div>
           <div
             className={cn(
@@ -53,11 +56,11 @@ export const Points = () => {
           >
             {isLoading ? 'Loading...' : user ? user.points : '0'}
           </div>
+        </div> */}
+        <div className="rounded-full text-moon">
+          Fuel Points <span className="text-moon">{fuelPoints}</span>
         </div>
-        <div className="rounded-full bg-white/5 px-4 py-2 text-moon">
-          Fuel Pts <span className="text-moon">0</span>
-        </div>
-        <Link href="/leaderboard" className="w-full mt-4">
+        {/* <Link href="/leaderboard" className="w-full mt-4">
           <Button className="w-full flex gap-x-2" variant="tertiary-card">
             <Trophy className="w-5 h-5" />
             Points Leaderboard
@@ -91,7 +94,7 @@ export const Points = () => {
               Redeem referral code
             </Button>
           )}
-        </div>
+        </div> */}
       </PopoverContent>
     </Popover>
   );

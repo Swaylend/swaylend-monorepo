@@ -21,6 +21,7 @@ export const AppConfigSchema = z.object({
     fuelNodeUrl: z.string(),
     fuelExplorerUrl: z.string(),
     alchemyId: z.string(),
+    fuelOblApi: z.string(),
   }),
   server: z.object({
     sentioApi: z.string(),
