@@ -5,7 +5,7 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 
 /*
-  Fuels version: 0.94.6
+  Fuels version: 0.94.8
 */
 
 import { Contract, Interface } from "fuels";
@@ -2001,16 +2001,16 @@ const abi = {
       "concreteTypeId": "4e6aabd209068d31558291cfd07cff9366801b052a1767bd0a9eb34bf55e8a0e"
     },
     {
-      "logId": "7659206549590130669",
-      "concreteTypeId": "6a4af7c6d1aa3fedf33604a44da789ba359bf8f662a56fbc4de9603b8e732291"
-    },
-    {
       "logId": "3591203286967623281",
       "concreteTypeId": "31d6845ccbeb9e71f30bf07140659072ce92db76041efd6861d6895dace9e658"
     },
     {
       "logId": "5291237237808257645",
       "concreteTypeId": "496e403bcde15a6d2d8a6ac3ae964a1db2145d27464fad7ae2b0dd4390c90c19"
+    },
+    {
+      "logId": "7659206549590130669",
+      "concreteTypeId": "6a4af7c6d1aa3fedf33604a44da789ba359bf8f662a56fbc4de9603b8e732291"
     },
     {
       "logId": "10580804319558431108",
@@ -2090,22 +2090,22 @@ const abi = {
     {
       "name": "DEBUG_STEP",
       "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
-      "offset": 135016
+      "offset": 135216
     },
     {
       "name": "ORACLE_MAX_STALENESS",
       "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
-      "offset": 135064
+      "offset": 135264
     },
     {
       "name": "ORACLE_MAX_AHEADNESS",
       "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
-      "offset": 135024
+      "offset": 135224
     },
     {
       "name": "ORACLE_MAX_CONF_WIDTH",
       "concreteTypeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e",
-      "offset": 135032
+      "offset": 135232
     }
   ]
 };
