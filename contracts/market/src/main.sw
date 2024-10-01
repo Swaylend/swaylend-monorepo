@@ -1423,9 +1423,6 @@ fn accrue_internal() {
 
         // Write to storage (market_basic)
         storage.market_basic.write(market_basic);
-
-        // Emit market basic event
-        log(MarketBasicEvent { market_basic });
     }
 }
 
