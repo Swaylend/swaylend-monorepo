@@ -1,5 +1,5 @@
-import { usePostHog } from 'posthog-js/react';
 import { useMutation } from '@tanstack/react-query';
+import { usePostHog } from 'posthog-js/react';
 
 export const useTrackExternalPageView = () => {
   const posthog = usePostHog();

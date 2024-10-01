@@ -12,6 +12,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { appConfig } from '@/configs';
+import { useTrackExternalPageView } from '@/lib/posthog';
 import { cn } from '@/lib/utils';
 import { MARKET_MODE, useMarketStore } from '@/stores';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
@@ -35,8 +37,6 @@ import { Button } from '../ui/button';
 import { ConnectButton } from './ConnectButton';
 import { MarketSwitcher } from './MarketSwitcher';
 import { Points } from './Points';
-import { useTrackExternalPageView } from '@/lib/posthog';
-import { appConfig } from '@/configs';
 
 const NAVBAR_LINKS = [
   { href: '/market', label: 'Market', icon: <ChartLine /> },
