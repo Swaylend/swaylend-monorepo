@@ -93,12 +93,14 @@ export const InfoBowl = () => {
   return (
     <TooltipProvider>
       <Tooltip>
-        <TooltipTrigger>
+        <TooltipTrigger className="cursor-default">
           <div className="sm:w-[174px] sm:h-[174px] w-[124px] h-[124px] bg-background rounded-full flex items-center p-2 justify-center">
             {isLoading ? (
               <Skeleton className="w-full h-full bg-primary/20 rounded-full ring-2 ring-white/20" />
             ) : (
-              <div className="w-full h-full relative z-10">
+              <div
+                className={`w-full h-full relative z-10 ${bowlMode === 2 && 'cursor-pointer'}`}
+              >
                 {bowlMode === 2 && (
                   <>
                     <Wave

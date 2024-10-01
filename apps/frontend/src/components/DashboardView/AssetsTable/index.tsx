@@ -10,7 +10,7 @@ export const AssetsTable = () => {
 
   return (
     <div className="w-full mt-[15px] sm:mt-[20px]">
-      <div className="py-2 max-w-[160px]">
+      <div className="py-2 max-w-[200px]">
         <MarketSwitcher />
       </div>
       {marketMode === 'lend' && (

@@ -139,7 +139,7 @@ export const BorrowTable = () => {
 
   const borrowedBalance = useMemo(() => {
     if (!marketConfiguration || !userSupplyBorrow || !isConnected) {
-      return `${BigNumber(0).toFormat(4)} ${appConfig.assets[marketConfiguration?.baseToken.bits ?? '']}`;
+      return `${getFormattedNumber(BigNumber(0))} ${appConfig.assets[marketConfiguration?.baseToken.bits ?? '']}`;
     }
 
     const val = formatUnits(
@@ -149,7 +149,7 @@ export const BorrowTable = () => {
     if (val.lt(1) && val.gt(0)) {
       return `< 1 ${appConfig.assets[marketConfiguration?.baseToken.bits ?? '']}`;
     }
-    return `${val.toFormat(4)} ${appConfig.assets[marketConfiguration?.baseToken.bits ?? '']}`;
+    return `${getFormattedNumber(val)} ${appConfig.assets[marketConfiguration?.baseToken.bits ?? '']}`;
   }, [marketConfiguration, userSupplyBorrow, isConnected]);
 
   return (
@@ -242,10 +242,7 @@ export const BorrowTable = () => {
               >
                 {getBorrowApr(borrowRate)}
               </TableCell>
-              <TableCell>
-                {getFormattedNumber(BigNumber(borrowedBalance))}{' '}
-                {appConfig.assets[marketConfiguration?.baseToken.bits ?? '']}
-              </TableCell>
+              <TableCell>{borrowedBalance}</TableCell>
               <TableCell>
                 <PointIcons points={POINTS_BORROW} />
               </TableCell>
@@ -255,7 +252,7 @@ export const BorrowTable = () => {
                     You cannot Borrow assets while you have an active Earn
                     position. Learn more about how{' '}
                     <a
-                      href="https://docs.swaylend.com/"
+                      href="https://docs.swaylend.com/navigate-swaylend"
                       target="_blank"
                       rel="noreferrer"
                       className="underline hover:opacity-90 text-white"
@@ -375,9 +372,7 @@ export const BorrowTable = () => {
                   <div className="w-1/2 text-moon font-medium">
                     Borrowed Assets
                   </div>
-                  <div className="text-moon">
-                    {getFormattedNumber(BigNumber(borrowedBalance))}
-                  </div>
+                  <div className="text-moon">{borrowedBalance}</div>
                 </div>
                 <div className="w-full flex items-center">
                   <div className="w-1/2 text-moon font-medium">
@@ -394,7 +389,7 @@ export const BorrowTable = () => {
                 You cannot Borrow assets while you have an active Earn position.
                 Learn more about how{' '}
                 <a
-                  href="https://docs.swaylend.com/"
+                  href="https://docs.swaylend.com/navigate-swaylend"
                   target="_blank"
                   rel="noreferrer"
                   className="underline hover:opacity-90 text-white"
