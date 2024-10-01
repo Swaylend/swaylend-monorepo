@@ -98,7 +98,8 @@ export const Stats = () => {
       !isConnected ||
       !borrowCapacity ||
       !userSupplyBorrow ||
-      !marketConfiguration
+      !marketConfiguration ||
+      !priceData?.prices
     ) {
       return { title: '', value: 0 };
     }
@@ -122,7 +123,10 @@ export const Stats = () => {
       if (val.lt(1) && val.gt(0)) {
         return { title: 'Borrowed', value: 0.5 };
       }
-      return { title: 'Borrowed', value: val };
+      return {
+        title: 'Borrowed',
+        value: val.times(priceData.prices[marketConfiguration.baseToken.bits]),
+      };
     }
     // Available to borrow
     if (borrowCapacity.lt(1) && borrowCapacity.gt(0)) {

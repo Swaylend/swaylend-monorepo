@@ -1,6 +1,5 @@
 'use client';
 
-import { MARKET_MODE, useMarketStore } from '@/stores';
 import { BookTextIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -131,6 +130,7 @@ export const Footer = () => {
                 href="https://twitter.com/swaylend"
                 target="_blank"
                 rel="noreferrer"
+                className="md:mt-[-8px]"
               >
                 <Image src={X} alt="X logo" width={20} height={20} />
               </a>
