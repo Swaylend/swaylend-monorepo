@@ -139,12 +139,12 @@ export const Stats = () => {
   }, [isConnected, borrowCapacity, userSupplyBorrow, borrowedMode]);
 
   return (
-    <div className="w-full xl:px-[140px] 2xl:px-[203px]">
-      <div className="flex w-full bg-gradient-to-r justify-between from-background to-background via-primary/40 items-center h-[91px] sm:h-[123px] px-[24px] sm:px-[56px]">
+    <div className="w-full px-4 xl:px-[140px] 2xl:px-[203px]">
+      <div className="flex w-full bg-card rounded-xl border-border border justify-between  items-center h-[91px] sm:h-[123px] px-[24px] sm:px-[56px]">
         <div className="w-[300px]">
           {isConnected && (
             <div>
-              <div className="text-moon text-xs sm:text-md lg:text-lg font-semibold">
+              <div className="text-primary text-xs sm:text-md lg:text-lg font-semibold">
                 {marketMode === MARKET_MODE.BORROW
                   ? 'Supplied Collateral'
                   : 'Supplied Balance'}
@@ -163,7 +163,7 @@ export const Stats = () => {
         <div className="w-[300px] text-right">
           {isConnected && userSupplyBorrow && marketMode === 'borrow' && (
             <div>
-              <div className="text-moon flex items-center justify-end gap-x-1 text-xs sm:text-md lg:text-lg font-semibold">
+              <div className="text-primary flex items-center justify-end gap-x-1 text-xs sm:text-md lg:text-lg font-semibold">
                 {borrowedBalanceText.title}
                 {userSupplyBorrow.borrowed.gt(0) && (
                   <button

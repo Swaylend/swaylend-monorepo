@@ -21,7 +21,7 @@ export const TermsAndConditions = ({
 
   return (
     <>
-      <div className="flex flex-col w-full h-full px-6 py-4 gap-y-2.5 border-[1px] border-[#666E79] rounded-md text-lavender overflow-auto">
+      <div className="flex flex-col w-full h-full px-6 py-4 gap-y-2.5 border-[1px] border-[#666E79] rounded-md text-lavender overflow-auto scrollbar scrollbar-thumb-primary scrollbar-track-card">
         <div className="text-center text-white font-semibold text-lg">
           Terms & Conditions
         </div>

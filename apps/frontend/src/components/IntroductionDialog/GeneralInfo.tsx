@@ -14,7 +14,7 @@ export const GeneralInfo = ({
 
   return (
     <>
-      <div className="overflow-auto flex flex-col justify-between w-full h-full px-6 py-4 gap-y-2.5 rounded-md text-lavender">
+      <div className="overflow-auto flex flex-col justify-between w-full h-full px-6 py-4 gap-y-2.5 rounded-md text-lavender scrollbar scrollbar-thumb-primary scrollbar-track-card">
         <div>
           <div className="text-center text-white font-semibold text-xl">
             Before you Enter

@@ -5,15 +5,31 @@ import { SYMBOL_TO_ICON } from '@/utils';
 import BigNumber from 'bignumber.js';
 import Image from 'next/image';
 import type React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDebounceCallback } from 'usehooks-ts';
 import { Input } from '../ui/input';
 
 export const InputField = ({ error }: { error: boolean }) => {
-  const { changeTokenAmount, tokenAmount, actionTokenAssetId } =
+  const { changeTokenAmount, tokenAmount, actionTokenAssetId, action } =
     useMarketStore();
 
   const [inputValue, setInputValue] = useState<string>('');
+
+  const amountInput = useRef<HTMLInputElement>(null);
+
+  const debounceFocus = useDebounceCallback(() => {
+    if (amountInput.current) {
+      amountInput.current.focus();
+    }
+  }, 10);
+
+  useEffect(() => {
+    debounceFocus();
+  }, []);
+
+  useEffect(() => {
+    debounceFocus();
+  }, [action]);
 
   useEffect(() => {
     if (
@@ -75,6 +91,7 @@ export const InputField = ({ error }: { error: boolean }) => {
   return (
     <div className="relative flex w-full">
       <Input
+        autoFocus={true}
         type="string"
         className={cn(
           'h-[56px] bg-card border-2',
@@ -83,6 +100,7 @@ export const InputField = ({ error }: { error: boolean }) => {
         value={inputValue}
         onChange={handleChange}
         placeholder="Enter amount"
+        ref={amountInput}
       />
       <div className="absolute flex items-center gap-x-2 h-[24px] top-[calc(50%-12px)] left-[calc(100%-80px)]">
         <div className="w-[24px] h-[24px]">

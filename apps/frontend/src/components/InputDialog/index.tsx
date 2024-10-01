@@ -493,7 +493,8 @@ export const InputDialog = () => {
                 disabled={disabledRightTab}
                 onMouseDown={() =>
                   handleModeChange(
-                    action === ACTION_TYPE.BORROW
+                    action === ACTION_TYPE.BORROW ||
+                      action === ACTION_TYPE.REPAY
                       ? ACTION_TYPE.REPAY
                       : ACTION_TYPE.WITHDRAW
                   )

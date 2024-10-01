@@ -24,7 +24,7 @@ export const BorrowPositionSummary = () => {
   return (
     <>
       <div className="relative w-full">
-        <div className="absolute left-[calc(50%-4px)] top-[10px] h-[24px] z-0 w-[8px] bg-gradient-to-b from-white/0 to-primary" />
+        <div className="absolute left-[calc(50%-2px)] top-[10px] h-[24px] z-0 w-[4px] bg-gradient-to-b from-white/0 to-primary" />
       </div>
       <div className="mt-[30px] max-w-[800px] w-full">
         <div className="flex flex-col items-center justify-center gap-y-1">

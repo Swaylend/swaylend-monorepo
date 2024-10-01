@@ -1,47 +1,85 @@
 'use client';
 
-import { MARKET_MODE, useMarketStore } from '@/stores';
+import { BookTextIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
+import GITHUB from '/public/icons/GitHub_Invertocat_Light.png';
 import Logo from '/public/icons/dark-logo.svg?url';
+import DISCORD from '/public/icons/discord-mark-white.svg?url';
 import HalbornLogo from '/public/icons/halborn-logo.svg?url';
 import OttersecLogo from '/public/icons/ottersec-logo.svg?url';
+import X from '/public/icons/x-logo-white.png';
 import { Line } from '../Line';
 
 export const Footer = () => {
-  const { changeMarketMode } = useMarketStore();
   return (
     <div>
-      <div className="relative flex flex-col items-center overflow-hidden py-4 text-moon text-xs sm:text-md">
+      <div className="flex flex-col items-center overflow-hidden py-4 text-moon text-xs sm:text-md">
         <Line />
-        <div className="lg:max-w-[1000px] md:px-8 w-full">
-          <div className="w-full flex max-md:flex-col max-md:items-center justify-between mt-4">
-            <div className="flex justify-center md:justify-start md:gap-x-12 gap-x-4 w-4/5">
-              <div>
-                <div className="text-primary font-semibold text-sm">App</div>
-                <div className="mt-2 flex flex-col gap-y-1">
-                  <Link
-                    href="/"
-                    onClick={() => changeMarketMode(MARKET_MODE.BORROW)}
-                  >
-                    <div>Borrow</div>
-                  </Link>
-                  <Link
-                    href="/"
-                    onClick={() => changeMarketMode(MARKET_MODE.LEND)}
-                  >
-                    <div>Earn</div>
-                  </Link>
-                  <Link href="/market">
-                    <div>Markets</div>
-                  </Link>
-                </div>
+        <div className="w-full flex justify-between mt-8 px-[20px] sm:px-[40px] xl:px-[88px]">
+          <div className="md:w-1/3 sm:2/5 w-full max-sm:flex max-sm:flex-col justify-center items-center">
+            <Link href="/">
+              <Image src={Logo} height={50} alt="logo" />
+            </Link>
+            <div className="sm:text-xl font-semibold text-lavender mt-8 max-sm:text-center text-lg">
+              Welcome to the Leading Lending Protocol of Fuel Network
+            </div>
+
+            <div className="flex sm:hidden mt-16 gap-x-8">
+              <a
+                href="https://twitter.com/swaylend"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Image src={X} alt="X logo" width={20} height={20} />
+              </a>
+              <a
+                href="https://discord.gg/m9VcnNG2"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Image src={DISCORD} alt="X logo" height={20} />
+              </a>
+              <a
+                href="https://github.com/swaylend"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Image src={GITHUB} alt="X logo" width={20} height={20} />
+              </a>
+              <a
+                href="https://docs.swaylend.com/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <BookTextIcon className="w-[20px] h-[20px] text-white" />
+              </a>
+            </div>
+
+            <div className="mt-16">
+              <div className="text-primary items-center text-xs font-semibold flex gap-x-2">
+                Audited by
               </div>
+              <div className="mt-1 flex items-center gap-x-2">
+                <a
+                  href="https://www.halborn.com/"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <Image src={HalbornLogo} height={96} width={96} alt="logo" />
+                </a>
+                {/* <a href="https://osec.io/" target="_blank" rel="noreferrer">
+                  <Image src={OttersecLogo} height={96} width={96} alt="logo" />
+                </a> */}
+              </div>
+            </div>
+          </div>
+          <div className="hidden min-h-max sm:flex max-w-1/3 flex-col justify-between">
+            <div />
+            <div className="flex gap-x-16 justify-end">
               <div>
-                <div className="text-primary font-semibold text-sm">
-                  Resources
-                </div>
+                <div className="text-primary text-sm font-semibold">LEARN</div>
                 <div className="mt-2 flex flex-col gap-y-1">
                   <a
                     href="https://docs.swaylend.com/"
@@ -51,59 +89,74 @@ export const Footer = () => {
                     Documentation
                   </a>
                   <a
-                    href="https://github.com/swaylend"
+                    href="https://docs.swaylend.com/"
                     target="_blank"
                     rel="noreferrer"
                   >
-                    GitHub
+                    Blog
                   </a>
                 </div>
               </div>
               <div>
-                <div className="text-primary font-semibold text-sm">
-                  Community
-                </div>
+                <div className="text-primary text-sm font-semibold">LEGAL</div>
                 <div className="mt-2 flex flex-col gap-y-1">
                   <a
-                    href="https://discord.gg/m9VcnNG2"
+                    href="https://docs.swaylend.com/"
                     target="_blank"
                     rel="noreferrer"
                   >
-                    Discord
+                    Privacy Policy
                   </a>
                   <a
-                    href="https://twitter.com/swaylend"
+                    href="https://docs.swaylend.com/"
                     target="_blank"
                     rel="noreferrer"
                   >
-                    Twitter
+                    Disclaimer
+                  </a>
+                  <a
+                    href="https://docs.swaylend.com/"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    Terms & Conditions
                   </a>
                 </div>
               </div>
             </div>
-            <div className="md:w-1/5 items-end max-md:mt-8 max-md:w-full max-md:items-center flex flex-col gap-y-4">
-              <Link href="/">
-                <Image src={Logo} alt="logo" />
-              </Link>
-              <div className="text-primary items-center font-bold text-xs flex gap-x-2">
-                Secured by
-              </div>
+
+            <div className="flex gap-x-8">
               <a
-                href="https://www.halborn.com/"
+                href="https://twitter.com/swaylend"
                 target="_blank"
                 rel="noreferrer"
                 className="md:mt-[-8px]"
               >
-                <Image src={HalbornLogo} height={96} width={96} alt="logo" />
+                <Image src={X} alt="X logo" width={20} height={20} />
               </a>
-              {/* <a href="https://osec.io/" target="_blank" rel="noreferrer">
-                <Image src={OttersecLogo} height={96} width={96} alt="logo" />
-              </a> */}
+              <a
+                href="https://discord.gg/m9VcnNG2"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Image src={DISCORD} alt="X logo" height={20} />
+              </a>
+              <a
+                href="https://github.com/swaylend"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Image src={GITHUB} alt="X logo" width={20} height={20} />
+              </a>
+              <a
+                href="https://docs.swaylend.com/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <BookTextIcon className="w-[20px] h-[20px] text-white" />
+              </a>
             </div>
           </div>
-        </div>
-        <div className="absolute top-[calc(80%)] w-full flex justify-center z-[-10]">
-          <div className="opacity-60 blur-[45px] rounded-full w-[32%] sm:w-[500px] aspect-square bg-primary" />
         </div>
       </div>
     </div>

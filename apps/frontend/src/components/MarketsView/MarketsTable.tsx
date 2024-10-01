@@ -6,7 +6,9 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { appConfig } from '@/configs';
+import Image from 'next/image';
 import React from 'react';
+import FUEL from '/public/icons/fuel-logo.svg?url';
 import { MarketTableRow } from './MarketTableRow';
 
 export const MarketsTable = () => {
@@ -15,7 +17,10 @@ export const MarketsTable = () => {
       <TableHeader>
         <TableRow>
           <TableHead colSpan={8}>
-            <div className="w-full flex justify-center text-white font-semibold">
+            <div className="w-full flex items-center justify-center gap-x-2 text-white font-semibold">
+              <div>
+                <Image src={FUEL} height={24} alt={'fuel logo'} />
+              </div>
               Fuel Network
             </div>
           </TableHead>
