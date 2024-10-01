@@ -120,6 +120,9 @@ export const Providers = ({ children }: { children: ReactNode }) => {
         <QueryClientProvider client={queryClient}>
           <FuelProvider
             theme="dark"
+            uiConfig={{
+              suggestBridge: false,
+            }}
             networks={[
               {
                 chainId: CHAIN_IDS.fuel.testnet,

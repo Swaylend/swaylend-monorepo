@@ -207,7 +207,7 @@ export const Navbar = () => {
             </DropdownMenu> */}
           </div>
           <div className="flex items-center gap-x-2">
-            {/* <Points /> */}
+            <Points />
             <MarketSwitcher />
             <ConnectButton />
           </div>
@@ -222,7 +222,7 @@ export const Navbar = () => {
             <Image src={LogoIcon} alt="logo" />
           </Link>
           <div className="flex items-center gap-x-2">
-            {/* <Points /> */}
+            <Points />
             <div className="hidden md:block">
               <MarketSwitcher />
             </div>
