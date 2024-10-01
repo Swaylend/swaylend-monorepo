@@ -1,4 +1,5 @@
 import { FaucetView } from '@/components/FaucetView';
+import { appConfig } from '@/configs';
 
 import type { Metadata } from 'next';
 
@@ -7,5 +8,15 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <FaucetView />;
+  if (appConfig.env === 'testnet') {
+    return <FaucetView />;
+  }
+
+  return (
+    // TODO: Uncomment when mainnet is ready
+    // <div className="h-full flex justify-center items-center">
+    //   Faucet is only available on testnet
+    // </div>
+    <FaucetView />
+  );
 }
