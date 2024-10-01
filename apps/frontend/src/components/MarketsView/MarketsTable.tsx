@@ -17,10 +17,10 @@ export const MarketsTable = () => {
       <TableHeader>
         <TableRow>
           <TableHead colSpan={8}>
-            <div className="w-full flex justify-center gap-x-2 text-white font-semibold">
-              {/* <div>
-                <Image src={FUEL} alt={'fuel logo'} />
-              </div> */}
+            <div className="w-full flex items-center justify-center gap-x-2 text-white font-semibold">
+              <div>
+                <Image src={FUEL} height={24} alt={'fuel logo'} />
+              </div>
               Fuel Network
             </div>
           </TableHead>

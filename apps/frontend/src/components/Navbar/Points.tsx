@@ -12,6 +12,8 @@ import { Copy, Loader, Sparkle, Trophy } from 'lucide-react';
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { Button } from '../ui/button';
+import POINTS from '/public/icons/points-icon.svg?url';
+import Image from 'next/image';
 
 export const Points = () => {
   // const { setOpen } = useReferralModalStore();
@@ -37,28 +39,29 @@ export const Points = () => {
   return (
     <Popover>
       <PopoverTrigger>
-        <div className="text-yellow-400 sm:px-3 sm:py-1.5 max-sm:p-1 flex items-center gap-x-1 rounded-full border-[3px] border-yellow-400">
-          <Sparkle className="w-5 h-5" />
-          {/* <span className="max-sm:hidden">{user?.points ?? 0}</span> */}
-        </div>
+        {/* <div className="text-yellow-400 sm:px-3 sm:py-1.5 max-sm:p-1 flex items-center gap-x-1 rounded-full border-[3px] border-yellow-400">
+          <span className="max-sm:hidden">Coming Soon</span>
+          </div> */}
+        <Image alt="points-icon" width={32} height={32} src={POINTS} />
       </PopoverTrigger>
       <PopoverContent
         align="center"
         className="flex flex-col gap-y-2 items-center w-[258px] px-[24px]"
       >
-        {/* <div className="flex flex-col gap-y-2 items-center">
-          <div className="text-moon">SwayPoints</div>
+        <div className="flex flex-col gap-y-2 items-center border border-white/10 w-full p-2 rounded-xl">
+          <div className="text-lavender">SwayPoints</div>
           <div
             className={cn(
-              'text-lg font-semibold text-yellow-400',
-              isLoading && 'animate-pulse'
+              'text-lg font-semibold text-yellow-400'
+              // isLoading && 'animate-pulse'
             )}
           >
-            {isLoading ? 'Loading...' : user ? user.points : '0'}
+            Coming Soon
           </div>
-        </div> */}
-        <div className="rounded-full text-moon">
-          Fuel Points <span className="text-moon">{fuelPoints}</span>
+        </div>
+        <div className="rounded-full text-primary mt-8">
+          Fuel Points:{' '}
+          <span className="text-lavender font-semibold">{fuelPoints}</span>
         </div>
         {/* <Link href="/leaderboard" className="w-full mt-4">
           <Button className="w-full flex gap-x-2" variant="tertiary-card">
