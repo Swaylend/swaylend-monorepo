@@ -130,7 +130,6 @@ export const Footer = () => {
                 href="https://twitter.com/swaylend"
                 target="_blank"
                 rel="noreferrer"
-                className="md:mt-[-8px]"
               >
                 <Image src={X} alt="X logo" width={20} height={20} />
               </a>
@@ -139,14 +138,14 @@ export const Footer = () => {
                 target="_blank"
                 rel="noreferrer"
               >
-                <Image src={DISCORD} alt="X logo" height={20} />
+                <Image src={DISCORD} alt="Discord logo" height={20} />
               </a>
               <a
                 href="https://github.com/swaylend"
                 target="_blank"
                 rel="noreferrer"
               >
-                <Image src={GITHUB} alt="X logo" width={20} height={20} />
+                <Image src={GITHUB} alt="GitHub logo" width={21} height={21} />
               </a>
               <a
                 href="https://docs.swaylend.com/"
