@@ -2,9 +2,9 @@
 import { useLeaderboardPoints, useUser } from '@/hooks';
 import { useIsConnected } from '@fuels/react';
 import { TriangleAlert } from 'lucide-react';
+import { notFound } from 'next/navigation';
 import React from 'react';
 import { Skeleton } from '../ui/skeleton';
-import { notFound } from 'next/navigation';
 
 export const LeaderboardView = () => {
   return notFound();
