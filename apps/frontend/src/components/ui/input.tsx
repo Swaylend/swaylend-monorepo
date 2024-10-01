@@ -9,7 +9,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, ...props }, ref) => {
     return (
       <input
-        // biome-ignore lint/a11y/noAutofocus: <explanation>
         autoFocus
         type={type}
         className={cn(
