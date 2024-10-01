@@ -34,10 +34,9 @@ At the first level, the monorepo is divided into `contracts` , `apps` , `scripts
 
 * [`abis`](/abis/): Contains ABI (Application Binary Interface) files, specifically for the market contract.
 * [`apps`](/apps/): Houses different applications related to the project:
-  + `frontend-v2`: A newer version of the frontend application.
+  + `frontend`: Frontend interface for SwayLend.
   + `indexer`: Envio indexer for the Market contract.
   + `indexer-sentio`: Sentio indexer for the Market contract.
-  + `oracle`: Application related to the oracle service.
 * [`contracts`](/contracts/): Contains smart contracts for various functionalities:
   + `market`: The main market contract.
   + `pyth-mock`: Mock contract for Pyth oracle, used in tests.
