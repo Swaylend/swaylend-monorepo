@@ -33,7 +33,7 @@ import LogoIcon from '/public/icons/sway-icon-logo.svg?url';
 import { Line } from '../Line';
 import { Button } from '../ui/button';
 import { ConnectButton } from './ConnectButton';
-import { MarketSwitcher } from './MarketSwitcher';
+import { MarketSwitcher } from '../MarketSwitcher';
 import { Points } from './Points';
 
 const NAVBAR_LINKS = [
@@ -52,94 +52,70 @@ export const Navbar = () => {
       {/* DESKTOP */}
       <div className="max-lg:hidden">
         <div className="flex justify-between items-center px-16 min-h-[93px]">
-          <Link href="/">
-            <Image src={Logo} alt="logo" />
-          </Link>
-          <div className="flex items-center gap-x-4 h-full">
-            <div>
-              <button
-                type="button"
-                onClick={() => {
-                  changeMarketMode(MARKET_MODE.BORROW);
-                  router.push('/');
-                }}
-                className={cn(
-                  pathname === '/' && marketMode === MARKET_MODE.BORROW
-                    ? 'text-primary'
-                    : 'text-lavender',
-                  (pathname !== '/' || marketMode !== MARKET_MODE.BORROW) &&
-                    'hover:text-lavender/80',
-                  'flex items-center cursor-pointer justify-center text-md font-semibold gap-x-1 min-h-[93px] min-w-[90px] relative'
-                )}
-              >
-                Borrow
-                <div className="-z-10 absolute top-[80px] w-full flex justify-center">
-                  <div
-                    className={cn(
-                      pathname === '/' &&
-                        marketMode === MARKET_MODE.BORROW &&
-                        'blur-[30px] w-[90px] aspect-square bg-primary rounded-full'
-                    )}
-                  />
-                </div>
-              </button>
-            </div>
-            <div>
-              <button
-                type="button"
-                onClick={() => {
-                  changeMarketMode(MARKET_MODE.LEND);
-                  router.push('/');
-                }}
-                className={cn(
-                  pathname === '/' && marketMode === MARKET_MODE.LEND
-                    ? 'text-primary'
-                    : 'text-lavender',
-                  (pathname !== '/' || marketMode !== MARKET_MODE.LEND) &&
-                    'hover:text-lavender/80',
-                  'flex items-center cursor-pointer justify-center text-md font-semibold gap-x-1 min-h-[93px] min-w-[90px] relative'
-                )}
-              >
-                Earn
-                <div className="-z-10 absolute top-[80px] w-full flex justify-center">
-                  <div
-                    className={cn(
-                      pathname === '/' &&
-                        marketMode === MARKET_MODE.LEND &&
-                        'blur-[30px] w-[90px] aspect-square bg-primary rounded-full'
-                    )}
-                  />
-                </div>
-              </button>
-            </div>
-            {NAVBAR_LINKS.map(({ href, label }) => (
-              <Link key={href} href={href}>
-                <div
+          <div className="flex items-center gap-x-[70px]">
+            <Link href="/">
+              <Image src={Logo} alt="logo" />
+            </Link>
+            <div className="flex items-center gap-x-[25px] h-full">
+              <div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    changeMarketMode(MARKET_MODE.BORROW);
+                    router.push('/');
+                  }}
                   className={cn(
-                    pathname === href ? 'text-primary' : 'text-lavender',
-                    pathname !== href && 'hover:text-lavender/80',
-                    'flex items-center justify-center text-md font-semibold gap-x-1 min-h-[93px] min-w-[90px] relative'
+                    pathname === '/' && marketMode === MARKET_MODE.BORROW
+                      ? 'text-primary'
+                      : 'text-lavender',
+                    (pathname !== '/' || marketMode !== MARKET_MODE.BORROW) &&
+                      'hover:text-lavender/80',
+                    'flex items-center cursor-pointer justify-center text-md font-semibold min-h-[93px]'
                   )}
                 >
-                  {label}
-                  <div className="-z-10 absolute top-[80px] w-full flex justify-center">
-                    <div
-                      className={cn(
-                        pathname === href &&
-                          'blur-[30px] w-[90px] aspect-square bg-primary rounded-full'
-                      )}
-                    />
+                  Borrow
+                </button>
+              </div>
+              <div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    changeMarketMode(MARKET_MODE.LEND);
+                    router.push('/');
+                  }}
+                  className={cn(
+                    pathname === '/' && marketMode === MARKET_MODE.LEND
+                      ? 'text-primary'
+                      : 'text-lavender',
+                    (pathname !== '/' || marketMode !== MARKET_MODE.LEND) &&
+                      'hover:text-lavender/80',
+                    'flex items-center cursor-pointer justify-center text-md font-semibold  min-h-[93px]'
+                  )}
+                >
+                  Earn
+                </button>
+              </div>
+              {NAVBAR_LINKS.map(({ href, label }) => (
+                <Link key={href} href={href}>
+                  <div
+                    className={cn(
+                      pathname === href ? 'text-primary' : 'text-lavender',
+                      pathname !== href && 'hover:text-lavender/80',
+                      'flex items-center justify-center text-md font-semibold  min-h-[93px]'
+                    )}
+                  >
+                    {label}
                   </div>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              ))}
+            </div>
             {/* <DropdownMenu>
               <DropdownMenuTrigger>
-                <div className="text-lavender outline-none border-none focus:outline-none focus:border-none hover:text-lavender/80 text-md font-semibold flex items-center gap-x-1">
+              <div className="text-lavender outline-none border-none focus:outline-none focus:border-none hover:text-lavender/80 text-md font-semibold flex items-center gap-x-1">
                   Bridges
                   <ChevronDown className="w-4 h-4" />
-                </div>
-              </DropdownMenuTrigger>
+                  </div>
+                  </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuItem>
                   <a
@@ -208,7 +184,6 @@ export const Navbar = () => {
           </div>
           <div className="flex items-center gap-x-2">
             {/* <Points /> */}
-            <MarketSwitcher />
             <ConnectButton />
           </div>
         </div>
@@ -265,7 +240,7 @@ export const Navbar = () => {
                       className={cn(
                         pathname === '/' ? 'text-primary' : 'text-lavender',
                         pathname !== '/' && 'hover:text-lavender/80',
-                        'flex font-bold text-xl items-center gap-x-2 h-full relative'
+                        'flex font-bold text-xl items-center gap-x-2 h-full'
                       )}
                     >
                       Dashboard
@@ -281,17 +256,13 @@ export const Navbar = () => {
                         className={cn(
                           pathname === href ? 'text-primary' : 'text-lavender',
                           pathname !== href && 'hover:text-lavender/80',
-                          'flex font-bold text-xl items-center gap-x-2 h-full relative'
+                          'flex font-bold text-xl items-center gap-x-2 h-full'
                         )}
                       >
                         {label}
                       </div>
                     </Link>
                   ))}
-                </div>
-                <div className="md:hidden flex-col flex gap-y-2 w-[160px] mt-16">
-                  <div className="pl-4">Switch Markets</div>
-                  <MarketSwitcher />
                 </div>
               </div>
             </div>

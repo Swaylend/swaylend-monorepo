@@ -48,7 +48,7 @@ const FaucetRow = ({
 
   return (
     <TableRow key={assetId}>
-      <TableCell>
+      <TableCell className="text-lavender">
         {toFixed(
           formatUnits(
             BigNumber(balance ? balance.toString() : '0'),
@@ -60,7 +60,7 @@ const FaucetRow = ({
         )}
         {` ${symbol}`}
       </TableCell>
-      <TableCell>
+      <TableCell className="text-right">
         <Button
           disabled={
             !account || mintPending || (symbol !== 'ETH' && ethBalance.eq(0))
@@ -127,12 +127,12 @@ export const FaucetView = () => {
 
   return (
     <div className="h-full w-full flex flex-1 items-center justify-center flex-col gap-y-4 px-2 sm:px-16">
-      <div className="max-w-[640px] w-full">
+      <div className="max-w-[480px] w-full">
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead className="w-8/12">Current balance</TableHead>
-              <TableHead className="w-4/12">Action</TableHead>
+              <TableHead className="w-4/12 text-right">Action</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

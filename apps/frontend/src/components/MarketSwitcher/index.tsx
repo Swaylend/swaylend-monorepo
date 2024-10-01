@@ -38,9 +38,12 @@ const MarketItem = ({
         />
       </div>
 
-      <div className={cn(selected && 'hidden xl:block', 'text-moon')}>Fuel</div>
+      {/* <div className={cn(selected && 'hidden xl:block', 'text-moon')}>Fuel</div> */}
       <div
-        className={cn(selected && 'hidden xl:block', 'font-semibold text-md')}
+        className={cn(
+          selected && 'text-sm xl:text-md',
+          'font-semibold text-md'
+        )}
       >
         {market}
       </div>

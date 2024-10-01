@@ -13,7 +13,7 @@ export const Footer = () => {
   const { changeMarketMode } = useMarketStore();
   return (
     <div>
-      <div className="relative flex flex-col items-center overflow-hidden py-4 text-moon text-xs sm:text-md">
+      <div className="flex flex-col items-center overflow-hidden py-4 text-moon text-xs sm:text-md">
         <Line />
         <div className="lg:max-w-[1000px] md:px-8 w-full">
           <div className="w-full flex max-md:flex-col max-md:items-center justify-between mt-4">
@@ -96,9 +96,6 @@ export const Footer = () => {
               </a> */}
             </div>
           </div>
-        </div>
-        <div className="absolute top-[calc(80%)] w-full flex justify-center z-[-10]">
-          <div className="opacity-60 blur-[45px] rounded-full w-[32%] sm:w-[500px] aspect-square bg-primary" />
         </div>
       </div>
     </div>

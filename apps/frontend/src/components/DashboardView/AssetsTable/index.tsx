@@ -3,12 +3,16 @@ import React from 'react';
 import { BorrowTable } from './BorrowTable';
 import { CollateralTable } from './CollateralTable';
 import { LendTable } from './LendTable';
+import { MarketSwitcher } from '@/components/MarketSwitcher';
 
 export const AssetsTable = () => {
   const { marketMode } = useMarketStore();
 
   return (
-    <div className="w-full mt-[30px] sm:mt-[55px]">
+    <div className="w-full mt-[15px] sm:mt-[20px]">
+      <div className="py-2 max-w-[160px]">
+        <MarketSwitcher />
+      </div>
       {marketMode === 'lend' && (
         <div className="flex flex-col">
           <LendTable />
