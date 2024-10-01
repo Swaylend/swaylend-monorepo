@@ -9,11 +9,11 @@ import { cn } from '@/lib/utils';
 import { useReferralModalStore } from '@/stores/referralModalStore';
 import { useIsConnected } from '@fuels/react';
 import { Copy, Loader, Sparkle, Trophy } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import React, { useState } from 'react';
-import { Button } from '../ui/button';
 import POINTS from '/public/icons/points-icon.svg?url';
-import Image from 'next/image';
+import { Button } from '../ui/button';
 
 export const Points = () => {
   // const { setOpen } = useReferralModalStore();

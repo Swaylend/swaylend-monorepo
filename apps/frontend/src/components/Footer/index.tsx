@@ -1,17 +1,17 @@
 'use client';
 
 import { MARKET_MODE, useMarketStore } from '@/stores';
+import { BookTextIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
+import GITHUB from '/public/icons/GitHub_Invertocat_Light.png';
 import Logo from '/public/icons/dark-logo.svg?url';
+import DISCORD from '/public/icons/discord-mark-white.svg?url';
 import HalbornLogo from '/public/icons/halborn-logo.svg?url';
 import OttersecLogo from '/public/icons/ottersec-logo.svg?url';
-import { Line } from '../Line';
 import X from '/public/icons/x-logo-white.png';
-import GITHUB from '/public/icons/GitHub_Invertocat_Light.png';
-import DISCORD from '/public/icons/discord-mark-white.svg?url';
-import { BookTextIcon } from 'lucide-react';
+import { Line } from '../Line';
 
 export const Footer = () => {
   const { changeMarketMode } = useMarketStore();
