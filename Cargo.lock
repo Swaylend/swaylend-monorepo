@@ -6037,7 +6037,6 @@ dependencies = [
  "fuels",
  "market",
  "pyth_mock_sdk",
- "pyth_sdk",
  "rand",
  "serde",
  "serde_json",

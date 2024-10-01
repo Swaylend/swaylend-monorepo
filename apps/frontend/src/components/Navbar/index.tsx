@@ -12,6 +12,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { appConfig } from '@/configs';
+import { useTrackExternalPageView } from '@/lib/posthog';
 import { cn } from '@/lib/utils';
 import { MARKET_MODE, useMarketStore } from '@/stores';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
@@ -38,6 +40,10 @@ import { Points } from './Points';
 
 const NAVBAR_LINKS = [
   { href: '/market', label: 'Market', icon: <ChartLine /> },
+  // TODO: Uncomment when mainnet is ready
+  // ...(appConfig.env === 'testnet'
+  //   ? [{ href: '/faucet', label: 'Faucet', icon: <Coins /> }]
+  //   : []),
   { href: '/faucet', label: 'Faucet', icon: <Coins /> },
 ];
 
@@ -46,6 +52,7 @@ export const Navbar = () => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const { marketMode, changeMarketMode } = useMarketStore();
+  // const { mutate: trackExternalPageView } = useTrackExternalPageView();
 
   return (
     <>
@@ -118,30 +125,33 @@ export const Navbar = () => {
                   </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuItem>
-                  <a
-                    href="https://app.uniswap.io"
-                    target="_blank"
+                  <div
+                    onMouseDown={() => {
+                      trackExternalPageView('https://app.uniswap.io/1');
+                      window.open('https://app.uniswap.io', '_blank');
+                    }}
                     rel="noreferrer"
                     className="w-full"
                   >
-                    <div className="w-full flex items-center justify-between text-md font-medium text-lavender py-1 px-0.5 gap-x-2">
+                    <div className="w-full flex items-center justify-between text-md font-medium text-lavender py-1 px-0.5 gap-x-2 cursor-pointer hover:underline">
                       Bridge 1
                       <ExternalLink className="w-4 h-4" />
                     </div>
-                  </a>
+                  </div>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <a
-                    href="https://app.uniswap.io"
-                    target="_blank"
-                    rel="noreferrer"
+                  <div
+                    onMouseDown={() => {
+                      trackExternalPageView('https://app.uniswap.io/2');
+                      window.open('https://app.uniswap.io', '_blank');
+                    }}
                     className="w-full"
                   >
-                    <div className="w-full flex items-center justify-between text-md font-medium text-lavender py-1 px-0.5 gap-x-2">
+                    <div className="w-full flex items-center justify-between text-md font-medium text-lavender py-1 px-0.5 gap-x-2 cursor-pointer hover:underline">
                       Bridge 2
                       <ExternalLink className="w-4 h-4" />
                     </div>
-                  </a>
+                  </div>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -154,36 +164,39 @@ export const Navbar = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuItem>
-                  <a
-                    href="https://app.uniswap.io"
-                    target="_blank"
+                  <div
+                    onMouseDown={() => {
+                      trackExternalPageView('https://app.uniswap.io/3');
+                      window.open('https://app.uniswap.io', '_blank');
+                    }}
                     rel="noreferrer"
                     className="w-full"
                   >
-                    <div className="w-full flex items-center justify-between text-md font-medium text-lavender py-1 px-0.5 gap-x-2">
+                    <div className="w-full flex items-center justify-between text-md font-medium text-lavender py-1 px-0.5 gap-x-2 cursor-pointer hover:underline">
                       DEX 1
                       <ExternalLink className="w-4 h-4" />
                     </div>
-                  </a>
+                  </div>
                 </DropdownMenuItem>
                 <DropdownMenuItem>
-                  <a
-                    href="https://app.uniswap.io"
-                    target="_blank"
-                    rel="noreferrer"
+                  <div
+                    onMouseDown={() => {
+                      trackExternalPageView('https://app.uniswap.io/4');
+                      window.open('https://app.uniswap.io', '_blank');
+                    }}
                     className="w-full"
                   >
-                    <div className="w-full flex items-center justify-between text-md font-medium text-lavender py-1 px-0.5 gap-x-2">
+                    <div className="w-full flex items-center justify-between text-md font-medium text-lavender py-1 px-0.5 gap-x-2 cursor-pointer hover:underline">
                       DEX 2
                       <ExternalLink className="w-4 h-4" />
                     </div>
-                  </a>
+                  </div>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu> */}
           </div>
           <div className="flex items-center gap-x-2">
-            {/* <Points /> */}
+            <Points />
             <ConnectButton />
           </div>
         </div>
@@ -197,7 +210,7 @@ export const Navbar = () => {
             <Image src={LogoIcon} alt="logo" />
           </Link>
           <div className="flex items-center gap-x-2">
-            {/* <Points /> */}
+            <Points />
             <div className="hidden md:block">
               <MarketSwitcher />
             </div>
@@ -235,7 +248,7 @@ export const Navbar = () => {
 
               <div className="h-full flex flex-col justify-between items-start px-8 w-full py-16 mt-8">
                 <div className="flex flex-col w-full h-full items-start gap-y-8  pt-16">
-                  <Link href={'/'} onMouseDown={() => setOpen(false)}>
+                  <Link href="/" onMouseDown={() => setOpen(false)}>
                     <div
                       className={cn(
                         pathname === '/' ? 'text-primary' : 'text-lavender',

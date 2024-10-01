@@ -67,12 +67,24 @@ TODO
 
 ### Testnet: deploy tokens contract
 
-TODO
+This script will deploy customm tokens contract.
+
+```bash
+cargo run --bin deploy_tokens
+```
 
 ### Testnet: deploy Pyth oracle contract
 
-TODO
+This script will deploy Pyth mock oracle contract.
+
+```bash
+cargo run --bin deploy_pyth
+```
 
 ### Testnet: mint tokens
 
-TODO
+This script will mint tokens provided in the config file (base asset and collateral assets).
+
+```bash
+cargo run --bin mint_tokens -- --config-path ./configs/testnet_usdc_config.json --token-contract-id 0xa6447a4d4a1588a6a97f440af5ece9551fc16d41c3f6360a45affe24eaaf9c06 --recipient 0x2968d3dd71d8b517fdb57e837c419c58f7404744fb51c16e0e0a2dc18892b1f8 --amount 100000
+```

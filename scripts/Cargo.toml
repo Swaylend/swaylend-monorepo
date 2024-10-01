@@ -6,11 +6,23 @@ license = "Apache-2.0"
 
 [[bin]]
 name = "activate_market"
-path = "src/bin/activate_market.rs"
+path = "src/activate_market.rs"
 
 [[bin]]
 name = "update_collateral_assets"
-path = "src/bin/update_collateral_assets.rs"
+path = "src/update_collateral_assets.rs"
+
+[[bin]]
+name = "deploy_tokens"
+path = "src/deploy_tokens.rs"
+
+[[bin]]
+name = "mint_tokens"
+path = "src/mint_tokens.rs"
+
+[[bin]]
+name = "deploy_pyth"
+path = "src/deploy_pyth.rs"
 
 [dependencies]
 fuels = { workspace = true }
@@ -28,4 +40,3 @@ market = { workspace = true }
 
 token_sdk = { workspace = true }
 pyth_mock_sdk = { workspace = true }
-pyth_sdk = { workspace = true }
