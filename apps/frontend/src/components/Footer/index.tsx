@@ -28,6 +28,37 @@ export const Footer = () => {
               Welcome to the Leading Lending Protocol of Fuel Network
             </div>
 
+            <div className="flex sm:hidden mt-16 gap-x-8">
+              <a
+                href="https://twitter.com/swaylend"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Image src={X} alt="X logo" width={20} height={20} />
+              </a>
+              <a
+                href="https://discord.gg/m9VcnNG2"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Image src={DISCORD} alt="X logo" height={20} />
+              </a>
+              <a
+                href="https://github.com/swaylend"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Image src={GITHUB} alt="X logo" width={20} height={20} />
+              </a>
+              <a
+                href="https://docs.swaylend.com/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <BookTextIcon className="w-[20px] h-[20px] text-white" />
+              </a>
+            </div>
+
             <div className="mt-16">
               <div className="text-primary items-center text-xs font-semibold flex gap-x-2">
                 Audited by
@@ -46,9 +77,9 @@ export const Footer = () => {
               </div>
             </div>
           </div>
-          <div className="hidden md:w-1/3 min-h-max sm:flex w-2/5 flex-col justify-between">
+          <div className="hidden min-h-max sm:flex max-w-1/3 flex-col justify-between">
             <div />
-            <div className="flex gap-x-16">
+            <div className="flex gap-x-16 justify-end">
               <div>
                 <div className="text-primary text-sm font-semibold">LEARN</div>
                 <div className="mt-2 flex flex-col gap-y-1">
