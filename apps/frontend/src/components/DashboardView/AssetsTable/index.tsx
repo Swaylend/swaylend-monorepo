@@ -1,9 +1,9 @@
+import { MarketSwitcher } from '@/components/MarketSwitcher';
 import { useMarketStore } from '@/stores';
 import React from 'react';
 import { BorrowTable } from './BorrowTable';
 import { CollateralTable } from './CollateralTable';
 import { LendTable } from './LendTable';
-import { MarketSwitcher } from '@/components/MarketSwitcher';
 
 export const AssetsTable = () => {
   const { marketMode } = useMarketStore();

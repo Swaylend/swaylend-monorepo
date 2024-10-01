@@ -31,9 +31,9 @@ import React, { useState } from 'react';
 import Logo from '/public/icons/dark-logo.svg?url';
 import LogoIcon from '/public/icons/sway-icon-logo.svg?url';
 import { Line } from '../Line';
+import { MarketSwitcher } from '../MarketSwitcher';
 import { Button } from '../ui/button';
 import { ConnectButton } from './ConnectButton';
-import { MarketSwitcher } from '../MarketSwitcher';
 import { Points } from './Points';
 
 const NAVBAR_LINKS = [
