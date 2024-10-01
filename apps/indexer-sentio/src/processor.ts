@@ -888,6 +888,9 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
           basePoolSnapshot.blockDate = START_TIME_FORMATED;
           basePoolSnapshot.availableAmount =
             totalSupplyBase.minus(totalBorrowBase);
+          basePoolSnapshot.availableAmountUsd = totalSupplyBase
+            .minus(totalBorrowBase)
+            .times(basePrice);
           basePoolSnapshot.borrowedAmount = totalBorrowBase;
           basePoolSnapshot.suppliedAmount = totalSupplyBase;
           basePoolSnapshot.supplyIndex =
