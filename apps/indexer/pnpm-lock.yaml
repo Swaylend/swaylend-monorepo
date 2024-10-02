@@ -35,8 +35,8 @@ importers:
         specifier: 20.8.8
         version: 20.8.8
       envio:
-        specifier: 2.3.2
-        version: 2.3.2
+        specifier: 2.4.1
+        version: 2.4.1
       mocha:
         specifier: 10.2.0
         version: 10.2.0
@@ -690,28 +690,28 @@ packages:
   end-of-stream@1.4.4:
     resolution: {integrity: sha512-+uw1inIHVPQoaVuHzRyXd21icM+cnt4CzD5rW+NC1wjOUSTOs+Te7FOv7AhN7vS9x/oIyhLP5PR1H+phQAHu5Q==}
 
-  envio-darwin-arm64@2.3.2:
-    resolution: {integrity: sha512-CmyG796jrfnvMx/p/JrS6HiqPjyXR8sPmo8TKMSpuEFsM30r0iSRM1+2AJw1+w/3uyfgP/E6GsHPZyD55tsBRg==}
+  envio-darwin-arm64@2.4.1:
+    resolution: {integrity: sha512-uwwKhThFH9dZhQKd6kmleeTyl//GlJGvhFXuhuJ7xn93oGbOOy3hsoYfJZSbVmb0SSSJkgWdAKN82mYHNfdVwQ==}
     cpu: [arm64]
     os: [darwin]
 
-  envio-darwin-x64@2.3.2:
-    resolution: {integrity: sha512-cYgOSgY6qUPV733oORmEQk12nEShaz2E2Js72L3mh3djGrZmTQaIb0whl9uIptYO8B4vmpRPM9j1ox4eoihydA==}
+  envio-darwin-x64@2.4.1:
+    resolution: {integrity: sha512-SKqI2hQmjmqlDYCwFaEK6TDJMLL/UE/wWlUIzsAY5drJQTwAL0mBXzUfQM8JbMgDoxeWyKNegUV1vCuTmCDREw==}
     cpu: [x64]
     os: [darwin]
 
-  envio-linux-arm64@2.3.2:
-    resolution: {integrity: sha512-PAgWkP1AVdfBFt1NCH1gsnRAqev2nNjJZhh1zaNJikUOMjBsj1qQDXSgvnji7DyoqbjCPldQTxGBWP9CRTPqOQ==}
+  envio-linux-arm64@2.4.1:
+    resolution: {integrity: sha512-ujUUifyKM4kHkHfcudeH8iIf5xPiW9t+IzMCgY4gug2fs3Z3biyhmeaylYNpvNiIoQ58vZqJ23fBKaUn7CPPog==}
     cpu: [arm64]
     os: [linux]
 
-  envio-linux-x64@2.3.2:
-    resolution: {integrity: sha512-oadisYezSR+MOjsQ1hWl3jGNy2vU7EvtX3UBMuU5yx9qnJj+APx8eSo3EZKjUbhRwodBIPg+P667S/UvmvXoFQ==}
+  envio-linux-x64@2.4.1:
+    resolution: {integrity: sha512-aeVQ9I4zum6X+kBeJrFev/bTDePZRSlt6HytcnqJd7+iWagQggUejhcrSccp2eRSeQ95sGp+F+lQOFfWJHyEJQ==}
     cpu: [x64]
     os: [linux]
 
-  envio@2.3.2:
-    resolution: {integrity: sha512-WI9JEZyHri/xx2E0Rdu5PNXioWZiNIncT3ukYMxS2kbUgb1qLBMSPDb5Ffrsb7j1yaI9vVuYciEalxrRv7k7vg==}
+  envio@2.4.1:
+    resolution: {integrity: sha512-GsHv4S/mAzr//XCyTHFBnfd1CZFlfaG+wcWJkpeguzhnttNSOMJXCR4UPG0PxV2cZYiA3eVrOSPn58fTzk2G5g==}
     hasBin: true
 
   es-define-property@1.0.0:
@@ -2084,24 +2084,24 @@ snapshots:
     dependencies:
       once: 1.4.0
 
-  envio-darwin-arm64@2.3.2:
+  envio-darwin-arm64@2.4.1:
     optional: true
 
-  envio-darwin-x64@2.3.2:
+  envio-darwin-x64@2.4.1:
     optional: true
 
-  envio-linux-arm64@2.3.2:
+  envio-linux-arm64@2.4.1:
     optional: true
 
-  envio-linux-x64@2.3.2:
+  envio-linux-x64@2.4.1:
     optional: true
 
-  envio@2.3.2:
+  envio@2.4.1:
     optionalDependencies:
-      envio-darwin-arm64: 2.3.2
-      envio-darwin-x64: 2.3.2
-      envio-linux-arm64: 2.3.2
-      envio-linux-x64: 2.3.2
+      envio-darwin-arm64: 2.4.1
+      envio-darwin-x64: 2.4.1
+      envio-linux-arm64: 2.4.1
+      envio-linux-x64: 2.4.1
 
   es-define-property@1.0.0:
     dependencies:
