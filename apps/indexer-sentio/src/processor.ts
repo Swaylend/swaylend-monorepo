@@ -19,6 +19,7 @@ import {
   UserBasic,
 } from './schema/store.js';
 import { MarketProcessor } from './types/fuel/MarketProcessor.js';
+import { BigDecimal } from '@sentio/sdk';
 
 dayjs.extend(utc);
 
@@ -309,24 +310,25 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
         poolAddress: ctx.contractAddress,
         underlyingTokenAddress: asset_id,
         underlyingTokenSymbol: ASSET_ID_TO_SYMBOL[asset_id],
-        underlyingTokenPriceUsd: BigInt(0),
-        availableAmount: BigInt(0),
-        availableAmountUsd: BigInt(0),
-        suppliedAmount: BigInt(0),
-        suppliedAmountUsd: BigInt(0),
-        collateralAmount: BigInt(0),
-        collateralAmountUsd: BigInt(0),
-        collateralFactor:
-          BigInt(borrow_collateral_factor.toString()) / FACTOR_SCALE_18,
-        supplyIndex: BigInt(0),
-        supplyApr: BigInt(0),
-        borrowedAmount: BigInt(0),
-        borrowedAmountUsd: BigInt(0),
-        borrowIndex: BigInt(0),
-        borrowApr: BigInt(0),
-        totalFeesUsd: BigInt(0),
-        userFeesUsd: BigInt(0),
-        protocolFeesUsd: BigInt(0),
+        underlyingTokenPriceUsd: BigDecimal(0),
+        availableAmount: 0n,
+        availableAmountUsd: BigDecimal(0),
+        suppliedAmount: 0n,
+        suppliedAmountUsd: BigDecimal(0),
+        collateralAmount: 0n,
+        collateralAmountUsd: BigDecimal(0),
+        collateralFactor: BigDecimal(
+          borrow_collateral_factor.toString()
+        ).dividedBy(BigDecimal(FACTOR_SCALE_18.toString())),
+        supplyIndex: 0n,
+        supplyApr: 0n,
+        borrowedAmount: 0n,
+        borrowedAmountUsd: BigDecimal(0),
+        borrowIndex: 0n,
+        borrowApr: 0n,
+        totalFeesUsd: BigDecimal(0),
+        userFeesUsd: BigDecimal(0),
+        protocolFeesUsd: BigDecimal(0),
       });
 
       await ctx.store.upsert(poolSnapshot);
@@ -435,9 +437,9 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
           underlyingTokenSymbol:
             ASSET_ID_TO_SYMBOL[collateralConfiguration.assetAddress],
           suppliedAmount: 0n,
-          suppliedAmountUsd: 0n,
+          suppliedAmountUsd: BigDecimal(0),
           borrowedAmount: 0n,
-          borrowedAmountUsd: 0n,
+          borrowedAmountUsd: BigDecimal(0),
           collateralAmount: BigInt(amount.toString()),
           // BigInt(amount.toString()) /
           // 10n ** BigInt(collateralConfiguration.decimals.toString()),
@@ -572,7 +574,7 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
         );
       }
 
-      collateralPosition.collateralAmount = BigInt(0);
+      collateralPosition.collateralAmount = 0n;
 
       await ctx.store.upsert(collateralPosition);
     })
@@ -674,7 +676,37 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
           );
         }
 
-        const basePrice = BigInt(baseAssetPrice ?? 0);
+        const basePrice = BigDecimal(baseAssetPrice ?? 0);
+
+        const marketBasicsCall = ctx.contract.functions.get_market_basics();
+        const marketBasicsRes = await marketBasicsCall.get();
+        const marketBasicsWithInterestCall =
+          ctx.contract.functions.get_market_basics_with_interest();
+        const marketBasicsWithInterestRes =
+          await marketBasicsWithInterestCall.get();
+
+        ctx.eventLogger.emit('marketBasicDebug', {
+          baseBorrowIndex: marketBasic?.baseBorrowIndex ?? 0,
+          totalBorrowBase: marketBasic?.totalBorrowBase ?? 0,
+          totalSupplyIndex: marketBasic?.baseSupplyIndex ?? 0,
+          totalSupplyBase: marketBasic?.totalSupplyBase ?? 0,
+          postAccrue: 'no',
+          //borrow
+          baseBorrowIndexGetFunc: marketBasicsRes.value.base_borrow_index,
+          totalBorrowBaseGetFunc: marketBasicsRes.value.total_borrow_base,
+          baseBorrowIndexWithInterestGetFunc:
+            marketBasicsWithInterestRes.value.base_borrow_index,
+          totalBorrowBaseWithInterestGetFunc:
+            marketBasicsWithInterestRes.value.total_borrow_base,
+          //supply
+          baseSupplyIndexGetFunc: marketBasicsRes.value.base_supply_index,
+          totalSupplyBaseGetFunc: marketBasicsRes.value.total_supply_base,
+          baseSupplyIndexWithInterestGetFunc:
+            marketBasicsWithInterestRes.value.base_supply_index,
+          totalSupplyBaseWithInterestGetFunc:
+            marketBasicsWithInterestRes.value.total_supply_base,
+          last_accrual_timeGetFunc: marketBasicsRes.value.last_accrual_time,
+        });
 
         // Accrue interest
         const now = BigInt(DateTime.fromUnixSeconds(START_TIME_UNIX).toTai64());
@@ -759,19 +791,27 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
               underlyingTokenSymbol: ASSET_ID_TO_SYMBOL[underlyingTokenAddress],
               userAddress: userBasic.address,
               suppliedAmount: suppliedAmount,
-              suppliedAmountUsd: suppliedAmount * basePrice,
+              suppliedAmountUsd: BigDecimal(suppliedAmount.toString()).times(
+                basePrice
+              ),
               borrowedAmount: borrowedAmount,
-              borrowedAmountUsd: borrowedAmount * basePrice,
+              borrowedAmountUsd: BigDecimal(borrowedAmount.toString()).times(
+                basePrice
+              ),
               collateralAmount: 0n,
-              collateralAmountUsd: 0n,
+              collateralAmountUsd: BigDecimal(0),
             });
           } else {
             basePositionSnapshot.timestamp = START_TIME_UNIX;
             basePositionSnapshot.blockDate = START_TIME_FORMATED;
             basePositionSnapshot.suppliedAmount = suppliedAmount;
-            basePositionSnapshot.suppliedAmountUsd = suppliedAmount * basePrice;
+            basePositionSnapshot.suppliedAmountUsd = BigDecimal(
+              suppliedAmount.toString()
+            ).times(basePrice);
             basePositionSnapshot.borrowedAmount = borrowedAmount;
-            basePositionSnapshot.borrowedAmountUsd = borrowedAmount * basePrice;
+            basePositionSnapshot.borrowedAmountUsd = BigDecimal(
+              borrowedAmount.toString()
+            ).times(basePrice);
           }
 
           await ctx.store.upsert(basePositionSnapshot);
@@ -810,6 +850,29 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
           marketBasic.baseBorrowIndex
         );
 
+        ctx.eventLogger.emit('marketBasicDebug', {
+          baseBorrowIndex: marketBasic?.baseBorrowIndex ?? 0,
+          totalBorrowBase: totalBorrowBase,
+          totalSupplyIndex: marketBasic?.baseSupplyIndex ?? 0,
+          totalSupplyBase: totalSupplyBase,
+          postAccrue: 'yes',
+          //borrow
+          baseBorrowIndexGetFunc: marketBasicsRes.value.base_borrow_index,
+          totalBorrowBaseGetFunc: marketBasicsRes.value.total_borrow_base,
+          baseBorrowIndexWithInterestGetFunc:
+            marketBasicsWithInterestRes.value.base_borrow_index,
+          totalBorrowBaseWithInterestGetFunc:
+            marketBasicsWithInterestRes.value.total_borrow_base,
+          //supply
+          baseSupplyIndexGetFunc: marketBasicsRes.value.base_supply_index,
+          totalSupplyBaseGetFunc: marketBasicsRes.value.total_supply_base,
+          baseSupplyIndexWithInterestGetFunc:
+            marketBasicsWithInterestRes.value.base_supply_index,
+          totalSupplyBaseWithInterestGetFunc:
+            marketBasicsWithInterestRes.value.total_supply_base,
+          last_accrual_timeGetFunc: marketBasicsRes.value.last_accrual_time,
+        });
+
         const utilization = getUtilization(
           totalSupplyBase,
           totalBorrowBase,
@@ -833,29 +896,36 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
             underlyingTokenSymbol: ASSET_ID_TO_SYMBOL[underlyingTokenAddress],
             underlyingTokenPriceUsd: basePrice,
             availableAmount: totalSupplyBase - totalBorrowBase,
-            availableAmountUsd: (totalSupplyBase - totalBorrowBase) * basePrice,
+            availableAmountUsd: BigDecimal(
+              (totalSupplyBase - totalBorrowBase).toString()
+            ).times(basePrice),
 
             suppliedAmount: totalSupplyBase,
-            suppliedAmountUsd: totalSupplyBase * basePrice,
+            suppliedAmountUsd: BigDecimal(totalSupplyBase.toString()).times(
+              basePrice
+            ),
             collateralAmount: 0n,
-            collateralAmountUsd: 0n,
-            collateralFactor: 0n,
+            collateralAmountUsd: BigDecimal(0),
+            collateralFactor: BigDecimal(0),
             supplyIndex: marketBasic.baseSupplyIndex / FACTOR_SCALE_15,
             supplyApr: supplyApr,
             borrowedAmount: totalBorrowBase,
-            borrowedAmountUsd: totalBorrowBase * basePrice,
+            borrowedAmountUsd: BigDecimal(totalBorrowBase.toString()).times(
+              basePrice
+            ),
             borrowIndex: marketBasic.baseBorrowIndex / FACTOR_SCALE_15,
             borrowApr: borrowApr,
-            totalFeesUsd: 0n,
-            userFeesUsd: 0n,
-            protocolFeesUsd: 0n,
+            totalFeesUsd: BigDecimal(0),
+            userFeesUsd: BigDecimal(0),
+            protocolFeesUsd: BigDecimal(0),
           });
         } else {
           basePoolSnapshot.timestamp = START_TIME_UNIX;
           basePoolSnapshot.blockDate = START_TIME_FORMATED;
           basePoolSnapshot.availableAmount = totalSupplyBase - totalBorrowBase;
-          basePoolSnapshot.availableAmountUsd =
-            (totalSupplyBase - totalBorrowBase) * basePrice;
+          basePoolSnapshot.availableAmountUsd = BigDecimal(
+            (totalSupplyBase - totalBorrowBase).toString()
+          ).times(basePrice);
           basePoolSnapshot.borrowedAmount = totalBorrowBase;
           basePoolSnapshot.suppliedAmount = totalSupplyBase;
           basePoolSnapshot.supplyIndex =
@@ -864,8 +934,12 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
             marketBasic.baseBorrowIndex / FACTOR_SCALE_15;
           basePoolSnapshot.supplyApr = supplyApr;
           basePoolSnapshot.borrowApr = borrowApr;
-          basePoolSnapshot.suppliedAmountUsd = totalSupplyBase * basePrice;
-          basePoolSnapshot.borrowedAmountUsd = totalBorrowBase * basePrice;
+          basePoolSnapshot.suppliedAmountUsd = BigDecimal(
+            totalSupplyBase.toString()
+          ).times(basePrice);
+          basePoolSnapshot.borrowedAmountUsd = BigDecimal(
+            totalBorrowBase.toString()
+          ).times(basePrice);
           basePoolSnapshot.borrowApr = borrowApr;
         }
 
@@ -882,7 +956,7 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
           ])
         ).filter((val) => val.chainId === 0);
 
-        const collateralPrices = new Map<string, bigint>();
+        const collateralPrices = new Map<string, BigDecimal>();
 
         for (const collateralPool of collateralPools) {
           const collateralPrice = await getPriceBySymbol(
@@ -898,7 +972,7 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
 
           collateralPrices.set(
             collateralPool.underlyingTokenAddress,
-            BigInt(collateralPrice ?? 0)
+            BigDecimal(collateralPrice ?? 0)
           );
         }
 
@@ -920,9 +994,11 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
                 underlyingTokenPriceUsd: collateralPrices.get(
                   collateralPool.underlyingTokenAddress
                 ),
-                collateralAmountUsd:
-                  collateralPool.collateralAmount *
-                  collateralPrices.get(collateralPool.underlyingTokenAddress)!,
+                collateralAmountUsd: BigDecimal(
+                  collateralPool.collateralAmount.toString()
+                ).times(
+                  collateralPrices.get(collateralPool.underlyingTokenAddress)!
+                ),
               });
             } else {
               collateralPoolSnapshot.timestamp = START_TIME_UNIX;
@@ -935,9 +1011,11 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
                 collateralPool.collateralFactor;
               collateralPoolSnapshot.underlyingTokenPriceUsd =
                 collateralPrices.get(collateralPool.underlyingTokenAddress);
-              collateralPoolSnapshot.collateralAmountUsd =
-                collateralPool.collateralAmount *
-                collateralPrices.get(collateralPool.underlyingTokenAddress)!;
+              collateralPoolSnapshot.collateralAmountUsd = BigDecimal(
+                collateralPool.collateralAmount.toString()
+              ).times(
+                collateralPrices.get(collateralPool.underlyingTokenAddress)!
+              );
             }
 
             await ctx.store.upsert(collateralPoolSnapshot);
@@ -971,11 +1049,13 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
                 ...collateralPosition,
                 timestamp: START_TIME_UNIX,
                 blockDate: START_TIME_FORMATED,
-                collateralAmountUsd:
-                  collateralPosition.collateralAmount *
+                collateralAmountUsd: BigDecimal(
+                  collateralPosition.collateralAmount.toString()
+                ).times(
                   collateralPrices.get(
-                    collateralPosition.underlyingTokenAddress
-                  )!,
+                    collateralPosition.underlyingTokenAddress!
+                  )!
+                ),
               });
             } else {
               collateralPositionSnapshot.timestamp = START_TIME_UNIX;
@@ -983,11 +1063,11 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
 
               collateralPositionSnapshot.collateralAmount =
                 collateralPosition.collateralAmount;
-              collateralPositionSnapshot.collateralAmountUsd =
-                collateralPosition.collateralAmount *
-                collateralPrices.get(
-                  collateralPosition.underlyingTokenAddress
-                )!;
+              collateralPositionSnapshot.collateralAmountUsd = BigDecimal(
+                collateralPosition.collateralAmount.toString()
+              ).times(
+                collateralPrices.get(collateralPosition.underlyingTokenAddress)!
+              );
             }
 
             await ctx.store.upsert(collateralPositionSnapshot);

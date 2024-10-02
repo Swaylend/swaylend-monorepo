@@ -65,11 +65,11 @@ type BasePositionSnapshot @entity {
     underlyingTokenSymbol: String!
     userAddress: String!
     suppliedAmount: BigInt!
-    suppliedAmountUsd: BigInt
+    suppliedAmountUsd: BigDecimal
     borrowedAmount: BigInt!
-    borrowedAmountUsd: BigInt
+    borrowedAmountUsd: BigDecimal
     collateralAmount: BigInt!
-    collateralAmountUsd: BigInt
+    collateralAmountUsd: BigDecimal
 }
 
 type BasePoolSnapshot @entity {
@@ -80,23 +80,23 @@ type BasePoolSnapshot @entity {
     poolAddress: String!
     underlyingTokenAddress: String!
     underlyingTokenSymbol: String!
-    underlyingTokenPriceUsd: BigInt
+    underlyingTokenPriceUsd: BigDecimal
     availableAmount: BigInt!
-    availableAmountUsd: BigInt
+    availableAmountUsd: BigDecimal
     suppliedAmount: BigInt!
-    suppliedAmountUsd: BigInt
+    suppliedAmountUsd: BigDecimal
     collateralAmount: BigInt!
-    collateralAmountUsd: BigInt
-    collateralFactor: BigInt!
+    collateralAmountUsd: BigDecimal
+    collateralFactor: BigDecimal!
     supplyIndex: BigInt!
     supplyApr: BigInt!
     borrowedAmount: BigInt!
-    borrowedAmountUsd: BigInt
+    borrowedAmountUsd: BigDecimal
     borrowIndex: BigInt!
     borrowApr: BigInt!
-    totalFeesUsd: BigInt
-    userFeesUsd: BigInt
-    protocolFeesUsd: BigInt
+    totalFeesUsd: BigDecimal
+    userFeesUsd: BigDecimal
+    protocolFeesUsd: BigDecimal
 }
 
 type CollateralPosition @entity {
@@ -107,11 +107,11 @@ type CollateralPosition @entity {
     underlyingTokenSymbol: String!
     userAddress: String!
     suppliedAmount: BigInt!
-    suppliedAmountUsd: BigInt
+    suppliedAmountUsd: BigDecimal
     borrowedAmount: BigInt!
-    borrowedAmountUsd: BigInt
+    borrowedAmountUsd: BigDecimal
     collateralAmount: BigInt!
-    collateralAmountUsd: BigInt
+    collateralAmountUsd: BigDecimal
 }
 
 type CollateralPool @entity {
@@ -120,23 +120,23 @@ type CollateralPool @entity {
     poolAddress: String!
     underlyingTokenAddress: String!
     underlyingTokenSymbol: String!
-    underlyingTokenPriceUsd: BigInt
+    underlyingTokenPriceUsd: BigDecimal
     availableAmount: BigInt!
-    availableAmountUsd: BigInt
+    availableAmountUsd: BigDecimal
     suppliedAmount: BigInt!
-    suppliedAmountUsd: BigInt
+    suppliedAmountUsd: BigDecimal
     collateralAmount: BigInt!
-    collateralAmountUsd: BigInt
-    collateralFactor: BigInt!
+    collateralAmountUsd: BigDecimal
+    collateralFactor: BigDecimal!
     supplyIndex: BigInt!
     supplyApr: BigInt!
     borrowedAmount: BigInt!
-    borrowedAmountUsd: BigInt
+    borrowedAmountUsd: BigDecimal
     borrowIndex: BigInt!
     borrowApr: BigInt!
-    totalFeesUsd: BigInt
-    userFeesUsd: BigInt
-    protocolFeesUsd: BigInt
+    totalFeesUsd: BigDecimal
+    userFeesUsd: BigDecimal
+    protocolFeesUsd: BigDecimal
 }
 
 type CollateralPositionSnapshot @entity {
@@ -149,11 +149,11 @@ type CollateralPositionSnapshot @entity {
     underlyingTokenSymbol: String!
     userAddress: String!
     suppliedAmount: BigInt!
-    suppliedAmountUsd: BigInt
+    suppliedAmountUsd: BigDecimal
     borrowedAmount: BigInt!
-    borrowedAmountUsd: BigInt
+    borrowedAmountUsd: BigDecimal
     collateralAmount: BigInt!
-    collateralAmountUsd: BigInt
+    collateralAmountUsd: BigDecimal
 }
 
 type CollateralPoolSnapshot @entity {
@@ -164,21 +164,21 @@ type CollateralPoolSnapshot @entity {
     poolAddress: String!
     underlyingTokenAddress: String!
     underlyingTokenSymbol: String!
-    underlyingTokenPriceUsd: BigInt
+    underlyingTokenPriceUsd: BigDecimal
     availableAmount: BigInt!
-    availableAmountUsd: BigInt
+    availableAmountUsd: BigDecimal
     suppliedAmount: BigInt!
-    suppliedAmountUsd: BigInt
+    suppliedAmountUsd: BigDecimal
     collateralAmount: BigInt!
-    collateralAmountUsd: BigInt
-    collateralFactor: BigInt!
+    collateralAmountUsd: BigDecimal
+    collateralFactor: BigDecimal!
     supplyIndex: BigInt!
     supplyApr: BigInt!
     borrowedAmount: BigInt!
-    borrowedAmountUsd: BigInt
+    borrowedAmountUsd: BigDecimal
     borrowIndex: BigInt!
     borrowApr: BigInt!
-    totalFeesUsd: BigInt
-    userFeesUsd: BigInt
-    protocolFeesUsd: BigInt
+    totalFeesUsd: BigDecimal
+    userFeesUsd: BigDecimal
+    protocolFeesUsd: BigDecimal
 }
