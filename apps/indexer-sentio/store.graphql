@@ -2,11 +2,11 @@ type MarketBasic @entity {
     id: ID! # Constructed as chainId_marketAddress
     chainId: Int!
     contractAddress: String!
-    baseSupplyIndex: BigDecimal!
-    baseBorrowIndex: BigDecimal!
-    totalSupplyBase: BigDecimal!
-    totalBorrowBase: BigDecimal!
-    lastAccrualTime: BigDecimal!
+    baseSupplyIndex: BigInt!
+    baseBorrowIndex: BigInt!
+    totalSupplyBase: BigInt!
+    totalBorrowBase: BigInt!
+    lastAccrualTime: BigInt!
 }
 
 type UserBasic @entity {
@@ -14,7 +14,7 @@ type UserBasic @entity {
     chainId: Int!
     contractAddress: String!
     address: String!
-    principal: BigDecimal!
+    principal: BigInt!
     isNegative: Boolean!
 }
 
@@ -24,14 +24,14 @@ type MarketConfiguration @entity {
     contractAddress: String!
     baseTokenAddress: String!
     baseTokenDecimals: Int!
-    supplyKink: BigDecimal!
-    borrowKink: BigDecimal!
-    supplyPerSecondInterestRateBase: BigDecimal!
-    supplyPerSecondInterestRateSlopeLow: BigDecimal!
-    supplyPerSecondInterestRateSlopeHigh: BigDecimal!
-    borrowPerSecondInterestRateBase: BigDecimal!
-    borrowPerSecondInterestRateSlopeLow: BigDecimal!
-    borrowPerSecondInterestRateSlopeHigh: BigDecimal!
+    supplyKink: BigInt!
+    borrowKink: BigInt!
+    supplyPerSecondInterestRateBase: BigInt!
+    supplyPerSecondInterestRateSlopeLow: BigInt!
+    supplyPerSecondInterestRateSlopeHigh: BigInt!
+    borrowPerSecondInterestRateBase: BigInt!
+    borrowPerSecondInterestRateSlopeLow: BigInt!
+    borrowPerSecondInterestRateSlopeHigh: BigInt!
 }
 
 type CollateralConfiguration @entity {
@@ -64,12 +64,12 @@ type BasePositionSnapshot @entity {
     underlyingTokenAddress: String!
     underlyingTokenSymbol: String!
     userAddress: String!
-    suppliedAmount: BigDecimal!
-    suppliedAmountUsd: BigDecimal
-    borrowedAmount: BigDecimal!
-    borrowedAmountUsd: BigDecimal
-    collateralAmount: BigDecimal!
-    collateralAmountUsd: BigDecimal
+    suppliedAmount: BigInt!
+    suppliedAmountUsd: BigInt
+    borrowedAmount: BigInt!
+    borrowedAmountUsd: BigInt
+    collateralAmount: BigInt!
+    collateralAmountUsd: BigInt
 }
 
 type BasePoolSnapshot @entity {
@@ -80,23 +80,23 @@ type BasePoolSnapshot @entity {
     poolAddress: String!
     underlyingTokenAddress: String!
     underlyingTokenSymbol: String!
-    underlyingTokenPriceUsd: BigDecimal
-    availableAmount: BigDecimal!
-    availableAmountUsd: BigDecimal
-    suppliedAmount: BigDecimal!
-    suppliedAmountUsd: BigDecimal
-    collateralAmount: BigDecimal!
-    collateralAmountUsd: BigDecimal
-    collateralFactor: BigDecimal!
-    supplyIndex: BigDecimal!
-    supplyApr: BigDecimal!
-    borrowedAmount: BigDecimal!
-    borrowedAmountUsd: BigDecimal
-    borrowIndex: BigDecimal!
-    borrowApr: BigDecimal!
-    totalFeesUsd: BigDecimal
-    userFeesUsd: BigDecimal
-    protocolFeesUsd: BigDecimal
+    underlyingTokenPriceUsd: BigInt
+    availableAmount: BigInt!
+    availableAmountUsd: BigInt
+    suppliedAmount: BigInt!
+    suppliedAmountUsd: BigInt
+    collateralAmount: BigInt!
+    collateralAmountUsd: BigInt
+    collateralFactor: BigInt!
+    supplyIndex: BigInt!
+    supplyApr: BigInt!
+    borrowedAmount: BigInt!
+    borrowedAmountUsd: BigInt
+    borrowIndex: BigInt!
+    borrowApr: BigInt!
+    totalFeesUsd: BigInt
+    userFeesUsd: BigInt
+    protocolFeesUsd: BigInt
 }
 
 type CollateralPosition @entity {
@@ -106,12 +106,12 @@ type CollateralPosition @entity {
     underlyingTokenAddress: String!
     underlyingTokenSymbol: String!
     userAddress: String!
-    suppliedAmount: BigDecimal!
-    suppliedAmountUsd: BigDecimal
-    borrowedAmount: BigDecimal!
-    borrowedAmountUsd: BigDecimal
-    collateralAmount: BigDecimal!
-    collateralAmountUsd: BigDecimal
+    suppliedAmount: BigInt!
+    suppliedAmountUsd: BigInt
+    borrowedAmount: BigInt!
+    borrowedAmountUsd: BigInt
+    collateralAmount: BigInt!
+    collateralAmountUsd: BigInt
 }
 
 type CollateralPool @entity {
@@ -120,23 +120,23 @@ type CollateralPool @entity {
     poolAddress: String!
     underlyingTokenAddress: String!
     underlyingTokenSymbol: String!
-    underlyingTokenPriceUsd: BigDecimal
-    availableAmount: BigDecimal!
-    availableAmountUsd: BigDecimal
-    suppliedAmount: BigDecimal!
-    suppliedAmountUsd: BigDecimal
-    collateralAmount: BigDecimal!
-    collateralAmountUsd: BigDecimal
-    collateralFactor: BigDecimal!
-    supplyIndex: BigDecimal!
-    supplyApr: BigDecimal!
-    borrowedAmount: BigDecimal!
-    borrowedAmountUsd: BigDecimal
-    borrowIndex: BigDecimal!
-    borrowApr: BigDecimal!
-    totalFeesUsd: BigDecimal
-    userFeesUsd: BigDecimal
-    protocolFeesUsd: BigDecimal
+    underlyingTokenPriceUsd: BigInt
+    availableAmount: BigInt!
+    availableAmountUsd: BigInt
+    suppliedAmount: BigInt!
+    suppliedAmountUsd: BigInt
+    collateralAmount: BigInt!
+    collateralAmountUsd: BigInt
+    collateralFactor: BigInt!
+    supplyIndex: BigInt!
+    supplyApr: BigInt!
+    borrowedAmount: BigInt!
+    borrowedAmountUsd: BigInt
+    borrowIndex: BigInt!
+    borrowApr: BigInt!
+    totalFeesUsd: BigInt
+    userFeesUsd: BigInt
+    protocolFeesUsd: BigInt
 }
 
 type CollateralPositionSnapshot @entity {
@@ -148,12 +148,12 @@ type CollateralPositionSnapshot @entity {
     underlyingTokenAddress: String!
     underlyingTokenSymbol: String!
     userAddress: String!
-    suppliedAmount: BigDecimal!
-    suppliedAmountUsd: BigDecimal
-    borrowedAmount: BigDecimal!
-    borrowedAmountUsd: BigDecimal
-    collateralAmount: BigDecimal!
-    collateralAmountUsd: BigDecimal
+    suppliedAmount: BigInt!
+    suppliedAmountUsd: BigInt
+    borrowedAmount: BigInt!
+    borrowedAmountUsd: BigInt
+    collateralAmount: BigInt!
+    collateralAmountUsd: BigInt
 }
 
 type CollateralPoolSnapshot @entity {
@@ -164,21 +164,21 @@ type CollateralPoolSnapshot @entity {
     poolAddress: String!
     underlyingTokenAddress: String!
     underlyingTokenSymbol: String!
-    underlyingTokenPriceUsd: BigDecimal
-    availableAmount: BigDecimal!
-    availableAmountUsd: BigDecimal
-    suppliedAmount: BigDecimal!
-    suppliedAmountUsd: BigDecimal
-    collateralAmount: BigDecimal!
-    collateralAmountUsd: BigDecimal
-    collateralFactor: BigDecimal!
-    supplyIndex: BigDecimal!
-    supplyApr: BigDecimal!
-    borrowedAmount: BigDecimal!
-    borrowedAmountUsd: BigDecimal
-    borrowIndex: BigDecimal!
-    borrowApr: BigDecimal!
-    totalFeesUsd: BigDecimal
-    userFeesUsd: BigDecimal
-    protocolFeesUsd: BigDecimal
+    underlyingTokenPriceUsd: BigInt
+    availableAmount: BigInt!
+    availableAmountUsd: BigInt
+    suppliedAmount: BigInt!
+    suppliedAmountUsd: BigInt
+    collateralAmount: BigInt!
+    collateralAmountUsd: BigInt
+    collateralFactor: BigInt!
+    supplyIndex: BigInt!
+    supplyApr: BigInt!
+    borrowedAmount: BigInt!
+    borrowedAmountUsd: BigInt
+    borrowIndex: BigInt!
+    borrowApr: BigInt!
+    totalFeesUsd: BigInt
+    userFeesUsd: BigInt
+    protocolFeesUsd: BigInt
 }

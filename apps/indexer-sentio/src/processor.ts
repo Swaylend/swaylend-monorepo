@@ -23,103 +23,80 @@ import { MarketProcessor } from './types/fuel/MarketProcessor.js';
 
 dayjs.extend(utc);
 
-const FACTOR_SCALE_15 = BigDecimal(10).pow(15);
-const FACTOR_SCALE_18 = BigDecimal(10).pow(18);
-const SECONDS_PER_YEAR = BigDecimal(365).times(24).times(60).times(60);
-const I256_INDENT = BigDecimal(2).pow(255);
+const FACTOR_SCALE_15 = 10n ** 15n;
+const FACTOR_SCALE_18 = 10n ** 18n;
+const SECONDS_PER_YEAR = 365n * 24n * 60n * 60n;
+const I256_INDENT = 2n ** 255n;
 
 const getBorrowRate = (
   marketConfig: MarketConfiguration,
-  utilization: BigDecimal
-): BigDecimal => {
-  if (utilization.lte(marketConfig.borrowKink)) {
-    return marketConfig.borrowPerSecondInterestRateBase.plus(
-      marketConfig.borrowPerSecondInterestRateSlopeLow
-        .times(utilization)
-        .dividedBy(FACTOR_SCALE_18)
+  utilization: bigint
+): bigint => {
+  if (utilization <= marketConfig.borrowKink) {
+    return (
+      marketConfig.borrowPerSecondInterestRateBase +
+      (marketConfig.borrowPerSecondInterestRateSlopeLow * utilization) /
+        FACTOR_SCALE_18
     );
   }
 
-  return marketConfig.borrowPerSecondInterestRateBase
-    .plus(
-      marketConfig.borrowPerSecondInterestRateSlopeLow
-        .times(marketConfig.borrowKink)
-        .dividedBy(FACTOR_SCALE_18)
-    )
-    .plus(
-      marketConfig.borrowPerSecondInterestRateSlopeHigh
-        .times(utilization.minus(marketConfig.borrowKink))
-        .dividedBy(FACTOR_SCALE_18)
-    );
+  return (
+    marketConfig.borrowPerSecondInterestRateBase +
+    (marketConfig.borrowPerSecondInterestRateSlopeLow *
+      marketConfig.borrowKink) /
+      FACTOR_SCALE_18 +
+    (marketConfig.borrowPerSecondInterestRateSlopeHigh *
+      (utilization - marketConfig.borrowKink)) /
+      FACTOR_SCALE_18
+  );
 };
 
 const getSupplyRate = (
   marketConfig: MarketConfiguration,
-  utilization: BigDecimal
-): BigDecimal => {
-  if (utilization.lte(marketConfig.supplyKink)) {
-    return marketConfig.supplyPerSecondInterestRateBase.plus(
-      marketConfig.supplyPerSecondInterestRateSlopeLow
-        .times(utilization)
-        .dividedBy(FACTOR_SCALE_18)
+  utilization: bigint
+): bigint => {
+  if (utilization <= marketConfig.supplyKink) {
+    return (
+      marketConfig.supplyPerSecondInterestRateBase +
+      (marketConfig.supplyPerSecondInterestRateSlopeLow * utilization) /
+        FACTOR_SCALE_18
     );
   }
 
-  return marketConfig.supplyPerSecondInterestRateBase
-    .plus(
-      marketConfig.supplyPerSecondInterestRateSlopeLow
-        .times(marketConfig.supplyKink)
-        .dividedBy(FACTOR_SCALE_18)
-    )
-    .plus(
-      marketConfig.supplyPerSecondInterestRateSlopeHigh
-        .times(utilization.minus(marketConfig.supplyKink))
-        .dividedBy(FACTOR_SCALE_18)
-    );
+  return (
+    marketConfig.supplyPerSecondInterestRateBase +
+    (marketConfig.supplyPerSecondInterestRateSlopeLow *
+      marketConfig.supplyKink) /
+      FACTOR_SCALE_18 +
+    (marketConfig.supplyPerSecondInterestRateSlopeHigh *
+      (utilization - marketConfig.supplyKink)) /
+      FACTOR_SCALE_18
+  );
 };
 
-const getApr = (rate: BigDecimal) => {
-  return rate.times(SECONDS_PER_YEAR).times(100).dividedBy(FACTOR_SCALE_18);
+const getApr = (rate: bigint) => {
+  return (rate * SECONDS_PER_YEAR * 100n) / FACTOR_SCALE_18;
 };
 
-const getPresentValue = (
-  principal: BigDecimal,
-  index: BigDecimal
-): BigDecimal => {
-  return principal.times(index).dividedBy(FACTOR_SCALE_15);
-};
-
-const getPrincipalValue = (
-  presentValue: BigDecimal,
-  index: BigDecimal
-): BigDecimal => {
-  if (presentValue.gte(0)) {
-    return presentValue.times(FACTOR_SCALE_15).dividedBy(index);
-  }
-
-  return presentValue
-    .times(FACTOR_SCALE_15)
-    .plus(index.minus(1))
-    .dividedBy(index);
+const getPresentValue = (principal: bigint, index: bigint): bigint => {
+  return (principal * index) / FACTOR_SCALE_15;
 };
 
 // Get the utilization of the market
 const getUtilization = (
-  totalSupplyBase: BigDecimal,
-  totalBorrowBase: BigDecimal,
-  baseSupplyIndex: BigDecimal,
-  baseBorrowIndex: BigDecimal
+  totalSupplyBase: bigint,
+  totalBorrowBase: bigint,
+  baseSupplyIndex: bigint,
+  baseBorrowIndex: bigint
 ) => {
   const presentValueSupply = getPresentValue(baseSupplyIndex, totalSupplyBase);
   const presentValueBorrow = getPresentValue(baseBorrowIndex, totalBorrowBase);
 
-  if (presentValueSupply.eq(0)) {
-    return BigDecimal(0);
+  if (presentValueSupply === 0n) {
+    return 0n;
   }
 
-  return presentValueBorrow
-    .times(FACTOR_SCALE_18)
-    .dividedBy(presentValueSupply);
+  return (presentValueBorrow * FACTOR_SCALE_18) / presentValueSupply;
 };
 
 const CHAIN_ID_MAP = {
@@ -184,24 +161,24 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
           contractAddress: ctx.contractAddress,
           baseTokenAddress: base_token,
           baseTokenDecimals: base_token_decimals,
-          supplyKink: BigDecimal(supply_kink.toString()),
-          borrowKink: BigDecimal(borrow_kink.toString()),
-          supplyPerSecondInterestRateBase: BigDecimal(
+          supplyKink: BigInt(supply_kink.toString()),
+          borrowKink: BigInt(borrow_kink.toString()),
+          supplyPerSecondInterestRateBase: BigInt(
             supply_per_second_interest_rate_base.toString()
           ),
-          supplyPerSecondInterestRateSlopeLow: BigDecimal(
+          supplyPerSecondInterestRateSlopeLow: BigInt(
             supply_per_second_interest_rate_slope_low.toString()
           ),
-          supplyPerSecondInterestRateSlopeHigh: BigDecimal(
+          supplyPerSecondInterestRateSlopeHigh: BigInt(
             supply_per_second_interest_rate_slope_high.toString()
           ),
-          borrowPerSecondInterestRateBase: BigDecimal(
+          borrowPerSecondInterestRateBase: BigInt(
             borrow_per_second_interest_rate_base.toString()
           ),
-          borrowPerSecondInterestRateSlopeLow: BigDecimal(
+          borrowPerSecondInterestRateSlopeLow: BigInt(
             borrow_per_second_interest_rate_slope_low.toString()
           ),
-          borrowPerSecondInterestRateSlopeHigh: BigDecimal(
+          borrowPerSecondInterestRateSlopeHigh: BigInt(
             borrow_per_second_interest_rate_slope_high.toString()
           ),
         });
@@ -210,24 +187,24 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
         marketConfiguration.baseTokenDecimals = base_token_decimals;
         marketConfiguration.chainId = chainId;
         marketConfiguration.contractAddress = ctx.contractAddress;
-        marketConfiguration.supplyKink = BigDecimal(supply_kink.toString());
-        marketConfiguration.borrowKink = BigDecimal(borrow_kink.toString());
-        marketConfiguration.supplyPerSecondInterestRateBase = BigDecimal(
+        marketConfiguration.supplyKink = BigInt(supply_kink.toString());
+        marketConfiguration.borrowKink = BigInt(borrow_kink.toString());
+        marketConfiguration.supplyPerSecondInterestRateBase = BigInt(
           supply_per_second_interest_rate_base.toString()
         );
-        marketConfiguration.supplyPerSecondInterestRateSlopeLow = BigDecimal(
+        marketConfiguration.supplyPerSecondInterestRateSlopeLow = BigInt(
           supply_per_second_interest_rate_slope_low.toString()
         );
-        marketConfiguration.supplyPerSecondInterestRateSlopeHigh = BigDecimal(
+        marketConfiguration.supplyPerSecondInterestRateSlopeHigh = BigInt(
           supply_per_second_interest_rate_slope_high.toString()
         );
-        marketConfiguration.borrowPerSecondInterestRateBase = BigDecimal(
+        marketConfiguration.borrowPerSecondInterestRateBase = BigInt(
           borrow_per_second_interest_rate_base.toString()
         );
-        marketConfiguration.borrowPerSecondInterestRateSlopeLow = BigDecimal(
+        marketConfiguration.borrowPerSecondInterestRateSlopeLow = BigInt(
           borrow_per_second_interest_rate_slope_low.toString()
         );
-        marketConfiguration.borrowPerSecondInterestRateSlopeHigh = BigDecimal(
+        marketConfiguration.borrowPerSecondInterestRateSlopeHigh = BigInt(
           borrow_per_second_interest_rate_slope_high.toString()
         );
       }
@@ -333,25 +310,24 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
         poolAddress: ctx.contractAddress,
         underlyingTokenAddress: asset_id,
         underlyingTokenSymbol: ASSET_ID_TO_SYMBOL[asset_id],
-        underlyingTokenPriceUsd: BigDecimal(0),
-        availableAmount: BigDecimal(0),
-        availableAmountUsd: BigDecimal(0),
-        suppliedAmount: BigDecimal(0),
-        suppliedAmountUsd: BigDecimal(0),
-        collateralAmount: BigDecimal(0),
-        collateralAmountUsd: BigDecimal(0),
-        collateralFactor: BigDecimal(
-          borrow_collateral_factor.toString()
-        ).dividedBy(FACTOR_SCALE_18),
-        supplyIndex: BigDecimal(0),
-        supplyApr: BigDecimal(0),
-        borrowedAmount: BigDecimal(0),
-        borrowedAmountUsd: BigDecimal(0),
-        borrowIndex: BigDecimal(0),
-        borrowApr: BigDecimal(0),
-        totalFeesUsd: BigDecimal(0),
-        userFeesUsd: BigDecimal(0),
-        protocolFeesUsd: BigDecimal(0),
+        underlyingTokenPriceUsd: BigInt(0),
+        availableAmount: BigInt(0),
+        availableAmountUsd: BigInt(0),
+        suppliedAmount: BigInt(0),
+        suppliedAmountUsd: BigInt(0),
+        collateralAmount: BigInt(0),
+        collateralAmountUsd: BigInt(0),
+        collateralFactor:
+          BigInt(borrow_collateral_factor.toString()) / FACTOR_SCALE_18,
+        supplyIndex: BigInt(0),
+        supplyApr: BigInt(0),
+        borrowedAmount: BigInt(0),
+        borrowedAmountUsd: BigInt(0),
+        borrowIndex: BigInt(0),
+        borrowApr: BigInt(0),
+        totalFeesUsd: BigInt(0),
+        userFeesUsd: BigInt(0),
+        protocolFeesUsd: BigInt(0),
       });
 
       await ctx.store.upsert(poolSnapshot);
@@ -398,7 +374,7 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
         },
       } = event;
 
-      const value = BigDecimal(underlying.toString()).minus(I256_INDENT);
+      const value = BigInt(underlying.toString()) - I256_INDENT;
 
       const address = (account.Address?.bits ?? account.ContractId?.bits)!;
       const chainId = CHAIN_ID_MAP[ctx.chainId as keyof typeof CHAIN_ID_MAP];
@@ -412,12 +388,12 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
           chainId: chainId,
           contractAddress: ctx.contractAddress,
           address: address,
-          principal: value.abs(),
-          isNegative: value.isNegative(),
+          principal: value < 0 ? -value : value,
+          isNegative: value < 0,
         });
       } else {
-        userBasic.principal = value.abs();
-        userBasic.isNegative = value.isNegative();
+        userBasic.principal = value < 0 ? -value : value;
+        userBasic.isNegative = value < 0;
       }
 
       await ctx.store.upsert(userBasic);
@@ -459,21 +435,19 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
           underlyingTokenAddress: collateralConfiguration.assetAddress,
           underlyingTokenSymbol:
             ASSET_ID_TO_SYMBOL[collateralConfiguration.assetAddress],
-          suppliedAmount: BigDecimal(0),
-          suppliedAmountUsd: BigDecimal(0),
-          borrowedAmount: BigDecimal(0),
-          borrowedAmountUsd: BigDecimal(0),
-          collateralAmount: BigDecimal(amount.toString()).dividedBy(
-            BigDecimal(10).pow(collateralConfiguration.decimals)
-          ),
+          suppliedAmount: 0n,
+          suppliedAmountUsd: 0n,
+          borrowedAmount: 0n,
+          borrowedAmountUsd: 0n,
+          collateralAmount:
+            BigInt(amount.toString()) /
+            10n ** BigInt(collateralConfiguration.decimals.toString()),
         });
       } else {
         collateralPosition.collateralAmount =
-          collateralPosition.collateralAmount.plus(
-            BigDecimal(amount.toString()).dividedBy(
-              BigDecimal(10).pow(collateralConfiguration.decimals)
-            )
-          );
+          collateralPosition.collateralAmount +
+          BigInt(amount.toString()) /
+            10n ** BigInt(collateralConfiguration.decimals.toString());
       }
 
       await ctx.store.upsert(collateralPosition);
@@ -491,11 +465,10 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
         );
       }
 
-      collateralPool.collateralAmount = collateralPool.collateralAmount.plus(
-        BigDecimal(amount.toString()).dividedBy(
-          BigDecimal(10).pow(collateralConfiguration.decimals)
-        )
-      );
+      collateralPool.collateralAmount =
+        collateralPool.collateralAmount +
+        BigInt(amount.toString()) /
+          10n ** BigInt(collateralConfiguration.decimals.toString());
 
       await ctx.store.upsert(collateralPool);
     })
@@ -533,15 +506,10 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
         );
       }
 
-      collateralPosition.collateralAmount = BigDecimal(
-        collateralPosition.collateralAmount
-          .minus(
-            BigDecimal(amount.toString()).dividedBy(
-              BigDecimal(10).pow(collateralConfiguration.decimals)
-            )
-          )
-          .toString()
-      );
+      collateralPosition.collateralAmount =
+        collateralPosition.collateralAmount -
+        BigInt(amount.toString()) /
+          10n ** BigInt(collateralConfiguration.decimals.toString());
 
       // If user withdraws all collatera
       await ctx.store.upsert(collateralPosition);
@@ -559,11 +527,10 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
         );
       }
 
-      collateralPool.collateralAmount = collateralPool.collateralAmount.minus(
-        BigDecimal(amount.toString()).dividedBy(
-          BigDecimal(10).pow(collateralConfiguration.decimals)
-        )
-      );
+      collateralPool.collateralAmount =
+        collateralPool.collateralAmount -
+        BigInt(amount.toString()) /
+          10n ** BigInt(collateralConfiguration.decimals.toString());
 
       await ctx.store.upsert(collateralPool);
     })
@@ -587,11 +554,9 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
         );
       }
 
-      collateralPool.collateralAmount = BigDecimal(
-        collateralPool.collateralAmount
-      ).minus(
-        BigDecimal(amount.toString()).dividedBy(BigDecimal(10).pow(decimals))
-      );
+      collateralPool.collateralAmount =
+        collateralPool.collateralAmount -
+        BigInt(amount.toString()) / 10n ** BigInt(decimals.toString());
 
       await ctx.store.upsert(collateralPool);
 
@@ -608,7 +573,7 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
         );
       }
 
-      collateralPosition.collateralAmount = BigDecimal(0);
+      collateralPosition.collateralAmount = BigInt(0);
 
       await ctx.store.upsert(collateralPosition);
     })
@@ -635,18 +600,18 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
           id: marketBasicId,
           chainId: chainId,
           contractAddress: ctx.contractAddress,
-          lastAccrualTime: BigDecimal(last_accrual_time.toString()),
-          baseSupplyIndex: BigDecimal(base_supply_index.toString()),
-          baseBorrowIndex: BigDecimal(base_borrow_index.toString()),
-          totalSupplyBase: BigDecimal(total_supply_base.toString()),
-          totalBorrowBase: BigDecimal(total_borrow_base.toString()),
+          lastAccrualTime: BigInt(last_accrual_time.toString()),
+          baseSupplyIndex: BigInt(base_supply_index.toString()),
+          baseBorrowIndex: BigInt(base_borrow_index.toString()),
+          totalSupplyBase: BigInt(total_supply_base.toString()),
+          totalBorrowBase: BigInt(total_borrow_base.toString()),
         });
       } else {
-        marketBasic.lastAccrualTime = BigDecimal(last_accrual_time.toString());
-        marketBasic.baseSupplyIndex = BigDecimal(base_supply_index.toString());
-        marketBasic.baseBorrowIndex = BigDecimal(base_borrow_index.toString());
-        marketBasic.totalSupplyBase = BigDecimal(total_supply_base.toString());
-        marketBasic.totalBorrowBase = BigDecimal(total_borrow_base.toString());
+        marketBasic.lastAccrualTime = BigInt(last_accrual_time.toString());
+        marketBasic.baseSupplyIndex = BigInt(base_supply_index.toString());
+        marketBasic.baseBorrowIndex = BigInt(base_borrow_index.toString());
+        marketBasic.totalSupplyBase = BigInt(total_supply_base.toString());
+        marketBasic.totalBorrowBase = BigInt(total_borrow_base.toString());
       }
 
       await ctx.store.upsert(marketBasic);
@@ -710,16 +675,16 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
           );
         }
 
-        const basePrice = BigDecimal(baseAssetPrice ?? 0);
+        const basePrice = BigInt(baseAssetPrice ?? 0);
 
         // Accrue interest
-        const now = BigDecimal(
-          DateTime.fromUnixSeconds(START_TIME_UNIX).toTai64()
-        ); // Need to convert timestamp to Tai64 format
-        const timeElapsed = now.minus(marketBasic.lastAccrualTime);
+        const now = BigInt(DateTime.fromUnixSeconds(START_TIME_UNIX).toTai64());
 
-        if (timeElapsed.gt(0)) {
-          if (!marketBasic.lastAccrualTime.eq(0)) {
+        // Need to convert timestamp to Tai64 format
+        const timeElapsed = now - marketBasic.lastAccrualTime;
+
+        if (timeElapsed > 0n) {
+          if (marketBasic.lastAccrualTime === 0n) {
             const baseSupplyIndex = marketBasic.baseSupplyIndex;
             const baseBorrowIndex = marketBasic.baseBorrowIndex;
 
@@ -733,20 +698,16 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
             const supplyRate = getSupplyRate(marketConfiguration, utilization);
             const borrowRate = getBorrowRate(marketConfiguration, utilization);
 
-            const baseSupplyIndexDelta = baseSupplyIndex
-              .times(supplyRate)
-              .times(timeElapsed)
-              .dividedBy(FACTOR_SCALE_18);
+            const baseSupplyIndexDelta =
+              (baseSupplyIndex * supplyRate * timeElapsed) / FACTOR_SCALE_18;
 
-            const baseBorrowIndexDelta = baseBorrowIndex
-              .times(borrowRate)
-              .times(timeElapsed)
-              .dividedBy(FACTOR_SCALE_18);
+            const baseBorrowIndexDelta =
+              (baseBorrowIndex * borrowRate * timeElapsed) / FACTOR_SCALE_18;
 
             marketBasic.baseSupplyIndex =
-              baseSupplyIndex.plus(baseSupplyIndexDelta);
+              baseSupplyIndex + baseSupplyIndexDelta;
             marketBasic.baseBorrowIndex =
-              baseBorrowIndex.plus(baseBorrowIndexDelta);
+              baseBorrowIndex + baseBorrowIndexDelta;
           }
 
           marketBasic.lastAccrualTime = now;
@@ -767,27 +728,23 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
         for (const userBasic of userBasics) {
           const basePositionSnapshotId = `${userBasic.chainId}_${userBasic.contractAddress}_${marketConfiguration.baseTokenAddress}_${userBasic.address}`;
 
-          const presentValue = getPresentValue(
-            userBasic.principal,
-            userBasic.isNegative
-              ? marketBasic.baseBorrowIndex
-              : marketBasic.baseSupplyIndex
-          ).dividedBy(
-            BigDecimal(10).pow(marketConfiguration.baseTokenDecimals)
-          );
+          const presentValue =
+            getPresentValue(
+              userBasic.principal,
+              userBasic.isNegative
+                ? marketBasic.baseBorrowIndex
+                : marketBasic.baseSupplyIndex
+            ) /
+            10n ** BigInt(marketConfiguration.baseTokenDecimals);
 
           let basePositionSnapshot = await ctx.store.get(
             BasePositionSnapshot,
             basePositionSnapshotId
           );
 
-          const suppliedAmount = userBasic.isNegative
-            ? BigDecimal(0)
-            : presentValue;
+          const suppliedAmount = userBasic.isNegative ? 0n : presentValue;
 
-          const borrowedAmount = userBasic.isNegative
-            ? presentValue
-            : BigDecimal(0);
+          const borrowedAmount = userBasic.isNegative ? presentValue : 0n;
 
           // Create base position snapshot if it doesn't exist
           if (!basePositionSnapshot) {
@@ -803,21 +760,19 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
               underlyingTokenSymbol: ASSET_ID_TO_SYMBOL[underlyingTokenAddress],
               userAddress: userBasic.address,
               suppliedAmount: suppliedAmount,
-              suppliedAmountUsd: suppliedAmount.times(basePrice),
+              suppliedAmountUsd: suppliedAmount * basePrice,
               borrowedAmount: borrowedAmount,
-              borrowedAmountUsd: borrowedAmount.times(basePrice),
-              collateralAmount: BigDecimal(0),
-              collateralAmountUsd: BigDecimal(0),
+              borrowedAmountUsd: borrowedAmount * basePrice,
+              collateralAmount: 0n,
+              collateralAmountUsd: 0n,
             });
           } else {
             basePositionSnapshot.timestamp = START_TIME_UNIX;
             basePositionSnapshot.blockDate = START_TIME_FORMATED;
             basePositionSnapshot.suppliedAmount = suppliedAmount;
-            basePositionSnapshot.suppliedAmountUsd =
-              suppliedAmount.times(basePrice);
+            basePositionSnapshot.suppliedAmountUsd = suppliedAmount * basePrice;
             basePositionSnapshot.borrowedAmount = borrowedAmount;
-            basePositionSnapshot.borrowedAmountUsd =
-              borrowedAmount.times(basePrice);
+            basePositionSnapshot.borrowedAmountUsd = borrowedAmount * basePrice;
           }
 
           await ctx.store.upsert(basePositionSnapshot);
@@ -833,15 +788,19 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
           basePoolSnapshotId
         );
 
-        const totalSupplyBase = getPresentValue(
-          marketBasic.totalSupplyBase,
-          marketBasic.baseSupplyIndex
-        ).dividedBy(BigDecimal(10).pow(marketConfiguration.baseTokenDecimals));
+        const totalSupplyBase =
+          getPresentValue(
+            marketBasic.totalSupplyBase,
+            marketBasic.baseSupplyIndex
+          ) /
+          10n ** BigInt(marketConfiguration.baseTokenDecimals);
 
-        const totalBorrowBase = getPresentValue(
-          marketBasic.totalBorrowBase,
-          marketBasic.baseBorrowIndex
-        ).dividedBy(BigDecimal(10).pow(marketConfiguration.baseTokenDecimals));
+        const totalBorrowBase =
+          getPresentValue(
+            marketBasic.totalBorrowBase,
+            marketBasic.baseBorrowIndex
+          ) /
+          10n ** BigInt(marketConfiguration.baseTokenDecimals);
 
         const utilization = getUtilization(
           totalSupplyBase,
@@ -864,45 +823,40 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
             underlyingTokenAddress: underlyingTokenAddress,
             underlyingTokenSymbol: ASSET_ID_TO_SYMBOL[underlyingTokenAddress],
             underlyingTokenPriceUsd: basePrice,
-            availableAmount: totalSupplyBase.minus(totalBorrowBase),
-            availableAmountUsd: totalSupplyBase
-              .minus(totalBorrowBase)
-              .times(basePrice),
+            availableAmount: totalSupplyBase - totalBorrowBase,
+            availableAmountUsd: (totalSupplyBase - totalBorrowBase) * basePrice,
+
             suppliedAmount: totalSupplyBase,
-            suppliedAmountUsd: totalSupplyBase.times(basePrice),
-            collateralAmount: BigDecimal(0),
-            collateralAmountUsd: BigDecimal(0),
-            collateralFactor: BigDecimal(0),
-            supplyIndex: marketBasic.baseSupplyIndex.dividedBy(FACTOR_SCALE_15),
+            suppliedAmountUsd: totalSupplyBase * basePrice,
+            collateralAmount: 0n,
+            collateralAmountUsd: 0n,
+            collateralFactor: 0n,
+            supplyIndex: marketBasic.baseSupplyIndex / FACTOR_SCALE_15,
             supplyApr: supplyApr,
             borrowedAmount: totalBorrowBase,
-            borrowedAmountUsd: totalBorrowBase.times(basePrice),
-            borrowIndex: marketBasic.baseBorrowIndex.dividedBy(FACTOR_SCALE_15),
+            borrowedAmountUsd: totalBorrowBase * basePrice,
+            borrowIndex: marketBasic.baseBorrowIndex / FACTOR_SCALE_15,
             borrowApr: borrowApr,
-            totalFeesUsd: BigDecimal(0),
-            userFeesUsd: BigDecimal(0),
-            protocolFeesUsd: BigDecimal(0),
+            totalFeesUsd: 0n,
+            userFeesUsd: 0n,
+            protocolFeesUsd: 0n,
           });
         } else {
           basePoolSnapshot.timestamp = START_TIME_UNIX;
           basePoolSnapshot.blockDate = START_TIME_FORMATED;
-          basePoolSnapshot.availableAmount =
-            totalSupplyBase.minus(totalBorrowBase);
-          basePoolSnapshot.availableAmountUsd = totalSupplyBase
-            .minus(totalBorrowBase)
-            .times(basePrice);
+          basePoolSnapshot.availableAmount = totalSupplyBase - totalBorrowBase;
+          basePoolSnapshot.availableAmountUsd =
+            (totalSupplyBase - totalBorrowBase) * basePrice;
           basePoolSnapshot.borrowedAmount = totalBorrowBase;
           basePoolSnapshot.suppliedAmount = totalSupplyBase;
           basePoolSnapshot.supplyIndex =
-            marketBasic.baseSupplyIndex.dividedBy(FACTOR_SCALE_15);
+            marketBasic.baseSupplyIndex / FACTOR_SCALE_15;
           basePoolSnapshot.borrowIndex =
-            marketBasic.baseBorrowIndex.dividedBy(FACTOR_SCALE_15);
+            marketBasic.baseBorrowIndex / FACTOR_SCALE_15;
           basePoolSnapshot.supplyApr = supplyApr;
           basePoolSnapshot.borrowApr = borrowApr;
-          basePoolSnapshot.suppliedAmountUsd =
-            totalSupplyBase.multipliedBy(basePrice);
-          basePoolSnapshot.borrowedAmountUsd =
-            totalBorrowBase.multipliedBy(basePrice);
+          basePoolSnapshot.suppliedAmountUsd = totalSupplyBase * basePrice;
+          basePoolSnapshot.borrowedAmountUsd = totalBorrowBase * basePrice;
           basePoolSnapshot.borrowApr = borrowApr;
         }
 
@@ -919,7 +873,7 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
           ])
         ).filter((val) => val.chainId === 0);
 
-        const collateralPrices = new Map<string, BigDecimal>();
+        const collateralPrices = new Map<string, bigint>();
 
         for (const collateralPool of collateralPools) {
           const collateralPrice = await getPriceBySymbol(
@@ -935,7 +889,7 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
 
           collateralPrices.set(
             collateralPool.underlyingTokenAddress,
-            BigDecimal(collateralPrice ?? 0)
+            BigInt(collateralPrice ?? 0)
           );
         }
 
@@ -957,9 +911,9 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
                 underlyingTokenPriceUsd: collateralPrices.get(
                   collateralPool.underlyingTokenAddress
                 ),
-                collateralAmountUsd: collateralPool.collateralAmount.times(
-                  collateralPrices.get(collateralPool.underlyingTokenAddress)!
-                ),
+                collateralAmountUsd:
+                  collateralPool.collateralAmount *
+                  collateralPrices.get(collateralPool.underlyingTokenAddress)!,
               });
             } else {
               collateralPoolSnapshot.timestamp = START_TIME_UNIX;
@@ -973,9 +927,8 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
               collateralPoolSnapshot.underlyingTokenPriceUsd =
                 collateralPrices.get(collateralPool.underlyingTokenAddress);
               collateralPoolSnapshot.collateralAmountUsd =
-                collateralPool.collateralAmount.times(
-                  collateralPrices.get(collateralPool.underlyingTokenAddress)!
-                );
+                collateralPool.collateralAmount *
+                collateralPrices.get(collateralPool.underlyingTokenAddress)!;
             }
 
             await ctx.store.upsert(collateralPoolSnapshot);
@@ -1009,11 +962,11 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
                 ...collateralPosition,
                 timestamp: START_TIME_UNIX,
                 blockDate: START_TIME_FORMATED,
-                collateralAmountUsd: collateralPosition.collateralAmount.times(
+                collateralAmountUsd:
+                  collateralPosition.collateralAmount *
                   collateralPrices.get(
                     collateralPosition.underlyingTokenAddress
-                  )!
-                ),
+                  )!,
               });
             } else {
               collateralPositionSnapshot.timestamp = START_TIME_UNIX;
@@ -1022,11 +975,10 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
               collateralPositionSnapshot.collateralAmount =
                 collateralPosition.collateralAmount;
               collateralPositionSnapshot.collateralAmountUsd =
-                collateralPosition.collateralAmount.times(
-                  collateralPrices.get(
-                    collateralPosition.underlyingTokenAddress
-                  )!
-                );
+                collateralPosition.collateralAmount *
+                collateralPrices.get(
+                  collateralPosition.underlyingTokenAddress
+                )!;
             }
 
             await ctx.store.upsert(collateralPositionSnapshot);
