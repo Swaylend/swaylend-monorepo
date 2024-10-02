@@ -13,8 +13,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React, { useState } from 'react';
 import POINTS from '/public/icons/points-icon.svg?url';
-import { Button } from '../ui/button';
 import { InfoIcon } from '../InfoIcon';
+import { Button } from '../ui/button';
 
 export const Points = () => {
   // const { setOpen } = useReferralModalStore();
