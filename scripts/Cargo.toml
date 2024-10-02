@@ -1,0 +1,42 @@
+[package]
+name = "swaylend-scripts"
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+
+[[bin]]
+name = "activate_market"
+path = "src/activate_market.rs"
+
+[[bin]]
+name = "update_collateral_assets"
+path = "src/update_collateral_assets.rs"
+
+[[bin]]
+name = "deploy_tokens"
+path = "src/deploy_tokens.rs"
+
+[[bin]]
+name = "mint_tokens"
+path = "src/mint_tokens.rs"
+
+[[bin]]
+name = "deploy_pyth"
+path = "src/deploy_pyth.rs"
+
+[dependencies]
+fuels = { workspace = true }
+clap = { workspace = true }
+tokio = { workspace = true }
+anyhow = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+dotenv = { workspace = true }
+rand = { workspace = true }
+chrono = { workspace = true }
+tai64 = { workspace = true }
+
+market = { workspace = true }
+
+token_sdk = { workspace = true }
+pyth_mock_sdk = { workspace = true }

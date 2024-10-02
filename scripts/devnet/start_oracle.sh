@@ -1,4 +1,0 @@
-#!/bin/sh
-
-cd ../../apps/oracle
-SECRET=0x0331479c5df9d693c52bd5036cd3c21ef913dfae507231f526ce0b17ebbad6cc RPC=http://127.0.0.1:4000 ORACLE_ADDRESS=1150bab9c165acb40e4cc9bf12d4225ff5c2815734495f88002d22c09e296188 cargo run

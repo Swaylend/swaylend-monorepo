@@ -1,0 +1,13 @@
+query GetMarketConfiguration {
+  MarketConfiguartion {
+    baseToken
+    baseTokenDecimals
+    baseTokenPriceFeedId
+    baseBorrowMin
+    supplyKink
+    borrowKink
+    borrowPerSecondInterestRateBase
+    borrowPerSecondInterestRateSlopeLow
+    borrowPerSecondInterestRateSlopeHigh
+  }
+}

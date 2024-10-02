@@ -8,6 +8,9 @@ use std::bytes::Bytes;
 use sway_libs::signed_integers::i256::I256;
 
 abi Market {
+    // Get version of the smart contract
+    fn get_version() -> u8;
+
     // # 0. Activate contract (un-pause)
     #[storage(write)]
     fn activate_contract(market_configuration: MarketConfiguration, owner: Identity);

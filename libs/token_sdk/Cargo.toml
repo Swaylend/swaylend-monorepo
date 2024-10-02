@@ -5,11 +5,6 @@ version = "0.1.0"
 edition = "2021"
 license = "Apache-2.0"
 
-[[test]]
-harness = true
-name = "integration_tests"
-path = "tests/harness.rs"
-
 [dependencies]
 token = { workspace = true }
 market = { workspace = true }

@@ -15,23 +15,19 @@ pub fn format_units_u128(num: u128, decimals: u64) -> f64 {
 }
 
 pub fn convert_i256_to_i128(value: &I256) -> i128 {
-    let value = if is_i256_negative(value) {
-        i256_indent() - value.underlying
+    if is_i256_negative(value) {
+        i128::try_from(i256_indent() - value.underlying).unwrap() * -1
     } else {
-        value.underlying - i256_indent()
-    };
-
-    i128::try_from(value).unwrap()
+        i128::try_from(value.underlying - i256_indent()).unwrap()
+    }
 }
 
 pub fn convert_i256_to_i64(value: &I256) -> i64 {
-    let value = if is_i256_negative(value) {
-        i256_indent() - value.underlying
+    if is_i256_negative(value) {
+        i64::try_from(i256_indent() - value.underlying).unwrap() * -1
     } else {
-        value.underlying - i256_indent()
-    };
-
-    i64::try_from(value).unwrap()
+        i64::try_from(value.underlying - i256_indent()).unwrap()
+    }
 }
 
 pub fn convert_u256_to_u128(value: U256) -> u128 {

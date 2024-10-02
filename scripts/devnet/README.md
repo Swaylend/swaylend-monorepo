@@ -6,53 +6,32 @@ practice vehicle bulb together group cost olive rely wasp mask soda olive
 
 Account #0:
 
-- private key: 0x0331479c5df9d693c52bd5036cd3c21ef913dfae507231f526ce0b17ebbad6cc
-- address: 2968d3dd71d8b517fdb57e837c419c58f7404744fb51c16e0e0a2dc18892b1f8, fuel1995d8ht3mz630ld406phcsvutrm5q36yldguzmswpgkurzyjk8uq4l4w69
+* private key: 0x0331479c5df9d693c52bd5036cd3c21ef913dfae507231f526ce0b17ebbad6cc
+* address: 2968d3dd71d8b517fdb57e837c419c58f7404744fb51c16e0e0a2dc18892b1f8, fuel1995d8ht3mz630ld406phcsvutrm5q36yldguzmswpgkurzyjk8uq4l4w69
 
 ## Start devnet
 
 ``bash
-./devnet.sh
+./run.sh
 ``
 
 ## Deploy contracts (oracle, tokens, market)
 
-``bash
-./deploy_contracts.sh
-``
-
-Oracle contract = 0x1150bab9c165acb40e4cc9bf12d4225ff5c2815734495f88002d22c09e296188
-
-Token factory contract = 0x8272199a6df6220ab4a5430656967dc66321af1509c2a0ffd39b62a73fdde9c5
-
-Market contract = 0xe6ffabec7d624f362ab2ed0c9e2513a1d247e96dd315960600199abd5e2ab6d1
-
-SWAY = 0x9a54a8d789c581c6f53358027a708c77f1fb37e66f9d746aefcc2cd6d6ecff5b
-USDC = 0x6d1155ac4f08bcabb7bb4247a7325249263abbbf058a5db5fc0015a32c82dd0f
-ETH  = 0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07
-LINK = 0xcdc4d96249f5b7a9f502453930c6f44e57b93d160006a35718018561967331c7
-BTC  = 0xec60e64c3f8857f288f7eed81c5699540a665c88a1657c18f2bbb48cf7d1490e
-UNI  = 0x48da8f6980d24b97710b2a89666c90edd833f53747776ae1a58e7cc9b419b177
-COMP = 0x48f792b7f7207bfff8d92f86a8fb5c61cff0cb100508953d99547716592faf74
-
-## Mint some tokens
+This will deploy the pyth mock oracle, tokens, mint tokens, and deploy the market contract along with activation and collateral configs.
 
 ``bash
-./mint_tokens.sh
+./setup-devnet.sh
 ``
 
-## Start frontend
+* Token factory contract: `0xab0dc5c65212c0d062101b986e18a251f15317c934c1196ccf78fa761eecb394`
+* Pyth mock oracle: `0xd162dfc8b22cedc427afe8e88640520cb1828627633085beed8e0c78442ba428`
+* Loader contract: `0x19fb90cd10df6c35056d4f20c1dccc235afed70b5f285f7cb19948f6cb3b1ea0` (this is basically the main logic contract)
+* Proxy contract: `0x4f1814444f2e995803d88179476421f04f774b5c4c40956b0655b1e62b1c695d`
 
-``bash
-./start_frontend.sh
-``
+Tokens: 
+* ETH: `f8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07`
+* USDC: `0xdb012cf2f31dcb9b46ed0ef619abe040db24172deb8f7c1ef573097b2225d8b6`
+* BTC: `0x50ec3fd9d54db44697b4613b2b6d6f16df5b9f8e3e7a6fba3c51896cfaeec3a7`
+* UNI: `0x2cc3e9fa1a1009342165b57d375790f91959346a6558f9bceb378a31bd4ca992`
 
-## Start oracle service
-
-``bash
-./start_oracle_service.sh
-``
-
-## Rebuilding ABIs
-
-When rebuilding the ABIs using the ``rebuild_contracts.sh`` script, first set the swaylend folder path
+> Also deploys src-20 on 0x02a2e4643e3a8c41ab7aa39a29ea60142a8e1d857775ae116ce60a4eeb9039e8, for now useless.

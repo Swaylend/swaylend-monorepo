@@ -1,86 +1,120 @@
-import { HermesClient, PriceUpdate } from '@pythnetwork/hermes-client';
-import BN from '@src/utils/BN';
-import { initProvider, walletToRead } from '@src/utils/walletToRead';
-import { useQueries } from '@tanstack/react-query';
-import type { Provider, WalletUnlocked } from 'fuels';
-import { useEffect, useState } from 'react';
+import { Market, type PriceDataUpdateInput } from '@/contract-types/Market';
+import { useMarketStore } from '@/stores';
 
-const PRICE_FEEDS = {
-  '0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07': {
-    symbol: 'Crypto.ETH/USD',
-    id: '0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace',
-  },
-  '0x00dc5cda67b6a53b60fa53f95570fdaabb5b916c0e6d614a3f5d9de68f832e61': {
-    symbol: 'Crypto.BTC/USD',
-    id: '0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43',
-  },
-  '0xb5a7ec61506d83f6e4739be2dc57018898b1e08684c097c73b582c9583e191e2': {
-    symbol: 'Crypto.USDC/USD',
-    id: '0xeaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a',
-  },
-  '0xf7c5f807c40573b5db88e467eb9aabc42332483493f7697442e1edbd59e020ad': {
-    symbol: 'Crypto.UNI/USD',
-    id: '0x78d185a741d07edb3412b09008b7c5cfb9bbbd7d568bf00ba737b456ba171501',
-  },
-} as Record<string, any>;
+import { appConfig } from '@/configs';
+import { HermesClient } from '@pythnetwork/hermes-client';
+import {
+  PYTH_CONTRACT_ADDRESS_SEPOLIA,
+  PythContract,
+} from '@pythnetwork/pyth-fuel-js';
+import { useQuery } from '@tanstack/react-query';
+import BigNumber from 'bignumber.js';
+import { arrayify } from 'fuels';
+import { DateTime } from 'fuels';
+import { useMemo } from 'react';
+import { useCollateralConfigurations } from './useCollateralConfigurations';
+import { useMarketConfiguration } from './useMarketConfiguration';
+import { useProvider } from './useProvider';
 
-export const usePrice = (assetIds: string[]) => {
-  const [wallet, setWallet] = useState<WalletUnlocked | null>(null);
-  const [provider, setProvider] = useState<Provider | null>(null);
+export const usePrice = (marketParam?: string) => {
+  const hermesClient = new HermesClient(
+    process.env.NEXT_PUBLIC_HERMES_API ?? 'https://hermes.pyth.network'
+  );
+  const provider = useProvider();
 
-  useEffect(() => {
-    walletToRead().then((w) => setWallet(w));
-    initProvider().then((p) => setProvider(p));
-  }, []);
+  const { market: storeMarket } = useMarketStore();
+  const market = marketParam ?? storeMarket;
 
-  const hermesClient = new HermesClient('https://hermes.pyth.network');
+  const { data: marketConfiguration } = useMarketConfiguration(market);
+  const { data: collateralConfigurations } =
+    useCollateralConfigurations(market);
 
-  const fetchPrice = async (assetId: string) => {
-    const priceUpdates = await hermesClient.getLatestPriceUpdates([
-      PRICE_FEEDS[assetId].id,
-    ]);
+  // Create a map of priceFeedId to assetId
+  const priceFeedIdToAssetId = useMemo(() => {
+    if (!marketConfiguration || !collateralConfigurations) return null;
 
-    if (!priceUpdates) throw new Error('Failed to fetch price');
-    const previousPrice =
-      Number(priceUpdates.parsed?.[0].price.price) *
-      10 ** Number(priceUpdates.parsed?.[0].price.expo);
+    const assets: Map<string, string> = new Map();
 
-    return new BN(previousPrice.toString());
-  };
-  const results = useQueries({
-    queries: assetIds.map((assetId) => ({
-      queryKey: ['priceOf', assetId],
-      queryFn: () => fetchPrice(assetId),
-      enabled: !!provider || !!wallet,
-    })),
+    assets.set(
+      marketConfiguration.baseTokenPriceFeedId,
+      marketConfiguration.baseToken.bits
+    );
+
+    for (const [assetId, collateralConfiguration] of Object.entries(
+      collateralConfigurations
+    )) {
+      assets.set(collateralConfiguration.price_feed_id, assetId);
+    }
+
+    return assets;
+  }, [marketConfiguration, collateralConfigurations]);
+
+  return useQuery({
+    queryKey: ['pythPrices', priceFeedIdToAssetId, market],
+    queryFn: async () => {
+      if (!provider || !priceFeedIdToAssetId) return null;
+
+      const priceFeedIds = Array.from(priceFeedIdToAssetId.keys());
+
+      // Fetch price updates from Hermes client
+      const priceUpdates =
+        await hermesClient.getLatestPriceUpdates(priceFeedIds);
+
+      if (
+        !priceUpdates ||
+        !priceUpdates.parsed ||
+        priceUpdates.parsed.length === 0
+      ) {
+        throw new Error('Failed to fetch price');
+      }
+
+      // Fetch updateFee
+      const pythContract = new PythContract(
+        PYTH_CONTRACT_ADDRESS_SEPOLIA,
+        provider
+      );
+
+      const marketContract = new Market(
+        appConfig.markets[market].marketAddress,
+        provider
+      );
+
+      const buffer = Buffer.from(priceUpdates.binary.data[0], 'hex');
+      const updateData = [arrayify(buffer)];
+
+      const { value: fee } = await marketContract.functions
+        .update_fee(updateData)
+        .addContracts([pythContract])
+        .get();
+
+      // Prepare the PriceDateUpdateInput object
+      const priceUpdateData: PriceDataUpdateInput = {
+        update_fee: fee,
+        publish_times: priceUpdates.parsed.map((parsedPrice) =>
+          DateTime.fromUnixSeconds(parsedPrice.price.publish_time).toTai64()
+        ),
+        price_feed_ids: priceFeedIds,
+        update_data: updateData,
+      };
+
+      // Format prices to BigNumber
+      const prices = Object.fromEntries(
+        priceUpdates.parsed.map((parsedPrice) => [
+          priceFeedIdToAssetId.get(`0x${parsedPrice.id}`)!,
+          BigNumber(parsedPrice.price.price).times(
+            BigNumber(10).pow(BigNumber(parsedPrice.price.expo))
+          ),
+        ])
+      );
+
+      return {
+        prices,
+        priceUpdateData,
+      };
+    },
+    refetchInterval: 10000,
+    enabled: !!provider && !!priceFeedIdToAssetId,
+    staleTime: 10000,
+    refetchOnWindowFocus: false,
   });
-
-  const data = results.reduce((acc, res, index) => {
-    if (!res.data) return acc;
-    // biome-ignore lint/performance/noAccumulatingSpread: <explanation>
-    return { ...acc, [assetIds[index]]: res.data };
-  }, {}) as Record<string, BN>;
-
-  const refetch = () => {
-    results.forEach((res) => res.refetch());
-  };
-
-  const getPrice = (assetId: string) => {
-    return data[assetId] ?? BN.ZERO;
-  };
-
-  const getFormattedPrice = (assetId: string): string => {
-    if (!data[assetId]) return '$ 0.00';
-    const price = data[assetId];
-    return `$${price.toFormat(2)}`;
-  };
-
-  return {
-    data,
-    isLoading: results.some((res) => res.isLoading),
-    isError: results.some((res) => res.isError),
-    refetch,
-    getPrice,
-    getFormattedPrice,
-  };
 };

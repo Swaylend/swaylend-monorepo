@@ -104,7 +104,7 @@ async fn pause_test() {
     // 🤙 Call: withdraw_base
     // 💰 Amount: 150.00 USDC
 
-    let amount = parse_units(150, usdc.decimals);
+    let amount = parse_units(100, usdc.decimals);
 
     // Alice calls withdraw_base
     market
@@ -125,10 +125,10 @@ async fn pause_test() {
     // ==================== Step #3 ====================
     // 👛 Wallet: Admin 🗿
     // 🤙 Drop of collateral price
-    // 💰 Amount: -10%
+    // 💰 Amount: -30%
 
     let res = oracle.price(uni.price_feed_id).await.unwrap().value;
-    let new_price = (res.price as f64 * 0.9) as u64;
+    let new_price = (res.price as f64 * 0.7) as u64;
     let prices = Vec::from([(
         uni.price_feed_id,
         (

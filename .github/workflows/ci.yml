@@ -30,7 +30,7 @@ jobs:
       - name: Build contracts
         run: ~/.fuelup/bin/forc build --release
       - name: Run contracts tests (FORC)
-        run: forc test --release
+        run: ~/.fuelup/bin/forc test --release
       - name: Run contracts tests (RUST)
         run: cargo test --release local_tests
       - name: Install pnpm

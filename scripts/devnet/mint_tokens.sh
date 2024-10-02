@@ -1,4 +1,0 @@
-#!/bin/bash
-
-cd ../../contracts/market
-SECRET=0x0331479c5df9d693c52bd5036cd3c21ef913dfae507231f526ce0b17ebbad6cc TOKEN_CONTRACT_ADDRESS=8272199a6df6220ab4a5430656967dc66321af1509c2a0ffd39b62a73fdde9c5 ORACLE_ADDRESS=1150bab9c165acb40e4cc9bf12d4225ff5c2815734495f88002d22c09e296188 RPC=http://127.0.0.1:4000 cargo test mint_tokens -- --nocapture

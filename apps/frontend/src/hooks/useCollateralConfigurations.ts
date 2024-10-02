@@ -1,24 +1,52 @@
-import type { MarketAbi } from '@src/contract-types';
-import type { CollateralConfigurationOutput } from '@src/contract-types/MarketAbi';
+import { appConfig } from '@/configs';
+import {
+  type CollateralConfigurationOutput,
+  Market,
+} from '@/contract-types/Market';
+import { useMarketStore } from '@/stores';
 import { useQuery } from '@tanstack/react-query';
+import { useProvider } from './useProvider';
 
-export const useCollateralConfigurations = (marketContract: MarketAbi) => {
-  const fetchCollateralConfigurations = async () => {
-    const result = await marketContract.functions
-      .get_collateral_configurations()
-      .get();
-    if (!result || !result.value)
-      throw new Error('Failed to fetch collateral configurations');
-
-    return result.value.reduce((acc, res, index) => {
-      if (res == null) return acc;
-      // biome-ignore lint/performance/noAccumulatingSpread: <explanation>
-      return { ...acc, [res.asset_id]: res };
-    }, {}) as Record<string, CollateralConfigurationOutput>;
-  };
+export const useCollateralConfigurations = (marketParam?: string) => {
+  const provider = useProvider();
+  const { market: storeMarket } = useMarketStore();
+  const market = marketParam ?? storeMarket;
 
   return useQuery({
-    queryKey: ['collateralConfigurations'],
-    queryFn: fetchCollateralConfigurations,
+    queryKey: ['collateralConfigurations', market],
+    queryFn: async () => {
+      if (!provider) return null;
+
+      const marketContract = new Market(
+        appConfig.markets[market].marketAddress,
+        provider
+      );
+
+      const { value: collateralConfigurations } = await marketContract.functions
+        .get_collateral_configurations()
+        .get();
+
+      const formattedConfigurations: Record<
+        string,
+        CollateralConfigurationOutput
+      > = {};
+
+      for (const config of collateralConfigurations) {
+        formattedConfigurations[config.asset_id.bits] = {
+          asset_id: config.asset_id,
+          paused: config.paused,
+          price_feed_id: config.price_feed_id,
+          decimals: config.decimals,
+          borrow_collateral_factor: config.borrow_collateral_factor,
+          liquidate_collateral_factor: config.liquidate_collateral_factor,
+          supply_cap: config.supply_cap,
+          liquidation_penalty: config.liquidation_penalty,
+        };
+      }
+
+      return formattedConfigurations;
+    },
+    refetchOnWindowFocus: false,
+    enabled: !!provider,
   });
 };

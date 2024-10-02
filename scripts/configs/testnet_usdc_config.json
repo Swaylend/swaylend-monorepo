@@ -1,0 +1,64 @@
+{
+  "is_active": true,
+  "supply_kink": 850000000000000000,
+  "borrow_kink": 850000000000000000,
+  "supply_per_second_interest_rate_slope_low": 1236681887,
+  "supply_per_second_interest_rate_slope_high": 114155251141,
+  "supply_per_second_interest_rate_base": 0,
+  "borrow_per_second_interest_rate_slope_low": 1046423135,
+  "borrow_per_second_interest_rate_slope_high": 126839167935,
+  "borrow_per_second_interest_rate_base": 475646879,
+  "store_front_price_factor": 600000000000000000,
+  "base_tracking_index_scale": 1000000000000000,
+  "base_tracking_supply_speed": 810185185185,
+  "base_tracking_borrow_speed": 821759259259,
+  "base_min_for_rewards": 1000000000,
+  "base_borrow_min": 10000000,
+  "target_reserves": 1000000000000,
+  "pyth_contract_id": "0xe31e04946c67fb41923f93d50ee7fc1c6c99d6e07c02860c6bea5f4a13919277",
+  "base_asset": {
+    "asset_id": "0x3aced3c270121c9d85e00fb14f079ecc666b733b12a0d15df1c2ecae26c1167a",
+    "price_feed_id": "0xeaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a",
+    "name": "USD Coin",
+    "symbol": "USDC",
+    "decimals": 6
+  },
+  "collateral_assets": [
+    {
+      "asset_id": "0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07",
+      "price_feed_id": "0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace",
+      "name": "Ethereum",
+      "symbol": "ETH",
+      "decimals": 9,
+      "borrow_collateral_factor": 800000000000000000,
+      "liquidate_collateral_factor": 850000000000000000,
+      "liquidation_penalty": 900000000000000000,
+      "supply_cap": 1000000000000,
+      "is_active": true
+    },
+    {
+      "asset_id": "0x506442d6926065fe53dd09870b7392dd46bfe39b761ab347b11cc2e1f8874250",
+      "price_feed_id": "0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43",
+      "name": "Bitcoin",
+      "symbol": "BTC",
+      "decimals": 8,
+      "borrow_collateral_factor": 700000000000000000,
+      "liquidate_collateral_factor": 770000000000000000,
+      "liquidation_penalty": 950000000000000000,
+      "supply_cap": 2000000000,
+      "is_active": true
+    },
+    {
+      "asset_id": "0xa95097d8fe21970639e543db9b7f590aa678f325bce3dbc12a682cdcbbfae378",
+      "price_feed_id": "0x78d185a741d07edb3412b09008b7c5cfb9bbbd7d568bf00ba737b456ba171501",
+      "name": "Uniswap",
+      "symbol": "UNI",
+      "decimals": 9,
+      "borrow_collateral_factor": 750000000000000000,
+      "liquidate_collateral_factor": 810000000000000000,
+      "liquidation_penalty": 930000000000000000,
+      "supply_cap": 400000000000000,
+      "is_active": true
+    }
+  ]
+}

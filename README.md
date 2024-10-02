@@ -34,16 +34,15 @@ At the first level, the monorepo is divided into `contracts` , `apps` , `scripts
 
 * [`abis`](/abis/): Contains ABI (Application Binary Interface) files, specifically for the market contract.
 * [`apps`](/apps/): Houses different applications related to the project:
-  + `frontend-v2`: A newer version of the frontend application.
-  + `indexer`: Application responsible for indexing blockchain data.
-  + `oracle`: Application related to the oracle service.
+  + `frontend`: Frontend interface for SwayLend.
+  + `indexer`: Envio indexer for the Market contract.
+  + `indexer-sentio`: Sentio indexer for the Market contract.
 * [`contracts`](/contracts/): Contains smart contracts for various functionalities:
   + `market`: The main market contract.
   + `pyth-mock`: Mock contract for Pyth oracle, used in tests.
   + `src-20`: SRC-20 contract, SLEND governance token.
   + `token`: Token contract, used in tests.
 * [`libs`](/libs/): Includes shared libraries used across the project:
-  + `i256`: Library for 256-bit integer operations.
   + `market_sdk`: Custom SDK for interacting with the market contract, used in tests.
   + `pyth_mock_sdk`: Custom SDK for the Pyth mock contract, used in tests.
   + `token_sdk`: Custom SDK for the token contract, used in tests.
@@ -61,7 +60,7 @@ There is a dedicated [DEPLOYMENTS.md](DEPLOYMENTS.md) for contracts. For the rel
 # Socials / Contact
 * Twitter/X: [@swaylend](https://x.com/swaylend)
 * Email: TBA
-* Discord: TBA
+* Discord: [SwayLend](https://discord.gg/m9VcnNG2)
 # Licensing
 
 The primary license for all SwayLend components is the MIT License. See [`LICENSE`](/LICENSE).

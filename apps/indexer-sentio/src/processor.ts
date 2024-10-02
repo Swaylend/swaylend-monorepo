@@ -133,12 +133,12 @@ const DEPLOYED_MARKETS: Record<
 > = {
   USDC: {
     marketAddress:
-      '0xd4a6a92bedda0c9ebd5c82805b7573795532411ebb1503f3adacb59714d7fd35',
+      '0x6ab51f60634e1414e83467482d802594bee7315b62999321ac20cb401af018b6',
     startBlock: BigInt(11380000),
   },
   USDT: {
     marketAddress:
-      '0x0239b371a4f817933c65907b078ff77064427a50752683cba78d143349cdf598',
+      '0xe1e6fb5fc0d08ebd559d00c0b059438e4ff71d956bff0aebfebe883ea3cfaa1d',
     startBlock: BigInt(11380000),
   },
 };
@@ -412,11 +412,11 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
           chainId: chainId,
           contractAddress: ctx.contractAddress,
           address: address,
-          principal: BigDecimal(value.toString()),
+          principal: value.abs(),
           isNegative: value.isNegative(),
         });
       } else {
-        userBasic.principal = BigDecimal(value.toString());
+        userBasic.principal = value.abs();
         userBasic.isNegative = value.isNegative();
       }
 
@@ -888,6 +888,9 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
           basePoolSnapshot.blockDate = START_TIME_FORMATED;
           basePoolSnapshot.availableAmount =
             totalSupplyBase.minus(totalBorrowBase);
+          basePoolSnapshot.availableAmountUsd = totalSupplyBase
+            .minus(totalBorrowBase)
+            .times(basePrice);
           basePoolSnapshot.borrowedAmount = totalBorrowBase;
           basePoolSnapshot.suppliedAmount = totalSupplyBase;
           basePoolSnapshot.supplyIndex =

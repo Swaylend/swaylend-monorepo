@@ -1,31 +1,32 @@
 {
   "compilerOptions": {
-    "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
     "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
+    "noEmit": true,
+    "esModuleInterop": true,
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
-    "jsx": "react-jsx",
-    "baseUrl": ".",
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
     "paths": {
-      "@src": ["src"],
-      "@src/*": ["src/*"],
-      "@components": ["src/components"],
-      "@components/*": ["src/components/*"],
-      "@stores": ["src/stores"],
-      "@stores/*": ["src/stores/*"],
-      "@screens": ["src/screens"],
-      "@screens/*": ["src/screens/*"]
+      "@/*": ["./src/*"]
     }
   },
-  "include": ["src"]
+  "include": [
+    "svgr.d.ts",
+    "next-env.d.ts",
+    ".next/types/**/*.ts",
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": ["node_modules"]
 }

@@ -1,22 +1,36 @@
-import type { MarketAbi } from '@src/contract-types';
-import BN from '@src/utils/BN';
+import { Market } from '@/contract-types';
+import { useMarketStore } from '@/stores';
+
+import { appConfig } from '@/configs';
 import { useQuery } from '@tanstack/react-query';
-import type { BigNumberish } from 'fuels';
+import BigNumber from 'bignumber.js';
+import { useProvider } from './useProvider';
 import { useUtilization } from './useUtilization';
 
-export const useBorrowRate = (marketContract: MarketAbi) => {
-  const { data: utilization } = useUtilization(marketContract);
+export const useBorrowRate = (marketParam?: string) => {
+  const provider = useProvider();
+  const { data: utilization } = useUtilization(marketParam);
+  const { market: storeMarket } = useMarketStore();
+  const market = marketParam ?? storeMarket;
 
-  const fetchBorrowRate = async (utilization: BN) => {
-    const { value } = await marketContract.functions
-      .get_borrow_rate(utilization as unknown as BigNumberish)
-      .get();
-    if (!value) throw new Error('Failed to fetch borrowRate');
-    return new BN(value.toString());
-  };
   return useQuery({
-    queryKey: ['borrowRate'],
-    queryFn: () => fetchBorrowRate(utilization as unknown as BN),
-    enabled: !!utilization,
+    queryKey: ['borrowRate', utilization?.toString(), market],
+    queryFn: async () => {
+      if (!provider || !utilization) return null;
+
+      const marketContract = new Market(
+        appConfig.markets[market].marketAddress,
+        provider
+      );
+
+      const { value } = await marketContract.functions
+        .get_borrow_rate(utilization)
+        .get();
+
+      if (!value) throw new Error('Failed to fetch borrowRate');
+      return new BigNumber(value.toString());
+    },
+    refetchOnWindowFocus: false,
+    enabled: !!utilization && !!provider,
   });
 };
