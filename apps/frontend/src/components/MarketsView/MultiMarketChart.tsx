@@ -61,14 +61,14 @@ export const MultiMarketChart = ({
           </div>
           <div className="flex justify-between gap-x-2 items-center mt-2">
             <div className="flex gap-x-2 items-center">
-              <div className="w-2 h-2 rounded-full bg-primary" />
+              <div className="w-2 h-2 rounded-full bg-purple" />
               <div className="text-white/60 text-xs font-normal">Earning</div>
             </div>
             <div>{getFormattedPrice(BigNumber(payload[0].value))}</div>
           </div>
           <div className="flex justify-between gap-x-2 items-center mt-2">
             <div className="flex gap-x-2 items-center">
-              <div className="w-2 h-2 rounded-full bg-purple" />
+              <div className="w-2 h-2 rounded-full bg-primary" />
               <div className="text-white/60 text-xs font-normal">Borrowing</div>
             </div>
             <div>{getFormattedPrice(BigNumber(payload[1].value))}</div>
@@ -200,19 +200,19 @@ export const MultiMarketChart = ({
             <Area
               dataKey="suppliedValueUsd"
               type="monotone"
-              fill="url(#color2)"
+              fill="url(#color1)"
               fillOpacity={0.4}
-              stroke="url(#color2)"
+              stroke="url(#color1)"
               strokeWidth={2}
               stackId="a"
             />
             <Area
               dataKey="borrowedValueUsd"
               type="monotone"
-              fill="url(#color1)"
+              fill="url(#color2)"
               fillOpacity={0.4}
               strokeWidth={2}
-              stroke="url(#color1)"
+              stroke="url(#color2)"
               stackId="b"
             />
             <Area

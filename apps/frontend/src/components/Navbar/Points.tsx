@@ -13,6 +13,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React, { useState } from 'react';
 import POINTS from '/public/icons/points-icon.svg?url';
+import { InfoIcon } from '../InfoIcon';
 import { Button } from '../ui/button';
 
 export const Points = () => {
@@ -34,8 +35,6 @@ export const Points = () => {
   //   }, 1000);
   // };
 
-  if (!isConnected) return null;
-
   return (
     <Popover>
       <PopoverTrigger>
@@ -45,6 +44,7 @@ export const Points = () => {
         <Image alt="points-icon" width={32} height={32} src={POINTS} />
       </PopoverTrigger>
       <PopoverContent
+        sideOffset={8}
         align="center"
         className="flex flex-col gap-y-2 items-center w-[258px] px-[24px]"
       >
@@ -59,9 +59,14 @@ export const Points = () => {
             Coming Soon
           </div>
         </div>
-        <div className="rounded-full text-primary mt-8">
-          Fuel Points:{' '}
-          <span className="text-lavender font-semibold">{fuelPoints}</span>
+        <div className="rounded-full flex flex-col items-center justify-center text-primary mt-8">
+          <div className="flex gap-x-1 items-center">
+            Fuel Points
+            <InfoIcon text="Points earned through the Fuel Points Program" />
+          </div>
+          <span className="text-lavender font-semibold">
+            {isConnected ? fuelPoints : 'Connect Wallet'}
+          </span>
         </div>
         {/* <Link href="/leaderboard" className="w-full mt-4">
           <Button className="w-full flex gap-x-2" variant="tertiary-card">
