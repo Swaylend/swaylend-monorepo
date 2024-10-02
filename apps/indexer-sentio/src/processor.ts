@@ -759,14 +759,14 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
         for (const userBasic of userBasics) {
           const basePositionSnapshotId = `${userBasic.chainId}_${userBasic.contractAddress}_${marketConfiguration.baseTokenAddress}_${userBasic.address}`;
 
-          const presentValue =
-            getPresentValue(
-              userBasic.principal,
-              userBasic.isNegative
-                ? marketBasic.baseBorrowIndex
-                : marketBasic.baseSupplyIndex
-            ) /
-            10n ** BigInt(marketConfiguration.baseTokenDecimals);
+          const presentValue = getPresentValue(
+            userBasic.principal,
+            userBasic.isNegative
+              ? marketBasic.baseBorrowIndex
+              : marketBasic.baseSupplyIndex
+          );
+          // /
+          // 10n ** BigInt(marketConfiguration.baseTokenDecimals);
 
           let basePositionSnapshot = await ctx.store.get(
             BasePositionSnapshot,
