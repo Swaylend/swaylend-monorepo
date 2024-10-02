@@ -12,6 +12,7 @@
     "codegen": "graphql-codegen"
   },
   "dependencies": {
+    "@clerk/nextjs": "^5.6.4",
     "@fuel-ts/contract": "^0.94.8",
     "@fuels/connectors": "^0.29.2",
     "@fuels/react": "^0.29.2",
