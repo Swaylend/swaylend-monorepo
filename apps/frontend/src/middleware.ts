@@ -1,3 +1,4 @@
+import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 import { type NextRequest, NextResponse } from 'next/server';
 
 const BLOCKED_COUNTRIES = [
@@ -23,11 +24,9 @@ const BLOCKED_COUNTRIES = [
   'ZW', // ZIMBABWE
 ];
 
-export function middleware(req: NextRequest) {
+function middleware(req: NextRequest) {
   const country = req.geo?.country;
 
-  // TODO: Maybe better to move this to Cloudflare WAF
-  // As Vercel cost will be too high for this
   if (
     req.nextUrl.pathname !== '/blocked' &&
     process.env.NODE_ENV !== 'development' &&
@@ -39,6 +38,19 @@ export function middleware(req: NextRequest) {
   return NextResponse.next();
 }
 
+// Add clerk protection to all routes
+const isPublicRoute = createRouteMatcher(['/sign-in(.*)']);
+
+export default clerkMiddleware((auth, request) => {
+  if (process.env.USE_AUTH === 'true') {
+    if (!isPublicRoute(request)) {
+      auth().protect();
+    }
+  }
+
+  return middleware(request);
+});
+
 export const config = {
   matcher: [
     /*
@@ -48,6 +60,11 @@ export const config = {
      * - _next/image (image optimization files)
      * - favicon.ico, sitemap.xml, robots.txt (metadata files)
      */
-    '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
+    // '/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)',
+
+    // Skip Next.js internals and all static files, unless found in search params
+    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
+    // Always run for API routes
+    '/(api|trpc)(.*)',
   ],
 };
