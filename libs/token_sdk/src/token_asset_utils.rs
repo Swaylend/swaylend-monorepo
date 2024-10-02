@@ -98,13 +98,28 @@ impl TokenAsset {
         amount: u64,
     ) -> Result<CallResponse<()>, fuels::types::errors::Error> {
         let symbol_hash = get_symbol_hash(&self.symbol);
-        self.instance
-            .methods()
-            .mint(recipient, Some(symbol_hash), amount)
-            .with_variable_output_policy(VariableOutputPolicy::Exactly(1))
-            .with_tx_policies(TxPolicies::default().with_tip(1))
-            .call()
-            .await
+
+        match recipient {
+            Identity::Address(_) => {
+                self.instance
+                    .methods()
+                    .mint(recipient, Some(symbol_hash), amount)
+                    .with_variable_output_policy(VariableOutputPolicy::Exactly(1))
+                    .with_tx_policies(TxPolicies::default().with_tip(1))
+                    .call()
+                    .await
+            }
+            Identity::ContractId(id) => {
+                self.instance
+                    .methods()
+                    .mint(recipient, Some(symbol_hash), amount)
+                    .with_variable_output_policy(VariableOutputPolicy::Exactly(1))
+                    .with_contract_ids(&[id.into()])
+                    .with_tx_policies(TxPolicies::default().with_tip(1))
+                    .call()
+                    .await
+            }
+        }
     }
 
     pub fn parse_units(&self, value: f64) -> f64 {

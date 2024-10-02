@@ -2,9 +2,9 @@ use clap::Parser;
 use dotenv::dotenv;
 use fuels::{
     accounts::{provider::Provider, wallet::WalletUnlocked},
-    types::{bech32::Bech32ContractId, AssetId, Bits256, ContractId},
+    types::{bech32::Bech32ContractId, AssetId, Bits256, ContractId, U256},
 };
-use market::{CollateralConfiguration, MarketConfiguration, MarketContract};
+use market::{CollateralConfiguration, MarketConfiguration, MarketContract, I256};
 use serde::Deserialize;
 use std::{io::Write, path::PathBuf, str::FromStr};
 
@@ -213,6 +213,18 @@ pub async fn get_market_instance(
     let target_contract_id = ContractId::from_str(&target_contract_id).unwrap();
 
     Ok((market_instance, target_contract_id.into()))
+}
+
+pub fn i256_indent() -> U256 {
+    U256::from_big_endian(
+        &hex::decode("8000000000000000000000000000000000000000000000000000000000000000").unwrap(),
+    )
+}
+
+pub fn convert_i256_to_u64(value: &I256) -> u64 {
+    let value = value.underlying - i256_indent();
+
+    u64::try_from(value).unwrap()
 }
 
 #[allow(dead_code)]
