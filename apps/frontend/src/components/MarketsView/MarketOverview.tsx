@@ -138,7 +138,7 @@ export default function MarketOverview({
       <div className="w-full mt-12 flex justify-between">
         <div className="w-[47%]">
           <div className="max-lg:hidden">
-            <div className="text-primary text-md font-semibold">
+            <div className="text-purple text-md font-semibold">
               Total Collateral
             </div>
             <div className="text-white font-bold text-[20px]">
@@ -150,7 +150,7 @@ export default function MarketOverview({
 
         <div className="w-[47%]">
           <div className="max-lg:hidden">
-            <div className="text-purple text-md font-semibold">
+            <div className="text-primary text-md font-semibold">
               Total Borrowing
             </div>
             <div className="text-white font-bold text-[20px]">
@@ -247,14 +247,14 @@ export default function MarketOverview({
           <CardContent>
             <div className="w-full flex justify-between pt-16 px-8">
               <div className="w-1/4 ">
-                <div className="text-purple text-lg font-semibold">
+                <div className="text-primary text-lg font-semibold">
                   Net Borrow APR
                 </div>
                 <div className="text-xl text-white font-semibold">
                   {borrowApr}
                 </div>
 
-                <div className="text-primary text-lg font-semibold mt-8">
+                <div className="text-purple text-lg font-semibold mt-8">
                   Net Earn APR
                 </div>
                 <div className="text-xl text-white font-semibold">

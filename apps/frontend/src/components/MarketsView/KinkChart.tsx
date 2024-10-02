@@ -141,14 +141,14 @@ export const KinkChart = ({
               <Line
                 type="monotone"
                 dataKey="borrowValue"
-                stroke="#8b5cf6"
+                stroke="#3FE8BD"
                 strokeWidth={2}
                 dot={false}
               />
               <Line
                 type="monotone"
                 dataKey="earn"
-                stroke="#3FE8BD"
+                stroke="#8b5cf6"
                 strokeWidth={2}
                 dot={false}
               />

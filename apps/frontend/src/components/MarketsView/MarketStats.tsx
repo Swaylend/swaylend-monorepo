@@ -37,8 +37,8 @@ export const MarketStats = ({
       <div className="flex items-end gap-x-16">
         <div>
           <div className="flex gap-x-2 items-center">
-            <div className="w-2 h-2 rounded-full bg-primary" />
-            <div className="text-sm font-semibold text-primary">Earning</div>
+            <div className="w-2 h-2 rounded-full bg-purple" />
+            <div className="text-sm font-semibold text-purple">Earning</div>
           </div>
           <div className="text-white font-bold text-xl">
             {getFormattedPrice(supplied)}
@@ -46,8 +46,8 @@ export const MarketStats = ({
         </div>
         <div>
           <div className="flex gap-x-2 items-center">
-            <div className="w-2 h-2 rounded-full bg-purple" />
-            <div className="text-sm font-semibold text-purple">Borrowing </div>
+            <div className="w-2 h-2 rounded-full bg-primary" />
+            <div className="text-sm font-semibold text-primary">Borrowing </div>
           </div>
           <div className="text-white font-bold text-xl">
             {getFormattedPrice(borrowed)}

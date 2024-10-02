@@ -24,7 +24,7 @@ import {
 } from '@/hooks';
 import { cn } from '@/lib/utils';
 import { ACTION_TYPE, useMarketStore } from '@/stores';
-import { formatUnits, getFormattedNumber } from '@/utils';
+import { formatUnits, getFormattedNumber, getFormattedPrice } from '@/utils';
 import { useAccount, useIsConnected } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import BigNumber from 'bignumber.js';
@@ -140,9 +140,9 @@ export const InputDialog = () => {
 
     if (action === 'REPAY') {
       return formatUnits(
-        BigNumber(balance.toString()),
+        userSupplyBorrow.borrowed,
         marketConfiguration.baseTokenDecimals
-      );
+      ).times(priceData?.prices[marketConfiguration.baseToken.bits] ?? 1);
     }
     if (action === 'SUPPLY') {
       if (actionTokenAssetId === marketConfiguration.baseToken.bits) {
@@ -538,10 +538,14 @@ export const InputDialog = () => {
               </div>
               <div className="flex mt-2 justify-between items-center w-full">
                 <div className="text-moon text-sm">
-                  {getFormattedNumber(finalBalance)}
-                  {action === ACTION_TYPE.BORROW
-                    ? ' available to borrow'
-                    : ' available'}
+                  {action === ACTION_TYPE.REPAY
+                    ? getFormattedPrice(finalBalance)
+                    : getFormattedNumber(finalBalance)}
+                  {action === ACTION_TYPE.BORROW && ' available to borrow'}
+                  {action === ACTION_TYPE.REPAY && ' debt to repay'}
+                  {(action === ACTION_TYPE.SUPPLY ||
+                    action === ACTION_TYPE.WITHDRAW) &&
+                    ' available'}
                 </div>
                 <Button
                   disabled={!finalBalance || finalBalance.eq(0)}

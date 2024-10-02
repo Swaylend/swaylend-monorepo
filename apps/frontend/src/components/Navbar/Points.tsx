@@ -14,6 +14,7 @@ import Link from 'next/link';
 import React, { useState } from 'react';
 import POINTS from '/public/icons/points-icon.svg?url';
 import { Button } from '../ui/button';
+import { InfoIcon } from '../InfoIcon';
 
 export const Points = () => {
   // const { setOpen } = useReferralModalStore();
@@ -59,8 +60,11 @@ export const Points = () => {
             Coming Soon
           </div>
         </div>
-        <div className="rounded-full text-primary mt-8">
-          Fuel Points:{' '}
+        <div className="rounded-full flex gap-x-2 items-center text-primary mt-8">
+          <span className="flex gap-x-1 items-center">
+            Fuel Points
+            <InfoIcon text="Points earned through the Fuel Points Program" />:
+          </span>
           <span className="text-lavender font-semibold">{fuelPoints}</span>
         </div>
         {/* <Link href="/leaderboard" className="w-full mt-4">

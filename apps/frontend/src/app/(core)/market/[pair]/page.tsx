@@ -31,14 +31,14 @@ export default async function Page({ params }: { params: { pair: string } }) {
           <MarketChart
             chartData={chartData?.singleMarketData[baseAsset]}
             dataKey="collateralValueUsd"
-            color="#3FE8BD"
+            color="#8B5CF6"
           />
         }
         marketChartBorrow={
           <MarketChart
             chartData={chartData?.singleMarketData[baseAsset]}
             dataKey="borrowedValueUsd"
-            color="#8B5CF6"
+            color="#3FE8BD"
           />
         }
       />
