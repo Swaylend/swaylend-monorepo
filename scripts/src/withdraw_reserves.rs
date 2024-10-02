@@ -108,6 +108,14 @@ async fn main() -> anyhow::Result<()> {
         )
     );
 
+    println!(
+        "Recipient is the following identity: {:?}",
+        match recipient {
+            Identity::Address(addr) => format!("address:{}", addr),
+            Identity::ContractId(id) => format!("contract:{}", id),
+        }
+    );
+
     if !get_yes_no_input("Do you really want to withdraw reserves? (yes/no): ") {
         return Ok(());
     }
