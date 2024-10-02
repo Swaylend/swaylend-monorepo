@@ -15,6 +15,8 @@ Before we begin, you need to do a few things:
 
 Below, we have all the necessary scripts for operations on the mainnet. If you're testing on testnet/devnet, make sure to check the testnet scripts in the end as well.
 
+**Note:** In some scripts you need to enter blockchain address or contract id. Please, double check you use correct prefix (i.e., address or contract). If you select wrong prefix, funds can be lost! It is suggested that you try with smaller amounts first.
+
 ### Deploy market contract with proxy
 
 Market contract is deploy with the proxy (proxy contract + loader contract with 2 blobs because market contract is bigger than 100 KB). The owner of the proxy contract is the deployer. You have to run this command in the CLI.
@@ -63,11 +65,15 @@ TODO
 
 ### Withdraw reserves
 
-TODO
+This script will withdraw reserves.
+
+```bash
+cargo run --bin withdraw_reserves -- --amount 100000000 --recipient address:0x2968d3dd71d8b517fdb57e837c419c58f7404744fb51c16e0e0a2dc18892b1f8
+```
 
 ### Testnet: deploy tokens contract
 
-This script will deploy customm tokens contract.
+This script will deploy custom tokens contract.
 
 ```bash
 cargo run --bin deploy_tokens
@@ -83,8 +89,8 @@ cargo run --bin deploy_pyth
 
 ### Testnet: mint tokens
 
-This script will mint tokens provided in the config file (base asset and collateral assets).
+This script will mint tokens provided in the config file (base asset and collateral assets). For recipient, use `address` or `contract` prefix (depends to whom you want to mint tokens).
 
 ```bash
-cargo run --bin mint_tokens -- --config-path ./configs/testnet_usdc_config.json --token-contract-id 0xa6447a4d4a1588a6a97f440af5ece9551fc16d41c3f6360a45affe24eaaf9c06 --recipient 0x2968d3dd71d8b517fdb57e837c419c58f7404744fb51c16e0e0a2dc18892b1f8 --amount 100000
+cargo run --bin mint_tokens -- --config-path ./configs/testnet_usdc_config.json --token-contract-id 0xb55fa4f5c9d10d64b272b046e133eac9beab496587e0ed02d5620a69b77b9028 --recipient contract:0x0e5e4311f2ab9bd5dc6ac5d39a363b1488eed59e178367d1702126948951245f --amount 10000000000
 ```

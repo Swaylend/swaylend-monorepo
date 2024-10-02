@@ -13,6 +13,10 @@ name = "update_collateral_assets"
 path = "src/update_collateral_assets.rs"
 
 [[bin]]
+name = "withdraw_reserves"
+path = "src/withdraw_reserves.rs"
+
+[[bin]]
 name = "deploy_tokens"
 path = "src/deploy_tokens.rs"
 
@@ -35,6 +39,7 @@ dotenv = { workspace = true }
 rand = { workspace = true }
 chrono = { workspace = true }
 tai64 = { workspace = true }
+hex = { workspace = true }
 
 market = { workspace = true }
 
