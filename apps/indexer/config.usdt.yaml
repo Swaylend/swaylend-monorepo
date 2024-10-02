@@ -1,27 +1,27 @@
 name: SwayLend USDT Market
 ecosystem: fuel
 networks:
-        - id: 0
-          start_block: 11380000
-          contracts:
-                  - name: Market
-                    address: 0xe1e6fb5fc0d08ebd559d00c0b059438e4ff71d956bff0aebfebe883ea3cfaa1d
-                    abi_file_path: ./abi/market-abi.json
-                    handler: ./src/EventHandlers.ts
-                    events:
-                            - name: CollateralAssetAdded
-                            - name: CollateralAssetUpdated
-                            - name: CollateralAssetPaused
-                            - name: CollateralAssetResumed
-                            - name: UserBasicEvent
-                            - name: MarketBasicEvent
-                            - name: UserSupplyCollateralEvent
-                            - name: UserWithdrawCollateralEvent
-                            - name: UserSupplyBaseEvent
-                            - name: UserWithdrawBaseEvent
-                            - name: AbsorbCollateralEvent
-                            - name: UserLiquidatedEvent
-                            - name: BuyCollateralEvent
-                            - name: ReservesWithdrawnEvent
-                            - name: PauseConfigurationEvent
-                            - name: MarketConfigurationEvent
+  - id: 0
+    start_block: 11380000
+    contracts:
+      - name: Market
+        address: 0xe1e6fb5fc0d08ebd559d00c0b059438e4ff71d956bff0aebfebe883ea3cfaa1d
+        abi_file_path: ./abi/market-abi.json
+        handler: ./src/EventHandlers.ts
+        events:
+          - name: CollateralAssetAdded
+          - name: CollateralAssetUpdated
+          - name: CollateralAssetPaused
+          - name: CollateralAssetResumed
+          - name: UserBasicEvent
+          - name: MarketBasicEvent
+          - name: UserSupplyCollateralEvent
+          - name: UserWithdrawCollateralEvent
+          - name: UserSupplyBaseEvent
+          - name: UserWithdrawBaseEvent
+          - name: AbsorbCollateralEvent
+          - name: UserLiquidatedEvent
+          - name: BuyCollateralEvent
+          - name: ReservesWithdrawnEvent
+          - name: PauseConfigurationEvent
+          - name: MarketConfigurationEvent

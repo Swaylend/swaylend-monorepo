@@ -27,7 +27,7 @@ importers:
         version: 1.8.3
       '@types/chai':
         specifier: ^4.3.11
-        version: 4.3.19
+        version: 4.3.20
       '@types/mocha':
         specifier: 10.0.6
         version: 10.0.6
@@ -279,6 +279,10 @@ packages:
     resolution: {integrity: sha512-wR+ZGUT1Jjj7LifmvHfBIAIZRwjXUYddwT6SDptBglDQkJGlMwEHv8xh76FU0W764NwWGRqoX2TeZKIdu4fD/w==}
     engines: {node: ^18.20.3 || ^20.0.0 || ^22.0.0}
 
+  '@fuel-ts/interfaces@0.94.8':
+    resolution: {integrity: sha512-gSkp6cp0g+vYK7yzoBwvW7x43AzJL6EoPE7HTHoJWUMbLPWhgqOGJtWoNnobGRO1Pxl0etmBLaVyZmrhJdVQqQ==}
+    engines: {node: ^18.20.3 || ^20.0.0 || ^22.0.0}
+
   '@fuel-ts/math@0.94.6':
     resolution: {integrity: sha512-VIgVv3Qdy4wjuR7ehlvOz+fo6WZPuoWLnACBu4xeMEwUrSZRJrDGBSG3FKBcJOBwIX9olbWseCNTccRWcLinMQ==}
     engines: {node: ^18.20.3 || ^20.0.0 || ^22.0.0}
@@ -360,8 +364,8 @@ packages:
   '@types/bn.js@5.1.6':
     resolution: {integrity: sha512-Xh8vSwUeMKeYYrj3cX4lGQgFSF/N03r+tv4AiLl1SucqV+uTQpxRcnM8AkXKHwYP9ZPXOYXRr2KPXpVlIvqh9w==}
 
-  '@types/chai@4.3.19':
-    resolution: {integrity: sha512-2hHHvQBVE2FiSK4eN0Br6snX9MtolHaTo/batnLjlGRhoQzlCL61iVpxoqO7SfFyOw+P/pwv+0zNHzKoGWz9Cw==}
+  '@types/chai@4.3.20':
+    resolution: {integrity: sha512-/pC9HAB5I/xMlc5FP77qjCnI16ChlJfW0tGa0IUcFn38VJrTV6DeZ60NU5KZBtaOZqjdpwTWohz5HU1RrhiYxQ==}
 
   '@types/json5@0.0.29':
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
@@ -1708,11 +1712,13 @@ snapshots:
   '@fuel-ts/hasher@0.94.6':
     dependencies:
       '@fuel-ts/crypto': 0.94.6
-      '@fuel-ts/interfaces': 0.94.6
+      '@fuel-ts/interfaces': 0.94.8
       '@fuel-ts/utils': 0.94.6
       '@noble/hashes': 1.5.0
 
   '@fuel-ts/interfaces@0.94.6': {}
+
+  '@fuel-ts/interfaces@0.94.8': {}
 
   '@fuel-ts/math@0.94.6':
     dependencies:
@@ -1792,7 +1798,7 @@ snapshots:
     dependencies:
       '@types/node': 20.8.8
 
-  '@types/chai@4.3.19': {}
+  '@types/chai@4.3.20': {}
 
   '@types/json5@0.0.29':
     optional: true
