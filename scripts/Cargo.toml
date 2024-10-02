@@ -13,6 +13,14 @@ name = "update_collateral_assets"
 path = "src/update_collateral_assets.rs"
 
 [[bin]]
+name = "change_proxy_owner"
+path = "src/change_proxy_owner.rs"
+
+[[bin]]
+name = "change_market_owner"
+path = "src/change_market_owner.rs"
+
+[[bin]]
 name = "deploy_tokens"
 path = "src/deploy_tokens.rs"
 

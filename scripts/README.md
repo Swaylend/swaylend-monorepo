@@ -51,11 +51,19 @@ TODO
 
 ### Change proxy owner
 
-TODO
+This script will change proxy owner.
+
+```bash
+cargo run --bin change_proxy_owner -- --new-owner contract:0x546403add23accc66d96e853245db1398fb8d0ffbea184395f04ae3d26fd516f
+```
 
 ### Change market owner
 
-TODO
+This script will change market owner.
+
+```bash
+cargo run --bin change_market_owner -- --new-owner address:0x2968d3dd71d8b517fdb57e837c419c58f7404744fb51c16e0e0a2dc18892b1f8
+```
 
 ### Update market configuration
 
