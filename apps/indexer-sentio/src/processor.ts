@@ -133,12 +133,12 @@ const DEPLOYED_MARKETS: Record<
 > = {
   USDC: {
     marketAddress:
-      '0x8cd7937a7688b8856eb480cea41b9a04ef931cfd9fb7d1172e158be653b41577',
+      '0x6ab51f60634e1414e83467482d802594bee7315b62999321ac20cb401af018b6',
     startBlock: BigInt(11380000),
   },
   USDT: {
     marketAddress:
-      '0xf75a4aa3a36e2031cdbf6528b109b8daa414eb8b36960c34e32a0e970b89dcd6',
+      '0xe1e6fb5fc0d08ebd559d00c0b059438e4ff71d956bff0aebfebe883ea3cfaa1d',
     startBlock: BigInt(11380000),
   },
 };
@@ -888,6 +888,9 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
           basePoolSnapshot.blockDate = START_TIME_FORMATED;
           basePoolSnapshot.availableAmount =
             totalSupplyBase.minus(totalBorrowBase);
+          basePoolSnapshot.availableAmountUsd = totalSupplyBase
+            .minus(totalBorrowBase)
+            .times(basePrice);
           basePoolSnapshot.borrowedAmount = totalBorrowBase;
           basePoolSnapshot.suppliedAmount = totalSupplyBase;
           basePoolSnapshot.supplyIndex =

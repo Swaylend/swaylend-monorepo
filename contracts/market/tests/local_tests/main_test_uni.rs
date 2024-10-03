@@ -300,7 +300,7 @@ async fn main_test() {
 
     print_case_title(6, "Admin", "Drop of collateral price", "-10%");
     let res = oracle.price(uni.price_feed_id).await.unwrap().value;
-    let new_price = (res.price as f64 * 0.9) as u64;
+    let new_price = (res.price as f64 * 0.7) as u64;
     let prices = Vec::from([(
         uni.price_feed_id,
         (
@@ -394,7 +394,11 @@ async fn main_test() {
     assert!(!is_i256_negative(&reserves));
 
     let amount = market
-        .collateral_value_to_sell(&[&oracle.instance], uni.asset_id, convert_i256_to_u64(&reserves))
+        .collateral_value_to_sell(
+            &[&oracle.instance],
+            uni.asset_id,
+            convert_i256_to_u64(&reserves),
+        )
         .await
         .unwrap()
         .value;

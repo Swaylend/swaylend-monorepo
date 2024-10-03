@@ -48,8 +48,8 @@ pub fn get_market_config(
     base_token_decimals: u32,
     base_token_price_feed_id: Bits256,
 ) -> anyhow::Result<MarketConfiguration> {
-    let config_json_path =
-        PathBuf::from(env!("CARGO_WORKSPACE_DIR")).join("contracts/market/tests/config.json");
+    let config_json_path = PathBuf::from(env!("CARGO_WORKSPACE_DIR"))
+        .join("contracts/market/tests/market-config.json");
     let config_json_str = std::fs::read_to_string(config_json_path)?;
     let config: MarketConfig = serde_json::from_str(&config_json_str)?;
 

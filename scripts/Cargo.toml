@@ -16,6 +16,22 @@ path = "src/update_collateral_assets.rs"
 name = "update_market"
 path = "src/update_market.rs"
 
+[[bin]]
+name = "withdraw_reserves"
+path = "src/withdraw_reserves.rs"
+
+[[bin]]
+name = "deploy_tokens"
+path = "src/deploy_tokens.rs"
+
+[[bin]]
+name = "mint_tokens"
+path = "src/mint_tokens.rs"
+
+[[bin]]
+name = "deploy_pyth"
+path = "src/deploy_pyth.rs"
+
 [dependencies]
 fuels = { workspace = true }
 clap = { workspace = true }
@@ -27,9 +43,9 @@ dotenv = { workspace = true }
 rand = { workspace = true }
 chrono = { workspace = true }
 tai64 = { workspace = true }
+hex = { workspace = true }
 
 market = { workspace = true }
 
 token_sdk = { workspace = true }
 pyth_mock_sdk = { workspace = true }
-pyth_sdk = { workspace = true }
