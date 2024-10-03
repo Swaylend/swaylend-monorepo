@@ -44,6 +44,7 @@ export const Points = () => {
         <Image alt="points-icon" width={40} height={40} src={POINTS} />
       </PopoverTrigger>
       <PopoverContent
+        onOpenAutoFocus={(e) => e.preventDefault()}
         sideOffset={8}
         align="center"
         className="flex flex-col gap-y-2 items-center w-[258px] px-[24px]"
