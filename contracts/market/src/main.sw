@@ -487,7 +487,7 @@ impl Market for Contract {
     /// This function allows users to supply base assets to the market, updating their balance and the market's total supply.
     ///
     /// # Arguments
-    /// This function does not take any parameters directly, as it uses the message context to retrieve the amount and asset ID.
+    /// This function does not take any Arguments directly, as it uses the message context to retrieve the amount and asset ID.
     ///
     /// # Reverts
     /// * When the supply is paused.
@@ -1417,7 +1417,7 @@ fn timestamp() -> u64 {
 
 /// Calculates the present value based on the given base supply index and principal value.
 ///
-/// # Parameters
+/// # Arguments
 /// * `base_supply_index`: [u256] - The base supply index.
 /// * `principal`: [u256] - The principal value.
 ///
@@ -1434,7 +1434,7 @@ pub fn present_value_supply(base_supply_index: u256, principal: u256) -> u256 {
 
 /// Calculates the present value based on the given base borrow index and principal value.
 ///
-/// # Parameters
+/// # Arguments
 /// * `base_borrow_index`: [u256] - The base borrow index.
 /// * `principal`: [u256] - The principal value.
 ///
@@ -1451,7 +1451,7 @@ pub fn present_value_borrow(base_borrow_index: u256, principal: u256) -> u256 {
 
 /// Calculates the principal value based on the given base supply index and present value.
 ///
-/// # Parameters
+/// # Arguments
 /// * `base_supply_index`: [u256] - The base supply index.
 /// * `present`: [u256] - The present value.
 ///
@@ -1468,7 +1468,7 @@ pub fn principal_value_supply(base_supply_index: u256, present: u256) -> u256 {
 
 /// Calculates the principal value based on the given base borrow index and present value.
 ///
-/// # Parameters
+/// # Arguments
 /// * `base_borrow_index`: [u256] - The base borrow index.
 /// * `present`: [u256] - The present value.
 ///
@@ -1485,7 +1485,7 @@ pub fn principal_value_borrow(base_borrow_index: u256, present: u256) -> u256 {
 
 /// Calculates the present value based on the provided principal.
 ///
-/// # Parameters
+/// # Arguments
 /// * `principal`: [I256] - The principal value (can be positive or negative).
 ///
 /// # Returns
@@ -1522,7 +1522,7 @@ fn present_value(principal: I256) -> I256 {
 /// It determines whether the present value is positive or negative to calculate
 /// the corresponding principal value from either supply or borrow.
 ///
-/// # Parameters
+/// # Arguments
 /// * `present_value`: [I256] - The present value (can be positive or negative).
 ///
 /// # Returns
@@ -1846,12 +1846,12 @@ fn get_reserves_internal() -> I256 {
 /// It updates the market's supply and borrow indices based on the elapsed time since the last accrual,
 /// and adjusts the tracking indices for reward calculations.
 ///
+/// # Reverts
+/// * The function assumes all calculations succeed without explicitly handling errors.
+///
 /// # Number of Storage Accesses
 /// * Reads: `3` (Reads market basic, market configuration, and base token decimals.)
 /// * Writes: `1` (Writes updated market basic data back to storage.)
-///
-/// # Reverts
-/// * The function assumes all calculations succeed without explicitly handling errors.
 #[storage(write)]
 fn accrue_internal() {
     let mut market_basic = storage.market_basic.read();
