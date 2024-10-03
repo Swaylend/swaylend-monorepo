@@ -4,7 +4,7 @@ use clap::Parser;
 use fuels::{
     accounts::{provider::Provider, wallet::WalletUnlocked},
     crypto::SecretKey,
-    types::{Address, ContractId},
+    types::{Address, ContractId, Identity},
 };
 use std::str::FromStr;
 use token_sdk::{get_symbol_hash, TokenAsset, TokenContract};
@@ -42,8 +42,17 @@ async fn main() -> anyhow::Result<()> {
     let secret = SecretKey::from_str(&args.args.signing_key).unwrap();
     let wallet = WalletUnlocked::new_from_private_key(secret, Some(provider.clone()));
 
-    let recipient: Address = if let Some(recipient) = args.recipient.clone() {
-        Address::from_str(&recipient).unwrap()
+    let recipient: Identity = if let Some(recipient) = args.recipient.clone() {
+        let mut parts = recipient.split(":");
+
+        let identity_type = parts.next().unwrap_or("");
+        let val = parts.next().unwrap_or("");
+
+        match identity_type {
+            "contract" => ContractId::from_str(val).unwrap().into(),
+            "address" => Address::from_str(val).unwrap().into(),
+            _ => panic!("Wrong identity type!"),
+        }
     } else {
         wallet.address().into()
     };
@@ -83,14 +92,20 @@ async fn main() -> anyhow::Result<()> {
 
     for asset in assets.iter() {
         println!("{}: 0x{}", asset.symbol, asset.asset_id);
-        asset.mint(recipient.into(), args.amount).await.unwrap();
-        println!("Minted {} tokens to 0x{}", args.amount, recipient);
+        asset.mint(recipient, args.amount).await.unwrap();
+        println!("Minted {} tokens to {:?}", args.amount, args.recipient);
         println!(
             "Balance: {}",
-            provider
-                .get_asset_balance(&recipient.into(), asset.asset_id)
-                .await
-                .unwrap()
+            match recipient {
+                Identity::Address(addr) => provider
+                    .get_asset_balance(&addr.into(), asset.asset_id)
+                    .await
+                    .unwrap(),
+                Identity::ContractId(id) => provider
+                    .get_contract_asset_balance(&id.into(), asset.asset_id)
+                    .await
+                    .unwrap(),
+            }
         );
     }
 

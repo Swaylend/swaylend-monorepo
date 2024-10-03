@@ -8,18 +8,19 @@
     "codegen": "envio codegen",
     "dev": "envio dev",
     "test": "ts-mocha test/**/*.spec.ts",
-    "start": "tsx generated/src/Index.bs.js"
+    "start": "ts-node generated/src/Index.bs.js"
   },
   "dependencies": {
     "chai": "4.3.10",
-    "ethers": "6.8.0"
+    "ethers": "6.8.0",
+    "ts-node": "^10.9.2"
   },
   "devDependencies": {
     "@biomejs/biome": "1.8.3",
     "@types/chai": "^4.3.11",
     "@types/mocha": "10.0.6",
     "@types/node": "20.8.8",
-    "envio": "2.3.2",
+    "envio": "2.4.1",
     "mocha": "10.2.0",
     "ts-mocha": "^10.0.0",
     "typescript": "5.2.2"

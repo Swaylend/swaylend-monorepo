@@ -21,6 +21,14 @@ name = "change_market_owner"
 path = "src/change_market_owner.rs"
 
 [[bin]]
+name = "update_market"
+path = "src/update_market.rs"
+
+[[bin]]
+name = "withdraw_reserves"
+path = "src/withdraw_reserves.rs"
+
+[[bin]]
 name = "deploy_tokens"
 path = "src/deploy_tokens.rs"
 
@@ -43,6 +51,7 @@ dotenv = { workspace = true }
 rand = { workspace = true }
 chrono = { workspace = true }
 tai64 = { workspace = true }
+hex = { workspace = true }
 
 market = { workspace = true }
 

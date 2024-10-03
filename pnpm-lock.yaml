@@ -192,6 +192,9 @@ importers:
       ethers:
         specifier: 6.8.0
         version: 6.8.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      ts-node:
+        specifier: ^10.9.2
+        version: 10.9.2(@types/node@20.8.8)(typescript@5.2.2)
     optionalDependencies:
       generated:
         specifier: ./generated
@@ -210,8 +213,8 @@ importers:
         specifier: 20.8.8
         version: 20.8.8
       envio:
-        specifier: 2.3.2
-        version: 2.3.2
+        specifier: 2.4.1
+        version: 2.4.1
       mocha:
         specifier: 10.2.0
         version: 10.2.0
@@ -5396,28 +5399,28 @@ packages:
     engines: {node: '>=4'}
     hasBin: true
 
-  envio-darwin-arm64@2.3.2:
-    resolution: {integrity: sha512-CmyG796jrfnvMx/p/JrS6HiqPjyXR8sPmo8TKMSpuEFsM30r0iSRM1+2AJw1+w/3uyfgP/E6GsHPZyD55tsBRg==}
+  envio-darwin-arm64@2.4.1:
+    resolution: {integrity: sha512-uwwKhThFH9dZhQKd6kmleeTyl//GlJGvhFXuhuJ7xn93oGbOOy3hsoYfJZSbVmb0SSSJkgWdAKN82mYHNfdVwQ==}
     cpu: [arm64]
     os: [darwin]
 
-  envio-darwin-x64@2.3.2:
-    resolution: {integrity: sha512-cYgOSgY6qUPV733oORmEQk12nEShaz2E2Js72L3mh3djGrZmTQaIb0whl9uIptYO8B4vmpRPM9j1ox4eoihydA==}
+  envio-darwin-x64@2.4.1:
+    resolution: {integrity: sha512-SKqI2hQmjmqlDYCwFaEK6TDJMLL/UE/wWlUIzsAY5drJQTwAL0mBXzUfQM8JbMgDoxeWyKNegUV1vCuTmCDREw==}
     cpu: [x64]
     os: [darwin]
 
-  envio-linux-arm64@2.3.2:
-    resolution: {integrity: sha512-PAgWkP1AVdfBFt1NCH1gsnRAqev2nNjJZhh1zaNJikUOMjBsj1qQDXSgvnji7DyoqbjCPldQTxGBWP9CRTPqOQ==}
+  envio-linux-arm64@2.4.1:
+    resolution: {integrity: sha512-ujUUifyKM4kHkHfcudeH8iIf5xPiW9t+IzMCgY4gug2fs3Z3biyhmeaylYNpvNiIoQ58vZqJ23fBKaUn7CPPog==}
     cpu: [arm64]
     os: [linux]
 
-  envio-linux-x64@2.3.2:
-    resolution: {integrity: sha512-oadisYezSR+MOjsQ1hWl3jGNy2vU7EvtX3UBMuU5yx9qnJj+APx8eSo3EZKjUbhRwodBIPg+P667S/UvmvXoFQ==}
+  envio-linux-x64@2.4.1:
+    resolution: {integrity: sha512-aeVQ9I4zum6X+kBeJrFev/bTDePZRSlt6HytcnqJd7+iWagQggUejhcrSccp2eRSeQ95sGp+F+lQOFfWJHyEJQ==}
     cpu: [x64]
     os: [linux]
 
-  envio@2.3.2:
-    resolution: {integrity: sha512-WI9JEZyHri/xx2E0Rdu5PNXioWZiNIncT3ukYMxS2kbUgb1qLBMSPDb5Ffrsb7j1yaI9vVuYciEalxrRv7k7vg==}
+  envio@2.4.1:
+    resolution: {integrity: sha512-GsHv4S/mAzr//XCyTHFBnfd1CZFlfaG+wcWJkpeguzhnttNSOMJXCR4UPG0PxV2cZYiA3eVrOSPn58fTzk2G5g==}
     hasBin: true
 
   err-code@3.0.1:
@@ -16939,24 +16942,24 @@ snapshots:
 
   envinfo@7.14.0: {}
 
-  envio-darwin-arm64@2.3.2:
+  envio-darwin-arm64@2.4.1:
     optional: true
 
-  envio-darwin-x64@2.3.2:
+  envio-darwin-x64@2.4.1:
     optional: true
 
-  envio-linux-arm64@2.3.2:
+  envio-linux-arm64@2.4.1:
     optional: true
 
-  envio-linux-x64@2.3.2:
+  envio-linux-x64@2.4.1:
     optional: true
 
-  envio@2.3.2:
+  envio@2.4.1:
     optionalDependencies:
-      envio-darwin-arm64: 2.3.2
-      envio-darwin-x64: 2.3.2
-      envio-linux-arm64: 2.3.2
-      envio-linux-x64: 2.3.2
+      envio-darwin-arm64: 2.4.1
+      envio-darwin-x64: 2.4.1
+      envio-linux-arm64: 2.4.1
+      envio-linux-x64: 2.4.1
 
   err-code@3.0.1: {}
 
@@ -21186,6 +21189,24 @@ snapshots:
       ts-node: 7.0.1
     optionalDependencies:
       tsconfig-paths: 3.15.0
+
+  ts-node@10.9.2(@types/node@20.8.8)(typescript@5.2.2):
+    dependencies:
+      '@cspotcode/source-map-support': 0.8.1
+      '@tsconfig/node10': 1.0.11
+      '@tsconfig/node12': 1.0.11
+      '@tsconfig/node14': 1.0.3
+      '@tsconfig/node16': 1.0.4
+      '@types/node': 20.8.8
+      acorn: 8.12.1
+      acorn-walk: 8.3.4
+      arg: 4.1.3
+      create-require: 1.1.1
+      diff: 4.0.2
+      make-error: 1.3.6
+      typescript: 5.2.2
+      v8-compile-cache-lib: 3.0.1
+      yn: 3.1.1
 
   ts-node@10.9.2(@types/node@22.7.4)(typescript@5.6.2):
     dependencies:

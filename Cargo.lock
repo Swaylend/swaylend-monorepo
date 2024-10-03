@@ -6035,6 +6035,7 @@ dependencies = [
  "clap",
  "dotenv",
  "fuels",
+ "hex",
  "market",
  "pyth_mock_sdk",
  "rand",

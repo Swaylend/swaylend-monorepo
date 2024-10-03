@@ -105,6 +105,9 @@ abi Market {
     #[storage(write)]
     fn pause(config: PauseConfiguration);
 
+    #[storage(read)]
+    fn get_pause_configuration() -> PauseConfiguration;
+
     // # 9. Getters
     #[storage(read)]
     fn get_market_configuration() -> MarketConfiguration;
@@ -136,6 +139,9 @@ abi Market {
     // ## 10. Pyth calls
     #[storage(write)]
     fn set_pyth_contract_id(contract_id: ContractId);
+
+    #[storage(read)]
+    fn get_pyth_contract_id() -> ContractId;
     
     #[storage(read)]
     fn get_price(price_feed_id: PriceFeedId) -> Price;
