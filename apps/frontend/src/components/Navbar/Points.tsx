@@ -41,7 +41,7 @@ export const Points = () => {
         {/* <div className="text-yellow-400 sm:px-3 sm:py-1.5 max-sm:p-1 flex items-center gap-x-1 rounded-full border-[3px] border-yellow-400">
           <span className="max-sm:hidden">Coming Soon</span>
           </div> */}
-        <Image alt="points-icon" width={32} height={32} src={POINTS} />
+        <Image alt="points-icon" width={40} height={40} src={POINTS} />
       </PopoverTrigger>
       <PopoverContent
         sideOffset={8}
