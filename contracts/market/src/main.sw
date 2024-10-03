@@ -487,7 +487,7 @@ impl Market for Contract {
     /// This function allows users to supply base assets to the market, updating their balance and the market's total supply.
     ///
     /// # Arguments
-    /// This function does not take any Arguments directly, as it uses the message context to retrieve the amount and asset ID.
+    /// This function does not take any parameters directly, as it uses the message context to retrieve the amount and asset ID.
     ///
     /// # Reverts
     /// * When the supply is paused.
