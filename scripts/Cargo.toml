@@ -13,6 +13,10 @@ name = "update_collateral_assets"
 path = "src/update_collateral_assets.rs"
 
 [[bin]]
+name = "update_market"
+path = "src/update_market.rs"
+
+[[bin]]
 name = "withdraw_reserves"
 path = "src/withdraw_reserves.rs"
 

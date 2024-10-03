@@ -61,7 +61,11 @@ TODO
 
 ### Update market configuration
 
-TODO
+This script will update market configuration (change supply/borrow kink, interest rate curves ...).
+
+```bash
+cargo run --bin update_market -- --config-path ./configs/testnet_usdc_config.json
+```
 
 ### Withdraw reserves
 
