@@ -715,7 +715,7 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
         const timeElapsed = now - marketBasic.lastAccrualTime;
 
         if (timeElapsed > 0n) {
-          if (marketBasic.lastAccrualTime === 0n) {
+          if (marketBasic.lastAccrualTime !== 0n) {
             const baseSupplyIndex = marketBasic.baseSupplyIndex;
             const baseBorrowIndex = marketBasic.baseBorrowIndex;
 
