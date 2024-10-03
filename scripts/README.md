@@ -49,7 +49,13 @@ cargo run --bin update_collateral_assets -- --config-path ./configs/testnet_usdc
 
 ### Upgrade market contract
 
-TODO
+When you want to upgrade the market contract, make the changes to the contract, build it, and use the deploy command below. You also need to set the addres of the proxy in the `Forc.toml` in the `../contracts/market` folder. Make sure the address is written in property `address` within the `[proxy]` section.
+
+```bash
+cd ../contracts/market && forc deploy                                  && cd ../../scripts # mainnet
+cd ../contracts/market && forc deploy --testnet                        && cd ../../scripts # testnet
+cd ../contracts/market && /home/vid/Documents/Company/fuel/sway/target/debug/forc-deploy --node-url http://127.0.0.1:4000 && cd ../../scripts # devnet
+```
 
 ### Change proxy owner
 
