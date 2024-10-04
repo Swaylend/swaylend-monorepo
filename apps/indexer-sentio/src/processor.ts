@@ -839,10 +839,10 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
               userAddress: userBasic.address,
               suppliedAmount: suppliedAmount,
               suppliedAmountNormalized: suppliedAmountNormalized,
-              suppliedAmountUsd: suppliedAmount.asBigDecimal().times(basePrice),
+              suppliedAmountUsd: suppliedAmountNormalized.times(basePrice),
               borrowedAmount: borrowedAmount,
               borrowedAmountNormalized: borrowedAmountNormalized,
-              borrowedAmountUsd: borrowedAmount.asBigDecimal().times(basePrice),
+              borrowedAmountUsd: borrowedAmountNormalized.times(basePrice),
               collateralAmount: 0n,
               collateralAmountNormalized: BigDecimal(0),
               collateralAmountUsd: BigDecimal(0),
@@ -853,15 +853,13 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
             basePositionSnapshot.suppliedAmount = suppliedAmount;
             basePositionSnapshot.suppliedAmountNormalized =
               suppliedAmountNormalized;
-            basePositionSnapshot.suppliedAmountUsd = suppliedAmount
-              .asBigDecimal()
-              .times(basePrice);
+            basePositionSnapshot.suppliedAmountUsd =
+              suppliedAmountNormalized.times(basePrice);
             basePositionSnapshot.borrowedAmount = borrowedAmount;
             basePositionSnapshot.borrowedAmountNormalized =
               borrowedAmountNormalized;
-            basePositionSnapshot.borrowedAmountUsd = borrowedAmount
-              .asBigDecimal()
-              .times(basePrice);
+            basePositionSnapshot.borrowedAmountUsd =
+              borrowedAmountNormalized.times(basePrice);
           }
 
           await ctx.store.upsert(basePositionSnapshot);
