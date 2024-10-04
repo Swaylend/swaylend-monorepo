@@ -745,36 +745,6 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
 
         const basePrice = BigDecimal(baseAssetPrice ?? 0);
 
-        const marketBasicsCall = ctx.contract.functions.get_market_basics();
-        const marketBasicsRes = await marketBasicsCall.get();
-        const marketBasicsWithInterestCall =
-          ctx.contract.functions.get_market_basics_with_interest();
-        const marketBasicsWithInterestRes =
-          await marketBasicsWithInterestCall.get();
-
-        ctx.eventLogger.emit('marketBasicDebug', {
-          baseBorrowIndex: marketBasic?.baseBorrowIndex ?? 0,
-          totalBorrowBase: marketBasic?.totalBorrowBase ?? 0,
-          totalSupplyIndex: marketBasic?.baseSupplyIndex ?? 0,
-          totalSupplyBase: marketBasic?.totalSupplyBase ?? 0,
-          postAccrue: 'no',
-          //borrow
-          baseBorrowIndexGetFunc: marketBasicsRes.value.base_borrow_index,
-          totalBorrowBaseGetFunc: marketBasicsRes.value.total_borrow_base,
-          baseBorrowIndexWithInterestGetFunc:
-            marketBasicsWithInterestRes.value.base_borrow_index,
-          totalBorrowBaseWithInterestGetFunc:
-            marketBasicsWithInterestRes.value.total_borrow_base,
-          //supply
-          baseSupplyIndexGetFunc: marketBasicsRes.value.base_supply_index,
-          totalSupplyBaseGetFunc: marketBasicsRes.value.total_supply_base,
-          baseSupplyIndexWithInterestGetFunc:
-            marketBasicsWithInterestRes.value.base_supply_index,
-          totalSupplyBaseWithInterestGetFunc:
-            marketBasicsWithInterestRes.value.total_supply_base,
-          last_accrual_timeGetFunc: marketBasicsRes.value.last_accrual_time,
-        });
-
         // Accrue interest
         const now = BigInt(DateTime.fromUnixSeconds(START_TIME_UNIX).toTai64());
 
@@ -806,28 +776,6 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
               baseSupplyIndex + baseSupplyIndexDelta;
             marketBasic.baseBorrowIndex =
               baseBorrowIndex + baseBorrowIndexDelta;
-
-            const utilizationCall = ctx.contract.functions.get_utilization();
-            const utilizationRes = await utilizationCall.get();
-
-            const supplyRateCall = ctx.contract.functions.get_supply_rate(
-              utilizationRes.value
-            );
-            const supplyRateRes = await supplyRateCall.get();
-
-            const borrowRateCall = ctx.contract.functions.get_borrow_rate(
-              utilizationRes.value
-            );
-            const borrowRateRes = await borrowRateCall.get();
-
-            ctx.eventLogger.emit('OnTimeIntervalAccureDebug', {
-              utilization,
-              utilizationGetFunction: utilizationRes.value.toString(),
-              supplyRate,
-              supplyRateGetFunction: supplyRateRes.value.toString(),
-              borrowRate,
-              borrowRateGetFunction: borrowRateRes.value.toString(),
-            });
           }
 
           marketBasic.lastAccrualTime = now;
@@ -948,29 +896,6 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
           .asBigDecimal()
           .dividedBy(FACTOR_SCALE_15.asBigDecimal())
           .dividedBy(BigDecimal(10).pow(marketConfiguration.baseTokenDecimals));
-
-        ctx.eventLogger.emit('marketBasicDebug', {
-          baseBorrowIndex: marketBasic?.baseBorrowIndex ?? 0,
-          totalBorrowBase: totalBorrowBase,
-          totalSupplyIndex: marketBasic?.baseSupplyIndex ?? 0,
-          totalSupplyBase: totalSupplyBase,
-          postAccrue: 'yes',
-          //borrow
-          baseBorrowIndexGetFunc: marketBasicsRes.value.base_borrow_index,
-          totalBorrowBaseGetFunc: marketBasicsRes.value.total_borrow_base,
-          baseBorrowIndexWithInterestGetFunc:
-            marketBasicsWithInterestRes.value.base_borrow_index,
-          totalBorrowBaseWithInterestGetFunc:
-            marketBasicsWithInterestRes.value.total_borrow_base,
-          //supply
-          baseSupplyIndexGetFunc: marketBasicsRes.value.base_supply_index,
-          totalSupplyBaseGetFunc: marketBasicsRes.value.total_supply_base,
-          baseSupplyIndexWithInterestGetFunc:
-            marketBasicsWithInterestRes.value.base_supply_index,
-          totalSupplyBaseWithInterestGetFunc:
-            marketBasicsWithInterestRes.value.total_supply_base,
-          last_accrual_timeGetFunc: marketBasicsRes.value.last_accrual_time,
-        });
 
         const utilization = getUtilization(
           totalSupplyBase,
@@ -1192,7 +1117,7 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
 
         await Promise.all(processCollateralPositionSnapshotsPromises);
       },
-      5,
+      60,
       60
     );
 });
