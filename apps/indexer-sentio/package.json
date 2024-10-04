@@ -6,7 +6,8 @@
   "scripts": {
     "build": "sentio build --skip-deps --skip-gen",
     "gen": "sentio gen --skip-deps",
-    "upload": "sentio upload --skip-deps --skip-gen"
+    "upload": "sentio upload --skip-deps --skip-gen",
+    "upload:testnet": "sentio upload --name swaylend-testnet --skip-deps --skip-gen"
   },
   "dependencies": {
     "@sentio/sdk": "2.43.2",
