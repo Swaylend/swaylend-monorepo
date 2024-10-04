@@ -1,6 +1,6 @@
 # Frontend V2
 
-The web interface used to interact with the SwayLend protocol, written in TypeScript using [Next.js](https://nextjs.org/).
+The web interface used to interact with the Swaylend protocol, written in TypeScript using [Next.js](https://nextjs.org/).
 
 # Getting Started
 

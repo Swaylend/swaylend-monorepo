@@ -1,4 +1,4 @@
-name: SwayLend USDC Market
+name: Swaylend USDC Market
 ecosystem: fuel
 networks:
   - id: 0

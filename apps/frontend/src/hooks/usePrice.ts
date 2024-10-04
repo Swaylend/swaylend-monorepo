@@ -3,10 +3,7 @@ import { useMarketStore } from '@/stores';
 
 import { appConfig } from '@/configs';
 import { HermesClient } from '@pythnetwork/hermes-client';
-import {
-  PYTH_CONTRACT_ADDRESS_SEPOLIA,
-  PythContract,
-} from '@pythnetwork/pyth-fuel-js';
+import { PythContract } from '@pythnetwork/pyth-fuel-js';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { arrayify } from 'fuels';
@@ -70,7 +67,7 @@ export const usePrice = (marketParam?: string) => {
 
       // Fetch updateFee
       const pythContract = new PythContract(
-        PYTH_CONTRACT_ADDRESS_SEPOLIA,
+        appConfig.markets[market].oracleAddress,
         provider
       );
 

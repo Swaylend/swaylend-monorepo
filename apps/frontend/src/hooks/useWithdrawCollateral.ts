@@ -7,12 +7,8 @@ import { appConfig } from '@/configs';
 import { Market } from '@/contract-types';
 import type { PriceDataUpdateInput } from '@/contract-types/Market';
 import { useMarketStore } from '@/stores';
-import { FUEL_ETH_BASE_ASSET_ID } from '@/utils';
 import { useAccount, useWallet } from '@fuels/react';
-import {
-  PYTH_CONTRACT_ADDRESS_SEPOLIA,
-  PythContract,
-} from '@pythnetwork/pyth-fuel-js';
+import { PythContract } from '@pythnetwork/pyth-fuel-js';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { toast } from 'react-toastify';
@@ -57,7 +53,7 @@ export const useWithdrawCollateral = ({
       }
 
       const pythContract = new PythContract(
-        PYTH_CONTRACT_ADDRESS_SEPOLIA,
+        appConfig.markets[market].oracleAddress,
         wallet
       );
 
@@ -79,7 +75,7 @@ export const useWithdrawCollateral = ({
         .callParams({
           forward: {
             amount: priceUpdateData.update_fee,
-            assetId: FUEL_ETH_BASE_ASSET_ID,
+            assetId: appConfig.baseAssetId,
           },
         })
         .addContracts([pythContract])

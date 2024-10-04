@@ -1,4 +1,4 @@
-name: SwayLend USDC Mock Market
+name: Swaylend USDC Mock Market
 ecosystem: fuel
 networks:
   - id: 0

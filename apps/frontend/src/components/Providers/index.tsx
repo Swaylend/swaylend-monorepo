@@ -54,8 +54,8 @@ function getQueryClient() {
 }
 
 const METADATA = {
-  name: 'SwayLend',
-  description: 'SwayLend',
+  name: 'Swaylend',
+  description: 'Swaylend',
   url: 'https://app.swaylend.com',
   icons: ['https://app.swaylend.com/logo512.png'],
 };
@@ -124,16 +124,27 @@ export const Providers = ({ children }: { children: ReactNode }) => {
               suggestBridge: false,
             }}
             networks={[
-              {
-                chainId: CHAIN_IDS.fuel.testnet,
-              },
+              appConfig.env === 'testnet'
+                ? {
+                    bridgeURL: `${appConfig.client.fuelExplorerUrl}/bridge`,
+                    url: appConfig.client.fuelNodeUrl,
+                    chainId: CHAIN_IDS.fuel.testnet,
+                  }
+                : {
+                    bridgeURL: `${appConfig.client.fuelExplorerUrl}/bridge`,
+                    url: appConfig.client.fuelNodeUrl,
+                    chainId: CHAIN_IDS.fuel.mainnet,
+                  },
             ]}
             fuelConfig={{
               connectors: defaultConnectors({
                 devMode: appConfig.env === 'testnet',
                 wcProjectId: appConfig.client.walletConnectProjectId,
                 ethWagmiConfig: wagmiConfig,
-                chainId: CHAIN_IDS.fuel.testnet,
+                chainId:
+                  appConfig.env === 'testnet'
+                    ? CHAIN_IDS.fuel.testnet
+                    : CHAIN_IDS.fuel.mainnet,
               }),
             }}
           >

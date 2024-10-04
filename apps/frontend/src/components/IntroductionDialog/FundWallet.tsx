@@ -1,5 +1,5 @@
+import { appConfig } from '@/configs';
 import { useBalance } from '@/hooks';
-import { FUEL_ETH_BASE_ASSET_ID } from '@/utils';
 import { useAccount } from '@fuels/react';
 import { ExternalLink } from 'lucide-react';
 import React, { useEffect } from 'react';
@@ -16,7 +16,7 @@ export const FundWallet = ({
 
   const { data: ethBalance } = useBalance({
     address: account ?? undefined,
-    assetId: FUEL_ETH_BASE_ASSET_ID,
+    assetId: appConfig.baseAssetId,
   });
 
   useEffect(() => {
@@ -33,7 +33,7 @@ export const FundWallet = ({
         </div>
         <div className="mt-8">
           You currently have no Ethereum in your wallet. Ethereum on Fuel
-          Network is required to use SwayLend. Get some Ethereum by bridging it
+          Network is required to use Swaylend. Get some Ethereum by bridging it
           from another Network, or by buying it directly.
         </div>
         <div className="flex gap-x-4 w-full justify-center mt-8">
