@@ -554,6 +554,11 @@ impl Market for Contract {
 
             let balance: u256 = storage.user_collateral.get((account, collateral_configuration.asset_id)).try_read().unwrap_or(0).into();
 
+            if balance == 0 {
+                index += 1;
+                continue;
+            }
+
             let price = get_price_internal(collateral_configuration.price_feed_id); // decimals: price.exponent
             let price_exponent = price.exponent;
             let price = u256::from(price.price); // decimals: price.exponent
@@ -1334,6 +1339,12 @@ fn is_borrow_collateralized(account: Identity) -> bool {
         let collateral_configuration = storage.collateral_configurations.get(storage.collateral_configurations_keys.get(index).unwrap().read()).read();
 
         let balance: u256 = storage.user_collateral.get((account, collateral_configuration.asset_id)).try_read().unwrap_or(0).into(); // decimals: collateral_configuration.decimals
+
+        if balance == 0 {
+            index += 1;
+            continue;
+        }
+
         let price = get_price_internal(collateral_configuration.price_feed_id); // decimals: price.exponent decimals
         let price_scale = u256::from(10_u64).pow(price.exponent);
         let price = u256::from(price.price); // decimals: price.exponent
@@ -1375,6 +1386,12 @@ fn is_liquidatable_internal(account: Identity) -> bool {
         let collateral_configuration = storage.collateral_configurations.get(storage.collateral_configurations_keys.get(index).unwrap().read()).read();
 
         let balance: u256 = storage.user_collateral.get((account, collateral_configuration.asset_id)).try_read().unwrap_or(0).into(); // decimals: collateral_configuration.decimals
+
+        if balance == 0 {
+            index += 1;
+            continue;
+        }
+
         let price = get_price_internal(collateral_configuration.price_feed_id); // decimals: price.exponent
         let price_scale = u256::from(10.pow(price.exponent));
         let price = u256::from(price.price); // decimals: price.exponent
