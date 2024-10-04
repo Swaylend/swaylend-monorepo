@@ -1,1 +1,30 @@
-{}
+{
+  "supply_paused": true,
+  "withdraw_paused": true,
+  "absorb_paused": true,
+  "buy_paused": true,
+  "supply_kink": 850000000000000000,
+  "borrow_kink": 850000000000000000,
+  "supply_per_second_interest_rate_slope_low": 1236681887,
+  "supply_per_second_interest_rate_slope_high": 114155251141,
+  "supply_per_second_interest_rate_base": 0,
+  "borrow_per_second_interest_rate_slope_low": 1046423135,
+  "borrow_per_second_interest_rate_slope_high": 126839167935,
+  "borrow_per_second_interest_rate_base": 475646879,
+  "store_front_price_factor": 600000000000000000,
+  "base_tracking_index_scale": 1000000000000000,
+  "base_tracking_supply_speed": 810185185185,
+  "base_tracking_borrow_speed": 821759259259,
+  "base_min_for_rewards": 1000000000,
+  "base_borrow_min": 10000000,
+  "target_reserves": 1000000000000,
+  "pyth_contract_id": "0x103465f1c0c901471b868b4a9e4e57c381168ac38ee5b59732943e9e004c488d",
+  "base_asset": {
+    "asset_id": "0x286c479da40dc953bddc3bb4c453b608bba2e0ac483b077bd475174115395e6b",
+    "price_feed_id": "0xeaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a",
+    "name": "USD Coin",
+    "symbol": "USDC",
+    "decimals": 6
+  },
+  "collateral_assets": []
+}
