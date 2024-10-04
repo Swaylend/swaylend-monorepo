@@ -211,9 +211,6 @@ export const Navbar = () => {
           </Link>
           <div className="flex items-center gap-x-2">
             <Points />
-            <div className="hidden md:block">
-              <MarketSwitcher />
-            </div>
             <ConnectButton />
             <Button
               onMouseDown={() => setOpen(true)}
