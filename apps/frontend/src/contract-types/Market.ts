@@ -99,9 +99,6 @@ export type UserWithdrawCollateralEventOutput = { account: IdentityOutput, asset
 
 export type MarketConfigurables = Partial<{
   DEBUG_STEP: BigNumberish;
-  ORACLE_MAX_STALENESS: BigNumberish;
-  ORACLE_MAX_AHEADNESS: BigNumberish;
-  ORACLE_MAX_CONF_WIDTH: BigNumberish;
 }>;
 
 const abi = {
@@ -1481,6 +1478,61 @@ const abi = {
       ]
     },
     {
+      "inputs": [],
+      "name": "get_pause_configuration",
+      "output": "8ec71ec402ef77ffda0627839b31dd1444fad8b4a95507e86bfa89f0517dbc3d",
+      "attributes": [
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " This function retrieves the current pause configuration."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Returns"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * [PauseConfiguration] - The current pause configuration settings."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `1`"
+          ]
+        },
+        {
+          "name": "storage",
+          "arguments": [
+            "read"
+          ]
+        }
+      ]
+    },
+    {
       "inputs": [
         {
           "name": "price_feed_id",
@@ -1490,6 +1542,61 @@ const abi = {
       "name": "get_price",
       "output": "8aba92fff7345309d4313706ed7db3a811609f62da8f0d2859819db43d461ff8",
       "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read"
+          ]
+        }
+      ]
+    },
+    {
+      "inputs": [],
+      "name": "get_pyth_contract_id",
+      "output": "29c10735d33b5159f0c71ee1dbd17b36a3e69e41f00fab0d42e1bd9f428d8a54",
+      "attributes": [
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " This function retrieves the contract ID of the Pyth contract."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Returns"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * [ContractId] - The contract ID of the Pyth contract."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `1`"
+          ]
+        },
         {
           "name": "storage",
           "arguments": [
@@ -2090,22 +2197,7 @@ const abi = {
     {
       "name": "DEBUG_STEP",
       "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
-      "offset": 135216
-    },
-    {
-      "name": "ORACLE_MAX_STALENESS",
-      "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
-      "offset": 135264
-    },
-    {
-      "name": "ORACLE_MAX_AHEADNESS",
-      "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
-      "offset": 135224
-    },
-    {
-      "name": "ORACLE_MAX_CONF_WIDTH",
-      "concreteTypeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e",
-      "offset": 135232
+      "offset": 135104
     }
   ]
 };
@@ -2247,7 +2339,9 @@ export class MarketInterface extends Interface {
     get_market_basics: FunctionFragment;
     get_market_basics_with_interest: FunctionFragment;
     get_market_configuration: FunctionFragment;
+    get_pause_configuration: FunctionFragment;
     get_price: FunctionFragment;
+    get_pyth_contract_id: FunctionFragment;
     get_reserves: FunctionFragment;
     get_supply_rate: FunctionFragment;
     get_user_balance_with_interest: FunctionFragment;
@@ -2300,7 +2394,9 @@ export class Market extends Contract {
     get_market_basics: InvokeFunction<[], MarketBasicsOutput>;
     get_market_basics_with_interest: InvokeFunction<[], MarketBasicsOutput>;
     get_market_configuration: InvokeFunction<[], MarketConfigurationOutput>;
+    get_pause_configuration: InvokeFunction<[], PauseConfigurationOutput>;
     get_price: InvokeFunction<[price_feed_id: string], PriceOutput>;
+    get_pyth_contract_id: InvokeFunction<[], ContractIdOutput>;
     get_reserves: InvokeFunction<[], I256Output>;
     get_supply_rate: InvokeFunction<[utilization: BigNumberish], BN>;
     get_user_balance_with_interest: InvokeFunction<[account: IdentityInput], I256Output>;
