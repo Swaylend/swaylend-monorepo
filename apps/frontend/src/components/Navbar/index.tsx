@@ -33,18 +33,15 @@ import React, { useState } from 'react';
 import Logo from '/public/icons/dark-logo.svg?url';
 import LogoIcon from '/public/icons/sway-icon-logo.svg?url';
 import { Line } from '../Line';
-import { MarketSwitcher } from '../MarketSwitcher';
 import { Button } from '../ui/button';
 import { ConnectButton } from './ConnectButton';
 import { Points } from './Points';
 
 const NAVBAR_LINKS = [
-  { href: '/market', label: 'Market', icon: <ChartLine /> },
-  // TODO: Uncomment when mainnet is ready
-  // ...(appConfig.env === 'testnet'
-  //   ? [{ href: '/faucet', label: 'Faucet', icon: <Coins /> }]
-  //   : []),
-  { href: '/faucet', label: 'Faucet', icon: <Coins /> },
+  { href: '/markets', label: 'Markets', icon: <ChartLine /> },
+  ...(appConfig.env === 'testnet'
+    ? [{ href: '/faucet', label: 'Faucet', icon: <Coins /> }]
+    : []),
 ];
 
 export const Navbar = () => {

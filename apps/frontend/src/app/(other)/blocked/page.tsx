@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Blocked',
+  title: {
+    absolute: 'SwayLend',
+  },
 };
 
 export default function Page() {

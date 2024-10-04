@@ -13,10 +13,8 @@ export default function Page() {
   }
 
   return (
-    // TODO: Uncomment when mainnet is ready
-    // <div className="h-full flex justify-center items-center">
-    //   Faucet is only available on testnet
-    // </div>
-    <FaucetView />
+    <div className="h-full flex justify-center items-center">
+      Faucet is only available on testnet
+    </div>
   );
 }

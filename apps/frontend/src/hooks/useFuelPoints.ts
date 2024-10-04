@@ -28,7 +28,7 @@ export const useFuelPoints = () => {
       }
 
       // TODO: Fetch from API (Mainnet)
-      return getFormattedNumber(BigNumber(randomDouble(0, 1000000)));
+      return getFormattedNumber(BigNumber(0));
     },
     enabled: !!account,
   });

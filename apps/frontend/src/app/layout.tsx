@@ -15,7 +15,7 @@ const fontSans = FontSans({
 export const metadata: Metadata = {
   title: {
     default: 'SwayLend',
-    template: '%s | SwayLend',
+    template: 'SwayLend | %s',
   },
   description: 'The first and leading lending protocol on Fuel Network.',
   robots: {

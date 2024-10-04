@@ -121,7 +121,7 @@ export const MarketTableRow = ({
     SkeletonRow
   ) : (
     <TableRow
-      onClick={() => router.push(`/market/fuel-${marketName}`)}
+      onClick={() => router.push(`/markets/fuel-${marketName}`)}
       className="cursor-pointer hover:bg-white/5 transition-colors duration-200"
     >
       <TableCell>
