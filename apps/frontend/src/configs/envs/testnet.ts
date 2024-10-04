@@ -19,6 +19,7 @@ export function createTestnetConfig() {
     server: {
       sentioApi: process.env.SENTIO_API_URL ?? '',
       sentioApiKey: process.env.SENTIO_API_KEY ?? '',
+      sentioProcessorVersion: process.env.SENTIO_PROCESSOR_VERSION ?? '',
     },
     markets: markets,
     assets: assets,
