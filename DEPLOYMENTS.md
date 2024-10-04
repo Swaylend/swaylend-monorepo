@@ -1,4 +1,10 @@
-```ts                                                          
+```ts
+FUEL MAINNET
+
+// Market 1 (USDC)
+Market implementation contract = 0x76f1c287a24eac90b3c0dae3a945222e9d26d17b197d900b9ff6192759124470
+Market proxy contract = 0x6ad4681dfbc01a1019335f9d9cb3fa06e4ae7ed334ff20fb4576d6b471889c84
+
 FUEL TESTNET
 
 Pyth Oracle contract = 0xe31e04946c67fb41923f93d50ee7fc1c6c99d6e07c02860c6bea5f4a13919277
