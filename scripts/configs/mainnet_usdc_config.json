@@ -22,7 +22,7 @@
   "base_asset": {
     "asset_id": "0x286c479da40dc953bddc3bb4c453b608bba2e0ac483b077bd475174115395e6b",
     "price_feed_id": "0xeaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a",
-    "name": "USD Coin",
+    "name": "USDC",
     "symbol": "USDC",
     "decimals": 6
   },
