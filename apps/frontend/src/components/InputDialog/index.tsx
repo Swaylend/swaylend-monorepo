@@ -139,13 +139,16 @@ export const InputDialog = () => {
     }
 
     if (action === 'REPAY') {
+      // if (!priceData) return BigNumber(0);
       // Repay 1 cent more than owed to avoid staying in debt
-      return formatUnits(
-        userSupplyBorrow.borrowed,
-        marketConfiguration.baseTokenDecimals
-      )
-        .times(priceData?.prices[marketConfiguration.baseToken.bits] ?? 1)
-        .plus(0.01);
+      return (
+        formatUnits(
+          userSupplyBorrow.borrowed,
+          marketConfiguration.baseTokenDecimals
+        )
+          // .times(priceData?.prices[marketConfiguration.baseToken.bits] ?? 1)
+          .plus(0.01)
+      );
     }
     if (action === 'SUPPLY') {
       if (actionTokenAssetId === marketConfiguration.baseToken.bits) {
@@ -188,6 +191,7 @@ export const InputDialog = () => {
     maxWithdrawableCollateral,
     borrowCapacity,
     userSupplyBorrow,
+    priceData,
   ]);
 
   const onMaxBtnClick = () => {
@@ -267,7 +271,8 @@ export const InputDialog = () => {
       !userSupplyBorrow ||
       baseTokenBalance == null ||
       userCollateralAssets == null ||
-      actionTokenBalance == null
+      actionTokenBalance == null ||
+      !priceData
     ) {
       return null;
     }
@@ -352,9 +357,11 @@ export const InputDialog = () => {
       if (userSupplyBorrow.borrowed.eq(0)) return 'You have no debt';
       const userBorrowed =
         formatUnits(
-          userSupplyBorrow.borrowed.plus(20),
+          userSupplyBorrow.borrowed,
           marketConfiguration?.baseTokenDecimals
-        ).plus(0.01) ?? BigNumber(0);
+        )
+          // .times(priceData?.prices[marketConfiguration.baseToken.bits] ?? 1)
+          .plus(0.01) ?? BigNumber(0);
 
       if (tokenAmount.gt(userBorrowed))
         return 'You are trying to repay more than your debt';
