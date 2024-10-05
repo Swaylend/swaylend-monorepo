@@ -139,10 +139,13 @@ export const InputDialog = () => {
     }
 
     if (action === 'REPAY') {
+      // Repay 1 cent more than owed to avoid staying in debt
       return formatUnits(
         userSupplyBorrow.borrowed,
         marketConfiguration.baseTokenDecimals
-      ).times(priceData?.prices[marketConfiguration.baseToken.bits] ?? 1);
+      )
+        .times(priceData?.prices[marketConfiguration.baseToken.bits] ?? 1)
+        .plus(0.01);
     }
     if (action === 'SUPPLY') {
       if (actionTokenAssetId === marketConfiguration.baseToken.bits) {
@@ -171,7 +174,8 @@ export const InputDialog = () => {
     }
 
     if (action === 'BORROW') {
-      return borrowCapacity ?? BigNumber(0);
+      // Borrow $1 less than max borrowable amount to avoid "Trying to borrow more than the max borrowable amount" errors when prices change.
+      return borrowCapacity?.minus(1) ?? BigNumber(0);
     }
 
     return BigNumber(0);
@@ -224,27 +228,21 @@ export const InputDialog = () => {
             BigNumber(marketBalanceOfBase.formatted.toFixed(decimals))
           );
         } else {
-          changeTokenAmount(
-            BigNumber(finalBalance.toFixed(decimals)).minus(
-              BigNumber(10).pow(-decimals)
-            )
-          );
+          changeTokenAmount(BigNumber(finalBalance.toFixed(decimals)));
         }
         break;
       case ACTION_TYPE.REPAY: {
-        const finalBalanceRepay = finalBalance ?? BigNumber(0);
+        const userUSDCBalance = formatUnits(
+          BigNumber(balance?.toString() ?? 0),
+          decimals
+        );
 
         if (userSupplyBorrow.borrowed.eq(0)) return;
-        const userBorrowed =
-          formatUnits(
-            userSupplyBorrow.borrowed.plus(10),
-            marketConfiguration?.baseTokenDecimals
-          ) ?? BigNumber(0);
 
-        if (finalBalanceRepay.gte(userBorrowed)) {
-          changeTokenAmount(BigNumber(userBorrowed.toFixed(decimals)));
+        if (userUSDCBalance.gte(finalBalance)) {
+          changeTokenAmount(BigNumber(finalBalance.toFixed(decimals)));
         } else {
-          changeTokenAmount(BigNumber(finalBalanceRepay.toFixed(decimals)));
+          changeTokenAmount(BigNumber(userUSDCBalance.toFixed(decimals)));
         }
         break;
       }
@@ -356,7 +354,7 @@ export const InputDialog = () => {
         formatUnits(
           userSupplyBorrow.borrowed.plus(20),
           marketConfiguration?.baseTokenDecimals
-        ) ?? BigNumber(0);
+        ).plus(0.01) ?? BigNumber(0);
 
       if (tokenAmount.gt(userBorrowed))
         return 'You are trying to repay more than your debt';
