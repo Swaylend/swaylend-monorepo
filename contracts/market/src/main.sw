@@ -1376,7 +1376,7 @@ fn is_liquidatable_internal(account: Identity) -> bool {
         return false
     };
 
-    let present: u256 = present_value(principal.wrapping_neg()).try_into().unwrap(); // decimals: base_token_decimals
+    let present: u256 = present_value(principal).wrapping_neg().try_into().unwrap(); // decimals: base_token_decimals
     let mut liquidation_treshold: u256 = 0;
 
     let mut index = 0;
