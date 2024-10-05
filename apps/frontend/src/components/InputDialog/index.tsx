@@ -133,18 +133,22 @@ export const InputDialog = () => {
       !balance ||
       !marketConfiguration ||
       !actionTokenAssetId ||
-      !userSupplyBorrow
+      !userSupplyBorrow ||
+      !priceData
     ) {
       return BigNumber(0);
     }
 
     if (action === 'REPAY') {
-      // TODO: Change 0.01 into $0.01
       // Repay 1 cent more than owed to avoid staying in debt
       return formatUnits(
         userSupplyBorrow.borrowed,
         marketConfiguration.baseTokenDecimals
-      ).plus(0.01);
+      ).plus(
+        BigNumber(0.01).div(
+          priceData?.prices[marketConfiguration.baseToken.bits] ?? 1
+        )
+      );
     }
     if (action === 'SUPPLY') {
       if (actionTokenAssetId === marketConfiguration.baseToken.bits) {
@@ -173,9 +177,14 @@ export const InputDialog = () => {
     }
 
     if (action === 'BORROW') {
-      // TODO: Change 1 into $1
       // Borrow $1 less than max borrowable amount to avoid "Trying to borrow more than the max borrowable amount" errors when prices change.
-      return borrowCapacity?.minus(1) ?? BigNumber(0);
+      return (
+        borrowCapacity?.minus(
+          BigNumber(1).div(
+            priceData?.prices[marketConfiguration.baseToken.bits] ?? 1
+          )
+        ) ?? BigNumber(0)
+      );
     }
 
     return BigNumber(0);
@@ -349,12 +358,15 @@ export const InputDialog = () => {
 
       // Balance more than user borrowed
       if (userSupplyBorrow.borrowed.eq(0)) return 'You have no debt';
-      // TODO: Change 0.01 into $0.01
       const userBorrowed =
         formatUnits(
           userSupplyBorrow.borrowed,
           marketConfiguration?.baseTokenDecimals
-        ).plus(0.01) ?? BigNumber(0);
+        ).plus(
+          BigNumber(0.02).div(
+            priceData?.prices[marketConfiguration.baseToken.bits] ?? 1
+          )
+        ) ?? BigNumber(0);
 
       if (tokenAmount.gt(userBorrowed))
         return 'You are trying to repay more than your debt';
