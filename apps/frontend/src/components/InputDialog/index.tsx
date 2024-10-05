@@ -139,16 +139,11 @@ export const InputDialog = () => {
     }
 
     if (action === 'REPAY') {
-      // if (!priceData) return BigNumber(0);
       // Repay 1 cent more than owed to avoid staying in debt
-      return (
-        formatUnits(
-          userSupplyBorrow.borrowed,
-          marketConfiguration.baseTokenDecimals
-        )
-          // .times(priceData?.prices[marketConfiguration.baseToken.bits] ?? 1)
-          .plus(0.01)
-      );
+      return formatUnits(
+        userSupplyBorrow.borrowed,
+        marketConfiguration.baseTokenDecimals
+      ).plus(0.01);
     }
     if (action === 'SUPPLY') {
       if (actionTokenAssetId === marketConfiguration.baseToken.bits) {
@@ -220,9 +215,6 @@ export const InputDialog = () => {
         if (actionTokenAssetId === marketConfiguration.baseToken.bits) {
           changeTokenAmount(BigNumber(finalBalance.toFixed(decimals)));
         } else {
-          // TODO: Check max withdrawable collateral amount...
-
-          // Get borrowed amount
           changeTokenAmount(BigNumber(finalBalance.toFixed(decimals)));
         }
         break;
@@ -359,9 +351,7 @@ export const InputDialog = () => {
         formatUnits(
           userSupplyBorrow.borrowed,
           marketConfiguration?.baseTokenDecimals
-        )
-          // .times(priceData?.prices[marketConfiguration.baseToken.bits] ?? 1)
-          .plus(0.01) ?? BigNumber(0);
+        ).plus(0.01) ?? BigNumber(0);
 
       if (tokenAmount.gt(userBorrowed))
         return 'You are trying to repay more than your debt';
@@ -370,7 +360,6 @@ export const InputDialog = () => {
     return null;
   };
 
-  // Close modal if user disconnects...
   useEffect(() => {
     if (!isConnected) {
       setOpen(false);
