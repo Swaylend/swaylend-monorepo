@@ -61,8 +61,10 @@ export const TermsAndConditions = ({
                   className="cursor-pointer"
                 >
                   I confirm that I have read, understand and accept the{' '}
-                  {/* biome-ignore lint/a11y/useValidAnchor: <explanation> */}
-                  <a href="#" className="underline text-primary">
+                  <a
+                    href="https://docs.swaylend.com/legal/terms-and-condition"
+                    className="underline text-primary"
+                  >
                     Terms and Conditions.
                   </a>
                 </p>
