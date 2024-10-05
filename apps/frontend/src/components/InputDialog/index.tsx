@@ -133,16 +133,22 @@ export const InputDialog = () => {
       !balance ||
       !marketConfiguration ||
       !actionTokenAssetId ||
-      !userSupplyBorrow
+      !userSupplyBorrow ||
+      !priceData
     ) {
       return BigNumber(0);
     }
 
     if (action === 'REPAY') {
+      // Repay 1 cent more than owed to avoid staying in debt
       return formatUnits(
         userSupplyBorrow.borrowed,
         marketConfiguration.baseTokenDecimals
-      ).times(priceData?.prices[marketConfiguration.baseToken.bits] ?? 1);
+      ).plus(
+        BigNumber(0.01).div(
+          priceData?.prices[marketConfiguration.baseToken.bits] ?? 1
+        )
+      );
     }
     if (action === 'SUPPLY') {
       if (actionTokenAssetId === marketConfiguration.baseToken.bits) {
@@ -171,7 +177,14 @@ export const InputDialog = () => {
     }
 
     if (action === 'BORROW') {
-      return borrowCapacity ?? BigNumber(0);
+      // Borrow $1 less than max borrowable amount to avoid "Trying to borrow more than the max borrowable amount" errors when prices change.
+      return (
+        borrowCapacity?.minus(
+          BigNumber(1).div(
+            priceData?.prices[marketConfiguration.baseToken.bits] ?? 1
+          )
+        ) ?? BigNumber(0)
+      );
     }
 
     return BigNumber(0);
@@ -184,6 +197,7 @@ export const InputDialog = () => {
     maxWithdrawableCollateral,
     borrowCapacity,
     userSupplyBorrow,
+    priceData,
   ]);
 
   const onMaxBtnClick = () => {
@@ -212,9 +226,6 @@ export const InputDialog = () => {
         if (actionTokenAssetId === marketConfiguration.baseToken.bits) {
           changeTokenAmount(BigNumber(finalBalance.toFixed(decimals)));
         } else {
-          // TODO: Check max withdrawable collateral amount...
-
-          // Get borrowed amount
           changeTokenAmount(BigNumber(finalBalance.toFixed(decimals)));
         }
         break;
@@ -224,27 +235,21 @@ export const InputDialog = () => {
             BigNumber(marketBalanceOfBase.formatted.toFixed(decimals))
           );
         } else {
-          changeTokenAmount(
-            BigNumber(finalBalance.toFixed(decimals)).minus(
-              BigNumber(10).pow(-decimals)
-            )
-          );
+          changeTokenAmount(BigNumber(finalBalance.toFixed(decimals)));
         }
         break;
       case ACTION_TYPE.REPAY: {
-        const finalBalanceRepay = finalBalance ?? BigNumber(0);
+        const userBaseBalance = formatUnits(
+          BigNumber(balance?.toString() ?? 0),
+          decimals
+        );
 
         if (userSupplyBorrow.borrowed.eq(0)) return;
-        const userBorrowed =
-          formatUnits(
-            userSupplyBorrow.borrowed.plus(10),
-            marketConfiguration?.baseTokenDecimals
-          ) ?? BigNumber(0);
 
-        if (finalBalanceRepay.gte(userBorrowed)) {
-          changeTokenAmount(BigNumber(userBorrowed.toFixed(decimals)));
+        if (userBaseBalance.gte(finalBalance)) {
+          changeTokenAmount(BigNumber(finalBalance.toFixed(decimals)));
         } else {
-          changeTokenAmount(BigNumber(finalBalanceRepay.toFixed(decimals)));
+          changeTokenAmount(BigNumber(userBaseBalance.toFixed(decimals)));
         }
         break;
       }
@@ -269,7 +274,8 @@ export const InputDialog = () => {
       !userSupplyBorrow ||
       baseTokenBalance == null ||
       userCollateralAssets == null ||
-      actionTokenBalance == null
+      actionTokenBalance == null ||
+      !priceData
     ) {
       return null;
     }
@@ -354,8 +360,12 @@ export const InputDialog = () => {
       if (userSupplyBorrow.borrowed.eq(0)) return 'You have no debt';
       const userBorrowed =
         formatUnits(
-          userSupplyBorrow.borrowed.plus(20),
+          userSupplyBorrow.borrowed,
           marketConfiguration?.baseTokenDecimals
+        ).plus(
+          BigNumber(0.02).div(
+            priceData?.prices[marketConfiguration.baseToken.bits] ?? 1
+          )
         ) ?? BigNumber(0);
 
       if (tokenAmount.gt(userBorrowed))
@@ -365,7 +375,6 @@ export const InputDialog = () => {
     return null;
   };
 
-  // Close modal if user disconnects...
   useEffect(() => {
     if (!isConnected) {
       setOpen(false);
