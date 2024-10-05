@@ -20,6 +20,7 @@ import {
   UserBasic,
 } from './schema/store.js';
 import { MarketProcessor } from './types/fuel/MarketProcessor.js';
+import { appConfig } from './configs/index.js';
 
 dayjs.extend(utc);
 
@@ -109,32 +110,17 @@ const getUtilization = (
 
 const CHAIN_ID_MAP = {
   fuel_testnet: 0,
-  fuel_mainnet: 0,
-};
-
-const DEPLOYED_MARKETS: Record<
-  string,
-  { marketAddress: string; startBlock: bigint }
-> = {
-  USDC: {
-    marketAddress:
-      '0xe3771e5167967258c57ab9a699016af0e15d3c0a16378005798bf5f7862046dc',
-    startBlock: BigInt(11380000),
-  },
-  USDT: {
-    marketAddress:
-      '0x0867cb17fad5e9c88a3c369c89a036d1897975870b2e5f0918aa4b5fd36be493',
-    startBlock: BigInt(11380000),
-  },
+  fuel_mainnet: 9889,
 };
 
 GLOBAL_CONFIG.execution = {
   sequential: true,
 };
 
-Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
+Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
   MarketProcessor.bind({
-    chainId: FuelNetwork.TEST_NET,
+    chainId:
+      appConfig.env === 'testnet' ? FuelNetwork.TEST_NET : FuelNetwork.MAIN_NET,
     address: marketAddress,
     startBlock: startBlock,
   })
@@ -706,9 +692,10 @@ Object.values(DEPLOYED_MARKETS).forEach(({ marketAddress, startBlock }) => {
         ).filter((val) => val.chainId === 0);
 
         if (pools.length !== 1) {
-          throw new Error(
-            `Only one pool should be found. Found: ${pools.length}`
+          console.error(
+            `Exactly one pool should be found. Found: ${pools.length}`
           );
+          return;
         }
 
         const pool = pools[0];
