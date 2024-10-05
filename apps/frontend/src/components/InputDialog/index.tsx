@@ -228,17 +228,17 @@ export const InputDialog = () => {
         }
         break;
       case ACTION_TYPE.REPAY: {
-        const userUSDCBalance = formatUnits(
+        const userBaseBalance = formatUnits(
           BigNumber(balance?.toString() ?? 0),
           decimals
         );
 
         if (userSupplyBorrow.borrowed.eq(0)) return;
 
-        if (userUSDCBalance.gte(finalBalance)) {
+        if (userBaseBalance.gte(finalBalance)) {
           changeTokenAmount(BigNumber(finalBalance.toFixed(decimals)));
         } else {
-          changeTokenAmount(BigNumber(userUSDCBalance.toFixed(decimals)));
+          changeTokenAmount(BigNumber(userBaseBalance.toFixed(decimals)));
         }
         break;
       }
