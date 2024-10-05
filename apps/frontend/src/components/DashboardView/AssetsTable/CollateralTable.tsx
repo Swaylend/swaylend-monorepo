@@ -71,8 +71,8 @@ const POINTS_COLLATERAL: Point[] = [
   },
   {
     id: '2',
-    name: 'SwayLend',
-    description: 'Earn SwayLend Points by lending assets',
+    name: 'Swaylend',
+    description: 'Earn Swaylend Points by lending assets',
     icon: SYMBOL_TO_ICON.SWAY,
   },
 ];

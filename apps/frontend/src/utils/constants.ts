@@ -1,5 +1,6 @@
 import fuel from '/public/icons/fuel-logo.svg?url';
 import btc from '/public/tokens/bitcoin.svg?url';
+import bnb from '/public/tokens/bnb.svg?url';
 import eth from '/public/tokens/ethereum.svg?url';
 import sway from '/public/tokens/sway.svg?url';
 import uni from '/public/tokens/uni.svg?url';
@@ -25,25 +26,22 @@ export const FAUCET_AMOUNTS: Record<string, number> = {
   BNB: 300,
 };
 
-export const FUEL_ETH_BASE_ASSET_ID =
-  '0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07';
-
 export const SYMBOL_TO_ICON: Record<string, any> = {
   USDC: usdc,
   USDT: usdt,
   ETH: eth,
-  BTC: btc,
-  UNI: uni,
-  BNB: sway,
   SWAY: sway,
   FUEL: fuel,
+  BTC: btc,
+  UNI: uni,
+  BNB: bnb,
 };
 
 export const SYMBOL_TO_NAME: Record<string, string> = {
-  BTC: 'Bitcoin',
   ETH: 'Ethereum',
-  USDC: 'USD Coin',
-  USDT: 'Tether',
+  USDC: 'USDC',
+  USDT: 'USDT',
+  BTC: 'Bitcoin',
   UNI: 'Uniswap',
   BNB: 'Binance Coin',
 };

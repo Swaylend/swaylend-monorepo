@@ -19,6 +19,7 @@ export function createMainnetConfig() {
     server: {
       sentioApi: process.env.SENTIO_API_URL ?? '',
       sentioApiKey: process.env.SENTIO_API_KEY ?? '',
+      sentioProcessorVersion: process.env.SENTIO_PROCESSOR_VERSION ?? '',
     },
     baseAssetId:
       '0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07',
@@ -31,30 +32,15 @@ export function createMainnetConfig() {
 const markets: DeployedMarkets = {
   USDC: {
     oracleAddress:
-      '0xe31e04946c67fb41923f93d50ee7fc1c6c99d6e07c02860c6bea5f4a13919277',
+      '0x103465f1c0c901471b868b4a9e4e57c381168ac38ee5b59732943e9e004c488d',
     marketAddress:
-      '0x6ab51f60634e1414e83467482d802594bee7315b62999321ac20cb401af018b6',
-    tokenFactoryAddress:
-      '0x3e4f1948aece07d3f30c8c5c425f914ac74653827de48394466f2a887eebe9c7',
-    graphqlUrl: 'https://indexer.bigdevenergy.link/c755070/v1/graphql',
-  },
-  USDT: {
-    oracleAddress:
-      '0xe31e04946c67fb41923f93d50ee7fc1c6c99d6e07c02860c6bea5f4a13919277',
-    marketAddress:
-      '0xe1e6fb5fc0d08ebd559d00c0b059438e4ff71d956bff0aebfebe883ea3cfaa1d',
-    tokenFactoryAddress:
-      '0x1ea9a306a5f280cfe7bd1fdc96815a6438069668e495a2f5a727c7b9b90691cb',
-    graphqlUrl: 'https://indexer.bigdevenergy.link/8ce655e/v1/graphql',
+      '0x6ad4681dfbc01a1019335f9d9cb3fa06e4ae7ed334ff20fb4576d6b471889c84',
+    tokenFactoryAddress: '',
+    graphqlUrl: '',
   },
 };
 
 const assets: Record<string, string> = {
-  '0x3aced3c270121c9d85e00fb14f079ecc666b733b12a0d15df1c2ecae26c1167a': 'USDC',
-  '0xc264acd28eaf6f33e0e13360a37741dc91221aaa8817e1b4e462d61bb08c5835': 'USDT',
   '0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07': 'ETH',
-  '0x506442d6926065fe53dd09870b7392dd46bfe39b761ab347b11cc2e1f8874250': 'BTC',
-  '0xa95097d8fe21970639e543db9b7f590aa678f325bce3dbc12a682cdcbbfae378': 'UNI',
-  '0xf3e2b3960e0930402a5d6047883f5c178a30aa5db2f0d7302d582cefb59a1575': 'BTC',
-  '0x790d2c0eb869e72cf42540d928ce728c253142d5ef07ed22b75009e40660e4ea': 'BNB',
+  '0x286c479da40dc953bddc3bb4c453b608bba2e0ac483b077bd475174115395e6b': 'USDC',
 };

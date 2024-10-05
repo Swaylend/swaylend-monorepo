@@ -1,5 +1,8 @@
 {
-  "is_active": true,
+  "supply_paused": false,
+  "withdraw_paused": false,
+  "absorb_paused": false,
+  "buy_paused": false,
   "supply_kink": 850000000000000000,
   "borrow_kink": 850000000000000000,
   "supply_per_second_interest_rate_slope_low": 1236681887,
@@ -17,7 +20,7 @@
   "target_reserves": 1000000000000,
   "pyth_contract_id": "0x51b52248d0f329f2e2de63932d1bc9b72c66539c69766ec84c2478766d89857f",
   "base_asset": {
-    "asset_id": "0x4ad4b613b0b1726a9f2950f6462c5133f8f56ab1d2dc1b03ba91153b4380a0e6",
+    "asset_id": "0xa7c3258126a1a00f74604399053a92b1fa4c63988b891596e036dba6d1aef20a",
     "price_feed_id": "0xeaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a",
     "name": "USD Coin",
     "symbol": "USDC",

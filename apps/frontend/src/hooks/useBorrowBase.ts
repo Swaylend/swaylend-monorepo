@@ -7,7 +7,6 @@ import { appConfig } from '@/configs';
 import { Market } from '@/contract-types';
 import type { PriceDataUpdateInput } from '@/contract-types/Market';
 import { useMarketStore } from '@/stores';
-import { FUEL_ETH_BASE_ASSET_ID } from '@/utils';
 import { useAccount, useWallet } from '@fuels/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
@@ -53,7 +52,7 @@ export const useBorrowBase = () => {
         .callParams({
           forward: {
             amount: priceUpdateData.update_fee,
-            assetId: FUEL_ETH_BASE_ASSET_ID,
+            assetId: appConfig.baseAssetId,
           },
         })
         .call();

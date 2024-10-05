@@ -27,7 +27,7 @@ export const GeneralInfo = ({
             <div className="mt-4">
               While we are excited for the world to experience the first ever
               lending protocol on Fuel Network, we wanted to add some very
-              important reminders. SwayLend is a new and experimental
+              important reminders. Swaylend is a new and experimental
               technology. As with all new protocols, especially in DeFi, this
               technology should be used with caution and at your own discretion.
               <br />
@@ -37,7 +37,7 @@ export const GeneralInfo = ({
               external audits to identify and rectify any issues.
               <br />
               <br />
-              SwayLend engaged with one audit firm,{' '}
+              Swaylend engaged with one audit firm,{' '}
               <a
                 href="https://www.halborn.com/"
                 className="text-primary underline"
@@ -47,7 +47,7 @@ export const GeneralInfo = ({
                 Halborn
               </a>
               , for smart contract review. To learn more about the audit reports
-              and risks involved with using SwayLend, please visit the{' '}
+              and risks involved with using Swaylend, please visit the{' '}
               <a
                 href="https://docs.swaylend.com/"
                 className="text-primary underline"
@@ -56,13 +56,13 @@ export const GeneralInfo = ({
               >
                 official documentation
               </a>
-              . SwayLend was built by Reserve Labs, a web3 venture studio.
+              . Swaylend was built by Reserve Labs, a web3 venture studio.
             </div>
           </div>
         </div>
       </div>
       <div className="px-6 py-4 flex w-full justify-end">
-        <Button onClick={handleClose}>Explore SwayLend</Button>
+        <Button onClick={handleClose}>Explore Swaylend</Button>
       </div>
     </>
   );

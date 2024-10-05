@@ -26,6 +26,7 @@ export const AppConfigSchema = z.object({
   server: z.object({
     sentioApi: z.string(),
     sentioApiKey: z.string(),
+    sentioProcessorVersion: z.string(),
   }),
   markets: DeployedMarketsSchema,
   assets: z.record(z.string(), z.string()),

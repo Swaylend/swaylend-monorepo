@@ -18,7 +18,7 @@ use std::{
 
 configurable {
     DECIMALS: u8 = 9u8,
-    NAME: str[8] = __to_str_array("SwayLend"),
+    NAME: str[8] = __to_str_array("Swaylend"),
     SYMBOL: str[5] = __to_str_array("SLEND"),
     MAX_SUPPLY: u64 = 1_000_000_000_000_000_000u64,
 }

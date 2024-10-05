@@ -5,7 +5,7 @@ import { getChartData } from '@/lib/charts';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Market',
+  title: 'Markets',
 };
 
 export const revalidate = 3600;

@@ -6,7 +6,7 @@ import {
   useMarketConfiguration,
   useMintToken,
 } from '@/hooks';
-import { FAUCET_URL, FUEL_ETH_BASE_ASSET_ID, formatUnits } from '@/utils';
+import { FAUCET_URL, formatUnits } from '@/utils';
 import { useAccount } from '@fuels/react';
 import { useIsMutating } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
@@ -93,7 +93,7 @@ export const FaucetView = () => {
 
   const { data: ethBalance } = useBalance({
     address: account ?? undefined,
-    assetId: FUEL_ETH_BASE_ASSET_ID,
+    assetId: appConfig.baseAssetId,
   });
 
   const assets = useMemo(() => {

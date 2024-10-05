@@ -36,7 +36,7 @@ export const getChartData = async () => {
             sql: getSingleMarketQuery(poolAddress),
             size: 10000,
           },
-          version: 24,
+          version: appConfig.server.sentioProcessorVersion,
         }),
         next: {
           revalidate: 3600, // Cache for 1 hour
@@ -70,7 +70,7 @@ export const getChartData = async () => {
         sql: getMarketsCombinedQuery(),
         size: 10000,
       },
-      version: 24,
+      version: appConfig.server.sentioProcessorVersion,
     }),
     next: {
       revalidate: 3600, // Cache for 1 hour

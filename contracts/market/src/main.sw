@@ -32,14 +32,17 @@ use standards::src5::{SRC5, State};
 use sway_libs::ownership::*;
 use sway_libs::signed_integers::i256::I256;
 
+// version of the smart contract
 const VERSION: u8 = 1_u8;
+
+// pyth oracle configuration params
+const ORACLE_MAX_STALENESS: u64 = 30; // 30 seconds
+const ORACLE_MAX_AHEADNESS: u64 = 60; // 60 seconds
+const ORACLE_MAX_CONF_WIDTH: u256 = 20; // 20 / 10000 = 0.2 % 
 
 // This is set during deployment of the contract
 configurable {
     DEBUG_STEP: u64 = 0,
-    ORACLE_MAX_STALENESS: u64 = 30, // 30 seconds
-    ORACLE_MAX_AHEADNESS: u64 = 60, // 60 seconds
-    ORACLE_MAX_CONF_WIDTH: u256 = 100, // 100 / 10000 = 1 % 
 }
 
 storage {
@@ -551,6 +554,11 @@ impl Market for Contract {
 
             let balance: u256 = storage.user_collateral.get((account, collateral_configuration.asset_id)).try_read().unwrap_or(0).into();
 
+            if balance == 0 {
+                index += 1;
+                continue;
+            }
+
             let price = get_price_internal(collateral_configuration.price_feed_id); // decimals: price.exponent
             let price_exponent = price.exponent;
             let price = u256::from(price.price); // decimals: price.exponent
@@ -797,6 +805,18 @@ impl Market for Contract {
         storage.pause_config.write(pause_config);
     }
 
+    /// This function retrieves the current pause configuration.
+    ///
+    /// # Returns
+    /// * [PauseConfiguration] - The current pause configuration settings.
+    ///
+    /// # Number of Storage Accesses
+    /// * Reads: `1`
+    #[storage(read)]
+    fn get_pause_configuration() -> PauseConfiguration {
+        storage.pause_config.read()
+    }
+
     // # 9. Getters
 
     // ## 9.1 Get market configuration
@@ -924,6 +944,18 @@ impl Market for Contract {
         // Only owner can set the Pyth contract ID
         only_owner();
         storage.pyth_contract_id.write(contract_id);
+    }
+
+    /// This function retrieves the contract ID of the Pyth contract.
+    ///
+    /// # Returns
+    /// * [ContractId] - The contract ID of the Pyth contract.
+    ///
+    /// # Number of Storage Accesses
+    /// * Reads: `1`
+    #[storage(read)]
+    fn get_pyth_contract_id() -> ContractId {
+        storage.pyth_contract_id.read()
     }
 
     #[storage(read)]
@@ -1307,6 +1339,12 @@ fn is_borrow_collateralized(account: Identity) -> bool {
         let collateral_configuration = storage.collateral_configurations.get(storage.collateral_configurations_keys.get(index).unwrap().read()).read();
 
         let balance: u256 = storage.user_collateral.get((account, collateral_configuration.asset_id)).try_read().unwrap_or(0).into(); // decimals: collateral_configuration.decimals
+
+        if balance == 0 {
+            index += 1;
+            continue;
+        }
+
         let price = get_price_internal(collateral_configuration.price_feed_id); // decimals: price.exponent decimals
         let price_scale = u256::from(10_u64).pow(price.exponent);
         let price = u256::from(price.price); // decimals: price.exponent
@@ -1348,6 +1386,12 @@ fn is_liquidatable_internal(account: Identity) -> bool {
         let collateral_configuration = storage.collateral_configurations.get(storage.collateral_configurations_keys.get(index).unwrap().read()).read();
 
         let balance: u256 = storage.user_collateral.get((account, collateral_configuration.asset_id)).try_read().unwrap_or(0).into(); // decimals: collateral_configuration.decimals
+
+        if balance == 0 {
+            index += 1;
+            continue;
+        }
+
         let price = get_price_internal(collateral_configuration.price_feed_id); // decimals: price.exponent
         let price_scale = u256::from(10.pow(price.exponent));
         let price = u256::from(price.price); // decimals: price.exponent

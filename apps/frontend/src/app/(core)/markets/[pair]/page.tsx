@@ -2,14 +2,29 @@ import { MarketChart } from '@/components/MarketsView/MarketChart';
 import MarketOverview from '@/components/MarketsView/MarketOverview';
 import { appConfig } from '@/configs';
 import { getChartData } from '@/lib/charts';
-import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
-export const metadata: Metadata = {
-  title: 'MarketOverview',
-};
-
 export const revalidate = 3600;
+
+export async function generateMetadata({
+  params,
+}: { params: { pair: string } }) {
+  const [network, baseAsset] = params.pair.split('-');
+
+  if (
+    !network ||
+    !baseAsset ||
+    !Object.keys(appConfig.markets).includes(baseAsset.toUpperCase())
+  ) {
+    return {
+      title: 'Markets',
+    };
+  }
+
+  return {
+    title: `${network.toUpperCase()}-${baseAsset.toUpperCase()} Market`,
+  };
+}
 
 export default async function Page({ params }: { params: { pair: string } }) {
   const [network, baseAsset] = params.pair.split('-');

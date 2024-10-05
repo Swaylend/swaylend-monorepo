@@ -1,6 +1,6 @@
-# SwayLend Protocol Contracts
+# Swaylend Protocol Contracts
 
-The core components of the SwayLend protocol are located here. The protocol implementation resides in [`main.sw`](src/main.sw).
+The core components of the Swaylend protocol are located here. The protocol implementation resides in [`main.sw`](src/main.sw).
 
 ## Building contracts
 

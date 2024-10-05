@@ -1,11 +1,11 @@
-name: SwayLend USDC Market
+name: Swaylend USDC Market
 ecosystem: fuel
 networks:
   - id: 0
     start_block: 11380000
     contracts:
       - name: Market
-        address: 0x6ab51f60634e1414e83467482d802594bee7315b62999321ac20cb401af018b6
+        address: 0xe3771e5167967258c57ab9a699016af0e15d3c0a16378005798bf5f7862046dc
         abi_file_path: ./abi/market-abi.json
         handler: ./src/EventHandlers.ts
         events:

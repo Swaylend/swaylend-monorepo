@@ -30,10 +30,10 @@ export const TermsAndConditions = ({
           <div className="text-lavender">
             <p>
               No representation or warranty is made concerning any aspect of the
-              SwayLend Protocol, including its suitability, quality,
+              Swaylend Protocol, including its suitability, quality,
               availability, accessibility, accuracy or safety. As more fully
               explained in the Terms and Conditions (available below), your
-              access to and use of the SwayLend Protocol through this Interface
+              access to and use of the Swaylend Protocol through this Interface
               is entirely at your own risk and could lead to substantial losses,
               for which you take full responsibility.
             </p>
@@ -45,7 +45,7 @@ export const TermsAndConditions = ({
               Republic of China, the Russian Federation, Somalia, Sudan, South
               Sudan, Syria, the United States of America, Venezuela, Yemen, and
               Zimbabwe or any other jurisdiction in which accessing or using the
-              SwayLend Protocol is prohibited (“Prohibited Jurisdictions”). In
+              Swaylend Protocol is prohibited (“Prohibited Jurisdictions”). In
               using this Interface, you confirm that you are not located in,
               incorporated or otherwise established in, or resident of, a
               Prohibited Jurisdiction.
