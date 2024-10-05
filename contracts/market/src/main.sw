@@ -559,7 +559,7 @@ impl Market for Contract {
                 continue;
             }
 
-            let price = get_price_internal(collateral_configuration.price_feed_id); // decimals: price.exponent
+            let price = get_price_internal(collateral_configuration.price_feed_id, PricePosition::LowerBound); // decimals: price.exponent
             let price_exponent = price.exponent;
             let price = u256::from(price.price); // decimals: price.exponent
             let amount = balance * collateral_configuration.borrow_collateral_factor / FACTOR_SCALE_18; // decimals: collateral_configuration.decimals
@@ -701,14 +701,14 @@ impl Market for Contract {
         let market_configuration = storage.market_configuration.read();
 
         // Get the collateral asset price
-        let asset_price = get_price_internal(collateral_configuration.price_feed_id); // decimals: asset_price.exponent
+        let asset_price = get_price_internal(collateral_configuration.price_feed_id, PricePosition::UpperBound); // decimals: asset_price.exponent
         let asset_price_scale = u256::from(10_u64).pow(asset_price.exponent);
         let asset_price = u256::from(asset_price.price); // decimals: asset_price.exponent
         let discount_factor: u256 = market_configuration.store_front_price_factor * (FACTOR_SCALE_18 - collateral_configuration.liquidation_penalty) / FACTOR_SCALE_18; // decimals: 18
         let asset_price_discounted: u256 = asset_price * (FACTOR_SCALE_18 - discount_factor) / FACTOR_SCALE_18; // decimals: asset_price.exponent
 
         // Get the base token price 
-        let base_price = get_price_internal(market_configuration.base_token_price_feed_id); // decimals: base_price.exponent
+        let base_price = get_price_internal(market_configuration.base_token_price_feed_id, PricePosition::Middle); // decimals: base_price.exponent
         let base_price_scale = u256::from(10_u64).pow(base_price.exponent);
         let base_price = u256::from(base_price.price); // decimals: base_price.exponent
         let scale = u256::from(10_u64).pow(
@@ -960,7 +960,7 @@ impl Market for Contract {
 
     #[storage(read)]
     fn get_price(price_feed_id: PriceFeedId) -> Price {
-        get_price_internal(price_feed_id)
+        get_price_internal(price_feed_id, PricePosition::Middle)
     }
 
     #[storage(read)]
@@ -1015,7 +1015,7 @@ impl SRC5 for Contract {
 }
 
 #[storage(read)]
-fn get_price_internal(price_feed_id: PriceFeedId) -> Price {
+fn get_price_internal(price_feed_id: PriceFeedId, price_position: PricePosition) -> Price {
     let contract_id = storage.pyth_contract_id.read();
     require(
         contract_id != ContractId::zero(),
@@ -1023,7 +1023,7 @@ fn get_price_internal(price_feed_id: PriceFeedId) -> Price {
     );
 
     let oracle = abi(PythCore, contract_id.bits());
-    let price = oracle.price(price_feed_id);
+    let mut price = oracle.price(price_feed_id);
 
     // validate values
     if price.publish_time < std::block::timestamp() {
@@ -1046,6 +1046,12 @@ fn get_price_internal(price_feed_id: PriceFeedId) -> Price {
         u256::from(price.confidence) <= (u256::from(price.price) * ORACLE_MAX_CONF_WIDTH / ORACLE_CONF_BASIS_POINTS),
         Error::OraclePriceValidationError,
     );
+
+    if price_position == PricePosition::LowerBound {
+        price.price = price.price - price.confidence;
+    } else if price_position == PricePosition::UpperBound {
+        price.price = price.price + price.confidence;
+    }
 
     price
 }
@@ -1345,7 +1351,7 @@ fn is_borrow_collateralized(account: Identity) -> bool {
             continue;
         }
 
-        let price = get_price_internal(collateral_configuration.price_feed_id); // decimals: price.exponent decimals
+        let price = get_price_internal(collateral_configuration.price_feed_id, PricePosition::LowerBound); // decimals: price.exponent decimals
         let price_scale = u256::from(10_u64).pow(price.exponent);
         let price = u256::from(price.price); // decimals: price.exponent
         let collateral_scale = u256::from(10_u64).pow(collateral_configuration.decimals);
@@ -1356,7 +1362,7 @@ fn is_borrow_collateralized(account: Identity) -> bool {
         index += 1;
     }
 
-    let base_token_price = get_price_internal(storage.market_configuration.read().base_token_price_feed_id); // decimals: base_token_price.exponent 
+    let base_token_price = get_price_internal(storage.market_configuration.read().base_token_price_feed_id, PricePosition::Middle); // decimals: base_token_price.exponent 
     let base_token_price_scale = u256::from(10_u64).pow(base_token_price.exponent);
     let base_token_price = u256::from(base_token_price.price);
 
@@ -1392,7 +1398,7 @@ fn is_liquidatable_internal(account: Identity) -> bool {
             continue;
         }
 
-        let price = get_price_internal(collateral_configuration.price_feed_id); // decimals: price.exponent
+        let price = get_price_internal(collateral_configuration.price_feed_id, PricePosition::LowerBound); // decimals: price.exponent
         let price_scale = u256::from(10.pow(price.exponent));
         let price = u256::from(price.price); // decimals: price.exponent
         let collateral_scale = u256::from(10_u64).pow(collateral_configuration.decimals);
@@ -1403,7 +1409,7 @@ fn is_liquidatable_internal(account: Identity) -> bool {
         index += 1;
     }
 
-    let base_token_price = get_price_internal(storage.market_configuration.read().base_token_price_feed_id); // decimals: base_token_price.exponent
+    let base_token_price = get_price_internal(storage.market_configuration.read().base_token_price_feed_id, PricePosition::Middle); // decimals: base_token_price.exponent
     let base_token_price_scale = u256::from(10_u64).pow(base_token_price.exponent);
     let base_token_price = u256::from(base_token_price.price); // decimals: base_token_price.exponent
     let borrow_amount = present * base_token_price / base_token_price_scale; // decimals: base_token_decimals
@@ -1581,12 +1587,12 @@ fn quote_collateral_internal(asset_id: AssetId, base_amount: u64) -> u64 {
     let market_configuration = storage.market_configuration.read();
 
     // Get the asset price
-    let asset_price = get_price_internal(collateral_configuration.price_feed_id); // decimals: asset_price.exponent
+    let asset_price = get_price_internal(collateral_configuration.price_feed_id, PricePosition::UpperBound); // decimals: asset_price.exponent
     let asset_price_scale = u256::from(10_u64).pow(asset_price.exponent);
     let asset_price = u256::from(asset_price.price); // decimals: asset_price.exponent
 
     // Get the base token price
-    let base_price = get_price_internal(market_configuration.base_token_price_feed_id); // decimals: base_price.exponent 
+    let base_price = get_price_internal(market_configuration.base_token_price_feed_id, PricePosition::Middle); // decimals: base_price.exponent 
     let base_price_scale = u256::from(10_u64).pow(base_price.exponent);
     let base_price = u256::from(base_price.price); // decimals: base_price.exponent 
     let discount_factor: u256 = market_configuration.store_front_price_factor * (FACTOR_SCALE_18 - collateral_configuration.liquidation_penalty) / FACTOR_SCALE_18; // decimals: 18
@@ -1652,7 +1658,7 @@ fn absorb_internal(account: Identity) {
             );
 
         // Get price of the collateral asset
-        let price = get_price_internal(collateral_configuration.price_feed_id); // decimals: price.exponent
+        let price = get_price_internal(collateral_configuration.price_feed_id, PricePosition::LowerBound); // decimals: price.exponent
         let price_exponent = price.exponent;
         let price_scale = u256::from(10_u64).pow(price.exponent);
         let price = u256::from(price.price); // decimals: price.exponent
@@ -1677,7 +1683,7 @@ fn absorb_internal(account: Identity) {
     }
 
     // Get the base token price
-    let base_price = get_price_internal(market_configuration.base_token_price_feed_id); // decimals: base_token_price.exponent
+    let base_price = get_price_internal(market_configuration.base_token_price_feed_id, PricePosition::Middle); // decimals: base_token_price.exponent
     let base_price_exponent = base_price.exponent;
     let base_price_scale = u256::from(10_u64).pow(base_price.exponent);
     let base_price = u256::from(base_price.price); // decimals: base_token_price.exponent
