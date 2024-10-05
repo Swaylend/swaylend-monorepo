@@ -6,6 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { appConfig } from '@/configs';
 import { cn } from '@/lib/utils';
 import { useMarketStore } from '@/stores';
 import { SYMBOL_TO_ICON } from '@/utils';
@@ -71,12 +72,13 @@ export const MarketSwitcher = () => {
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          <SelectItem value="USDC">
-            <MarketItem market="USDC" logo={SYMBOL_TO_ICON.USDC} />
-          </SelectItem>
-          <SelectItem value="USDT">
-            <MarketItem market="USDT" logo={SYMBOL_TO_ICON.USDT} />
-          </SelectItem>
+          {Object.keys(appConfig.markets).map((market) => {
+            return (
+              <SelectItem key={market} value={market}>
+                <MarketItem market={market} logo={SYMBOL_TO_ICON[market]} />
+              </SelectItem>
+            );
+          })}
         </SelectGroup>
       </SelectContent>
     </Select>
