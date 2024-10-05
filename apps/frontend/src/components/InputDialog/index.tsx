@@ -139,6 +139,7 @@ export const InputDialog = () => {
     }
 
     if (action === 'REPAY') {
+      // TODO: Change 0.01 into $0.01
       // Repay 1 cent more than owed to avoid staying in debt
       return formatUnits(
         userSupplyBorrow.borrowed,
@@ -172,6 +173,7 @@ export const InputDialog = () => {
     }
 
     if (action === 'BORROW') {
+      // TODO: Change 1 into $1
       // Borrow $1 less than max borrowable amount to avoid "Trying to borrow more than the max borrowable amount" errors when prices change.
       return borrowCapacity?.minus(1) ?? BigNumber(0);
     }
@@ -347,6 +349,7 @@ export const InputDialog = () => {
 
       // Balance more than user borrowed
       if (userSupplyBorrow.borrowed.eq(0)) return 'You have no debt';
+      // TODO: Change 0.01 into $0.01
       const userBorrowed =
         formatUnits(
           userSupplyBorrow.borrowed,
