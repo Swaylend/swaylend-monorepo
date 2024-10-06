@@ -15,7 +15,7 @@ import { type ReactNode, useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 
 import { appConfig } from '@/configs';
-import { CHAIN_IDS } from 'fuels';
+import { CHAIN_IDS, Provider } from 'fuels';
 import posthog from 'posthog-js';
 import { PostHogProvider } from 'posthog-js/react';
 import { fallback } from 'viem';
@@ -23,6 +23,7 @@ import { http, createConfig } from 'wagmi';
 import { mainnet, sepolia } from 'wagmi/chains';
 import { coinbaseWallet, injected, walletConnect } from 'wagmi/connectors';
 import PostHogIdentify from './PostHogIdentify';
+import { useProvider } from '@/hooks';
 
 function makeQueryClient() {
   return new QueryClient({
@@ -91,6 +92,7 @@ const wagmiConfig = createConfig({
 });
 
 export const Providers = ({ children }: { children: ReactNode }) => {
+  const provider = useProvider();
   const queryClient = getQueryClient();
 
   useEffect(() => {
@@ -145,6 +147,8 @@ export const Providers = ({ children }: { children: ReactNode }) => {
                   appConfig.env === 'testnet'
                     ? CHAIN_IDS.fuel.testnet
                     : CHAIN_IDS.fuel.mainnet,
+                fuelProvider:
+                  provider ?? Provider.create(appConfig.client.fuelNodeUrl),
               }),
             }}
           >
