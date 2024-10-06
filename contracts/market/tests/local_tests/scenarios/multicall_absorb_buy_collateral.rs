@@ -35,7 +35,7 @@ async fn multicall_absorb_buy_collateral_test() {
         prices,
         assets,
         ..
-    } = setup().await;
+    } = setup(None).await;
 
     let price_data_update = PriceDataUpdate {
         update_fee: 1,

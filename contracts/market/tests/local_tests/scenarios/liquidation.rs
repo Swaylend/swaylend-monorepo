@@ -9,7 +9,10 @@ use fuels::{
     types::{transaction::TxPolicies, transaction_builders::VariableOutputPolicy},
 };
 use market::PriceDataUpdate;
-use market_sdk::{convert_i256_to_i128, convert_i256_to_u64, is_i256_negative, parse_units};
+use market_sdk::{
+    convert_i256_to_i128, convert_i256_to_u64, convert_u256_to_u128, format_units_u128,
+    is_i256_negative, parse_units,
+};
 
 const AMOUNT_COEFFICIENT: u64 = 10u64.pow(0);
 const SCALE_6: f64 = 10u64.pow(6) as f64;
@@ -34,7 +37,7 @@ async fn absorb_and_liquidate() {
         prices,
         usdc_contract,
         ..
-    } = setup().await;
+    } = setup(None).await;
 
     let price_data_update = PriceDataUpdate {
         update_fee: 0,
@@ -319,7 +322,7 @@ async fn all_assets_liquidated() {
         prices,
         usdc_contract,
         ..
-    } = setup().await;
+    } = setup(None).await;
 
     let price_data_update = PriceDataUpdate {
         update_fee: 0,
@@ -570,6 +573,244 @@ async fn all_assets_liquidated() {
 
     market
         .print_debug_state(&wallets, &usdc, &eth)
+        .await
+        .unwrap();
+}
+
+#[tokio::test]
+async fn is_liquidatable_internal_uses_correct_index() {
+    let TestData {
+        wallets,
+        alice,
+        alice_account,
+        bob,
+        bob_account,
+        chad,
+        market,
+        assets,
+        usdc,
+        uni,
+        oracle,
+        price_feed_ids,
+        publish_time,
+        prices,
+        usdc_contract,
+        uni_contract,
+        ..
+    } = setup(Some(100_000_000)).await;
+
+    let price_data_update = PriceDataUpdate {
+        update_fee: 0,
+        price_feed_ids,
+        publish_times: vec![publish_time; assets.len()],
+        update_data: oracle.create_update_data(&prices).await.unwrap(),
+    };
+
+    // =================================================
+    // ==================== Step #0 ====================
+    // 👛 Wallet: Alice 🧛
+    // 🤙 Call: supply_base
+    // 💰 Amount: 10K USDC
+    let amount = parse_units(10000 * AMOUNT_COEFFICIENT, usdc.decimals);
+    let log_amount = format!("{} USDC", amount as f64 / SCALE_6);
+    print_case_title(0, "Alice", "supply_base", log_amount.as_str());
+    println!("💸 Alice + {log_amount}");
+
+    // Transfer of 10K USDC to the Alice's wallet
+    usdc_contract.mint(alice_account, amount).await.unwrap();
+    let balance = alice.get_asset_balance(&usdc.asset_id).await.unwrap();
+    assert!(balance == amount);
+
+    // Alice calls supply_base
+    market
+        .with_account(&alice)
+        .await
+        .unwrap()
+        .supply_base(usdc.asset_id, amount)
+        .await
+        .unwrap();
+
+    // Сheck supply balance equal to 10K USDC
+    let (supply_balance, _) = market.get_user_supply_borrow(alice_account).await.unwrap();
+    assert!(supply_balance == amount as u128);
+
+    market
+        .print_debug_state(&wallets, &usdc, &uni)
+        .await
+        .unwrap();
+    market.debug_increment_timestamp().await.unwrap();
+
+    // =================================================
+    // ==================== Step #1 ====================
+    // 👛 Wallet: Bob 🧛
+    // 🤙 Call: supply_collateral
+    // 💰 Amount: 1K UNI ~ $5K
+    let amount = parse_units(1000 * AMOUNT_COEFFICIENT, uni.decimals);
+    let log_amount = format!("{} UNI", amount as f64 / SCALE_9);
+    print_case_title(1, "Bob", "supply_collateral", log_amount.as_str());
+    println!("💸 Bob + {log_amount}");
+
+    // Transfer of 1K UNI to the Bob's wallet
+    uni_contract.mint(bob_account, amount).await.unwrap();
+
+    let balance = bob.get_asset_balance(&uni.asset_id).await.unwrap();
+    assert!(balance == amount);
+
+    // Bob calls supply_collateral
+    market
+        .with_account(&bob)
+        .await
+        .unwrap()
+        .supply_collateral(uni.asset_id, amount)
+        .await
+        .unwrap();
+
+    // Сheck supply balance equal to 1K UNI
+    let res = market
+        .get_user_collateral(bob_account, uni.asset_id)
+        .await
+        .unwrap()
+        .value;
+    assert!(res == amount);
+
+    market
+        .print_debug_state(&wallets, &usdc, &uni)
+        .await
+        .unwrap();
+    market.debug_increment_timestamp().await.unwrap();
+
+    // =================================================
+    // ==================== Step #2 ====================
+    // 👛 Wallet: Bob 🧛
+    // 🤙 Call: withdraw_base
+    // 💰 Amount: 2K USDC
+    let amount = parse_units(2500 * AMOUNT_COEFFICIENT, usdc.decimals);
+    let log_amount = format!("{} USDC", amount as f64 / SCALE_6);
+    print_case_title(2, "Bob", "withdraw_base", log_amount.as_str());
+
+    // Bob calls withdraw_base
+    market
+        .with_account(&bob)
+        .await
+        .unwrap()
+        .withdraw_base(&[&oracle.instance], amount, &price_data_update)
+        .await
+        .unwrap();
+
+    // USDC balance check
+    let balance = bob.get_asset_balance(&usdc.asset_id).await.unwrap();
+    assert!(balance == amount);
+
+    market
+        .print_debug_state(&wallets, &usdc, &uni)
+        .await
+        .unwrap();
+
+    for _ in 0..6 {
+        market.debug_increment_timestamp().await.unwrap();
+    }
+
+    // Calculate liqudiation point, wrong present value and correct present value
+    let collateral_configurations = market.get_collateral_configurations().await.unwrap().value;
+    let uni_config = collateral_configurations
+        .iter()
+        .find(|config| config.asset_id == uni.asset_id);
+
+    let market_basics = market.get_market_basics_with_interest().await.unwrap();
+
+    let liquidation_factor = format_units_u128(
+        convert_u256_to_u128(uni_config.unwrap().liquidate_collateral_factor),
+        18,
+    );
+
+    let borrow_factor = format_units_u128(
+        convert_u256_to_u128(uni_config.unwrap().borrow_collateral_factor),
+        18,
+    );
+
+    let uni_price = oracle.price(uni.price_feed_id).await.unwrap().value;
+    let uni_price = uni_price.price as f64 / 10u64.pow(uni.price_feed_decimals as u32) as f64;
+
+    let borrow_limit = borrow_factor * uni_price * 1000_f64;
+    let liquidation_point = liquidation_factor * uni_price * 1000_f64;
+
+    let base_supply_index = format_units_u128(
+        convert_u256_to_u128(market_basics.value.base_supply_index),
+        15,
+    );
+
+    let base_borrow_index = format_units_u128(
+        convert_u256_to_u128(market_basics.value.base_borrow_index),
+        15,
+    );
+
+    let user_principal = market
+        .get_user_basic(bob_account)
+        .await
+        .unwrap()
+        .value
+        .principal;
+
+    let user_principal =
+        convert_i256_to_i128(&user_principal) as f64 / 10u64.pow(usdc.decimals as u32) as f64;
+
+    let wrong_present_value = base_supply_index * user_principal;
+    let correct_present_value = base_borrow_index * user_principal;
+
+    println!("\n==================== INFO ====================");
+    println!(
+        "📈 Borrow limit: {borrow_limit:?}\n📈 Liquidation point: {liquidation_point:?}\n📈 User principal: {user_principal:?}\n📈 Wrong present value: {wrong_present_value:?}\n📈 Correct present value: {correct_present_value:?}",
+    );
+    print!("==============================================");
+
+    let preset_balance = convert_i256_to_i128(
+        &market
+            .get_user_balance_with_interest(bob_account)
+            .await
+            .unwrap()
+            .value,
+    );
+    println!("📈 Preset balance: {preset_balance:?}");
+
+    // =================================================
+    // ==================== Step #3 ====================
+    // 👛 Wallet: Chad 🧛
+    // 🤙 Call: absorb
+    // 🔥 Target: Bob
+    print_case_title(3, "Chad", "absorb", "Bob");
+
+    // This returns false, as `is_liquidatable` does not accrue interest first
+    assert!(
+        market
+            .is_liquidatable(&[&oracle.instance], bob_account)
+            .await
+            .unwrap()
+            .value
+            == false
+    );
+
+    // This should work
+    market
+        .with_account(&chad)
+        .await
+        .unwrap()
+        .absorb(&[&oracle.instance], vec![bob_account], &price_data_update)
+        .await
+        .unwrap();
+
+    // Check if absorb was ok
+    let (_, borrow) = market.get_user_supply_borrow(bob_account).await.unwrap();
+    assert!(borrow == 0);
+
+    let amount = market
+        .get_user_collateral(bob_account, uni.asset_id)
+        .await
+        .unwrap()
+        .value;
+    assert!(amount == 0);
+
+    market
+        .print_debug_state(&wallets, &usdc, &uni)
         .await
         .unwrap();
 }
