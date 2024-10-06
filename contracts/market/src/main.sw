@@ -606,7 +606,9 @@ impl Market for Contract {
         let mut index = 0;
         // Loop and absorb each account
         while index < accounts.len() {
-            absorb_internal(accounts.get(index).unwrap());
+            let account = accounts.get(index).unwrap();
+            let principal = storage.user_basic.get(account).try_read().unwrap_or(UserBasic::default()).principal;
+            absorb_internal(account, principal);
             index += 1;
         }
     }
@@ -620,7 +622,9 @@ impl Market for Contract {
     // - `bool`: True if the account is liquidatable, False otherwise
     #[storage(read)]
     fn is_liquidatable(account: Identity) -> bool {
-        is_liquidatable_internal(account)
+        let principal = storage.user_basic.get(account).try_read().unwrap_or(UserBasic::default()).principal;
+        let present = get_user_balance_with_interest_internal(account);
+        is_liquidatable_internal(account, principal, present)
     }
 
     // # 6. Protocol collateral management
@@ -884,25 +888,7 @@ impl Market for Contract {
     // - `I256`: The user balance (with included interest)
     #[storage(read)]
     fn get_user_balance_with_interest(account: Identity) -> I256 {
-        let mut user_basic = storage.user_basic.get(account).try_read().unwrap_or(UserBasic::default());
-        let last_accrual_time = storage.market_basic.last_accrual_time.read();
-
-        // Calculate new indices
-        let (supply_index, borrow_index) = accrued_interest_indices(timestamp().into(), last_accrual_time);
-
-        // Set latest values (the principal is now the present value of the user's supply or borrow)
-        if user_basic.principal >= I256::zero() {
-            I256::try_from(present_value_supply(supply_index, user_basic.principal.try_into().unwrap())).unwrap()
-        } else {
-            I256::try_from(present_value_borrow(
-                borrow_index,
-                user_basic
-                    .principal
-                    .wrapping_neg()
-                    .try_into()
-                    .unwrap(),
-            )).unwrap().wrapping_neg()
-        }
+        get_user_balance_with_interest_internal(account)
     }
 
     // ## 9.7 Get utilization
@@ -1367,16 +1353,18 @@ fn is_borrow_collateralized(account: Identity) -> bool {
 // ## Check whether an account has enough collateral to not be liquidated
 // ### Parameters:
 // - `account`: The account of the account to be checked
+// - 'principal': The principal value of the account
+// - 'present': The present value of the account
 // ### Returns:
 // - `bool`: True if the account is liquidatable, False otherwise
 #[storage(read)]
-fn is_liquidatable_internal(account: Identity) -> bool {
-    let principal = storage.user_basic.get(account).try_read().unwrap_or(UserBasic::default()).principal; // decimals: base_asset_decimal
+fn is_liquidatable_internal(account: Identity, principal: I256, present: I256) -> bool {
     if principal >= I256::zero() {
         return false
     };
 
-    let present: u256 = present_value(principal.wrapping_neg()).try_into().unwrap(); // decimals: base_token_decimals
+    let present: u256 = present.wrapping_neg().try_into().unwrap(); // decimals: base_token_decimals
+
     let mut liquidation_treshold: u256 = 0;
 
     let mut index = 0;
@@ -1601,15 +1589,44 @@ fn quote_collateral_internal(asset_id: AssetId, base_amount: u64) -> u64 {
     <u64 as TryFrom<u256>>::try_from(quote).unwrap()
 }
 
+// ## Get user balance (with included interest)
+// ### Parameters:
+// - `account`: The account of the user
+// ### Returns:
+// - `I256`: The user balance (with included interest)
+#[storage(read)]
+fn get_user_balance_with_interest_internal(account: Identity) -> I256 {
+    let mut user_basic = storage.user_basic.get(account).try_read().unwrap_or(UserBasic::default());
+    let last_accrual_time = storage.market_basic.last_accrual_time.read();
+
+    // Calculate new indices
+    let (supply_index, borrow_index) = accrued_interest_indices(timestamp().into(), last_accrual_time);
+
+    // Set latest values (the principal is now the present value of the user's supply or borrow)
+    if user_basic.principal >= I256::zero() {
+        I256::try_from(present_value_supply(supply_index, user_basic.principal.try_into().unwrap())).unwrap()
+    } else {
+        I256::try_from(present_value_borrow(
+            borrow_index,
+            user_basic
+                .principal
+                .wrapping_neg()
+                .try_into()
+                .unwrap(),
+        )).unwrap().wrapping_neg()
+    }
+}
+
 // ## Absorb an account
 // ### Description:
 // - The function transfers the pledge (collateral) to the property of the protocol and closes the user's debt
 // ### Parameters:
-// - `account`: The account of the account to be absorbed
+// - `account`: The account of the account to be 
+// - `principal`: The principal value of the account
 #[storage(write)]
-fn absorb_internal(account: Identity) {
+fn absorb_internal(account: Identity, principal: I256) {
     // Check that the account is liquidatable
-    require(is_liquidatable_internal(account), Error::NotLiquidatable);
+    require(is_liquidatable_internal(account, principal, present_value(principal)), Error::NotLiquidatable);
 
     let market_configuration = storage.market_configuration.read();
 
