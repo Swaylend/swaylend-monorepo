@@ -352,6 +352,22 @@ async fn pause_test() {
         .is_err();
     assert!(res);
 
+    // Alice calls withdraw_collateral
+
+    let res = market
+        .with_account(&alice)
+        .await
+        .unwrap()
+        .withdraw_collateral(
+            &[&oracle.instance],
+            uni.asset_id,
+            amount,
+            &price_data_update,
+        )
+        .await
+        .is_err();
+    assert!(res);
+
     // =================================================
     // ==================== Step #4 ====================
     // 👛 Wallet: Bob 🦹

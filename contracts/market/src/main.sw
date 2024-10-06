@@ -309,6 +309,9 @@ impl Market for Contract {
     ) {
         reentrancy_guard();
 
+        // Only allow withdrawing collateral if paused flag is not set
+        require(!storage.pause_config.withdraw_paused.read(), Error::Paused);
+
         // Get the caller's account and calculate the new user and total collateral
         let caller = msg_sender().unwrap();
         let user_collateral = storage.user_collateral.get((caller, asset_id)).try_read().unwrap_or(0) - amount;
@@ -1325,6 +1328,7 @@ fn accrued_interest_indices(now: u256, last_accrual_time: u256) -> (u256, u256) 
 #[storage(read)]
 fn is_borrow_collateralized(account: Identity) -> bool {
     let principal = storage.user_basic.get(account).try_read().unwrap_or(UserBasic::default()).principal; // decimals: base_asset_decimal
+
     if principal >= I256::zero() {
         return true
     };
@@ -1359,8 +1363,8 @@ fn is_borrow_collateralized(account: Identity) -> bool {
     let base_token_price = get_price_internal(storage.market_configuration.read().base_token_price_feed_id); // decimals: base_token_price.exponent 
     let base_token_price_scale = u256::from(10_u64).pow(base_token_price.exponent);
     let base_token_price = u256::from(base_token_price.price);
-
     let borrow_amount = u256::try_from(present.wrapping_neg()).unwrap() * base_token_price / base_token_price_scale; // decimals: base_token_decimals
+    
     borrow_amount <= borrow_limit
 }
 
@@ -1372,6 +1376,7 @@ fn is_borrow_collateralized(account: Identity) -> bool {
 #[storage(read)]
 fn is_liquidatable_internal(account: Identity) -> bool {
     let principal = storage.user_basic.get(account).try_read().unwrap_or(UserBasic::default()).principal; // decimals: base_asset_decimal
+
     if principal >= I256::zero() {
         return false
     };
@@ -1407,6 +1412,7 @@ fn is_liquidatable_internal(account: Identity) -> bool {
     let base_token_price_scale = u256::from(10_u64).pow(base_token_price.exponent);
     let base_token_price = u256::from(base_token_price.price); // decimals: base_token_price.exponent
     let borrow_amount = present * base_token_price / base_token_price_scale; // decimals: base_token_decimals
+
     borrow_amount > liquidation_treshold
 }
 
