@@ -109,9 +109,9 @@ export const usePrice = (marketParam?: string) => {
         priceUpdateData,
       };
     },
-    refetchInterval: 10000,
+    refetchInterval: 3000,
     enabled: !!provider && !!priceFeedIdToAssetId,
-    staleTime: 10000,
+    staleTime: 3000,
     refetchOnWindowFocus: false,
   });
 };
