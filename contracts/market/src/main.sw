@@ -38,7 +38,7 @@ const VERSION: u8 = 1_u8;
 // pyth oracle configuration params
 const ORACLE_MAX_STALENESS: u64 = 30; // 30 seconds
 const ORACLE_MAX_AHEADNESS: u64 = 60; // 60 seconds
-const ORACLE_MAX_CONF_WIDTH: u256 = 20; // 20 / 10000 = 0.2 % 
+const ORACLE_MAX_CONF_WIDTH: u256 = 50; // 20 / 10000 = 0.5 % 
 
 // This is set during deployment of the contract
 configurable {
