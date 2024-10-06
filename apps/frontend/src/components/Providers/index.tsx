@@ -15,6 +15,7 @@ import { type ReactNode, useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 
 import { appConfig } from '@/configs';
+import { useProvider } from '@/hooks';
 import { CHAIN_IDS, Provider } from 'fuels';
 import posthog from 'posthog-js';
 import { PostHogProvider } from 'posthog-js/react';
@@ -23,7 +24,6 @@ import { http, createConfig } from 'wagmi';
 import { mainnet, sepolia } from 'wagmi/chains';
 import { coinbaseWallet, injected, walletConnect } from 'wagmi/connectors';
 import PostHogIdentify from './PostHogIdentify';
-import { useProvider } from '@/hooks';
 
 function makeQueryClient() {
   return new QueryClient({
