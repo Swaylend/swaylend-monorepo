@@ -763,15 +763,6 @@ async fn is_liquidatable_internal_uses_correct_index() {
     );
     print!("==============================================");
 
-    let preset_balance = convert_i256_to_i128(
-        &market
-            .get_user_balance_with_interest(bob_account)
-            .await
-            .unwrap()
-            .value,
-    );
-    println!("📈 Preset balance: {preset_balance:?}");
-
     // =================================================
     // ==================== Step #3 ====================
     // 👛 Wallet: Chad 🧛
