@@ -1,22 +1,22 @@
 #!/bin/bash
 
 # deploys to those addresses on local devnet
-TOKEN_CONTRACT_ID="0xab0dc5c65212c0d062101b986e18a251f15317c934c1196ccf78fa761eecb394"
-SRC_20_CONTRACT_ID="0x2442977986968c3091c0b5bc5cabf20c4dffaa57f2dc7d2a90caf8d91fd41825"
-ORACLE_CONTRACT_ID="0xd162dfc8b22cedc427afe8e88640520cb1828627633085beed8e0c78442ba428"
-TARGET_CONTRACT_ID="0x19fb90cd10df6c35056d4f20c1dccc235afed70b5f285f7cb19948f6cb3b1ea0"
+TOKEN_CONTRACT_ID="0xad56293ee3dc2ce81005d33c95ecbeb1549dbfb1adb242b81090dba390241067"
+SRC_20_CONTRACT_ID="0xbfc6b400716e93736953f1fdf956300e036abdaf2b41fb30e70fb813b87d4c34"
+ORACLE_CONTRACT_ID="0xc7b7ba72307fd1681017a6ed2e958629a87a2e48cb32dc2ed0e783918398c588"
+TARGET_CONTRACT_ID="0xee51fa53d17de68ce364a9bb61fd4544369c0e47b81a6dbfd6145e763b8b1828"
 PROXY_CONTRACT_ID="0x4f1814444f2e995803d88179476421f04f774b5c4c40956b0655b1e62b1c695d"
 BASE_TOKEN_PRICE_FEED="0xeaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a"
 
-USDC_CONTRACT_ID="0xdb012cf2f31dcb9b46ed0ef619abe040db24172deb8f7c1ef573097b2225d8b6"
-BTC_CONTRACT_ID="0x50ec3fd9d54db44697b4613b2b6d6f16df5b9f8e3e7a6fba3c51896cfaeec3a7"
-UNI_CONTRACT_ID="0x2cc3e9fa1a1009342165b57d375790f91959346a6558f9bceb378a31bd4ca992"
+USDC_CONTRACT_ID="0xc75cf050b2b7495f504f7dc30a7aa45230e0373116fe0566bc44e2c84595f414"
+BTC_CONTRACT_ID="0x8bd21c9d6d1b342e651ad7da95220d5741cd4583234c6b1b99e5c245db69263a"
+UNI_CONTRACT_ID="0x69c6de7ebf99efd3ab5af9289a45fd9626ccbb61b012b35853b91c2287529fd2"
 
-read -p "Have you deleted proxy address from contracts/market/Forc.toml? (y/n): " answer
-if [ "$answer" != "y" ]; then
-    echo "Please delete the proxy address from contracts/market/Forc.toml before continuing."
-    exit 1
-fi
+# read -p "Have you deleted proxy address from contracts/market/Forc.toml? (y/n): " answer
+# if [ "$answer" != "y" ]; then
+#     echo "Please delete the proxy address from contracts/market/Forc.toml before continuing."
+#     exit 1
+# fi
 
 cd ../../
 forc deploy --node-url http://localhost:4000 \
@@ -25,23 +25,11 @@ forc deploy --node-url http://localhost:4000 \
     --salt pyth-mock:0x0000000000000000000000000000000000000000000000000000000000000003 \
     --salt src-20:0x0000000000000000000000000000000000000000000000000000000000000004
 
+cd ./scripts
 # configure with test tokens
-cargo run --bin configure_tokens -- --signing-key $SIGNING_KEY \
-    --token-contract-id $TOKEN_CONTRACT_ID
-
-# mint tokens
-cargo run --bin mint_tokens -- --signing-key $SIGNING_KEY \
-    --token-contract-id $TOKEN_CONTRACT_ID
+cargo run --bin mint_tokens -- --config-path ./configs/devnet_usdc_mock_config.json \
+    --token-contract-id 0xad56293ee3dc2ce81005d33c95ecbeb1549dbfb1adb242b81090dba390241067 \
+    --recipient address:0x0000000000000000000000000000000000000000000000000000000000000000 --amount 10000000000
 
 # activate market
-cargo run --bin activate_market -- --signing-key $SIGNING_KEY \
-    --proxy-contract-id $PROXY_CONTRACT_ID \
-    --target-contract-id $TARGET_CONTRACT_ID \
-    --oracle-contract-id $ORACLE_CONTRACT_ID \
-    --base-token-id $USDC_CONTRACT_ID \
-    --base-token-price-feed $BASE_TOKEN_PRICE_FEED
-
-# bootstrap collateral
-cargo run --bin bootstrap_collateral -- --signing-key $SIGNING_KEY \
-    --token-contract-id $TOKEN_CONTRACT_ID \
-    --target-contract-id $TARGET_CONTRACT_ID
+cargo run --bin activate_market -- --config-path ./configs/devnet_usdc_mock_config.json
