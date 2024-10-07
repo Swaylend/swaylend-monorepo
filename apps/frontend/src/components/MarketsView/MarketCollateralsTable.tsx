@@ -90,7 +90,7 @@ const MarketCollateralsTableRow = ({
         {formatUnits(liquidationFactor, 16).toString()}%
       </TableCell>
       <TableCell className="text-lavender font-medium">
-        {BigNumber(100).minus(formatUnits(liquidationPenalty, 16)).toString()}%
+        {formatUnits(liquidationPenalty, 16).toString()}%
       </TableCell>
     </TableRow>
   );
