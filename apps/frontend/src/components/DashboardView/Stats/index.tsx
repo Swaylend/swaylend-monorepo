@@ -121,10 +121,10 @@ export const Stats = () => {
         marketConfiguration.baseTokenDecimals
       );
       if (val.lt(1) && val.gt(0)) {
-        return { title: 'Borrowed', value: 0.5 };
+        return { title: 'Your Borrow Position', value: 0.5 };
       }
       return {
-        title: 'Borrowed',
+        title: 'Your Borrow Position',
         value: val.times(priceData.prices[marketConfiguration.baseToken.bits]),
       };
     }
@@ -146,8 +146,8 @@ export const Stats = () => {
             <div>
               <div className="text-primary text-xs sm:text-md lg:text-lg font-semibold">
                 {marketMode === MARKET_MODE.BORROW
-                  ? 'Supplied Collateral'
-                  : 'Supplied Balance'}
+                  ? 'Your Supplied Collateral'
+                  : 'Your Supplied Balance'}
               </div>
               {isLoading ? (
                 <Skeleton className="w-[60%] h-[25px] mt-2 sm:h-[40px] bg-primary/20" />

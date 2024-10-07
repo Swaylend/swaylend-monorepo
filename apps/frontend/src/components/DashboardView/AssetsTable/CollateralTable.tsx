@@ -319,7 +319,9 @@ const CollateralCard = ({
             </div>
           </div>
           <div className="w-full flex items-center">
-            <div className="w-1/2 text-moon font-medium">Supplied Assets</div>
+            <div className="w-1/2 text-moon font-medium">
+              Your Supplied Collateral
+            </div>
             <div className=" text-moon flex items-center gap-x-2">
               <span className="text-lavender font-medium">
                 {getFormattedPrice(
@@ -484,7 +486,7 @@ export const CollateralTable = () => {
                 />
               </div>
             </TableHead>
-            <TableHead className="w-2/12">Supplied Assets</TableHead>
+            <TableHead className="w-2/12">Your Supplied Collateral</TableHead>
             <TableHead className="w-1/12">
               <div className="flex items-center gap-x-2">
                 Points

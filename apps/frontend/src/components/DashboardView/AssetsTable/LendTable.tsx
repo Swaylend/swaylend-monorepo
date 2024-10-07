@@ -96,7 +96,7 @@ const SkeletonCardContent = (
         <Skeleton className="w-1/2 h-[24px] bg-primary/20 rounded-md" />
       </div>
       <div className="w-full flex items-center">
-        <div className="w-1/2 text-moon font-medium">Supplied Assets</div>
+        <div className="w-1/2 text-moon font-medium">Your Supplied Assets</div>
         <Skeleton className="w-1/2 h-[24px] bg-primary/20 rounded-md" />
       </div>
       <div className="w-full flex items-center">
@@ -347,7 +347,7 @@ export const LendTable = () => {
                 </div>
                 <div className="w-full flex items-center">
                   <div className="w-1/2 text-moon font-medium">
-                    Supplied Assets
+                    Your Supplied Assets
                   </div>
                   <div className="text-moon">
                     {getFormattedNumber(
