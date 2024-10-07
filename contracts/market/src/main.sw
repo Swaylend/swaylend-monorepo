@@ -578,6 +578,13 @@ impl Market for Contract {
             index += 1;
         };
 
+        // Get the base token price 
+        let base_price = get_price_internal(market_configuration.base_token_price_feed_id, PricePosition::Middle); // decimals: base_price.exponent
+        let base_price_scale = u256::from(10_u64).pow(base_price.exponent);
+        let base_price = u256::from(base_price.price); // decimals: base_price.exponent
+
+        let borrow = base_price * borrow.into() / base_price_scale; // decimals: base_token_decimals
+
         if borrow_limit < borrow {
             u256::zero()
         } else {
