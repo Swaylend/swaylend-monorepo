@@ -930,6 +930,9 @@ impl Market for Contract {
         // Only owner can set the Pyth contract ID
         only_owner();
         storage.pyth_contract_id.write(contract_id);
+
+        // Emit Pyth contract ID set event
+        log(SetPythContractIdEvent { contract_id });
     }
 
     /// This function retrieves the contract ID of the Pyth contract.
