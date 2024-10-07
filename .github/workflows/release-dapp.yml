@@ -27,7 +27,7 @@ jobs:
       - name: Create Release Pull Request
         uses: changesets/action@v1
         with:
-          title: 'chore: release dapp'
-          commit: 'chore: release dapp'
+          title: 'chore: dapp release'
+          commit: 'chore: dapp release'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
