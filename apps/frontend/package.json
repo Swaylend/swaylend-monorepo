@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@clerk/nextjs": "^5.6.4",
-    "@fuel-ts/contract": "^0.94.8",
+    "@fuel-ts/contract": "^0.94.9",
     "@fuels/connectors": "0.31.3",
     "@fuels/react": "0.31.3",
     "@pythnetwork/hermes-client": "^1.1.0",
@@ -36,7 +36,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "encoding": "^0.1.13",
-    "fuels": "^0.94.8",
+    "fuels": "^0.94.9",
     "lucide-react": "^0.428.0",
     "next": "14.2.11",
     "next-themes": "^0.3.0",
