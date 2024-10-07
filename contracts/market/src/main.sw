@@ -609,8 +609,7 @@ impl Market for Contract {
         let mut index = 0;
         // Loop and absorb each account
         while index < accounts.len() {
-            let account = accounts.get(index).unwrap();
-            absorb_internal(account);
+            absorb_internal(accounts.get(index).unwrap());
             index += 1;
         }
     }
