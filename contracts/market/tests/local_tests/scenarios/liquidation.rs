@@ -770,14 +770,14 @@ async fn is_liquidatable_internal_uses_correct_index() {
     // 🔥 Target: Bob
     print_case_title(3, "Chad", "absorb", "Bob");
 
-    // This returns false, as `is_liquidatable` does not accrue interest first
+    // `is_liquidatable` accrues iterest first, so this must return `true`
     assert!(
         market
             .is_liquidatable(&[&oracle.instance], bob_account)
             .await
             .unwrap()
             .value
-            == false
+            == true
     );
 
     // This should work
