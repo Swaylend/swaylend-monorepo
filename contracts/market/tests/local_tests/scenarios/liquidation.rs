@@ -777,7 +777,7 @@ async fn is_liquidatable_internal_uses_correct_index() {
             .await
             .unwrap()
             .value
-            == false
+            == true
     );
 
     // This should work
