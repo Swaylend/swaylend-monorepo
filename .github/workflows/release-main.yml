@@ -1,0 +1,15 @@
+on:
+  push:
+    branches:
+      - develop
+    paths:
+      - "apps/frontend/**"
+name: release-please
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: googleapis/release-please-action@v4
+        with:
+          release-type: node
+          target-branch: ${{ github.ref_name }}
