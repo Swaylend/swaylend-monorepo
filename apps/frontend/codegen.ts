@@ -7,7 +7,7 @@ const config: CodegenConfig = {
       config: {
         documentMode: 'string',
       },
-      schema: 'https://indexer.bigdevenergy.link/c755070/v1/graphql',
+      schema: 'https://indexer.bigdevenergy.link/9ddd3ee/v1/graphql',
       preset: 'client',
       plugins: [],
     },
