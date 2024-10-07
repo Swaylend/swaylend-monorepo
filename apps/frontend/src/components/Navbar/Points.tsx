@@ -69,7 +69,7 @@ export const Points = () => {
             {isConnected ? fuelPoints : 'Connect Wallet'}
           </span>
         </div>
-        {/* <Link href="/leaderboard" className="w-full mt-4">
+        {/* <Link href="/leaderboard" className="w-full mt-4" prefetch={false}>
           <Button className="w-full flex gap-x-2" variant="tertiary-card">
             <Trophy className="w-5 h-5" />
             Points Leaderboard

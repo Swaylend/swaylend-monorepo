@@ -48,8 +48,10 @@ export const Navbar = () => {
   const pathname = usePathname();
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const [openDex, setOpenDex] = useState(false);
+  const [openBridge, setOpenBridge] = useState(false);
   const { marketMode, changeMarketMode } = useMarketStore();
-  // const { mutate: trackExternalPageView } = useTrackExternalPageView();
+  const { mutate: trackExternalPageView } = useTrackExternalPageView();
 
   return (
     <>
@@ -57,7 +59,7 @@ export const Navbar = () => {
       <div className="max-lg:hidden">
         <div className="flex justify-between items-center px-16 min-h-[93px]">
           <div className="flex items-center gap-x-[70px]">
-            <Link href="/">
+            <Link href="/" prefetch={false}>
               <Image src={Logo} alt="logo" />
             </Link>
             <div className="flex items-center gap-x-[25px] h-full">
@@ -100,7 +102,7 @@ export const Navbar = () => {
                 </button>
               </div>
               {NAVBAR_LINKS.map(({ href, label }) => (
-                <Link key={href} href={href}>
+                <Link key={href} href={href} prefetch={false}>
                   <div
                     className={cn(
                       pathname === href ? 'text-primary' : 'text-lavender',
@@ -112,85 +114,68 @@ export const Navbar = () => {
                   </div>
                 </Link>
               ))}
+              <DropdownMenu open={openBridge} onOpenChange={setOpenBridge}>
+                <DropdownMenuTrigger>
+                  <div className="text-lavender outline-none border-none focus:outline-none focus:border-none hover:text-lavender/80 text-md font-semibold flex items-center gap-x-1">
+                    Bridges
+                    <ChevronDown className="w-4 h-4" />
+                  </div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  onCloseAutoFocus={(e) => e.preventDefault()}
+                >
+                  <DropdownMenuItem>
+                    <div
+                      onMouseDown={() => {
+                        trackExternalPageView(
+                          `${appConfig.client.fuelExplorerUrl}/bridge`
+                        );
+                        window.open(
+                          `${appConfig.client.fuelExplorerUrl}/bridge`,
+                          '_blank'
+                        );
+                        setOpenBridge(false);
+                      }}
+                      rel="noreferrer"
+                      className="w-full"
+                    >
+                      <div className="w-full flex items-center justify-between text-md font-medium text-lavender py-1 px-0.5 gap-x-2 cursor-pointer hover:underline">
+                        Official Fuel Bridge
+                        <ExternalLink className="w-4 h-4" />
+                      </div>
+                    </div>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              <DropdownMenu open={openDex} onOpenChange={setOpenDex}>
+                <DropdownMenuTrigger>
+                  <div className="text-lavender outline-none border-none focus:outline-none focus:border-none hover:text-lavender/80 text-md font-semibold flex items-center gap-x-1">
+                    DEX
+                    <ChevronDown className="w-4 h-4" />
+                  </div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  onCloseAutoFocus={(e) => e.preventDefault()}
+                >
+                  <DropdownMenuItem>
+                    <div
+                      onMouseDown={() => {
+                        trackExternalPageView('https://mira.ly/');
+                        window.open('https://mira.ly/', '_blank');
+                        setOpenDex(false);
+                      }}
+                      rel="noreferrer"
+                      className="w-full"
+                    >
+                      <div className="w-full flex items-center justify-between text-md font-medium text-lavender py-1 px-0.5 gap-x-2 cursor-pointer hover:underline">
+                        MIRA
+                        <ExternalLink className="w-4 h-4" />
+                      </div>
+                    </div>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
-            {/* <DropdownMenu>
-              <DropdownMenuTrigger>
-              <div className="text-lavender outline-none border-none focus:outline-none focus:border-none hover:text-lavender/80 text-md font-semibold flex items-center gap-x-1">
-                  Bridges
-                  <ChevronDown className="w-4 h-4" />
-                  </div>
-                  </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem>
-                  <div
-                    onMouseDown={() => {
-                      trackExternalPageView('https://app.uniswap.io/1');
-                      window.open('https://app.uniswap.io', '_blank');
-                    }}
-                    rel="noreferrer"
-                    className="w-full"
-                  >
-                    <div className="w-full flex items-center justify-between text-md font-medium text-lavender py-1 px-0.5 gap-x-2 cursor-pointer hover:underline">
-                      Bridge 1
-                      <ExternalLink className="w-4 h-4" />
-                    </div>
-                  </div>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <div
-                    onMouseDown={() => {
-                      trackExternalPageView('https://app.uniswap.io/2');
-                      window.open('https://app.uniswap.io', '_blank');
-                    }}
-                    className="w-full"
-                  >
-                    <div className="w-full flex items-center justify-between text-md font-medium text-lavender py-1 px-0.5 gap-x-2 cursor-pointer hover:underline">
-                      Bridge 2
-                      <ExternalLink className="w-4 h-4" />
-                    </div>
-                  </div>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <DropdownMenu>
-              <DropdownMenuTrigger>
-                <div className="text-lavender outline-none border-none focus:outline-none focus:border-none hover:text-lavender/80 text-md font-semibold flex items-center gap-x-1">
-                  DEX
-                  <ChevronDown className="w-4 h-4" />
-                </div>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem>
-                  <div
-                    onMouseDown={() => {
-                      trackExternalPageView('https://app.uniswap.io/3');
-                      window.open('https://app.uniswap.io', '_blank');
-                    }}
-                    rel="noreferrer"
-                    className="w-full"
-                  >
-                    <div className="w-full flex items-center justify-between text-md font-medium text-lavender py-1 px-0.5 gap-x-2 cursor-pointer hover:underline">
-                      DEX 1
-                      <ExternalLink className="w-4 h-4" />
-                    </div>
-                  </div>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <div
-                    onMouseDown={() => {
-                      trackExternalPageView('https://app.uniswap.io/4');
-                      window.open('https://app.uniswap.io', '_blank');
-                    }}
-                    className="w-full"
-                  >
-                    <div className="w-full flex items-center justify-between text-md font-medium text-lavender py-1 px-0.5 gap-x-2 cursor-pointer hover:underline">
-                      DEX 2
-                      <ExternalLink className="w-4 h-4" />
-                    </div>
-                  </div>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu> */}
           </div>
           <div className="flex items-center gap-x-2">
             <Points />
@@ -203,7 +188,7 @@ export const Navbar = () => {
       {/* MOBILE */}
       <div className="hidden max-lg:block">
         <div className="flex justify-between items-center px-4 h-[80px]">
-          <Link href="/">
+          <Link href="/" prefetch={false}>
             <Image src={LogoIcon} alt="logo" />
           </Link>
           <div className="flex items-center gap-x-2">
@@ -242,7 +227,11 @@ export const Navbar = () => {
 
               <div className="h-full flex flex-col justify-between items-start px-8 w-full py-16 mt-8">
                 <div className="flex flex-col w-full h-full items-start gap-y-8  pt-16">
-                  <Link href="/" onMouseDown={() => setOpen(false)}>
+                  <Link
+                    href="/"
+                    onMouseDown={() => setOpen(false)}
+                    prefetch={false}
+                  >
                     <div
                       className={cn(
                         pathname === '/' ? 'text-primary' : 'text-lavender',
@@ -258,6 +247,7 @@ export const Navbar = () => {
                       key={href}
                       href={href}
                       onMouseDown={() => setOpen(false)}
+                      prefetch={false}
                     >
                       <div
                         className={cn(
