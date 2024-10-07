@@ -220,10 +220,10 @@ export default function MarketOverview({
               <div
                 className={cn(
                   'text-xl font-semibold text-white mt-2',
-                  collateralization.isNaN() && 'text-center'
+                  !collateralization.isFinite() && 'text-center'
                 )}
               >
-                {collateralization.isNaN()
+                {!collateralization.isFinite()
                   ? '-'
                   : `${collateralization.toFixed(2, 1)}%`}
               </div>
