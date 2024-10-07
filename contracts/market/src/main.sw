@@ -1628,7 +1628,7 @@ fn get_user_balance_with_interest_internal(account: Identity) -> I256 {
 // ### Description:
 // - The function transfers the pledge (collateral) to the property of the protocol and closes the user's debt
 // ### Parameters:
-// - `account`: The account of the account to be 
+// - `account`: The account to be absorbed
 #[storage(write)]
 fn absorb_internal(account: Identity) {
     // Get the user's basic information
