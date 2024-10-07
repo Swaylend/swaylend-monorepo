@@ -32,6 +32,10 @@ export const useFuelPoints = () => {
           `${appConfig.client.fuelOblApi}/fuel/epoch1_leaderboard?user_address=${account}`
         );
 
+        if (!response.ok) {
+          return getFormattedNumber(BigNumber(0));
+        }
+
         const data = (await response.json()) as
           | OblApiResponse[]
           | null
