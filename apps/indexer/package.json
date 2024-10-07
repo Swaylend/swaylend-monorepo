@@ -5,7 +5,7 @@
   "scripts": {
     "clean": "tsc --clean",
     "build": "tsc --build",
-    "codegen": "envio codegen",
+    "codegen": "envio codegen --config config.mainnet.usdc.yaml",
     "dev": "envio dev",
     "test": "ts-mocha test/**/*.spec.ts",
     "start": "ts-node generated/src/Index.bs.js"

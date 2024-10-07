@@ -7,9 +7,7 @@ import BigNumber from 'bignumber.js';
 type OblApiResponse = {
   user_address: string;
   total_points: number;
-  passive_points: number;
-  active_points: number;
-  gas_points: number;
+  rank: number;
 };
 
 function randomDouble(min: number, max: number) {
@@ -22,13 +20,38 @@ export const useFuelPoints = () => {
   return useQuery<string>({
     queryKey: ['fuelPoints', account],
     queryFn: async () => {
+      if (!account) return getFormattedNumber(BigNumber(0));
+
       // On testnet just return some random data that we can use for testing
       if (appConfig.env === 'testnet') {
         return getFormattedNumber(BigNumber(randomDouble(0, 1000000)));
       }
 
-      // TODO: Fetch from API (Mainnet)
-      return getFormattedNumber(BigNumber(0));
+      try {
+        const response = await fetch(
+          `${appConfig.client.fuelOblApi}/fuel/epoch1_leaderboard?user_address=${account}`
+        );
+
+        const data = (await response.json()) as
+          | OblApiResponse[]
+          | null
+          | undefined;
+
+        if (!data || data.length === 0) {
+          return getFormattedNumber(BigNumber(0));
+        }
+
+        const points = data[0].total_points;
+
+        if (!points) {
+          return getFormattedNumber(BigNumber(0));
+        }
+
+        return getFormattedNumber(BigNumber(points));
+      } catch (e) {
+        console.log(e);
+        return getFormattedNumber(BigNumber(0));
+      }
     },
     enabled: !!account,
   });

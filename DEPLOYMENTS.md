@@ -2,9 +2,9 @@
 
 ## USDC Market
 
-* Market implementation contract: `0x76f1c287a24eac90b3c0dae3a945222e9d26d17b197d900b9ff6192759124470`
+* Market implementation contract: `0x73c39f7a8378d442ae196c20c0dd4c7fb427f21f281e30bba304384da9ca50df`
 
-* Market proxy contract: `0x6ad4681dfbc01a1019335f9d9cb3fa06e4ae7ed334ff20fb4576d6b471889c84`
+* Market proxy contract: `0x657ab45a6eb98a4893a99fd104347179151e8b3828fd8f2a108cc09770d1ebae`
 
 ---
 
