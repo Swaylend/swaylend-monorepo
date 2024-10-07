@@ -60,7 +60,7 @@ pub struct TestData {
     pub prices: Vec<(Bits256, (u64, u32, u64, u64))>,
 }
 
-pub async fn setup() -> TestData {
+pub async fn setup(debug_step: Option<u64>) -> TestData {
     //--------------- WALLETS ---------------
     let wallets = init_wallets().await;
     let admin = &wallets[0];
@@ -95,10 +95,8 @@ pub async fn setup() -> TestData {
         get_market_config(usdc.asset_id, usdc.decimals as u32, usdc.price_feed_id).unwrap();
 
     // debug step
-    let debug_step: u64 = 10_000;
-    let market = Market::deploy(&admin, debug_step, false)
-        .await
-        .unwrap();
+    let debug_step: u64 = debug_step.unwrap_or(10_000);
+    let market = Market::deploy(&admin, debug_step, false).await.unwrap();
 
     // Activate contract
     market

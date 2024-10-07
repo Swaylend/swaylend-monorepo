@@ -96,7 +96,7 @@ const SkeletonCardContent = (
         <Skeleton className="w-1/2 h-[24px] bg-primary/20 rounded-md" />
       </div>
       <div className="w-full flex items-center">
-        <div className="w-1/2 text-moon font-medium">Supplied Assets</div>
+        <div className="w-1/2 text-moon font-medium">Your Supplied Assets</div>
         <Skeleton className="w-1/2 h-[24px] bg-primary/20 rounded-md" />
       </div>
       <div className="w-full flex items-center">
@@ -143,12 +143,12 @@ export const LendTable = () => {
           <TableRow>
             <TableHead className="w-3/12">
               <div className="flex items-center gap-x-2">
-                Asset
+                Earn Asset
                 <InfoIcon text={'Base asset available for lending.'} />
               </div>
             </TableHead>
             <TableHead className="w-1/6">Supply APY</TableHead>
-            <TableHead className="w-1/6">Supplied Assets</TableHead>
+            <TableHead className="w-1/6">Your Supplied Assets</TableHead>
             <TableHead className="w-1/6">
               <div className="flex items-center gap-x-2">
                 Earn Points
@@ -347,7 +347,7 @@ export const LendTable = () => {
                 </div>
                 <div className="w-full flex items-center">
                   <div className="w-1/2 text-moon font-medium">
-                    Supplied Assets
+                    Your Supplied Assets
                   </div>
                   <div className="text-moon">
                     {getFormattedNumber(

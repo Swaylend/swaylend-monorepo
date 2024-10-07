@@ -26,7 +26,7 @@ async fn pause_test() {
         publish_time,
         prices,
         ..
-    } = setup().await;
+    } = setup(None).await;
 
     let price_data_update = PriceDataUpdate {
         update_fee: 1,
@@ -348,6 +348,22 @@ async fn pause_test() {
         .await
         .unwrap()
         .withdraw_base(&[&oracle.instance], amount, &price_data_update)
+        .await
+        .is_err();
+    assert!(res);
+
+    // Alice calls withdraw_collateral
+
+    let res = market
+        .with_account(&alice)
+        .await
+        .unwrap()
+        .withdraw_collateral(
+            &[&oracle.instance],
+            uni.asset_id,
+            amount,
+            &price_data_update,
+        )
         .await
         .is_err();
     assert!(res);

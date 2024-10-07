@@ -33,5 +33,8 @@ export const getFormattedNumber = (number: BigNumber): string => {
   if (number.gte(1)) {
     return `${number.toFixed(2, 1)}`;
   }
-  return number.toFixed(3, BigNumber.ROUND_FLOOR);
+  if (number.gte(0.001)) {
+    return number.toFixed(3, BigNumber.ROUND_FLOOR);
+  }
+  return '< 0.001';
 };

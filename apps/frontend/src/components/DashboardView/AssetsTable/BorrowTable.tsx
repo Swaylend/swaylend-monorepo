@@ -97,7 +97,7 @@ const SkeletonCardContent = (
         <Skeleton className="w-1/2 h-[24px] bg-primary/20 rounded-md" />
       </div>
       <div className="w-full flex items-center">
-        <div className="w-1/2 text-moon font-medium">Supplied Assets</div>
+        <div className="w-1/2 text-moon font-medium">Your Supplied Assets</div>
         <Skeleton className="w-1/2 h-[24px] bg-primary/20 rounded-md" />
       </div>
       <div className="w-full flex items-center">
@@ -160,7 +160,7 @@ export const BorrowTable = () => {
           <TableRow>
             <TableHead className="w-3/12">
               <div className="flex items-center gap-x-2">
-                Borrow Assets
+                Borrow Asset
                 <InfoIcon
                   text={
                     "Base asset available for borrowing once you've provided at least one collateral asset."
@@ -169,7 +169,7 @@ export const BorrowTable = () => {
               </div>
             </TableHead>
             <TableHead className="w-1/6">Borrow APY</TableHead>
-            <TableHead className="w-1/6">Borrowed Assets</TableHead>
+            <TableHead className="w-1/6">Your Borrow Position</TableHead>
             <TableHead className="w-1/6">
               <div className="flex items-center gap-x-2">
                 Borrow Points
@@ -370,7 +370,7 @@ export const BorrowTable = () => {
                 </div>
                 <div className="w-full flex items-center">
                   <div className="w-1/2 text-moon font-medium">
-                    Borrowed Assets
+                    Your Borrow Position
                   </div>
                   <div className="text-moon">{borrowedBalance}</div>
                 </div>

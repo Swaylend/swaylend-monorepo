@@ -1,0 +1,27 @@
+name: Swaylend USDC Market
+ecosystem: fuel
+networks:
+  - id: 9889
+    start_block: 2000000
+    contracts:
+      - name: Market
+        address: 0x6ad4681dfbc01a1019335f9d9cb3fa06e4ae7ed334ff20fb4576d6b471889c84
+        abi_file_path: ./abi/market-abi.json
+        handler: ./src/EventHandlers.ts
+        events:
+          - name: CollateralAssetAdded
+          - name: CollateralAssetUpdated
+          - name: CollateralAssetPaused
+          - name: CollateralAssetResumed
+          - name: UserBasicEvent
+          - name: MarketBasicEvent
+          - name: UserSupplyCollateralEvent
+          - name: UserWithdrawCollateralEvent
+          - name: UserSupplyBaseEvent
+          - name: UserWithdrawBaseEvent
+          - name: AbsorbCollateralEvent
+          - name: UserLiquidatedEvent
+          - name: BuyCollateralEvent
+          - name: ReservesWithdrawnEvent
+          - name: PauseConfigurationEvent
+          - name: MarketConfigurationEvent

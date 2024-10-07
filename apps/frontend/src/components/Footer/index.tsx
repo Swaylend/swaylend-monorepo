@@ -19,7 +19,7 @@ export const Footer = () => {
         <Line />
         <div className="w-full flex justify-between mt-8 px-[20px] sm:px-[40px] xl:px-[88px]">
           <div className="md:w-1/3 sm:2/5 w-full max-sm:flex max-sm:flex-col justify-center items-center">
-            <Link href="/">
+            <Link href="/" prefetch={false}>
               <Image src={Logo} height={50} alt="logo" />
             </Link>
             <div className="sm:text-xl font-semibold text-lavender mt-8 max-sm:text-center text-lg">
@@ -101,21 +101,14 @@ export const Footer = () => {
                 <div className="text-primary text-sm font-semibold">LEGAL</div>
                 <div className="mt-2 flex flex-col gap-y-1">
                   <a
-                    href="https://docs.swaylend.com/"
+                    href="https://docs.swaylend.com/legal/swaylend-website-terms-of-use"
                     target="_blank"
                     rel="noreferrer"
                   >
-                    Privacy Policy
+                    Terms of Use
                   </a>
                   <a
-                    href="https://docs.swaylend.com/"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    Disclaimer
-                  </a>
-                  <a
-                    href="https://docs.swaylend.com/"
+                    href="https://docs.swaylend.com/legal/terms-and-condition"
                     target="_blank"
                     rel="noreferrer"
                   >

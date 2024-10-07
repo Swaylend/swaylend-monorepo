@@ -28,7 +28,7 @@ async fn price_changes() {
         prices,
         usdc_contract,
         ..
-    } = setup().await;
+    } = setup(None).await;
 
     let price_data_update = PriceDataUpdate {
         update_fee: 0,

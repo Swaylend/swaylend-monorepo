@@ -26,7 +26,7 @@ export const useBorrowCapacity = () => {
       collateralConfigurations,
       market,
       userCollateralAssets,
-      priceData?.prices,
+      priceData,
       marketConfiguration,
     ],
     queryFn: async () => {
@@ -45,7 +45,9 @@ export const useBorrowCapacity = () => {
         .reduce((acc, [key, value]) => {
           return acc.plus(
             formatUnits(
-              value.times(priceData.prices[key]),
+              value.times(
+                priceData.prices[key].minus(priceData.confidenceIntervals[key])
+              ),
               collateralConfigurations[key].decimals
             ).times(
               formatUnits(

@@ -1,4 +1,4 @@
-name: Swaylend USDT Market
+name: Swaylend USDT Market (testnet)
 ecosystem: fuel
 networks:
   - id: 0

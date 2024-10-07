@@ -24,7 +24,7 @@ async fn reserves_test() {
         admin,
         admin_account,
         ..
-    } = setup().await;
+    } = setup(None).await;
 
     let price_data_update = PriceDataUpdate {
         update_fee: 0,
@@ -151,7 +151,7 @@ async fn add_reserves_test() {
         usdc,
         usdc_contract,
         ..
-    } = setup().await;
+    } = setup(None).await;
 
     let mint_amount = parse_units(150, usdc.decimals);
     usdc_contract

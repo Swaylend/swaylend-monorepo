@@ -22,7 +22,7 @@ async fn rewards_test() {
         prices,
         eth,
         ..
-    } = setup().await;
+    } = setup(None).await;
 
     let price_data_update = PriceDataUpdate {
         update_fee: 0,

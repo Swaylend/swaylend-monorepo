@@ -102,3 +102,8 @@ pub struct PauseConfigurationEvent {
 pub struct MarketConfigurationEvent {
     pub market_config: MarketConfiguration,
 }
+
+// Set pyth contract id event
+pub struct SetPythContractIdEvent {
+    pub contract_id: ContractId,
+}
