@@ -1609,7 +1609,7 @@ fn get_user_balance_with_interest_internal(account: Identity) -> I256 {
     // Calculate new indices
     let (supply_index, borrow_index) = accrued_interest_indices(timestamp().into(), last_accrual_time);
 
-    // Set latest values (the principal is now the present value of the user's supply or borrow)
+    // Return the present value of the user's balance
     if user_basic.principal >= I256::zero() {
         I256::try_from(present_value_supply(supply_index, user_basic.principal.try_into().unwrap())).unwrap()
     } else {
