@@ -1,3 +1,5 @@
+import { appConfig } from '@/configs';
+
 export const getSingleMarketQuery = (poolAddress: string) => `
 WITH CollateralPoolData AS (
     select date,
@@ -6,7 +8,7 @@ WITH CollateralPoolData AS (
             SELECT DATE(timestamp) as date,
                 argMax(collateralAmountUsd, timestamp) as collateralValueUsd
             FROM CollateralPoolSnapshot_raw
-            WHERE chainId = 0
+            WHERE chainId = ${appConfig.env === 'testnet' ? 0 : 9889}
                 AND poolAddress = '${poolAddress}'
                 AND timestamp >= DATE_SUB(NOW(), INTERVAL 1 MONTH)
             GROUP BY date,
@@ -21,7 +23,7 @@ BasePoolData AS (
         ROUND(argMax(supplyApr, timestamp), 2) as supplyApr,
         ROUND(argMax(borrowApr, timestamp), 2) as borrowApr
     FROM BasePoolSnapshot_raw
-    WHERE chainId = 0
+    WHERE chainId = ${appConfig.env === 'testnet' ? 0 : 9889}
         AND poolAddress = '${poolAddress}'
         AND timestamp >= DATE_SUB(NOW(), INTERVAL 1 MONTH)
     GROUP BY date

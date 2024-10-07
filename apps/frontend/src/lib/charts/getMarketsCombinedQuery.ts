@@ -1,3 +1,5 @@
+import { appConfig } from '@/configs';
+
 export const getMarketsCombinedQuery = () => `
 WITH CollateralPoolData AS (
     select date,
@@ -7,7 +9,7 @@ WITH CollateralPoolData AS (
                 DATE(timestamp) as date,
                 FLOOR(argMax(collateralAmountUsd, timestamp)) as collateralValueUsd
             FROM CollateralPoolSnapshot_raw
-            WHERE chainId = 0
+            WHERE chainId = ${appConfig.env === 'testnet' ? 0 : 9889}
                 AND timestamp >= DATE_SUB(NOW(), INTERVAL 1 MONTH)
             GROUP BY date, poolAddress, underlyingTokenAddress
         )
@@ -23,7 +25,7 @@ BasePoolData AS (
                 argMax(suppliedAmountUsd, timestamp) as suppliedValueUsd,
                 argMax(borrowedAmountUsd, timestamp) as borrowedValueUsd
             FROM BasePoolSnapshot_raw
-            WHERE chainId = 0
+            WHERE chainId = ${appConfig.env === 'testnet' ? 0 : 9889}
                 AND timestamp >= DATE_SUB(NOW(), INTERVAL 1 MONTH)
             GROUP BY date,
                 poolAddress
