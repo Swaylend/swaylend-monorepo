@@ -1,0 +1,24 @@
+name: Sync develop
+
+on:
+  push:
+    branches:
+      - 'main'
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: develop
+      - name: Git config
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+      - name: Sync
+        run: |
+          git checkout develop
+          git merge main --ff-only
+          git push origin develop
