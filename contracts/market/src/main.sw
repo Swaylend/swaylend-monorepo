@@ -581,7 +581,7 @@ impl Market for Contract {
         let base_price_scale = u256::from(10_u64).pow(base_price.exponent);
         let base_price = u256::from(base_price.price); // decimals: base_price.exponent
 
-        let borrow = base_price * borrow / base_price_scale; // decimals: base_token_decimals
+        let borrow_limit = borrow_limit * base_price_scale / base_price; // decimals: base_token_decimals
 
         if borrow_limit < borrow {
             u256::zero()
