@@ -6,7 +6,6 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc.js';
 import { DateTime } from 'fuels';
 import { appConfig } from './configs/index.js';
-import { ASSET_ID_TO_SYMBOL } from './constants.js';
 import {
   BasePoolSnapshot,
   BasePositionSnapshot,
@@ -228,7 +227,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
             ctx.transaction.time
           ).toUnixSeconds(),
           underlyingTokenAddress: base_token,
-          underlyingTokenSymbol: ASSET_ID_TO_SYMBOL[base_token],
+          underlyingTokenSymbol: appConfig.assets[base_token],
           receiptTokenAddress: '',
           receiptTokenSymbol: '',
           poolAddress: ctx.contractAddress,
@@ -293,7 +292,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
             ctx.transaction.time
           ).toUnixSeconds(),
           underlyingTokenAddress: asset_id,
-          underlyingTokenSymbol: ASSET_ID_TO_SYMBOL[asset_id],
+          underlyingTokenSymbol: appConfig.assets[asset_id],
           receiptTokenAddress: '',
           receiptTokenSymbol: '',
           poolAddress: ctx.contractAddress,
@@ -311,7 +310,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
         chainId: chainId,
         poolAddress: ctx.contractAddress,
         underlyingTokenAddress: asset_id,
-        underlyingTokenSymbol: ASSET_ID_TO_SYMBOL[asset_id],
+        underlyingTokenSymbol: appConfig.assets[asset_id],
         underlyingTokenPriceUsd: BigDecimal(0),
         availableAmount: 0n,
         availableAmountUsd: BigDecimal(0),
@@ -449,7 +448,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
           userAddress: address,
           underlyingTokenAddress: collateralConfiguration.assetAddress,
           underlyingTokenSymbol:
-            ASSET_ID_TO_SYMBOL[collateralConfiguration.assetAddress],
+            appConfig.assets[collateralConfiguration.assetAddress],
           suppliedAmount: 0n,
           suppliedAmountNormalized: BigDecimal(0),
           suppliedAmountUsd: BigDecimal(0),
@@ -720,13 +719,13 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
         }
 
         const baseAssetPrice = await getPriceBySymbol(
-          ASSET_ID_TO_SYMBOL[pool.underlyingTokenAddress],
+          appConfig.assets[pool.underlyingTokenAddress],
           ctx.timestamp
         );
 
         if (!baseAssetPrice) {
           console.error(
-            `No price found for ${ASSET_ID_TO_SYMBOL[pool.underlyingTokenAddress]} at ${ctx.timestamp}`
+            `No price found for ${appConfig.assets[pool.underlyingTokenAddress]} at ${ctx.timestamp}`
           );
         }
 
@@ -822,7 +821,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
               chainId: 0,
               poolAddress: userBasic.contractAddress,
               underlyingTokenAddress: underlyingTokenAddress,
-              underlyingTokenSymbol: ASSET_ID_TO_SYMBOL[underlyingTokenAddress],
+              underlyingTokenSymbol: appConfig.assets[underlyingTokenAddress],
               userAddress: userBasic.address,
               suppliedAmount: suppliedAmount,
               suppliedAmountNormalized: suppliedAmountNormalized,
@@ -902,7 +901,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
             chainId: 0,
             poolAddress: marketBasic.contractAddress,
             underlyingTokenAddress: underlyingTokenAddress,
-            underlyingTokenSymbol: ASSET_ID_TO_SYMBOL[underlyingTokenAddress],
+            underlyingTokenSymbol: appConfig.assets[underlyingTokenAddress],
             underlyingTokenPriceUsd: basePrice,
             availableAmount: totalSupplyBase - totalBorrowBase,
             availableAmountNormalized: totalSupplyBaseNormalized.minus(
@@ -978,13 +977,13 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
 
         for (const collateralPool of collateralPools) {
           const collateralPrice = await getPriceBySymbol(
-            ASSET_ID_TO_SYMBOL[collateralPool.underlyingTokenAddress],
+            appConfig.assets[collateralPool.underlyingTokenAddress],
             ctx.timestamp
           );
 
           if (!collateralPrice) {
             console.error(
-              `No price found for ${ASSET_ID_TO_SYMBOL[collateralPool.underlyingTokenAddress]} at ${ctx.timestamp}`
+              `No price found for ${appConfig.assets[collateralPool.underlyingTokenAddress]} at ${ctx.timestamp}`
             );
           }
 
