@@ -1,15 +1,17 @@
+name: Release dapp
 on:
   workflow_dispatch:
   push:
     branches:
-      - develop
-name: release-please
+      - main
 jobs:
   release-please:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
       - uses: googleapis/release-please-action@v4
         with:
           release-type: node
           target-branch: ${{ github.ref_name }}
           path: apps/frontend
+          token: ${{ secrets.GITHUB_TOKEN }}
