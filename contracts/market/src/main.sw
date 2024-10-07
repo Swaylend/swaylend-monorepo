@@ -551,6 +551,8 @@ impl Market for Contract {
         // Calculate borrow limit for each collateral asset the user has
         let mut index = 0;
         let len = storage.collateral_configurations_keys.len();
+        let market_configuration = storage.market_configuration.read();
+
 
         while index < len {
             let collateral_configuration = storage.collateral_configurations.get(storage.collateral_configurations_keys.get(index).unwrap().read()).read();
@@ -567,16 +569,19 @@ impl Market for Contract {
             let price = u256::from(price.price); // decimals: price.exponent
             let amount = balance * collateral_configuration.borrow_collateral_factor / FACTOR_SCALE_18; // decimals: collateral_configuration.decimals
             let scale = u256::from(10_u64).pow(
-                collateral_configuration
-                    .decimals + price_exponent - storage
-                    .market_configuration
-                    .read()
-                    .base_token_decimals,
+                collateral_configuration.decimals + price_exponent - market_configuration.base_token_decimals,
             );
 
             borrow_limit += amount * price / scale; // decimals: base_token_decimals
             index += 1;
         };
+
+        // Get the base token price 
+        let base_price = get_price_internal(market_configuration.base_token_price_feed_id, PricePosition::Middle); // decimals: base_price.exponent
+        let base_price_scale = u256::from(10_u64).pow(base_price.exponent);
+        let base_price = u256::from(base_price.price); // decimals: base_price.exponent
+
+        let borrow = base_price * borrow / base_price_scale; // decimals: base_token_decimals
 
         if borrow_limit < borrow {
             u256::zero()
