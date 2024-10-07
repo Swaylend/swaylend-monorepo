@@ -676,6 +676,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
         const START_TIME = dayjs(ctx.timestamp.getTime()).utc();
         const START_TIME_UNIX = START_TIME.unix();
         const START_TIME_FORMATED = START_TIME.format('YYYY-MM-DD HH:00:00');
+        const chainId = CHAIN_ID_MAP[ctx.chainId as keyof typeof CHAIN_ID_MAP];
 
         // BASE POOL SNAPSHOTS AND BASE POSITIONS SNAPSHOTS
         const pools = (
@@ -688,7 +689,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
               value: ctx.contract.id.toB256(),
             },
           ])
-        ).filter((val) => val.chainId === 0);
+        ).filter((val) => val.chainId === chainId);
 
         if (pools.length !== 1) {
           console.error(
@@ -777,7 +778,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
               value: marketBasic.contractAddress,
             },
           ])
-        ).filter((val) => val.chainId === 0);
+        ).filter((val) => val.chainId === chainId);
 
         for (const userBasic of userBasics) {
           const basePositionSnapshotId = `${userBasic.chainId}_${userBasic.contractAddress}_${marketConfiguration.baseTokenAddress}_${userBasic.address}`;
@@ -818,7 +819,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
               id: basePositionSnapshotId,
               timestamp: START_TIME_UNIX,
               blockDate: START_TIME_FORMATED,
-              chainId: 0,
+              chainId: chainId,
               poolAddress: userBasic.contractAddress,
               underlyingTokenAddress: underlyingTokenAddress,
               underlyingTokenSymbol: appConfig.assets[underlyingTokenAddress],
@@ -898,7 +899,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
             id: basePoolSnapshotId,
             timestamp: START_TIME_UNIX,
             blockDate: START_TIME_FORMATED,
-            chainId: 0,
+            chainId: chainId,
             poolAddress: marketBasic.contractAddress,
             underlyingTokenAddress: underlyingTokenAddress,
             underlyingTokenSymbol: appConfig.assets[underlyingTokenAddress],
@@ -971,7 +972,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
               value: ctx.contract.id.toB256(),
             },
           ])
-        ).filter((val) => val.chainId === 0);
+        ).filter((val) => val.chainId === chainId);
 
         const collateralPrices = new Map<string, BigDecimal>();
 
@@ -1057,7 +1058,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
               value: ctx.contract.id.toB256(),
             },
           ])
-        ).filter((val) => val.chainId === 0);
+        ).filter((val) => val.chainId === chainId);
 
         const processCollateralPositionSnapshotsPromises =
           collateralPositions.map(async (collateralPosition) => {
