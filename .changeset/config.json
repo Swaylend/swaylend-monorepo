@@ -1,14 +1,14 @@
 {
   "$schema": "https://unpkg.com/@changesets/config@3.0.3/schema.json",
   "changelog": [
-    "@changesets/cli/changelog",
+    "@changesets/changelog-github",
     { "repo": "pseudobun/swaylend-monorepo" }
   ],
   "commit": false,
   "fixed": [],
   "linked": [],
   "access": "restricted",
-  "baseBranch": "main",
+  "baseBranch": "develop",
   "updateInternalDependencies": "patch",
   "ignore": ["sway-lend-indexer", "indexer-sentio"]
 }
