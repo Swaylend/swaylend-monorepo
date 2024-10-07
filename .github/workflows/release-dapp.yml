@@ -1,17 +1,30 @@
-name: Release dapp
+name: Release
+
 on:
-  workflow_dispatch:
   push:
     branches:
       - main
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
 jobs:
-  release-please:
+  release:
+    name: Release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: googleapis/release-please-action@v4
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+      - name: Install node
+        uses: actions/setup-node@v4
         with:
-          release-type: node
-          target-branch: ${{ github.ref_name }}
-          path: apps/frontend
-          token: ${{ secrets.GITHUB_TOKEN }}
+          node-version-file: '.nvmrc'
+          registry-url: https://registry.npmjs.org/
+          cache: 'pnpm'
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Create Release Pull Request
+        uses: changesets/action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

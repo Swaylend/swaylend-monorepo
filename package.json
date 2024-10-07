@@ -11,7 +11,8 @@
     "@graphql-codegen/cli": "^5.0.2",
     "@graphql-codegen/client-preset": "^4.3.3",
     "@graphql-typed-document-node/core": "^3.2.0",
-    "graphql": "^16.9.0"
+    "graphql": "^16.9.0",
+    "@changesets/cli": "^2.27.9"
   },
   "packageManager": "pnpm@9.11.0",
   "engines": {
