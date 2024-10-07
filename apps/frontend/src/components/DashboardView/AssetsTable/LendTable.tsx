@@ -143,12 +143,12 @@ export const LendTable = () => {
           <TableRow>
             <TableHead className="w-3/12">
               <div className="flex items-center gap-x-2">
-                Asset
+                Earn Asset
                 <InfoIcon text={'Base asset available for lending.'} />
               </div>
             </TableHead>
             <TableHead className="w-1/6">Supply APY</TableHead>
-            <TableHead className="w-1/6">Supplied Assets</TableHead>
+            <TableHead className="w-1/6">Your Supplied Assets</TableHead>
             <TableHead className="w-1/6">
               <div className="flex items-center gap-x-2">
                 Earn Points

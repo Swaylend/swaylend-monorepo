@@ -104,8 +104,19 @@ export const usePrice = (marketParam?: string) => {
         ])
       );
 
+      // Format confidence intervals to BigNumber
+      const confidenceIntervals = Object.fromEntries(
+        priceUpdates.parsed.map((parsedPrice) => [
+          priceFeedIdToAssetId.get(`0x${parsedPrice.id}`)!,
+          BigNumber(parsedPrice.price.conf).times(
+            BigNumber(10).pow(BigNumber(parsedPrice.price.expo))
+          ),
+        ])
+      );
+
       return {
         prices,
+        confidenceIntervals,
         priceUpdateData,
       };
     },

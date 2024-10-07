@@ -160,7 +160,7 @@ export const BorrowTable = () => {
           <TableRow>
             <TableHead className="w-3/12">
               <div className="flex items-center gap-x-2">
-                Borrow Assets
+                Borrow Asset
                 <InfoIcon
                   text={
                     "Base asset available for borrowing once you've provided at least one collateral asset."
