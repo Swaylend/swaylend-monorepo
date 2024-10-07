@@ -13,3 +13,4 @@ jobs:
         with:
           release-type: node
           target-branch: ${{ github.ref_name }}
+          path: ./apps/frontend
