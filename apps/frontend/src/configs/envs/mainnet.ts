@@ -34,7 +34,7 @@ const markets: DeployedMarkets = {
     oracleAddress:
       '0x103465f1c0c901471b868b4a9e4e57c381168ac38ee5b59732943e9e004c488d',
     marketAddress:
-      '0x6ad4681dfbc01a1019335f9d9cb3fa06e4ae7ed334ff20fb4576d6b471889c84',
+      '0x657ab45a6eb98a4893a99fd104347179151e8b3828fd8f2a108cc09770d1ebae',
     tokenFactoryAddress: '',
     graphqlUrl: '',
   },
