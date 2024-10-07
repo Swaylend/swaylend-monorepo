@@ -59,7 +59,7 @@ export const Navbar = () => {
       <div className="max-lg:hidden">
         <div className="flex justify-between items-center px-16 min-h-[93px]">
           <div className="flex items-center gap-x-[70px]">
-            <Link href="/">
+            <Link href="/" prefetch={false}>
               <Image src={Logo} alt="logo" />
             </Link>
             <div className="flex items-center gap-x-[25px] h-full">
@@ -102,7 +102,7 @@ export const Navbar = () => {
                 </button>
               </div>
               {NAVBAR_LINKS.map(({ href, label }) => (
-                <Link key={href} href={href}>
+                <Link key={href} href={href} prefetch={false}>
                   <div
                     className={cn(
                       pathname === href ? 'text-primary' : 'text-lavender',
@@ -128,10 +128,10 @@ export const Navbar = () => {
                     <div
                       onMouseDown={() => {
                         trackExternalPageView(
-                          `${appConfig.client.fuelExplorerUrl}bridge`
+                          `${appConfig.client.fuelExplorerUrl}/bridge`
                         );
                         window.open(
-                          `${appConfig.client.fuelExplorerUrl}bridge`,
+                          `${appConfig.client.fuelExplorerUrl}/bridge`,
                           '_blank'
                         );
                         setOpenBridge(false);
@@ -188,7 +188,7 @@ export const Navbar = () => {
       {/* MOBILE */}
       <div className="hidden max-lg:block">
         <div className="flex justify-between items-center px-4 h-[80px]">
-          <Link href="/">
+          <Link href="/" prefetch={false}>
             <Image src={LogoIcon} alt="logo" />
           </Link>
           <div className="flex items-center gap-x-2">
@@ -227,7 +227,11 @@ export const Navbar = () => {
 
               <div className="h-full flex flex-col justify-between items-start px-8 w-full py-16 mt-8">
                 <div className="flex flex-col w-full h-full items-start gap-y-8  pt-16">
-                  <Link href="/" onMouseDown={() => setOpen(false)}>
+                  <Link
+                    href="/"
+                    onMouseDown={() => setOpen(false)}
+                    prefetch={false}
+                  >
                     <div
                       className={cn(
                         pathname === '/' ? 'text-primary' : 'text-lavender',
@@ -243,6 +247,7 @@ export const Navbar = () => {
                       key={href}
                       href={href}
                       onMouseDown={() => setOpen(false)}
+                      prefetch={false}
                     >
                       <div
                         className={cn(

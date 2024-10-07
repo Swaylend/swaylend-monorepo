@@ -42,14 +42,15 @@ export const FundWallet = ({
             Buy Ethereum <ExternalLink className="w-4 h-4" />
           </Button> */}
 
-          <Link
+          <a
+            href={`${appConfig.client.fuelExplorerUrl}/bridge`}
+            rel="noreferrer"
             target="_blank"
-            href={`${appConfig.client.fuelExplorerUrl}bridge`}
           >
             <Button className="flex gap-x-1 items-center">
               Bridge Ethereum <ExternalLink className="w-4 h-4" />
             </Button>
-          </Link>
+          </a>
         </div>
       </div>
       <div className="mt-16 flex w-full justify-end">
