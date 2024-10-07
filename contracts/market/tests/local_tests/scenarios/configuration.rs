@@ -22,7 +22,7 @@ async fn collateral_configuration_test() {
         usdc_contract,
         eth,
         ..
-    } = setup().await;
+    } = setup(None).await;
 
     let price_data_update = PriceDataUpdate {
         update_fee: 0,
@@ -164,7 +164,7 @@ async fn market_configuration_test() {
         market,
         usdc,
         ..
-    } = setup().await;
+    } = setup(None).await;
 
     let old_market_config = market.get_market_configuration().await.unwrap().value;
     let new_market_config = MarketConfiguration {

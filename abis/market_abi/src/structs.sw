@@ -131,6 +131,23 @@ pub struct PriceDataUpdate {
     pub update_data: Vec<Bytes>
 }
 
+pub enum PricePosition {
+    LowerBound: (),
+    Middle: (),
+    UpperBound: (),
+}
+
+impl core::ops::Eq for PricePosition {
+    fn eq(self, other: Self) -> bool {
+        match (self, other) {
+            (PricePosition::LowerBound, PricePosition::LowerBound) => true,
+            (PricePosition::Middle, PricePosition::Middle) => true,
+            (PricePosition::UpperBound, PricePosition::UpperBound) => true,
+            _ => false,
+        }
+    }
+}
+
 pub enum Error {
     AlreadyInitialized: (),
     Paused: (),
