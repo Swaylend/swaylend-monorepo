@@ -2,6 +2,7 @@ import { appConfig } from '@/configs';
 import { useBalance } from '@/hooks';
 import { useAccount } from '@fuels/react';
 import { ExternalLink } from 'lucide-react';
+import Link from 'next/link';
 import React, { useEffect } from 'react';
 import { Button } from '../ui/button';
 
@@ -37,13 +38,18 @@ export const FundWallet = ({
           from another Network, or by buying it directly.
         </div>
         <div className="flex gap-x-4 w-full justify-center mt-8">
-          <Button className="flex gap-x-1 items-center">
+          {/* <Button className="flex gap-x-1 items-center">
             Buy Ethereum <ExternalLink className="w-4 h-4" />
-          </Button>
+          </Button> */}
 
-          <Button className="flex gap-x-1 items-center">
-            Bridge Ethereum <ExternalLink className="w-4 h-4" />
-          </Button>
+          <Link
+            target="_blank"
+            href={`${appConfig.client.fuelExplorerUrl}bridge`}
+          >
+            <Button className="flex gap-x-1 items-center">
+              Bridge Ethereum <ExternalLink className="w-4 h-4" />
+            </Button>
+          </Link>
         </div>
       </div>
       <div className="mt-16 flex w-full justify-end">

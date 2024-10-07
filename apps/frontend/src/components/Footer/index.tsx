@@ -101,21 +101,14 @@ export const Footer = () => {
                 <div className="text-primary text-sm font-semibold">LEGAL</div>
                 <div className="mt-2 flex flex-col gap-y-1">
                   <a
-                    href="https://docs.swaylend.com/"
+                    href="https://docs.swaylend.com/legal/swaylend-website-terms-of-use"
                     target="_blank"
                     rel="noreferrer"
                   >
-                    Privacy Policy
+                    Terms of Use
                   </a>
                   <a
-                    href="https://docs.swaylend.com/"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    Disclaimer
-                  </a>
-                  <a
-                    href="https://docs.swaylend.com/"
+                    href="https://docs.swaylend.com/legal/terms-and-condition"
                     target="_blank"
                     rel="noreferrer"
                   >
