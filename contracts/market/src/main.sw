@@ -607,8 +607,7 @@ impl Market for Contract {
         // Loop and absorb each account
         while index < accounts.len() {
             let account = accounts.get(index).unwrap();
-            let principal = storage.user_basic.get(account).try_read().unwrap_or(UserBasic::default()).principal;
-            absorb_internal(account, principal);
+            absorb_internal(account);
             index += 1;
         }
     }
@@ -622,9 +621,8 @@ impl Market for Contract {
     // - `bool`: True if the account is liquidatable, False otherwise
     #[storage(read)]
     fn is_liquidatable(account: Identity) -> bool {
-        let principal = storage.user_basic.get(account).try_read().unwrap_or(UserBasic::default()).principal;
         let present = get_user_balance_with_interest_internal(account);
-        is_liquidatable_internal(account, principal, present)
+        is_liquidatable_internal(account, present)
     }
 
     // # 6. Protocol collateral management
@@ -1353,13 +1351,12 @@ fn is_borrow_collateralized(account: Identity) -> bool {
 // ## Check whether an account has enough collateral to not be liquidated
 // ### Parameters:
 // - `account`: The account of the account to be checked
-// - 'principal': The principal value of the account
 // - 'present': The present value of the account
 // ### Returns:
 // - `bool`: True if the account is liquidatable, False otherwise
 #[storage(read)]
-fn is_liquidatable_internal(account: Identity, principal: I256, present: I256) -> bool {
-    if principal >= I256::zero() {
+fn is_liquidatable_internal(account: Identity, present: I256) -> bool {
+    if present >= I256::zero() {
         return false
     };
 
@@ -1622,21 +1619,20 @@ fn get_user_balance_with_interest_internal(account: Identity) -> I256 {
 // - The function transfers the pledge (collateral) to the property of the protocol and closes the user's debt
 // ### Parameters:
 // - `account`: The account of the account to be 
-// - `principal`: The principal value of the account
 #[storage(write)]
-fn absorb_internal(account: Identity, principal: I256) {
+fn absorb_internal(account: Identity) {
+    // Get the user's basic information
+    let user_basic = storage.user_basic.get(account).try_read().unwrap_or(UserBasic::default());
+    let old_principal = user_basic.principal;
+    let old_balance = present_value(old_principal); // decimals: base_token_decimals
+    
     // Check that the account is liquidatable
-    require(is_liquidatable_internal(account, principal, present_value(principal)), Error::NotLiquidatable);
+    require(is_liquidatable_internal(account, old_balance), Error::NotLiquidatable);
 
+    let mut delta_value: u256 = 0; // decimals: 18
     let market_configuration = storage.market_configuration.read();
 
     let caller = msg_sender().unwrap();
-
-    // Get the user's basic information
-    let account_user = storage.user_basic.get(account).try_read().unwrap_or(UserBasic::default());
-    let old_principal = account_user.principal;
-    let old_balance = present_value(old_principal); // decimals: base_token_decimals
-    let mut delta_value: u256 = 0; // decimals: 18
 
     // Only used for logging event
     let mut total_value: u256 = 0; // decimals: 18
@@ -1710,7 +1706,7 @@ fn absorb_internal(account: Identity, principal: I256) {
 
     // Calculate the new principal value of the user
     let new_principal = principal_value(new_balance);
-    update_base_principal(account, account_user, new_principal);
+    update_base_principal(account, user_basic, new_principal);
 
     // Calculate the repay and supply amounts
     let (repay_amount, supply_amount) = repay_and_supply_amount(old_principal, new_principal);
