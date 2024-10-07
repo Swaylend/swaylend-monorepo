@@ -26,7 +26,7 @@ async fn collateral_borrow_test() {
         uni,
         uni_contract,
         ..
-    } = setup().await;
+    } = setup(None).await;
 
     let price_data_update = PriceDataUpdate {
         update_fee: 0,
@@ -245,7 +245,7 @@ async fn collateral_borrow_timeskip_test() {
         uni,
         uni_contract,
         ..
-    } = setup().await;
+    } = setup(None).await;
 
     let price_data_update = PriceDataUpdate {
         update_fee: 0,

@@ -27,7 +27,7 @@ async fn negative_reserves_test() {
         prices,
         assets,
         ..
-    } = setup().await;
+    } = setup(None).await;
 
     let price_data_update = PriceDataUpdate {
         update_fee: 1,

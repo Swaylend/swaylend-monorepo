@@ -21,7 +21,7 @@ async fn supply_withdraw_test() {
         publish_time,
         prices,
         ..
-    } = setup().await;
+    } = setup(None).await;
 
     let price_data_update = PriceDataUpdate {
         update_fee: 1,
