@@ -55,17 +55,3 @@ const assets: Record<string, string> = {
   '0x7a4f087c957d30218223c2baaaa365355c9ca81b6ea49004cfb1590a5399216f':
     'SolvBTC.BBN',
 };
-
-// ETH: 'Ethereum',
-// USDC: 'USDC',
-// USDT: 'USDT',
-// BTC: 'Bitcoin',
-// UNI: 'Uniswap',
-// BNB: 'BNB',
-// ezETH: 'ezETH',
-// pzETH: 'pzETH',
-// sDAI: 'sDAI',
-// weETH: 'weETH',
-// wstETH: 'wstETH',
-// SolvBTC: 'SolvBTC',
-// 'SolvBTC.BBN': 'SolvBTC.BBN',
