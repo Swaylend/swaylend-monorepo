@@ -18,7 +18,7 @@
   "base_min_for_rewards": 1000000000,
   "base_borrow_min": 10000000,
   "target_reserves": 1000000000000,
-  "pyth_contract_id": "0x02aba78ebf9e2a81ff675802f50005d92d8730bdaf761913a2081690a65b0419",
+  "pyth_contract_id": "0xa98729ffb994b5faaedf60f06d70086340f334c229f3dae01341f1451a3a6593",
   "base_asset": {
     "asset_id": "0xf57e447241dd177c8178cda22e2682a8f2b28429988aa590054cec09e2877d09",
     "price_feed_id": "0xeaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a",
