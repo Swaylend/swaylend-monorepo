@@ -3,8 +3,6 @@ on:
   push:
     branches:
       - develop
-    paths:
-      - "apps/frontend/**"
 name: release-please
 jobs:
   release-please:
@@ -14,4 +12,4 @@ jobs:
         with:
           release-type: node
           target-branch: ${{ github.ref_name }}
-          path: ./apps/frontend
+          path: apps/frontend
