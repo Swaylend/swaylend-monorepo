@@ -12,7 +12,7 @@ export default function GlobalError({
   return (
     <html lang="en">
       <body className="w-full h-full flex flex-col justify-center items-center gap-y-2">
-        <h2>Something went wrongs!</h2>
+        <h2>Something went wrong!</h2>
         <Button onMouseDown={() => reset()}>Try again</Button>
       </body>
     </html>
