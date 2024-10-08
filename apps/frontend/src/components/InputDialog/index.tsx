@@ -28,11 +28,11 @@ import { formatUnits, getFormattedNumber, getFormattedPrice } from '@/utils';
 import { useAccount, useIsConnected } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import BigNumber from 'bignumber.js';
+import { LoaderCircleIcon } from 'lucide-react';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Button } from '../ui/button';
 import { InputField } from './InputField';
 import { PositionSummary } from './PositionSummary';
-import { LoaderCircleIcon } from 'lucide-react';
 
 export const InputDialog = () => {
   const { account } = useAccount();
