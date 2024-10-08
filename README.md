@@ -62,4 +62,4 @@ There is a dedicated [DEPLOYMENTS.md](DEPLOYMENTS.md) for contracts. For the dap
 * Discord: [SwayLend](https://discord.gg/7N796pdHNk)
 # Licensing
 
-The primary license for all Swaylend components is the MIT License. See [ `LICENSE ` ](/LICENSE) .
+The primary license for all Swaylend components is the [MIT License](/LICENSE).
