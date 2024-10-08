@@ -10,6 +10,6 @@
   "access": "restricted",
   "baseBranch": "main",
   "updateInternalDependencies": "patch",
-  "ignore": ["sway-lend-indexer", "indexer-sentio"],
+  "ignore": ["swaylend-indexer-envio", "swaylend-indexer-sentio"],
   "privatePackages": { "version": true, "tag": true }
 }

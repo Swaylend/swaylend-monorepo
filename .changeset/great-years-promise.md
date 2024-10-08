@@ -1,5 +1,5 @@
 ---
-"swaylend-v2": minor
+"swaylend-dapp": minor
 ---
 
 Initial minor release.
