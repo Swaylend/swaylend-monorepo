@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.2
+
+### Patch Changes
+
+- [`34193dc`](https://github.com/pseudobun/swaylend-monorepo/commit/34193dc0db3adb6c0a2fb194e500d38527a14571) Thanks [@pseudobun](https://github.com/pseudobun)! - Adds ..
+
+- [#6](https://github.com/pseudobun/swaylend-monorepo/pull/6) [`6274ec0`](https://github.com/pseudobun/swaylend-monorepo/commit/6274ec0c02f85d6eb74fb007d31e69ea9c8bda33) Thanks [@pseudobun](https://github.com/pseudobun)! - Something
+
+- [`e8217fe`](https://github.com/pseudobun/swaylend-monorepo/commit/e8217fe7f0b3033596e3a3c0804b2f12cac84c9a) Thanks [@pseudobun](https://github.com/pseudobun)! - Minor
+
 ## 0.1.1
 
 ### Patch Changes
