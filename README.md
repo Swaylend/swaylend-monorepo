@@ -59,7 +59,7 @@ There is a dedicated [DEPLOYMENTS.md](DEPLOYMENTS.md) for contracts. For the rel
 
 # Socials / Contact
 * Twitter/X: [@swaylend](https://x.com/swaylend)
-* Discord: [SwayLend](https://discord.gg/m9VcnNG2)
+* Discord: [SwayLend](https://discord.gg/7N796pdHNk)
 # Licensing
 
 The primary license for all Swaylend components is the MIT License. See [ `LICENSE` ](/LICENSE).
