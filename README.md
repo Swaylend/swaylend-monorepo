@@ -9,7 +9,7 @@
 </div>
 
 <h6 align="center">
-  <a target="_blank" href="https://swaylend.com">Website</a>
+  <a target="_blank" href="https://swaylend.com">Websites</a>
   ·
   <a target="_blank" href="https://docs.swaylend.com/">Docs</a>
   ·
