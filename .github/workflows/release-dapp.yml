@@ -29,5 +29,6 @@ jobs:
         with:
           title: 'chore: dapp release'
           commit: 'chore: dapp release'
+          publish: npx @changesets/cli tag
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
