@@ -22,6 +22,10 @@ jobs:
           node-version-file: '.nvmrc'
           registry-url: https://registry.npmjs.org/
           cache: 'pnpm'
+      - name: Git config
+        run: |
+          git config user.name "Lutra Labs Bot"
+          git config user.email "info@lutralabs.io"
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Create Release Pull Request
@@ -31,7 +35,7 @@ jobs:
           commit: 'chore: dapp release'
           publish: npx @changesets/cli tag
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.LUTRA_BOT_PAT }}
 
   sync:
     name: Sync develop
@@ -44,9 +48,11 @@ jobs:
           ref: main
       - name: Git config
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "Lutra Labs Bot"
+          git config user.email "info@lutralabs.io"
       - name: Sync
+        env:
+            GITHUB_TOKEN: ${{ secrets.LUTRA_BOT_PAT }}
         run: |
           git checkout develop
           git merge main --ff-only
