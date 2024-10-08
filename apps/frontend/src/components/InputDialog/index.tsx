@@ -32,6 +32,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Button } from '../ui/button';
 import { InputField } from './InputField';
 import { PositionSummary } from './PositionSummary';
+import { LoaderCircleIcon } from 'lucide-react';
 
 export const InputDialog = () => {
   const { account } = useAccount();
@@ -50,6 +51,8 @@ export const InputDialog = () => {
     changeAction,
     changeTokenAmount,
     changeInputDialogOpen: setOpen,
+    actionActive,
+    changeActionActive,
   } = useMarketStore();
 
   const { data: priceData } = usePrice();
@@ -76,6 +79,7 @@ export const InputDialog = () => {
 
   const handleSubmit = () => {
     if (!marketConfiguration) return;
+    changeActionActive(true);
 
     switch (action) {
       case ACTION_TYPE.SUPPLY: {
@@ -579,12 +583,15 @@ export const InputDialog = () => {
                 </Button>
               </DialogClose>
               <Button
-                disabled={error !== null || tokenAmount.eq(0)}
+                disabled={error !== null || tokenAmount.eq(0) || actionActive}
                 onMouseDown={handleSubmit}
-                className="w-1/2"
+                className="w-1/2 flex items-center gap-x-2"
               >
                 {action &&
                   `${action.slice(0, 1)}${action.slice(1).toLowerCase()}`}
+                {actionActive && (
+                  <LoaderCircleIcon className="animate-spin w-4 h-4" />
+                )}
               </Button>
             </div>
             <div className="w-full flex justify-center">

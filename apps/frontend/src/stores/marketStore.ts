@@ -1,5 +1,6 @@
 import { appConfig } from '@/configs';
 import BigNumber from 'bignumber.js';
+import { act } from 'react';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 
@@ -31,6 +32,7 @@ interface MarketStore {
   inputDialogOpen: boolean;
   successDialogOpen: boolean;
   successDialogTransactionId: string | null;
+  actionActive: boolean;
 
   changeMarket: (market: string) => void;
   changeMode: (mode: ACTION_MODE) => void;
@@ -41,6 +43,7 @@ interface MarketStore {
   changeInputDialogOpen: (open: boolean) => void;
   changeSuccessDialogOpen: (open: boolean) => void;
   changeSuccessDialogTransactionId: (transactionId: string | null) => void;
+  changeActionActive: (active: boolean) => void;
 }
 
 export const marketStoreInitialState = {
@@ -53,6 +56,7 @@ export const marketStoreInitialState = {
   inputDialogOpen: false,
   successDialogOpen: false,
   successDialogTransactionId: null,
+  actionActive: false,
 };
 
 export const useMarketStore = createWithEqualityFn<MarketStore>()(
@@ -71,6 +75,7 @@ export const useMarketStore = createWithEqualityFn<MarketStore>()(
       set({ successDialogOpen: open }),
     changeSuccessDialogTransactionId: (transactionId: string | null) =>
       set({ successDialogTransactionId: transactionId }),
+    changeActionActive: (active: boolean) => set({ actionActive: active }),
   }),
   shallow
 );

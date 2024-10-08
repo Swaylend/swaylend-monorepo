@@ -22,6 +22,7 @@ export const useSupplyBase = () => {
     changeInputDialogOpen,
     changeSuccessDialogOpen,
     changeSuccessDialogTransactionId,
+    changeActionActive,
   } = useMarketStore();
 
   const queryClient = useQueryClient();
@@ -67,10 +68,12 @@ export const useSupplyBase = () => {
         changeInputDialogOpen(false);
         changeTokenAmount(BigNumber(0));
         changeSuccessDialogOpen(true);
+        changeActionActive(false);
       }
     },
     onError: (error) => {
       ErrorToast({ error: error.message });
+      changeActionActive(false);
     },
     onSettled: () => {
       // Invalidate queries
