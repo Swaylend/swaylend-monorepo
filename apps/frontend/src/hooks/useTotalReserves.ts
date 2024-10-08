@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { useProvider } from './useProvider';
 
-export const useTotalReserves = (assetId: string, marketParam?: string) => {
+export const useTotalReserves = (marketParam?: string) => {
   const provider = useProvider();
   const { market: storeMarket } = useMarketStore();
   const market = marketParam ?? storeMarket;
@@ -14,7 +14,7 @@ export const useTotalReserves = (assetId: string, marketParam?: string) => {
   return useQuery({
     queryKey: ['totalReserves', market],
     queryFn: async () => {
-      if (!provider || !assetId) return BigNumber(0);
+      if (!provider) return BigNumber(0);
 
       const marketContract = new Market(
         appConfig.markets[market].marketAddress,
