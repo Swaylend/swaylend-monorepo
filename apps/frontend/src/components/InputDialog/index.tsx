@@ -545,7 +545,9 @@ export const InputDialog = () => {
                 )}
               </div>
               <div className="flex mt-2 justify-between items-center w-full">
-                <div className="text-moon text-sm">
+                <div
+                  className={`text-sm ${action === ACTION_TYPE.REPAY ? 'text-lavender' : 'text-moon'}`}
+                >
                   {action === ACTION_TYPE.REPAY
                     ? getFormattedPrice(finalBalance)
                     : getFormattedNumber(finalBalance)}
@@ -554,6 +556,11 @@ export const InputDialog = () => {
                   {(action === ACTION_TYPE.SUPPLY ||
                     action === ACTION_TYPE.WITHDRAW) &&
                     ' available'}
+
+                  <div className="text-moon">
+                    {action === ACTION_TYPE.REPAY &&
+                      `${getFormattedNumber(formatUnits(BigNumber(balance?.toString() ?? 0), marketConfiguration?.baseTokenDecimals))} available`}
+                  </div>
                 </div>
                 <Button
                   disabled={!finalBalance || finalBalance.eq(0)}
