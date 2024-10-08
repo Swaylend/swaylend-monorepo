@@ -26,8 +26,6 @@ The Swaylend protocol is built on a re-engineered solution from the Ethereum blo
 
 Swaylend is live at [https://swaylend.com](https://swaylend.com).
 
-> ⚠️ Warning: Please note that Swaylend is in the alpha testing phase, and contracts may change in the future, leading to potential loss of supply/borrow amounts.
-
 # Project Structure
 
 At the first level, the monorepo is divided into `contracts` , `apps` , `scripts` , and `libs` .
