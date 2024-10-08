@@ -41,19 +41,13 @@ export const InputField = ({ error }: { error: boolean }) => {
       `${tokenAmount.toString()}.` !== inputValue
     ) {
       const tokenAmountStr = tokenAmount.toString();
-      const [inputIntegerPart, inputDecimalPart = ''] = inputValue.split('.');
-      const [tokenIntegerPart, tokenDecimalPart = ''] =
-        tokenAmountStr.split('.');
+      const [_, inputDecimalPart = ''] = inputValue.split('.');
+      const [__, tokenDecimalPart = ''] = tokenAmountStr.split('.');
 
       const hasTrailingZeros =
         inputDecimalPart.length > tokenDecimalPart.length &&
         inputDecimalPart.endsWith('0');
-      if (
-        (!hasTrailingZeros &&
-          tokenIntegerPart === inputIntegerPart &&
-          tokenDecimalPart !== inputDecimalPart) ||
-        inputValue === ''
-      ) {
+      if (!hasTrailingZeros || inputValue === '') {
         BigNumber.config({ EXPONENTIAL_AT: 20 });
         setInputValue(tokenAmountStr);
       }
