@@ -1,9 +1,9 @@
+import { useMarketStore } from '@/stores';
 import { formatUnits } from '@/utils';
+import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { useMarketBasics } from './useMarketBasics';
 import { useMarketConfiguration } from './useMarketConfiguration';
-import { useQuery } from '@tanstack/react-query';
-import { useMarketStore } from '@/stores';
 import { useTotalReserves } from './useTotalReserves';
 
 export const useMarketBalanceOfBase = (marketParam?: string) => {
