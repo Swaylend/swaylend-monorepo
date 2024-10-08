@@ -27,7 +27,9 @@ import { ACTION_TYPE, useMarketStore } from '@/stores';
 import { formatUnits, getFormattedNumber, getFormattedPrice } from '@/utils';
 import { useAccount, useIsConnected } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
+import { useMutationState } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
+import { LoaderCircleIcon } from 'lucide-react';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Button } from '../ui/button';
 import { InputField } from './InputField';
@@ -55,19 +57,40 @@ export const InputDialog = () => {
   const { data: priceData } = usePrice();
   const marketBalanceOfBase = useMarketBalanceOfBase();
 
-  const { mutate: supplyCollateral } = useSupplyCollateral({
-    actionTokenAssetId,
-  });
+  const { mutate: supplyCollateral, isPending: isSupplyCollateralPending } =
+    useSupplyCollateral({
+      actionTokenAssetId,
+    });
 
-  const { mutate: withdrawCollateral } = useWithdrawCollateral({
-    actionTokenAssetId,
-  });
+  const { mutate: withdrawCollateral, isPending: isWithdrawCollateralPending } =
+    useWithdrawCollateral({
+      actionTokenAssetId,
+    });
 
-  const { mutate: supplyBase } = useSupplyBase();
+  const { mutate: supplyBase, isPending: isSupplyBasePending } =
+    useSupplyBase();
 
-  const { mutate: withdrawBase } = useWithdrawBase();
+  const { mutate: withdrawBase, isPending: isWithdrawBasePending } =
+    useWithdrawBase();
 
-  const { mutate: borrowBase } = useBorrowBase();
+  const { mutate: borrowBase, isPending: isBorrowBasePending } =
+    useBorrowBase();
+
+  const isAnyActionPending = useMemo(
+    () =>
+      isSupplyCollateralPending ||
+      isWithdrawCollateralPending ||
+      isSupplyBasePending ||
+      isWithdrawBasePending ||
+      isBorrowBasePending,
+    [
+      isSupplyCollateralPending,
+      isWithdrawCollateralPending,
+      isSupplyBasePending,
+      isWithdrawBasePending,
+      isBorrowBasePending,
+    ]
+  );
 
   const [error, setError] = useState<string | null>(null);
 
@@ -239,18 +262,9 @@ export const InputDialog = () => {
         }
         break;
       case ACTION_TYPE.REPAY: {
-        const userBaseBalance = formatUnits(
-          BigNumber(balance?.toString() ?? 0),
-          decimals
-        );
-
         if (userSupplyBorrow.borrowed.eq(0)) return;
+        changeTokenAmount(BigNumber(finalBalance.toFixed(decimals)));
 
-        if (userBaseBalance.gte(finalBalance)) {
-          changeTokenAmount(BigNumber(finalBalance.toFixed(decimals)));
-        } else {
-          changeTokenAmount(BigNumber(userBaseBalance.toFixed(decimals)));
-        }
         break;
       }
     }
@@ -343,7 +357,15 @@ export const InputDialog = () => {
         return `Minimum borrow amount is 10 ${appConfig.assets[marketConfiguration?.baseToken.bits]}`;
       }
 
-      if (tokenAmount.gt(borrowCapacity)) {
+      if (
+        tokenAmount.gt(
+          borrowCapacity?.minus(
+            BigNumber(0.99).div(
+              priceData?.prices[marketConfiguration.baseToken.bits] ?? 1
+            )
+          ) ?? BigNumber(0)
+        )
+      ) {
         return 'You are trying to borrow more than the max borrowable amount';
       }
     }
@@ -546,7 +568,9 @@ export const InputDialog = () => {
                 )}
               </div>
               <div className="flex mt-2 justify-between items-center w-full">
-                <div className="text-moon text-sm">
+                <div
+                  className={`text-sm ${action === ACTION_TYPE.REPAY ? 'text-lavender' : 'text-moon'}`}
+                >
                   {action === ACTION_TYPE.REPAY
                     ? getFormattedPrice(finalBalance)
                     : getFormattedNumber(finalBalance)}
@@ -555,6 +579,11 @@ export const InputDialog = () => {
                   {(action === ACTION_TYPE.SUPPLY ||
                     action === ACTION_TYPE.WITHDRAW) &&
                     ' available'}
+
+                  <div className="text-moon">
+                    {action === ACTION_TYPE.REPAY &&
+                      `${getFormattedNumber(formatUnits(BigNumber(balance?.toString() ?? 0), marketConfiguration?.baseTokenDecimals))} available`}
+                  </div>
                 </div>
                 <Button
                   disabled={!finalBalance || finalBalance.eq(0)}
@@ -573,12 +602,17 @@ export const InputDialog = () => {
                 </Button>
               </DialogClose>
               <Button
-                disabled={error !== null || tokenAmount.eq(0)}
+                disabled={
+                  error !== null || tokenAmount.eq(0) || isAnyActionPending
+                }
                 onMouseDown={handleSubmit}
-                className="w-1/2"
+                className="w-1/2 flex items-center gap-x-2"
               >
                 {action &&
                   `${action.slice(0, 1)}${action.slice(1).toLowerCase()}`}
+                {isAnyActionPending && (
+                  <LoaderCircleIcon className="animate-spin w-4 h-4" />
+                )}
               </Button>
             </div>
             <div className="w-full flex justify-center">

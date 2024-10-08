@@ -103,16 +103,24 @@ export const Stats = () => {
     ) {
       return { title: '', value: 0 };
     }
+
+    const updatedBorrowCapacity =
+      borrowCapacity?.minus(
+        BigNumber(1).div(
+          priceData?.prices[marketConfiguration.baseToken.bits] ?? 1
+        )
+      ) ?? BigNumber(0);
+
     // Borrowed + Available to Borrow
     if (userSupplyBorrow.borrowed.gt(0)) {
       // Available to Borrow
       if (borrowedMode === 0) {
-        if (borrowCapacity.lt(1) && borrowCapacity.gt(0)) {
+        if (updatedBorrowCapacity.lt(1) && updatedBorrowCapacity.gt(0)) {
           return { title: 'Available to Borrow', value: 0.5 };
         }
         return {
           title: 'Available to Borrow',
-          value: borrowCapacity,
+          value: updatedBorrowCapacity,
         };
       }
       // Borrowed
@@ -129,14 +137,21 @@ export const Stats = () => {
       };
     }
     // Available to borrow
-    if (borrowCapacity.lt(1) && borrowCapacity.gt(0)) {
+    if (updatedBorrowCapacity.lt(1) && updatedBorrowCapacity.gt(0)) {
       return { title: 'Available to Borrow', value: 0.5 };
     }
     return {
       title: 'Available to Borrow',
-      value: borrowCapacity,
+      value: updatedBorrowCapacity,
     };
-  }, [isConnected, borrowCapacity, userSupplyBorrow, borrowedMode]);
+  }, [
+    isConnected,
+    borrowCapacity,
+    userSupplyBorrow,
+    borrowedMode,
+    priceData,
+    marketConfiguration,
+  ]);
 
   return (
     <div className="w-full px-4 xl:px-[140px] 2xl:px-[203px]">

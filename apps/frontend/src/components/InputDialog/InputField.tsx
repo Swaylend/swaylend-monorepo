@@ -40,8 +40,23 @@ export const InputField = ({ error }: { error: boolean }) => {
       tokenAmount.toString() !== inputValue &&
       `${tokenAmount.toString()}.` !== inputValue
     ) {
-      BigNumber.config({ EXPONENTIAL_AT: 20 });
-      setInputValue(tokenAmount.toString());
+      const tokenAmountStr = tokenAmount.toString();
+      const [inputIntegerPart, inputDecimalPart = ''] = inputValue.split('.');
+      const [tokenIntegerPart, tokenDecimalPart = ''] =
+        tokenAmountStr.split('.');
+
+      const hasTrailingZeros =
+        inputDecimalPart.length > tokenDecimalPart.length &&
+        inputDecimalPart.endsWith('0');
+      if (
+        (!hasTrailingZeros &&
+          tokenIntegerPart === inputIntegerPart &&
+          tokenDecimalPart !== inputDecimalPart) ||
+        inputValue === ''
+      ) {
+        BigNumber.config({ EXPONENTIAL_AT: 20 });
+        setInputValue(tokenAmountStr);
+      }
     }
   }, [tokenAmount]);
 

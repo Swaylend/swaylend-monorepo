@@ -15,23 +15,19 @@ export const ErrorToast = ({ error }: ErrorToastProps) => {
       return 'Transaction failed. Out of gas';
     }
 
-    if (error === 'not enough coins to fit the target') {
+    if (error.includes('not enough coins to fit the target')) {
       return 'Insufficient balance.';
     }
 
-    if (error.startsWith('Error: User rejected the transaction!')) {
+    if (error.includes('User rejected')) {
       return 'Transaction rejected by user.';
     }
 
-    if (
-      error.startsWith(
-        'FuelError: The transaction reverted because a "require" statement has thrown "NotCollateralized".'
-      )
-    ) {
-      return 'Cannot withdraw more than collateralized. Try lowering the amount.';
+    if (error.includes('NotCollateralized')) {
+      return 'Cannot withdraw more than collateralized. Try lowering the amount';
     }
 
-    if (error === 'A predicate account cannot sign messages') {
+    if (error.includes('A predicate account cannot sign messages')) {
       return (
         <>
           A{' '}
@@ -46,6 +42,10 @@ export const ErrorToast = ({ error }: ErrorToastProps) => {
           account cannot sign messages
         </>
       );
+    }
+
+    if (error.includes("don't have enough funds to cover the transaction")) {
+      return 'Not enough funds to cover the transaction cost. Please acquire more ETH on this wallet.';
     }
 
     return error;

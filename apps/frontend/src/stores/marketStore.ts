@@ -1,5 +1,6 @@
 import { appConfig } from '@/configs';
 import BigNumber from 'bignumber.js';
+import { act } from 'react';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 
