@@ -104,12 +104,16 @@ export const Stats = () => {
       return { title: '', value: 0 };
     }
 
-    const updatedBorrowCapacity =
+    let updatedBorrowCapacity =
       borrowCapacity?.minus(
         BigNumber(1).div(
           priceData?.prices[marketConfiguration.baseToken.bits] ?? 1
         )
       ) ?? BigNumber(0);
+
+    updatedBorrowCapacity = updatedBorrowCapacity.lt(0)
+      ? BigNumber(0)
+      : updatedBorrowCapacity;
 
     // Borrowed + Available to Borrow
     if (userSupplyBorrow.borrowed.gt(0)) {

@@ -81,6 +81,16 @@ export const PositionSummary = () => {
   }, [possibleCollateralUtilizationValue]);
 
   const stats = useMemo(() => {
+    let updatedBorrowCapacity = borrowCapacity?.minus(
+      BigNumber(1).div(
+        priceData?.prices[marketConfiguration?.baseToken.bits ?? ''] ?? 1
+      )
+    );
+
+    updatedBorrowCapacity = updatedBorrowCapacity?.lt(0)
+      ? BigNumber(0)
+      : updatedBorrowCapacity;
+
     return [
       {
         title: 'Liquidation Point',
@@ -148,11 +158,7 @@ export const PositionSummary = () => {
         title: 'Available to Borrow',
         tooltip: 'The amount of base asset you can borrow',
         value: `${getFormattedNumber(
-          borrowCapacity?.minus(
-            BigNumber(1).div(
-              priceData?.prices[marketConfiguration?.baseToken.bits ?? ''] ?? 1
-            )
-          ) ?? BigNumber(0)
+          updatedBorrowCapacity ?? BigNumber(0)
         )} USDC`,
         changeValue: possibleAvailableToBorrow
           ? `${getFormattedNumber(

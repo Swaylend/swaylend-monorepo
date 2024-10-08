@@ -167,10 +167,6 @@ export const InputDialog = () => {
       return formatUnits(
         userSupplyBorrow.borrowed,
         marketConfiguration.baseTokenDecimals
-      ).plus(
-        BigNumber(0.01).div(
-          priceData?.prices[marketConfiguration.baseToken.bits] ?? 1
-        )
       );
     }
     if (action === 'SUPPLY') {
@@ -263,7 +259,17 @@ export const InputDialog = () => {
         break;
       case ACTION_TYPE.REPAY: {
         if (userSupplyBorrow.borrowed.eq(0)) return;
-        changeTokenAmount(BigNumber(finalBalance.toFixed(decimals)));
+        changeTokenAmount(
+          BigNumber(
+            finalBalance
+              .plus(
+                BigNumber(0.01).div(
+                  priceData?.prices[marketConfiguration.baseToken.bits] ?? 1
+                )
+              )
+              .toFixed(decimals)
+          )
+        );
 
         break;
       }
@@ -571,9 +577,7 @@ export const InputDialog = () => {
                 <div
                   className={`text-sm ${action === ACTION_TYPE.REPAY ? 'text-lavender' : 'text-moon'}`}
                 >
-                  {action === ACTION_TYPE.REPAY
-                    ? getFormattedPrice(finalBalance)
-                    : getFormattedNumber(finalBalance)}
+                  {getFormattedNumber(finalBalance)}
                   {action === ACTION_TYPE.BORROW && ' available to borrow'}
                   {action === ACTION_TYPE.REPAY && ' debt to repay'}
                   {(action === ACTION_TYPE.SUPPLY ||
