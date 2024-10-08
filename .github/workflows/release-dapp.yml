@@ -14,8 +14,6 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
-        with:
-          ref: main
       - name: Install pnpm
         uses: pnpm/action-setup@v4
       - name: Install node
