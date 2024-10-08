@@ -36,9 +36,9 @@ use sway_libs::signed_integers::i256::I256;
 const VERSION: u8 = 1_u8;
 
 // pyth oracle configuration params
-ORACLE_MAX_STALENESS: u64 = 30, // 30 seconds
-ORACLE_MAX_AHEADNESS: u64 = 60, // 60 seconds
-ORACLE_MAX_CONF_WIDTH: u256 = 100, // 100 / 10000 = 1 % 
+const ORACLE_MAX_STALENESS: u64 = 30; // 30 seconds
+const ORACLE_MAX_AHEADNESS: u64 = 60; // 60 seconds
+const ORACLE_MAX_CONF_WIDTH: u256 = 100; // 100 / 10000 = 1 % 
 
 // This is set during deployment of the contract
 configurable {
