@@ -343,7 +343,15 @@ export const InputDialog = () => {
         return `Minimum borrow amount is 10 ${appConfig.assets[marketConfiguration?.baseToken.bits]}`;
       }
 
-      if (tokenAmount.gt(borrowCapacity)) {
+      if (
+        tokenAmount.gt(
+          borrowCapacity?.minus(
+            BigNumber(0.99).div(
+              priceData?.prices[marketConfiguration.baseToken.bits] ?? 1
+            )
+          ) ?? BigNumber(0)
+        )
+      ) {
         return 'You are trying to borrow more than the max borrowable amount';
       }
     }
