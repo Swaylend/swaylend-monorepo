@@ -35,12 +35,14 @@ use sway_libs::signed_integers::i256::I256;
 // version of the smart contract
 const VERSION: u8 = 1_u8;
 
+// pyth oracle configuration params
+ORACLE_MAX_STALENESS: u64 = 30, // 30 seconds
+ORACLE_MAX_AHEADNESS: u64 = 60, // 60 seconds
+ORACLE_MAX_CONF_WIDTH: u256 = 100, // 100 / 10000 = 1 % 
+
 // This is set during deployment of the contract
 configurable {
     DEBUG_STEP: u64 = 0,
-    ORACLE_MAX_STALENESS: u64 = 30, // 30 seconds
-    ORACLE_MAX_AHEADNESS: u64 = 60, // 60 seconds
-    ORACLE_MAX_CONF_WIDTH: u256 = 100, // 100 / 10000 = 1 % 
 }
 
 storage {
@@ -381,6 +383,9 @@ impl Market for Contract {
     ) {
         reentrancy_guard();
 
+        // Only allow withdrawing collateral if paused flag is not set
+        require(!storage.pause_config.withdraw_paused.read(), Error::Paused);
+
         // Get the caller's account and calculate the new user and total collateral
         let caller = msg_sender().unwrap();
         let user_collateral = storage.user_collateral.get((caller, asset_id)).try_read().unwrap_or(0) - amount;
@@ -690,7 +695,12 @@ impl Market for Contract {
 
             let balance: u256 = storage.user_collateral.get((account, collateral_configuration.asset_id)).try_read().unwrap_or(0).into();
 
-            let price = get_price_internal(collateral_configuration.price_feed_id); // decimals: price.exponent
+            if balance == 0 {
+                index += 1;
+                continue;
+            }
+
+            let price = get_price_internal(collateral_configuration.price_feed_id, PricePosition::LowerBound); // decimals: price.exponent
             let price_exponent = price.exponent;
             let price = u256::from(price.price); // decimals: price.exponent
             let amount = balance * collateral_configuration.borrow_collateral_factor / FACTOR_SCALE_18; // decimals: collateral_configuration.decimals
@@ -1769,6 +1779,7 @@ fn accrued_interest_indices(now: u256, last_accrual_time: u256) -> (u256, u256) 
 #[storage(read)]
 fn is_borrow_collateralized(account: Identity) -> bool {
     let principal = storage.user_basic.get(account).try_read().unwrap_or(UserBasic::default()).principal; // decimals: base_asset_decimal
+
     if principal >= I256::zero() {
         return true
     };
@@ -2155,12 +2166,6 @@ fn absorb_internal(account: Identity) {
     let market_configuration = storage.market_configuration.read();
 
     let caller = msg_sender().unwrap();
-
-    // Get the user's basic information
-    let account_user = storage.user_basic.get(account).try_read().unwrap_or(UserBasic::default());
-    let old_principal = account_user.principal;
-    let old_balance = present_value(old_principal); // decimals: base_token_decimals
-    let mut delta_value: u256 = 0; // decimals: 18
 
     // Only used for logging event
     let mut total_value: u256 = 0; // decimals: 18
