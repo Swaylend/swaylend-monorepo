@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.5
+
+### Patch Changes
+
+- [#10](https://github.com/pseudobun/swaylend-monorepo/pull/10) [`b0fdc95`](https://github.com/pseudobun/swaylend-monorepo/commit/b0fdc9502c144d97facf11e94fb316d6c1ad83d2) Thanks [@pseudobun](https://github.com/pseudobun)! - Fixes a minor error.
+
 ## 0.1.4
 
 ### Patch Changes
