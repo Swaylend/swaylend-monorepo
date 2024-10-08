@@ -55,7 +55,7 @@ At the first level, the monorepo is divided into `contracts` , `apps` , `scripts
 
 # Deployments
 
-There is a dedicated [DEPLOYMENTS.md](DEPLOYMENTS.md) for contracts. For the releases of the dapp, see [Releases](https://github.com/Swaylend/swaylend-monorepo/releases).
+There is a dedicated [DEPLOYMENTS.md](DEPLOYMENTS.md) for contracts. For the dapp's releases, see [Releases](https://github.com/Swaylend/swaylend-monorepo/releases).
 
 # Socials / Contact
 * Twitter/X: [@swaylend](https://x.com/swaylend)
