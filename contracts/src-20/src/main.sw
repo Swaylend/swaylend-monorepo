@@ -150,7 +150,7 @@ impl SRC3 for Contract {
     #[storage(read, write)]
     fn burn(sub_id: SubId, amount: u64) {
         require(sub_id == DEFAULT_SUB_ID, "incorrect-sub-id");
-        require(msg_amount() >= amount, "incorrect-amount-provided");
+        require(msg_amount() == amount, "incorrect-amount-provided");
         require(
             msg_asset_id() == AssetId::default(),
             "incorrect-asset-provided",
