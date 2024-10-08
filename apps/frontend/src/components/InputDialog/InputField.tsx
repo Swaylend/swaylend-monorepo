@@ -37,8 +37,31 @@ export const InputField = ({ error }: { error: boolean }) => {
       tokenAmount.toString() !== inputValue &&
       `${tokenAmount.toString()}.` !== inputValue
     ) {
-      setInputValue(tokenAmount.toString());
+      const tokenAmountStr = tokenAmount.toString();
+      const [inputIntegerPart, inputDecimalPart = ''] = inputValue.split('.');
+      const [tokenIntegerPart, tokenDecimalPart = ''] =
+        tokenAmountStr.split('.');
+
+      const hasTrailingZeros =
+        inputDecimalPart.length > tokenDecimalPart.length &&
+        inputDecimalPart.endsWith('0');
+      if (
+        (!hasTrailingZeros &&
+          tokenIntegerPart === inputIntegerPart &&
+          tokenDecimalPart !== inputDecimalPart) ||
+        inputValue === ''
+      ) {
+        setInputValue(tokenAmountStr);
+      }
     }
+
+    // if (
+    //   tokenAmount.gt(0) &&
+    //   tokenAmount.toString() !== inputValue &&
+    //   `${tokenAmount.toString()}.` !== inputValue
+    // ) {
+    //   setInputValue(tokenAmount.toString());
+    // }
   }, [tokenAmount]);
 
   const debounce = useDebounceCallback(changeTokenAmount, 333);
