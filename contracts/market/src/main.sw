@@ -289,7 +289,7 @@ impl Market for Contract {
     /// * [Vec<CollateralConfiguration>]: A list of collateral configurations
     ///
     /// # Number of Storage Accesses
-    /// * Reads: `1`
+    /// * Reads: `1 + storage.collateral_configurations_keys.len()`
     #[storage(read)]
     fn get_collateral_configurations() -> Vec<CollateralConfiguration> {
         let mut result = Vec::new();
@@ -417,6 +417,9 @@ impl Market for Contract {
     ///
     /// # Returns
     /// * [u64] - The amount of collateral the user has supplied for the specified asset.
+    ///
+    /// # Number of Storage Accesses
+    /// * Writes: `1`
     #[storage(read)]
     fn get_user_collateral(account: Identity, asset_id: AssetId) -> u64 {
         storage.user_collateral.get((account, asset_id)).try_read().unwrap_or(0)
@@ -429,6 +432,10 @@ impl Market for Contract {
     ///
     /// # Returns
     /// * [Vec<(AssetId, u64)>] - A list of tuples containing the asset ID and total collateral for each collateral asset.
+    ///
+    /// # Number of Storage Accesses
+    /// * Writes: `storage.collateral_configurations_keys.len()`
+    /// * Reads: `1 + storage.collateral_configurations_keys.len() * 3`
     #[storage(read)]
     fn get_all_user_collateral(account: Identity) -> Vec<(AssetId, u64)> {
         let mut result = Vec::new();
@@ -453,6 +460,9 @@ impl Market for Contract {
     ///
     /// # Returns
     /// * [u64] - The total collateral ammount.
+
+    /// # Number of Storage Accesses
+    /// * Writes: `1`
     #[storage(read)]
     fn totals_collateral(asset_id: AssetId) -> u64 {
         storage.totals_collateral.get(asset_id).try_read().unwrap_or(0)
@@ -465,7 +475,7 @@ impl Market for Contract {
     /// * [`Vec<(AssetId, u64)>`]: A list of tuples containing the asset ID and total collateral for each collateral asset
     ///
     /// # Number of Storage Accesses
-    /// * Reads: `1`
+    /// * Reads: `1 + storage.collateral_configurations_keys.len() * 2`
     #[storage(read)]
     fn get_all_totals_collateral() -> Vec<(AssetId, u64)> {
         let mut result = Vec::new();
@@ -495,8 +505,8 @@ impl Market for Contract {
     /// * When the supplied asset is not the base asset.
     ///
     /// # Number of Storage Accesses
-    /// * Writes: `3`
-    /// * Reads: `5`
+    /// * Writes: `2`
+    /// * Reads: `4`
     #[payable, storage(write)]
     fn supply_base() {
         // Only allow supplying if paused flag is not set
@@ -643,6 +653,9 @@ impl Market for Contract {
     /// # Returns
     /// * [u256] - The amount of base asset supplied by the user.
     /// * [u256] - The amount of base asset borrowed by the user.
+    /// 
+    /// # Number of Storage Accesses
+    /// * Reads: `3`
     #[storage(read)]
     fn get_user_supply_borrow(account: Identity) -> (u256, u256) {
         get_user_supply_borrow_internal(account)
@@ -656,6 +669,9 @@ impl Market for Contract {
     ///
     /// # Returns
     /// * [u256] - The amount of base asset the user can borrow.
+    ///
+    /// # Number of Storage Accesses
+    /// * Reads: `4 + storage.collateral_configurations_keys.len() * 5`
     #[storage(read)]
     fn available_to_borrow(account: Identity) -> u256 {
         // Get user's supply and borrow
@@ -709,6 +725,10 @@ impl Market for Contract {
     /// # Arguments
     /// * `accounts`: [Vec<Identity>] - The list of underwater accounts to be absorbed.
     /// * `price_data_update`: [PriceDataUpdate] - The price data update struct to be used for updating the price feeds.
+    ///
+    /// # Number of Storage Accesses
+    /// * Writes: `2 + accounts.len() * 4`
+    /// * Reads: `5 + accounts.len() * 5`
     #[payable, storage(write)]
     fn absorb(accounts: Vec<Identity>, price_data_update: PriceDataUpdate) {
         reentrancy_guard();
@@ -765,7 +785,7 @@ impl Market for Contract {
     /// * When collateral reserves are insufficient.
     ///
     /// # Number of Storage Accesses
-    /// * Reads: `4`
+    /// * Reads: `8`
     #[payable, storage(read)]
     fn buy_collateral(asset_id: AssetId, min_amount: u64, recipient: Identity) {
         reentrancy_guard();
@@ -832,7 +852,7 @@ impl Market for Contract {
     /// * [u64] - The value of the collateral asset in base asset.
     ///
     /// # Number of Storage Accesses
-    /// * Reads: `4`
+    /// * Reads: `5`
     #[storage(read)]
     fn collateral_value_to_sell(asset_id: AssetId, collateral_amount: u64) -> u64 { // decimals: base_token_decimals
         let collateral_configuration = storage.collateral_configurations.get(asset_id).read();
@@ -908,6 +928,9 @@ impl Market for Contract {
     /// # Reverts
     /// * When the caller is not the owner.
     /// * When the amount requested exceeds the available reserves.
+    ///
+    /// # Number of Storage Accesses
+    /// * Reads: `4`
     #[storage(read)]
     fn withdraw_reserves(to: Identity, amount: u64) {
         // Only owner can withdraw reserves
@@ -943,6 +966,9 @@ impl Market for Contract {
     ///
     /// # Returns
     /// * [I256] - The reserves (in asset decimals).
+    ///
+    /// # Number of Storage Accesses
+    /// * Reads: `1`
     #[storage(read)]
     fn get_collateral_reserves(asset_id: AssetId) -> I256 {
         get_collateral_reserves_internal(asset_id)
@@ -958,6 +984,9 @@ impl Market for Contract {
     ///
     /// # Reverts
     /// * When the caller is not the owner.
+    ///
+    /// # Number of Storage Accesses
+    /// * Writes: `1`
     #[storage(write)]
     fn pause(pause_config: PauseConfiguration) {
         // Only owner can change the pause configuration
@@ -976,6 +1005,9 @@ impl Market for Contract {
     ///
     /// # Number of Storage Accesses
     /// * Reads: `1`
+    ///
+    /// # Number of Storage Accesses
+    /// * Reads: `1`
     #[storage(read)]
     fn get_pause_configuration() -> PauseConfiguration {
         storage.pause_config.read()
@@ -988,6 +1020,9 @@ impl Market for Contract {
     ///
     /// # Returns
     /// * [MarketConfiguration] - The market configuration.
+    ///
+    /// # Number of Storage Accesses
+    /// * Reads: `1`
     #[storage(read)]
     fn get_market_configuration() -> MarketConfiguration {
         storage.market_configuration.read()
@@ -998,6 +1033,9 @@ impl Market for Contract {
     ///
     /// # Returns
     /// * [MarketBasics] - The market basic information.
+    ///
+    /// # Number of Storage Accesses
+    /// * Reads: `1`
     #[storage(read)]
     fn get_market_basics() -> MarketBasics {
         storage.market_basic.read()
@@ -1008,6 +1046,9 @@ impl Market for Contract {
     ///
     /// # Returns
     /// * [MarketBasics] - The market basic information (with included interest).
+    ///
+    /// # Number of Storage Accesses
+    /// * Reads: `1`
     #[storage(read)]
     fn get_market_basics_with_interest() -> MarketBasics {
         let mut market_basic = storage.market_basic.read();
@@ -1045,6 +1086,9 @@ impl Market for Contract {
     ///
     /// # Returns
     /// * [UserBasic] - The user basic information.
+    ///
+    /// # Number of Storage Accesses
+    /// * Reads: `1`
     #[storage(read)]
     fn get_user_basic(account: Identity) -> UserBasic {
         storage.user_basic.get(account).try_read().unwrap_or(UserBasic::default())
@@ -1058,6 +1102,9 @@ impl Market for Contract {
     ///
     /// # Returns
     /// * [I256] - The user balance (with included interest).
+    ///
+    /// # Number of Storage Accesses
+    /// * Reads: `1`
     #[storage(read)]
     fn get_user_balance_with_interest(account: Identity) -> I256 {
         get_user_balance_with_interest_internal(account)
@@ -1100,7 +1147,7 @@ impl Market for Contract {
     /// * [u256] - The supply rate (decimals 18).
     ///
     /// # Number of Storage Accesses
-    /// * Reads: 5 (Reads market configuration for various interest rate components).
+    /// * Reads: `3 or 6`
     #[storage(read)]
     fn get_supply_rate(utilization: u256) -> u256 {
         get_supply_rate_internal(utilization)
@@ -1117,7 +1164,7 @@ impl Market for Contract {
     /// * [u256] - The borrow rate (decimals 18).
     ///
     /// # Number of Storage Accesses
-    /// * Reads: 5 (Reads market configuration for various interest rate components).
+    /// * Reads: `3 or 6`
     #[storage(read)]
     fn get_borrow_rate(utilization: u256) -> u256 {
         get_borrow_rate_internal(utilization)
@@ -1131,6 +1178,9 @@ impl Market for Contract {
     ///
     /// # Reverts
     /// * When the caller is not the owner.
+    ///
+    /// # Number of Storage Accesses
+    /// * Writes: `1`
     #[storage(write)]
     fn set_pyth_contract_id(contract_id: ContractId) {
         // Only owner can set the Pyth contract ID
@@ -1168,7 +1218,7 @@ impl Market for Contract {
     /// * When the confidence value exceeds the allowed width.
     ///
     /// # Number of Storage Accesses
-    /// * Reads: `2`
+    /// * Reads: `1`
     #[storage(read)]
     fn get_price(price_feed_id: PriceFeedId) -> Price {
         get_price_internal(price_feed_id, PricePosition::Middle)
@@ -1252,6 +1302,9 @@ impl Market for Contract {
     ///
     /// # Reverts
     /// * When the caller is not the current owner.
+    ///
+    /// # Number of Storage Accesses
+    /// * Reads: `1`
     #[storage(write)]
     fn transfer_ownership(new_owner: Identity) {
         transfer_ownership(new_owner);
@@ -1261,6 +1314,9 @@ impl Market for Contract {
     ///
     /// # Additional Information
     /// This action is irreversible and should be done with caution, as it removes all ownership privileges.
+    ///
+    /// # Number of Storage Accesses
+    /// * Reads: `1`
     #[storage(write)]
     fn renounce_ownership() {
         renounce_ownership();
@@ -1289,7 +1345,7 @@ impl SRC5 for Contract {
 /// * When the confidence value exceeds the allowed width.
 ///
 /// # Number of Storage Accesses
-/// * Reads: `2`
+/// * Reads: `1`
 #[storage(read)]
 fn get_price_internal(price_feed_id: PriceFeedId, price_position: PricePosition) -> Price {
     let contract_id = storage.pyth_contract_id.read();
@@ -1492,7 +1548,7 @@ pub fn principal_value_borrow(base_borrow_index: u256, present: u256) -> u256 {
 /// * [I256] - The present value (base_token_decimals).
 ///
 /// # Number of Storage Accesses
-/// * Reads: 1 (Reads market basic information).
+/// * Reads: `1`
 #[storage(read)]
 fn present_value(principal: I256) -> I256 {
     let market_basic = storage.market_basic.read();
@@ -1529,7 +1585,7 @@ fn present_value(principal: I256) -> I256 {
 /// * [I256] - The principal value (base_token_decimals).
 ///
 /// # Number of Storage Accesses
-/// * Reads: 1 (Reads market basic information).
+/// * Reads: `1`
 #[storage(read)]
 fn principal_value(present_value: I256) -> I256 {
     let market_basic = storage.market_basic.read();
@@ -1562,7 +1618,7 @@ fn principal_value(present_value: I256) -> I256 {
 /// * [u256] - The utilization of the market (decimals 18).
 ///
 /// # Number of Storage Accesses
-/// * Reads: 1 (Reads market basic information).
+/// * Reads: `1`
 #[storage(read)]
 fn get_utilization_internal() -> u256 {
     let market_basic = storage.market_basic.read();
@@ -1596,7 +1652,7 @@ fn get_utilization_internal() -> u256 {
 /// * [u256] - The supply rate (decimals 18).
 ///
 /// # Number of Storage Accesses
-/// * Reads: 5 (Reads market configuration for various interest rate components).
+/// * Reads: `3 or 6`
 #[storage(read)]
 fn get_supply_rate_internal(utilization: u256) -> u256 {
     if utilization <= storage.market_configuration.read().supply_kink
@@ -1617,7 +1673,7 @@ fn get_supply_rate_internal(utilization: u256) -> u256 {
 /// * [u256] - The borrow rate (decimals 18).
 ///
 /// # Number of Storage Accesses
-/// * Reads: 5 (Reads market configuration for various interest rate components).
+/// * Reads: `3 or 6`
 #[storage(read)]
 fn get_borrow_rate_internal(utilization: u256) -> u256 {
     if utilization <= storage.market_configuration.read().borrow_kink
@@ -1640,7 +1696,7 @@ fn get_borrow_rate_internal(utilization: u256) -> u256 {
 /// * [u256] - The amount of base asset borrowed by the user.
 ///
 /// # Number of Storage Accesses
-/// * Reads: 3 (Reads user basic, market basic, and accrued interest indices).
+/// * Reads: `3`
 #[storage(read)]
 fn get_user_supply_borrow_internal(account: Identity) -> (u256, u256) {
     let principal = storage.user_basic.get(account).try_read().unwrap_or(UserBasic::default()).principal;
@@ -1668,7 +1724,7 @@ fn get_user_supply_borrow_internal(account: Identity) -> (u256, u256) {
 /// * [u256] - The updated base token borrow index (18 decimals).
 ///
 /// # Number of Storage Accesses
-/// * Reads: 1 (Reads market basic).
+/// * Reads: `between 8 and 14`
 #[storage(read)]
 fn accrued_interest_indices(now: u256, last_accrual_time: u256) -> (u256, u256) {
     if last_accrual_time == 0 {
@@ -1709,7 +1765,7 @@ fn accrued_interest_indices(now: u256, last_accrual_time: u256) -> (u256, u256) 
 /// * [bool] - Returns `true` if the user's collateral sufficiently covers the borrow amount, `false` otherwise.
 ///
 /// # Number of Storage Accesses
-/// * Reads: Multiple (Reads user basic, collateral configurations, user collateral, price feeds, and market configuration.)
+/// * Reads: `4 + storage.collateral_configurations_keys.len() * 4`
 #[storage(read)]
 fn is_borrow_collateralized(account: Identity) -> bool {
     let principal = storage.user_basic.get(account).try_read().unwrap_or(UserBasic::default()).principal; // decimals: base_asset_decimal
@@ -1763,7 +1819,7 @@ fn is_borrow_collateralized(account: Identity) -> bool {
 /// * [bool] - Returns `true` if the account is liquidatable, `false` otherwise.
 ///
 /// # Number of Storage Accesses
-/// * Reads: Multiple (Reads user basic, collateral configurations, user collateral, price feed, and market configuration.)
+/// * Reads: `4 + storage.collateral_configurations_keys.len() * 4`
 #[storage(read)]
 fn is_liquidatable_internal(account: Identity, present: I256) -> bool {
     if present >= I256::zero() {
@@ -1816,7 +1872,7 @@ fn is_liquidatable_internal(account: Identity, present: I256) -> bool {
 /// * [I256] - The reserves of the collateral asset, expressed in asset decimals.
 ///
 /// # Number of Storage Accesses
-/// * Reads: `2` (Reads the current balance of the asset and the total collateral for the asset.)
+/// * Reads: `1`
 #[storage(read)]
 fn get_collateral_reserves_internal(asset_id: AssetId) -> I256 {
     I256::try_from(u256::from(this_balance(asset_id))).unwrap() - I256::try_from(u256::from(storage.totals_collateral.get(asset_id).try_read().unwrap_or(0))).unwrap()
@@ -1830,7 +1886,7 @@ fn get_collateral_reserves_internal(asset_id: AssetId) -> I256 {
 /// * [I256] - The reserves of the base asset, expressed in base token decimals.
 ///
 /// # Number of Storage Accesses
-/// * Reads: `3` (Reads market basic, market configuration, and current balance of the base token.)
+/// * Reads: `3`
 #[storage(read)]
 fn get_reserves_internal() -> I256 {
     let market_basic = storage.market_basic.read();
@@ -1850,8 +1906,8 @@ fn get_reserves_internal() -> I256 {
 /// * The function assumes all calculations succeed without explicitly handling errors.
 ///
 /// # Number of Storage Accesses
-/// * Reads: `3` (Reads market basic, market configuration, and base token decimals.)
-/// * Writes: `1` (Writes updated market basic data back to storage.)
+/// * Reads: `3`
+/// * Writes: `1`
 #[storage(write)]
 fn accrue_internal() {
     let mut market_basic = storage.market_basic.read();
@@ -1895,8 +1951,8 @@ fn accrue_internal() {
 /// * `principal_new`: [I256] - The new principal value that the user holds.
 ///
 /// # Number of Storage Accesses
-/// * Reads: `3` (Reads market basic data, market configuration, and base token decimals.)
-/// * Writes: `1` (Writes updated user basic data back to storage.)
+/// * Reads: `3`
+/// * Writes: `1`
 #[storage(write)]
 fn update_base_principal(account: Identity, basic: UserBasic, principal_new: I256) {
     let market_basic = storage.market_basic.read();
@@ -2077,14 +2133,14 @@ fn get_user_balance_with_interest_internal(account: Identity) -> I256 {
 /// This function absorbs the collateral from a liquidated account, transferring it to the protocol and settling the account's debt.
 ///
 /// # Arguments
-/// * `account`: [Identity] - The account of the account to be absorbed.
+/// * `account`: [Identity] - The account to be absorbed.
 ///
 /// # Reverts
 /// * When the account is not liquidatable.
 ///
 /// # Number of Storage Accesses
-/// * Reads: `5`
-/// * Writes: `4`
+/// * Reads: `8 + storage.collateral_configurations_keys.len() * 5`
+/// * Writes: `2 + storage.collateral_configurations_keys.len() * 2`
 #[storage(write)]
 fn absorb_internal(account: Identity) {
     // Get the user's basic information
