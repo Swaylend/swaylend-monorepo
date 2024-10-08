@@ -24,6 +24,7 @@ import {
 } from '@/utils';
 import BigNumber from 'bignumber.js';
 import React, { useMemo } from 'react';
+import { InfoIcon } from '../InfoIcon';
 
 type TableRowProps = {
   assetId: string;
@@ -90,7 +91,7 @@ const MarketCollateralsTableRow = ({
         {formatUnits(liquidationFactor, 16).toString()}%
       </TableCell>
       <TableCell className="text-lavender font-medium">
-        {formatUnits(liquidationPenalty, 16).toString()}%
+        {BigNumber(100).minus(formatUnits(liquidationPenalty, 16)).toString()}%
       </TableCell>
     </TableRow>
   );
@@ -130,22 +131,36 @@ export const MarketCollateralsTable = ({
               Collateral Asset
             </TableHead>
             <TableHead className="w-1/8 bg-card h-[60px] font-bold ">
-              Total Supply
+              <div className="flex gap-x-1 items-center">
+                Total Supply <InfoIcon text="Total value of supplied asset." />
+              </div>
             </TableHead>
             <TableHead className="w-1/8 bg-card h-[60px] font-bold">
-              Reserves
+              <div className="flex gap-x-1 items-center">
+                Reserves{' '}
+                <InfoIcon text="Total value of this asset in reserves." />
+              </div>
             </TableHead>
             <TableHead className="w-1/8 bg-card h-[60px] font-bold">
               Oracle Price
             </TableHead>
             <TableHead className="w-1/8 bg-card h-[60px] font-bold">
-              Collateral Factor
+              <div className="flex gap-x-1 items-center">
+                Collateral Factor{' '}
+                <InfoIcon text="The portion of the Collateral that can be borrowed against. Collateral factor of 80% means that for every $100 of Collateral, user can borrow $80." />
+              </div>
             </TableHead>
             <TableHead className="w-1/8 bg-card h-[60px] font-bold">
-              Liquidation Factor
+              <div className="flex gap-x-1 items-center">
+                Liquidation Factor{' '}
+                <InfoIcon text="The level at which a borrower can have their collateral liquidated." />
+              </div>
             </TableHead>
             <TableHead className="w-1/8 bg-card h-[60px] font-bold">
-              Liquidation Penalty
+              <div className="flex gap-x-1 items-center">
+                Liquidation Penalty{' '}
+                <InfoIcon text="The fee a user pays to the protocol for being liquidated." />
+              </div>
             </TableHead>
           </TableRow>
         </TableHeader>
