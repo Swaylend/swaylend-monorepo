@@ -9,14 +9,14 @@
 </div>
 
 <h6 align="center">
-  <a target="_blank" href="https://swaylend.com">Websites</a>
+  <a target="_blank" href="https://swaylend.com">Website</a>
   ·
   <a target="_blank" href="https://docs.swaylend.com/">Docs</a>
   ·
   <a target="_blank" href="https://x.com/swaylend">Twitter</a>
 </h6>
 
-# Introductio
+# Introduction
 
 Swaylend is a decentralized lending platform operating on the [Fuel Network](https://fuel.network), which utilizes an Ethereum consensus layer. Our platform offers a secure and trustworthy environment for crypto users to earn passive income by supplying liquidity to the market.
 
