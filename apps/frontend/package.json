@@ -1,6 +1,6 @@
 {
-  "name": "swaylend-v2",
-  "version": "0.1.0",
+  "name": "swaylend-dapp",
+  "version": "0.0.0",
   "license": "MIT",
   "private": true,
   "homepage": "https://app.swaylend.com",
@@ -8,7 +8,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "generate:types": "rimraf ./src/contract-types && fuels typegen -i ../../contracts/**/*-abi.json -o ./src/contract-types",
+    "generate:types": "rimraf ./src/contract-types && fuels typegen -i ../../contracts/**/release/**/*-abi.json -o ./src/contract-types",
     "codegen": "graphql-codegen"
   },
   "dependencies": {
@@ -37,11 +37,11 @@
     "clsx": "^2.1.1",
     "encoding": "^0.1.13",
     "fuels": "^0.94.9",
-    "lucide-react": "^0.428.0",
+    "lucide-react": "^0.449.0",
     "next": "14.2.14",
     "next-themes": "^0.3.0",
     "pino-pretty": "^11.2.2",
-    "posthog-js": "^1.161.3",
+    "posthog-js": "^1.167.0",
     "react": "^18",
     "react-circular-progressbar": "^2.1.0",
     "react-dom": "^18",
@@ -54,13 +54,13 @@
     "tailwind-scrollbar": "^3.1.0",
     "tailwindcss-animate": "^1.0.7",
     "usehooks-ts": "^3.1.0",
-    "vaul": "^0.9.2",
+    "vaul": "^1.0.0",
     "viem": "2.20.1",
     "wagmi": "2.12.9",
     "zustand": "^4.5.5"
   },
   "devDependencies": {
-    "@types/node": "^22.5.4",
+    "@types/node": "^22.7.5",
     "@types/react": "^18.3.5",
     "@types/react-dom": "^18",
     "postcss": "^8.4.45",

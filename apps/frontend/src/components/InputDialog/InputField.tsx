@@ -1,4 +1,5 @@
 import { appConfig } from '@/configs';
+import { useCollateralConfigurations, useMarketConfiguration } from '@/hooks';
 import { cn } from '@/lib/utils';
 import { useMarketStore } from '@/stores';
 import { SYMBOL_TO_ICON } from '@/utils';
@@ -12,6 +13,8 @@ import { Input } from '../ui/input';
 export const InputField = ({ error }: { error: boolean }) => {
   const { changeTokenAmount, tokenAmount, actionTokenAssetId, action } =
     useMarketStore();
+  const { data: marketConfiguration } = useMarketConfiguration();
+  const { data: collateralConfigurations } = useCollateralConfigurations();
 
   const [inputValue, setInputValue] = useState<string>('');
 
@@ -51,22 +54,22 @@ export const InputField = ({ error }: { error: boolean }) => {
           tokenDecimalPart !== inputDecimalPart) ||
         inputValue === ''
       ) {
+        BigNumber.config({ EXPONENTIAL_AT: 20 });
         setInputValue(tokenAmountStr);
       }
     }
-
-    // if (
-    //   tokenAmount.gt(0) &&
-    //   tokenAmount.toString() !== inputValue &&
-    //   `${tokenAmount.toString()}.` !== inputValue
-    // ) {
-    //   setInputValue(tokenAmount.toString());
-    // }
   }, [tokenAmount]);
 
   const debounce = useDebounceCallback(changeTokenAmount, 333);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (
+      !marketConfiguration ||
+      !collateralConfigurations ||
+      !actionTokenAssetId
+    )
+      return;
+
     let { value } = event.currentTarget;
 
     // Replace comma to the dot
@@ -95,11 +98,15 @@ export const InputField = ({ error }: { error: boolean }) => {
       value = value.replace(/^0+/, '') || '0';
     }
 
-    // TODO: use correct decimals for the specific token
-    // Limit to 9 decimal places
+    const maxDecimalLength =
+      actionTokenAssetId === marketConfiguration.baseToken.bits
+        ? marketConfiguration.baseTokenDecimals
+        : collateralConfigurations[actionTokenAssetId].decimals;
+
+    // Limit to `actionTokenAssetId` decimal places
     const decimalParts = value.split('.');
-    if (decimalParts[1] && decimalParts[1].length > 9) {
-      decimalParts[1] = decimalParts[1].slice(0, 9);
+    if (decimalParts[1] && decimalParts[1].length > maxDecimalLength) {
+      decimalParts[1] = decimalParts[1].slice(0, maxDecimalLength);
       value = decimalParts.join('.');
     }
 
@@ -124,6 +131,11 @@ export const InputField = ({ error }: { error: boolean }) => {
         onChange={handleChange}
         placeholder="Enter amount"
         ref={amountInput}
+        disabled={
+          !marketConfiguration ||
+          !collateralConfigurations ||
+          !actionTokenAssetId
+        }
       />
       <div className="absolute flex items-center gap-x-2 h-[24px] top-[calc(50%-12px)] left-[calc(100%-80px)]">
         <div className="w-[24px] h-[24px]">

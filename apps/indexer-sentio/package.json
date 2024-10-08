@@ -1,6 +1,6 @@
 {
   "private": true,
-  "name": "indexer-sentio",
+  "name": "swaylend-indexer-sentio",
   "version": "1.0.0",
   "type": "module",
   "scripts": {
