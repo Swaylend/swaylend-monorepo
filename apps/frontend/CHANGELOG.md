@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.4
+
+### Patch Changes
+
+- [#8](https://github.com/pseudobun/swaylend-monorepo/pull/8) [`8ece185`](https://github.com/pseudobun/swaylend-monorepo/commit/8ece1859eff80e0c3dddb5b4ca6a1442b2e2d6de) Thanks [@pseudobun](https://github.com/pseudobun)! - Adds some functionality
+
 ## 0.1.3
 
 ### Patch Changes
