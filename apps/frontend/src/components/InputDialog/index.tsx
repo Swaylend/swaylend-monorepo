@@ -27,6 +27,7 @@ import { ACTION_TYPE, useMarketStore } from '@/stores';
 import { formatUnits, getFormattedNumber, getFormattedPrice } from '@/utils';
 import { useAccount, useIsConnected } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
+import { useMutationState } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { LoaderCircleIcon } from 'lucide-react';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -51,26 +52,45 @@ export const InputDialog = () => {
     changeAction,
     changeTokenAmount,
     changeInputDialogOpen: setOpen,
-    actionActive,
-    changeActionActive,
   } = useMarketStore();
 
   const { data: priceData } = usePrice();
   const marketBalanceOfBase = useMarketBalanceOfBase();
 
-  const { mutate: supplyCollateral } = useSupplyCollateral({
-    actionTokenAssetId,
-  });
+  const { mutate: supplyCollateral, isPending: isSupplyCollateralPending } =
+    useSupplyCollateral({
+      actionTokenAssetId,
+    });
 
-  const { mutate: withdrawCollateral } = useWithdrawCollateral({
-    actionTokenAssetId,
-  });
+  const { mutate: withdrawCollateral, isPending: isWithdrawCollateralPending } =
+    useWithdrawCollateral({
+      actionTokenAssetId,
+    });
 
-  const { mutate: supplyBase } = useSupplyBase();
+  const { mutate: supplyBase, isPending: isSupplyBasePending } =
+    useSupplyBase();
 
-  const { mutate: withdrawBase } = useWithdrawBase();
+  const { mutate: withdrawBase, isPending: isWithdrawBasePending } =
+    useWithdrawBase();
 
-  const { mutate: borrowBase } = useBorrowBase();
+  const { mutate: borrowBase, isPending: isBorrowBasePending } =
+    useBorrowBase();
+
+  const isAnyActionPending = useMemo(
+    () =>
+      isSupplyCollateralPending ||
+      isWithdrawCollateralPending ||
+      isSupplyBasePending ||
+      isWithdrawBasePending ||
+      isBorrowBasePending,
+    [
+      isSupplyCollateralPending,
+      isWithdrawCollateralPending,
+      isSupplyBasePending,
+      isWithdrawBasePending,
+      isBorrowBasePending,
+    ]
+  );
 
   const [error, setError] = useState<string | null>(null);
 
@@ -79,7 +99,6 @@ export const InputDialog = () => {
 
   const handleSubmit = () => {
     if (!marketConfiguration) return;
-    changeActionActive(true);
 
     switch (action) {
       case ACTION_TYPE.SUPPLY: {
@@ -583,13 +602,15 @@ export const InputDialog = () => {
                 </Button>
               </DialogClose>
               <Button
-                disabled={error !== null || tokenAmount.eq(0) || actionActive}
+                disabled={
+                  error !== null || tokenAmount.eq(0) || isAnyActionPending
+                }
                 onMouseDown={handleSubmit}
                 className="w-1/2 flex items-center gap-x-2"
               >
                 {action &&
                   `${action.slice(0, 1)}${action.slice(1).toLowerCase()}`}
-                {actionActive && (
+                {isAnyActionPending && (
                   <LoaderCircleIcon className="animate-spin w-4 h-4" />
                 )}
               </Button>

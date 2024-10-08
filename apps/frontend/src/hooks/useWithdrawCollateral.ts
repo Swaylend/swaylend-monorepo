@@ -30,7 +30,6 @@ export const useWithdrawCollateral = ({
     changeInputDialogOpen,
     changeSuccessDialogOpen,
     changeSuccessDialogTransactionId,
-    changeActionActive,
   } = useMarketStore();
 
   const queryClient = useQueryClient();
@@ -98,12 +97,10 @@ export const useWithdrawCollateral = ({
         changeInputDialogOpen(false);
         changeTokenAmount(BigNumber(0));
         changeSuccessDialogOpen(true);
-        changeActionActive(false);
       }
     },
     onError: (error) => {
       ErrorToast({ error: error.message });
-      changeActionActive(false);
     },
     onSettled: () => {
       // Invalidate queries

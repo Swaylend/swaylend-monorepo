@@ -23,7 +23,6 @@ export const useWithdrawBase = () => {
     changeInputDialogOpen,
     changeSuccessDialogOpen,
     changeSuccessDialogTransactionId,
-    changeActionActive,
   } = useMarketStore();
   const { data: marketConfiguration } = useMarketConfiguration();
 
@@ -82,12 +81,10 @@ export const useWithdrawBase = () => {
         changeInputDialogOpen(false);
         changeTokenAmount(BigNumber(0));
         changeSuccessDialogOpen(true);
-        changeActionActive(false);
       }
     },
     onError: (error) => {
       ErrorToast({ error: error.message });
-      changeActionActive(false);
     },
     onSettled: () => {
       // Invalidate queries
