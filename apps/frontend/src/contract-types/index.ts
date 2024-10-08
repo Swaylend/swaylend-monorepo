@@ -10,9 +10,17 @@
 
 export { Token } from './Token';
 export { TokenFactory } from './TokenFactory';
+export { Token } from './Token';
+export { TokenFactory } from './TokenFactory';
+export { Src20 } from './Src20';
+export { Src20Factory } from './Src20Factory';
 export { Src20 } from './Src20';
 export { Src20Factory } from './Src20Factory';
 export { PythMock } from './PythMock';
 export { PythMockFactory } from './PythMockFactory';
+export { PythMock } from './PythMock';
+export { PythMockFactory } from './PythMockFactory';
+export { Market } from './Market';
+export { MarketFactory } from './MarketFactory';
 export { Market } from './Market';
 export { MarketFactory } from './MarketFactory';
