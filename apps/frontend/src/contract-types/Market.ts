@@ -56,8 +56,8 @@ export type CollateralConfigurationInput = { asset_id: AssetIdInput, price_feed_
 export type CollateralConfigurationOutput = { asset_id: AssetIdOutput, price_feed_id: string, decimals: number, borrow_collateral_factor: BN, liquidate_collateral_factor: BN, liquidation_penalty: BN, supply_cap: BN, paused: boolean };
 export type ContractIdInput = { bits: string };
 export type ContractIdOutput = ContractIdInput;
-export type I256Input = { value: BigNumberish, negative: boolean };
-export type I256Output = { value: BN, negative: boolean };
+export type I256Input = { underlying: BigNumberish };
+export type I256Output = { underlying: BN };
 export type MarketBasicEventInput = { market_basic: MarketBasicsInput };
 export type MarketBasicEventOutput = { market_basic: MarketBasicsOutput };
 export type MarketBasicsInput = { base_supply_index: BigNumberish, base_borrow_index: BigNumberish, tracking_supply_index: BigNumberish, tracking_borrow_index: BigNumberish, total_supply_base: BigNumberish, total_borrow_base: BigNumberish, last_accrual_time: BigNumberish };
@@ -82,6 +82,8 @@ export type PriceDataUpdateInput = { update_fee: BigNumberish, publish_times: Ve
 export type PriceDataUpdateOutput = { update_fee: BN, publish_times: Vec<BN>, price_feed_ids: Vec<string>, update_data: Vec<Bytes> };
 export type ReservesWithdrawnEventInput = { caller: IdentityInput, to: IdentityInput, amount: BigNumberish };
 export type ReservesWithdrawnEventOutput = { caller: IdentityOutput, to: IdentityOutput, amount: BN };
+export type SetPythContractIdEventInput = { contract_id: ContractIdInput };
+export type SetPythContractIdEventOutput = { contract_id: ContractIdOutput };
 export type UserBasicInput = { principal: I256Input, base_tracking_index: BigNumberish, base_tracking_accrued: BigNumberish };
 export type UserBasicOutput = { principal: I256Output, base_tracking_index: BN, base_tracking_accrued: BN };
 export type UserBasicEventInput = { account: IdentityInput, user_basic: UserBasicInput };
@@ -99,9 +101,6 @@ export type UserWithdrawCollateralEventOutput = { account: IdentityOutput, asset
 
 export type MarketConfigurables = Partial<{
   DEBUG_STEP: BigNumberish;
-  ORACLE_MAX_STALENESS: BigNumberish;
-  ORACLE_MAX_AHEADNESS: BigNumberish;
-  ORACLE_MAX_CONF_WIDTH: BigNumberish;
 }>;
 
 const abi = {
@@ -212,38 +211,38 @@ const abi = {
       "metadataTypeId": 19
     },
     {
+      "type": "struct events::SetPythContractIdEvent",
+      "concreteTypeId": "d1ce69d85e3baf58b6bc7ebe55774b2c0ff63b955321139eece739000f91b995",
+      "metadataTypeId": 20
+    },
+    {
       "type": "struct events::UserBasicEvent",
       "concreteTypeId": "496e403bcde15a6d2d8a6ac3ae964a1db2145d27464fad7ae2b0dd4390c90c19",
-      "metadataTypeId": 20
+      "metadataTypeId": 21
     },
     {
       "type": "struct events::UserLiquidatedEvent",
       "concreteTypeId": "92d691781932f1848ba9433a9b1c09a97f985b331d88a1a289fc54569161d639",
-      "metadataTypeId": 21
+      "metadataTypeId": 22
     },
     {
       "type": "struct events::UserSupplyBaseEvent",
       "concreteTypeId": "1aed7a0722d2031e0bce0b49bb46e0f91a2237480a9d928eb696c7d1a6d7250c",
-      "metadataTypeId": 22
+      "metadataTypeId": 23
     },
     {
       "type": "struct events::UserSupplyCollateralEvent",
       "concreteTypeId": "61825e22a76ff7a0ca3ce1004c7d128c7844a8dde36cf7ea9077f8a57ef1f88a",
-      "metadataTypeId": 23
+      "metadataTypeId": 24
     },
     {
       "type": "struct events::UserWithdrawBaseEvent",
       "concreteTypeId": "3bbf66e44a782b08497502f3c67b5e181f14ef16755805fd800040f902019de1",
-      "metadataTypeId": 24
+      "metadataTypeId": 25
     },
     {
       "type": "struct events::UserWithdrawCollateralEvent",
       "concreteTypeId": "76ac511aac239f80b30e11716c2a730f0a814ea3acc85a13abb1777519465a4a",
-      "metadataTypeId": 25
-    },
-    {
-      "type": "struct i256::I256",
-      "concreteTypeId": "2c1b573de37da8020776e36206aa54a3020ad03063bf219d626b6c1cdd82c65d",
       "metadataTypeId": 26
     },
     {
@@ -344,12 +343,21 @@ const abi = {
       "metadataTypeId": 43
     },
     {
+      "type": "struct sway_libs::signed_integers::i256::I256",
+      "concreteTypeId": "1c791a2f63a6d482f33e38564a4c4f67f2351f36419d0c750ce825e233c86ae1",
+      "metadataTypeId": 44
+    },
+    {
       "type": "u256",
       "concreteTypeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
     },
     {
       "type": "u64",
       "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+    },
+    {
+      "type": "u8",
+      "concreteTypeId": "c89951a24c6ca28c13fd1cfdc646b2b656d69e61a92b91023be7eb58eb914b6b"
     }
   ],
   "metadataTypes": [
@@ -551,7 +559,7 @@ const abi = {
         },
         {
           "name": "decimals",
-          "typeId": 44
+          "typeId": 45
         }
       ]
     },
@@ -678,8 +686,18 @@ const abi = {
       ]
     },
     {
-      "type": "struct events::UserBasicEvent",
+      "type": "struct events::SetPythContractIdEvent",
       "metadataTypeId": 20,
+      "components": [
+        {
+          "name": "contract_id",
+          "typeId": 38
+        }
+      ]
+    },
+    {
+      "type": "struct events::UserBasicEvent",
+      "metadataTypeId": 21,
       "components": [
         {
           "name": "account",
@@ -693,7 +711,7 @@ const abi = {
     },
     {
       "type": "struct events::UserLiquidatedEvent",
-      "metadataTypeId": 21,
+      "metadataTypeId": 22,
       "components": [
         {
           "name": "account",
@@ -721,13 +739,13 @@ const abi = {
         },
         {
           "name": "decimals",
-          "typeId": 44
+          "typeId": 45
         }
       ]
     },
     {
       "type": "struct events::UserSupplyBaseEvent",
-      "metadataTypeId": 22,
+      "metadataTypeId": 23,
       "components": [
         {
           "name": "account",
@@ -745,7 +763,7 @@ const abi = {
     },
     {
       "type": "struct events::UserSupplyCollateralEvent",
-      "metadataTypeId": 23,
+      "metadataTypeId": 24,
       "components": [
         {
           "name": "account",
@@ -763,7 +781,7 @@ const abi = {
     },
     {
       "type": "struct events::UserWithdrawBaseEvent",
-      "metadataTypeId": 24,
+      "metadataTypeId": 25,
       "components": [
         {
           "name": "account",
@@ -781,7 +799,7 @@ const abi = {
     },
     {
       "type": "struct events::UserWithdrawCollateralEvent",
-      "metadataTypeId": 25,
+      "metadataTypeId": 26,
       "components": [
         {
           "name": "account",
@@ -794,20 +812,6 @@ const abi = {
         {
           "name": "amount",
           "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
-        }
-      ]
-    },
-    {
-      "type": "struct i256::I256",
-      "metadataTypeId": 26,
-      "components": [
-        {
-          "name": "value",
-          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
-        },
-        {
-          "name": "negative",
-          "typeId": "b760f44fa5965c2474a3b471467a22c43185152129295af588b022ae50b50903"
         }
       ]
     },
@@ -825,7 +829,7 @@ const abi = {
         },
         {
           "name": "decimals",
-          "typeId": 44
+          "typeId": 45
         },
         {
           "name": "borrow_collateral_factor",
@@ -893,7 +897,7 @@ const abi = {
         },
         {
           "name": "base_token_decimals",
-          "typeId": 44
+          "typeId": 45
         },
         {
           "name": "base_token_price_feed_id",
@@ -1029,7 +1033,7 @@ const abi = {
       "components": [
         {
           "name": "principal",
-          "typeId": 26
+          "typeId": 44
         },
         {
           "name": "base_tracking_index",
@@ -1051,7 +1055,7 @@ const abi = {
         },
         {
           "name": "exponent",
-          "typeId": 44
+          "typeId": 45
         },
         {
           "name": "price",
@@ -1196,8 +1200,18 @@ const abi = {
       ]
     },
     {
+      "type": "struct sway_libs::signed_integers::i256::I256",
+      "metadataTypeId": 44,
+      "components": [
+        {
+          "name": "underlying",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        }
+      ]
+    },
+    {
       "type": "u32",
-      "metadataTypeId": 44
+      "metadataTypeId": 45
     }
   ],
   "functions": [
@@ -1431,7 +1445,7 @@ const abi = {
         }
       ],
       "name": "get_collateral_reserves",
-      "output": "2c1b573de37da8020776e36206aa54a3020ad03063bf219d626b6c1cdd82c65d",
+      "output": "1c791a2f63a6d482f33e38564a4c4f67f2351f36419d0c750ce825e233c86ae1",
       "attributes": [
         {
           "name": "storage",
@@ -1481,6 +1495,61 @@ const abi = {
       ]
     },
     {
+      "inputs": [],
+      "name": "get_pause_configuration",
+      "output": "8ec71ec402ef77ffda0627839b31dd1444fad8b4a95507e86bfa89f0517dbc3d",
+      "attributes": [
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " This function retrieves the current pause configuration."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Returns"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * [PauseConfiguration] - The current pause configuration settings."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `1`"
+          ]
+        },
+        {
+          "name": "storage",
+          "arguments": [
+            "read"
+          ]
+        }
+      ]
+    },
+    {
       "inputs": [
         {
           "name": "price_feed_id",
@@ -1500,8 +1569,63 @@ const abi = {
     },
     {
       "inputs": [],
+      "name": "get_pyth_contract_id",
+      "output": "29c10735d33b5159f0c71ee1dbd17b36a3e69e41f00fab0d42e1bd9f428d8a54",
+      "attributes": [
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " This function retrieves the contract ID of the Pyth contract."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Returns"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * [ContractId] - The contract ID of the Pyth contract."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `1`"
+          ]
+        },
+        {
+          "name": "storage",
+          "arguments": [
+            "read"
+          ]
+        }
+      ]
+    },
+    {
+      "inputs": [],
       "name": "get_reserves",
-      "output": "2c1b573de37da8020776e36206aa54a3020ad03063bf219d626b6c1cdd82c65d",
+      "output": "1c791a2f63a6d482f33e38564a4c4f67f2351f36419d0c750ce825e233c86ae1",
       "attributes": [
         {
           "name": "storage",
@@ -1537,7 +1661,7 @@ const abi = {
         }
       ],
       "name": "get_user_balance_with_interest",
-      "output": "2c1b573de37da8020776e36206aa54a3020ad03063bf219d626b6c1cdd82c65d",
+      "output": "1c791a2f63a6d482f33e38564a4c4f67f2351f36419d0c750ce825e233c86ae1",
       "attributes": [
         {
           "name": "storage",
@@ -1617,6 +1741,12 @@ const abi = {
           ]
         }
       ]
+    },
+    {
+      "inputs": [],
+      "name": "get_version",
+      "output": "c89951a24c6ca28c13fd1cfdc646b2b656d69e61a92b91023be7eb58eb914b6b",
+      "attributes": null
     },
     {
       "inputs": [
@@ -1995,16 +2125,16 @@ const abi = {
       "concreteTypeId": "4e6aabd209068d31558291cfd07cff9366801b052a1767bd0a9eb34bf55e8a0e"
     },
     {
-      "logId": "7659206549590130669",
-      "concreteTypeId": "6a4af7c6d1aa3fedf33604a44da789ba359bf8f662a56fbc4de9603b8e732291"
-    },
-    {
       "logId": "3591203286967623281",
       "concreteTypeId": "31d6845ccbeb9e71f30bf07140659072ce92db76041efd6861d6895dace9e658"
     },
     {
       "logId": "5291237237808257645",
       "concreteTypeId": "496e403bcde15a6d2d8a6ac3ae964a1db2145d27464fad7ae2b0dd4390c90c19"
+    },
+    {
+      "logId": "7659206549590130669",
+      "concreteTypeId": "6a4af7c6d1aa3fedf33604a44da789ba359bf8f662a56fbc4de9603b8e732291"
     },
     {
       "logId": "10580804319558431108",
@@ -2051,6 +2181,10 @@ const abi = {
       "concreteTypeId": "81fb1b4fe81422099de81384a1f433aac8964b267aac0428e6bf423e46b88df9"
     },
     {
+      "logId": "15118137377144155992",
+      "concreteTypeId": "d1ce69d85e3baf58b6bc7ebe55774b2c0ff63b955321139eece739000f91b995"
+    },
+    {
       "logId": "1940341185534100254",
       "concreteTypeId": "1aed7a0722d2031e0bce0b49bb46e0f91a2237480a9d928eb696c7d1a6d7250c"
     },
@@ -2084,22 +2218,7 @@ const abi = {
     {
       "name": "DEBUG_STEP",
       "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
-      "offset": 154856
-    },
-    {
-      "name": "ORACLE_MAX_STALENESS",
-      "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
-      "offset": 154904
-    },
-    {
-      "name": "ORACLE_MAX_AHEADNESS",
-      "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
-      "offset": 154864
-    },
-    {
-      "name": "ORACLE_MAX_CONF_WIDTH",
-      "concreteTypeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e",
-      "offset": 154872
+      "offset": 136624
     }
   ]
 };
@@ -2241,7 +2360,9 @@ export class MarketInterface extends Interface {
     get_market_basics: FunctionFragment;
     get_market_basics_with_interest: FunctionFragment;
     get_market_configuration: FunctionFragment;
+    get_pause_configuration: FunctionFragment;
     get_price: FunctionFragment;
+    get_pyth_contract_id: FunctionFragment;
     get_reserves: FunctionFragment;
     get_supply_rate: FunctionFragment;
     get_user_balance_with_interest: FunctionFragment;
@@ -2249,6 +2370,7 @@ export class MarketInterface extends Interface {
     get_user_collateral: FunctionFragment;
     get_user_supply_borrow: FunctionFragment;
     get_utilization: FunctionFragment;
+    get_version: FunctionFragment;
     is_liquidatable: FunctionFragment;
     pause: FunctionFragment;
     pause_collateral_asset: FunctionFragment;
@@ -2293,7 +2415,9 @@ export class Market extends Contract {
     get_market_basics: InvokeFunction<[], MarketBasicsOutput>;
     get_market_basics_with_interest: InvokeFunction<[], MarketBasicsOutput>;
     get_market_configuration: InvokeFunction<[], MarketConfigurationOutput>;
+    get_pause_configuration: InvokeFunction<[], PauseConfigurationOutput>;
     get_price: InvokeFunction<[price_feed_id: string], PriceOutput>;
+    get_pyth_contract_id: InvokeFunction<[], ContractIdOutput>;
     get_reserves: InvokeFunction<[], I256Output>;
     get_supply_rate: InvokeFunction<[utilization: BigNumberish], BN>;
     get_user_balance_with_interest: InvokeFunction<[account: IdentityInput], I256Output>;
@@ -2301,6 +2425,7 @@ export class Market extends Contract {
     get_user_collateral: InvokeFunction<[account: IdentityInput, asset_id: AssetIdInput], BN>;
     get_user_supply_borrow: InvokeFunction<[account: IdentityInput], [BN, BN]>;
     get_utilization: InvokeFunction<[], BN>;
+    get_version: InvokeFunction<[], number>;
     is_liquidatable: InvokeFunction<[account: IdentityInput], boolean>;
     pause: InvokeFunction<[pause_config: PauseConfigurationInput], void>;
     pause_collateral_asset: InvokeFunction<[asset_id: AssetIdInput], void>;

@@ -8,7 +8,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "generate:types": "rimraf ./src/contract-types && fuels typegen -i ../../contracts/**/*-abi.json -o ./src/contract-types",
+    "generate:types": "rimraf ./src/contract-types && fuels typegen -i ../../contracts/**/release/**/*-abi.json -o ./src/contract-types",
     "codegen": "graphql-codegen"
   },
   "dependencies": {
