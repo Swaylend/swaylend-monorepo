@@ -24,10 +24,9 @@ import {
 } from '@/hooks';
 import { cn } from '@/lib/utils';
 import { ACTION_TYPE, useMarketStore } from '@/stores';
-import { formatUnits, getFormattedNumber, getFormattedPrice } from '@/utils';
+import { formatUnits, getFormattedNumber } from '@/utils';
 import { useAccount, useIsConnected } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
-import { useMutationState } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { LoaderCircleIcon } from 'lucide-react';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -127,6 +126,35 @@ export const InputDialog = () => {
       }
       case ACTION_TYPE.BORROW:
         if (!priceData || !tokenAmount.gt(0)) return;
+
+        console.log('Prices:');
+        console.log(
+          Object.entries(priceData.prices).map((val) => ({
+            assetId: val[0],
+            price: val[1].toString(),
+          }))
+        );
+        console.log('Confidence intervals:');
+        console.log(
+          Object.entries(priceData.confidenceIntervals).map((val) => {
+            if (
+              val[1].div(priceData.prices[val[0]]).times(100).gte(BigNumber(1))
+            ) {
+              console.error(
+                `Confidence price for asset ${val[0]} is too high. Confidence is: ${val[1].div(priceData.prices[val[0]]).times(100).toFixed(2)}%`
+              );
+            }
+
+            return {
+              assetId: val[0],
+              confidenceInterval: val[1].toString(),
+              confidenceIntervalPercentage: `${val[1]
+                .div(priceData.prices[val[0]])
+                .times(100)
+                .toFixed(2)}%`,
+            };
+          })
+        );
 
         borrowBase({
           tokenAmount,
