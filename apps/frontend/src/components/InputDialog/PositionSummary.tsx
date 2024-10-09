@@ -132,7 +132,8 @@ export const PositionSummary = () => {
             BigNumber(1).div(
               priceData?.prices[marketConfiguration?.baseToken.bits ?? ''] ?? 1
             )
-          )
+          ),
+          true
         )} USDC`,
         changeValue: possibleBorrowCapacity
           ? `${getFormattedNumber(
@@ -142,7 +143,8 @@ export const PositionSummary = () => {
                     marketConfiguration?.baseToken.bits ?? ''
                   ] ?? 1
                 )
-              )
+              ),
+              true
             )} USDC`
           : null,
         color: possibleBorrowCapacity?.lte(totalBorrowCapacity ?? BigNumber(0))
@@ -158,7 +160,8 @@ export const PositionSummary = () => {
         title: 'Available to Borrow',
         tooltip: 'The amount of base asset you can borrow',
         value: `${getFormattedNumber(
-          updatedBorrowCapacity ?? BigNumber(0)
+          updatedBorrowCapacity ?? BigNumber(0),
+          true
         )} USDC`,
         changeValue: possibleAvailableToBorrow
           ? `${getFormattedNumber(
@@ -168,7 +171,8 @@ export const PositionSummary = () => {
                     marketConfiguration?.baseToken.bits ?? ''
                   ] ?? 1
                 )
-              )
+              ),
+              true
             )} USDC`
           : null,
         color: possibleAvailableToBorrow?.lte(borrowCapacity ?? BigNumber(0))

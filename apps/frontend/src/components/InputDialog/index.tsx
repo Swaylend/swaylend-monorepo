@@ -599,7 +599,7 @@ export const InputDialog = () => {
                 <div
                   className={`text-sm ${action === ACTION_TYPE.REPAY ? 'text-lavender' : 'text-moon'}`}
                 >
-                  {getFormattedNumber(finalBalance)}
+                  {getFormattedNumber(finalBalance, true)}
                   {action === ACTION_TYPE.BORROW && ' available to borrow'}
                   {action === ACTION_TYPE.REPAY && ' debt to repay'}
                   {(action === ACTION_TYPE.SUPPLY ||
@@ -612,7 +612,7 @@ export const InputDialog = () => {
                   </div>
                 </div>
                 <Button
-                  disabled={!finalBalance || finalBalance.eq(0)}
+                  disabled={!finalBalance || finalBalance.lte(0)}
                   onMouseDown={onMaxBtnClick}
                   size="sm"
                   variant={'secondary'}
