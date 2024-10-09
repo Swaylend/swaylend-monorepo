@@ -63,12 +63,12 @@ type TableRowProps = {
 };
 
 const POINTS_COLLATERAL: Point[] = [
-  // {
-  //   id: '1',
-  //   name: 'Fuel',
-  //   description: 'Earn Fuel Points by lending assets',
-  //   icon: SYMBOL_TO_ICON.FUEL,
-  // },
+  {
+    id: '1',
+    name: 'Fuel',
+    description: 'Earn Fuel Points by lending assets',
+    icon: SYMBOL_TO_ICON.FUEL,
+  },
   // {
   //   id: '2',
   //   name: 'Swaylend',
