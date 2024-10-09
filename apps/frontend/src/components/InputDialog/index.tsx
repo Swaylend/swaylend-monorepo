@@ -55,7 +55,7 @@ export const InputDialog = () => {
   } = useMarketStore();
 
   const { data: priceData } = usePrice();
-  const marketBalanceOfBase = useMarketBalanceOfBase();
+  const { data: marketBalanceOfBase } = useMarketBalanceOfBase();
 
   const { mutate: supplyCollateral, isPending: isSupplyCollateralPending } =
     useSupplyCollateral({
