@@ -1230,6 +1230,60 @@ const abi = {
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
+          "name": "doc-comment",
+          "arguments": [
+            " This function absorbs a list of underwater accounts onto the protocol balance sheet."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Arguments"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `accounts`: [Vec<Identity>] - The list of underwater accounts to be absorbed."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `price_data_update`: [PriceDataUpdate] - The price data update struct to be used for updating the price feeds."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Writes: `2 + accounts.len() * 4`"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `5 + accounts.len() * 5`"
+          ]
+        },
+        {
           "name": "payable",
           "arguments": []
         },
@@ -1256,6 +1310,66 @@ const abi = {
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
+          "name": "doc-comment",
+          "arguments": [
+            " # Arguments"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `market_configuration`: [MarketConfiguration] - The configuration settings for the market."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `owner`: [Identity] - The identity of the owner of the contract."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Reverts"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the contract is already active, indicated by a non-zero last accrual time."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Writes: `4`"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `2`"
+          ]
+        },
+        {
           "name": "storage",
           "arguments": [
             "write"
@@ -1273,6 +1387,66 @@ const abi = {
       "name": "add_collateral_asset",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Arguments"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `configuration`: [CollateralConfiguration] - The collateral configuration to be added."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Reverts"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the caller is not the owner."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the asset already exists, indicated by a non-`None` value in the storage."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Writes: `2`"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `1`"
+          ]
+        },
         {
           "name": "storage",
           "arguments": [
@@ -1292,6 +1466,66 @@ const abi = {
       "output": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e",
       "attributes": [
         {
+          "name": "doc-comment",
+          "arguments": [
+            " This function calculates the amount of base asset a user can borrow based on their collateral and current borrow position."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Arguments"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `account`: [Identity] - The account of the user."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Returns"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * [u256] - The amount of base asset the user can borrow."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `4 + storage.collateral_configurations_keys.len() * 5`"
+          ]
+        },
+        {
           "name": "storage",
           "arguments": [
             "read"
@@ -1308,7 +1542,50 @@ const abi = {
       ],
       "name": "balance_of",
       "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
-      "attributes": null
+      "attributes": [
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " This function retrieves the balance of a specified asset for the contract."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Arguments"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `asset_id`: [AssetId] - The asset ID of the asset whose balance is to be retrieved."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Returns"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * [u64] - The balance of the specified asset."
+          ]
+        }
+      ]
     },
     {
       "inputs": [
@@ -1328,6 +1605,102 @@ const abi = {
       "name": "buy_collateral",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " This function allows buying collateral from the protocol. Prices are not updated here as the caller is expected to update them in the same transaction using a multicall handler."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Arguments"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `asset_id`: [AssetId] - The asset ID of the collateral asset to be bought."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `min_amount`: [u64] - The minimum amount of collateral to be bought."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `recipient`: [Identity] - The account of the recipient of the collateral."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Reverts"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the buy operation is paused."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When payment is not in the base token or the amount is zero."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When reserves are sufficient or not less than target reserves."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the quoted collateral amount is less than the minimum requested."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When collateral reserves are insufficient."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `8`"
+          ]
+        },
         {
           "name": "payable",
           "arguments": []
@@ -1355,6 +1728,72 @@ const abi = {
       "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
       "attributes": [
         {
+          "name": "doc-comment",
+          "arguments": [
+            " This function calculates the base asset value for selling a collateral asset."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Arguments"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `asset_id`: [AssetId] - The asset ID of the collateral asset."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `collateral_amount`: [u64] - The amount of the collateral asset."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Returns"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * [u64] - The value of the collateral asset in base asset."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `5`"
+          ]
+        },
+        {
           "name": "storage",
           "arguments": [
             "read"
@@ -1368,6 +1807,54 @@ const abi = {
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
+          "name": "doc-comment",
+          "arguments": [
+            " This function is useful for testing purposes, allowing developers to simulate time progression during debugging."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Reverts"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When `DEBUG_STEP` is not greater than zero, indicating that debugging is disabled."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Writes: `1`"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `1`"
+          ]
+        },
+        {
           "name": "storage",
           "arguments": [
             "write"
@@ -1380,6 +1867,48 @@ const abi = {
       "name": "get_all_totals_collateral",
       "output": "d0540b5a00688e21ad7a3f5d7db93636c18f3ef7aed40d4e48f0cffc74683bcb",
       "attributes": [
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " This function retrieves the total collateral amount for all collateral assets in the market."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Returns"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * [`Vec<(AssetId, u64)>`]: A list of tuples containing the asset ID and total collateral for each collateral asset"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `1 + storage.collateral_configurations_keys.len() * 2`"
+          ]
+        },
         {
           "name": "storage",
           "arguments": [
@@ -1399,6 +1928,66 @@ const abi = {
       "output": "d0540b5a00688e21ad7a3f5d7db93636c18f3ef7aed40d4e48f0cffc74683bcb",
       "attributes": [
         {
+          "name": "doc-comment",
+          "arguments": [
+            " This function retrieves all collateral assets that a user has supplied, along with their respective amounts."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Arguments"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `account`: [Identity] - The account of the user."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Returns"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * [Vec<(AssetId, u64)>] - A list of tuples containing the asset ID and total collateral for each collateral asset."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Writes: `storage.collateral_configurations_keys.len()`"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `1 + storage.collateral_configurations_keys.len() * 3`"
+          ]
+        },
+        {
           "name": "storage",
           "arguments": [
             "read"
@@ -1417,6 +2006,72 @@ const abi = {
       "output": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e",
       "attributes": [
         {
+          "name": "doc-comment",
+          "arguments": [
+            " This function calculates the borrow rate based on the market's utilization. "
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " It uses different rates depending on whether the utilization is below or above the kink point."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Arguments"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `utilization`: [u256] - The utilization of the market."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Returns"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * [u256] - The borrow rate (decimals 18)."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `3 or 6`"
+          ]
+        },
+        {
           "name": "storage",
           "arguments": [
             "read"
@@ -1429,6 +2084,48 @@ const abi = {
       "name": "get_collateral_configurations",
       "output": "135bedc713ecdc7e568f13811c40a9df6a62b44f54789c3f87066e7ccaedcc14",
       "attributes": [
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " This function retrieves all collateral asset configurations in the market."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Returns"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * [Vec<CollateralConfiguration>]: A list of collateral configurations"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `1 + storage.collateral_configurations_keys.len()`"
+          ]
+        },
         {
           "name": "storage",
           "arguments": [
@@ -1448,6 +2145,66 @@ const abi = {
       "output": "1c791a2f63a6d482f33e38564a4c4f67f2351f36419d0c750ce825e233c86ae1",
       "attributes": [
         {
+          "name": "doc-comment",
+          "arguments": [
+            " This function retrieves the reserves of a specified collateral asset."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Arguments"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `asset_id`: [AssetId] - The asset ID of the collateral asset."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Returns"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * [I256] - The reserves (in asset decimals)."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `1`"
+          ]
+        },
+        {
           "name": "storage",
           "arguments": [
             "read"
@@ -1460,6 +2217,48 @@ const abi = {
       "name": "get_market_basics",
       "output": "8f0ca9732dda82407f3d36328a5e4b89421c5f1c404a9568afa856df6efb5802",
       "attributes": [
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " This function retrieves the current market basic information."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Returns"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * [MarketBasics] - The market basic information."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `1`"
+          ]
+        },
         {
           "name": "storage",
           "arguments": [
@@ -1474,6 +2273,48 @@ const abi = {
       "output": "8f0ca9732dda82407f3d36328a5e4b89421c5f1c404a9568afa856df6efb5802",
       "attributes": [
         {
+          "name": "doc-comment",
+          "arguments": [
+            " This function retrieves the current market basic information, including accrued interest."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Returns"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * [MarketBasics] - The market basic information (with included interest)."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `1`"
+          ]
+        },
+        {
           "name": "storage",
           "arguments": [
             "read"
@@ -1486,6 +2327,48 @@ const abi = {
       "name": "get_market_configuration",
       "output": "788c494dd193488709eb7174a5299c17819b0c2e68089b18e0474d616080cc9c",
       "attributes": [
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " This function retrieves the current market configuration."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Returns"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * [MarketConfiguration] - The market configuration."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `1`"
+          ]
+        },
         {
           "name": "storage",
           "arguments": [
@@ -1542,6 +2425,24 @@ const abi = {
           ]
         },
         {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `1`"
+          ]
+        },
+        {
           "name": "storage",
           "arguments": [
             "read"
@@ -1559,6 +2460,102 @@ const abi = {
       "name": "get_price",
       "output": "8aba92fff7345309d4313706ed7db3a811609f62da8f0d2859819db43d461ff8",
       "attributes": [
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " This function ensures that the price data is fresh and meets the required validation criteria."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Arguments"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `price_feed_id`: [PriceFeedId] - The ID of the price feed for which the price is being retrieved."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Returns"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * [Price] - The price data retrieved from the oracle."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Reverts"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the `contract_id` is zero, indicating the oracle contract ID is not set."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the price is stale or ahead of the current timestamp."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the price is less than or equal to zero."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the confidence value exceeds the allowed width."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `1`"
+          ]
+        },
         {
           "name": "storage",
           "arguments": [
@@ -1628,6 +2625,48 @@ const abi = {
       "output": "1c791a2f63a6d482f33e38564a4c4f67f2351f36419d0c750ce825e233c86ae1",
       "attributes": [
         {
+          "name": "doc-comment",
+          "arguments": [
+            " This function calculates and returns the total amount of protocol reserves of the base asset."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Returns"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * [I256] - The reserves of the base asset, expressed in base token decimals."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `3` (Reads market basic, market configuration, and current balance of the base token.)"
+          ]
+        },
+        {
           "name": "storage",
           "arguments": [
             "read"
@@ -1645,6 +2684,72 @@ const abi = {
       "name": "get_supply_rate",
       "output": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e",
       "attributes": [
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " This function calculates the supply rate based on the market's utilization."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " It applies different rates depending on whether the utilization is below or above the kink point."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Arguments"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `utilization`: [u256] - The utilization of the market."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Returns"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * [u256] - The supply rate (decimals 18)."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `3 or 6`"
+          ]
+        },
         {
           "name": "storage",
           "arguments": [
@@ -1664,6 +2769,66 @@ const abi = {
       "output": "1c791a2f63a6d482f33e38564a4c4f67f2351f36419d0c750ce825e233c86ae1",
       "attributes": [
         {
+          "name": "doc-comment",
+          "arguments": [
+            " This function retrieves the user's balance, including accrued interest."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Arguments"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `account`: [Identity] - The account of the user."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Returns"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * [I256] - The user balance (with included interest)."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `1`"
+          ]
+        },
+        {
           "name": "storage",
           "arguments": [
             "read"
@@ -1681,6 +2846,66 @@ const abi = {
       "name": "get_user_basic",
       "output": "2878312d8fe9af45fe59b9252d6afa651128c8f755ca8f26ae4d67ede06b8ea1",
       "attributes": [
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " This function retrieves the basic information of a specified user."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Arguments"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `account`: [Identity] - The account of the user."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Returns"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * [UserBasic] - The user basic information."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `1`"
+          ]
+        },
         {
           "name": "storage",
           "arguments": [
@@ -1704,6 +2929,66 @@ const abi = {
       "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
       "attributes": [
         {
+          "name": "doc-comment",
+          "arguments": [
+            " This function retrieves the amount of collateral a user has supplied for a specific asset."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Arguments"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `account`: [Identity] - The account of the user."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `asset_id`: [AssetId] - The asset ID of the collateral asset."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Returns"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * [u64] - The amount of collateral the user has supplied for the specified asset."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Writes: `1`"
+          ]
+        },
+        {
           "name": "storage",
           "arguments": [
             "read"
@@ -1722,6 +3007,72 @@ const abi = {
       "output": "2770d9f762bf8ec295d5c253193cd2897c893401f1f438769f92d212641ec779",
       "attributes": [
         {
+          "name": "doc-comment",
+          "arguments": [
+            " This function retrieves the amount of base asset supplied and borrowed by a specific user."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Arguments"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `account`: [Identity] - The account of the user."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Returns"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * [u256] - The amount of base asset supplied by the user."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * [u256] - The amount of base asset borrowed by the user."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " "
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `3`"
+          ]
+        },
+        {
           "name": "storage",
           "arguments": [
             "read"
@@ -1735,6 +3086,54 @@ const abi = {
       "output": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e",
       "attributes": [
         {
+          "name": "doc-comment",
+          "arguments": [
+            " This function calculates the utilization of the market, defined as the ratio of total borrowed"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " amount to total supplied amount."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Returns"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * [u256] - The utilization of the market (decimals 18)."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: 1 (Reads market basic information)."
+          ]
+        },
+        {
           "name": "storage",
           "arguments": [
             "read"
@@ -1746,7 +3145,26 @@ const abi = {
       "inputs": [],
       "name": "get_version",
       "output": "c89951a24c6ca28c13fd1cfdc646b2b656d69e61a92b91023be7eb58eb914b6b",
-      "attributes": null
+      "attributes": [
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " Get version of the smart contract"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Returns"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * [u8] - The version number of the smart contract."
+          ]
+        }
+      ]
     },
     {
       "inputs": [
@@ -1758,6 +3176,66 @@ const abi = {
       "name": "is_liquidatable",
       "output": "b760f44fa5965c2474a3b471467a22c43185152129295af588b022ae50b50903",
       "attributes": [
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " This function checks if an account is liquidatable."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Arguments"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * account: [Identity] - The account to be checked."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Returns"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * [bool] - True if the account is liquidatable, False otherwise."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: 1"
+          ]
+        },
         {
           "name": "storage",
           "arguments": [
@@ -1777,6 +3255,66 @@ const abi = {
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
+          "name": "doc-comment",
+          "arguments": [
+            " This function updates the pause configuration of the contract."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Arguments"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `pause_config`: [PauseConfiguration] - The pause configuration to be set."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Reverts"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the caller is not the owner."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Writes: `1`"
+          ]
+        },
+        {
           "name": "storage",
           "arguments": [
             "write"
@@ -1794,6 +3332,60 @@ const abi = {
       "name": "pause_collateral_asset",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Arguments"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `asset_id`: [AssetId] - The asset ID of the collateral asset to be paused."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Reverts"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the caller is not the owner."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Writes: `1`"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `1`   "
+          ]
+        },
         {
           "name": "storage",
           "arguments": [
@@ -1817,6 +3409,90 @@ const abi = {
       "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
       "attributes": [
         {
+          "name": "doc-comment",
+          "arguments": [
+            " This function calculates the quote for collateral by considering the asset price, base price, and discount factors based on the collateral configuration."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Arguments"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `asset_id`: [AssetId] - The asset ID of the collateral asset."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `base_amount`: [u64] - The amount of base asset for which the quote is requested."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Returns"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * [u64] - The quote for the collateral asset in exchange for the base asset."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Reverts"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the conversion from `u256` to `u64` fails due to overflow."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `2`"
+          ]
+        },
+        {
           "name": "storage",
           "arguments": [
             "read"
@@ -1829,6 +3505,42 @@ const abi = {
       "name": "renounce_ownership",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Additional Information"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " This action is irreversible and should be done with caution, as it removes all ownership privileges."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `1`"
+          ]
+        },
         {
           "name": "storage",
           "arguments": [
@@ -1848,6 +3560,60 @@ const abi = {
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
+          "name": "doc-comment",
+          "arguments": [
+            " # Arguments"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `asset_id`: [AssetId] - The asset ID of the collateral asset to be resumed."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Reverts"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the caller is not the owner."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Writes: `1`"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `1`"
+          ]
+        },
+        {
           "name": "storage",
           "arguments": [
             "write"
@@ -1866,6 +3632,66 @@ const abi = {
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
+          "name": "doc-comment",
+          "arguments": [
+            " This function sets the Pyth contract ID, allowing the contract to interact with the Pyth oracle."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Arguments:"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `contract_id`: [ContractId] - The contract ID of the Pyth oracle to be set."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Reverts"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the caller is not the owner."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Writes: `1`"
+          ]
+        },
+        {
           "name": "storage",
           "arguments": [
             "write"
@@ -1878,6 +3704,84 @@ const abi = {
       "name": "supply_base",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " This function allows users to supply base assets to the market, updating their balance and the market's total supply."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Arguments"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " This function does not take any parameters directly, as it uses the message context to retrieve the amount and asset ID."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Reverts"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the supply is paused."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the supplied amount is less than or equal to zero."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the supplied asset is not the base asset."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Writes: `2`"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `4`"
+          ]
+        },
         {
           "name": "payable",
           "arguments": []
@@ -1895,6 +3799,72 @@ const abi = {
       "name": "supply_collateral",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " This function ensures that the supplied collateral adheres to the market's rules and limits."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Reverts"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the supply is paused."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the supplied amount is less than or equal to zero."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the collateral asset is paused."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the total collateral exceeds the supply cap."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Writes: `2`"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `4`"
+          ]
+        },
         {
           "name": "payable",
           "arguments": []
@@ -1918,6 +3888,60 @@ const abi = {
       "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
       "attributes": [
         {
+          "name": "doc-comment",
+          "arguments": [
+            " This function retrieves the total collateral amount for a specific asset."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Arguments"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `asset_id`: [AssetId] - The asset ID of the collateral asset."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Returns"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * [u64] - The total collateral ammount."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Writes: `1`"
+          ]
+        },
+        {
           "name": "storage",
           "arguments": [
             "read"
@@ -1935,6 +3959,66 @@ const abi = {
       "name": "transfer_ownership",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " This function allows the current owner to transfer ownership of the contract to a new owner."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Arguments"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `new_owner`: [Identity] - The identity of the new owner."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Reverts"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the caller is not the current owner."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `1`"
+          ]
+        },
         {
           "name": "storage",
           "arguments": [
@@ -1958,6 +4042,72 @@ const abi = {
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
+          "name": "doc-comment",
+          "arguments": [
+            " # Arguments"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `asset_id`: [AssetId] - The asset ID of the collateral asset to be updated."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `configuration`: [CollateralConfiguration] - The new collateral configuration."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Reverts"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the caller is not the owner."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the asset does not exist, indicated by a non-`Some` value in the storage."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Writes: `1`"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `1`"
+          ]
+        },
+        {
           "name": "storage",
           "arguments": [
             "write"
@@ -1975,6 +4125,84 @@ const abi = {
       "name": "update_fee",
       "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
       "attributes": [
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " This function interacts with an external oracle to obtain the update fee and ensures that the contract ID is valid."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Arguments"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `update_data`: [Vec<Bytes>] - The data used for the fee update request."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Returns"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * [u64] - The update fee retrieved from the oracle."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Reverts"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the contract ID is not set (i.e., it is zero)."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `1`"
+          ]
+        },
         {
           "name": "storage",
           "arguments": [
@@ -1994,6 +4222,72 @@ const abi = {
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
+          "name": "doc-comment",
+          "arguments": [
+            " This function updates the market configuration, allowing the owner to modify settings while preserving certain values."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Arguments"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `configuration`: [MarketConfiguration] - The new market configuration to be set."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Reverts"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the caller is not the owner."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Writes: `1`"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `2`"
+          ]
+        },
+        {
           "name": "storage",
           "arguments": [
             "write"
@@ -2011,6 +4305,90 @@ const abi = {
       "name": "update_price_feeds_if_necessary",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " This function ensures that the provided price data update is valid and performs an update if the conditions are met."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Arguments"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `price_data_update`: [PriceDataUpdate] - The data necessary for updating the price feeds."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Returns"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " This function does not return a value."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Reverts"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the contract ID is not set (i.e., it is zero)."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the payment amount is insufficient or the asset ID is not the base asset."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `1`"
+          ]
+        },
         {
           "name": "payable",
           "arguments": []
@@ -2037,6 +4415,78 @@ const abi = {
       "name": "withdraw_base",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " This function allows users to withdraw a specified amount of base assets, potentially borrowing if necessary."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Arguments"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `amount`: [u64] - The amount of base asset to be withdrawn."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `price_data_update`: [PriceDataUpdate] - The price data update struct to be used for updating the price feeds."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Reverts"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the user is not collateralized."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Writes: `3`"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `5`"
+          ]
+        },
         {
           "name": "payable",
           "arguments": []
@@ -2068,6 +4518,78 @@ const abi = {
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
+          "name": "doc-comment",
+          "arguments": [
+            " This function ensures that the withdrawal adheres to the market's rules and checks for collateralization."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Arguments"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `asset_id`: [AssetId] - The asset ID of the collateral asset to be withdrawn."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `amount`: [u64] - The amount of collateral to be withdrawn."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `price_data_update`: [PriceDataUpdate] - The price data update struct to be used for updating the price feeds."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Reverts"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the user is not collateralized."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Writes: `2`"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `4`"
+          ]
+        },
+        {
           "name": "payable",
           "arguments": []
         },
@@ -2093,6 +4615,78 @@ const abi = {
       "name": "withdraw_reserves",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " This function allows the owner to withdraw a specified amount of reserves from the contract."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Arguments"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `to`: [Identity] - The account to which the reserves will be sent."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `amount`: [u64] - The amount of reserves to be withdrawn."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Reverts"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the caller is not the owner."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the amount requested exceeds the available reserves."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `4`"
+          ]
+        },
         {
           "name": "storage",
           "arguments": [
