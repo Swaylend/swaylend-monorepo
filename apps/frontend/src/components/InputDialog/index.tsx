@@ -195,6 +195,10 @@ export const InputDialog = () => {
       return formatUnits(
         userSupplyBorrow.borrowed,
         marketConfiguration.baseTokenDecimals
+      ).plus(
+        BigNumber(0.01).div(
+          priceData?.prices[marketConfiguration.baseToken.bits] ?? 1
+        )
       );
     }
     if (action === 'SUPPLY') {
@@ -287,17 +291,7 @@ export const InputDialog = () => {
         break;
       case ACTION_TYPE.REPAY: {
         if (userSupplyBorrow.borrowed.eq(0)) return;
-        changeTokenAmount(
-          BigNumber(
-            finalBalance
-              .plus(
-                BigNumber(0.01).div(
-                  priceData?.prices[marketConfiguration.baseToken.bits] ?? 1
-                )
-              )
-              .toFixed(decimals)
-          )
-        );
+        changeTokenAmount(BigNumber(finalBalance.toFixed(decimals)));
 
         break;
       }
