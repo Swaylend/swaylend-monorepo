@@ -93,6 +93,16 @@ export const InputDialog = () => {
 
   const [error, setError] = useState<string | null>(null);
 
+  const isLending = useMemo(() => {
+    if (
+      (action === ACTION_TYPE.SUPPLY || action === ACTION_TYPE.WITHDRAW) &&
+      actionTokenAssetId === marketConfiguration?.baseToken.bits
+    ) {
+      return true;
+    }
+    return false;
+  }, [action, actionTokenAssetId, marketConfiguration]);
+
   const { data: maxWithdrawableCollateral } =
     useMaxWithdrawableCollateral(actionTokenAssetId);
 
@@ -641,9 +651,11 @@ export const InputDialog = () => {
                 )}
               </Button>
             </div>
-            <div className="w-full flex justify-center">
-              <PositionSummary />
-            </div>
+            {!isLending && (
+              <div className="w-full flex justify-center">
+                <PositionSummary />
+              </div>
+            )}
           </div>
         </div>
       </DialogContent>
