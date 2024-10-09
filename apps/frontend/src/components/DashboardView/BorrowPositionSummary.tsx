@@ -1,10 +1,15 @@
-import { useBorrowCapacity, useUserSupplyBorrow } from '@/hooks';
+import {
+  useBorrowCapacity,
+  useMarketConfiguration,
+  usePrice,
+  useUserSupplyBorrow,
+} from '@/hooks';
 import { useUserLiquidationPoint } from '@/hooks/useUserLiquidationPoint';
 import { getFormattedPrice } from '@/utils';
 import { useIsConnected } from '@fuels/react';
 import BigNumber from 'bignumber.js';
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import PlusIcon from '/public/icons/plus-filled.svg?url';
 import XIcon from '/public/icons/x-filled.svg?url';
 import { InfoIcon } from '../InfoIcon';
@@ -15,7 +20,26 @@ export const BorrowPositionSummary = () => {
   const { data: borrowCapacity } = useBorrowCapacity();
   const { data: userLiquidationPoint } = useUserLiquidationPoint();
   const { data: userSupplyBorrow } = useUserSupplyBorrow();
+  const { data: priceData } = usePrice();
+  const { data: marketConfiguration } = useMarketConfiguration();
   const [open, setOpen] = useState(false);
+
+  const updatedBorrowCapacity = useMemo(() => {
+    if (!marketConfiguration || !priceData || !borrowCapacity) {
+      return BigNumber(0);
+    }
+    let updatedBorrowCapacity = borrowCapacity?.minus(
+      BigNumber(1).div(
+        priceData?.prices[marketConfiguration?.baseToken.bits ?? ''] ?? 1
+      )
+    );
+
+    updatedBorrowCapacity = updatedBorrowCapacity?.lt(0)
+      ? BigNumber(0)
+      : updatedBorrowCapacity;
+
+    return updatedBorrowCapacity;
+  }, [marketConfiguration, borrowCapacity, priceData]);
 
   if (!isConnected || !userSupplyBorrow || userSupplyBorrow.borrowed.eq(0)) {
     return null;
@@ -73,7 +97,7 @@ export const BorrowPositionSummary = () => {
                     />
                   </div>
                   <div className="text-primary text-right">
-                    {getFormattedPrice(borrowCapacity ?? BigNumber(0))}
+                    {getFormattedPrice(updatedBorrowCapacity)}
                   </div>
                 </div>
               </div>
