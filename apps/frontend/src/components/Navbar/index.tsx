@@ -22,7 +22,6 @@ import {
   ChevronDown,
   Coins,
   ExternalLink,
-  LayoutDashboard,
   Menu,
   X,
 } from 'lucide-react';
