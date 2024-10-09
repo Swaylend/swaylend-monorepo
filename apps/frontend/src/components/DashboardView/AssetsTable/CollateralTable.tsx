@@ -69,12 +69,12 @@ const POINTS_COLLATERAL: Point[] = [
     description: 'Earn Fuel Points by lending assets',
     icon: SYMBOL_TO_ICON.FUEL,
   },
-  {
-    id: '2',
-    name: 'Swaylend',
-    description: 'Earn Swaylend Points by lending assets',
-    icon: SYMBOL_TO_ICON.SWAY,
-  },
+  // {
+  //   id: '2',
+  //   name: 'Swaylend',
+  //   description: 'Earn Swaylend Points by lending assets',
+  //   icon: SYMBOL_TO_ICON.SWAY,
+  // },
 ];
 
 const CollateralTableRow = ({

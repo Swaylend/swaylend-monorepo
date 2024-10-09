@@ -10,7 +10,7 @@ import { appConfig } from '@/configs';
 import { cn } from '@/lib/utils';
 import { useMarketStore } from '@/stores';
 import { SYMBOL_TO_ICON } from '@/utils';
-import { SelectGroup, SelectLabel } from '@radix-ui/react-select';
+import { SelectGroup } from '@radix-ui/react-select';
 import Image from 'next/image';
 
 const MarketItem = ({

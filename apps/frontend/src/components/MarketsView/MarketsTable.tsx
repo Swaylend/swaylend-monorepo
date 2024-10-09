@@ -9,6 +9,7 @@ import { appConfig } from '@/configs';
 import Image from 'next/image';
 import React from 'react';
 import FUEL from '/public/icons/fuel-logo.svg?url';
+import { InfoIcon } from '../InfoIcon';
 import { MarketTableRow } from './MarketTableRow';
 
 export const MarketsTable = () => {
@@ -30,10 +31,16 @@ export const MarketsTable = () => {
             Market
           </TableHead>
           <TableHead className="h-[64px] pt-4 text-primary font-bold bg-card">
-            Collateral Assets
+            <div className="flex gap-x-1 items-center">
+              Collateral Assets{' '}
+              <InfoIcon text="Assets that can be used as Collateral in this market." />
+            </div>
           </TableHead>
           <TableHead className="h-[64px] pt-4 text-primary font-bold bg-card">
-            Utilization
+            <div className="flex gap-x-1 items-center">
+              Utilization{' '}
+              <InfoIcon text="Percentage of Supplied Base Assets that is being borrowed." />
+            </div>
           </TableHead>
           <TableHead className="h-[64px] pt-4 text-primary font-bold bg-card">
             Net Earn APR
@@ -42,13 +49,22 @@ export const MarketsTable = () => {
             Net Borrow APR
           </TableHead>
           <TableHead className="h-[64px] pt-4 text-primary font-bold bg-card">
-            Total Earning
+            <div className="flex gap-x-1 items-center">
+              Total Earning{' '}
+              <InfoIcon text="Total value of Supplied Base Assets." />
+            </div>
           </TableHead>
           <TableHead className="h-[64px] pt-4 text-primary font-bold bg-card">
-            Total Borrowing
+            <div className="flex gap-x-1 items-center">
+              Total Borrowing{' '}
+              <InfoIcon text="Total value of Base Assets that are Borrowed." />
+            </div>
           </TableHead>
           <TableHead className="h-[64px] pt-4 text-primary font-bold bg-card">
-            Total Collateral
+            <div className="flex gap-x-1 items-center">
+              Total Collateral{' '}
+              <InfoIcon text="Total value of Supplied Collateral Assets." />
+            </div>
           </TableHead>
         </TableRow>
       </TableHeader>

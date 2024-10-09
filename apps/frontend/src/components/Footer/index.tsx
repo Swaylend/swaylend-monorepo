@@ -89,7 +89,7 @@ export const Footer = () => {
                     Documentation
                   </a>
                   <a
-                    href="https://docs.swaylend.com/"
+                    href="https://medium.com/@swaylend"
                     target="_blank"
                     rel="noreferrer"
                   >

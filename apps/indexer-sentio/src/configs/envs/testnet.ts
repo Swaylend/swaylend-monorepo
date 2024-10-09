@@ -12,12 +12,12 @@ export function createTestnetConfig() {
 const markets: DeployedMarkets = {
   USDC: {
     marketAddress:
-      '0xe3771e5167967258c57ab9a699016af0e15d3c0a16378005798bf5f7862046dc',
+      '0xa42a086b357cdb5ee3e7b981ea67768e38a5b6db4db35ca4dbab32ab60f48475',
     startBlock: BigInt(11380000),
   },
   USDT: {
     marketAddress:
-      '0x0867cb17fad5e9c88a3c369c89a036d1897975870b2e5f0918aa4b5fd36be493',
+      '0x44daa228d84335bf2e17b1af1cf7f9de73266977affe6c3445f08bd07a2b0d5d',
     startBlock: BigInt(11380000),
   },
 };
@@ -30,4 +30,5 @@ const assets: Record<string, string> = {
   '0xa95097d8fe21970639e543db9b7f590aa678f325bce3dbc12a682cdcbbfae378': 'UNI',
   '0xf3e2b3960e0930402a5d6047883f5c178a30aa5db2f0d7302d582cefb59a1575': 'BTC',
   '0x790d2c0eb869e72cf42540d928ce728c253142d5ef07ed22b75009e40660e4ea': 'BNB',
+  '0x24dd639420a98a5d9d3015280e82cafefb3b88d75f996107d1a3b12da831f733': 'ezETH',
 };

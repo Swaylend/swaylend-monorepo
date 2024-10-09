@@ -13,6 +13,7 @@ import {
   useTotalReserves,
 } from '@/hooks';
 
+import { cn } from '@/lib/utils';
 import {
   SYMBOL_TO_ICON,
   formatUnits,
@@ -45,14 +46,14 @@ export default function MarketOverview({
 }: MarketOverviewProps) {
   const { data: borrowRate } = useBorrowRate(baseAsset);
   const { data: supplyRate } = useSupplyRate(baseAsset);
-  const { data: totalReserves } = useTotalReserves(baseAsset);
+  const { data: totalReserves } = useTotalReserves();
 
   const { data: collateralConfigurations } =
     useCollateralConfigurations(baseAsset);
   const { data: marketConfiguration } = useMarketConfiguration(baseAsset);
   const borrowApr = useMemo(() => getBorrowApr(borrowRate), [borrowRate]);
   const supplyApr = useMemo(() => getSupplyApr(supplyRate), [supplyRate]);
-  const availableLiquidity = useMarketBalanceOfBase(baseAsset);
+  const { data: availableLiquidity } = useMarketBalanceOfBase(baseAsset);
 
   const { data: totalCollateral } = useTotalCollateral(baseAsset);
   const { data: marketBasics } = useMarketBasics(baseAsset);
@@ -100,7 +101,7 @@ export default function MarketOverview({
     <div className="pt-[60px] pb-[55px] px-[88px] flex flex-col gap-y-8 w-full items-center justify-center">
       <div className="max-lg:hidden flex items-start justify-between w-full">
         <div className="flex items-center space-x-4 text-white/60 w-1/3">
-          <Link href="/markets" prefetch={false}>
+          <Link href="/markets">
             <div className="flex gap-x-2 items-center">
               <ChevronLeft className="h-6 w-6" />
               <div className="text-[20px] font-semibold">Markets</div>
@@ -194,7 +195,9 @@ export default function MarketOverview({
                 Available Liquidity
               </div>
               <div className="text-xl font-semibold text-white mt-2">
-                {getFormattedPrice(availableLiquidity.formatted)}
+                {getFormattedPrice(
+                  availableLiquidity?.formatted ?? BigNumber(0)
+                )}
               </div>
             </div>
             <div>
@@ -216,8 +219,15 @@ export default function MarketOverview({
               <div className="text-sm text-primary font-semibold">
                 Collateralization
               </div>
-              <div className="text-xl font-semibold text-white mt-2">
-                {collateralization.toFixed(2, 1)}%
+              <div
+                className={cn(
+                  'text-xl font-semibold text-white mt-2',
+                  !collateralization.isFinite() && 'text-center'
+                )}
+              >
+                {!collateralization.isFinite()
+                  ? '-'
+                  : `${collateralization.toFixed(2, 1)}%`}
               </div>
             </div>
             <div>

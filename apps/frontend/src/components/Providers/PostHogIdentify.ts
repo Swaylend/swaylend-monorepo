@@ -16,9 +16,13 @@ export default function PostHogIdentify(): null {
 
   useEffect(() => {
     if (posthog && account && currentConnector) {
-      posthog.identify(account, {
-        connector: currentConnector.name,
-      });
+      try {
+        posthog.identify(account, {
+          connector: currentConnector.name,
+        });
+      } catch (error) {
+        console.error(error);
+      }
     }
   }, [account, posthog, currentConnector]);
 

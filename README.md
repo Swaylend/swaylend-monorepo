@@ -26,8 +26,6 @@ The Swaylend protocol is built on a re-engineered solution from the Ethereum blo
 
 Swaylend is live at [https://swaylend.com](https://swaylend.com).
 
-> ⚠️ Warning: Please note that Swaylend is in the alpha testing phase, and contracts may change in the future, leading to potential loss of supply/borrow amounts.
-
 # Project Structure
 
 At the first level, the monorepo is divided into `contracts` , `apps` , `scripts` , and `libs` .
@@ -47,6 +45,8 @@ At the first level, the monorepo is divided into `contracts` , `apps` , `scripts
   + `pyth_mock_sdk`: Custom SDK for the Pyth mock contract, used in tests.
   + `token_sdk`: Custom SDK for the token contract, used in tests.
 * [`scripts`](/scripts/): Contains scripts for various network operations:
+  + `src`: Containing actual `.rs` scripts that can be run using `cargo run --bin <script>`.
+  + `configs`: Different market configurations for various networks.
   + `devnet`: Scripts related to the local development network.
   + `testnet`: Scripts related to the public test network.
  
@@ -55,12 +55,11 @@ At the first level, the monorepo is divided into `contracts` , `apps` , `scripts
 
 # Deployments
 
-There is a dedicated [DEPLOYMENTS.md](DEPLOYMENTS.md) for contracts. For the releases of the dapp, see [Releases](https://github.com/Swaylend/swaylend-monorepo/releases).
+There is a dedicated [DEPLOYMENTS.md](DEPLOYMENTS.md) for contracts. For the dapp's releases, see [Releases](https://github.com/Swaylend/swaylend-monorepo/releases) and [CHANGELOG.md](apps/frontend/CHANGELOG.md).
 
 # Socials / Contact
 * Twitter/X: [@swaylend](https://x.com/swaylend)
-* Email: TBA
-* Discord: [Swaylend](https://discord.gg/m9VcnNG2)
+* Discord: [SwayLend](https://discord.gg/7N796pdHNk)
 # Licensing
 
-The primary license for all Swaylend components is the MIT License. See [`LICENSE`](/LICENSE).
+The primary license for all Swaylend components is the [MIT License](/LICENSE).

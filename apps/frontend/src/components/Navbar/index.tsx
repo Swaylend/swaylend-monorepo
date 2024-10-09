@@ -22,7 +22,6 @@ import {
   ChevronDown,
   Coins,
   ExternalLink,
-  LayoutDashboard,
   Menu,
   X,
 } from 'lucide-react';
@@ -150,7 +149,7 @@ export const Navbar = () => {
               <DropdownMenu open={openDex} onOpenChange={setOpenDex}>
                 <DropdownMenuTrigger>
                   <div className="text-lavender outline-none border-none focus:outline-none focus:border-none hover:text-lavender/80 text-md font-semibold flex items-center gap-x-1">
-                    DEX
+                    Swap
                     <ChevronDown className="w-4 h-4" />
                   </div>
                 </DropdownMenuTrigger>
