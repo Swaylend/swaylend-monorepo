@@ -120,7 +120,7 @@ export const Stats = () => {
       // Available to Borrow
       if (borrowedMode === 0) {
         if (updatedBorrowCapacity.lt(1) && updatedBorrowCapacity.gt(0)) {
-          return { title: 'Available to Borrow', value: 0.5 };
+          return { title: 'Available to Borrow', value: updatedBorrowCapacity };
         }
         return {
           title: 'Available to Borrow',
@@ -131,9 +131,18 @@ export const Stats = () => {
       const val = formatUnits(
         userSupplyBorrow.borrowed,
         marketConfiguration.baseTokenDecimals
+      ).plus(
+        BigNumber(0.01).div(
+          priceData?.prices[marketConfiguration.baseToken.bits] ?? 1
+        )
       );
       if (val.lt(1) && val.gt(0)) {
-        return { title: 'Your Borrow Position', value: 0.5 };
+        return {
+          title: 'Your Borrow Position',
+          value: val.times(
+            priceData.prices[marketConfiguration.baseToken.bits]
+          ),
+        };
       }
       return {
         title: 'Your Borrow Position',
@@ -142,7 +151,7 @@ export const Stats = () => {
     }
     // Available to borrow
     if (updatedBorrowCapacity.lt(1) && updatedBorrowCapacity.gt(0)) {
-      return { title: 'Available to Borrow', value: 0.5 };
+      return { title: 'Available to Borrow', value: updatedBorrowCapacity };
     }
     return {
       title: 'Available to Borrow',

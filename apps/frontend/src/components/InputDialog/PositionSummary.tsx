@@ -19,7 +19,7 @@ import { Progress } from '../ui/progress';
 
 export const PositionSummary = () => {
   const { data: marketConfiguration } = useMarketConfiguration();
-  const marketBalanceOfBase = useMarketBalanceOfBase();
+  const { data: marketBalanceOfBase } = useMarketBalanceOfBase();
   const { data: borrowCapacity } = useBorrowCapacity();
   const { data: userSupplyBorrow } = useUserSupplyBorrow();
 

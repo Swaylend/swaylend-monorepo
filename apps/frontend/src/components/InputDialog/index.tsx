@@ -27,7 +27,6 @@ import { ACTION_TYPE, useMarketStore } from '@/stores';
 import { formatUnits, getFormattedNumber, getFormattedPrice } from '@/utils';
 import { useAccount, useIsConnected } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
-import { useMutationState } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { LoaderCircleIcon } from 'lucide-react';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -167,6 +166,10 @@ export const InputDialog = () => {
       return formatUnits(
         userSupplyBorrow.borrowed,
         marketConfiguration.baseTokenDecimals
+      ).plus(
+        BigNumber(0.01).div(
+          priceData?.prices[marketConfiguration.baseToken.bits] ?? 1
+        )
       );
     }
     if (action === 'SUPPLY') {
@@ -259,17 +262,7 @@ export const InputDialog = () => {
         break;
       case ACTION_TYPE.REPAY: {
         if (userSupplyBorrow.borrowed.eq(0)) return;
-        changeTokenAmount(
-          BigNumber(
-            finalBalance
-              .plus(
-                BigNumber(0.01).div(
-                  priceData?.prices[marketConfiguration.baseToken.bits] ?? 1
-                )
-              )
-              .toFixed(decimals)
-          )
-        );
+        changeTokenAmount(BigNumber(finalBalance.toFixed(decimals)));
 
         break;
       }

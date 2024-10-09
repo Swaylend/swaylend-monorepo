@@ -26,6 +26,7 @@ import {
   useBorrowCapacity,
   useBorrowRate,
   useMarketConfiguration,
+  usePrice,
   useUserRole,
   useUserSupplyBorrow,
 } from '@/hooks';
@@ -119,6 +120,7 @@ export const BorrowTable = () => {
 
   const { data: borrowRate, isPending: isBorrowRatePending } = useBorrowRate();
   const { data: userSupplyBorrow } = useUserSupplyBorrow();
+  const { data: priceData } = usePrice();
   const { data: marketConfiguration, isPending: isPendingMarketConfiguration } =
     useMarketConfiguration();
   const { data: maxBorrowAmount } = useBorrowCapacity();
@@ -145,6 +147,10 @@ export const BorrowTable = () => {
     const val = formatUnits(
       userSupplyBorrow.borrowed,
       marketConfiguration.baseTokenDecimals
+    ).plus(
+      BigNumber(0.01).div(
+        priceData?.prices[marketConfiguration.baseToken.bits] ?? 1
+      )
     );
     if (val.lt(1) && val.gt(0)) {
       return `< 1 ${appConfig.assets[marketConfiguration?.baseToken.bits ?? '']}`;
