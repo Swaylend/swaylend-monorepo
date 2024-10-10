@@ -144,14 +144,18 @@ export const BorrowTable = () => {
       return `${getFormattedNumber(BigNumber(0))} ${appConfig.assets[marketConfiguration?.baseToken.bits ?? '']}`;
     }
 
-    const val = formatUnits(
+    let val = formatUnits(
       userSupplyBorrow.borrowed,
       marketConfiguration.baseTokenDecimals
-    ).plus(
-      BigNumber(0.01).div(
-        priceData?.prices[marketConfiguration.baseToken.bits] ?? 1
-      )
     );
+    if (val.gt(0)) {
+      val = val.plus(
+        BigNumber(0.01).div(
+          priceData?.prices[marketConfiguration.baseToken.bits] ?? 1
+        )
+      );
+    }
+
     if (val.lt(1) && val.gt(0)) {
       return `< 1 ${appConfig.assets[marketConfiguration?.baseToken.bits ?? '']}`;
     }

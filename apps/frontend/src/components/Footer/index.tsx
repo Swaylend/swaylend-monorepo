@@ -23,7 +23,7 @@ export const Footer = () => {
               <Image src={Logo} height={50} alt="logo" />
             </Link>
             <div className="sm:text-xl font-semibold text-lavender mt-8 max-sm:text-center text-lg">
-              Welcome to the Leading Lending Protocol of Fuel Network
+              Lending reimagined, powered by Fuel.
             </div>
 
             <div className="flex sm:hidden mt-16 gap-x-8">
