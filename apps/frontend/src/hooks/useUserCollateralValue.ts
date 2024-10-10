@@ -9,7 +9,6 @@ import { useUserCollateralAssets } from './useUserCollateralAssets';
 export const useUserCollateralValue = () => {
   const { data: assetsConfigs } = useCollateralConfigurations();
   const { data: collateralBalances } = useUserCollateralAssets();
-  const { data: collateralConfig } = useCollateralConfigurations();
   const { data: priceData } = usePrice();
 
   return useQuery({
@@ -18,30 +17,24 @@ export const useUserCollateralValue = () => {
       collateralBalances,
       assetsConfigs,
       priceData?.prices,
-      collateralConfig,
     ],
     queryFn: async () => {
       if (
         collateralBalances == null ||
         assetsConfigs == null ||
-        priceData == null ||
-        collateralConfig == null
+        priceData == null
       ) {
         return null;
       }
 
       return Object.entries(collateralBalances).reduce((acc, [assetId, v]) => {
-        const token = collateralConfig[assetId];
+        const token = assetsConfigs[assetId];
         const balance = formatUnits(v, token.decimals);
         const dollBalance = priceData.prices[assetId].times(balance);
         return acc.plus(dollBalance);
       }, BigNumber(0));
     },
-    enabled:
-      !!collateralBalances &&
-      !!assetsConfigs &&
-      !!priceData &&
-      !!collateralConfig,
+    enabled: !!collateralBalances && !!assetsConfigs && !!priceData,
     refetchOnWindowFocus: false,
     placeholderData: keepPreviousData,
   });
