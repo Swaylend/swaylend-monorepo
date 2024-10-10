@@ -35,7 +35,6 @@ export const useMarketAddressBasedContracts = createWithEqualityFn<Store>()(
       if (!provider || !marketAddress) {
         return;
       }
-      console.log('fsk creating contracts');
       const pythContract = new PythContract(
         appConfig.markets[marketAddress].oracleAddress,
         provider

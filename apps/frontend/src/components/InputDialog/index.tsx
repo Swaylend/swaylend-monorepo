@@ -24,10 +24,9 @@ import {
 } from '@/hooks';
 import { cn } from '@/lib/utils';
 import { ACTION_TYPE, useMarketStore } from '@/stores';
-import { formatUnits, getFormattedNumber, getFormattedPrice } from '@/utils';
+import { formatUnits, getFormattedNumber } from '@/utils';
 import { useAccount, useIsConnected } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
-import { useMutationState } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { LoaderCircleIcon } from 'lucide-react';
 import React, { useEffect, useMemo, useState } from 'react';
