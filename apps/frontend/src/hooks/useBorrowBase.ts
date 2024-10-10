@@ -44,7 +44,7 @@ export const useBorrowBase = () => {
         appConfig.markets[market].marketAddress,
         wallet
       );
-      const amount = new BigNumber(tokenAmount.plus(10000000000)).times(
+      const amount = new BigNumber(tokenAmount).times(
         10 ** marketConfiguration.baseTokenDecimals
       );
       const { waitForResult } = await marketContract.functions
