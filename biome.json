@@ -63,7 +63,9 @@
         "noDangerouslySetInnerHtml": "off"
       },
       "correctness": {
-        "useExhaustiveDependencies": "off"
+        "useExhaustiveDependencies": "warn",
+        "noUnusedVariables": "error",
+        "noUnusedImports": "error"
       },
       "a11y": {
         "useKeyWithClickEvents": "off",
@@ -92,21 +94,5 @@
       "indentStyle": "space",
       "lineEnding": "lf"
     }
-  },
-  "overrides": [
-    {
-      "include": ["**/apps/frontend/**"],
-      "linter": {
-        "rules": {
-          "correctness": { "useExhaustiveDependencies": "off" },
-          "style": {
-            "useImportType": "off"
-          },
-          "suspicious": {
-            "noShadowRestrictedNames": "off"
-          }
-        }
-      }
-    }
-  ]
+  }
 }
