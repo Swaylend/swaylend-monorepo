@@ -36,7 +36,11 @@ export const ConnectButton = () => {
             <ChevronDown className="h-4 w-4" />
           </div>
         </PopoverTrigger>
-        <PopoverContent align="end" className="w-[260px] px-[25px]">
+        <PopoverContent
+          align="end"
+          className="w-[260px] px-[25px]"
+          onOpenAutoFocus={(e) => e.preventDefault()}
+        >
           <div className="w-full">
             <div>
               <div className="text-moon text-sm">Connected Wallet</div>
