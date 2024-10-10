@@ -3,14 +3,13 @@ import {
   PendingToast,
   TransactionSuccessToast,
 } from '@/components/Toasts';
-import { appConfig } from '@/configs';
-import { Market } from '@/contract-types';
 import { useMarketStore } from '@/stores';
 import { useAccount, useWallet } from '@fuels/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { toast } from 'react-toastify';
 import { useMarketConfiguration } from './useMarketConfiguration';
+import { useMarketContract } from '@/contracts/useMarketContract';
 
 export const useSupplyBase = () => {
   const { wallet } = useWallet();
@@ -25,18 +24,14 @@ export const useSupplyBase = () => {
   } = useMarketStore();
 
   const queryClient = useQueryClient();
+  const marketContract = useMarketContract();
 
   return useMutation({
     mutationKey: ['supplyBase', account, marketConfiguration, market],
     mutationFn: async (tokenAmount: BigNumber) => {
-      if (!wallet || !account || !marketConfiguration) {
+      if (!wallet || !account || !marketConfiguration || !marketContract) {
         return null;
       }
-
-      const marketContract = new Market(
-        appConfig.markets[market].marketAddress,
-        wallet
-      );
 
       const amount = new BigNumber(tokenAmount).times(
         10 ** marketConfiguration.baseTokenDecimals

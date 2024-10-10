@@ -1,9 +1,7 @@
-import { Market, type PriceDataUpdateInput } from '@/contract-types/Market';
+import { type PriceDataUpdateInput } from '@/contract-types/Market';
 import { useMarketStore } from '@/stores';
 
-import { appConfig } from '@/configs';
 import { HermesClient } from '@pythnetwork/hermes-client';
-import { PythContract } from '@pythnetwork/pyth-fuel-js';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { arrayify } from 'fuels';
@@ -12,6 +10,8 @@ import { useMemo } from 'react';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
 import { useMarketConfiguration } from './useMarketConfiguration';
 import { useProvider } from './useProvider';
+import { useMarketContract } from '@/contracts/useMarketContract';
+import { usePythContract } from '@/contracts/usePythContract';
 
 export const usePrice = (marketParam?: string) => {
   const hermesClient = new HermesClient(
@@ -26,6 +26,8 @@ export const usePrice = (marketParam?: string) => {
   const { data: collateralConfigurations } =
     useCollateralConfigurations(market);
 
+  const marketContract = useMarketContract();
+  const pythContract = usePythContract();
   // Create a map of priceFeedId to assetId
   const priceFeedIdToAssetId = useMemo(() => {
     if (!marketConfiguration || !collateralConfigurations) return null;
@@ -49,7 +51,13 @@ export const usePrice = (marketParam?: string) => {
   return useQuery({
     queryKey: ['pythPrices', priceFeedIdToAssetId, market],
     queryFn: async () => {
-      if (!provider || !priceFeedIdToAssetId) return null;
+      if (
+        !provider ||
+        !priceFeedIdToAssetId ||
+        !marketContract ||
+        !pythContract
+      )
+        return null;
 
       const priceFeedIds = Array.from(priceFeedIdToAssetId.keys());
 
@@ -64,17 +72,6 @@ export const usePrice = (marketParam?: string) => {
       ) {
         throw new Error('Failed to fetch price');
       }
-
-      // Fetch updateFee
-      const pythContract = new PythContract(
-        appConfig.markets[market].oracleAddress,
-        provider
-      );
-
-      const marketContract = new Market(
-        appConfig.markets[market].marketAddress,
-        provider
-      );
 
       const buffer = Buffer.from(priceUpdates.binary.data[0], 'hex');
       const updateData = [arrayify(buffer)];

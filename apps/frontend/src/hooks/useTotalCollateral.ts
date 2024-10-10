@@ -1,11 +1,10 @@
-import { Market } from '@/contract-types';
 import { useMarketStore } from '@/stores';
 
-import { appConfig } from '@/configs';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
 import { useProvider } from './useProvider';
+import { useMarketContract } from '@/contracts/useMarketContract';
 
 export const useTotalCollateral = (marketParam?: string) => {
   const provider = useProvider();
@@ -13,16 +12,12 @@ export const useTotalCollateral = (marketParam?: string) => {
   const market = marketParam ?? storeMarket;
   const { data: collateralConfigurations } =
     useCollateralConfigurations(market);
+  const marketContract = useMarketContract();
 
   return useQuery({
     queryKey: ['totalCollateral', market, collateralConfigurations],
     queryFn: async () => {
       if (!provider || !collateralConfigurations) return null;
-
-      const marketContract = new Market(
-        appConfig.markets[market].marketAddress,
-        provider
-      );
 
       const totalsCollateral = await marketContract.functions
         .get_all_totals_collateral()

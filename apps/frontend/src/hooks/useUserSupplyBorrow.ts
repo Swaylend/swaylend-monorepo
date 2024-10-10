@@ -1,5 +1,4 @@
-import { appConfig } from '@/configs';
-import { Market } from '@/contract-types';
+import { useMarketContract } from '@/contracts/useMarketContract';
 import { useMarketStore } from '@/stores';
 import { useAccount, useWallet } from '@fuels/react';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
@@ -10,15 +9,12 @@ export const useUserSupplyBorrow = () => {
   const { account } = useAccount();
   const { market } = useMarketStore();
 
+  const marketContract = useMarketContract();
+
   return useQuery({
     queryKey: ['userSupplyBorrow', account, market],
     queryFn: async () => {
-      if (!wallet || !account) return null;
-
-      const marketContract = new Market(
-        appConfig.markets[market].marketAddress,
-        wallet
-      );
+      if (!account || !marketContract) return null;
 
       const { value } = await marketContract.functions
         .get_user_supply_borrow({ Address: { bits: account } })

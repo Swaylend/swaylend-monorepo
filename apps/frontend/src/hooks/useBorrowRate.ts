@@ -1,27 +1,22 @@
-import { Market } from '@/contract-types';
 import { useMarketStore } from '@/stores';
 
-import { appConfig } from '@/configs';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { useProvider } from './useProvider';
 import { useUtilization } from './useUtilization';
+import { useMarketContract } from '@/contracts/useMarketContract';
 
 export const useBorrowRate = (marketParam?: string) => {
   const provider = useProvider();
   const { data: utilization } = useUtilization(marketParam);
   const { market: storeMarket } = useMarketStore();
   const market = marketParam ?? storeMarket;
+  const marketContract = useMarketContract();
 
   return useQuery({
     queryKey: ['borrowRate', utilization?.toString(), market],
     queryFn: async () => {
-      if (!provider || !utilization) return null;
-
-      const marketContract = new Market(
-        appConfig.markets[market].marketAddress,
-        provider
-      );
+      if (!provider || !utilization || !marketContract) return null;
 
       const { value } = await marketContract.functions
         .get_borrow_rate(utilization)
@@ -31,6 +26,6 @@ export const useBorrowRate = (marketParam?: string) => {
       return new BigNumber(value.toString());
     },
     refetchOnWindowFocus: false,
-    enabled: !!utilization && !!provider,
+    enabled: !!utilization && !!provider && !!marketContract,
   });
 };

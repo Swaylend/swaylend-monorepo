@@ -3,14 +3,13 @@ import {
   PendingToast,
   TransactionSuccessToast,
 } from '@/components/Toasts';
-import { appConfig } from '@/configs';
-import { Market } from '@/contract-types';
 import { useMarketStore } from '@/stores';
 import { useAccount, useWallet } from '@fuels/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { toast } from 'react-toastify';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
+import { useMarketContract } from '@/contracts/useMarketContract';
 
 type useSupplyCollateralProps = {
   actionTokenAssetId: string | null | undefined;
@@ -31,6 +30,7 @@ export const useSupplyCollateral = ({
   } = useMarketStore();
 
   const queryClient = useQueryClient();
+  const marketContract = useMarketContract();
 
   return useMutation({
     mutationKey: [
@@ -45,15 +45,11 @@ export const useSupplyCollateral = ({
         !wallet ||
         !account ||
         !actionTokenAssetId ||
-        !collateralConfigurations
+        !collateralConfigurations ||
+        !marketContract
       ) {
         return null;
       }
-
-      const marketContract = new Market(
-        appConfig.markets[market].marketAddress,
-        wallet
-      );
 
       const amount = new BigNumber(tokenAmount).times(
         10 ** collateralConfigurations[actionTokenAssetId].decimals

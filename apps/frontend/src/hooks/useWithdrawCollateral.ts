@@ -4,15 +4,15 @@ import {
   TransactionSuccessToast,
 } from '@/components/Toasts';
 import { appConfig } from '@/configs';
-import { Market } from '@/contract-types';
 import type { PriceDataUpdateInput } from '@/contract-types/Market';
 import { useMarketStore } from '@/stores';
 import { useAccount, useWallet } from '@fuels/react';
-import { PythContract } from '@pythnetwork/pyth-fuel-js';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { toast } from 'react-toastify';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
+import { useMarketContract } from '@/contracts/useMarketContract';
+import { usePythContract } from '@/contracts/usePythContract';
 
 type useWithdrawCollateralProps = {
   actionTokenAssetId: string | null | undefined;
@@ -33,6 +33,8 @@ export const useWithdrawCollateral = ({
   } = useMarketStore();
 
   const queryClient = useQueryClient();
+  const marketContract = useMarketContract();
+  const pythContract = usePythContract();
 
   return useMutation({
     mutationKey: ['withdrawCollateral', actionTokenAssetId, account, market],
@@ -47,20 +49,12 @@ export const useWithdrawCollateral = ({
         !wallet ||
         !account ||
         !actionTokenAssetId ||
-        !collateralConfigurations
+        !collateralConfigurations ||
+        !marketContract ||
+        !pythContract
       ) {
         return null;
       }
-
-      const pythContract = new PythContract(
-        appConfig.markets[market].oracleAddress,
-        wallet
-      );
-
-      const marketContract = new Market(
-        appConfig.markets[market].marketAddress,
-        wallet
-      );
 
       const amount = new BigNumber(tokenAmount).times(
         10 ** collateralConfigurations[actionTokenAssetId].decimals

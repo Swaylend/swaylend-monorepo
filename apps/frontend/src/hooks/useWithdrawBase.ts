@@ -4,15 +4,15 @@ import {
   TransactionSuccessToast,
 } from '@/components/Toasts';
 import { appConfig } from '@/configs';
-import { Market } from '@/contract-types';
 import type { PriceDataUpdateInput } from '@/contract-types/Market';
 import { useMarketStore } from '@/stores';
 import { useAccount, useWallet } from '@fuels/react';
-import { PythContract } from '@pythnetwork/pyth-fuel-js';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { toast } from 'react-toastify';
 import { useMarketConfiguration } from './useMarketConfiguration';
+import { useMarketContract } from '@/contracts/useMarketContract';
+import { usePythContract } from '@/contracts/usePythContract';
 
 export const useWithdrawBase = () => {
   const { wallet } = useWallet();
@@ -27,6 +27,8 @@ export const useWithdrawBase = () => {
   const { data: marketConfiguration } = useMarketConfiguration();
 
   const queryClient = useQueryClient();
+  const marketContract = useMarketContract();
+  const pythContract = usePythContract();
 
   return useMutation({
     mutationKey: ['withdrawBase', account, market, marketConfiguration],
@@ -37,19 +39,15 @@ export const useWithdrawBase = () => {
       tokenAmount: BigNumber;
       priceUpdateData: PriceDataUpdateInput;
     }) => {
-      if (!wallet || !account || !marketConfiguration) {
+      if (
+        !wallet ||
+        !account ||
+        !marketConfiguration ||
+        !marketContract ||
+        !pythContract
+      ) {
         return null;
       }
-
-      const pythContract = new PythContract(
-        appConfig.markets[market].oracleAddress,
-        wallet
-      );
-
-      const marketContract = new Market(
-        appConfig.markets[market].marketAddress,
-        wallet
-      );
 
       const amount = new BigNumber(tokenAmount).times(
         10 ** marketConfiguration.baseTokenDecimals
