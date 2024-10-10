@@ -23,9 +23,9 @@ export const ErrorToast = ({ error }: ErrorToastProps) => {
       return 'Transaction rejected by user.';
     }
 
-    if (error.includes('NotCollateralized')) {
-      return 'Cannot withdraw more than collateralized. Try lowering the amount';
-    }
+    // if (error.includes('NotCollateralized')) {
+    //   return 'Cannot withdraw more than collateralized. Try lowering the amount';
+    // }
 
     if (error.includes('A predicate account cannot sign messages')) {
       return (
