@@ -2,7 +2,7 @@
 
 import 'react-toastify/dist/ReactToastify.css';
 
-import { defaultConnectors } from '@fuels/connectors';
+import { createConfig, defaultConnectors } from '@fuels/connectors';
 import { FuelProvider } from '@fuels/react';
 import {
   QueryClient,
@@ -15,12 +15,11 @@ import { type ReactNode, useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 
 import { appConfig } from '@/configs';
-import { useProvider } from '@/hooks';
 import { CHAIN_IDS, Provider } from 'fuels';
 import posthog from 'posthog-js';
 import { PostHogProvider } from 'posthog-js/react';
 import { fallback } from 'viem';
-import { http, createConfig } from 'wagmi';
+import { http, createConfig as createWagmiConfig } from 'wagmi';
 import { mainnet, sepolia } from 'wagmi/chains';
 import { coinbaseWallet, injected, walletConnect } from 'wagmi/connectors';
 import PostHogIdentify from './PostHogIdentify';
@@ -61,7 +60,7 @@ const METADATA = {
   icons: ['https://app.swaylend.com/logo512.png'],
 };
 
-const wagmiConfig = createConfig({
+const wagmiConfig = createWagmiConfig({
   chains: [mainnet, sepolia],
   connectors: [
     injected({ shimDisconnect: false }),
@@ -91,6 +90,22 @@ const wagmiConfig = createConfig({
   },
 });
 
+// For SSR application we need to use
+// createConfig to avoid errors related to window
+// usage inside the connectors.
+const fuelConfig = createConfig(() => ({
+  connectors: defaultConnectors({
+    devMode: appConfig.env === 'testnet',
+    wcProjectId: appConfig.client.walletConnectProjectId,
+    ethWagmiConfig: wagmiConfig,
+    chainId:
+      appConfig.env === 'testnet'
+        ? CHAIN_IDS.fuel.testnet
+        : CHAIN_IDS.fuel.mainnet,
+    fuelProvider: Provider.create(appConfig.client.fuelNodeUrl),
+  }),
+}));
+
 if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'development') {
   try {
     posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
@@ -110,7 +125,6 @@ if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'development') {
 }
 
 export const Providers = ({ children }: { children: ReactNode }) => {
-  const provider = useProvider();
   const queryClient = getQueryClient();
 
   return (
@@ -141,19 +155,7 @@ export const Providers = ({ children }: { children: ReactNode }) => {
                     chainId: CHAIN_IDS.fuel.mainnet,
                   },
             ]}
-            fuelConfig={{
-              connectors: defaultConnectors({
-                devMode: appConfig.env === 'testnet',
-                wcProjectId: appConfig.client.walletConnectProjectId,
-                ethWagmiConfig: wagmiConfig,
-                chainId:
-                  appConfig.env === 'testnet'
-                    ? CHAIN_IDS.fuel.testnet
-                    : CHAIN_IDS.fuel.mainnet,
-                fuelProvider:
-                  provider ?? Provider.create(appConfig.client.fuelNodeUrl),
-              }),
-            }}
+            fuelConfig={fuelConfig}
           >
             <>
               {children}
