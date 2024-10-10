@@ -11,7 +11,7 @@ import {
 } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { ThemeProvider } from 'next-themes';
-import { type ReactNode, useEffect } from 'react';
+import { type ReactNode, useEffect, useMemo } from 'react';
 import { ToastContainer } from 'react-toastify';
 
 import { appConfig } from '@/configs';
@@ -61,6 +61,23 @@ const METADATA = {
   icons: ['https://app.swaylend.com/logo512.png'],
 };
 
+const UI_CONFIG = {
+  suggestBridge: false,
+};
+const NETWORKS = [
+  appConfig.env === 'testnet'
+    ? {
+        bridgeURL: `${appConfig.client.fuelExplorerUrl}/bridge`,
+        url: appConfig.client.fuelNodeUrl,
+        chainId: CHAIN_IDS.fuel.testnet,
+      }
+    : {
+        bridgeURL: `${appConfig.client.fuelExplorerUrl}/bridge`,
+        url: appConfig.client.fuelNodeUrl,
+        chainId: CHAIN_IDS.fuel.mainnet,
+      },
+];
+
 const wagmiConfig = createConfig({
   chains: [mainnet, sepolia],
   connectors: [
@@ -92,7 +109,7 @@ const wagmiConfig = createConfig({
 });
 
 export const Providers = ({ children }: { children: ReactNode }) => {
-  const provider = useProvider();
+  const fuelProvider = useProvider();
   const queryClient = getQueryClient();
 
   useEffect(() => {
@@ -110,6 +127,22 @@ export const Providers = ({ children }: { children: ReactNode }) => {
     });
   }, []);
 
+  const fuelConfig = useMemo(
+    () => ({
+      connectors: defaultConnectors({
+        devMode: appConfig.env === 'testnet',
+        wcProjectId: appConfig.client.walletConnectProjectId,
+        ethWagmiConfig: wagmiConfig,
+        chainId:
+          appConfig.env === 'testnet'
+            ? CHAIN_IDS.fuel.testnet
+            : CHAIN_IDS.fuel.mainnet,
+        fuelProvider,
+      }),
+    }),
+    [fuelProvider]
+  );
+
   return (
     <ThemeProvider
       attribute="class"
@@ -122,35 +155,9 @@ export const Providers = ({ children }: { children: ReactNode }) => {
         <QueryClientProvider client={queryClient}>
           <FuelProvider
             theme="dark"
-            uiConfig={{
-              suggestBridge: false,
-            }}
-            networks={[
-              appConfig.env === 'testnet'
-                ? {
-                    bridgeURL: `${appConfig.client.fuelExplorerUrl}/bridge`,
-                    url: appConfig.client.fuelNodeUrl,
-                    chainId: CHAIN_IDS.fuel.testnet,
-                  }
-                : {
-                    bridgeURL: `${appConfig.client.fuelExplorerUrl}/bridge`,
-                    url: appConfig.client.fuelNodeUrl,
-                    chainId: CHAIN_IDS.fuel.mainnet,
-                  },
-            ]}
-            fuelConfig={{
-              connectors: defaultConnectors({
-                devMode: appConfig.env === 'testnet',
-                wcProjectId: appConfig.client.walletConnectProjectId,
-                ethWagmiConfig: wagmiConfig,
-                chainId:
-                  appConfig.env === 'testnet'
-                    ? CHAIN_IDS.fuel.testnet
-                    : CHAIN_IDS.fuel.mainnet,
-                fuelProvider:
-                  provider ?? Provider.create(appConfig.client.fuelNodeUrl),
-              }),
-            }}
+            uiConfig={UI_CONFIG}
+            networks={NETWORKS}
+            fuelConfig={fuelConfig}
           >
             <>
               {children}
