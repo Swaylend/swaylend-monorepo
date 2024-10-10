@@ -12,6 +12,7 @@ import { useMarketConfiguration } from './useMarketConfiguration';
 import { useProvider } from './useProvider';
 import { useMarketContract } from '@/contracts/useMarketContract';
 import { usePythContract } from '@/contracts/usePythContract';
+import { stringifyMap } from '@/utils/stringifyMap';
 
 export const usePrice = (marketParam?: string) => {
   const hermesClient = new HermesClient(
@@ -48,8 +49,13 @@ export const usePrice = (marketParam?: string) => {
     return assets;
   }, [marketConfiguration, collateralConfigurations]);
 
+  const priceFeedIdToAssetIdKey = useMemo(
+    () => stringifyMap(priceFeedIdToAssetId),
+    [priceFeedIdToAssetId]
+  );
+
   return useQuery({
-    queryKey: ['pythPrices', priceFeedIdToAssetId, market],
+    queryKey: ['pythPrices', priceFeedIdToAssetIdKey, market],
     queryFn: async () => {
       if (
         !provider ||

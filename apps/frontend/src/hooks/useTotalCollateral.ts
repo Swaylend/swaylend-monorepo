@@ -5,6 +5,8 @@ import BigNumber from 'bignumber.js';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
 import { useProvider } from './useProvider';
 import { useMarketContract } from '@/contracts/useMarketContract';
+import { stringifySimpleRecord } from '@/utils/stringifySimpleRecord';
+import { useMemo } from 'react';
 
 export const useTotalCollateral = (marketParam?: string) => {
   const provider = useProvider();
@@ -14,10 +16,16 @@ export const useTotalCollateral = (marketParam?: string) => {
     useCollateralConfigurations(market);
   const marketContract = useMarketContract();
 
+  const collateralConfigurationsKey = useMemo(
+    () => stringifySimpleRecord(collateralConfigurations),
+    [collateralConfigurations]
+  );
+
   return useQuery({
-    queryKey: ['totalCollateral', market, collateralConfigurations],
+    queryKey: ['totalCollateral', market, collateralConfigurationsKey],
     queryFn: async () => {
-      if (!provider || !collateralConfigurations) return null;
+      if (!provider || !collateralConfigurations || !marketContract)
+        return null;
 
       const totalsCollateral = await marketContract.functions
         .get_all_totals_collateral()

@@ -4,6 +4,8 @@ import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
 import { useMarketContract } from '@/contracts/useMarketContract';
+import { useMemo } from 'react';
+import { stringifySimpleRecord } from '@/utils/stringifySimpleRecord';
 
 export const useUserCollateralAssets = () => {
   const { wallet } = useWallet();
@@ -12,8 +14,18 @@ export const useUserCollateralAssets = () => {
   const { data: collateralConfigurations } = useCollateralConfigurations();
   const marketContract = useMarketContract();
 
+  const collateralConfigurationsKey = useMemo(
+    () => stringifySimpleRecord(collateralConfigurations),
+    [collateralConfigurations]
+  );
+
   return useQuery({
-    queryKey: ['collateralAssets', account, market, collateralConfigurations],
+    queryKey: [
+      'collateralAssets',
+      account,
+      market,
+      collateralConfigurationsKey,
+    ],
     queryFn: async () => {
       if (!account || !collateralConfigurations || !wallet || !marketContract)
         return null;
