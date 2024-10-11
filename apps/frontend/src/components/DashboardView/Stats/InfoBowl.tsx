@@ -5,7 +5,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { useBorrowRate, useSupplyRate, useUserSupplyBorrow } from '@/hooks';
+import {
+  useBorrowRate,
+  useSupplyRate,
+  useUserCollateralAssets,
+  useUserSupplyBorrow,
+} from '@/hooks';
 import { useUserCollateralUtilization } from '@/hooks/useUserCollateralUtilization';
 import { cn } from '@/lib/utils';
 import { selectMarketMode, useMarketStore } from '@/stores';
@@ -38,6 +43,7 @@ export const InfoBowl = () => {
   const { data: userSupplyBorrow, isPending: isPendingUserSupplyBorrow } =
     useUserSupplyBorrow();
   const { data: collateralUtilization } = useUserCollateralUtilization();
+  const { data: collateralBalances } = useUserCollateralAssets();
 
   const matches = useMediaQuery('(max-width:640px)');
 
@@ -53,7 +59,7 @@ export const InfoBowl = () => {
       return -1 * Number(collateralUtilization.times(100).toFixed(2)) + 100;
     }
     return -1.5 * Number(collateralUtilization.times(100).toFixed(2)) + 150;
-  }, [collateralUtilization]);
+  }, [collateralUtilization, collateralBalances]);
 
   const waveColor = useMemo(() => {
     if (!collateralUtilization || collateralUtilization.eq(0)) {
@@ -62,7 +68,7 @@ export const InfoBowl = () => {
     if (collateralUtilization.lt(0.6)) return WAVE_COLORS.normal;
     if (collateralUtilization.lt(0.8)) return WAVE_COLORS.warning;
     return WAVE_COLORS.danger;
-  }, [collateralUtilization]);
+  }, [collateralUtilization, collateralBalances]);
 
   const borrowApr = useMemo(() => getBorrowApr(borrowRate), [borrowRate]);
 

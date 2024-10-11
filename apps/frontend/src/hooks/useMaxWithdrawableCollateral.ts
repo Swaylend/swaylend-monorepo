@@ -114,7 +114,7 @@ export const useMaxWithdrawableCollateral = (
         return BigNumber(0);
       }
 
-      return allowedCollateralAmountToWithdraw;
+      return allowedCollateralAmountToWithdraw.times(0.99);
     },
     enabled:
       !!collateralBalances &&

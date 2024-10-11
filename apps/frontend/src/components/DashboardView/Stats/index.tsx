@@ -139,14 +139,12 @@ export const Stats = () => {
       if (val.lt(1) && val.gt(0)) {
         return {
           title: 'Your Borrow Position',
-          value: val.times(
-            priceData.prices[marketConfiguration.baseToken.bits]
-          ),
+          value: val,
         };
       }
       return {
         title: 'Your Borrow Position',
-        value: val.times(priceData.prices[marketConfiguration.baseToken.bits]),
+        value: val,
       };
     }
     // Available to borrow
