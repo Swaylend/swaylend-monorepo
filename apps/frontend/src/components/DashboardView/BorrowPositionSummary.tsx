@@ -9,7 +9,7 @@ import { getFormattedPrice } from '@/utils';
 import { useIsConnected } from '@fuels/react';
 import BigNumber from 'bignumber.js';
 import Image from 'next/image';
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import PlusIcon from '/public/icons/plus-filled.svg?url';
 import XIcon from '/public/icons/x-filled.svg?url';
 import { InfoIcon } from '../InfoIcon';

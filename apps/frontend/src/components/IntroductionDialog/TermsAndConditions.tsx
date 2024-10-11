@@ -1,6 +1,6 @@
 import { Checkbox } from '@/components/ui/checkbox';
 import { useAccount } from '@fuels/react';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Button } from '../ui/button';
 
 export const TermsAndConditions = ({

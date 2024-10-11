@@ -1,4 +1,3 @@
-import type { Provider } from 'fuels';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 

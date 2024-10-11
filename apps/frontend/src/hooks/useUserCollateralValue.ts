@@ -1,6 +1,6 @@
 import { formatUnits } from '@/utils';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
+import { useMemo } from 'react';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
 import { usePrice } from './usePrice';
 import { useUserCollateralAssets } from './useUserCollateralAssets';
@@ -9,40 +9,23 @@ import { useUserCollateralAssets } from './useUserCollateralAssets';
 export const useUserCollateralValue = () => {
   const { data: assetsConfigs } = useCollateralConfigurations();
   const { data: collateralBalances } = useUserCollateralAssets();
-  const { data: collateralConfig } = useCollateralConfigurations();
   const { data: priceData } = usePrice();
 
-  return useQuery({
-    queryKey: [
-      'userCollateralValue',
-      collateralBalances,
-      assetsConfigs,
-      priceData?.prices,
-      collateralConfig,
-    ],
-    queryFn: async () => {
-      if (
-        collateralBalances == null ||
-        assetsConfigs == null ||
-        priceData == null ||
-        collateralConfig == null
-      ) {
-        return null;
-      }
+  const data = useMemo(() => {
+    if (
+      collateralBalances == null ||
+      assetsConfigs == null ||
+      priceData == null
+    ) {
+      return null;
+    }
 
-      return Object.entries(collateralBalances).reduce((acc, [assetId, v]) => {
-        const token = collateralConfig[assetId];
-        const balance = formatUnits(v, token.decimals);
-        const dollBalance = priceData.prices[assetId].times(balance);
-        return acc.plus(dollBalance);
-      }, BigNumber(0));
-    },
-    enabled:
-      !!collateralBalances &&
-      !!assetsConfigs &&
-      !!priceData &&
-      !!collateralConfig,
-    refetchOnWindowFocus: false,
-    placeholderData: keepPreviousData,
-  });
+    return Object.entries(collateralBalances).reduce((acc, [assetId, v]) => {
+      const token = assetsConfigs[assetId];
+      const balance = formatUnits(v, token.decimals);
+      const dollBalance = priceData.prices[assetId].times(balance);
+      return acc.plus(dollBalance);
+    }, BigNumber(0));
+  }, [collateralBalances, assetsConfigs, priceData]);
+  return { data };
 };

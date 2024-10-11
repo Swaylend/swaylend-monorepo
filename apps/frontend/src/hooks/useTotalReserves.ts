@@ -1,25 +1,25 @@
-import { Market } from '@/contract-types';
-import { useMarketStore } from '@/stores';
+import { selectMarket, useMarketStore } from '@/stores';
 
-import { appConfig } from '@/configs';
+import { useMarketContract } from '@/contracts/useMarketContract';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { useProvider } from './useProvider';
 
 export const useTotalReserves = (marketParam?: string) => {
   const provider = useProvider();
-  const { market: storeMarket } = useMarketStore();
+  const storeMarket = useMarketStore(selectMarket);
   const market = marketParam ?? storeMarket;
+  const marketContract = useMarketContract();
 
   return useQuery({
-    queryKey: ['totalReserves', market],
+    queryKey: [
+      'totalReserves',
+      market,
+      marketContract?.account?.address,
+      marketContract?.id,
+    ],
     queryFn: async () => {
-      if (!provider) return BigNumber(0);
-
-      const marketContract = new Market(
-        appConfig.markets[market].marketAddress,
-        provider
-      );
+      if (!provider || !marketContract) return BigNumber(0);
 
       const { value } = await marketContract.functions.get_reserves().get();
       return BigNumber(value.underlying.toString()).minus(

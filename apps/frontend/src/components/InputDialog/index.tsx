@@ -23,13 +23,23 @@ import {
   useWithdrawCollateral,
 } from '@/hooks';
 import { cn } from '@/lib/utils';
-import { ACTION_TYPE, useMarketStore } from '@/stores';
+import {
+  ACTION_TYPE,
+  selectAction,
+  selectActionTokenAssetId,
+  selectChangeAction,
+  selectChangeInputDialogOpen,
+  selectChangeTokenAmount,
+  selectInputDialogOpen,
+  selectTokenAmount,
+  useMarketStore,
+} from '@/stores';
 import { formatUnits, getFormattedNumber } from '@/utils';
 import { useAccount, useIsConnected } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import BigNumber from 'bignumber.js';
 import { LoaderCircleIcon } from 'lucide-react';
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Button } from '../ui/button';
 import { InputField } from './InputField';
 import { PositionSummary } from './PositionSummary';
@@ -43,15 +53,13 @@ export const InputDialog = () => {
   const { data: collateralBalances } = useTotalCollateral();
   const { data: borrowCapacity } = useBorrowCapacity();
   const { data: userSupplyBorrow } = useUserSupplyBorrow();
-  const {
-    actionTokenAssetId,
-    tokenAmount,
-    action,
-    inputDialogOpen: open,
-    changeAction,
-    changeTokenAmount,
-    changeInputDialogOpen: setOpen,
-  } = useMarketStore();
+  const actionTokenAssetId = useMarketStore(selectActionTokenAssetId);
+  const tokenAmount = useMarketStore(selectTokenAmount);
+  const action = useMarketStore(selectAction);
+  const open = useMarketStore(selectInputDialogOpen);
+  const changeAction = useMarketStore(selectChangeAction);
+  const changeTokenAmount = useMarketStore(selectChangeTokenAmount);
+  const setOpen = useMarketStore(selectChangeInputDialogOpen);
 
   const { data: priceData } = usePrice();
   const { data: marketBalanceOfBase } = useMarketBalanceOfBase();
@@ -465,6 +473,7 @@ export const InputDialog = () => {
 
     return false;
   }, [
+    action,
     account,
     borrowCapacity,
     balance,
@@ -504,6 +513,7 @@ export const InputDialog = () => {
     userCollateralAssets,
     actionTokenAssetId,
     marketConfiguration,
+    action,
   ]);
 
   return (

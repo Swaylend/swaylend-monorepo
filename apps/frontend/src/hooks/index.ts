@@ -13,7 +13,6 @@ export * from './useWithdrawCollateral';
 export * from './useWithdrawBase';
 export * from './useSupplyBase';
 export * from './useMarketConfiguration';
-export * from './useCollateralConfigurations';
 export * from './useBorrowCapacity';
 export * from './useBorrowBase';
 export * from './useUserCollateralUtilization';

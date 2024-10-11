@@ -1,19 +1,25 @@
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { appConfig } from '@/configs';
 import { cn } from '@/lib/utils';
-import { ACTION_TYPE, useMarketStore } from '@/stores';
+import {
+  ACTION_TYPE,
+  selectAction,
+  selectChangeSuccessDialogOpen,
+  selectSuccessDialogOpen,
+  selectSuccessDialogTransactionId,
+  useMarketStore,
+} from '@/stores';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import { ArrowUpRightIcon, CheckCircleIcon } from 'lucide-react';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 
 export const SuccessDialog = () => {
-  const {
-    actionTokenAssetId,
-    action,
-    successDialogOpen: open,
-    changeSuccessDialogOpen: setOpen,
-    successDialogTransactionId,
-  } = useMarketStore();
+  const action = useMarketStore(selectAction);
+  const open = useMarketStore(selectSuccessDialogOpen);
+  const setOpen = useMarketStore(selectChangeSuccessDialogOpen);
+  const successDialogTransactionId = useMarketStore(
+    selectSuccessDialogTransactionId
+  );
 
   const actionText = useMemo(() => {
     if (action === ACTION_TYPE.SUPPLY) {
@@ -28,7 +34,7 @@ export const SuccessDialog = () => {
     if (action === ACTION_TYPE.REPAY) {
       return 'Repayment Completed';
     }
-  }, [action, actionTokenAssetId]);
+  }, [action]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

@@ -1,26 +1,24 @@
-import { appConfig } from '@/configs';
-import {
-  type CollateralConfigurationOutput,
-  Market,
-} from '@/contract-types/Market';
-import { useMarketStore } from '@/stores';
+import type { CollateralConfigurationOutput } from '@/contract-types/Market';
+import { useMarketContract } from '@/contracts/useMarketContract';
+import { selectMarket, useMarketStore } from '@/stores';
 import { useQuery } from '@tanstack/react-query';
 import { useProvider } from './useProvider';
 
 export const useCollateralConfigurations = (marketParam?: string) => {
   const provider = useProvider();
-  const { market: storeMarket } = useMarketStore();
+  const storeMarket = useMarketStore(selectMarket);
   const market = marketParam ?? storeMarket;
+  const marketContract = useMarketContract();
 
   return useQuery({
-    queryKey: ['collateralConfigurations', market],
+    queryKey: [
+      'collateralConfigurations',
+      market,
+      marketContract?.account?.address,
+      marketContract?.id,
+    ],
     queryFn: async () => {
-      if (!provider) return null;
-
-      const marketContract = new Market(
-        appConfig.markets[market].marketAddress,
-        provider
-      );
+      if (!provider || !marketContract) return null;
 
       const { value: collateralConfigurations } = await marketContract.functions
         .get_collateral_configurations()

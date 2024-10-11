@@ -1,7 +1,6 @@
 import type { ChartData } from '@/lib/charts';
 import { getFormattedPrice } from '@/utils';
 import BigNumber from 'bignumber.js';
-import React from 'react';
 import { Skeleton } from '../ui/skeleton';
 
 export const MarketStats = ({

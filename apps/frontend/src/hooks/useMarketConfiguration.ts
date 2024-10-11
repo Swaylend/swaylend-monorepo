@@ -1,24 +1,24 @@
-import { Market } from '@/contract-types';
-import { useMarketStore } from '@/stores';
+import { selectMarket, useMarketStore } from '@/stores';
 
-import { appConfig } from '@/configs';
+import { useMarketContract } from '@/contracts/useMarketContract';
 import { useQuery } from '@tanstack/react-query';
 import { useProvider } from './useProvider';
 
 export const useMarketConfiguration = (marketParam?: string) => {
   const provider = useProvider();
-  const { market: storeMarket } = useMarketStore();
+  const storeMarket = useMarketStore(selectMarket);
   const market = marketParam ?? storeMarket;
+  const marketContract = useMarketContract();
 
   return useQuery({
-    queryKey: ['marketConfiguration', market],
+    queryKey: [
+      'marketConfiguration',
+      market,
+      marketContract?.account?.address,
+      marketContract?.id,
+    ],
     queryFn: async () => {
-      if (!provider) return null;
-
-      const marketContract = new Market(
-        appConfig.markets[market].marketAddress,
-        provider
-      );
+      if (!provider || !marketContract) return null;
 
       const { value: marketConfiguration } = await marketContract.functions
         .get_market_configuration()

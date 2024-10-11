@@ -3,12 +3,10 @@
 import { BookTextIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import React from 'react';
 import GITHUB from '/public/icons/GitHub_Invertocat_Light.png';
 import Logo from '/public/icons/dark-logo.svg?url';
 import DISCORD from '/public/icons/discord-mark-white.svg?url';
 import HalbornLogo from '/public/icons/halborn-logo.svg?url';
-import OttersecLogo from '/public/icons/ottersec-logo.svg?url';
 import X from '/public/icons/x-logo-white.png';
 import { Line } from '../Line';
 
