@@ -1,4 +1,4 @@
-import { type PriceDataUpdateInput } from '@/contract-types/Market';
+import type { PriceDataUpdateInput } from '@/contract-types/Market';
 import { useMarketStore } from '@/stores';
 
 import { HermesClient } from '@pythnetwork/hermes-client';
@@ -6,7 +6,7 @@ import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { arrayify } from 'fuels';
 import { DateTime } from 'fuels';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
 import { useMarketConfiguration } from './useMarketConfiguration';
 import { useProvider } from './useProvider';
@@ -15,8 +15,11 @@ import { usePythContract } from '@/contracts/usePythContract';
 import { stringifyMap } from '@/utils/stringifyMap';
 
 export const usePrice = (marketParam?: string) => {
-  const hermesClient = new HermesClient(
-    process.env.NEXT_PUBLIC_HERMES_API ?? 'https://hermes.pyth.network'
+  const [hermesClient, _] = useState(
+    () =>
+      new HermesClient(
+        process.env.NEXT_PUBLIC_HERMES_API ?? 'https://hermes.pyth.network'
+      )
   );
   const provider = useProvider();
 
