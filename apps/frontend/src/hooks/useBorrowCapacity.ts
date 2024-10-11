@@ -1,7 +1,7 @@
 import { formatUnits } from '@/utils';
 import { useAccount } from '@fuels/react';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
-import { useMemo } from 'react';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
 import { useMarketConfiguration } from './useMarketConfiguration';
 import { usePrice } from './usePrice';
@@ -16,55 +16,67 @@ export const useBorrowCapacity = () => {
   const { data: priceData } = usePrice();
   const { data: marketConfiguration } = useMarketConfiguration();
 
-  const data = useMemo(() => {
-    if (
-      !account ||
-      !supplyBorrow ||
-      !collateralConfigurations ||
-      !userCollateralAssets ||
-      !priceData ||
-      !marketConfiguration
-    ) {
-      return null;
-    }
+  return useQuery({
+    queryKey: [
+      'borrowCapacity',
+      account,
+      supplyBorrow,
+      collateralConfigurations,
+      userCollateralAssets,
+      priceData,
+      marketConfiguration,
+    ],
+    queryFn: async () => {
+      if (
+        !account ||
+        !supplyBorrow ||
+        !collateralConfigurations ||
+        !userCollateralAssets ||
+        !priceData ||
+        !marketConfiguration
+      ) {
+        return null;
+      }
 
-    const borrowCapacity = Object.entries(userCollateralAssets)
-      .reduce((acc, [key, value]) => {
-        return acc.plus(
-          formatUnits(
-            value.times(
-              priceData.prices[key].minus(priceData.confidenceIntervals[key])
-            ),
-            collateralConfigurations[key].decimals
-          ).times(
+      const borrowCapacity = Object.entries(userCollateralAssets)
+        .reduce((acc, [key, value]) => {
+          return acc.plus(
             formatUnits(
-              BigNumber(
-                collateralConfigurations[
-                  key
-                ].borrow_collateral_factor.toString() ?? 0
+              value.times(
+                priceData.prices[key].minus(priceData.confidenceIntervals[key])
               ),
-              18
+              collateralConfigurations[key].decimals
+            ).times(
+              formatUnits(
+                BigNumber(
+                  collateralConfigurations[
+                    key
+                  ].borrow_collateral_factor.toString() ?? 0
+                ),
+                18
+              )
             )
+          );
+        }, new BigNumber(0))
+        .minus(
+          formatUnits(
+            supplyBorrow.borrowed.times(
+              priceData.prices[marketConfiguration.baseToken.bits]
+            ),
+            marketConfiguration.baseTokenDecimals
           )
         );
-      }, new BigNumber(0))
-      .minus(
-        formatUnits(
-          supplyBorrow.borrowed.times(
-            priceData.prices[marketConfiguration.baseToken.bits]
-          ),
-          marketConfiguration.baseTokenDecimals
-        )
-      );
 
-    return borrowCapacity.lt(0) ? BigNumber(0) : borrowCapacity;
-  }, [
-    account,
-    collateralConfigurations,
-    marketConfiguration,
-    priceData,
-    supplyBorrow,
-    userCollateralAssets,
-  ]);
-  return { data };
+      return borrowCapacity.lt(0) ? BigNumber(0) : borrowCapacity;
+    },
+    enabled:
+      !!account &&
+      !!supplyBorrow &&
+      !!collateralConfigurations &&
+      !!userCollateralAssets &&
+      !!priceData &&
+      !!marketConfiguration,
+    refetchOnWindowFocus: false,
+    placeholderData: keepPreviousData,
+  });
 };
