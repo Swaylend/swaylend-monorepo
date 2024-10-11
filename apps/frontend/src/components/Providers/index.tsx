@@ -183,7 +183,7 @@ export const Providers = ({ children }: { children: ReactNode }) => {
               />
             </>
           </FuelProvider>
-          <ReactQueryDevtools initialIsOpen={false} />
+          {/* <ReactQueryDevtools initialIsOpen={false} /> */}
         </QueryClientProvider>
       </PostHogProvider>
     </ThemeProvider>

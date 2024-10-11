@@ -100,7 +100,12 @@ export const useWithdrawBase = () => {
     onSettled: () => {
       // Invalidate queries
       queryClient.invalidateQueries({
-        queryKey: ['userSupplyBorrow', account, market],
+        queryKey: [
+          'userSupplyBorrow',
+          account,
+          marketContract?.account?.address,
+          marketContract?.id,
+        ],
       });
 
       // Invalidate Fuel balance query

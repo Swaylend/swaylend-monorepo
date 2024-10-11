@@ -23,7 +23,7 @@ export const useBorrowCapacity = () => {
       supplyBorrow,
       collateralConfigurations,
       userCollateralAssets,
-      priceData,
+      priceData?.prices,
       marketConfiguration,
     ],
     queryFn: async () => {

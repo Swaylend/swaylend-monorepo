@@ -97,7 +97,12 @@ export const useSupplyCollateral = ({
       // Invalidate queries
       queryClient.invalidateQueries({
         exact: false,
-        queryKey: ['collateralAssets', account, market],
+        queryKey: [
+          'collateralAssets',
+          account,
+          marketContract?.account?.address,
+          marketContract?.id,
+        ],
       });
 
       // Invalidate Fuel balance query
