@@ -393,7 +393,7 @@ export const InputDialog = () => {
           ) ?? BigNumber(0)
         )
       ) {
-        return 'You are trying to borrow more than the max borrowable amount';
+        return 'You do not have enough collateral to borrow this amount. Deposit more collateral to proceed!';
       }
     }
 
