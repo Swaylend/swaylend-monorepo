@@ -6,6 +6,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { appConfig } from '@/configs';
 import {
   useAccount,
   useConnectUI,
@@ -55,7 +56,7 @@ export const ConnectButton = () => {
           </div>
           <div className="mt-10">
             <a
-              href={`https://app.fuel.network/account/${account}`}
+              href={`${appConfig.client.fuelExplorerUrl}/account/${account}`}
               target="_blank"
               rel="noreferrer"
             >
