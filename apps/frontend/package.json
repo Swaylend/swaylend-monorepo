@@ -14,8 +14,8 @@
   "dependencies": {
     "@clerk/nextjs": "^5.6.4",
     "@fuel-ts/contract": "^0.95.0",
-    "@fuels/connectors": "0.31.6",
-    "@fuels/react": "0.31.6",
+    "@fuels/connectors": "0.32.0",
+    "@fuels/react": "0.32.0",
     "@pythnetwork/hermes-client": "^1.1.0",
     "@pythnetwork/pyth-fuel-js": "^1.0.6",
     "@radix-ui/react-checkbox": "^1.1.1",
