@@ -1,9 +1,9 @@
 import {
   selectPythContract,
-  useMarketAddressBasedContracts,
-} from '@/stores/marketAddressBasedContracts';
+  useMarketAddressBasedContractsStore,
+} from '@/stores/marketAddressBasedContractsStore';
 
 export function usePythContract() {
-  const pythContract = useMarketAddressBasedContracts(selectPythContract);
+  const pythContract = useMarketAddressBasedContractsStore(selectPythContract);
   return pythContract;
 }

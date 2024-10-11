@@ -5,8 +5,8 @@ import { Market } from '@/contract-types';
 import { useMarketStore } from '@/stores';
 import {
   selectUpdateContracts,
-  useMarketAddressBasedContracts,
-} from '@/stores/marketAddressBasedContracts';
+  useMarketAddressBasedContractsStore,
+} from '@/stores/marketAddressBasedContractsStore';
 import { useProvider, useWallet } from '@fuels/react';
 import { PythContract } from '@pythnetwork/pyth-fuel-js';
 import { useEffect, useMemo } from 'react';
@@ -14,7 +14,9 @@ import { useEffect, useMemo } from 'react';
 export default function MarketContractStoreWatcher(): null {
   const { wallet } = useWallet();
   const { market } = useMarketStore();
-  const updateContracts = useMarketAddressBasedContracts(selectUpdateContracts);
+  const updateContracts = useMarketAddressBasedContractsStore(
+    selectUpdateContracts
+  );
   const { provider } = useProvider();
   const walletOrProvider = wallet || provider;
 

@@ -1,9 +1,10 @@
 import {
   selectMarketContract,
-  useMarketAddressBasedContracts,
-} from '@/stores/marketAddressBasedContracts';
+  useMarketAddressBasedContractsStore,
+} from '@/stores/marketAddressBasedContractsStore';
 
 export function useMarketContract() {
-  const marketContract = useMarketAddressBasedContracts(selectMarketContract);
+  const marketContract =
+    useMarketAddressBasedContractsStore(selectMarketContract);
   return marketContract;
 }

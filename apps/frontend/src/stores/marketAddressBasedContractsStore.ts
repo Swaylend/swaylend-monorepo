@@ -21,7 +21,7 @@ export const marketStoreInitialState = {
   marketContract: undefined,
 };
 
-export const useMarketAddressBasedContracts = create<Store>()((set) => ({
+export const useMarketAddressBasedContractsStore = create<Store>()((set) => ({
   ...marketStoreInitialState,
   updateContracts: (
     pythContract: PythContract | undefined,
@@ -40,7 +40,7 @@ export const selectUpdateContracts = (state: Store) => state.updateContracts;
 // OBS: When contracts are initialized with provider instead of wallet they can only make read calls.
 useProviderStore.subscribe((newState, _) => {
   const { updateContracts, pythContract, marketContract } =
-    useMarketAddressBasedContracts.getState();
+    useMarketAddressBasedContractsStore.getState();
   const market = useMarketStore.getState().market;
   const initialized = marketContract || pythContract;
 
