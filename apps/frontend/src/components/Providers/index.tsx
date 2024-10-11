@@ -16,7 +16,7 @@ import { ToastContainer } from 'react-toastify';
 import MarketContractStoreWatcher from '@/components/Providers/MarketContractStoreWatcher';
 import { appConfig } from '@/configs';
 import { useProvider } from '@/hooks';
-import { CHAIN_IDS } from 'fuels';
+import { CHAIN_IDS, Provider } from 'fuels';
 import posthog from 'posthog-js';
 import { PostHogProvider } from 'posthog-js/react';
 import { fallback } from 'viem';
@@ -73,7 +73,7 @@ const NETWORKS = [
       }
     : {
         bridgeURL: `${appConfig.client.fuelExplorerUrl}/bridge`,
-        url: process.env.NEXT_PUBLIC_FUEL_NODE_URL,
+        url: appConfig.client.fuelNodeUrl,
         chainId: CHAIN_IDS.fuel.mainnet,
       },
 ];
@@ -127,22 +127,21 @@ export const Providers = ({ children }: { children: ReactNode }) => {
     });
   }, []);
 
-  const fuelConfig = useMemo(
-    () =>
-      createConfig(() => ({
-        connectors: defaultConnectors({
-          devMode: appConfig.env === 'testnet',
-          wcProjectId: appConfig.client.walletConnectProjectId,
-          ethWagmiConfig: wagmiConfig,
-          chainId:
-            appConfig.env === 'testnet'
-              ? CHAIN_IDS.fuel.testnet
-              : CHAIN_IDS.fuel.mainnet,
-          fuelProvider,
-        }),
-      })),
-    [fuelProvider]
-  );
+  const fuelConfig = useMemo(() => {
+    return createConfig(() => ({
+      connectors: defaultConnectors({
+        devMode: appConfig.env === 'testnet',
+        wcProjectId: appConfig.client.walletConnectProjectId,
+        ethWagmiConfig: wagmiConfig,
+        chainId:
+          appConfig.env === 'testnet'
+            ? CHAIN_IDS.fuel.testnet
+            : CHAIN_IDS.fuel.mainnet,
+        fuelProvider:
+          fuelProvider ?? Provider.create(appConfig.client.fuelNodeUrl),
+      }),
+    }));
+  }, [fuelProvider]);
 
   return (
     <ThemeProvider
