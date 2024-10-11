@@ -25,6 +25,8 @@ export const useUserCollateralAssets = () => {
       account,
       market,
       collateralConfigurationsKey,
+      marketContract?.account?.address,
+      marketContract?.id,
     ],
     queryFn: async () => {
       if (!account || !collateralConfigurations || !wallet || !marketContract)

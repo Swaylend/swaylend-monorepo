@@ -14,7 +14,13 @@ export const useBorrowRate = (marketParam?: string) => {
   const marketContract = useMarketContract();
 
   return useQuery({
-    queryKey: ['borrowRate', utilization?.toString(), market],
+    queryKey: [
+      'borrowRate',
+      utilization?.toString(),
+      market,
+      marketContract?.account?.address,
+      marketContract?.id,
+    ],
     queryFn: async () => {
       if (!provider || !utilization || !marketContract) return null;
 

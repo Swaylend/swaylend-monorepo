@@ -39,6 +39,8 @@ export const useSupplyCollateral = ({
       account,
       market,
       collateralConfigurations,
+      marketContract?.account?.address,
+      marketContract?.id,
     ],
     mutationFn: async (tokenAmount: BigNumber) => {
       if (

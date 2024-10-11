@@ -27,7 +27,14 @@ export const useSupplyBase = () => {
   const marketContract = useMarketContract();
 
   return useMutation({
-    mutationKey: ['supplyBase', account, marketConfiguration, market],
+    mutationKey: [
+      'supplyBase',
+      account,
+      marketConfiguration,
+      market,
+      marketContract?.account?.address,
+      marketContract?.id,
+    ],
     mutationFn: async (tokenAmount: BigNumber) => {
       if (!wallet || !account || !marketConfiguration || !marketContract) {
         return null;

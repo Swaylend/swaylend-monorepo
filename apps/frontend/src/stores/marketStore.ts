@@ -1,6 +1,5 @@
 import { appConfig } from '@/configs';
 import BigNumber from 'bignumber.js';
-import { act } from 'react';
 import { shallow } from 'zustand/shallow';
 import { createWithEqualityFn } from 'zustand/traditional';
 
@@ -75,3 +74,5 @@ export const useMarketStore = createWithEqualityFn<MarketStore>()(
   }),
   shallow
 );
+
+export const selectMarket = (state: MarketStore) => state.market;

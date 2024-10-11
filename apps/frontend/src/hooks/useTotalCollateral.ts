@@ -22,7 +22,13 @@ export const useTotalCollateral = (marketParam?: string) => {
   );
 
   return useQuery({
-    queryKey: ['totalCollateral', market, collateralConfigurationsKey],
+    queryKey: [
+      'totalCollateral',
+      market,
+      collateralConfigurationsKey,
+      marketContract?.account?.address,
+      marketContract?.id,
+    ],
     queryFn: async () => {
       if (!provider || !collateralConfigurations || !marketContract)
         return null;

@@ -11,7 +11,12 @@ export const useMarketBasics = (marketParam?: string) => {
   const marketContract = useMarketContract();
 
   return useQuery({
-    queryKey: ['marketBasics', market],
+    queryKey: [
+      'marketBasics',
+      market,
+      marketContract?.account?.address,
+      marketContract?.id,
+    ],
     queryFn: async () => {
       if (!provider || !marketContract) return null;
 

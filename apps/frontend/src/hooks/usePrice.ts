@@ -58,7 +58,15 @@ export const usePrice = (marketParam?: string) => {
   );
 
   return useQuery({
-    queryKey: ['pythPrices', priceFeedIdToAssetIdKey, market],
+    queryKey: [
+      'pythPrices',
+      priceFeedIdToAssetIdKey,
+      market,
+      marketContract?.account?.address,
+      marketContract?.id,
+      pythContract?.account?.address,
+      pythContract?.id,
+    ],
     queryFn: async () => {
       if (
         !provider ||

@@ -12,7 +12,13 @@ export const useUserSupplyBorrow = () => {
   const marketContract = useMarketContract();
 
   return useQuery({
-    queryKey: ['userSupplyBorrow', account, market],
+    queryKey: [
+      'userSupplyBorrow',
+      account,
+      market,
+      marketContract?.account?.address,
+      marketContract?.id,
+    ],
     queryFn: async () => {
       if (!account || !marketContract) return null;
 

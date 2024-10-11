@@ -9,14 +9,13 @@ import {
   QueryClientProvider,
   isServer,
 } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { ThemeProvider } from 'next-themes';
 import { type ReactNode, useEffect, useMemo } from 'react';
 import { ToastContainer } from 'react-toastify';
 
 import { appConfig } from '@/configs';
 import { useProvider } from '@/hooks';
-import { CHAIN_IDS, Provider } from 'fuels';
+import { CHAIN_IDS } from 'fuels';
 import posthog from 'posthog-js';
 import { PostHogProvider } from 'posthog-js/react';
 import { fallback } from 'viem';
@@ -24,6 +23,7 @@ import { http, createConfig } from 'wagmi';
 import { mainnet, sepolia } from 'wagmi/chains';
 import { coinbaseWallet, injected, walletConnect } from 'wagmi/connectors';
 import PostHogIdentify from './PostHogIdentify';
+import MarketContractStoreWatcher from '@/components/Providers/MarketContractStoreWatcher';
 
 function makeQueryClient() {
   return new QueryClient({
@@ -161,6 +161,7 @@ export const Providers = ({ children }: { children: ReactNode }) => {
           >
             <>
               {children}
+              <MarketContractStoreWatcher />
               <PostHogIdentify />
               <ToastContainer
                 icon={false}

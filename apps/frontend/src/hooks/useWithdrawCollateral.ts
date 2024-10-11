@@ -37,7 +37,16 @@ export const useWithdrawCollateral = ({
   const pythContract = usePythContract();
 
   return useMutation({
-    mutationKey: ['withdrawCollateral', actionTokenAssetId, account, market],
+    mutationKey: [
+      'withdrawCollateral',
+      actionTokenAssetId,
+      account,
+      market,
+      marketContract?.account?.address,
+      marketContract?.id,
+      pythContract?.account?.address,
+      pythContract?.id,
+    ],
     mutationFn: async ({
       tokenAmount,
       priceUpdateData,

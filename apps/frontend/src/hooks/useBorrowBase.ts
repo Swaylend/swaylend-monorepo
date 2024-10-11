@@ -29,7 +29,14 @@ export const useBorrowBase = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationKey: ['borrowBase', account, marketConfiguration, market],
+    mutationKey: [
+      'borrowBase',
+      account,
+      marketConfiguration,
+      market,
+      marketContract?.account?.address,
+      marketContract?.id,
+    ],
     mutationFn: async ({
       tokenAmount,
       priceUpdateData,

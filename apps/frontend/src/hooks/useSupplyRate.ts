@@ -12,8 +12,15 @@ export const useSupplyRate = (marketParam?: string) => {
   const { market: storeMarket } = useMarketStore();
   const market = marketParam ?? storeMarket;
   const marketContract = useMarketContract();
+
   return useQuery({
-    queryKey: ['supplyRate', utilization?.toString(), market],
+    queryKey: [
+      'supplyRate',
+      utilization?.toString(),
+      market,
+      marketContract?.account?.address,
+      marketContract?.id,
+    ],
     queryFn: async () => {
       if (!provider || !utilization || !marketContract) return null;
 

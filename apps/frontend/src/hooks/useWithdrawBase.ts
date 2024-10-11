@@ -31,7 +31,16 @@ export const useWithdrawBase = () => {
   const pythContract = usePythContract();
 
   return useMutation({
-    mutationKey: ['withdrawBase', account, market, marketConfiguration],
+    mutationKey: [
+      'withdrawBase',
+      account,
+      market,
+      marketConfiguration,
+      marketContract?.account?.address,
+      marketContract?.id,
+      pythContract?.account?.address,
+      pythContract?.id,
+    ],
     mutationFn: async ({
       tokenAmount,
       priceUpdateData,
