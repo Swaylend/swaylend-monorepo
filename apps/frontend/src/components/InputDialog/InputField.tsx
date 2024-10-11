@@ -48,7 +48,6 @@ export const InputField = ({ error }: { error: boolean }) => {
         inputDecimalPart.length > tokenDecimalPart.length &&
         inputDecimalPart.endsWith('0');
       if (!hasTrailingZeros || inputValue === '') {
-        BigNumber.config({ EXPONENTIAL_AT: 20 });
         setInputValue(tokenAmountStr);
       }
     }
@@ -61,8 +60,9 @@ export const InputField = ({ error }: { error: boolean }) => {
       !marketConfiguration ||
       !collateralConfigurations ||
       !actionTokenAssetId
-    )
+    ) {
       return;
+    }
 
     let { value } = event.currentTarget;
 

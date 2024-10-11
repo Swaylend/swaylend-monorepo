@@ -55,6 +55,7 @@ export const marketStoreInitialState = {
   successDialogTransactionId: null,
 };
 
+BigNumber.config({ EXPONENTIAL_AT: 20 });
 export const useMarketStore = createWithEqualityFn<MarketStore>()(
   (set) => ({
     ...marketStoreInitialState,

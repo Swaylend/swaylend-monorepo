@@ -1,10 +1,8 @@
 import { useMarketContract } from '@/contracts/useMarketContract';
 import { selectMarket, useMarketStore } from '@/stores';
-import { stringifySimpleRecord } from '@/utils/stringifySimpleRecord';
 import { useAccount } from '@fuels/react';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
-import { useMemo } from 'react';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
 
 export const useUserCollateralAssets = () => {
@@ -13,17 +11,11 @@ export const useUserCollateralAssets = () => {
   const { data: collateralConfigurations } = useCollateralConfigurations();
   const marketContract = useMarketContract(market);
 
-  // FIXME: This is wrong
-  const collateralConfigurationsKey = useMemo(
-    () => stringifySimpleRecord(collateralConfigurations),
-    [collateralConfigurations]
-  );
-
   return useQuery({
     queryKey: [
       'collateralAssets',
       account,
-      collateralConfigurationsKey,
+      collateralConfigurations,
       marketContract?.account?.address,
       marketContract?.id,
     ],
