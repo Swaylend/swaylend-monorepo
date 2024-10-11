@@ -127,21 +127,23 @@ export const Providers = ({ children }: { children: ReactNode }) => {
     });
   }, []);
 
-  const fuelConfig = useMemo(() => {
-    return createConfig(() => ({
-      connectors: defaultConnectors({
-        devMode: appConfig.env === 'testnet',
-        wcProjectId: appConfig.client.walletConnectProjectId,
-        ethWagmiConfig: wagmiConfig,
-        chainId:
-          appConfig.env === 'testnet'
-            ? CHAIN_IDS.fuel.testnet
-            : CHAIN_IDS.fuel.mainnet,
-        fuelProvider:
-          fuelProvider ?? Provider.create(appConfig.client.fuelNodeUrl),
-      }),
-    }));
-  }, [fuelProvider]);
+  const fuelConfig = useMemo(
+    () =>
+      createConfig(() => ({
+        connectors: defaultConnectors({
+          devMode: appConfig.env === 'testnet',
+          wcProjectId: appConfig.client.walletConnectProjectId,
+          ethWagmiConfig: wagmiConfig,
+          chainId:
+            appConfig.env === 'testnet'
+              ? CHAIN_IDS.fuel.testnet
+              : CHAIN_IDS.fuel.mainnet,
+          fuelProvider:
+            fuelProvider ?? Provider.create(appConfig.client.fuelNodeUrl),
+        }),
+      })),
+    [fuelProvider]
+  );
 
   return (
     <ThemeProvider

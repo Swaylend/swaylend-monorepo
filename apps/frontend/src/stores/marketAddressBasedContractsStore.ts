@@ -45,7 +45,6 @@ useProviderStore.subscribe((newState, _) => {
   const initialized = marketContract || pythContract;
 
   if (newState.provider && !initialized && market) {
-    console.log('fsk initializing');
     const pythContract = new PythContract(
       appConfig.markets[market].oracleAddress,
       newState.provider
@@ -55,7 +54,5 @@ useProviderStore.subscribe((newState, _) => {
       newState.provider
     );
     updateContracts(pythContract, marketContract);
-  } else {
-    console.log('fsk not initializing');
   }
 });
