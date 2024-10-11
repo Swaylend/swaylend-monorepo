@@ -66,7 +66,6 @@ useProviderStore.subscribe((newState, _) => {
     useMarketAddressBasedContractsStore.getState();
 
   Object.keys(appConfig.markets).forEach((market) => {
-    console.log(market);
     if (contracts.get(market) || !newState.provider) return;
     const pythContract = new PythContract(
       appConfig.markets[market].oracleAddress,
