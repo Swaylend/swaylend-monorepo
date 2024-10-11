@@ -1,6 +1,9 @@
 import { ErrorToast, InfoToast } from '@/components/Toasts';
 import { appConfig } from '@/configs';
-import { useReferralModalStore } from '@/stores/referralModalStore';
+import {
+  selectReferralModalSetOpen,
+  useReferralModalStore,
+} from '@/stores/referralModalStore';
 import { useAccount, useWallet } from '@fuels/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -11,7 +14,7 @@ const getMessage = (inviteCode: string) => {
 export const useRedeemInvite = () => {
   const { wallet } = useWallet();
   const { account } = useAccount();
-  const { setOpen } = useReferralModalStore();
+  const setOpen = useReferralModalStore(selectReferralModalSetOpen);
   const queryClient = useQueryClient();
 
   return useMutation({

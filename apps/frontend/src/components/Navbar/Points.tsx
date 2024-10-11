@@ -17,7 +17,7 @@ export const Points = () => {
   const isHover = useHover(hoverRef);
 
   const [isManualOpen, setIsManualOpen] = useState(false);
-  // const { setOpen } = useReferralModalStore();
+  // const setOpen = useReferralModalStore(selectReferralModalSetOpen);
 
   // const { data: user, isPending, isLoading, isError, refetch } = useUser();
 
