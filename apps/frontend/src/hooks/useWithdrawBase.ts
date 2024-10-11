@@ -15,14 +15,13 @@ import {
   selectMarket,
   useMarketStore,
 } from '@/stores';
-import { useAccount, useWallet } from '@fuels/react';
+import { useAccount } from '@fuels/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { toast } from 'react-toastify';
 import { useMarketConfiguration } from './useMarketConfiguration';
 
 export const useWithdrawBase = () => {
-  const { wallet } = useWallet();
   const { account } = useAccount();
   const market = useMarketStore(selectMarket);
   const changeTokenAmount = useMarketStore(selectChangeTokenAmount);
@@ -34,14 +33,13 @@ export const useWithdrawBase = () => {
   const { data: marketConfiguration } = useMarketConfiguration();
 
   const queryClient = useQueryClient();
-  const marketContract = useMarketContract();
-  const pythContract = usePythContract();
+  const marketContract = useMarketContract(market);
+  const pythContract = usePythContract(market);
 
   return useMutation({
     mutationKey: [
       'withdrawBase',
       account,
-      market,
       marketConfiguration,
       marketContract?.account?.address,
       marketContract?.id,
@@ -56,7 +54,6 @@ export const useWithdrawBase = () => {
       priceUpdateData: PriceDataUpdateInput;
     }) => {
       if (
-        !wallet ||
         !account ||
         !marketConfiguration ||
         !marketContract ||
@@ -103,7 +100,12 @@ export const useWithdrawBase = () => {
     onSettled: () => {
       // Invalidate queries
       queryClient.invalidateQueries({
-        queryKey: ['userSupplyBorrow', account, market],
+        queryKey: [
+          'userSupplyBorrow',
+          account,
+          marketContract?.account?.address,
+          marketContract?.id,
+        ],
       });
 
       // Invalidate Fuel balance query

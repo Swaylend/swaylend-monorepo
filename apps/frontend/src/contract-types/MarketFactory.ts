@@ -5,7 +5,7 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 
 /*
-  Fuels version: 0.94.9
+  Fuels version: 0.95.0
 */
 
 import { Contract, ContractFactory, decompressBytecode } from "fuels";
@@ -23,7 +23,7 @@ export class MarketFactory extends ContractFactory {
     super(bytecode, Market.abi, accountOrProvider);
   }
 
-  deploy<TContract extends Contract = Contract>(
+  override deploy<TContract extends Contract = Contract>(
     deployOptions?: DeployContractOptions
   ): Promise<DeployContractResult<TContract>> {
     return super.deploy({

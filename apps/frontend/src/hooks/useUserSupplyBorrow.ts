@@ -1,21 +1,19 @@
 import { useMarketContract } from '@/contracts/useMarketContract';
 import { selectMarket, useMarketStore } from '@/stores';
-import { useAccount, useWallet } from '@fuels/react';
+import { useAccount } from '@fuels/react';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 
 export const useUserSupplyBorrow = () => {
-  const { wallet } = useWallet();
   const { account } = useAccount();
   const market = useMarketStore(selectMarket);
 
-  const marketContract = useMarketContract();
+  const marketContract = useMarketContract(market);
 
   return useQuery({
     queryKey: [
       'userSupplyBorrow',
       account,
-      market,
       marketContract?.account?.address,
       marketContract?.id,
     ],
@@ -31,7 +29,7 @@ export const useUserSupplyBorrow = () => {
         borrowed: new BigNumber(value[1].toString()),
       };
     },
-    enabled: !!wallet && !!account,
+    enabled: !!marketContract && !!account,
     refetchOnWindowFocus: false,
     placeholderData: keepPreviousData,
   });

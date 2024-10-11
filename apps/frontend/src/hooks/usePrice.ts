@@ -3,7 +3,6 @@ import { selectMarket, useMarketStore } from '@/stores';
 
 import { useMarketContract } from '@/contracts/useMarketContract';
 import { usePythContract } from '@/contracts/usePythContract';
-import { stringifyMap } from '@/utils/stringifyMap';
 import { HermesClient } from '@pythnetwork/hermes-client';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
@@ -30,8 +29,9 @@ export const usePrice = (marketParam?: string) => {
   const { data: collateralConfigurations } =
     useCollateralConfigurations(market);
 
-  const marketContract = useMarketContract();
-  const pythContract = usePythContract();
+  const marketContract = useMarketContract(market);
+  const pythContract = usePythContract(market);
+
   // Create a map of priceFeedId to assetId
   const priceFeedIdToAssetId = useMemo(() => {
     if (!marketConfiguration || !collateralConfigurations) return null;
@@ -53,7 +53,7 @@ export const usePrice = (marketParam?: string) => {
   }, [marketConfiguration, collateralConfigurations]);
 
   const priceFeedIdToAssetIdKey = useMemo(
-    () => stringifyMap(priceFeedIdToAssetId),
+    () => Object.fromEntries(priceFeedIdToAssetId?.entries() ?? []),
     [priceFeedIdToAssetId]
   );
 
@@ -61,20 +61,15 @@ export const usePrice = (marketParam?: string) => {
     queryKey: [
       'pythPrices',
       priceFeedIdToAssetIdKey,
-      market,
       marketContract?.account?.address,
       marketContract?.id,
       pythContract?.account?.address,
       pythContract?.id,
     ],
     queryFn: async () => {
-      if (
-        !provider ||
-        !priceFeedIdToAssetId ||
-        !marketContract ||
-        !pythContract
-      )
+      if (!priceFeedIdToAssetId || !marketContract || !pythContract) {
         return null;
+      }
 
       const priceFeedIds = Array.from(priceFeedIdToAssetId.keys());
 
@@ -135,7 +130,11 @@ export const usePrice = (marketParam?: string) => {
       };
     },
     refetchInterval: 3000,
-    enabled: !!provider && !!priceFeedIdToAssetId,
+    enabled:
+      !!provider &&
+      !!priceFeedIdToAssetId &&
+      !!marketContract &&
+      !!pythContract,
     staleTime: 3000,
     refetchOnWindowFocus: false,
   });

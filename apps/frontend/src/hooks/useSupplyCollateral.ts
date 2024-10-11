@@ -37,14 +37,13 @@ export const useSupplyCollateral = ({
   const { data: collateralConfigurations } = useCollateralConfigurations();
 
   const queryClient = useQueryClient();
-  const marketContract = useMarketContract();
+  const marketContract = useMarketContract(market);
 
   return useMutation({
     mutationKey: [
       'supplyCollateral',
       actionTokenAssetId,
       account,
-      market,
       collateralConfigurations,
       marketContract?.account?.address,
       marketContract?.id,
@@ -98,7 +97,12 @@ export const useSupplyCollateral = ({
       // Invalidate queries
       queryClient.invalidateQueries({
         exact: false,
-        queryKey: ['collateralAssets', account, market],
+        queryKey: [
+          'collateralAssets',
+          account,
+          marketContract?.account?.address,
+          marketContract?.id,
+        ],
       });
 
       // Invalidate Fuel balance query

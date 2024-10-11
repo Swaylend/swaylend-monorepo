@@ -15,7 +15,7 @@ import {
   selectMarket,
   useMarketStore,
 } from '@/stores';
-import { useAccount, useWallet } from '@fuels/react';
+import { useAccount } from '@fuels/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { toast } from 'react-toastify';
@@ -28,7 +28,6 @@ type useWithdrawCollateralProps = {
 export const useWithdrawCollateral = ({
   actionTokenAssetId,
 }: useWithdrawCollateralProps) => {
-  const { wallet } = useWallet();
   const { account } = useAccount();
   const { data: collateralConfigurations } = useCollateralConfigurations();
   const market = useMarketStore(selectMarket);
@@ -40,15 +39,14 @@ export const useWithdrawCollateral = ({
   );
 
   const queryClient = useQueryClient();
-  const marketContract = useMarketContract();
-  const pythContract = usePythContract();
+  const marketContract = useMarketContract(market);
+  const pythContract = usePythContract(market);
 
   return useMutation({
     mutationKey: [
       'withdrawCollateral',
       actionTokenAssetId,
       account,
-      market,
       marketContract?.account?.address,
       marketContract?.id,
       pythContract?.account?.address,
@@ -62,7 +60,6 @@ export const useWithdrawCollateral = ({
       priceUpdateData: PriceDataUpdateInput;
     }) => {
       if (
-        !wallet ||
         !account ||
         !actionTokenAssetId ||
         !collateralConfigurations ||
@@ -115,7 +112,12 @@ export const useWithdrawCollateral = ({
     onSettled: () => {
       // Invalidate queries
       queryClient.invalidateQueries({
-        queryKey: ['collateralAssets', account, market],
+        queryKey: [
+          'collateralAssets',
+          account,
+          marketContract?.account?.address,
+          marketContract?.id,
+        ],
       });
 
       // Invalidate Fuel balance query

@@ -1,6 +1,10 @@
 import { useRedeemInvite } from '@/hooks';
 import { cn } from '@/lib/utils';
-import { useReferralModalStore } from '@/stores/referralModalStore';
+import {
+  selectReferralModalOpen,
+  selectReferralModalSetOpen,
+  useReferralModalStore,
+} from '@/stores/referralModalStore';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import { useMemo, useState } from 'react';
 import { Button } from '../ui/button';
@@ -8,7 +12,8 @@ import { Dialog, DialogContent, DialogTitle } from '../ui/dialog';
 import { Input } from '../ui/input';
 
 export const RedeemReferralDialog = () => {
-  const { open, setOpen } = useReferralModalStore();
+  const open = useReferralModalStore(selectReferralModalOpen);
+  const setOpen = useReferralModalStore(selectReferralModalSetOpen);
   const { mutate: redeemInvite, isError, error, isPending } = useRedeemInvite();
   const [inviteCode, setInviteCode] = useState('');
 
