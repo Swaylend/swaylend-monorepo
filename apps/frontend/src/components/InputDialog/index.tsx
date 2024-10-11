@@ -181,6 +181,7 @@ export const InputDialog = () => {
 
     if (action === 'REPAY') {
       // Repay 1 cent more than owed to avoid staying in debt
+
       return formatUnits(
         userSupplyBorrow.borrowed,
         marketConfiguration.baseTokenDecimals
@@ -280,8 +281,17 @@ export const InputDialog = () => {
         break;
       case ACTION_TYPE.REPAY: {
         if (userSupplyBorrow.borrowed.eq(0)) return;
-        changeTokenAmount(BigNumber(finalBalance.toFixed(decimals)));
 
+        const usdcBalance = formatUnits(
+          BigNumber(balance?.toString() ?? 0),
+          marketConfiguration.baseTokenDecimals
+        );
+
+        if (finalBalance.lte(usdcBalance)) {
+          changeTokenAmount(BigNumber(finalBalance.toFixed(decimals)));
+        } else {
+          changeTokenAmount(usdcBalance);
+        }
         break;
       }
     }
