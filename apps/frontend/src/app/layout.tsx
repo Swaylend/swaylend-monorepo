@@ -14,10 +14,10 @@ const fontSans = FontSans({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Swaylend',
+    default: 'Swaylend | Lending reimagined',
     template: 'Swaylend | %s',
   },
-  description: 'The first and leading lending protocol on Fuel Network.',
+  description: "Welcome to Fuel's first lending protocol.",
   robots: {
     index: true,
     follow: true,
@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     'max-snippet': -1,
   },
   openGraph: {
-    description: 'The first and leading lending protocol on Fuel Network.',
+    description: "Welcome to Fuel's first lending protocol.",
     siteName: 'app.swaylend.com',
     title: 'app.swaylend.com - Swaylend',
     type: 'article',
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
     title: 'app.swaylend.com - Swaylend',
-    description: 'The first and leading lending protocol on Fuel Network.',
+    description: "Welcome to Fuel's first lending protocol.",
   },
 };
 

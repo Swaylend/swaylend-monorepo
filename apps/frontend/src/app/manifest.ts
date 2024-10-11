@@ -2,9 +2,9 @@ import type { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Swaylend: Lending protocol built on Fuel Network',
+    name: 'Swaylend | Lending reimagined',
     short_name: 'Swaylend',
-    description: 'The first and leading lending protocol on Fuel Network.',
+    description: "Welcome to Fuel's first lending protocol.",
     start_url: '/',
     display: 'standalone',
     background_color: '#000000',

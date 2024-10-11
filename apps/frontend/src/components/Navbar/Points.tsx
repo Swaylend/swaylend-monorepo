@@ -11,12 +11,17 @@ import { useIsConnected } from '@fuels/react';
 import { Copy, Loader, Sparkle, Trophy } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { useHover } from 'usehooks-ts';
 import POINTS from '/public/icons/points-icon.svg?url';
 import { InfoIcon } from '../InfoIcon';
 import { Button } from '../ui/button';
 
 export const Points = () => {
+  const hoverRef = useRef<HTMLButtonElement | null>(null);
+  const isHover = useHover(hoverRef);
+
+  const [isManualOpen, setIsManualOpen] = useState(false);
   // const { setOpen } = useReferralModalStore();
 
   // const { data: user, isPending, isLoading, isError, refetch } = useUser();
@@ -36,14 +41,19 @@ export const Points = () => {
   // };
 
   return (
-    <Popover>
-      <PopoverTrigger>
+    <Popover open={isHover || isManualOpen}>
+      <PopoverTrigger
+        className="focus-visible:outline-none"
+        ref={hoverRef}
+        onClick={() => setIsManualOpen(true)}
+      >
         {/* <div className="text-yellow-400 sm:px-3 sm:py-1.5 max-sm:p-1 flex items-center gap-x-1 rounded-full border-[3px] border-yellow-400">
           <span className="max-sm:hidden">Coming Soon</span>
           </div> */}
         <Image alt="points-icon" width={40} height={40} src={POINTS} />
       </PopoverTrigger>
       <PopoverContent
+        onInteractOutside={() => setIsManualOpen(false)}
         onOpenAutoFocus={(e) => e.preventDefault()}
         sideOffset={8}
         align="center"

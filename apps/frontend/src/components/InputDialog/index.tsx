@@ -62,7 +62,7 @@ export const InputDialog = () => {
   const setOpen = useMarketStore(selectChangeInputDialogOpen);
 
   const { data: priceData } = usePrice();
-  const marketBalanceOfBase = useMarketBalanceOfBase();
+  const { data: marketBalanceOfBase } = useMarketBalanceOfBase();
 
   const { mutate: supplyCollateral, isPending: isSupplyCollateralPending } =
     useSupplyCollateral({
@@ -101,6 +101,16 @@ export const InputDialog = () => {
 
   const [error, setError] = useState<string | null>(null);
 
+  const isLending = useMemo(() => {
+    if (
+      (action === ACTION_TYPE.SUPPLY || action === ACTION_TYPE.WITHDRAW) &&
+      actionTokenAssetId === marketConfiguration?.baseToken.bits
+    ) {
+      return true;
+    }
+    return false;
+  }, [action, actionTokenAssetId, marketConfiguration]);
+
   const { data: maxWithdrawableCollateral } =
     useMaxWithdrawableCollateral(actionTokenAssetId);
 
@@ -134,6 +144,35 @@ export const InputDialog = () => {
       }
       case ACTION_TYPE.BORROW:
         if (!priceData || !tokenAmount.gt(0)) return;
+
+        console.log('Prices:');
+        console.log(
+          Object.entries(priceData.prices).map((val) => ({
+            assetId: val[0],
+            price: val[1].toString(),
+          }))
+        );
+        console.log('Confidence intervals:');
+        console.log(
+          Object.entries(priceData.confidenceIntervals).map((val) => {
+            if (
+              val[1].div(priceData.prices[val[0]]).times(100).gte(BigNumber(1))
+            ) {
+              console.error(
+                `Confidence price for asset ${val[0]} is too high. Confidence is: ${val[1].div(priceData.prices[val[0]]).times(100).toFixed(2)}%`
+              );
+            }
+
+            return {
+              assetId: val[0],
+              confidenceInterval: val[1].toString(),
+              confidenceIntervalPercentage: `${val[1]
+                .div(priceData.prices[val[0]])
+                .times(100)
+                .toFixed(2)}%`,
+            };
+          })
+        );
 
         borrowBase({
           tokenAmount,
@@ -174,6 +213,10 @@ export const InputDialog = () => {
       return formatUnits(
         userSupplyBorrow.borrowed,
         marketConfiguration.baseTokenDecimals
+      ).plus(
+        BigNumber(0.01).div(
+          priceData?.prices[marketConfiguration.baseToken.bits] ?? 1
+        )
       );
     }
     if (action === 'SUPPLY') {
@@ -266,17 +309,7 @@ export const InputDialog = () => {
         break;
       case ACTION_TYPE.REPAY: {
         if (userSupplyBorrow.borrowed.eq(0)) return;
-        changeTokenAmount(
-          BigNumber(
-            finalBalance
-              .plus(
-                BigNumber(0.01).div(
-                  priceData?.prices[marketConfiguration.baseToken.bits] ?? 1
-                )
-              )
-              .toFixed(decimals)
-          )
-        );
+        changeTokenAmount(BigNumber(finalBalance.toFixed(decimals)));
 
         break;
       }
@@ -586,7 +619,7 @@ export const InputDialog = () => {
                 <div
                   className={`text-sm ${action === ACTION_TYPE.REPAY ? 'text-lavender' : 'text-moon'}`}
                 >
-                  {getFormattedNumber(finalBalance)}
+                  {getFormattedNumber(finalBalance, true)}
                   {action === ACTION_TYPE.BORROW && ' available to borrow'}
                   {action === ACTION_TYPE.REPAY && ' debt to repay'}
                   {(action === ACTION_TYPE.SUPPLY ||
@@ -599,7 +632,7 @@ export const InputDialog = () => {
                   </div>
                 </div>
                 <Button
-                  disabled={!finalBalance || finalBalance.eq(0)}
+                  disabled={!finalBalance || finalBalance.lte(0)}
                   onMouseDown={onMaxBtnClick}
                   size="sm"
                   variant={'secondary'}
@@ -628,9 +661,11 @@ export const InputDialog = () => {
                 )}
               </Button>
             </div>
-            <div className="w-full flex justify-center">
-              <PositionSummary />
-            </div>
+            {!isLending && (
+              <div className="w-full flex justify-center">
+                <PositionSummary />
+              </div>
+            )}
           </div>
         </div>
       </DialogContent>

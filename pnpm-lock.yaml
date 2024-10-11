@@ -246,8 +246,8 @@ importers:
   apps/indexer-sentio:
     dependencies:
       '@sentio/sdk':
-        specifier: 2.43.2
-        version: 2.43.2(bufferutil@4.0.8)(encoding@0.1.13)(typescript@5.6.2)(utf-8-validate@5.0.10)
+        specifier: 2.44.0
+        version: 2.44.0(bufferutil@4.0.8)(encoding@0.1.13)(typescript@5.6.2)(utf-8-validate@5.0.10)
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
@@ -259,8 +259,8 @@ importers:
         version: 3.23.8
     devDependencies:
       '@sentio/cli':
-        specifier: 2.21.2
-        version: 2.21.2(@types/node@22.7.5)(bufferutil@4.0.8)(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13))(postcss@8.4.47)(ts-node@10.9.2(@types/node@22.7.5)(typescript@5.6.2))(typescript@5.6.2)(utf-8-validate@5.0.10)
+        specifier: 2.21.3
+        version: 2.21.3(@types/node@22.7.5)(bufferutil@4.0.8)(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13))(postcss@8.4.47)(ts-node@10.9.2(@types/node@22.7.5)(typescript@5.6.2))(typescript@5.6.2)(utf-8-validate@5.0.10)
       typescript:
         specifier: ^5.5.2
         version: 5.6.2
@@ -3251,11 +3251,11 @@ packages:
   '@sentio/bigdecimal@9.1.1-patch.3':
     resolution: {integrity: sha512-O5w8XdyeatUcwI+ZbpSw60/cXFPJk3NbpIupwMHfYmW8fpxpXyRbyGESNJNufWWrB6CadsWGh1R3rd7owvrmlw==}
 
-  '@sentio/chain@2.1.7':
-    resolution: {integrity: sha512-driZy7/5RfEVZmos1k1HSYBvxzmy2/Jf9hc2eZoBtTVVoAIR/Jake5q0qpOqOPfPT3XBqqsm3NttPajkAMkV4A==}
+  '@sentio/chain@2.1.9':
+    resolution: {integrity: sha512-qbwgKfiYwFIOF0JEHQVO1zGWfHv7BBKqGXN/f+OYMr0wJWN4248aVj9Mt39X85cU/lmGHP32f7YeQvvsDYUQ1Q==}
 
-  '@sentio/cli@2.21.2':
-    resolution: {integrity: sha512-3xHemjR77X5V62rw5qPP6QR1x7g6/MBe5+qS+x8hyW5Y7ngQLL23yqKdBGhun77UhLyZ4tb+nI77aNUROQ8iXQ==}
+  '@sentio/cli@2.21.3':
+    resolution: {integrity: sha512-oN7zh79/yKvWMSFY4sPKGhOVeKAC1qWqr+6+iWFAqatu5xBhZj5z/c2coNuRs3KPnoEXTuVXdRS6De6X3HSGtg==}
     engines: {node: '>=16'}
     hasBin: true
 
@@ -3274,17 +3274,17 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
-  '@sentio/protos@2.43.2':
-    resolution: {integrity: sha512-JX8fPDUZDll3Iqu+AV1bzAgRWPCn/I2dAthT1HWnnrqxCHVn9iN3QtFJ2ZxHQLCA5wuw4Jbr/dkS3WdLZUxcMQ==}
+  '@sentio/protos@2.44.0':
+    resolution: {integrity: sha512-lzso+MNfeLrJeTeoapI4c3bGEkIz6WimVTzYpuIB27TqN168MAJW6sPlvM1zZl9N1HykX+9aIOoW817qnyjQ9g==}
     engines: {node: '>=16'}
 
-  '@sentio/runtime@2.43.2':
-    resolution: {integrity: sha512-lqtK6m02Ybp0+0JLmEmJ6l/sdRmc0DLdpgEEgGb2JAnpWe8Gb02eUaFtEbU203NRPKyyopFsiJjD0TOGLp/3wg==}
+  '@sentio/runtime@2.44.0':
+    resolution: {integrity: sha512-Xx9hNX2R66E0+6v5N08Glr6MvRQfnlKUqR7CRGyOpdR3zhqI6dtoAQr9JjJ3KErRgAmbYa+AXhuh93G7x6/qpg==}
     engines: {node: '>=16'}
     hasBin: true
 
-  '@sentio/sdk@2.43.2':
-    resolution: {integrity: sha512-j7fQ0QXuptohFyLxWYIf5evocaHmw3tsnzLEUKDG0+43pj+gJicgQqgIEXdwYdClM0BgTAIztWz8/lmW0CiUBw==}
+  '@sentio/sdk@2.44.0':
+    resolution: {integrity: sha512-9/e/0J3zIyVOXLq/+yInQitNHdE7wjifVQinVy/XoA1uK3QFBhjw/N4yATULFMwAr310Gj/EH5BvY9NKvs11vA==}
     engines: {node: '>=16'}
     peerDependencies:
       tsup: npm:@sentio/tsup@^6.7.5
@@ -13222,9 +13222,9 @@ snapshots:
 
   '@sentio/bigdecimal@9.1.1-patch.3': {}
 
-  '@sentio/chain@2.1.7': {}
+  '@sentio/chain@2.1.9': {}
 
-  '@sentio/cli@2.21.2(@types/node@22.7.5)(bufferutil@4.0.8)(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13))(postcss@8.4.47)(ts-node@10.9.2(@types/node@22.7.5)(typescript@5.6.2))(typescript@5.6.2)(utf-8-validate@5.0.10)':
+  '@sentio/cli@2.21.3(@types/node@22.7.5)(bufferutil@4.0.8)(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13))(postcss@8.4.47)(ts-node@10.9.2(@types/node@22.7.5)(typescript@5.6.2))(typescript@5.6.2)(utf-8-validate@5.0.10)':
     dependencies:
       '@sentio/graph-cli': 0.80.0-patch.1(@types/node@22.7.5)(bufferutil@4.0.8)(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13))(typescript@5.6.2)(utf-8-validate@5.0.10)
       tsup: '@sentio/tsup@6.7.5(postcss@8.4.47)(ts-node@10.9.2(@types/node@22.7.5)(typescript@5.6.2))(typescript@5.6.2)'
@@ -13303,7 +13303,7 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  '@sentio/protos@2.43.2':
+  '@sentio/protos@2.44.0':
     dependencies:
       google-protobuf: 3.21.4
       long: 5.2.3
@@ -13311,9 +13311,9 @@ snapshots:
       nice-grpc-common: 2.0.2
       protobufjs: 7.4.0
 
-  '@sentio/runtime@2.43.2': {}
+  '@sentio/runtime@2.44.0': {}
 
-  '@sentio/sdk@2.43.2(bufferutil@4.0.8)(encoding@0.1.13)(typescript@5.6.2)(utf-8-validate@5.0.10)':
+  '@sentio/sdk@2.44.0(bufferutil@4.0.8)(encoding@0.1.13)(typescript@5.6.2)(utf-8-validate@5.0.10)':
     dependencies:
       '@aptos-labs/ts-sdk': 1.26.0
       '@coral-xyz/borsh': 0.30.1(@solana/web3.js@1.91.8(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10))
@@ -13322,10 +13322,10 @@ snapshots:
       '@project-serum/anchor': 0.26.0(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10)
       '@sentio/abi-wan-kanabi': 2.2.2-1
       '@sentio/bigdecimal': 9.1.1-patch.3
-      '@sentio/chain': 2.1.7
+      '@sentio/chain': 2.1.9
       '@sentio/ethers-v6': 1.0.29(@sentio/ethers@6.13.1-patch.1(bufferutil@4.0.8)(utf-8-validate@5.0.10))(typescript@5.6.2)
-      '@sentio/protos': 2.43.2
-      '@sentio/runtime': 2.43.2
+      '@sentio/protos': 2.44.0
+      '@sentio/runtime': 2.44.0
       '@solana/web3.js': 1.91.8(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10)
       '@typemove/aptos': 1.6.3
       '@typemove/move': 1.6.3

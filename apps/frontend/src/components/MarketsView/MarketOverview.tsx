@@ -46,14 +46,14 @@ export default function MarketOverview({
 }: MarketOverviewProps) {
   const { data: borrowRate } = useBorrowRate(baseAsset);
   const { data: supplyRate } = useSupplyRate(baseAsset);
-  const { data: totalReserves } = useTotalReserves(baseAsset);
+  const { data: totalReserves } = useTotalReserves();
 
   const { data: collateralConfigurations } =
     useCollateralConfigurations(baseAsset);
   const { data: marketConfiguration } = useMarketConfiguration(baseAsset);
   const borrowApr = useMemo(() => getBorrowApr(borrowRate), [borrowRate]);
   const supplyApr = useMemo(() => getSupplyApr(supplyRate), [supplyRate]);
-  const availableLiquidity = useMarketBalanceOfBase(baseAsset);
+  const { data: availableLiquidity } = useMarketBalanceOfBase(baseAsset);
 
   const { data: totalCollateral } = useTotalCollateral(baseAsset);
   const { data: marketBasics } = useMarketBasics(baseAsset);
@@ -195,7 +195,9 @@ export default function MarketOverview({
                 Available Liquidity
               </div>
               <div className="text-xl font-semibold text-white mt-2">
-                {getFormattedPrice(availableLiquidity.formatted)}
+                {getFormattedPrice(
+                  availableLiquidity?.formatted ?? BigNumber(0)
+                )}
               </div>
             </div>
             <div>
@@ -205,10 +207,8 @@ export default function MarketOverview({
               <div className="text-xl font-semibold text-white mt-2">
                 {getFormattedPrice(
                   formatUnits(
-                    formatUnits(
-                      totalReserves ?? BigNumber(0),
-                      marketConfiguration?.baseTokenDecimals
-                    )
+                    totalReserves ?? BigNumber(0),
+                    marketConfiguration?.baseTokenDecimals
                   )
                 )}
               </div>

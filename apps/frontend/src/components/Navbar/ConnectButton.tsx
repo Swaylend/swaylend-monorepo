@@ -12,7 +12,8 @@ import {
   useDisconnect,
   useIsConnected,
 } from '@fuels/react';
-import { ChevronDown, Copy } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
+import { CopyIcon } from '../CopyIcon';
 
 export const ConnectButton = () => {
   const { connect, isConnecting } = useConnectUI();
@@ -35,7 +36,11 @@ export const ConnectButton = () => {
             <ChevronDown className="h-4 w-4" />
           </div>
         </PopoverTrigger>
-        <PopoverContent align="end" className="w-[260px] px-[25px]">
+        <PopoverContent
+          align="end"
+          className="w-[260px] px-[25px]"
+          onOpenAutoFocus={(e) => e.preventDefault()}
+        >
           <div className="w-full">
             <div>
               <div className="text-moon text-sm">Connected Wallet</div>
@@ -44,12 +49,7 @@ export const ConnectButton = () => {
                   <div className="w-2 h-2 rounded-full bg-primary" />
                   {`${account?.slice(0, 6)}...${account?.slice(-4)}`}
                 </div>
-                <Copy
-                  className="w-4 h-4 hover:opacity-80"
-                  onMouseDown={async () => {
-                    await navigator.clipboard.writeText(account);
-                  }}
-                />
+                <CopyIcon value={account} />
               </div>
             </div>
           </div>

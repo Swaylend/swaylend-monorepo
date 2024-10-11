@@ -2,7 +2,7 @@
 
 import 'react-toastify/dist/ReactToastify.css';
 
-import { defaultConnectors } from '@fuels/connectors';
+import { defaultConnectors, createConfig } from '@fuels/connectors';
 import { FuelProvider } from '@fuels/react';
 import {
   QueryClient,
@@ -19,7 +19,7 @@ import { CHAIN_IDS } from 'fuels';
 import posthog from 'posthog-js';
 import { PostHogProvider } from 'posthog-js/react';
 import { fallback } from 'viem';
-import { http, createConfig } from 'wagmi';
+import { http, createConfig as createConfigWagmiConfig } from 'wagmi';
 import { mainnet, sepolia } from 'wagmi/chains';
 import { coinbaseWallet, injected, walletConnect } from 'wagmi/connectors';
 import PostHogIdentify from './PostHogIdentify';
@@ -78,7 +78,7 @@ const NETWORKS = [
       },
 ];
 
-const wagmiConfig = createConfig({
+const wagmiConfig = createConfigWagmiConfig({
   chains: [mainnet, sepolia],
   connectors: [
     injected({ shimDisconnect: false }),
@@ -128,18 +128,19 @@ export const Providers = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const fuelConfig = useMemo(
-    () => ({
-      connectors: defaultConnectors({
-        devMode: appConfig.env === 'testnet',
-        wcProjectId: appConfig.client.walletConnectProjectId,
-        ethWagmiConfig: wagmiConfig,
-        chainId:
-          appConfig.env === 'testnet'
-            ? CHAIN_IDS.fuel.testnet
-            : CHAIN_IDS.fuel.mainnet,
-        fuelProvider,
-      }),
-    }),
+    () =>
+      createConfig(() => ({
+        connectors: defaultConnectors({
+          devMode: appConfig.env === 'testnet',
+          wcProjectId: appConfig.client.walletConnectProjectId,
+          ethWagmiConfig: wagmiConfig,
+          chainId:
+            appConfig.env === 'testnet'
+              ? CHAIN_IDS.fuel.testnet
+              : CHAIN_IDS.fuel.mainnet,
+          fuelProvider,
+        }),
+      })),
     [fuelProvider]
   );
 

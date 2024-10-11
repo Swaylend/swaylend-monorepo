@@ -5,7 +5,7 @@ import BigNumber from 'bignumber.js';
 import { useProvider } from './useProvider';
 import { useMarketContract } from '@/contracts/useMarketContract';
 
-export const useTotalReserves = (assetId: string, marketParam?: string) => {
+export const useTotalReserves = (marketParam?: string) => {
   const provider = useProvider();
   const storeMarket = useMarketStore(selectMarket);
   const market = marketParam ?? storeMarket;
@@ -19,7 +19,7 @@ export const useTotalReserves = (assetId: string, marketParam?: string) => {
       marketContract?.id,
     ],
     queryFn: async () => {
-      if (!provider || !assetId || !marketContract) return BigNumber(0);
+      if (!provider || !marketContract) return BigNumber(0);
 
       const { value } = await marketContract.functions.get_reserves().get();
       return BigNumber(value.underlying.toString()).minus(
