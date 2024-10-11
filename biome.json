@@ -63,13 +63,10 @@
         "noDangerouslySetInnerHtml": "off"
       },
       "correctness": {
-        "useExhaustiveDependencies": "warn",
-        "noUnusedVariables": "error",
-        "noUnusedImports": "error"
+        "useExhaustiveDependencies": "off"
       },
       "a11y": {
-        "useKeyWithClickEvents": "off",
-        "noAutofocus": "off"
+        "useKeyWithClickEvents": "off"
       }
     }
   },
@@ -94,5 +91,21 @@
       "indentStyle": "space",
       "lineEnding": "lf"
     }
-  }
+  },
+  "overrides": [
+    {
+      "include": ["**/apps/frontend/**"],
+      "linter": {
+        "rules": {
+          "correctness": { "useExhaustiveDependencies": "off" },
+          "style": {
+            "useImportType": "off"
+          },
+          "suspicious": {
+            "noShadowRestrictedNames": "off"
+          }
+        }
+      }
+    }
+  ]
 }
