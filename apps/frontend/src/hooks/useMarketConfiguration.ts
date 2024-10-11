@@ -2,23 +2,20 @@ import { selectMarket, useMarketStore } from '@/stores';
 
 import { useMarketContract } from '@/contracts/useMarketContract';
 import { useQuery } from '@tanstack/react-query';
-import { useProvider } from './useProvider';
 
 export const useMarketConfiguration = (marketParam?: string) => {
-  const provider = useProvider();
   const storeMarket = useMarketStore(selectMarket);
   const market = marketParam ?? storeMarket;
-  const marketContract = useMarketContract();
+  const marketContract = useMarketContract(market);
 
   return useQuery({
     queryKey: [
       'marketConfiguration',
-      market,
       marketContract?.account?.address,
       marketContract?.id,
     ],
     queryFn: async () => {
-      if (!provider || !marketContract) return null;
+      if (!marketContract) return null;
 
       const { value: marketConfiguration } = await marketContract.functions
         .get_market_configuration()
@@ -52,6 +49,6 @@ export const useMarketConfiguration = (marketParam?: string) => {
       };
     },
     refetchOnWindowFocus: false,
-    enabled: !!provider,
+    enabled: !!marketContract,
   });
 };

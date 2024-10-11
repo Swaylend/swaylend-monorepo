@@ -2,23 +2,20 @@ import type { CollateralConfigurationOutput } from '@/contract-types/Market';
 import { useMarketContract } from '@/contracts/useMarketContract';
 import { selectMarket, useMarketStore } from '@/stores';
 import { useQuery } from '@tanstack/react-query';
-import { useProvider } from './useProvider';
 
 export const useCollateralConfigurations = (marketParam?: string) => {
-  const provider = useProvider();
   const storeMarket = useMarketStore(selectMarket);
   const market = marketParam ?? storeMarket;
-  const marketContract = useMarketContract();
+  const marketContract = useMarketContract(market);
 
   return useQuery({
     queryKey: [
       'collateralConfigurations',
-      market,
       marketContract?.account?.address,
       marketContract?.id,
     ],
     queryFn: async () => {
-      if (!provider || !marketContract) return null;
+      if (!marketContract) return null;
 
       const { value: collateralConfigurations } = await marketContract.functions
         .get_collateral_configurations()
@@ -45,6 +42,6 @@ export const useCollateralConfigurations = (marketParam?: string) => {
       return formattedConfigurations;
     },
     refetchOnWindowFocus: false,
-    enabled: !!provider,
+    enabled: !!marketContract,
   });
 };

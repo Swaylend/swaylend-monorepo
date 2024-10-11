@@ -6,16 +6,15 @@ import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { useMemo } from 'react';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
-import { useProvider } from './useProvider';
 
 export const useTotalCollateral = (marketParam?: string) => {
-  const provider = useProvider();
   const storeMarket = useMarketStore(selectMarket);
   const market = marketParam ?? storeMarket;
   const { data: collateralConfigurations } =
     useCollateralConfigurations(market);
-  const marketContract = useMarketContract();
+  const marketContract = useMarketContract(market);
 
+  // FIXME: This is wrong
   const collateralConfigurationsKey = useMemo(
     () => stringifySimpleRecord(collateralConfigurations),
     [collateralConfigurations]
@@ -24,14 +23,14 @@ export const useTotalCollateral = (marketParam?: string) => {
   return useQuery({
     queryKey: [
       'totalCollateral',
-      market,
       collateralConfigurationsKey,
       marketContract?.account?.address,
       marketContract?.id,
     ],
     queryFn: async () => {
-      if (!provider || !collateralConfigurations || !marketContract)
+      if (!collateralConfigurations || !marketContract) {
         return null;
+      }
 
       const totalsCollateral = await marketContract.functions
         .get_all_totals_collateral()
@@ -46,6 +45,6 @@ export const useTotalCollateral = (marketParam?: string) => {
 
       return totals;
     },
-    enabled: !!provider && !!collateralConfigurations,
+    enabled: !!collateralConfigurations && !!marketContract,
   });
 };

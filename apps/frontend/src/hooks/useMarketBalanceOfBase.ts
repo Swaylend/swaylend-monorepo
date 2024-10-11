@@ -7,14 +7,21 @@ import { useMarketConfiguration } from './useMarketConfiguration';
 import { useTotalReserves } from './useTotalReserves';
 
 export const useMarketBalanceOfBase = (marketParam?: string) => {
-  const { data: marketBasics } = useMarketBasics(marketParam);
-  const { data: marketConfiguration } = useMarketConfiguration(marketParam);
-  const { data: totalReserves } = useTotalReserves(marketParam);
   const { market: storeMarket } = useMarketStore();
   const market = marketParam ?? storeMarket;
 
+  const { data: marketBasics } = useMarketBasics(market);
+  const { data: marketConfiguration } = useMarketConfiguration(market);
+  const { data: totalReserves } = useTotalReserves(market);
+
   return useQuery({
-    queryKey: ['marketBalanceOfBase', market],
+    queryKey: [
+      'marketBalanceOfBase',
+      market,
+      marketBasics,
+      marketConfiguration,
+      totalReserves,
+    ],
     queryFn: async () => {
       if (!marketBasics || !marketConfiguration || !totalReserves) {
         return {

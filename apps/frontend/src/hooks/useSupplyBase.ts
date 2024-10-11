@@ -12,14 +12,13 @@ import {
   selectMarket,
   useMarketStore,
 } from '@/stores';
-import { useAccount, useWallet } from '@fuels/react';
+import { useAccount } from '@fuels/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { toast } from 'react-toastify';
 import { useMarketConfiguration } from './useMarketConfiguration';
 
 export const useSupplyBase = () => {
-  const { wallet } = useWallet();
   const { account } = useAccount();
   const market = useMarketStore(selectMarket);
   const changeTokenAmount = useMarketStore(selectChangeTokenAmount);
@@ -31,19 +30,18 @@ export const useSupplyBase = () => {
   const { data: marketConfiguration } = useMarketConfiguration(market);
 
   const queryClient = useQueryClient();
-  const marketContract = useMarketContract();
+  const marketContract = useMarketContract(market);
 
   return useMutation({
     mutationKey: [
       'supplyBase',
       account,
       marketConfiguration,
-      market,
       marketContract?.account?.address,
       marketContract?.id,
     ],
     mutationFn: async (tokenAmount: BigNumber) => {
-      if (!wallet || !account || !marketConfiguration || !marketContract) {
+      if (!account || !marketConfiguration || !marketContract) {
         return null;
       }
 

@@ -14,14 +14,13 @@ import {
   selectMarket,
   useMarketStore,
 } from '@/stores';
-import { useAccount, useWallet } from '@fuels/react';
+import { useAccount } from '@fuels/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { toast } from 'react-toastify';
 import { useMarketConfiguration } from './useMarketConfiguration';
 
 export const useBorrowBase = () => {
-  const { wallet } = useWallet();
   const { account } = useAccount();
   const market = useMarketStore(selectMarket);
   const changeTokenAmount = useMarketStore(selectChangeTokenAmount);
@@ -31,7 +30,7 @@ export const useBorrowBase = () => {
     selectChangeSuccessDialogTransactionId
   );
   const { data: marketConfiguration } = useMarketConfiguration();
-  const marketContract = useMarketContract();
+  const marketContract = useMarketContract(market);
 
   const queryClient = useQueryClient();
 
@@ -40,7 +39,6 @@ export const useBorrowBase = () => {
       'borrowBase',
       account,
       marketConfiguration,
-      market,
       marketContract?.account?.address,
       marketContract?.id,
     ],
@@ -51,7 +49,7 @@ export const useBorrowBase = () => {
       tokenAmount: BigNumber;
       priceUpdateData: PriceDataUpdateInput;
     }) => {
-      if (!wallet || !account || !marketConfiguration || !marketContract) {
+      if (!account || !marketConfiguration || !marketContract) {
         return null;
       }
 

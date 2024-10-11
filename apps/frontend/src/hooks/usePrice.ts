@@ -29,8 +29,8 @@ export const usePrice = (marketParam?: string) => {
   const { data: collateralConfigurations } =
     useCollateralConfigurations(market);
 
-  const marketContract = useMarketContract();
-  const pythContract = usePythContract();
+  const marketContract = useMarketContract(market);
+  const pythContract = usePythContract(market);
 
   // Create a map of priceFeedId to assetId
   const priceFeedIdToAssetId = useMemo(() => {
@@ -61,20 +61,15 @@ export const usePrice = (marketParam?: string) => {
     queryKey: [
       'pythPrices',
       priceFeedIdToAssetIdKey,
-      market,
       marketContract?.account?.address,
       marketContract?.id,
       pythContract?.account?.address,
       pythContract?.id,
     ],
     queryFn: async () => {
-      if (
-        !provider ||
-        !priceFeedIdToAssetId ||
-        !marketContract ||
-        !pythContract
-      )
+      if (!priceFeedIdToAssetId || !marketContract || !pythContract) {
         return null;
+      }
 
       const priceFeedIds = Array.from(priceFeedIdToAssetId.keys());
 

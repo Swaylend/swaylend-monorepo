@@ -37,14 +37,13 @@ export const useSupplyCollateral = ({
   const { data: collateralConfigurations } = useCollateralConfigurations();
 
   const queryClient = useQueryClient();
-  const marketContract = useMarketContract();
+  const marketContract = useMarketContract(market);
 
   return useMutation({
     mutationKey: [
       'supplyCollateral',
       actionTokenAssetId,
       account,
-      market,
       collateralConfigurations,
       marketContract?.account?.address,
       marketContract?.id,
