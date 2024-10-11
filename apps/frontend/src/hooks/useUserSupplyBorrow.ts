@@ -1,5 +1,5 @@
 import { useMarketContract } from '@/contracts/useMarketContract';
-import { useMarketStore } from '@/stores';
+import { selectMarket, useMarketStore } from '@/stores';
 import { useAccount, useWallet } from '@fuels/react';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
@@ -7,7 +7,7 @@ import BigNumber from 'bignumber.js';
 export const useUserSupplyBorrow = () => {
   const { wallet } = useWallet();
   const { account } = useAccount();
-  const { market } = useMarketStore();
+  const market = useMarketStore(selectMarket);
 
   const marketContract = useMarketContract();
 

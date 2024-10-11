@@ -1,4 +1,10 @@
-import { ACTION_TYPE, useMarketStore } from '@/stores';
+import {
+  selectAction,
+  selectActionTokenAssetId,
+  selectTokenAmount,
+  useMarketStore,
+  ACTION_TYPE,
+} from '@/stores';
 import { formatUnits } from '@/utils';
 import BigNumber from 'bignumber.js';
 import { useMemo, useState } from 'react';
@@ -12,7 +18,9 @@ import { useUserSupplyBorrow } from './useUserSupplyBorrow';
 import { useUserTrueCollateralValue } from './useUserTrueCollateralValue';
 
 export const usePossiblePositionSummary = () => {
-  const { actionTokenAssetId, tokenAmount, action } = useMarketStore();
+  const actionTokenAssetId = useMarketStore(selectActionTokenAssetId);
+  const tokenAmount = useMarketStore(selectTokenAmount);
+  const action = useMarketStore(selectAction);
   const { data: priceData } = usePrice();
   const { data: marketConfiguration } = useMarketConfiguration();
   const { data: userCollateralAssets } = useUserCollateralAssets();

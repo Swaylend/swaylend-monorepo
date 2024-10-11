@@ -5,21 +5,13 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import {
-  useBorrowCapacity,
-  useBorrowRate,
-  useSupplyRate,
-  useUserCollateralValue,
-  useUserSupplyBorrow,
-} from '@/hooks';
+import { useBorrowRate, useSupplyRate, useUserSupplyBorrow } from '@/hooks';
 import { useUserCollateralUtilization } from '@/hooks/useUserCollateralUtilization';
-import { useUserLiquidationPoint } from '@/hooks/useUserLiquidationPoint';
 import { cn } from '@/lib/utils';
-import { useMarketStore } from '@/stores';
-import { getBorrowApr, getFormattedPrice, getSupplyApr } from '@/utils';
+import { selectMarketMode, useMarketStore } from '@/stores';
+import { getBorrowApr, getSupplyApr } from '@/utils';
 import { useIsConnected } from '@fuels/react';
-import BigNumber from 'bignumber.js';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import Wave from 'react-wavify';
 import { useMediaQuery } from 'usehooks-ts';
 
@@ -39,7 +31,7 @@ const WAVE_COLORS = {
 };
 
 export const InfoBowl = () => {
-  const { marketMode } = useMarketStore();
+  const marketMode = useMarketStore(selectMarketMode);
   const { isConnected } = useIsConnected();
   const { data: borrowRate, isPending: isPendingBorrowRate } = useBorrowRate();
   const { data: supplyRate, isPending: isPendingSupplyRate } = useSupplyRate();

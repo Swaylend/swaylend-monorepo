@@ -1,4 +1,4 @@
-import { useMarketStore } from '@/stores';
+import { selectMarket, useMarketStore } from '@/stores';
 import { useQuery } from '@tanstack/react-query';
 import { useProvider } from './useProvider';
 import { useMarketContract } from '@/contracts/useMarketContract';
@@ -6,8 +6,8 @@ import { useMarketContract } from '@/contracts/useMarketContract';
 export const useUtilization = (marketParam?: string) => {
   const provider = useProvider();
 
-  const { market: selectedMarket } = useMarketStore();
-  const currentMarket = marketParam ?? selectedMarket;
+  const market = useMarketStore(selectMarket);
+  const currentMarket = marketParam ?? market;
   const marketContract = useMarketContract();
 
   return useQuery({

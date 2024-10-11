@@ -2,7 +2,7 @@
 
 import { appConfig } from '@/configs';
 import { Market } from '@/contract-types';
-import { useMarketStore } from '@/stores';
+import { selectMarket, useMarketStore } from '@/stores';
 import {
   selectUpdateContracts,
   useMarketAddressBasedContractsStore,
@@ -13,7 +13,7 @@ import { useEffect, useMemo } from 'react';
 
 export default function MarketContractStoreWatcher(): null {
   const { wallet } = useWallet();
-  const { market } = useMarketStore();
+  const market = useMarketStore(selectMarket);
   const updateContracts = useMarketAddressBasedContractsStore(
     selectUpdateContracts
   );

@@ -1,5 +1,5 @@
 import type { PriceDataUpdateInput } from '@/contract-types/Market';
-import { useMarketStore } from '@/stores';
+import { selectMarket, useMarketStore } from '@/stores';
 
 import { HermesClient } from '@pythnetwork/hermes-client';
 import { useQuery } from '@tanstack/react-query';
@@ -23,7 +23,7 @@ export const usePrice = (marketParam?: string) => {
   );
   const provider = useProvider();
 
-  const { market: storeMarket } = useMarketStore();
+  const storeMarket = useMarketStore(selectMarket);
   const market = marketParam ?? storeMarket;
 
   const { data: marketConfiguration } = useMarketConfiguration(market);

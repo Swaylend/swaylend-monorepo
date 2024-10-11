@@ -29,7 +29,14 @@ import {
   useUserSupplyBorrow,
 } from '@/hooks';
 import { cn } from '@/lib/utils';
-import { ACTION_TYPE, useMarketStore } from '@/stores';
+import {
+  ACTION_TYPE,
+  selectChangeInputDialogOpen,
+  selectChangeActionTokenAssetId,
+  selectChangeTokenAmount,
+  selectChangeAction,
+  useMarketStore,
+} from '@/stores';
 import {
   SYMBOL_TO_ICON,
   formatUnits,
@@ -40,7 +47,6 @@ import { useAccount } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import BigNumber from 'bignumber.js';
 import Image from 'next/image';
-import React from 'react';
 
 const POINTS_LEND: Point[] = [
   {
@@ -109,12 +115,12 @@ const SkeletonCardContent = (
 
 export const LendTable = () => {
   const { account } = useAccount();
-  const {
-    changeAction,
-    changeTokenAmount,
-    changeActionTokenAssetId,
-    changeInputDialogOpen,
-  } = useMarketStore();
+  const changeAction = useMarketStore(selectChangeAction);
+  const changeTokenAmount = useMarketStore(selectChangeTokenAmount);
+  const changeActionTokenAssetId = useMarketStore(
+    selectChangeActionTokenAssetId
+  );
+  const changeInputDialogOpen = useMarketStore(selectChangeInputDialogOpen);
 
   const { data: supplyRate, isPending: isSupplyRatePending } = useSupplyRate();
   const { data: userSupplyBorrow } = useUserSupplyBorrow();
