@@ -73,7 +73,7 @@ const NETWORKS = [
       }
     : {
         bridgeURL: `${appConfig.client.fuelExplorerUrl}/bridge`,
-        url: appConfig.client.fuelNodeUrl,
+        url: process.env.NEXT_PUBLIC_FUEL_NODE_URL,
         chainId: CHAIN_IDS.fuel.mainnet,
       },
 ];
