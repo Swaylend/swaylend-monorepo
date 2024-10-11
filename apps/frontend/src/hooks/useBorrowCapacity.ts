@@ -1,12 +1,12 @@
 import { formatUnits } from '@/utils';
 import { useAccount } from '@fuels/react';
 import BigNumber from 'bignumber.js';
+import { useMemo } from 'react';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
 import { useMarketConfiguration } from './useMarketConfiguration';
 import { usePrice } from './usePrice';
 import { useUserCollateralAssets } from './useUserCollateralAssets';
 import { useUserSupplyBorrow } from './useUserSupplyBorrow';
-import { useMemo } from 'react';
 
 export const useBorrowCapacity = () => {
   const { account } = useAccount();

@@ -1,11 +1,11 @@
 import { formatUnits } from '@/utils';
 import BigNumber from 'bignumber.js';
+import { useMemo } from 'react';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
 import { useMarketConfiguration } from './useMarketConfiguration';
 import { usePrice } from './usePrice';
 import { useUserCollateralAssets } from './useUserCollateralAssets';
 import { useUserSupplyBorrow } from './useUserSupplyBorrow';
-import { useMemo } from 'react';
 
 // Value of collateral in USD times the liquidation factor
 export const useMaxWithdrawableCollateral = (

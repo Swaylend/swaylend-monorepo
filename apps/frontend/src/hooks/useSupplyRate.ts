@@ -1,10 +1,10 @@
 import { selectMarket, useMarketStore } from '@/stores';
 
+import { useMarketContract } from '@/contracts/useMarketContract';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { useProvider } from './useProvider';
 import { useUtilization } from './useUtilization';
-import { useMarketContract } from '@/contracts/useMarketContract';
 
 export const useSupplyRate = (marketParam?: string) => {
   const provider = useProvider();

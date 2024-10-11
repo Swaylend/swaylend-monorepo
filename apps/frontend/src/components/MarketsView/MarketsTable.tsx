@@ -7,7 +7,6 @@ import {
 } from '@/components/ui/table';
 import { appConfig } from '@/configs';
 import Image from 'next/image';
-import React from 'react';
 import FUEL from '/public/icons/fuel-logo.svg?url';
 import { InfoIcon } from '../InfoIcon';
 import { MarketTableRow } from './MarketTableRow';

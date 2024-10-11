@@ -1,11 +1,11 @@
+import { useMarketContract } from '@/contracts/useMarketContract';
 import { selectMarket, useMarketStore } from '@/stores';
+import { stringifySimpleRecord } from '@/utils/stringifySimpleRecord';
 import { useAccount, useWallet } from '@fuels/react';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
-import { useCollateralConfigurations } from './useCollateralConfigurations';
-import { useMarketContract } from '@/contracts/useMarketContract';
 import { useMemo } from 'react';
-import { stringifySimpleRecord } from '@/utils/stringifySimpleRecord';
+import { useCollateralConfigurations } from './useCollateralConfigurations';
 
 export const useUserCollateralAssets = () => {
   const { wallet } = useWallet();

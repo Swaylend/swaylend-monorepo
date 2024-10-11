@@ -38,12 +38,12 @@ import {
 } from '@/hooks';
 import {
   ACTION_TYPE,
-  selectChangeInputDialogOpen,
-  selectChangeActionTokenAssetId,
   selectChangeAction,
+  selectChangeActionTokenAssetId,
+  selectChangeInputDialogOpen,
+  selectChangeMode,
   selectChangeTokenAmount,
   useMarketStore,
-  selectChangeMode,
 } from '@/stores';
 import {
   SYMBOL_TO_ICON,

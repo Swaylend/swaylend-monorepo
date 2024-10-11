@@ -1,10 +1,10 @@
 import { formatUnits } from '@/utils';
 import BigNumber from 'bignumber.js';
+import { useMemo } from 'react';
 import { useMarketConfiguration } from './useMarketConfiguration';
 import { usePrice } from './usePrice';
 import { useUserSupplyBorrow } from './useUserSupplyBorrow';
 import { useUserTrueCollateralValue } from './useUserTrueCollateralValue';
-import { useMemo } from 'react';
 
 export const useUserCollateralUtilization = () => {
   const { data: userSupplyBorrow } = useUserSupplyBorrow();

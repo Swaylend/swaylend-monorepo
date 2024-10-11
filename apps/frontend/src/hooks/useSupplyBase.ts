@@ -3,6 +3,7 @@ import {
   PendingToast,
   TransactionSuccessToast,
 } from '@/components/Toasts';
+import { useMarketContract } from '@/contracts/useMarketContract';
 import {
   selectChangeInputDialogOpen,
   selectChangeSuccessDialogOpen,
@@ -16,7 +17,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { toast } from 'react-toastify';
 import { useMarketConfiguration } from './useMarketConfiguration';
-import { useMarketContract } from '@/contracts/useMarketContract';
 
 export const useSupplyBase = () => {
   const { wallet } = useWallet();

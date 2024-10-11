@@ -1,5 +1,4 @@
 'use client';
-import React from 'react';
 import { InputDialog } from '../InputDialog';
 import { RedeemReferralDialog } from '../RedeemReferralDialog';
 import { SuccessDialog } from '../SuccessDialog';

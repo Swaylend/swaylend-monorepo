@@ -5,9 +5,11 @@ import {
 } from '@/components/Toasts';
 import { appConfig } from '@/configs';
 import type { PriceDataUpdateInput } from '@/contract-types/Market';
+import { useMarketContract } from '@/contracts/useMarketContract';
+import { usePythContract } from '@/contracts/usePythContract';
 import {
-  selectChangeSuccessDialogOpen,
   selectChangeInputDialogOpen,
+  selectChangeSuccessDialogOpen,
   selectChangeSuccessDialogTransactionId,
   selectChangeTokenAmount,
   selectMarket,
@@ -18,8 +20,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { toast } from 'react-toastify';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
-import { useMarketContract } from '@/contracts/useMarketContract';
-import { usePythContract } from '@/contracts/usePythContract';
 
 type useWithdrawCollateralProps = {
   actionTokenAssetId: string | null | undefined;

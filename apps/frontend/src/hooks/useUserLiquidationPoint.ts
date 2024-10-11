@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
+import { useMemo } from 'react';
 import { useUserCollateralUtilization } from './useUserCollateralUtilization';
 import { useUserCollateralValue } from './useUserCollateralValue';
-import { useMemo } from 'react';
 
 export const useUserLiquidationPoint = () => {
   const { data: collateralValue } = useUserCollateralValue();

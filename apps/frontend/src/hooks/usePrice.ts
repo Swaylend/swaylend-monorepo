@@ -1,6 +1,9 @@
 import type { PriceDataUpdateInput } from '@/contract-types/Market';
 import { selectMarket, useMarketStore } from '@/stores';
 
+import { useMarketContract } from '@/contracts/useMarketContract';
+import { usePythContract } from '@/contracts/usePythContract';
+import { stringifyMap } from '@/utils/stringifyMap';
 import { HermesClient } from '@pythnetwork/hermes-client';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
@@ -10,9 +13,6 @@ import { useMemo, useState } from 'react';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
 import { useMarketConfiguration } from './useMarketConfiguration';
 import { useProvider } from './useProvider';
-import { useMarketContract } from '@/contracts/useMarketContract';
-import { usePythContract } from '@/contracts/usePythContract';
-import { stringifyMap } from '@/utils/stringifyMap';
 
 export const usePrice = (marketParam?: string) => {
   const [hermesClient, _] = useState(

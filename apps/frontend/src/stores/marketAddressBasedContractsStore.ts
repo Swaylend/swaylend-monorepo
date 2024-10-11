@@ -1,11 +1,11 @@
 'use client';
 
-import { PythContract } from '@pythnetwork/pyth-fuel-js';
-import { Market } from '@/contract-types';
-import { create } from 'zustand';
-import { useProviderStore } from '@/stores/providerStore';
-import { useMarketStore } from '@/stores/marketStore';
 import { appConfig } from '@/configs';
+import { Market } from '@/contract-types';
+import { useMarketStore } from '@/stores/marketStore';
+import { useProviderStore } from '@/stores/providerStore';
+import { PythContract } from '@pythnetwork/pyth-fuel-js';
+import { create } from 'zustand';
 
 interface Store {
   pythContract: PythContract | undefined;

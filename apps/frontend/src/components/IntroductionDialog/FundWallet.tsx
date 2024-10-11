@@ -2,8 +2,7 @@ import { appConfig } from '@/configs';
 import { useBalance } from '@/hooks';
 import { useAccount } from '@fuels/react';
 import { ExternalLink } from 'lucide-react';
-import Link from 'next/link';
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Button } from '../ui/button';
 
 export const FundWallet = ({

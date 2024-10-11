@@ -5,12 +5,13 @@ import {
 } from '@/components/Toasts';
 import { appConfig } from '@/configs';
 import type { PriceDataUpdateInput } from '@/contract-types/Market';
+import { useMarketContract } from '@/contracts/useMarketContract';
 import {
-  selectChangeTokenAmount,
-  selectMarket,
   selectChangeInputDialogOpen,
   selectChangeSuccessDialogOpen,
   selectChangeSuccessDialogTransactionId,
+  selectChangeTokenAmount,
+  selectMarket,
   useMarketStore,
 } from '@/stores';
 import { useAccount, useWallet } from '@fuels/react';
@@ -18,7 +19,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { toast } from 'react-toastify';
 import { useMarketConfiguration } from './useMarketConfiguration';
-import { useMarketContract } from '@/contracts/useMarketContract';
 
 export const useBorrowBase = () => {
   const { wallet } = useWallet();

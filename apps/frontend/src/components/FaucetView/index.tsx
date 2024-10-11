@@ -11,7 +11,7 @@ import { useAccount } from '@fuels/react';
 import { useIsMutating } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { BN, toFixed } from 'fuels';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { Button } from '../ui/button';
 import {
   Table,

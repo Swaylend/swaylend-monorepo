@@ -13,7 +13,7 @@ import { cn } from '@/lib/utils';
 import { formatUnits, getFormattedNumber, getFormattedPrice } from '@/utils';
 import BigNumber from 'bignumber.js';
 import { ArrowDown, ArrowUp } from 'lucide-react';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { InfoIcon } from '../InfoIcon';
 import { Progress } from '../ui/progress';
 

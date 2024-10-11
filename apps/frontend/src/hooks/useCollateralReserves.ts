@@ -1,9 +1,9 @@
 import { selectMarket, useMarketStore } from '@/stores';
 
+import { useMarketContract } from '@/contracts/useMarketContract';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { useProvider } from './useProvider';
-import { useMarketContract } from '@/contracts/useMarketContract';
 
 export const useCollateralReserves = (
   assetId: string,

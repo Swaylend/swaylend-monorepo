@@ -2,7 +2,7 @@
 
 import 'react-toastify/dist/ReactToastify.css';
 
-import { defaultConnectors, createConfig } from '@fuels/connectors';
+import { createConfig, defaultConnectors } from '@fuels/connectors';
 import { FuelProvider } from '@fuels/react';
 import {
   QueryClient,
@@ -13,6 +13,7 @@ import { ThemeProvider } from 'next-themes';
 import { type ReactNode, useEffect, useMemo } from 'react';
 import { ToastContainer } from 'react-toastify';
 
+import MarketContractStoreWatcher from '@/components/Providers/MarketContractStoreWatcher';
 import { appConfig } from '@/configs';
 import { useProvider } from '@/hooks';
 import { CHAIN_IDS } from 'fuels';
@@ -23,7 +24,6 @@ import { http, createConfig as createConfigWagmiConfig } from 'wagmi';
 import { mainnet, sepolia } from 'wagmi/chains';
 import { coinbaseWallet, injected, walletConnect } from 'wagmi/connectors';
 import PostHogIdentify from './PostHogIdentify';
-import MarketContractStoreWatcher from '@/components/Providers/MarketContractStoreWatcher';
 
 function makeQueryClient() {
   return new QueryClient({

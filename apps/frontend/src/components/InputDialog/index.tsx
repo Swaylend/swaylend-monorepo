@@ -25,14 +25,14 @@ import {
 import { cn } from '@/lib/utils';
 import {
   ACTION_TYPE,
-  selectChangeAction,
   selectAction,
-  selectTokenAmount,
   selectActionTokenAssetId,
-  useMarketStore,
-  selectChangeTokenAmount,
+  selectChangeAction,
   selectChangeInputDialogOpen,
+  selectChangeTokenAmount,
   selectInputDialogOpen,
+  selectTokenAmount,
+  useMarketStore,
 } from '@/stores';
 import { formatUnits, getFormattedNumber } from '@/utils';
 import { useAccount, useIsConnected } from '@fuels/react';

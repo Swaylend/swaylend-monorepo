@@ -1,9 +1,9 @@
 import {
+  ACTION_TYPE,
   selectAction,
   selectActionTokenAssetId,
   selectTokenAmount,
   useMarketStore,
-  ACTION_TYPE,
 } from '@/stores';
 import { formatUnits } from '@/utils';
 import BigNumber from 'bignumber.js';

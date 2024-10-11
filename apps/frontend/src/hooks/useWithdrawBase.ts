@@ -5,6 +5,8 @@ import {
 } from '@/components/Toasts';
 import { appConfig } from '@/configs';
 import type { PriceDataUpdateInput } from '@/contract-types/Market';
+import { useMarketContract } from '@/contracts/useMarketContract';
+import { usePythContract } from '@/contracts/usePythContract';
 import {
   selectChangeInputDialogOpen,
   selectChangeSuccessDialogOpen,
@@ -18,8 +20,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { toast } from 'react-toastify';
 import { useMarketConfiguration } from './useMarketConfiguration';
-import { useMarketContract } from '@/contracts/useMarketContract';
-import { usePythContract } from '@/contracts/usePythContract';
 
 export const useWithdrawBase = () => {
   const { wallet } = useWallet();

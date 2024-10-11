@@ -1,12 +1,12 @@
 import { selectMarket, useMarketStore } from '@/stores';
 
-import { useQuery } from '@tanstack/react-query';
-import BigNumber from 'bignumber.js';
-import { useCollateralConfigurations } from './useCollateralConfigurations';
-import { useProvider } from './useProvider';
 import { useMarketContract } from '@/contracts/useMarketContract';
 import { stringifySimpleRecord } from '@/utils/stringifySimpleRecord';
+import { useQuery } from '@tanstack/react-query';
+import BigNumber from 'bignumber.js';
 import { useMemo } from 'react';
+import { useCollateralConfigurations } from './useCollateralConfigurations';
+import { useProvider } from './useProvider';
 
 export const useTotalCollateral = (marketParam?: string) => {
   const provider = useProvider();
