@@ -186,7 +186,7 @@ export const InputDialog = () => {
         userSupplyBorrow.borrowed,
         marketConfiguration.baseTokenDecimals
       ).plus(
-        BigNumber(0.01).div(
+        BigNumber(0.001).div(
           priceData?.prices[marketConfiguration.baseToken.bits] ?? 1
         )
       );
