@@ -497,6 +497,8 @@ export const InputDialog = () => {
     action,
   ]);
 
+  if (!marketConfiguration) return null;
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="p-0 max-sm:w-[90%] max-sm:rounded-xl max-w-[400px]">
@@ -600,7 +602,11 @@ export const InputDialog = () => {
                 <div
                   className={`text-sm ${action === ACTION_TYPE.REPAY ? 'text-lavender' : 'text-moon'}`}
                 >
-                  {getFormattedNumber(finalBalance, true)}
+                  {action === ACTION_TYPE.REPAY
+                    ? finalBalance.toFixed(
+                        marketConfiguration.baseTokenDecimals
+                      )
+                    : getFormattedNumber(finalBalance, true)}
                   {action === ACTION_TYPE.BORROW && ' available to borrow'}
                   {action === ACTION_TYPE.REPAY && ' debt to repay'}
                   {(action === ACTION_TYPE.SUPPLY ||
