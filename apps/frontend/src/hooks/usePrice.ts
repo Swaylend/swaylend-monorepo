@@ -3,7 +3,6 @@ import { selectMarket, useMarketStore } from '@/stores';
 
 import { useMarketContract } from '@/contracts/useMarketContract';
 import { usePythContract } from '@/contracts/usePythContract';
-import { stringifyMap } from '@/utils/stringifyMap';
 import { HermesClient } from '@pythnetwork/hermes-client';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
@@ -32,6 +31,7 @@ export const usePrice = (marketParam?: string) => {
 
   const marketContract = useMarketContract();
   const pythContract = usePythContract();
+
   // Create a map of priceFeedId to assetId
   const priceFeedIdToAssetId = useMemo(() => {
     if (!marketConfiguration || !collateralConfigurations) return null;
@@ -53,7 +53,7 @@ export const usePrice = (marketParam?: string) => {
   }, [marketConfiguration, collateralConfigurations]);
 
   const priceFeedIdToAssetIdKey = useMemo(
-    () => stringifyMap(priceFeedIdToAssetId),
+    () => Object.fromEntries(priceFeedIdToAssetId?.entries() ?? []),
     [priceFeedIdToAssetId]
   );
 
@@ -135,7 +135,11 @@ export const usePrice = (marketParam?: string) => {
       };
     },
     refetchInterval: 3000,
-    enabled: !!provider && !!priceFeedIdToAssetId,
+    enabled:
+      !!provider &&
+      !!priceFeedIdToAssetId &&
+      !!marketContract &&
+      !!pythContract,
     staleTime: 3000,
     refetchOnWindowFocus: false,
   });

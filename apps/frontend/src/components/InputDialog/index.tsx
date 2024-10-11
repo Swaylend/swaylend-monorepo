@@ -145,35 +145,6 @@ export const InputDialog = () => {
       case ACTION_TYPE.BORROW:
         if (!priceData || !tokenAmount.gt(0)) return;
 
-        console.log('Prices:');
-        console.log(
-          Object.entries(priceData.prices).map((val) => ({
-            assetId: val[0],
-            price: val[1].toString(),
-          }))
-        );
-        console.log('Confidence intervals:');
-        console.log(
-          Object.entries(priceData.confidenceIntervals).map((val) => {
-            if (
-              val[1].div(priceData.prices[val[0]]).times(100).gte(BigNumber(1))
-            ) {
-              console.error(
-                `Confidence price for asset ${val[0]} is too high. Confidence is: ${val[1].div(priceData.prices[val[0]]).times(100).toFixed(2)}%`
-              );
-            }
-
-            return {
-              assetId: val[0],
-              confidenceInterval: val[1].toString(),
-              confidenceIntervalPercentage: `${val[1]
-                .div(priceData.prices[val[0]])
-                .times(100)
-                .toFixed(2)}%`,
-            };
-          })
-        );
-
         borrowBase({
           tokenAmount,
           priceUpdateData: priceData.priceUpdateData,

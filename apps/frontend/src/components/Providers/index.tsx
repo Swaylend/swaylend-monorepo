@@ -16,6 +16,7 @@ import { ToastContainer } from 'react-toastify';
 import MarketContractStoreWatcher from '@/components/Providers/MarketContractStoreWatcher';
 import { appConfig } from '@/configs';
 import { useProvider } from '@/hooks';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { CHAIN_IDS, Provider } from 'fuels';
 import posthog from 'posthog-js';
 import { PostHogProvider } from 'posthog-js/react';
@@ -182,7 +183,7 @@ export const Providers = ({ children }: { children: ReactNode }) => {
               />
             </>
           </FuelProvider>
-          {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+          <ReactQueryDevtools initialIsOpen={false} />
         </QueryClientProvider>
       </PostHogProvider>
     </ThemeProvider>

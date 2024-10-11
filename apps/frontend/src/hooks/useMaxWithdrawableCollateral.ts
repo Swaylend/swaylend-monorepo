@@ -56,7 +56,10 @@ export const useMaxWithdrawableCollateral = (
     }, BigNumber(0));
 
     // BorrowCollateral Asset balance
+    console.log(assetId);
+    console.log(collateralConfig);
     const collateralToken = collateralConfig?.[assetId ?? ''];
+    console.log(collateralToken);
     const currentBalance = formatUnits(
       BigNumber(collateralBalances?.[assetId ?? ''] ?? new BigNumber(0)),
       collateralToken?.decimals
