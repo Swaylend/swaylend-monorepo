@@ -132,21 +132,19 @@ export const Stats = () => {
         userSupplyBorrow.borrowed,
         marketConfiguration.baseTokenDecimals
       ).plus(
-        BigNumber(0.01).div(
+        BigNumber(0.001).div(
           priceData?.prices[marketConfiguration.baseToken.bits] ?? 1
         )
       );
       if (val.lt(1) && val.gt(0)) {
         return {
           title: 'Your Borrow Position',
-          value: val.times(
-            priceData.prices[marketConfiguration.baseToken.bits]
-          ),
+          value: val,
         };
       }
       return {
         title: 'Your Borrow Position',
-        value: val.times(priceData.prices[marketConfiguration.baseToken.bits]),
+        value: val,
       };
     }
     // Available to borrow

@@ -157,7 +157,7 @@ export const BorrowTable = () => {
     );
     if (val.gt(0)) {
       val = val.plus(
-        BigNumber(0.01).div(
+        BigNumber(0.001).div(
           priceData?.prices[marketConfiguration.baseToken.bits] ?? 1
         )
       );

@@ -181,11 +181,12 @@ export const InputDialog = () => {
 
     if (action === 'REPAY') {
       // Repay 1 cent more than owed to avoid staying in debt
+
       return formatUnits(
         userSupplyBorrow.borrowed,
         marketConfiguration.baseTokenDecimals
       ).plus(
-        BigNumber(0.01).div(
+        BigNumber(0.001).div(
           priceData?.prices[marketConfiguration.baseToken.bits] ?? 1
         )
       );
@@ -280,8 +281,17 @@ export const InputDialog = () => {
         break;
       case ACTION_TYPE.REPAY: {
         if (userSupplyBorrow.borrowed.eq(0)) return;
-        changeTokenAmount(BigNumber(finalBalance.toFixed(decimals)));
 
+        const usdcBalance = formatUnits(
+          BigNumber(balance?.toString() ?? 0),
+          marketConfiguration.baseTokenDecimals
+        );
+
+        if (finalBalance.lte(usdcBalance)) {
+          changeTokenAmount(BigNumber(finalBalance.toFixed(decimals)));
+        } else {
+          changeTokenAmount(usdcBalance);
+        }
         break;
       }
     }
@@ -383,7 +393,7 @@ export const InputDialog = () => {
           ) ?? BigNumber(0)
         )
       ) {
-        return 'You are trying to borrow more than the max borrowable amount';
+        return 'You do not have enough collateral to borrow this amount. Deposit more collateral to proceed!';
       }
     }
 
@@ -486,6 +496,8 @@ export const InputDialog = () => {
     marketConfiguration,
     action,
   ]);
+
+  if (!marketConfiguration) return null;
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -590,7 +602,11 @@ export const InputDialog = () => {
                 <div
                   className={`text-sm ${action === ACTION_TYPE.REPAY ? 'text-lavender' : 'text-moon'}`}
                 >
-                  {getFormattedNumber(finalBalance, true)}
+                  {action === ACTION_TYPE.REPAY
+                    ? finalBalance.toFixed(
+                        marketConfiguration.baseTokenDecimals
+                      )
+                    : getFormattedNumber(finalBalance, true)}
                   {action === ACTION_TYPE.BORROW && ' available to borrow'}
                   {action === ACTION_TYPE.REPAY && ' debt to repay'}
                   {(action === ACTION_TYPE.SUPPLY ||

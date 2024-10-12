@@ -69,6 +69,9 @@ export const InputField = ({ error }: { error: boolean }) => {
     // Replace comma to the dot
     value = value.replace(',', '.');
 
+    // Remove minus sign
+    value = value.replace(/[^\d.,]/g, '');
+
     // Remove additional decimal separators
     const parts = value.split('.');
     if (parts.length > 2) {
