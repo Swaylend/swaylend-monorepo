@@ -70,7 +70,7 @@ export const InputField = ({ error }: { error: boolean }) => {
     value = value.replace(',', '.');
 
     // Remove minus sign
-    value = value.replace('-', '');
+    value = value.replace(/[^\d.,]/g, '');
 
     // Remove additional decimal separators
     const parts = value.split('.');
