@@ -380,8 +380,29 @@ export const InputDialog = () => {
         return `There is not enough ${appConfig.assets[marketConfiguration?.baseToken.bits]} to borrow`;
       }
 
-      if (tokenAmount.lt(new BigNumber(10))) {
-        return `Minimum borrow amount is 10 ${appConfig.assets[marketConfiguration?.baseToken.bits]}`;
+      const minMarketBorrowPosition = BigNumber(
+        marketConfiguration.baseBorrowMin.toString()
+      ).dividedBy(BigNumber(10).pow(marketConfiguration.baseTokenDecimals));
+
+      const newBorrowPosition = userSupplyBorrow.borrowed
+        .dividedBy(BigNumber(10).pow(marketConfiguration.baseTokenDecimals))
+        .plus(tokenAmount)
+        .minus(
+          userSupplyBorrow.supplied.dividedBy(
+            BigNumber(10).pow(marketConfiguration.baseTokenDecimals)
+          )
+        );
+
+      if (newBorrowPosition.lt(minMarketBorrowPosition)) {
+        const amountToAchieveMinMarketBorrowPosition = minMarketBorrowPosition
+          .plus(
+            userSupplyBorrow.supplied.dividedBy(
+              BigNumber(10).pow(marketConfiguration.baseTokenDecimals)
+            )
+          )
+          .toFixed();
+
+        return `Minimum borrow position is ${minMarketBorrowPosition.toFixed(0)} ${appConfig.assets[marketConfiguration.baseToken.bits]}. You need to borrow at least ${amountToAchieveMinMarketBorrowPosition} ${appConfig.assets[marketConfiguration.baseToken.bits]}.`;
       }
 
       if (

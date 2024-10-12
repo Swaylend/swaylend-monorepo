@@ -6,6 +6,7 @@ import {
 import { appConfig } from '@/configs';
 import type { PriceDataUpdateInput } from '@/contract-types/Market';
 import { useMarketContract } from '@/contracts/useMarketContract';
+import { usePythContract } from '@/contracts/usePythContract';
 import {
   selectChangeInputDialogOpen,
   selectChangeSuccessDialogOpen,
@@ -31,6 +32,7 @@ export const useBorrowBase = () => {
   );
   const { data: marketConfiguration } = useMarketConfiguration();
   const marketContract = useMarketContract(market);
+  const pythContract = usePythContract(market);
 
   const queryClient = useQueryClient();
 
@@ -41,6 +43,8 @@ export const useBorrowBase = () => {
       marketConfiguration,
       marketContract?.account?.address,
       marketContract?.id,
+      pythContract?.account?.address,
+      pythContract?.id,
     ],
     mutationFn: async ({
       tokenAmount,
@@ -49,7 +53,12 @@ export const useBorrowBase = () => {
       tokenAmount: BigNumber;
       priceUpdateData: PriceDataUpdateInput;
     }) => {
-      if (!account || !marketConfiguration || !marketContract) {
+      if (
+        !account ||
+        !marketConfiguration ||
+        !marketContract ||
+        !pythContract
+      ) {
         return null;
       }
 
@@ -64,6 +73,7 @@ export const useBorrowBase = () => {
             assetId: appConfig.baseAssetId,
           },
         })
+        .addContracts([pythContract])
         .call();
 
       const transactionResult = await toast.promise(waitForResult(), {
