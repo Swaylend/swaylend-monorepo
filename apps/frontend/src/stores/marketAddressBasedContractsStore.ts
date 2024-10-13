@@ -65,6 +65,8 @@ useProviderStore.subscribe((newState, _) => {
   const { updateContracts, contracts } =
     useMarketAddressBasedContractsStore.getState();
 
+  console.log('initialize contracts');
+
   Object.keys(appConfig.markets).forEach((market) => {
     if (contracts.get(market) || !newState.provider) return;
     const pythContract = new PythContract(

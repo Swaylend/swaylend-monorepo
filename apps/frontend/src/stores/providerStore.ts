@@ -1,6 +1,6 @@
 import { initProvider } from '@/utils';
 import type { Provider } from 'fuels';
-import { createWithEqualityFn } from 'zustand/traditional';
+import { create } from 'zustand';
 
 interface ProviderStore {
   provider: Provider | undefined;
@@ -11,12 +11,10 @@ export const providerStoreInitialState = {
   provider: undefined,
 };
 
-export const useProviderStore = createWithEqualityFn<ProviderStore>()(
-  (set) => ({
-    ...providerStoreInitialState,
-    changeProvider: (provider: Provider) => set({ provider }),
-  })
-);
+export const useProviderStore = create<ProviderStore>()((set) => ({
+  ...providerStoreInitialState,
+  changeProvider: (provider: Provider) => set({ provider }),
+}));
 
 initProvider()
   .then((provider) => useProviderStore.setState({ provider }))
