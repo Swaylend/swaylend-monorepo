@@ -12,7 +12,7 @@
   "dependencies": {
     "@sentio/sdk": "2.44.0",
     "dayjs": "^1.11.13",
-    "fuels": "0.95.0",
+    "fuels": "0.96.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
