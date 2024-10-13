@@ -30,7 +30,7 @@ export const CollateralIcons = ({ collaterals }: CollateralIconsProps) => {
               key={collateral.id}
               className="flex items-center rounded-full bg-card p-1 [&:nth-child(n+2)]:ml-[-12px]"
             >
-              <TooltipProvider>
+              <TooltipProvider delayDuration={100}>
                 <Tooltip>
                   <TooltipTrigger>
                     <Image

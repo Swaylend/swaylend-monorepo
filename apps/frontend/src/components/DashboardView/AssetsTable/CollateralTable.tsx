@@ -124,7 +124,7 @@ const CollateralTableRow = ({
   return (
     <TableRow>
       <TableCell>
-        <TooltipProvider>
+        <TooltipProvider delayDuration={100}>
           <Tooltip>
             <TooltipTrigger>
               <AssetName

@@ -623,11 +623,19 @@ export const InputDialog = () => {
                 <div
                   className={`text-sm ${action === ACTION_TYPE.REPAY ? 'text-lavender' : 'text-moon'}`}
                 >
-                  {action === ACTION_TYPE.REPAY
+                  {/* {action === ACTION_TYPE.REPAY
                     ? finalBalance.toFixed(
                         marketConfiguration.baseTokenDecimals
                       )
-                    : getFormattedNumber(finalBalance, true)}
+                    : getFormattedNumber(finalBalance, true)} */}
+                  {actionTokenAssetId === marketConfiguration.baseToken.bits
+                    ? finalBalance.toFixed(
+                        marketConfiguration.baseTokenDecimals
+                      )
+                    : finalBalance.toFixed(
+                        collateralConfigurations?.[actionTokenAssetId ?? '']
+                          .decimals!
+                      )}
                   {action === ACTION_TYPE.BORROW && ' available to borrow'}
                   {action === ACTION_TYPE.REPAY && ' debt to repay'}
                   {(action === ACTION_TYPE.SUPPLY ||
