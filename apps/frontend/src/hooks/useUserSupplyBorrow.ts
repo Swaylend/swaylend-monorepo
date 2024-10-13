@@ -18,7 +18,14 @@ export const useUserSupplyBorrow = () => {
       marketContract?.id,
     ],
     queryFn: async () => {
-      if (!account || !marketContract) return null;
+      if (!account) {
+        return {
+          supplied: new BigNumber(0),
+          borrowed: new BigNumber(0),
+        };
+      }
+
+      if (!marketContract) return null;
 
       const { value } = await marketContract.functions
         .get_user_supply_borrow({ Address: { bits: account } })
@@ -29,7 +36,7 @@ export const useUserSupplyBorrow = () => {
         borrowed: new BigNumber(value[1].toString()),
       };
     },
-    enabled: !!marketContract && !!account,
+    enabled: !!marketContract,
     refetchOnWindowFocus: false,
     placeholderData: keepPreviousData,
   });
