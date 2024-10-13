@@ -428,17 +428,37 @@ export const InputDialog = () => {
 
       // Balance more than user borrowed
       if (userSupplyBorrow.borrowed.eq(0)) return 'You have no debt';
-      const userBorrowed =
-        formatUnits(
-          userSupplyBorrow.borrowed,
-          marketConfiguration?.baseTokenDecimals
-        ).plus(
-          BigNumber(0.02).div(
+
+      const userBorrowed = formatUnits(
+        userSupplyBorrow.borrowed,
+        marketConfiguration?.baseTokenDecimals
+      );
+
+      const userBorrowedModified =
+        userBorrowed.plus(
+          BigNumber(0.002).div(
             priceData?.prices[marketConfiguration.baseToken.bits] ?? 1
           )
         ) ?? BigNumber(0);
 
-      if (tokenAmount.gt(userBorrowed))
+      const userBorrowedModifiedRepay =
+        userBorrowed
+          .plus(
+            BigNumber(0.001).div(
+              priceData?.prices[marketConfiguration.baseToken.bits] ?? 1
+            )
+          )
+          .decimalPlaces(marketConfiguration?.baseTokenDecimals) ??
+        BigNumber(0);
+
+      if (
+        userBorrowedModifiedRepay.minus(tokenAmount).lt(10) &&
+        userBorrowedModifiedRepay.minus(tokenAmount).gt(0)
+      ) {
+        return 'Your position cannot be less than $10. Please repay whole position or leave a position of at least $10 open.';
+      }
+
+      if (tokenAmount.gt(userBorrowedModified))
         return 'You are trying to repay more than your debt';
     }
 
