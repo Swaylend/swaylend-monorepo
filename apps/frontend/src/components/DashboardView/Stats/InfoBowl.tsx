@@ -89,7 +89,7 @@ export const InfoBowl = () => {
   ]);
 
   return (
-    <TooltipProvider>
+    <TooltipProvider delayDuration={100}>
       <Tooltip>
         <TooltipTrigger className="cursor-default">
           <div className="sm:w-[174px] sm:h-[174px] w-[124px] h-[124px] bg-background rounded-full flex items-center p-2 justify-center">

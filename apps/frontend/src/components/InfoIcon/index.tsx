@@ -7,7 +7,7 @@ import {
 import { Info } from 'lucide-react';
 export const InfoIcon = ({ text }: { text: string }) => {
   return (
-    <TooltipProvider>
+    <TooltipProvider delayDuration={100}>
       <Tooltip>
         <TooltipTrigger>
           <Info className="w-4 h-4" />
