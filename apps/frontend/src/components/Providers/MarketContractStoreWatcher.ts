@@ -21,10 +21,6 @@ export default function MarketContractStoreWatcher(): null {
   useEffect(() => {
     if (!walletOrProvider) return;
 
-    console.log('Update contracts to use:');
-    console.log('Wallet:', wallet?.address.toB256());
-    console.log('Provider:', provider?.url);
-
     Object.keys(appConfig.markets).forEach((market) => {
       const pythContract = new PythContract(
         appConfig.markets[market].oracleAddress,
