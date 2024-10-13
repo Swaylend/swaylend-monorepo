@@ -8,6 +8,7 @@ import {
 } from '@/hooks';
 
 import { Skeleton } from '@/components/ui/skeleton';
+import { appConfig } from '@/configs';
 import { MARKET_MODE, selectMarketMode, useMarketStore } from '@/stores';
 import { formatUnits, getFormattedNumber, getFormattedPrice } from '@/utils';
 import { useIsConnected } from '@fuels/react';
@@ -15,7 +16,6 @@ import BigNumber from 'bignumber.js';
 import { Repeat } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { InfoBowl } from './InfoBowl';
-import { appConfig } from '@/configs';
 
 export const Stats = () => {
   const [borrowedMode, setBorrowedMode] = useState(1); // 0: available to borrow, 1: borrowed
