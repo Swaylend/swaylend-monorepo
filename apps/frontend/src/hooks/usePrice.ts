@@ -3,6 +3,7 @@ import { selectMarket, useMarketStore } from '@/stores';
 
 import { useMarketContract } from '@/contracts/useMarketContract';
 import { usePythContract } from '@/contracts/usePythContract';
+import { useProvider } from '@fuels/react';
 import { HermesClient } from '@pythnetwork/hermes-client';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
@@ -11,7 +12,6 @@ import { DateTime } from 'fuels';
 import { useMemo, useState } from 'react';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
 import { useMarketConfiguration } from './useMarketConfiguration';
-import { useProvider } from './useProvider';
 
 export const usePrice = (marketParam?: string) => {
   const [hermesClient, _] = useState(
@@ -20,7 +20,7 @@ export const usePrice = (marketParam?: string) => {
         process.env.NEXT_PUBLIC_HERMES_API ?? 'https://hermes.pyth.network'
       )
   );
-  const provider = useProvider();
+  const { provider } = useProvider();
 
   const storeMarket = useMarketStore(selectMarket);
   const market = marketParam ?? storeMarket;

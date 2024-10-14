@@ -1,6 +1,6 @@
+import { useProvider } from '@fuels/react';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { Address, type BytesLike } from 'fuels';
-import { useProvider } from './useProvider';
 
 type UseBalanceParams = {
   address?: string;
@@ -8,7 +8,7 @@ type UseBalanceParams = {
 };
 
 export const useBalance = ({ address, assetId }: UseBalanceParams) => {
-  const provider = useProvider();
+  const { provider } = useProvider();
 
   return useQuery({
     queryKey: ['balance', address, assetId],

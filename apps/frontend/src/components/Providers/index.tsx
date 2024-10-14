@@ -15,7 +15,6 @@ import { ToastContainer } from 'react-toastify';
 
 import MarketContractStoreWatcher from '@/components/Providers/MarketContractStoreWatcher';
 import { appConfig } from '@/configs';
-import { useProvider } from '@/hooks';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { CHAIN_IDS, Provider } from 'fuels';
 import posthog from 'posthog-js';
@@ -109,8 +108,20 @@ const wagmiConfig = createConfigWagmiConfig({
   },
 });
 
+const FUEL_CONFIG = createConfig(() => ({
+  connectors: defaultConnectors({
+    devMode: appConfig.env === 'testnet',
+    wcProjectId: appConfig.client.walletConnectProjectId,
+    ethWagmiConfig: wagmiConfig,
+    chainId:
+      appConfig.env === 'testnet'
+        ? CHAIN_IDS.fuel.testnet
+        : CHAIN_IDS.fuel.mainnet,
+    fuelProvider: Provider.create(appConfig.client.fuelNodeUrl),
+  }),
+}));
+
 export const Providers = ({ children }: { children: ReactNode }) => {
-  const fuelProvider = useProvider();
   const queryClient = getQueryClient();
 
   useEffect(() => {
@@ -128,24 +139,6 @@ export const Providers = ({ children }: { children: ReactNode }) => {
     });
   }, []);
 
-  const fuelConfig = useMemo(
-    () =>
-      createConfig(() => ({
-        connectors: defaultConnectors({
-          devMode: appConfig.env === 'testnet',
-          wcProjectId: appConfig.client.walletConnectProjectId,
-          ethWagmiConfig: wagmiConfig,
-          chainId:
-            appConfig.env === 'testnet'
-              ? CHAIN_IDS.fuel.testnet
-              : CHAIN_IDS.fuel.mainnet,
-          fuelProvider:
-            fuelProvider ?? Provider.create(appConfig.client.fuelNodeUrl),
-        }),
-      })),
-    [fuelProvider]
-  );
-
   return (
     <ThemeProvider
       attribute="class"
@@ -160,7 +153,7 @@ export const Providers = ({ children }: { children: ReactNode }) => {
             theme="dark"
             uiConfig={UI_CONFIG}
             networks={NETWORKS}
-            fuelConfig={fuelConfig}
+            fuelConfig={FUEL_CONFIG}
           >
             <>
               {children}
