@@ -12,6 +12,7 @@ import * as types from './graphql';
  * 3. It does not support dead code elimination, so it will add unused operations.
  *
  * Therefore it is highly recommended to use the babel or swc plugin for production.
+ * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
 const documents = {
     "query GetCollateralAssets($account: String) {\n  User(where: {address: {_eq: $account}}) {\n    collateralAssets {\n      amount\n      collateralAsset_id\n    }\n  }\n}": types.GetCollateralAssetsDocument,
