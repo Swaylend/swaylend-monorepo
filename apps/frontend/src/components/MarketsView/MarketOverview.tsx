@@ -84,18 +84,13 @@ export default function MarketOverview({
       return BigNumber(0);
     }
 
-    const totalEarning = formatUnits(
-      BigNumber(marketBasics?.total_supply_base.toString() ?? 0),
-      marketConfiguration?.baseTokenDecimals
-    );
-
     const totalBorrowing = formatUnits(
       BigNumber(marketBasics?.total_borrow_base.toString() ?? 0),
       marketConfiguration?.baseTokenDecimals
     );
 
-    return totalEarning.div(totalBorrowing).times(100);
-  }, [marketConfiguration, marketBasics]);
+    return totalCollateralValue.div(totalBorrowing).times(100);
+  }, [marketConfiguration, marketBasics, totalCollateralValue]);
 
   return (
     <div className="pt-[60px] pb-[55px] px-[88px] flex flex-col gap-y-8 w-full items-center justify-center">

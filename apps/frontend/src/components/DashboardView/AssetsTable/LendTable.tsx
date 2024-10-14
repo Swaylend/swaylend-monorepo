@@ -55,12 +55,12 @@ const POINTS_LEND: Point[] = [
     description: 'Earn Fuel Points by lending assets',
     icon: SYMBOL_TO_ICON.FUEL,
   },
-  {
-    id: '2',
-    name: 'Swaylend',
-    description: 'Earn Swaylend Points by lending assets',
-    icon: SYMBOL_TO_ICON.SWAY,
-  },
+  // {
+  //   id: '2',
+  //   name: 'Swaylend',
+  //   description: 'Earn Swaylend Points by lending assets',
+  //   icon: SYMBOL_TO_ICON.SWAY,
+  // },
 ];
 
 const SkeletonRow = (
@@ -255,7 +255,7 @@ export const LendTable = () => {
                   <div className="flex gap-x-2 w-full">
                     <Button
                       className="w-1/2"
-                      disabled={!account}
+                      disabled={!account || !balance?.gt(0)}
                       onMouseDown={() => {
                         handleBaseTokenClick(ACTION_TYPE.SUPPLY);
                       }}
@@ -396,7 +396,7 @@ export const LendTable = () => {
               <div className="flex gap-x-2 w-full">
                 <Button
                   className="w-1/2"
-                  disabled={!account}
+                  disabled={!account || !balance?.gt(0)}
                   onMouseDown={() => {
                     handleBaseTokenClick(ACTION_TYPE.SUPPLY);
                   }}
@@ -405,7 +405,11 @@ export const LendTable = () => {
                 </Button>
                 <Button
                   className="w-1/2"
-                  disabled={!account}
+                  disabled={
+                    !account ||
+                    !userSupplyBorrow ||
+                    userSupplyBorrow.supplied.eq(0)
+                  }
                   variant={'secondary'}
                   onMouseDown={() => {
                     handleBaseTokenClick(ACTION_TYPE.WITHDRAW);

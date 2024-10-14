@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Tooltip,
   TooltipContent,
@@ -9,10 +11,10 @@ export const InfoIcon = ({ text }: { text: string }) => {
   return (
     <TooltipProvider delayDuration={100}>
       <Tooltip>
-        <TooltipTrigger>
+        <TooltipTrigger onClick={(e) => e.preventDefault()}>
           <Info className="w-4 h-4" />
         </TooltipTrigger>
-        <TooltipContent>
+        <TooltipContent onPointerDownOutside={(e) => e.preventDefault()}>
           <div>{text}</div>
         </TooltipContent>
       </Tooltip>

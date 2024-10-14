@@ -28,7 +28,7 @@ export const IconPair = ({ icons }: IconPairProps) => {
           >
             <TooltipProvider delayDuration={100}>
               <Tooltip>
-                <TooltipTrigger>
+                <TooltipTrigger onClick={(e) => e.preventDefault()}>
                   <Image
                     src={icon.path}
                     alt={icon.name}
@@ -37,7 +37,9 @@ export const IconPair = ({ icons }: IconPairProps) => {
                     className="rounded-full"
                   />
                 </TooltipTrigger>
-                <TooltipContent>
+                <TooltipContent
+                  onPointerDownOutside={(e) => e.preventDefault()}
+                >
                   <div className="p-1">
                     <div className="font-bold">{icon.name}</div>
                   </div>
