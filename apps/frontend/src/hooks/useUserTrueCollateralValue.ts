@@ -7,7 +7,6 @@ import { useUserCollateralAssets } from './useUserCollateralAssets';
 
 // Value of collateral in USD times the liquidation factor
 export const useUserTrueCollateralValue = () => {
-  const { data: assetsConfigs } = useCollateralConfigurations();
   const { data: collateralBalances } = useUserCollateralAssets();
   const { data: collateralConfig } = useCollateralConfigurations();
   const { data: priceData } = usePrice();
@@ -16,14 +15,12 @@ export const useUserTrueCollateralValue = () => {
     queryKey: [
       'userTrueCollateralValue',
       collateralBalances,
-      assetsConfigs,
       collateralConfig,
       priceData?.prices,
     ],
     queryFn: async () => {
       if (
         collateralBalances == null ||
-        assetsConfigs == null ||
         priceData == null ||
         collateralConfig == null
       ) {
@@ -35,7 +32,7 @@ export const useUserTrueCollateralValue = () => {
           const token = collateralConfig[assetId];
           const liquidationFactor = formatUnits(
             BigNumber(
-              assetsConfigs![assetId].liquidate_collateral_factor.toString()
+              collateralConfig![assetId].liquidate_collateral_factor.toString()
             ),
             18
           );
@@ -49,11 +46,7 @@ export const useUserTrueCollateralValue = () => {
 
       return trueCollateralValue;
     },
-    enabled:
-      !!collateralBalances &&
-      !!assetsConfigs &&
-      !!collateralConfig &&
-      !!priceData,
+    enabled: !!collateralBalances && !!collateralConfig && !!priceData,
     refetchOnWindowFocus: false,
   });
 };

@@ -3,26 +3,21 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { useUser } from '@/hooks';
 import { useFuelPoints } from '@/hooks/useFuelPoints';
 import { cn } from '@/lib/utils';
-import { useReferralModalStore } from '@/stores/referralModalStore';
 import { useIsConnected } from '@fuels/react';
-import { Copy, Loader, Sparkle, Trophy } from 'lucide-react';
 import Image from 'next/image';
-import Link from 'next/link';
-import React, { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useHover } from 'usehooks-ts';
 import POINTS from '/public/icons/points-icon.svg?url';
 import { InfoIcon } from '../InfoIcon';
-import { Button } from '../ui/button';
 
 export const Points = () => {
   const hoverRef = useRef<HTMLButtonElement | null>(null);
   const isHover = useHover(hoverRef);
 
   const [isManualOpen, setIsManualOpen] = useState(false);
-  // const { setOpen } = useReferralModalStore();
+  // const setOpen = useReferralModalStore(selectReferralModalSetOpen);
 
   // const { data: user, isPending, isLoading, isError, refetch } = useUser();
 

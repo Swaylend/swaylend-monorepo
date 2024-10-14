@@ -1,6 +1,5 @@
 import type { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import Image from 'next/image';
-import React from 'react';
 import {
   Tooltip,
   TooltipContent,
@@ -31,9 +30,9 @@ export const CollateralIcons = ({ collaterals }: CollateralIconsProps) => {
               key={collateral.id}
               className="flex items-center rounded-full bg-card p-1 [&:nth-child(n+2)]:ml-[-12px]"
             >
-              <TooltipProvider>
+              <TooltipProvider delayDuration={100}>
                 <Tooltip>
-                  <TooltipTrigger>
+                  <TooltipTrigger onClick={(e) => e.preventDefault()}>
                     <Image
                       src={collateral.icon}
                       alt={collateral.name}
@@ -42,7 +41,9 @@ export const CollateralIcons = ({ collaterals }: CollateralIconsProps) => {
                       className="rounded-full"
                     />
                   </TooltipTrigger>
-                  <TooltipContent>
+                  <TooltipContent
+                    onPointerDownOutside={(e) => e.preventDefault()}
+                  >
                     <div className="p-1">
                       <div className="font-bold">{collateral.name}</div>
                     </div>
@@ -58,7 +59,7 @@ export const CollateralIcons = ({ collaterals }: CollateralIconsProps) => {
             className="flex items-center rounded-full bg-card p-1 [&:nth-child(n+2)]:ml-[-12px]"
           >
             <div className="w-[28px] h-[28px] text-lavender font-semibold bg-white/20 rounded-full flex items-center pl-1">
-              +{collaterals.slice(2).length}
+              +{collaterals.length - 3}
             </div>
           </div>
         )}

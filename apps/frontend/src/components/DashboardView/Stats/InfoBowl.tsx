@@ -6,20 +6,17 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import {
-  useBorrowCapacity,
   useBorrowRate,
   useSupplyRate,
-  useUserCollateralValue,
+  useUserCollateralAssets,
   useUserSupplyBorrow,
 } from '@/hooks';
 import { useUserCollateralUtilization } from '@/hooks/useUserCollateralUtilization';
-import { useUserLiquidationPoint } from '@/hooks/useUserLiquidationPoint';
 import { cn } from '@/lib/utils';
-import { useMarketStore } from '@/stores';
-import { getBorrowApr, getFormattedPrice, getSupplyApr } from '@/utils';
+import { selectMarketMode, useMarketStore } from '@/stores';
+import { getBorrowApr, getSupplyApr } from '@/utils';
 import { useIsConnected } from '@fuels/react';
-import BigNumber from 'bignumber.js';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import Wave from 'react-wavify';
 import { useMediaQuery } from 'usehooks-ts';
 
@@ -39,13 +36,14 @@ const WAVE_COLORS = {
 };
 
 export const InfoBowl = () => {
-  const { marketMode } = useMarketStore();
+  const marketMode = useMarketStore(selectMarketMode);
   const { isConnected } = useIsConnected();
   const { data: borrowRate, isPending: isPendingBorrowRate } = useBorrowRate();
   const { data: supplyRate, isPending: isPendingSupplyRate } = useSupplyRate();
   const { data: userSupplyBorrow, isPending: isPendingUserSupplyBorrow } =
     useUserSupplyBorrow();
   const { data: collateralUtilization } = useUserCollateralUtilization();
+  const { data: collateralBalances } = useUserCollateralAssets();
 
   const matches = useMediaQuery('(max-width:640px)');
 
@@ -61,7 +59,7 @@ export const InfoBowl = () => {
       return -1 * Number(collateralUtilization.times(100).toFixed(2)) + 100;
     }
     return -1.5 * Number(collateralUtilization.times(100).toFixed(2)) + 150;
-  }, [collateralUtilization]);
+  }, [collateralUtilization, collateralBalances]);
 
   const waveColor = useMemo(() => {
     if (!collateralUtilization || collateralUtilization.eq(0)) {
@@ -70,7 +68,7 @@ export const InfoBowl = () => {
     if (collateralUtilization.lt(0.6)) return WAVE_COLORS.normal;
     if (collateralUtilization.lt(0.8)) return WAVE_COLORS.warning;
     return WAVE_COLORS.danger;
-  }, [collateralUtilization]);
+  }, [collateralUtilization, collateralBalances]);
 
   const borrowApr = useMemo(() => getBorrowApr(borrowRate), [borrowRate]);
 
@@ -91,9 +89,12 @@ export const InfoBowl = () => {
   ]);
 
   return (
-    <TooltipProvider>
+    <TooltipProvider delayDuration={100}>
       <Tooltip>
-        <TooltipTrigger className="cursor-default">
+        <TooltipTrigger
+          className="cursor-default"
+          onClick={(e) => e.preventDefault()}
+        >
           <div className="sm:w-[174px] sm:h-[174px] w-[124px] h-[124px] bg-background rounded-full flex items-center p-2 justify-center">
             {isLoading ? (
               <Skeleton className="w-full h-full bg-primary/20 rounded-full ring-2 ring-white/20" />
@@ -190,6 +191,7 @@ export const InfoBowl = () => {
             'max-lg:hidden'
           )}
           side="bottom"
+          onPointerDownOutside={(e) => e.preventDefault()}
         >
           <div className="p-1">
             <span className="font-semibold text-primary">

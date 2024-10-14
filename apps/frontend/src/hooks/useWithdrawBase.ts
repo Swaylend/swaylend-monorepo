@@ -4,32 +4,48 @@ import {
   TransactionSuccessToast,
 } from '@/components/Toasts';
 import { appConfig } from '@/configs';
-import { Market } from '@/contract-types';
 import type { PriceDataUpdateInput } from '@/contract-types/Market';
-import { useMarketStore } from '@/stores';
-import { useAccount, useWallet } from '@fuels/react';
-import { PythContract } from '@pythnetwork/pyth-fuel-js';
+import { useMarketContract } from '@/contracts/useMarketContract';
+import { usePythContract } from '@/contracts/usePythContract';
+import {
+  selectChangeInputDialogOpen,
+  selectChangeSuccessDialogOpen,
+  selectChangeSuccessDialogTransactionId,
+  selectChangeTokenAmount,
+  selectMarket,
+  useMarketStore,
+} from '@/stores';
+import { useAccount } from '@fuels/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { toast } from 'react-toastify';
 import { useMarketConfiguration } from './useMarketConfiguration';
 
 export const useWithdrawBase = () => {
-  const { wallet } = useWallet();
   const { account } = useAccount();
-  const {
-    market,
-    changeTokenAmount,
-    changeInputDialogOpen,
-    changeSuccessDialogOpen,
-    changeSuccessDialogTransactionId,
-  } = useMarketStore();
+  const market = useMarketStore(selectMarket);
+  const changeTokenAmount = useMarketStore(selectChangeTokenAmount);
+  const changeInputDialogOpen = useMarketStore(selectChangeInputDialogOpen);
+  const changeSuccessDialogOpen = useMarketStore(selectChangeSuccessDialogOpen);
+  const changeSuccessDialogTransactionId = useMarketStore(
+    selectChangeSuccessDialogTransactionId
+  );
   const { data: marketConfiguration } = useMarketConfiguration();
 
   const queryClient = useQueryClient();
+  const marketContract = useMarketContract(market);
+  const pythContract = usePythContract(market);
 
   return useMutation({
-    mutationKey: ['withdrawBase', account, market, marketConfiguration],
+    mutationKey: [
+      'withdrawBase',
+      account,
+      marketConfiguration,
+      marketContract?.account?.address,
+      marketContract?.id,
+      pythContract?.account?.address,
+      pythContract?.id,
+    ],
     mutationFn: async ({
       tokenAmount,
       priceUpdateData,
@@ -37,19 +53,14 @@ export const useWithdrawBase = () => {
       tokenAmount: BigNumber;
       priceUpdateData: PriceDataUpdateInput;
     }) => {
-      if (!wallet || !account || !marketConfiguration) {
+      if (
+        !account ||
+        !marketConfiguration ||
+        !marketContract ||
+        !pythContract
+      ) {
         return null;
       }
-
-      const pythContract = new PythContract(
-        appConfig.markets[market].oracleAddress,
-        wallet
-      );
-
-      const marketContract = new Market(
-        appConfig.markets[market].marketAddress,
-        wallet
-      );
 
       const amount = new BigNumber(tokenAmount).times(
         10 ** marketConfiguration.baseTokenDecimals
@@ -89,7 +100,12 @@ export const useWithdrawBase = () => {
     onSettled: () => {
       // Invalidate queries
       queryClient.invalidateQueries({
-        queryKey: ['userSupplyBorrow', account, market],
+        queryKey: [
+          'userSupplyBorrow',
+          account,
+          marketContract?.account?.address,
+          marketContract?.id,
+        ],
       });
 
       // Invalidate Fuel balance query

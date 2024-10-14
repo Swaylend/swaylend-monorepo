@@ -6,6 +6,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { appConfig } from '@/configs';
 import {
   useAccount,
   useConnectUI,
@@ -36,7 +37,11 @@ export const ConnectButton = () => {
             <ChevronDown className="h-4 w-4" />
           </div>
         </PopoverTrigger>
-        <PopoverContent align="end" className="w-[260px] px-[25px]">
+        <PopoverContent
+          align="end"
+          className="w-[260px] px-[25px]"
+          onOpenAutoFocus={(e) => e.preventDefault()}
+        >
           <div className="w-full">
             <div>
               <div className="text-moon text-sm">Connected Wallet</div>
@@ -51,7 +56,7 @@ export const ConnectButton = () => {
           </div>
           <div className="mt-10">
             <a
-              href={`https://app.fuel.network/account/${account}`}
+              href={`${appConfig.client.fuelExplorerUrl}/account/${account}`}
               target="_blank"
               rel="noreferrer"
             >

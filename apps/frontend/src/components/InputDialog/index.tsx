@@ -23,13 +23,23 @@ import {
   useWithdrawCollateral,
 } from '@/hooks';
 import { cn } from '@/lib/utils';
-import { ACTION_TYPE, useMarketStore } from '@/stores';
-import { formatUnits, getFormattedNumber } from '@/utils';
+import {
+  ACTION_TYPE,
+  selectAction,
+  selectActionTokenAssetId,
+  selectChangeAction,
+  selectChangeInputDialogOpen,
+  selectChangeTokenAmount,
+  selectInputDialogOpen,
+  selectTokenAmount,
+  useMarketStore,
+} from '@/stores';
+import { SYMBOL_TO_NAME, formatUnits, getFormattedNumber } from '@/utils';
 import { useAccount, useIsConnected } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import BigNumber from 'bignumber.js';
 import { LoaderCircleIcon } from 'lucide-react';
-import React, { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Button } from '../ui/button';
 import { InputField } from './InputField';
 import { PositionSummary } from './PositionSummary';
@@ -43,15 +53,13 @@ export const InputDialog = () => {
   const { data: collateralBalances } = useTotalCollateral();
   const { data: borrowCapacity } = useBorrowCapacity();
   const { data: userSupplyBorrow } = useUserSupplyBorrow();
-  const {
-    actionTokenAssetId,
-    tokenAmount,
-    action,
-    inputDialogOpen: open,
-    changeAction,
-    changeTokenAmount,
-    changeInputDialogOpen: setOpen,
-  } = useMarketStore();
+  const actionTokenAssetId = useMarketStore(selectActionTokenAssetId);
+  const tokenAmount = useMarketStore(selectTokenAmount);
+  const action = useMarketStore(selectAction);
+  const open = useMarketStore(selectInputDialogOpen);
+  const changeAction = useMarketStore(selectChangeAction);
+  const changeTokenAmount = useMarketStore(selectChangeTokenAmount);
+  const setOpen = useMarketStore(selectChangeInputDialogOpen);
 
   const { data: priceData } = usePrice();
   const { data: marketBalanceOfBase } = useMarketBalanceOfBase();
@@ -93,6 +101,16 @@ export const InputDialog = () => {
 
   const [error, setError] = useState<string | null>(null);
 
+  const isLending = useMemo(() => {
+    if (
+      (action === ACTION_TYPE.SUPPLY || action === ACTION_TYPE.WITHDRAW) &&
+      actionTokenAssetId === marketConfiguration?.baseToken.bits
+    ) {
+      return true;
+    }
+    return false;
+  }, [action, actionTokenAssetId, marketConfiguration]);
+
   const { data: maxWithdrawableCollateral } =
     useMaxWithdrawableCollateral(actionTokenAssetId);
 
@@ -126,35 +144,6 @@ export const InputDialog = () => {
       }
       case ACTION_TYPE.BORROW:
         if (!priceData || !tokenAmount.gt(0)) return;
-
-        console.log('Prices:');
-        console.log(
-          Object.entries(priceData.prices).map((val) => ({
-            assetId: val[0],
-            price: val[1].toString(),
-          }))
-        );
-        console.log('Confidence intervals:');
-        console.log(
-          Object.entries(priceData.confidenceIntervals).map((val) => {
-            if (
-              val[1].div(priceData.prices[val[0]]).times(100).gte(BigNumber(1))
-            ) {
-              console.error(
-                `Confidence price for asset ${val[0]} is too high. Confidence is: ${val[1].div(priceData.prices[val[0]]).times(100).toFixed(2)}%`
-              );
-            }
-
-            return {
-              assetId: val[0],
-              confidenceInterval: val[1].toString(),
-              confidenceIntervalPercentage: `${val[1]
-                .div(priceData.prices[val[0]])
-                .times(100)
-                .toFixed(2)}%`,
-            };
-          })
-        );
 
         borrowBase({
           tokenAmount,
@@ -192,11 +181,12 @@ export const InputDialog = () => {
 
     if (action === 'REPAY') {
       // Repay 1 cent more than owed to avoid staying in debt
+
       return formatUnits(
         userSupplyBorrow.borrowed,
         marketConfiguration.baseTokenDecimals
       ).plus(
-        BigNumber(0.01).div(
+        BigNumber(0.001).div(
           priceData?.prices[marketConfiguration.baseToken.bits] ?? 1
         )
       );
@@ -291,8 +281,17 @@ export const InputDialog = () => {
         break;
       case ACTION_TYPE.REPAY: {
         if (userSupplyBorrow.borrowed.eq(0)) return;
-        changeTokenAmount(BigNumber(finalBalance.toFixed(decimals)));
 
+        const usdcBalance = formatUnits(
+          BigNumber(balance?.toString() ?? 0),
+          marketConfiguration.baseTokenDecimals
+        );
+
+        if (finalBalance.lte(usdcBalance)) {
+          changeTokenAmount(BigNumber(finalBalance.toFixed(decimals)));
+        } else {
+          changeTokenAmount(usdcBalance);
+        }
         break;
       }
     }
@@ -381,8 +380,29 @@ export const InputDialog = () => {
         return `There is not enough ${appConfig.assets[marketConfiguration?.baseToken.bits]} to borrow`;
       }
 
-      if (tokenAmount.lt(new BigNumber(10))) {
-        return `Minimum borrow amount is 10 ${appConfig.assets[marketConfiguration?.baseToken.bits]}`;
+      const minMarketBorrowPosition = BigNumber(
+        marketConfiguration.baseBorrowMin.toString()
+      ).dividedBy(BigNumber(10).pow(marketConfiguration.baseTokenDecimals));
+
+      const newBorrowPosition = userSupplyBorrow.borrowed
+        .dividedBy(BigNumber(10).pow(marketConfiguration.baseTokenDecimals))
+        .plus(tokenAmount)
+        .minus(
+          userSupplyBorrow.supplied.dividedBy(
+            BigNumber(10).pow(marketConfiguration.baseTokenDecimals)
+          )
+        );
+
+      if (newBorrowPosition.lt(minMarketBorrowPosition)) {
+        const amountToAchieveMinMarketBorrowPosition = minMarketBorrowPosition
+          .plus(
+            userSupplyBorrow.supplied.dividedBy(
+              BigNumber(10).pow(marketConfiguration.baseTokenDecimals)
+            )
+          )
+          .toFixed();
+
+        return `Minimum borrow position is ${minMarketBorrowPosition.toFixed(0)} ${appConfig.assets[marketConfiguration.baseToken.bits]}. You need to borrow at least ${amountToAchieveMinMarketBorrowPosition} ${appConfig.assets[marketConfiguration.baseToken.bits]}.`;
       }
 
       if (
@@ -394,7 +414,7 @@ export const InputDialog = () => {
           ) ?? BigNumber(0)
         )
       ) {
-        return 'You are trying to borrow more than the max borrowable amount';
+        return 'You do not have enough collateral to borrow this amount. Deposit more collateral to proceed!';
       }
     }
 
@@ -408,22 +428,65 @@ export const InputDialog = () => {
 
       // Balance more than user borrowed
       if (userSupplyBorrow.borrowed.eq(0)) return 'You have no debt';
-      const userBorrowed =
-        formatUnits(
-          userSupplyBorrow.borrowed,
-          marketConfiguration?.baseTokenDecimals
-        ).plus(
-          BigNumber(0.02).div(
+
+      const userBorrowed = formatUnits(
+        userSupplyBorrow.borrowed,
+        marketConfiguration?.baseTokenDecimals
+      );
+
+      const userBorrowedModified =
+        userBorrowed.plus(
+          BigNumber(0.002).div(
             priceData?.prices[marketConfiguration.baseToken.bits] ?? 1
           )
         ) ?? BigNumber(0);
 
-      if (tokenAmount.gt(userBorrowed))
+      const userBorrowedModifiedRepay =
+        userBorrowed
+          .plus(
+            BigNumber(0.001).div(
+              priceData?.prices[marketConfiguration.baseToken.bits] ?? 1
+            )
+          )
+          .decimalPlaces(marketConfiguration?.baseTokenDecimals) ??
+        BigNumber(0);
+
+      const minOpenPositionValue = BigNumber(
+        marketConfiguration.baseBorrowMin.toString()
+      ).dividedBy(BigNumber(10).pow(marketConfiguration.baseTokenDecimals));
+
+      if (
+        userBorrowedModifiedRepay.minus(tokenAmount).lt(minOpenPositionValue) &&
+        userBorrowedModifiedRepay.minus(tokenAmount).gt(0)
+      ) {
+        return `Your position cannot be less than ${minOpenPositionValue.toFixed()} ${SYMBOL_TO_NAME[appConfig.assets[marketConfiguration.baseToken.bits]]}. Please repay whole position or leave a position of at least ${minOpenPositionValue.toFixed()} ${SYMBOL_TO_NAME[appConfig.assets[marketConfiguration.baseToken.bits]]} open.`;
+      }
+
+      if (tokenAmount.gt(userBorrowedModified))
         return 'You are trying to repay more than your debt';
     }
 
     return null;
   };
+
+  const availableBalance = useMemo(() => {
+    if (
+      !collateralConfigurations ||
+      !marketConfiguration ||
+      !actionTokenAssetId
+    ) {
+      return '0.00';
+    }
+
+    if (finalBalance.lte(0)) return '0.00';
+
+    if (actionTokenAssetId === marketConfiguration.baseToken.bits) {
+      return finalBalance.toFixed(marketConfiguration.baseTokenDecimals);
+    }
+    return finalBalance.toFixed(
+      collateralConfigurations?.[actionTokenAssetId ?? '']?.decimals
+    );
+  }, [finalBalance, marketConfiguration, collateralConfigurations]);
 
   useEffect(() => {
     if (!isConnected) {
@@ -455,6 +518,7 @@ export const InputDialog = () => {
 
     return false;
   }, [
+    action,
     account,
     borrowCapacity,
     balance,
@@ -494,7 +558,10 @@ export const InputDialog = () => {
     userCollateralAssets,
     actionTokenAssetId,
     marketConfiguration,
+    action,
   ]);
+
+  if (!marketConfiguration) return null;
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -599,7 +666,7 @@ export const InputDialog = () => {
                 <div
                   className={`text-sm ${action === ACTION_TYPE.REPAY ? 'text-lavender' : 'text-moon'}`}
                 >
-                  {getFormattedNumber(finalBalance)}
+                  {availableBalance}
                   {action === ACTION_TYPE.BORROW && ' available to borrow'}
                   {action === ACTION_TYPE.REPAY && ' debt to repay'}
                   {(action === ACTION_TYPE.SUPPLY ||
@@ -612,7 +679,7 @@ export const InputDialog = () => {
                   </div>
                 </div>
                 <Button
-                  disabled={!finalBalance || finalBalance.eq(0)}
+                  disabled={!finalBalance || finalBalance.lte(0)}
                   onMouseDown={onMaxBtnClick}
                   size="sm"
                   variant={'secondary'}
@@ -641,9 +708,11 @@ export const InputDialog = () => {
                 )}
               </Button>
             </div>
-            <div className="w-full flex justify-center">
-              <PositionSummary />
-            </div>
+            {!isLending && (
+              <div className="w-full flex justify-center">
+                <PositionSummary />
+              </div>
+            )}
           </div>
         </div>
       </DialogContent>

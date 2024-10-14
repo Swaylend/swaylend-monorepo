@@ -2,9 +2,8 @@
 
 import { useAccount, useIsConnected } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Step, Stepper } from 'react-form-stepper';
-import { Button } from '../ui/button';
 import { Dialog, DialogContent, DialogTitle } from '../ui/dialog';
 import { FundWallet } from './FundWallet';
 import { GeneralInfo } from './GeneralInfo';

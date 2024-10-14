@@ -23,7 +23,7 @@ import {
   getFormattedPrice,
 } from '@/utils';
 import BigNumber from 'bignumber.js';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { InfoIcon } from '../InfoIcon';
 
 type TableRowProps = {

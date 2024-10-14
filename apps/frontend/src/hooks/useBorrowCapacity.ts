@@ -1,4 +1,3 @@
-import { useMarketStore } from '@/stores';
 import { formatUnits } from '@/utils';
 import { useAccount } from '@fuels/react';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
@@ -10,7 +9,6 @@ import { useUserCollateralAssets } from './useUserCollateralAssets';
 import { useUserSupplyBorrow } from './useUserSupplyBorrow';
 
 export const useBorrowCapacity = () => {
-  const { market } = useMarketStore();
   const { account } = useAccount();
   const { data: supplyBorrow } = useUserSupplyBorrow();
   const { data: collateralConfigurations } = useCollateralConfigurations();
@@ -24,9 +22,8 @@ export const useBorrowCapacity = () => {
       account,
       supplyBorrow,
       collateralConfigurations,
-      market,
       userCollateralAssets,
-      priceData,
+      priceData?.prices,
       marketConfiguration,
     ],
     queryFn: async () => {

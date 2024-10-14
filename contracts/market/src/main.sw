@@ -551,6 +551,18 @@ impl Market for Contract {
         // Update and write principal to storage
         update_base_principal(caller, user_basic, user_principal_new);
 
+        if user_balance < I256::zero() {
+            // Check that the borrow amount is greater than the minimum allowed
+            require(
+                u256::try_from(user_balance.wrapping_neg())
+                    .unwrap() >= storage
+                    .market_configuration
+                    .read()
+                    .base_borrow_min,
+                Error::BorrowTooSmall,
+            );
+        }
+
         // Emit user supply base event
         log(UserSupplyBaseEvent {
             account: caller,

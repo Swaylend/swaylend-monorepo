@@ -1,26 +1,17 @@
-import { useProviderStore } from '@/stores';
-import { initProvider } from '@/utils/provider';
-import type { Provider } from 'fuels';
-import { useEffect } from 'react';
-
-let initializationPromise: Promise<Provider> | null = null;
+import { appConfig } from '@/configs';
+import { useProvider as useFuelProvider } from '@fuels/react';
+import { Provider } from 'fuels';
+import { useEffect, useState } from 'react';
 
 export const useProvider = () => {
-  const { provider, changeProvider } = useProviderStore();
+  const [customProvider, setCustomProvider] = useState<Provider | null>(null);
+  const { provider } = useFuelProvider();
 
   useEffect(() => {
-    if (provider === null && !initializationPromise) {
-      initializationPromise = initProvider();
+    Provider.create(appConfig.client.fuelNodeUrl)
+      .then((_provider) => setCustomProvider(_provider))
+      .catch((error) => console.error(`Error creating provider: ${error}`));
+  }, []);
 
-      initializationPromise
-        .then((p) => {
-          changeProvider(p);
-        })
-        .finally(() => {
-          initializationPromise = null;
-        });
-    }
-  }, [provider]);
-
-  return provider;
+  return { provider: provider ?? customProvider };
 };

@@ -36,7 +36,15 @@ import {
   useTotalCollateral,
   useUserCollateralAssets,
 } from '@/hooks';
-import { ACTION_TYPE, useMarketStore } from '@/stores';
+import {
+  ACTION_TYPE,
+  selectChangeAction,
+  selectChangeActionTokenAssetId,
+  selectChangeInputDialogOpen,
+  selectChangeMode,
+  selectChangeTokenAmount,
+  useMarketStore,
+} from '@/stores';
 import {
   SYMBOL_TO_ICON,
   SYMBOL_TO_NAME,
@@ -47,7 +55,7 @@ import {
 import { useAccount } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import BigNumber from 'bignumber.js';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 
 type TableRowProps = {
   account: string | undefined;
@@ -116,16 +124,16 @@ const CollateralTableRow = ({
   return (
     <TableRow>
       <TableCell>
-        <TooltipProvider>
+        <TooltipProvider delayDuration={100}>
           <Tooltip>
-            <TooltipTrigger>
+            <TooltipTrigger onClick={(e) => e.preventDefault()}>
               <AssetName
                 symbol={symbol}
                 name={SYMBOL_TO_NAME[symbol]}
                 src={SYMBOL_TO_ICON[symbol]}
               />
             </TooltipTrigger>
-            <TooltipContent>
+            <TooltipContent onPointerDownOutside={(e) => e.preventDefault()}>
               <div className="p-2 w-[250px]">
                 <div className="font-bold text-lg">Collateral Details</div>
                 <div className="flex flex-col gap-y-2 mt-2">
@@ -394,13 +402,13 @@ const SkeletonRow = (
 
 export const CollateralTable = () => {
   const { account } = useAccount();
-  const {
-    changeAction,
-    changeTokenAmount,
-    changeMode,
-    changeActionTokenAssetId,
-    changeInputDialogOpen,
-  } = useMarketStore();
+  const changeAction = useMarketStore(selectChangeAction);
+  const changeTokenAmount = useMarketStore(selectChangeTokenAmount);
+  const changeMode = useMarketStore(selectChangeMode);
+  const changeActionTokenAssetId = useMarketStore(
+    selectChangeActionTokenAssetId
+  );
+  const changeInputDialogOpen = useMarketStore(selectChangeInputDialogOpen);
 
   const {
     data: userCollateralAssets,

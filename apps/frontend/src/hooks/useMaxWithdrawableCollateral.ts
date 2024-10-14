@@ -11,7 +11,6 @@ import { useUserSupplyBorrow } from './useUserSupplyBorrow';
 export const useMaxWithdrawableCollateral = (
   assetId: string | null | undefined
 ) => {
-  const { data: assetsConfigs } = useCollateralConfigurations();
   const { data: collateralBalances } = useUserCollateralAssets();
   const { data: collateralConfig } = useCollateralConfigurations();
   const { data: priceData } = usePrice();
@@ -23,7 +22,6 @@ export const useMaxWithdrawableCollateral = (
       'userMaxWithdrawableCollateral',
       assetId,
       collateralBalances,
-      assetsConfigs,
       collateralConfig,
       supplyBorrow,
       priceData?.prices,
@@ -32,7 +30,6 @@ export const useMaxWithdrawableCollateral = (
     queryFn: async () => {
       if (
         collateralBalances == null ||
-        assetsConfigs == null ||
         priceData == null ||
         collateralConfig == null ||
         assetId == null ||
@@ -45,7 +42,7 @@ export const useMaxWithdrawableCollateral = (
       if (!supplyBorrow.borrowed || supplyBorrow.borrowed.isZero()) {
         return formatUnits(
           BigNumber(collateralBalances[assetId]),
-          assetsConfigs[assetId].decimals
+          collateralConfig[assetId].decimals
         );
       }
 
@@ -59,7 +56,7 @@ export const useMaxWithdrawableCollateral = (
         }
         const token = collateralConfig[id];
         const collateralFactor = formatUnits(
-          BigNumber(assetsConfigs![id].borrow_collateral_factor.toString()),
+          BigNumber(collateralConfig![id].borrow_collateral_factor.toString()),
           18
         );
         const balance = formatUnits(v, token.decimals);
@@ -71,10 +68,12 @@ export const useMaxWithdrawableCollateral = (
       // BorrowCollateral Asset balance
       const currentBalance = formatUnits(
         BigNumber(collateralBalances?.[assetId ?? ''] ?? new BigNumber(0)),
-        assetsConfigs?.[assetId ?? '']?.decimals
+        collateralConfig?.[assetId ?? '']?.decimals
       );
       const borrowCollateralFactor = formatUnits(
-        BigNumber(assetsConfigs![assetId!].borrow_collateral_factor.toString()),
+        BigNumber(
+          collateralConfig![assetId!].borrow_collateral_factor.toString()
+        ),
         18
       );
       const borrowCollateralValueCurrent = priceData.prices[assetId]
@@ -115,11 +114,10 @@ export const useMaxWithdrawableCollateral = (
         return BigNumber(0);
       }
 
-      return allowedCollateralAmountToWithdraw;
+      return allowedCollateralAmountToWithdraw.times(0.99);
     },
     enabled:
       !!collateralBalances &&
-      !!assetsConfigs &&
       !!collateralConfig &&
       !!priceData &&
       !!assetId &&

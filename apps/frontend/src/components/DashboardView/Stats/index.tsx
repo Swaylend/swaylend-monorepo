@@ -8,17 +8,18 @@ import {
 } from '@/hooks';
 
 import { Skeleton } from '@/components/ui/skeleton';
-import { MARKET_MODE, useMarketStore } from '@/stores';
-import { formatUnits, getFormattedPrice } from '@/utils';
+import { appConfig } from '@/configs';
+import { MARKET_MODE, selectMarketMode, useMarketStore } from '@/stores';
+import { formatUnits, getFormattedNumber, getFormattedPrice } from '@/utils';
 import { useIsConnected } from '@fuels/react';
 import BigNumber from 'bignumber.js';
 import { Repeat } from 'lucide-react';
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { InfoBowl } from './InfoBowl';
 
 export const Stats = () => {
   const [borrowedMode, setBorrowedMode] = useState(1); // 0: available to borrow, 1: borrowed
-  const { marketMode } = useMarketStore();
+  const marketMode = useMarketStore(selectMarketMode);
   const { data: userSupplyBorrow, isPending: isPendingUserSupplyBorrow } =
     useUserSupplyBorrow();
   const { data: borrowCapacity } = useBorrowCapacity();
@@ -62,9 +63,7 @@ export const Stats = () => {
     }
     if (marketMode === 'lend') {
       return formatUnits(
-        userSupplyBorrow.supplied.times(
-          priceData.prices[marketConfiguration.baseToken.bits]
-        ),
+        userSupplyBorrow.supplied,
         marketConfiguration.baseTokenDecimals
       );
     }
@@ -132,21 +131,19 @@ export const Stats = () => {
         userSupplyBorrow.borrowed,
         marketConfiguration.baseTokenDecimals
       ).plus(
-        BigNumber(0.01).div(
+        BigNumber(0.001).div(
           priceData?.prices[marketConfiguration.baseToken.bits] ?? 1
         )
       );
       if (val.lt(1) && val.gt(0)) {
         return {
           title: 'Your Borrow Position',
-          value: val.times(
-            priceData.prices[marketConfiguration.baseToken.bits]
-          ),
+          value: val,
         };
       }
       return {
         title: 'Your Borrow Position',
-        value: val.times(priceData.prices[marketConfiguration.baseToken.bits]),
+        value: val,
       };
     }
     // Available to borrow
@@ -175,13 +172,13 @@ export const Stats = () => {
               <div className="text-primary text-xs sm:text-md lg:text-lg font-semibold">
                 {marketMode === MARKET_MODE.BORROW
                   ? 'Your Supplied Collateral'
-                  : 'Your Supplied Balance'}
+                  : `Your Supplied ${appConfig.assets[marketConfiguration?.baseToken.bits ?? '']}`}
               </div>
               {isLoading ? (
                 <Skeleton className="w-[60%] h-[25px] mt-2 sm:h-[40px] bg-primary/20" />
               ) : (
                 <div className="text-lavender font-semibold text-lg sm:text-xl lg:text-2xl">
-                  {getFormattedPrice(BigNumber(totalSuppliedBalance ?? 0))}
+                  {getFormattedPrice(totalSuppliedBalance ?? BigNumber(0))}
                 </div>
               )}
             </div>

@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Tooltip,
   TooltipContent,
@@ -5,15 +7,14 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { Info } from 'lucide-react';
-import React from 'react';
 export const InfoIcon = ({ text }: { text: string }) => {
   return (
-    <TooltipProvider>
+    <TooltipProvider delayDuration={100}>
       <Tooltip>
-        <TooltipTrigger>
+        <TooltipTrigger onClick={(e) => e.preventDefault()}>
           <Info className="w-4 h-4" />
         </TooltipTrigger>
-        <TooltipContent>
+        <TooltipContent onPointerDownOutside={(e) => e.preventDefault()}>
           <div>{text}</div>
         </TooltipContent>
       </Tooltip>

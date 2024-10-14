@@ -12,7 +12,10 @@ export const ErrorToast = ({ error }: ErrorToastProps) => {
       return 'Transaction rejected by user.';
     }
     if (error.includes('Out of gas')) {
-      return 'Transaction failed. Out of gas';
+      return 'Transaction failed because the wallet failed to calculate the gas necessary. Please try again!';
+    }
+    if (error.includes('OutOfGas')) {
+      return 'Transaction failed because the wallet failed to calculate the gas necessary. Please try again!';
     }
 
     if (error.includes('not enough coins to fit the target')) {

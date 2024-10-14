@@ -29,7 +29,14 @@ import {
   useUserSupplyBorrow,
 } from '@/hooks';
 import { cn } from '@/lib/utils';
-import { ACTION_TYPE, useMarketStore } from '@/stores';
+import {
+  ACTION_TYPE,
+  selectChangeAction,
+  selectChangeActionTokenAssetId,
+  selectChangeInputDialogOpen,
+  selectChangeTokenAmount,
+  useMarketStore,
+} from '@/stores';
 import {
   SYMBOL_TO_ICON,
   formatUnits,
@@ -40,7 +47,6 @@ import { useAccount } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import BigNumber from 'bignumber.js';
 import Image from 'next/image';
-import React from 'react';
 
 const POINTS_LEND: Point[] = [
   {
@@ -109,12 +115,12 @@ const SkeletonCardContent = (
 
 export const LendTable = () => {
   const { account } = useAccount();
-  const {
-    changeAction,
-    changeTokenAmount,
-    changeActionTokenAssetId,
-    changeInputDialogOpen,
-  } = useMarketStore();
+  const changeAction = useMarketStore(selectChangeAction);
+  const changeTokenAmount = useMarketStore(selectChangeTokenAmount);
+  const changeActionTokenAssetId = useMarketStore(
+    selectChangeActionTokenAssetId
+  );
+  const changeInputDialogOpen = useMarketStore(selectChangeInputDialogOpen);
 
   const { data: supplyRate, isPending: isSupplyRatePending } = useSupplyRate();
   const { data: userSupplyBorrow } = useUserSupplyBorrow();
@@ -249,7 +255,7 @@ export const LendTable = () => {
                   <div className="flex gap-x-2 w-full">
                     <Button
                       className="w-1/2"
-                      disabled={!account}
+                      disabled={!account || !balance?.gt(0)}
                       onMouseDown={() => {
                         handleBaseTokenClick(ACTION_TYPE.SUPPLY);
                       }}
@@ -390,7 +396,7 @@ export const LendTable = () => {
               <div className="flex gap-x-2 w-full">
                 <Button
                   className="w-1/2"
-                  disabled={!account}
+                  disabled={!account || !balance?.gt(0)}
                   onMouseDown={() => {
                     handleBaseTokenClick(ACTION_TYPE.SUPPLY);
                   }}
@@ -399,7 +405,11 @@ export const LendTable = () => {
                 </Button>
                 <Button
                   className="w-1/2"
-                  disabled={!account}
+                  disabled={
+                    !account ||
+                    !userSupplyBorrow ||
+                    userSupplyBorrow.supplied.eq(0)
+                  }
                   variant={'secondary'}
                   onMouseDown={() => {
                     handleBaseTokenClick(ACTION_TYPE.WITHDRAW);

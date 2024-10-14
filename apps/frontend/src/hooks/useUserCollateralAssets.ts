@@ -1,26 +1,26 @@
-import { appConfig } from '@/configs';
-import { Market } from '@/contract-types';
-import { useMarketStore } from '@/stores';
-import { useAccount, useWallet } from '@fuels/react';
+import { useMarketContract } from '@/contracts/useMarketContract';
+import { selectMarket, useMarketStore } from '@/stores';
+import { useAccount } from '@fuels/react';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
 
 export const useUserCollateralAssets = () => {
-  const { wallet } = useWallet();
   const { account } = useAccount();
-  const { market } = useMarketStore();
+  const market = useMarketStore(selectMarket);
   const { data: collateralConfigurations } = useCollateralConfigurations();
+  const marketContract = useMarketContract(market);
 
   return useQuery({
-    queryKey: ['collateralAssets', account, market, collateralConfigurations],
+    queryKey: [
+      'collateralAssets',
+      account,
+      marketContract?.account?.address,
+      marketContract?.id,
+      collateralConfigurations,
+    ],
     queryFn: async () => {
-      if (!account || !collateralConfigurations || !wallet) return null;
-
-      const marketContract = new Market(
-        appConfig.markets[market].marketAddress,
-        wallet
-      );
+      if (!account || !collateralConfigurations || !marketContract) return null;
 
       const formattedCollaterals: Record<string, BigNumber> = {};
 
@@ -34,6 +34,6 @@ export const useUserCollateralAssets = () => {
 
       return formattedCollaterals;
     },
-    enabled: !!account && !!wallet && !!collateralConfigurations,
+    enabled: !!account && !!collateralConfigurations && !!marketContract,
   });
 };

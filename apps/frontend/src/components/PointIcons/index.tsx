@@ -1,6 +1,5 @@
 import type { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import Image from 'next/image';
-import React from 'react';
 import {
   Tooltip,
   TooltipContent,
@@ -28,9 +27,9 @@ export const PointIcons = ({ points }: PointIconsProps) => {
             key={point.id}
             className="flex items-center rounded-full bg-card p-1 [&:nth-child(n+2)]:ml-[-12px]"
           >
-            <TooltipProvider>
+            <TooltipProvider delayDuration={100}>
               <Tooltip>
-                <TooltipTrigger>
+                <TooltipTrigger onClick={(e) => e.preventDefault()}>
                   <Image
                     src={point.icon}
                     alt={point.name}
@@ -39,7 +38,9 @@ export const PointIcons = ({ points }: PointIconsProps) => {
                     className="rounded-full"
                   />
                 </TooltipTrigger>
-                <TooltipContent>
+                <TooltipContent
+                  onPointerDownOutside={(e) => e.preventDefault()}
+                >
                   <div className="p-1">
                     <div className="font-bold">{point.name}</div>
                     <div className="text-sm text-gray-400">

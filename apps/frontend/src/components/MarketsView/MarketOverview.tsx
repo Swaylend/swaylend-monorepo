@@ -207,10 +207,8 @@ export default function MarketOverview({
               <div className="text-xl font-semibold text-white mt-2">
                 {getFormattedPrice(
                   formatUnits(
-                    formatUnits(
-                      totalReserves ?? BigNumber(0),
-                      marketConfiguration?.baseTokenDecimals
-                    )
+                    totalReserves ?? BigNumber(0),
+                    marketConfiguration?.baseTokenDecimals
                   )
                 )}
               </div>

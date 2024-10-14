@@ -3,9 +3,15 @@ import {
   PendingToast,
   TransactionSuccessToast,
 } from '@/components/Toasts';
-import { appConfig } from '@/configs';
-import { Market } from '@/contract-types';
-import { useMarketStore } from '@/stores';
+import { useMarketContract } from '@/contracts/useMarketContract';
+import {
+  selectChangeInputDialogOpen,
+  selectChangeSuccessDialogOpen,
+  selectChangeSuccessDialogTransactionId,
+  selectChangeTokenAmount,
+  selectMarket,
+  useMarketStore,
+} from '@/stores';
 import { useAccount, useWallet } from '@fuels/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
@@ -21,39 +27,37 @@ export const useSupplyCollateral = ({
 }: useSupplyCollateralProps) => {
   const { wallet } = useWallet();
   const { account } = useAccount();
-  const { market } = useMarketStore();
+  const market = useMarketStore(selectMarket);
+  const changeTokenAmount = useMarketStore(selectChangeTokenAmount);
+  const changeInputDialogOpen = useMarketStore(selectChangeInputDialogOpen);
+  const changeSuccessDialogOpen = useMarketStore(selectChangeSuccessDialogOpen);
+  const changeSuccessDialogTransactionId = useMarketStore(
+    selectChangeSuccessDialogTransactionId
+  );
   const { data: collateralConfigurations } = useCollateralConfigurations();
-  const {
-    changeTokenAmount,
-    changeInputDialogOpen,
-    changeSuccessDialogOpen,
-    changeSuccessDialogTransactionId,
-  } = useMarketStore();
 
   const queryClient = useQueryClient();
+  const marketContract = useMarketContract(market);
 
   return useMutation({
     mutationKey: [
       'supplyCollateral',
       actionTokenAssetId,
       account,
-      market,
       collateralConfigurations,
+      marketContract?.account?.address,
+      marketContract?.id,
     ],
     mutationFn: async (tokenAmount: BigNumber) => {
       if (
         !wallet ||
         !account ||
         !actionTokenAssetId ||
-        !collateralConfigurations
+        !collateralConfigurations ||
+        !marketContract
       ) {
         return null;
       }
-
-      const marketContract = new Market(
-        appConfig.markets[market].marketAddress,
-        wallet
-      );
 
       const amount = new BigNumber(tokenAmount).times(
         10 ** collateralConfigurations[actionTokenAssetId].decimals
@@ -93,7 +97,12 @@ export const useSupplyCollateral = ({
       // Invalidate queries
       queryClient.invalidateQueries({
         exact: false,
-        queryKey: ['collateralAssets', account, market],
+        queryKey: [
+          'collateralAssets',
+          account,
+          marketContract?.account?.address,
+          marketContract?.id,
+        ],
       });
 
       // Invalidate Fuel balance query

@@ -8,7 +8,7 @@ type UseBalanceParams = {
 };
 
 export const useBalance = ({ address, assetId }: UseBalanceParams) => {
-  const provider = useProvider();
+  const { provider } = useProvider();
 
   return useQuery({
     queryKey: ['balance', address, assetId],

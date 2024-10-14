@@ -31,7 +31,14 @@ import {
   useUserSupplyBorrow,
 } from '@/hooks';
 import { cn } from '@/lib/utils';
-import { ACTION_TYPE, useMarketStore } from '@/stores';
+import {
+  ACTION_TYPE,
+  selectChangeAction,
+  selectChangeActionTokenAssetId,
+  selectChangeInputDialogOpen,
+  selectChangeTokenAmount,
+  useMarketStore,
+} from '@/stores';
 import {
   SYMBOL_TO_ICON,
   formatUnits,
@@ -42,7 +49,7 @@ import { useAccount, useIsConnected } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import BigNumber from 'bignumber.js';
 import Image from 'next/image';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 
 const POINTS_BORROW: Point[] = [
   {
@@ -111,12 +118,12 @@ const SkeletonCardContent = (
 
 export const BorrowTable = () => {
   const { account } = useAccount();
-  const {
-    changeAction,
-    changeTokenAmount,
-    changeActionTokenAssetId,
-    changeInputDialogOpen,
-  } = useMarketStore();
+  const changeAction = useMarketStore(selectChangeAction);
+  const changeTokenAmount = useMarketStore(selectChangeTokenAmount);
+  const changeActionTokenAssetId = useMarketStore(
+    selectChangeActionTokenAssetId
+  );
+  const changeInputDialogOpen = useMarketStore(selectChangeInputDialogOpen);
 
   const { data: borrowRate, isPending: isBorrowRatePending } = useBorrowRate();
   const { data: userSupplyBorrow } = useUserSupplyBorrow();
@@ -144,14 +151,18 @@ export const BorrowTable = () => {
       return `${getFormattedNumber(BigNumber(0))} ${appConfig.assets[marketConfiguration?.baseToken.bits ?? '']}`;
     }
 
-    const val = formatUnits(
+    let val = formatUnits(
       userSupplyBorrow.borrowed,
       marketConfiguration.baseTokenDecimals
-    ).plus(
-      BigNumber(0.01).div(
-        priceData?.prices[marketConfiguration.baseToken.bits] ?? 1
-      )
     );
+    if (val.gt(0)) {
+      val = val.plus(
+        BigNumber(0.001).div(
+          priceData?.prices[marketConfiguration.baseToken.bits] ?? 1
+        )
+      );
+    }
+
     if (val.lt(1) && val.gt(0)) {
       return `< 1 ${appConfig.assets[marketConfiguration?.baseToken.bits ?? '']}`;
     }

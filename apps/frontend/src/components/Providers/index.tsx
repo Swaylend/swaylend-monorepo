@@ -2,25 +2,34 @@
 
 import 'react-toastify/dist/ReactToastify.css';
 
-import { defaultConnectors } from '@fuels/connectors';
+import {
+  BakoSafeConnector,
+  BurnerWalletConnector,
+  FuelWalletConnector,
+  FuelWalletDevelopmentConnector,
+  FueletWalletConnector,
+  SolanaConnector,
+  WalletConnectConnector,
+  createConfig,
+} from '@fuels/connectors';
 import { FuelProvider } from '@fuels/react';
 import {
   QueryClient,
   QueryClientProvider,
   isServer,
 } from '@tanstack/react-query';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { ThemeProvider } from 'next-themes';
 import { type ReactNode, useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 
+import MarketContractStoreWatcher from '@/components/Providers/MarketContractStoreWatcher';
 import { appConfig } from '@/configs';
-import { useProvider } from '@/hooks';
-import { CHAIN_IDS, Provider } from 'fuels';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { CHAIN_IDS, FuelConnector, Provider } from 'fuels';
 import posthog from 'posthog-js';
 import { PostHogProvider } from 'posthog-js/react';
 import { fallback } from 'viem';
-import { http, createConfig } from 'wagmi';
+import { http, createConfig as createConfigWagmiConfig } from 'wagmi';
 import { mainnet, sepolia } from 'wagmi/chains';
 import { coinbaseWallet, injected, walletConnect } from 'wagmi/connectors';
 import PostHogIdentify from './PostHogIdentify';
@@ -61,7 +70,24 @@ const METADATA = {
   icons: ['https://app.swaylend.com/logo512.png'],
 };
 
-const wagmiConfig = createConfig({
+const UI_CONFIG = {
+  suggestBridge: false,
+};
+const NETWORKS = [
+  appConfig.env === 'testnet'
+    ? {
+        bridgeURL: `${appConfig.client.fuelExplorerUrl}/bridge`,
+        url: appConfig.client.fuelNodeUrl,
+        chainId: CHAIN_IDS.fuel.testnet,
+      }
+    : {
+        bridgeURL: `${appConfig.client.fuelExplorerUrl}/bridge`,
+        url: appConfig.client.fuelNodeUrl,
+        chainId: CHAIN_IDS.fuel.mainnet,
+      },
+];
+
+const wagmiConfig = createConfigWagmiConfig({
   chains: [mainnet, sepolia],
   connectors: [
     injected({ shimDisconnect: false }),
@@ -91,27 +117,65 @@ const wagmiConfig = createConfig({
   },
 });
 
-if (typeof window !== 'undefined' && process.env.NODE_ENV !== 'development') {
-  try {
+const customDefaultConnectors = (): Array<FuelConnector> => {
+  const provider = Provider.create(appConfig.client.fuelNodeUrl);
+  const connectors: Array<FuelConnector> = [
+    new FuelWalletConnector(),
+    new FueletWalletConnector(),
+    new BakoSafeConnector(),
+    new WalletConnectConnector({
+      projectId: appConfig.client.walletConnectProjectId,
+      wagmiConfig: wagmiConfig,
+      chainId:
+        appConfig.env === 'testnet'
+          ? CHAIN_IDS.fuel.testnet
+          : CHAIN_IDS.fuel.mainnet,
+      fuelProvider: provider,
+    }),
+    new SolanaConnector({
+      projectId: appConfig.client.walletConnectProjectId,
+      chainId:
+        appConfig.env === 'testnet'
+          ? CHAIN_IDS.fuel.testnet
+          : CHAIN_IDS.fuel.mainnet,
+      fuelProvider: provider,
+    }),
+  ];
+
+  if (appConfig.env === 'testnet') {
+    connectors.push(
+      new FuelWalletDevelopmentConnector(),
+      new BurnerWalletConnector({
+        chainId: CHAIN_IDS.fuel.testnet,
+        fuelProvider: provider,
+      })
+    );
+  }
+
+  return connectors;
+};
+
+const FUEL_CONFIG = createConfig(() => ({
+  connectors: customDefaultConnectors(),
+}));
+
+export const Providers = ({ children }: { children: ReactNode }) => {
+  const queryClient = getQueryClient();
+
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'development') return;
+
     posthog.init(process.env.NEXT_PUBLIC_POSTHOG_KEY!, {
       api_host: process.env.NEXT_PUBLIC_POSTHOG_HOST!,
       person_profiles: 'always',
       autocapture: false,
       capture_pageview: true,
       capture_pageleave: false,
-
       loaded: (posthog) => {
         if (process.env.NODE_ENV === 'development') posthog.debug(); // debug mode in development
       },
     });
-  } catch (error) {
-    console.error(error);
-  }
-}
-
-export const Providers = ({ children }: { children: ReactNode }) => {
-  const provider = useProvider();
-  const queryClient = getQueryClient();
+  }, []);
 
   return (
     <ThemeProvider
@@ -125,38 +189,13 @@ export const Providers = ({ children }: { children: ReactNode }) => {
         <QueryClientProvider client={queryClient}>
           <FuelProvider
             theme="dark"
-            uiConfig={{
-              suggestBridge: false,
-            }}
-            networks={[
-              appConfig.env === 'testnet'
-                ? {
-                    bridgeURL: `${appConfig.client.fuelExplorerUrl}/bridge`,
-                    url: appConfig.client.fuelNodeUrl,
-                    chainId: CHAIN_IDS.fuel.testnet,
-                  }
-                : {
-                    bridgeURL: `${appConfig.client.fuelExplorerUrl}/bridge`,
-                    url: appConfig.client.fuelNodeUrl,
-                    chainId: CHAIN_IDS.fuel.mainnet,
-                  },
-            ]}
-            fuelConfig={{
-              connectors: defaultConnectors({
-                devMode: appConfig.env === 'testnet',
-                wcProjectId: appConfig.client.walletConnectProjectId,
-                ethWagmiConfig: wagmiConfig,
-                chainId:
-                  appConfig.env === 'testnet'
-                    ? CHAIN_IDS.fuel.testnet
-                    : CHAIN_IDS.fuel.mainnet,
-                fuelProvider:
-                  provider ?? Provider.create(appConfig.client.fuelNodeUrl),
-              }),
-            }}
+            uiConfig={UI_CONFIG}
+            networks={NETWORKS}
+            fuelConfig={FUEL_CONFIG}
           >
             <>
               {children}
+              <MarketContractStoreWatcher />
               <PostHogIdentify />
               <ToastContainer
                 icon={false}

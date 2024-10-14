@@ -137,6 +137,17 @@ async fn collateral_borrow_test() {
     let bob_repay_amount = parse_units(60 * AMOUNT_COEFFICIENT, usdc.decimals);
     let bob_collateral_amount = parse_units(40 * AMOUNT_COEFFICIENT, uni.decimals);
     let log_amount = format!("{} USDC", bob_repay_amount as f64 / SCALE_6);
+
+    // Bob cannot repay and leave less than BASE_BORROW_MIN USDC
+    let amount_to_fail = parse_units(65 * AMOUNT_COEFFICIENT, usdc.decimals);
+    let repay_fail = market
+        .with_account(&bob)
+        .await
+        .unwrap()
+        .supply_base(usdc.asset_id, amount_to_fail)
+        .await;
+    assert!(repay_fail.is_err());
+
     print_case_title(3, "Bob", "supply_base", &log_amount.as_str());
     let repay_res = market
         .with_account(&bob)
