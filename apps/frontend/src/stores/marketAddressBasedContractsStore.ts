@@ -1,8 +1,8 @@
 'use client';
 
 import { appConfig } from '@/configs';
-import { Market } from '@/contract-types';
-import { PythContract } from '@pythnetwork/pyth-fuel-js';
+import type { Market } from '@/contract-types';
+import type { PythContract } from '@pythnetwork/pyth-fuel-js';
 import { create } from 'zustand';
 
 interface Store {
