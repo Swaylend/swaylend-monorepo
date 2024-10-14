@@ -29,7 +29,7 @@ export const PointIcons = ({ points }: PointIconsProps) => {
           >
             <TooltipProvider delayDuration={100}>
               <Tooltip>
-                <TooltipTrigger>
+                <TooltipTrigger onClick={(e) => e.preventDefault()}>
                   <Image
                     src={point.icon}
                     alt={point.name}
@@ -38,7 +38,9 @@ export const PointIcons = ({ points }: PointIconsProps) => {
                     className="rounded-full"
                   />
                 </TooltipTrigger>
-                <TooltipContent>
+                <TooltipContent
+                  onPointerDownOutside={(e) => e.preventDefault()}
+                >
                   <div className="p-1">
                     <div className="font-bold">{point.name}</div>
                     <div className="text-sm text-gray-400">

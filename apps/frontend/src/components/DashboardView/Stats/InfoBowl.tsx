@@ -91,7 +91,10 @@ export const InfoBowl = () => {
   return (
     <TooltipProvider delayDuration={100}>
       <Tooltip>
-        <TooltipTrigger className="cursor-default">
+        <TooltipTrigger
+          className="cursor-default"
+          onClick={(e) => e.preventDefault()}
+        >
           <div className="sm:w-[174px] sm:h-[174px] w-[124px] h-[124px] bg-background rounded-full flex items-center p-2 justify-center">
             {isLoading ? (
               <Skeleton className="w-full h-full bg-primary/20 rounded-full ring-2 ring-white/20" />
@@ -188,6 +191,7 @@ export const InfoBowl = () => {
             'max-lg:hidden'
           )}
           side="bottom"
+          onPointerDownOutside={(e) => e.preventDefault()}
         >
           <div className="p-1">
             <span className="font-semibold text-primary">

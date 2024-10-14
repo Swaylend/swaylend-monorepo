@@ -255,7 +255,7 @@ export const LendTable = () => {
                   <div className="flex gap-x-2 w-full">
                     <Button
                       className="w-1/2"
-                      disabled={!account || !balance.gt(0)}
+                      disabled={!account || !balance?.gt(0)}
                       onMouseDown={() => {
                         handleBaseTokenClick(ACTION_TYPE.SUPPLY);
                       }}
@@ -396,7 +396,7 @@ export const LendTable = () => {
               <div className="flex gap-x-2 w-full">
                 <Button
                   className="w-1/2"
-                  disabled={!account || !balance.gt(0)}
+                  disabled={!account || !balance?.gt(0)}
                   onMouseDown={() => {
                     handleBaseTokenClick(ACTION_TYPE.SUPPLY);
                   }}
