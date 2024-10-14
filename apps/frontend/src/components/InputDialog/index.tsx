@@ -474,8 +474,10 @@ export const InputDialog = () => {
       !collateralConfigurations ||
       !marketConfiguration ||
       !actionTokenAssetId
-    )
+    ) {
       return '0.00';
+    }
+
     if (finalBalance.lte(0)) return '0.00';
 
     if (actionTokenAssetId === marketConfiguration.baseToken.bits) {
