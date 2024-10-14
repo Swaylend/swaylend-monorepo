@@ -32,7 +32,7 @@ export function createTestnetConfig() {
 const markets: DeployedMarkets = {
   USDC: {
     oracleAddress:
-      '0xe31e04946c67fb41923f93d50ee7fc1c6c99d6e07c02860c6bea5f4a13919277',
+      '0x25146735b29d4216639f7f8b1d7b921ff87a1d3051de62d6cceaacabeb33b8e7',
     marketAddress:
       '0xa42a086b357cdb5ee3e7b981ea67768e38a5b6db4db35ca4dbab32ab60f48475',
     tokenFactoryAddress:
@@ -41,7 +41,7 @@ const markets: DeployedMarkets = {
   },
   USDT: {
     oracleAddress:
-      '0xe31e04946c67fb41923f93d50ee7fc1c6c99d6e07c02860c6bea5f4a13919277',
+      '0x25146735b29d4216639f7f8b1d7b921ff87a1d3051de62d6cceaacabeb33b8e7',
     marketAddress:
       '0x44daa228d84335bf2e17b1af1cf7f9de73266977affe6c3445f08bd07a2b0d5d',
     tokenFactoryAddress:

@@ -17,7 +17,7 @@
     "@fuels/connectors": "0.35.1",
     "@fuels/react": "0.35.1",
     "@pythnetwork/hermes-client": "^1.1.0",
-    "@pythnetwork/pyth-fuel-js": "^1.0.6",
+    "@pythnetwork/pyth-fuel-js": "^1.0.7",
     "@radix-ui/react-checkbox": "^1.1.1",
     "@radix-ui/react-dialog": "^1.1.1",
     "@radix-ui/react-dropdown-menu": "^2.1.1",
