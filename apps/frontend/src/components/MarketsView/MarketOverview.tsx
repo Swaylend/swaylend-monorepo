@@ -46,7 +46,7 @@ export default function MarketOverview({
 }: MarketOverviewProps) {
   const { data: borrowRate } = useBorrowRate(baseAsset);
   const { data: supplyRate } = useSupplyRate(baseAsset);
-  const { data: totalReserves } = useTotalReserves();
+  const { data: totalReserves } = useTotalReserves(baseAsset);
 
   const { data: collateralConfigurations } =
     useCollateralConfigurations(baseAsset);
