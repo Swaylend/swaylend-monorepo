@@ -3,6 +3,7 @@
 import 'react-toastify/dist/ReactToastify.css';
 
 import {
+  BakoSafeConnector,
   BurnerWalletConnector,
   FuelWalletConnector,
   FuelWalletDevelopmentConnector,
@@ -121,6 +122,7 @@ const customDefaultConnectors = (): Array<FuelConnector> => {
   const connectors: Array<FuelConnector> = [
     new FuelWalletConnector(),
     new FueletWalletConnector(),
+    new BakoSafeConnector(),
     new WalletConnectConnector({
       projectId: appConfig.client.walletConnectProjectId,
       wagmiConfig: wagmiConfig,
