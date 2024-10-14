@@ -34,7 +34,7 @@ import {
   selectTokenAmount,
   useMarketStore,
 } from '@/stores';
-import { formatUnits, getFormattedNumber } from '@/utils';
+import { SYMBOL_TO_NAME, formatUnits, getFormattedNumber } from '@/utils';
 import { useAccount, useIsConnected } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import BigNumber from 'bignumber.js';
@@ -451,11 +451,15 @@ export const InputDialog = () => {
           .decimalPlaces(marketConfiguration?.baseTokenDecimals) ??
         BigNumber(0);
 
+      const minOpenPositionValue = BigNumber(
+        marketConfiguration.baseBorrowMin.toString()
+      ).dividedBy(BigNumber(10).pow(marketConfiguration.baseTokenDecimals));
+
       if (
-        userBorrowedModifiedRepay.minus(tokenAmount).lt(10) &&
+        userBorrowedModifiedRepay.minus(tokenAmount).lt(minOpenPositionValue) &&
         userBorrowedModifiedRepay.minus(tokenAmount).gt(0)
       ) {
-        return 'Your position cannot be less than $10. Please repay whole position or leave a position of at least 10 USDC open.';
+        return `Your position cannot be less than ${minOpenPositionValue.toFixed()} ${SYMBOL_TO_NAME[appConfig.assets[marketConfiguration.baseToken.bits]]}. Please repay whole position or leave a position of at least ${minOpenPositionValue.toFixed()} ${SYMBOL_TO_NAME[appConfig.assets[marketConfiguration.baseToken.bits]]} open.`;
       }
 
       if (tokenAmount.gt(userBorrowedModified))
