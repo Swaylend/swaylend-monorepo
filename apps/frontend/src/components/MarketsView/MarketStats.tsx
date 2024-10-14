@@ -26,7 +26,7 @@ export const MarketStats = ({
       : BigNumber(0);
 
   return (
-    <div className="max-lg:hidden flex w-full justify-between">
+    <div className="flex w-full justify-between">
       <div className="flex flex-col justify-end">
         <div className="text-moon text-sm font-semibold">Total Supply</div>
         <div className="text-white font-bold text-2xl">

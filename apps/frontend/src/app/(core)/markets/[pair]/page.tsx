@@ -2,6 +2,8 @@ import { MarketChart } from '@/components/MarketsView/MarketChart';
 import MarketOverview from '@/components/MarketsView/MarketOverview';
 import { appConfig } from '@/configs';
 import { getChartData } from '@/lib/charts';
+import { isMobile } from '@/utils/isMobile';
+import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 
 export const revalidate = 3600;
@@ -27,6 +29,16 @@ export async function generateMetadata({
 }
 
 export default async function Page({ params }: { params: { pair: string } }) {
+  const userAgent = headers().get('user-agent') || '';
+  const mobile = isMobile(userAgent);
+
+  if (mobile)
+    return (
+      <div className="w-full h-[60dvh] flex items-center justify-center">
+        This page is not available on mobile devices.
+      </div>
+    );
+
   const [network, baseAsset] = params.pair.split('-');
   if (
     !network ||
@@ -57,8 +69,8 @@ export default async function Page({ params }: { params: { pair: string } }) {
           />
         }
       />
-      <div className="lg:hidden text-center w-full flex justify-center items-center text-primary">
-        This page is not available on mobile devices.
+      <div className="lg:hidden w-full h-[60dvh] flex items-center justify-center">
+        Minimum supported witdh reached
       </div>
     </>
   );
