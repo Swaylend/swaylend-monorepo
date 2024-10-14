@@ -115,7 +115,7 @@ async fn reserves_test() {
     // Check reserves
     let reserves = market.get_reserves().await.unwrap().value;
     let normalized_reserves: u64 = convert_i256_to_i128(&reserves).try_into().unwrap();
-    assert!(normalized_reserves == 62641);
+    assert!(normalized_reserves == 62644);
 
     // Governor withdraws reserves;
     let res = market

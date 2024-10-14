@@ -262,7 +262,7 @@ async fn main_test() {
         .await
         .unwrap();
 
-    assert!(res == u128::from(parse_units(1, usdc.decimals)));
+    assert!(res == u128::from(parse_units(1, usdc.decimals)) - 1);
 
     // Withdrawing more than available should fail (2 USDC)
     let res = market

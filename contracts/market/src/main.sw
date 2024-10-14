@@ -1524,7 +1524,7 @@ pub fn present_value_supply(base_supply_index: u256, principal: u256) -> u256 {
 /// let present_value = present_value_borrow(base_borrow_index, principal);
 /// ```
 pub fn present_value_borrow(base_borrow_index: u256, principal: u256) -> u256 {
-    principal * base_borrow_index / BASE_INDEX_SCALE_15
+    (principal * base_borrow_index + BASE_INDEX_SCALE_15 - 1) / BASE_INDEX_SCALE_15
 }
 
 /// Calculates the principal value based on the given base supply index and present value.
