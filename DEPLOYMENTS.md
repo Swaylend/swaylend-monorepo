@@ -2,7 +2,7 @@
 
 ## USDC Market
 
-* Market implementation contract: `0x73c39f7a8378d442ae196c20c0dd4c7fb427f21f281e30bba304384da9ca50df`
+* Market implementation contract: `0x8748488e127dccd6f2cf2a536bf248b2f807028e32e3b845d77233ead1ce242c`
 
 * Market proxy contract: `0x657ab45a6eb98a4893a99fd104347179151e8b3828fd8f2a108cc09770d1ebae`
 
@@ -18,7 +18,7 @@
 ### Contracts
 
 * Token factory contract: `0x3e4f1948aece07d3f30c8c5c425f914ac74653827de48394466f2a887eebe9c7`
-* Market implementation contract: `0x422a5cf61c859ee2b8f0607a0283f681e766c9578fcdb7714d867f8939c548b0`
+* Market implementation contract: `0xb34171ca7b5c3bf90bd08b71f86fb1570f0a303f7a9e2cb046764cec63b4e03c`
 * Market proxy contract: `0xa42a086b357cdb5ee3e7b981ea67768e38a5b6db4db35ca4dbab32ab60f48475`
 
 ### Assets
@@ -33,7 +33,7 @@
 ### Contracts
 
 * Token factory contract: `0x1ea9a306a5f280cfe7bd1fdc96815a6438069668e495a2f5a727c7b9b90691cb`
-* Market implementation contract: `0xe167678d49de0ef2cf2d1aad4e65f354574c8ea93622788e7d0a1105586df8fa`
+* Market implementation contract: `0xc0bbc7d7e84e6cad874a0d1bb4c53cc46084764baccb4a4bd2e090493707b6bd`
 * Market proxy contract: `0x44daa228d84335bf2e17b1af1cf7f9de73266977affe6c3445f08bd07a2b0d5d`
 
 ### Assets
