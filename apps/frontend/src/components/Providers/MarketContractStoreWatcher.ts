@@ -2,11 +2,12 @@
 
 import { appConfig } from '@/configs';
 import { Market } from '@/contract-types';
+import { useProvider } from '@/hooks';
 import {
   selectUpdateContracts,
   useMarketAddressBasedContractsStore,
 } from '@/stores/marketAddressBasedContractsStore';
-import { useProvider, useWallet } from '@fuels/react';
+import { useWallet } from '@fuels/react';
 import { PythContract } from '@pythnetwork/pyth-fuel-js';
 import { useEffect } from 'react';
 
