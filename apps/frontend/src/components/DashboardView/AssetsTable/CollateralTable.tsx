@@ -126,14 +126,14 @@ const CollateralTableRow = ({
       <TableCell>
         <TooltipProvider delayDuration={100}>
           <Tooltip>
-            <TooltipTrigger>
+            <TooltipTrigger onClick={(e) => e.preventDefault()}>
               <AssetName
                 symbol={symbol}
                 name={SYMBOL_TO_NAME[symbol]}
                 src={SYMBOL_TO_ICON[symbol]}
               />
             </TooltipTrigger>
-            <TooltipContent>
+            <TooltipContent onPointerDownOutside={(e) => e.preventDefault()}>
               <div className="p-2 w-[250px]">
                 <div className="font-bold text-lg">Collateral Details</div>
                 <div className="flex flex-col gap-y-2 mt-2">
