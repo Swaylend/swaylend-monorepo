@@ -1,6 +1,6 @@
 export default function NotFound() {
   return (
-    <div className="h-screen flex justify-center items-center text-primary">
+    <div className="w-full h-[60dvh] flex flex-col justify-center items-center gap-y-2">
       <h1>Page Not Found</h1>
     </div>
   );
