@@ -455,7 +455,7 @@ export const InputDialog = () => {
         userBorrowedModifiedRepay.minus(tokenAmount).lt(10) &&
         userBorrowedModifiedRepay.minus(tokenAmount).gt(0)
       ) {
-        return 'Your position cannot be less than $10. Please repay whole position or leave a position of at least $10 open.';
+        return 'Your position cannot be less than $10. Please repay whole position or leave a position of at least 10 USDC open.';
       }
 
       if (tokenAmount.gt(userBorrowedModified))
