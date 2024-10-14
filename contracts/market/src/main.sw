@@ -33,10 +33,10 @@ use sway_libs::ownership::*;
 use sway_libs::signed_integers::i256::I256;
 
 // version of the smart contract
-const VERSION: u8 = 1_u8;
+const VERSION: u8 = 2_u8;
 
 // pyth oracle configuration params
-const ORACLE_MAX_STALENESS: u64 = 30; // 30 seconds
+const ORACLE_MAX_STALENESS: u64 = 60; // 60 seconds
 const ORACLE_MAX_AHEADNESS: u64 = 60; // 60 seconds
 const ORACLE_MAX_CONF_WIDTH: u256 = 100; // 100 / 10000 = 1.0 % 
 
