@@ -32,7 +32,7 @@ export function createMainnetConfig() {
 const markets: DeployedMarkets = {
   USDC: {
     oracleAddress:
-      '0x103465f1c0c901471b868b4a9e4e57c381168ac38ee5b59732943e9e004c488d',
+      '0x1c86fdd9e0e7bc0d2ae1bf6817ef4834ffa7247655701ee1b031b52a24c523da',
     marketAddress:
       '0x657ab45a6eb98a4893a99fd104347179151e8b3828fd8f2a108cc09770d1ebae',
     tokenFactoryAddress: '',
