@@ -2,7 +2,15 @@
 
 import 'react-toastify/dist/ReactToastify.css';
 
-import { createConfig, defaultConnectors } from '@fuels/connectors';
+import {
+  BurnerWalletConnector,
+  FuelWalletConnector,
+  FuelWalletDevelopmentConnector,
+  FueletWalletConnector,
+  SolanaConnector,
+  WalletConnectConnector,
+  createConfig,
+} from '@fuels/connectors';
 import { FuelProvider } from '@fuels/react';
 import {
   QueryClient,
@@ -10,13 +18,13 @@ import {
   isServer,
 } from '@tanstack/react-query';
 import { ThemeProvider } from 'next-themes';
-import { type ReactNode, useEffect, useMemo } from 'react';
+import { type ReactNode, useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
 
 import MarketContractStoreWatcher from '@/components/Providers/MarketContractStoreWatcher';
 import { appConfig } from '@/configs';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { CHAIN_IDS, Provider } from 'fuels';
+import { CHAIN_IDS, FuelConnector, Provider } from 'fuels';
 import posthog from 'posthog-js';
 import { PostHogProvider } from 'posthog-js/react';
 import { fallback } from 'viem';
@@ -108,17 +116,45 @@ const wagmiConfig = createConfigWagmiConfig({
   },
 });
 
+const customDefaultConnectors = (): Array<FuelConnector> => {
+  const provider = Provider.create(appConfig.client.fuelNodeUrl);
+  const connectors: Array<FuelConnector> = [
+    new FuelWalletConnector(),
+    new FueletWalletConnector(),
+    new WalletConnectConnector({
+      projectId: appConfig.client.walletConnectProjectId,
+      wagmiConfig: wagmiConfig,
+      chainId:
+        appConfig.env === 'testnet'
+          ? CHAIN_IDS.fuel.testnet
+          : CHAIN_IDS.fuel.mainnet,
+      fuelProvider: provider,
+    }),
+    new SolanaConnector({
+      projectId: appConfig.client.walletConnectProjectId,
+      chainId:
+        appConfig.env === 'testnet'
+          ? CHAIN_IDS.fuel.testnet
+          : CHAIN_IDS.fuel.mainnet,
+      fuelProvider: provider,
+    }),
+  ];
+
+  if (appConfig.env === 'testnet') {
+    connectors.push(
+      new FuelWalletDevelopmentConnector(),
+      new BurnerWalletConnector({
+        chainId: CHAIN_IDS.fuel.testnet,
+        fuelProvider: provider,
+      })
+    );
+  }
+
+  return connectors;
+};
+
 const FUEL_CONFIG = createConfig(() => ({
-  connectors: defaultConnectors({
-    devMode: appConfig.env === 'testnet',
-    wcProjectId: appConfig.client.walletConnectProjectId,
-    ethWagmiConfig: wagmiConfig,
-    chainId:
-      appConfig.env === 'testnet'
-        ? CHAIN_IDS.fuel.testnet
-        : CHAIN_IDS.fuel.mainnet,
-    fuelProvider: Provider.create(appConfig.client.fuelNodeUrl),
-  }),
+  connectors: customDefaultConnectors(),
 }));
 
 export const Providers = ({ children }: { children: ReactNode }) => {

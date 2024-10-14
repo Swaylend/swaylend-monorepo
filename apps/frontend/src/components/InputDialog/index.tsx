@@ -469,6 +469,25 @@ export const InputDialog = () => {
     return null;
   };
 
+  const availableBalance = useMemo(() => {
+    if (
+      !collateralConfigurations ||
+      !marketConfiguration ||
+      !actionTokenAssetId
+    ) {
+      return '0.00';
+    }
+
+    if (finalBalance.lte(0)) return '0.00';
+
+    if (actionTokenAssetId === marketConfiguration.baseToken.bits) {
+      return finalBalance.toFixed(marketConfiguration.baseTokenDecimals);
+    }
+    return finalBalance.toFixed(
+      collateralConfigurations?.[actionTokenAssetId ?? '']?.decimals
+    );
+  }, [finalBalance, marketConfiguration, collateralConfigurations]);
+
   useEffect(() => {
     if (!isConnected) {
       setOpen(false);
@@ -647,17 +666,7 @@ export const InputDialog = () => {
                 <div
                   className={`text-sm ${action === ACTION_TYPE.REPAY ? 'text-lavender' : 'text-moon'}`}
                 >
-                  {actionTokenAssetId === marketConfiguration.baseToken.bits
-                    ? marketConfiguration.baseTokenDecimals &&
-                      finalBalance.toFixed(
-                        marketConfiguration.baseTokenDecimals
-                      )
-                    : collateralConfigurations?.[actionTokenAssetId ?? '']
-                        ?.decimals &&
-                      finalBalance.toFixed(
-                        collateralConfigurations?.[actionTokenAssetId ?? '']
-                          ?.decimals
-                      )}
+                  {availableBalance}
                   {action === ACTION_TYPE.BORROW && ' available to borrow'}
                   {action === ACTION_TYPE.REPAY && ' debt to repay'}
                   {(action === ACTION_TYPE.SUPPLY ||

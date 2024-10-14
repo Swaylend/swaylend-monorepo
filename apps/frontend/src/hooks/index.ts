@@ -28,3 +28,4 @@ export * from './useLeaderboardPoints';
 export * from './useTotalReserves';
 export * from './useCollateralReserves';
 export * from './useMaxWithdrawableCollateral';
+export * from './useProvider';
