@@ -183,7 +183,7 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
           </div>
           <div className="flex items-center gap-x-2">
             <Points />
-            <ConnectButton />
+            {!mobile && <ConnectButton />}
           </div>
         </div>
         <Line />
