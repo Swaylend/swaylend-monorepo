@@ -1,4 +1,4 @@
-import fuel from '/public/icons/fuel-logo.svg?url';
+import fuel from '/public/icons/fuel-logo-round.svg?url';
 import btc from '/public/tokens/bitcoin.svg?url';
 import bnb from '/public/tokens/bnb.svg?url';
 import eth from '/public/tokens/ethereum.svg?url';
