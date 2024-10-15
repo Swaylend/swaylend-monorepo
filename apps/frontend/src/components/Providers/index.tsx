@@ -120,6 +120,7 @@ const wagmiConfig = createConfigWagmiConfig({
 const customDefaultConnectors = (): Array<FuelConnector> => {
   const provider = Provider.create(appConfig.client.fuelNodeUrl);
   const connectors: Array<FuelConnector> = [
+    new FueletWalletConnector(),
     new FuelWalletConnector(),
     new BakoSafeConnector(),
     new WalletConnectConnector({
@@ -143,7 +144,6 @@ const customDefaultConnectors = (): Array<FuelConnector> => {
 
   if (appConfig.env === 'testnet') {
     connectors.push(
-      new FueletWalletConnector(),
       new FuelWalletDevelopmentConnector(),
       new BurnerWalletConnector({
         chainId: CHAIN_IDS.fuel.testnet,
