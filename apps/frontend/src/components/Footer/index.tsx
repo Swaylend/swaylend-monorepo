@@ -24,7 +24,7 @@ export const Footer = () => {
               Lending reimagined, powered by Fuel.
             </div>
 
-            <div className="flex sm:hidden mt-16 gap-x-8">
+            <div className="flex sm:hidden mt-8 gap-x-8">
               <a
                 href="https://twitter.com/swaylend"
                 target="_blank"
@@ -37,14 +37,19 @@ export const Footer = () => {
                 target="_blank"
                 rel="noreferrer"
               >
-                <Image src={DISCORD} alt="X logo" height={20} />
+                <Image
+                  src={DISCORD}
+                  alt="Discord logo"
+                  height={20}
+                  width={20}
+                />
               </a>
               <a
                 href="https://github.com/swaylend"
                 target="_blank"
                 rel="noreferrer"
               >
-                <Image src={GITHUB} alt="X logo" width={20} height={20} />
+                <Image src={GITHUB} alt="Github logo" width={20} height={20} />
               </a>
               <a
                 href="https://docs.swaylend.com/"
@@ -55,7 +60,7 @@ export const Footer = () => {
               </a>
             </div>
 
-            <div className="mt-16">
+            <div className="mt-8">
               <div className="text-primary items-center text-xs font-semibold flex gap-x-2">
                 Audited by
               </div>
@@ -65,7 +70,12 @@ export const Footer = () => {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  <Image src={HalbornLogo} height={96} width={96} alt="logo" />
+                  <Image
+                    src={HalbornLogo}
+                    height={96}
+                    width={96}
+                    alt="Halborn logo"
+                  />
                 </a>
                 {/* <a href="https://osec.io/" target="_blank" rel="noreferrer">
                   <Image src={OttersecLogo} height={96} width={96} alt="logo" />

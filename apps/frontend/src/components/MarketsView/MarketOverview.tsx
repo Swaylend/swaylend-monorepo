@@ -93,8 +93,8 @@ export default function MarketOverview({
   }, [marketConfiguration, marketBasics, totalCollateralValue]);
 
   return (
-    <div className="pt-[60px] pb-[55px] px-[88px] flex flex-col gap-y-8 w-full items-center justify-center">
-      <div className="max-lg:hidden flex items-start justify-between w-full">
+    <div className="max-lg:hidden pt-[60px] pb-[55px] px-[88px] flex flex-col gap-y-8 w-full items-center justify-center">
+      <div className=" flex items-start justify-between w-full">
         <div className="flex items-center space-x-4 text-white/60 w-1/3">
           <Link href="/markets">
             <div className="flex gap-x-2 items-center">
