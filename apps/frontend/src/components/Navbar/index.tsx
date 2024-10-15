@@ -209,7 +209,7 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
         </div>
         <Line />
         <Drawer open={open} onOpenChange={setOpen}>
-          <DrawerContent className="h-screen">
+          <DrawerContent className="h-dvh">
             <VisuallyHidden.Root>
               <DrawerHeader>
                 <DrawerTitle>Hamburger Menu</DrawerTitle>
