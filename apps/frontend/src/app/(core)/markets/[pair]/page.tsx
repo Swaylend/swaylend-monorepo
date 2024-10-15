@@ -32,12 +32,13 @@ export default async function Page({ params }: { params: { pair: string } }) {
   const userAgent = headers().get('user-agent') || '';
   const mobile = isMobile(userAgent);
 
-  if (mobile)
+  if (mobile) {
     return (
       <div className="w-full h-[60dvh] flex items-center justify-center">
         This page is not available on mobile devices.
       </div>
     );
+  }
 
   const [network, baseAsset] = params.pair.split('-');
   if (
@@ -70,7 +71,7 @@ export default async function Page({ params }: { params: { pair: string } }) {
         }
       />
       <div className="lg:hidden w-full h-[60dvh] flex items-center justify-center">
-        Minimum supported witdh reached
+        This page is not supported on this screen size.
       </div>
     </>
   );

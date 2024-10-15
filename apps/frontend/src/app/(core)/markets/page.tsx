@@ -16,12 +16,13 @@ export default async function Page() {
   const userAgent = headers().get('user-agent') || '';
   const mobile = isMobile(userAgent);
 
-  if (mobile)
+  if (mobile) {
     return (
       <div className="w-full h-[60dvh] flex items-center justify-center">
         This page is not available on mobile devices.
       </div>
     );
+  }
 
   const chartsData = await getChartData();
 
@@ -35,7 +36,7 @@ export default async function Page() {
         <MarketsTable />
       </div>
       <div className="w-full h-[60dvh] flex items-center justify-center">
-        Minimum supported screen witdh reached
+        This page is not supported on this screen size.
       </div>
     </div>
   );
