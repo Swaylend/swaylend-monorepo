@@ -1,5 +1,6 @@
 import { Checkbox } from '@/components/ui/checkbox';
 import { useAccount } from '@fuels/react';
+import Link from 'next/link';
 import { useState } from 'react';
 import { Button } from '../ui/button';
 
@@ -61,12 +62,13 @@ export const TermsAndConditions = ({
                   className="cursor-pointer"
                 >
                   I confirm that I have read, understand and accept the{' '}
-                  <a
+                  <Link
                     href="https://docs.swaylend.com/legal/terms-and-condition"
                     className="underline text-primary"
+                    target="_blank"
                   >
                     Terms and Conditions.
-                  </a>
+                  </Link>
                 </p>
               </div>
             </div>

@@ -121,7 +121,6 @@ const customDefaultConnectors = (): Array<FuelConnector> => {
   const provider = Provider.create(appConfig.client.fuelNodeUrl);
   const connectors: Array<FuelConnector> = [
     new FuelWalletConnector(),
-    new FueletWalletConnector(),
     new BakoSafeConnector(),
     new WalletConnectConnector({
       projectId: appConfig.client.walletConnectProjectId,
@@ -144,6 +143,7 @@ const customDefaultConnectors = (): Array<FuelConnector> => {
 
   if (appConfig.env === 'testnet') {
     connectors.push(
+      new FueletWalletConnector(),
       new FuelWalletDevelopmentConnector(),
       new BurnerWalletConnector({
         chainId: CHAIN_IDS.fuel.testnet,

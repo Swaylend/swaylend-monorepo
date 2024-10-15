@@ -35,7 +35,6 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Logo from '/public/icons/dark-logo.svg?url';
-import LogoIcon from '/public/icons/sway-icon-logo.svg?url';
 import { Line } from '../Line';
 import { Button } from '../ui/button';
 import { ConnectButton } from './ConnectButton';
@@ -48,7 +47,7 @@ const NAVBAR_LINKS = [
     : []),
 ];
 
-export const Navbar = () => {
+export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
   const pathname = usePathname();
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -184,7 +183,7 @@ export const Navbar = () => {
           </div>
           <div className="flex items-center gap-x-2">
             <Points />
-            <ConnectButton />
+            {!mobile && <ConnectButton />}
           </div>
         </div>
         <Line />
@@ -194,11 +193,11 @@ export const Navbar = () => {
       <div className="hidden max-lg:block">
         <div className="flex justify-between items-center px-4 h-[80px]">
           <Link href="/" prefetch={false}>
-            <Image src={LogoIcon} alt="logo" />
+            <Image src={Logo} alt="logo" />
           </Link>
           <div className="flex items-center gap-x-2">
             <Points />
-            <ConnectButton />
+            {!mobile && <ConnectButton />}
             <Button
               onMouseDown={() => setOpen(true)}
               className="rounded-full w-[40px] h-[40px] p-0"
@@ -210,16 +209,16 @@ export const Navbar = () => {
         </div>
         <Line />
         <Drawer open={open} onOpenChange={setOpen}>
-          <DrawerContent className="h-screen">
+          <DrawerContent className="h-dvh">
             <VisuallyHidden.Root>
               <DrawerHeader>
                 <DrawerTitle>Hamburger Menu</DrawerTitle>
               </DrawerHeader>
             </VisuallyHidden.Root>
             <div className="flex flex-col items-center w-full h-full justify-center">
-              <div className="flex justify-between w-full items-center px-4 h-[80px]">
+              <div className="flex justify-between w-full items-center px-8 h-[80px]">
                 <a href="https://swaylend.com" target="_blank" rel="noreferrer">
-                  <Image src={LogoIcon} alt="logo" />
+                  <Image src={Logo} alt="logo" />
                 </a>
                 <Button
                   onMouseDown={() => setOpen(false)}
