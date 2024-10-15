@@ -456,8 +456,8 @@ export const InputDialog = () => {
       ).dividedBy(BigNumber(10).pow(marketConfiguration.baseTokenDecimals));
 
       if (
-        userBorrowedModifiedRepay.minus(tokenAmount).lt(minOpenPositionValue) &&
-        userBorrowedModifiedRepay.minus(tokenAmount).gt(0)
+        userBorrowed.minus(tokenAmount).lt(minOpenPositionValue) &&
+        userBorrowed.minus(tokenAmount).gt(0)
       ) {
         return `Your position must be at least ${minOpenPositionValue.toFixed()} ${SYMBOL_TO_NAME[appConfig.assets[marketConfiguration.baseToken.bits]]}. Please repay the entire amount or keep at least ${minOpenPositionValue.toFixed()} ${SYMBOL_TO_NAME[appConfig.assets[marketConfiguration.baseToken.bits]]} in your position.`;
       }
