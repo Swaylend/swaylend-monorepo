@@ -317,6 +317,12 @@ pub fn convert_i256_to_u64(value: &I256) -> u64 {
     u64::try_from(value).unwrap()
 }
 
+pub fn convert_i256_to_i64(value: &I256) -> i64 {
+    let value = value.underlying - i256_indent();
+
+    i64::try_from(value).unwrap()
+}
+
 #[allow(dead_code)]
 fn main() {
     println!("good utils for deployment. just ignore this fn");
