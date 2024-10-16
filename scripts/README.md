@@ -8,10 +8,10 @@ If you are interested in testing on local devnet, checkout the `devnet` folder.
 
 Before we begin, you need to do a few things:
 
-- Setup a `forc-wallet`. Make sure to export a private key, since you're going to need it.
-- Rename `env.example` to `.env`.
-- Add signing key, provider url, and network (mainnet, testnet, devnet) to the `.env`.
-- If you already have deployed contract, add proxy contract id and target contract id as well (otherwise deploy contracts first and add it then).
+* Setup a `forc-wallet`. Make sure to export a private key, since you're going to need it.
+* Rename `env.example` to `.env`.
+* Add signing key, provider url, and network (mainnet, testnet, devnet) to the `.env`.
+* If you already have deployed contract, add proxy contract id and target contract id as well (otherwise deploy contracts first and add it then).
 
 Below, we have all the necessary scripts for operations on the mainnet. If you're testing on testnet/devnet, make sure to check the testnet scripts in the end as well.
 
@@ -27,9 +27,9 @@ cd ../contracts/market && forc deploy --testnet                        && cd ../
 cd ../contracts/market && /home/vid/Documents/Company/fuel/sway/target/debug/forc-deploy --node-url http://127.0.0.1:4000 && cd ../../scripts # devnet
 ```
 
-In the output you can see proxy contract id (proxy contract) and target contract id (loader contract). Add them to the `.env`.
+In the output you can see proxy contract id (proxy contract) and target contract id (loader contract). Add them to the `.env` .
 
-**Note:** This command will add proxy address in the `Forc.toml` in the `../contracts/market` folder. Make sure the address is not wrriten in ``Forc.toml`` when deploying the contracts again.
+**Note:** This command will add proxy address in the `Forc.toml` in the `../contracts/market` folder. Make sure the address is not wrriten in ` ` Forc.toml ` ` when deploying the contracts again.
 
 ### Activate market contract
 
@@ -87,6 +87,14 @@ This script will withdraw reserves.
 
 ```bash
 cargo run --bin withdraw_reserves -- --amount 100000000 --recipient address:0x2968d3dd71d8b517fdb57e837c419c58f7404744fb51c16e0e0a2dc18892b1f8
+```
+
+### Fill reserves
+
+This script will fill reserves. It will use the account provided in the .env `SIGNING_KEY` and the base asset of the market contract.
+
+```bash
+cargo run --bin fill_reserves -- --amount 100000000 
 ```
 
 ### Testnet: deploy tokens contract

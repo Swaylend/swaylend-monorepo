@@ -74,7 +74,10 @@ async fn main() -> anyhow::Result<()> {
 
     println!(
         "Sender balance: {:?}",
-        &wallet.get_asset_balance(&market_config.base_token).await
+        &wallet
+            .get_asset_balance(&market_config.base_token)
+            .await
+            .unwrap()
     );
 
     println!(
@@ -99,16 +102,18 @@ async fn main() -> anyhow::Result<()> {
         return Ok(());
     }
 
-    let (_tx_id, receipts) = wallet
+    let tx_policies = TxPolicies::default();
+
+    wallet
         .force_transfer_to_contract(
             &Bech32ContractId::from(address),
             amount,
             market_config.base_token,
-            TxPolicies::default(),
+            tx_policies,
         )
         .await?;
-    println!("Tx receipts: {:?}", receipts);
 
+    println!("Transfer successful!");
     println!(
         "Reserves balance: {:?}",
         convert_i256_to_i64(
