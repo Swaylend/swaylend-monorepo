@@ -34,7 +34,7 @@ export const Footer = () => {
                 <Image src={X} alt="X logo" width={20} height={20} />
               </a>
               <a
-                href="https://discord.gg/m9VcnNG2"
+                href="https://discord.gg/7N796pdHNk"
                 target="_blank"
                 rel="noreferrer"
               >
@@ -136,7 +136,7 @@ export const Footer = () => {
                 <Image src={X} alt="X logo" width={20} height={20} />
               </a>
               <a
-                href="https://discord.gg/m9VcnNG2"
+                href="https://discord.gg/7N796pdHNk"
                 target="_blank"
                 rel="noreferrer"
               >
