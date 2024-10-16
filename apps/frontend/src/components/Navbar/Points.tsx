@@ -25,7 +25,7 @@ export const Points = () => {
 
   const { isConnected } = useIsConnected();
 
-  const { data: fuelPoints } = useFuelPoints();
+  // const { data: fuelPoints } = useFuelPoints();
 
   // const handleCopy = async (value: string) => {
   //   setIsCopied(true);
