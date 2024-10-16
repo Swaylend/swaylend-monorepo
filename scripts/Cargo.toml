@@ -40,6 +40,10 @@ path = "src/mint_tokens.rs"
 name = "deploy_pyth"
 path = "src/deploy_pyth.rs"
 
+[[bin]]
+name = "fill_reserves"
+path = "src/fill_reserves.rs"
+
 [dependencies]
 fuels = { workspace = true }
 clap = { workspace = true }
