@@ -1,4 +1,3 @@
-import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 import { type NextRequest, NextResponse } from 'next/server';
 
 const BLOCKED_COUNTRIES = [
@@ -24,7 +23,7 @@ const BLOCKED_COUNTRIES = [
   'ZW', // ZIMBABWE
 ];
 
-function middleware(req: NextRequest) {
+export default function middleware(req: NextRequest) {
   const country = req.geo?.country;
 
   if (
@@ -37,19 +36,6 @@ function middleware(req: NextRequest) {
 
   return NextResponse.next();
 }
-
-// Add clerk protection to all routes
-const isPublicRoute = createRouteMatcher(['/sign-in(.*)']);
-
-export default clerkMiddleware((auth, request) => {
-  if (process.env.USE_AUTH === 'true') {
-    if (!isPublicRoute(request)) {
-      auth().protect();
-    }
-  }
-
-  return middleware(request);
-});
 
 export const config = {
   matcher: [
