@@ -18,7 +18,6 @@ const BLOCKED_COUNTRIES = [
   'SS', // SOUTH SUDAN
   'SY', // SYRIA
   'VE', // VENEZUELA
-  'US', // THE UNITED STATES OF AMERICA
   'YE', // YEMEN
   'ZW', // ZIMBABWE
 ];
