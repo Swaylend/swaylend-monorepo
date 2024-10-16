@@ -60,6 +60,19 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
   return (
     <>
       {/* DESKTOP */}
+      <div className="w-full text-center bg-primary font-medium text-md text-primary-foreground py-2 px-4">
+        Starting from the mainnet launch, users are earning Fuel points by using
+        the Swaylend Protocol. Although these points aren’t visible on our
+        dashboards yet, they will be available in the coming weeks.
+        <a
+          href="https://app.fuel.network/earn-points"
+          target="_blank"
+          rel="noreferrer"
+          className="underline ml-1"
+        >
+          Learn more
+        </a>
+      </div>
       <div className="max-lg:hidden">
         <div className="flex justify-between items-center px-16 min-h-[93px]">
           <div className="flex items-center gap-x-[70px]">
