@@ -7,7 +7,10 @@ use fuels::{
     types::{bech32::Bech32ContractId, transaction::TxPolicies, ContractId, Identity},
 };
 use std::str::FromStr;
-use utils::{get_market_instance, get_yes_no_input, read_env, verify_connected_network, Args};
+use utils::{
+    convert_i256_to_i64, get_market_instance, get_yes_no_input, read_env, verify_connected_network,
+    Args,
+};
 
 #[derive(Parser, Debug)]
 pub struct ArgsExtended {
@@ -76,13 +79,15 @@ async fn main() -> anyhow::Result<()> {
 
     println!(
         "Reserves balance: {:?}",
-        &market_instance
-            .methods()
-            .get_reserves()
-            .with_contract_ids(&[market_contract_id.clone()])
-            .call()
-            .await?
-            .value
+        convert_i256_to_i64(
+            &market_instance
+                .methods()
+                .get_reserves()
+                .with_contract_ids(&[market_contract_id.clone()])
+                .call()
+                .await?
+                .value
+        )
     );
 
     let amount = args.amount;
@@ -106,13 +111,15 @@ async fn main() -> anyhow::Result<()> {
 
     println!(
         "Reserves balance: {:?}",
-        &market_instance
-            .methods()
-            .get_reserves()
-            .with_contract_ids(&[market_contract_id.clone()])
-            .call()
-            .await?
-            .value
+        convert_i256_to_i64(
+            &market_instance
+                .methods()
+                .get_reserves()
+                .with_contract_ids(&[market_contract_id.clone()])
+                .call()
+                .await?
+                .value
+        )
     );
 
     Ok(())
