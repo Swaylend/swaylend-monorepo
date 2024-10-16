@@ -7,6 +7,7 @@ import GITHUB from '/public/icons/GitHub_Invertocat_Light.png';
 import Logo from '/public/icons/dark-logo.svg?url';
 import DISCORD from '/public/icons/discord-mark-white.svg?url';
 import HalbornLogo from '/public/icons/halborn-logo.svg?url';
+import OttersecLogo from '/public/icons/ottersec-logo.svg?url';
 import X from '/public/icons/x-logo-white.png';
 import { Line } from '../Line';
 
@@ -61,10 +62,10 @@ export const Footer = () => {
             </div>
 
             <div className="mt-8">
-              <div className="text-primary items-center text-xs font-semibold flex gap-x-2">
+              <div className="text-primary items-center text-xs font-semibold">
                 Audited by
               </div>
-              <div className="mt-1 flex items-center gap-x-2">
+              <div className="mt-1 flex items-center gap-x-4">
                 <a
                   href="https://www.halborn.com/"
                   target="_blank"
@@ -73,13 +74,13 @@ export const Footer = () => {
                   <Image
                     src={HalbornLogo}
                     height={96}
-                    width={96}
+                    width={112}
                     alt="Halborn logo"
                   />
                 </a>
-                {/* <a href="https://osec.io/" target="_blank" rel="noreferrer">
+                <a href="https://osec.io/" target="_blank" rel="noreferrer">
                   <Image src={OttersecLogo} height={96} width={96} alt="logo" />
-                </a> */}
+                </a>
               </div>
             </div>
           </div>
