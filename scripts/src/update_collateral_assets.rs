@@ -60,7 +60,7 @@ async fn main() -> anyhow::Result<()> {
 
     // verify explicitly assets decimals
     for collateral_asset in &market_config.collateral_assets {
-        assert!(collateral_asset.decimals > market_config.base_asset.decimals);
+        assert!(collateral_asset.decimals >= market_config.base_asset.decimals);
     }
 
     // get current collateral assets configurations
