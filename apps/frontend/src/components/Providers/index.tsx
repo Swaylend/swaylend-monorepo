@@ -25,7 +25,7 @@ import { ToastContainer } from 'react-toastify';
 import MarketContractStoreWatcher from '@/components/Providers/MarketContractStoreWatcher';
 import { appConfig } from '@/configs';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { CHAIN_IDS, FuelConnector, Provider } from 'fuels';
+import { CHAIN_IDS, type FuelConnector, Provider } from 'fuels';
 import posthog from 'posthog-js';
 import { PostHogProvider } from 'posthog-js/react';
 import { fallback } from 'viem';

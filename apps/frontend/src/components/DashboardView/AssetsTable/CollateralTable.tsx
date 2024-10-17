@@ -73,8 +73,25 @@ type TableRowProps = {
 const POINTS_COLLATERAL: Point[] = [
   {
     id: '1',
-    name: 'Fuel',
-    description: 'Earn Fuel Points by lending assets',
+    name: 'Passive Points',
+    description: (
+      <div className="text-md">
+        Earn <span className="text-lavender font-semibold">Passive Points</span>{' '}
+        by supplying collateral on Swaylend.
+        <br />
+        Note that Passive Points are not the same as Activity Points <br />
+        earned by Lending or Borrowing.{' '}
+        <a
+          href="https://fuel.mirror.xyz/UfX-NnWGvYy56K8lq5gPfGLPI58DGD3KOHBJupHIibk"
+          className="text-primary underline"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Learn more about <br /> the different types of points here
+        </a>
+        .
+      </div>
+    ),
     icon: SYMBOL_TO_ICON.FUEL,
   },
   // {

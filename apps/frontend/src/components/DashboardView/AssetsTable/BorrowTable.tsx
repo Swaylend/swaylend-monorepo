@@ -54,8 +54,24 @@ import { useMemo } from 'react';
 const POINTS_BORROW: Point[] = [
   {
     id: '1',
-    name: 'Fuel',
-    description: 'Earn Fuel Points by lending assets',
+    name: 'Activity Points',
+    description: (
+      <div className="text-md">
+        Earn <span className="text-primary">2x</span>{' '}
+        <span className="text-lavender font-semibold">Activity Points</span> by
+        borrowing assets on Swaylend.{' '}
+        <a
+          href="https://fuel.mirror.xyz/UfX-NnWGvYy56K8lq5gPfGLPI58DGD3KOHBJupHIibk"
+          className="text-primary underline"
+          target="_blank"
+          rel="noreferrer"
+        >
+          {' '}
+          Learn more
+        </a>
+        .
+      </div>
+    ),
     icon: SYMBOL_TO_ICON.FUEL,
   },
   // {
@@ -261,7 +277,7 @@ export const BorrowTable = () => {
               </TableCell>
               <TableCell>{borrowedBalance}</TableCell>
               <TableCell>
-                <PointIcons points={POINTS_BORROW} />
+                <PointIcons value="2x" points={POINTS_BORROW} />
               </TableCell>
               <TableCell>
                 {userRole === USER_ROLE.LENDER ? (
@@ -395,7 +411,7 @@ export const BorrowTable = () => {
                   <div className="w-1/2 text-moon font-medium">
                     Borrow Points
                   </div>
-                  <PointIcons points={POINTS_BORROW} />
+                  <PointIcons value="2x" points={POINTS_BORROW} />
                 </div>
               </div>
             </CardContent>

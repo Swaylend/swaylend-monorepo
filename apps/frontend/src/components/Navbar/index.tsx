@@ -61,9 +61,7 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
     <>
       {/* DESKTOP */}
       <div className="w-full text-center bg-primary font-medium text-md text-primary-foreground py-2 px-4">
-        Starting from the mainnet launch, users are earning Fuel points by using
-        the Swaylend Protocol. Although these points aren’t visible on our
-        dashboards yet, they will be available in the coming weeks.
+        Start earning Fuel Activity Points by Lending and Borrowing!
         <a
           href="https://app.fuel.network/earn-points"
           target="_blank"

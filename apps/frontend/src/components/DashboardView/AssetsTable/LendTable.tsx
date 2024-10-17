@@ -51,8 +51,24 @@ import Image from 'next/image';
 const POINTS_LEND: Point[] = [
   {
     id: '1',
-    name: 'Fuel',
-    description: 'Earn Fuel Points by lending assets',
+    name: 'Activity Points',
+    description: (
+      <div className="text-md">
+        Earn <span className="text-primary">2x</span>{' '}
+        <span className="text-lavender font-semibold">Activity Points</span> by
+        lending assets on Swaylend.{' '}
+        <a
+          href="https://fuel.mirror.xyz/UfX-NnWGvYy56K8lq5gPfGLPI58DGD3KOHBJupHIibk"
+          className="text-primary underline"
+          target="_blank"
+          rel="noreferrer"
+        >
+          {' '}
+          Learn more
+        </a>
+        .
+      </div>
+    ),
     icon: SYMBOL_TO_ICON.FUEL,
   },
   // {
@@ -235,7 +251,7 @@ export const LendTable = () => {
                 {appConfig.assets[marketConfiguration?.baseToken.bits ?? '']}
               </TableCell>
               <TableCell>
-                <PointIcons points={POINTS_LEND} />
+                <PointIcons value="2x" points={POINTS_LEND} />
               </TableCell>
               <TableCell>
                 {userRole === USER_ROLE.BORROWER ? (
@@ -373,7 +389,7 @@ export const LendTable = () => {
                   <div className="w-1/2 text-moon font-medium">
                     Supply Points
                   </div>
-                  <PointIcons points={POINTS_LEND} />
+                  <PointIcons value="2x" points={POINTS_LEND} />
                 </div>
               </div>
             </CardContent>
