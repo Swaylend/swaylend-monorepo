@@ -13,6 +13,7 @@ import {
   useTotalReserves,
 } from '@/hooks';
 
+import { ChartData } from '@/lib/charts';
 import { cn } from '@/lib/utils';
 import {
   SYMBOL_TO_ICON,
@@ -29,20 +30,19 @@ import type React from 'react';
 import { useMemo } from 'react';
 import { IconPair } from '../IconPair';
 import { KinkChart } from './KinkChart';
+import { MarketChart } from './MarketChart';
 import { MarketCollateralsTable } from './MarketCollateralsTable';
 
 type MarketOverviewProps = {
   network: string;
   baseAsset: string;
-  marketChartCollateral: React.ReactNode;
-  marketChartBorrow: React.ReactNode;
+  chartData: ChartData[] | undefined;
 };
 
 export default function MarketOverview({
   network,
   baseAsset,
-  marketChartCollateral,
-  marketChartBorrow,
+  chartData,
 }: MarketOverviewProps) {
   const { data: borrowRate } = useBorrowRate(baseAsset);
   const { data: supplyRate } = useSupplyRate(baseAsset);
@@ -141,7 +141,11 @@ export default function MarketOverview({
               {getFormattedPrice(totalCollateralValue)}
             </div>
           </div>
-          {marketChartCollateral}
+          <MarketChart
+            chartData={chartData}
+            dataKey="collateralValueUsd"
+            color="#8B5CF6"
+          />
         </div>
 
         <div className="w-[47%]">
@@ -158,7 +162,11 @@ export default function MarketOverview({
               )}
             </div>
           </div>
-          {marketChartBorrow}
+          <MarketChart
+            chartData={chartData}
+            dataKey="borrowedValueUsd"
+            color="#3FE8BD"
+          />
         </div>
       </div>
 

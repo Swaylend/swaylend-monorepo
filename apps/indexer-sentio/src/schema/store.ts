@@ -275,6 +275,53 @@ export class BasePositionSnapshot extends AbstractEntity  {
   constructor(data: Partial<BasePositionSnapshot>) {super()}
 }
 
+@Entity("BasePool")
+export class BasePool extends AbstractEntity  {
+
+	@Required
+	@Column("ID")
+	id: ID
+
+	@Required
+	@Column("Int")
+	chainId: Int
+
+	@Required
+	@Column("String")
+	poolAddress: String
+
+	@Required
+	@Column("BigInt")
+	suppliedAmount: BigInt
+
+	@Required
+	@Column("BigDecimal")
+	suppliedAmountNormalized: BigDecimal
+
+	@Column("BigDecimal")
+	suppliedAmountUsd?: BigDecimal
+
+	@Required
+	@Column("BigDecimal")
+	supplyApr: BigDecimal
+
+	@Required
+	@Column("BigInt")
+	borrowedAmount: BigInt
+
+	@Required
+	@Column("BigDecimal")
+	borrowedAmountNormalized: BigDecimal
+
+	@Column("BigDecimal")
+	borrowedAmountUsd?: BigDecimal
+
+	@Required
+	@Column("BigDecimal")
+	borrowApr: BigDecimal
+  constructor(data: Partial<BasePool>) {super()}
+}
+
 @Entity("BasePoolSnapshot")
 export class BasePoolSnapshot extends AbstractEntity  {
 
@@ -804,6 +851,20 @@ type BasePositionSnapshot @entity {
     collateralAmountUsd: BigDecimal
 }
 
+type BasePool @entity {
+    id: ID!
+    chainId: Int!
+    poolAddress: String!
+    suppliedAmount: BigInt!
+    suppliedAmountNormalized: BigDecimal!
+    suppliedAmountUsd: BigDecimal
+    supplyApr: BigDecimal!
+    borrowedAmount: BigInt!
+    borrowedAmountNormalized: BigDecimal!
+    borrowedAmountUsd: BigDecimal
+    borrowApr: BigDecimal!
+}
+
 type BasePoolSnapshot @entity {
     id: ID!
     timestamp: Int!
@@ -941,6 +1002,7 @@ DatabaseSchema.register({
 		"CollateralConfiguration": CollateralConfiguration,
 		"Pool": Pool,
 		"BasePositionSnapshot": BasePositionSnapshot,
+		"BasePool": BasePool,
 		"BasePoolSnapshot": BasePoolSnapshot,
 		"CollateralPosition": CollateralPosition,
 		"CollateralPool": CollateralPool,
