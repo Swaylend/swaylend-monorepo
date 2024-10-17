@@ -75,6 +75,20 @@ type BasePositionSnapshot @entity {
     collateralAmountUsd: BigDecimal
 }
 
+type BasePool @entity {
+    id: ID!
+    chainId: Int!
+    poolAddress: String!
+    suppliedAmount: BigInt!
+    suppliedAmountNormalized: BigDecimal!
+    suppliedAmountUsd: BigDecimal
+    supplyApr: BigDecimal!
+    borrowedAmount: BigInt!
+    borrowedAmountNormalized: BigDecimal!
+    borrowedAmountUsd: BigDecimal
+    borrowApr: BigDecimal!
+}
+
 type BasePoolSnapshot @entity {
     id: ID!
     timestamp: Int!

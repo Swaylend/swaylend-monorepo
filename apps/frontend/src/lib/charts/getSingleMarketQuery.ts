@@ -11,8 +11,20 @@ WITH CollateralPoolData AS (
             WHERE chainId = ${appConfig.env === 'testnet' ? 0 : 9889}
                 AND poolAddress = '${poolAddress}'
                 AND timestamp >= DATE_SUB(NOW(), INTERVAL 1 MONTH)
+                AND timestamp < toStartOfDay(NOW())
             GROUP BY date,
                 underlyingTokenAddress
+        )
+    group by date
+    UNION ALL
+    select date,
+        FLOOR(SUM(collateralValueUsd)) as collateralValueUsd
+    from (
+            SELECT DATE(NOW()) as date,
+                collateralAmountUsd as collateralValueUsd
+            FROM CollateralPool
+            WHERE chainId = ${appConfig.env === 'testnet' ? 0 : 9889}
+                AND poolAddress = '${poolAddress}'
         )
     group by date
 ),
@@ -26,7 +38,17 @@ BasePoolData AS (
     WHERE chainId = ${appConfig.env === 'testnet' ? 0 : 9889}
         AND poolAddress = '${poolAddress}'
         AND timestamp >= DATE_SUB(NOW(), INTERVAL 1 MONTH)
+        AND timestamp < toStartOfDay(NOW())
     GROUP BY date
+    UNION ALL
+    SELECT DATE(NOW()) as date,
+        FLOOR(suppliedAmountUsd) as suppliedValueUsd,
+        FLOOR(borrowedAmountUsd) as borrowedValueUsd,
+        ROUND(supplyApr, 2) as supplyApr,
+        ROUND(borrowApr, 2) as borrowApr
+    FROM BasePool
+    WHERE chainId = ${appConfig.env === 'testnet' ? 0 : 9889}
+        AND poolAddress = '${poolAddress}'
 )
 SELECT toUnixTimestamp(COALESCE(c.date, b.date)) as timestamp,
     coalesce(c.collateralValueUsd, 0) as collateralValueUsd,
@@ -36,9 +58,6 @@ SELECT toUnixTimestamp(COALESCE(c.date, b.date)) as timestamp,
     coalesce(b.borrowApr, 0) as borrowApr
 FROM CollateralPoolData c
     FULL OUTER JOIN BasePoolData b ON c.date = b.date
-ORDER BY timestamp ASC
-WITH FILL
-    FROM toUnixTimestamp(toDate(DATE_SUB(NOW(), INTERVAL 1 MONTH)))
-    TO toUnixTimestamp(toDate(NOW()))
-    STEP 86400
+ORDER BY timestamp ASC WITH FILL
+FROM toUnixTimestamp(toDate(DATE_SUB(NOW(), INTERVAL 1 MONTH))) TO toUnixTimestamp(toDate(NOW())) STEP 86400
 `;

@@ -7,6 +7,7 @@ import utc from 'dayjs/plugin/utc.js';
 import { DateTime } from 'fuels';
 import { appConfig } from './configs/index.js';
 import {
+  BasePool,
   BasePoolSnapshot,
   BasePositionSnapshot,
   CollateralConfiguration,
@@ -484,12 +485,28 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
         );
       }
 
+      // Collateral price
+      const collateralPrice = await getPriceBySymbol(
+        appConfig.assets[collateralPool.underlyingTokenAddress],
+        ctx.timestamp
+      );
+
+      if (!collateralPrice) {
+        throw new Error(
+          `No price found for ${appConfig.assets[collateralPool.underlyingTokenAddress]} at ${ctx.timestamp}`
+        );
+      }
+
       collateralPool.collateralAmount =
         collateralPool.collateralAmount + BigInt(amount.toString());
       collateralPool.collateralAmountNormalized =
         collateralPool.collateralAmount
           .asBigDecimal()
           .dividedBy(BigDecimal(10).pow(collateralConfiguration.decimals));
+      collateralPool.collateralAmountUsd = collateralPool.collateralAmount
+        .asBigDecimal()
+        .dividedBy(BigDecimal(10).pow(collateralConfiguration.decimals))
+        .times(BigDecimal(collateralPrice));
 
       await ctx.store.upsert(collateralPool);
     })
@@ -668,6 +685,105 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       }
 
       await ctx.store.upsert(marketBasic);
+
+      // Pool
+      const pools = (
+        await ctx.store.list(Pool, [
+          { field: 'poolType', op: '=', value: 'supply_only' },
+          {
+            field: 'poolAddress',
+            op: '=',
+            value: ctx.contractAddress,
+          },
+        ])
+      ).filter((val) => val.chainId === chainId);
+
+      if (pools.length !== 1) {
+        console.error(
+          `Exactly one pool should be found. Found: ${pools.length}`
+        );
+        return;
+      }
+
+      const pool = pools[0];
+
+      // Base pool
+      const basePoolId = `${chainId}_${ctx.contractAddress}`;
+      let basePool = await ctx.store.get(BasePool, basePoolId);
+
+      // Get market configuration
+      const marketConfigId = `${chainId}_${ctx.contractAddress}`;
+      const marketConfiguration = await ctx.store.get(
+        MarketConfiguration,
+        marketConfigId
+      );
+
+      if (!marketConfiguration) {
+        throw new Error(
+          `Market configuration not found for market ${ctx.contractAddress} on chain ${chainId}`
+        );
+      }
+
+      // Get base asset price
+      const baseAssetPrice = await getPriceBySymbol(
+        appConfig.assets[pool.underlyingTokenAddress],
+        ctx.timestamp
+      );
+
+      if (!baseAssetPrice) {
+        console.error(
+          `No price found for ${appConfig.assets[pool.underlyingTokenAddress]} at ${ctx.timestamp}`
+        );
+      }
+
+      const basePrice = BigDecimal(baseAssetPrice ?? 0);
+
+      const suppliedAmountNormalized = BigDecimal(
+        total_supply_base.toString()
+      ).dividedBy(BigDecimal(10).pow(marketConfiguration.baseTokenDecimals));
+
+      const borrowedAmountNormalized = BigDecimal(
+        total_borrow_base.toString()
+      ).dividedBy(BigDecimal(10).pow(marketConfiguration.baseTokenDecimals));
+
+      const utilization = getUtilization(
+        BigInt(total_supply_base.toString()),
+        BigInt(total_borrow_base.toString()),
+        marketBasic.baseSupplyIndex,
+        marketBasic.baseBorrowIndex
+      );
+
+      const supplyRate = getSupplyRate(marketConfiguration, utilization);
+      const borrowRate = getBorrowRate(marketConfiguration, utilization);
+      const supplyApr = getApr(supplyRate);
+      const borrowApr = getApr(borrowRate);
+
+      if (!basePool) {
+        basePool = new BasePool({
+          id: basePoolId,
+          chainId: chainId,
+          poolAddress: ctx.contractAddress,
+          suppliedAmount: BigInt(total_supply_base.toString()),
+          suppliedAmountNormalized: suppliedAmountNormalized,
+          suppliedAmountUsd: suppliedAmountNormalized.times(basePrice),
+          supplyApr: supplyApr,
+          borrowedAmount: BigInt(total_borrow_base.toString()),
+          borrowedAmountNormalized: borrowedAmountNormalized,
+          borrowedAmountUsd: borrowedAmountNormalized.times(basePrice),
+          borrowApr: borrowApr,
+        });
+      } else {
+        basePool.suppliedAmount = BigInt(total_supply_base.toString());
+        basePool.suppliedAmountNormalized = suppliedAmountNormalized;
+        basePool.suppliedAmountUsd = suppliedAmountNormalized.times(basePrice);
+        basePool.supplyApr = supplyApr;
+        basePool.borrowedAmount = BigInt(total_borrow_base.toString());
+        basePool.borrowedAmountNormalized = borrowedAmountNormalized;
+        basePool.borrowedAmountUsd = borrowedAmountNormalized.times(basePrice);
+        basePool.borrowApr = borrowApr;
+      }
+
+      await ctx.store.upsert(basePool);
     })
     // Process only current market
     .onTimeInterval(

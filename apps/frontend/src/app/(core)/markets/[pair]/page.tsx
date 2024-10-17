@@ -1,4 +1,3 @@
-import { MarketChart } from '@/components/MarketsView/MarketChart';
 import MarketOverview from '@/components/MarketsView/MarketOverview';
 import { appConfig } from '@/configs';
 import { getChartData } from '@/lib/charts';
@@ -6,7 +5,7 @@ import { isMobile } from '@/utils/isMobile';
 import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 
-export const revalidate = 3600;
+export const revalidate = 300;
 
 export async function generateMetadata({
   params,
@@ -55,20 +54,7 @@ export default async function Page({ params }: { params: { pair: string } }) {
       <MarketOverview
         network={network}
         baseAsset={baseAsset.toUpperCase()}
-        marketChartCollateral={
-          <MarketChart
-            chartData={chartData?.singleMarketData[baseAsset]}
-            dataKey="collateralValueUsd"
-            color="#8B5CF6"
-          />
-        }
-        marketChartBorrow={
-          <MarketChart
-            chartData={chartData?.singleMarketData[baseAsset]}
-            dataKey="borrowedValueUsd"
-            color="#3FE8BD"
-          />
-        }
+        chartData={chartData?.singleMarketData[baseAsset]}
       />
       <div className="lg:hidden w-full h-[60dvh] flex items-center justify-center">
         This page is not supported on this screen size.

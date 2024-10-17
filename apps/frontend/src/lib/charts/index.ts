@@ -39,7 +39,7 @@ export const getChartData = async () => {
           version: appConfig.server.sentioProcessorVersion,
         }),
         next: {
-          revalidate: 600, // Cache for 1 hour
+          revalidate: 300, // Cache for 5 min
         },
       });
 
@@ -73,7 +73,7 @@ export const getChartData = async () => {
       version: appConfig.server.sentioProcessorVersion,
     }),
     next: {
-      revalidate: 600, // Cache for 1 hour
+      revalidate: 300, // Cache for 5 min
     },
   });
 
