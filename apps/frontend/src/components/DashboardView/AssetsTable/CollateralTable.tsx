@@ -187,9 +187,9 @@ const CollateralTableRow = ({
                       {formatUnits(
                         BigNumber(
                           collateralConfiguration.borrow_collateral_factor.toString()
-                        ),
+                        ).times(100),
                         18
-                      ).toFormat(2)}
+                      ).toFormat(0)}
                       %
                     </div>
                   </div>
@@ -199,21 +199,25 @@ const CollateralTableRow = ({
                       {formatUnits(
                         BigNumber(
                           collateralConfiguration.liquidate_collateral_factor.toString()
-                        ),
+                        ).times(100),
                         18
-                      ).toFormat(2)}
+                      ).toFormat(0)}
                       %
                     </div>
                   </div>
                   <div className="text-md flex justify-between">
                     <div className="text-lavender">Liquidation Penalty</div>
                     <div className="font-semibold text-moon">
-                      {formatUnits(
-                        BigNumber(
-                          collateralConfiguration.liquidation_penalty.toString()
-                        ),
-                        18
-                      ).toFormat(2)}
+                      {BigNumber(100)
+                        .minus(
+                          formatUnits(
+                            BigNumber(
+                              collateralConfiguration.liquidation_penalty.toString()
+                            ),
+                            16
+                          )
+                        )
+                        .toFormat(0)}
                       %
                     </div>
                   </div>
