@@ -40,14 +40,15 @@ BasePoolData AS (
                 AND timestamp < toStartOfDay(NOW())
             GROUP BY date,
                 poolAddress
+                UNION ALL
+            SELECT poolAddress,
+            DATE(NOW()) as date,
+                FLOOR(suppliedAmountUsd) as suppliedValueUsd,
+                FLOOR(borrowedAmountUsd) as borrowedValueUsd
+            FROM BasePool
+            WHERE chainId = 9889
         )
     group by date
-    UNION ALL
-    SELECT DATE(NOW()) as date,
-        FLOOR(suppliedAmountUsd) as suppliedValueUsd,
-        FLOOR(borrowedAmountUsd) as borrowedValueUsd
-    FROM BasePool
-    WHERE chainId = 9889
 )
 SELECT toUnixTimestamp(COALESCE(c.date, b.date)) as timestamp,
     c.collateralValueUsd,
