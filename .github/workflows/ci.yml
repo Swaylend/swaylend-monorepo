@@ -18,7 +18,9 @@ jobs:
       - name: Install Fuel toolchain
         run: |
           curl https://install.fuel.network | sh && \
+          ~/.fuelup/bin/fuelup self update && \
           ~/.fuelup/bin/fuelup toolchain install latest
+
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@stable
         with:
