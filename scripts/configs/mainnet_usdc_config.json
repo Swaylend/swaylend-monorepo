@@ -62,6 +62,18 @@
       "liquidation_penalty": 950000000000000000,
       "supply_cap": 10000000000000,
       "is_active": true
+    },
+    {
+      "asset_id": "0x9e46f919fbf978f3cad7cd34cca982d5613af63ff8aab6c379e4faa179552958",
+      "price_feed_id": "0x710659c5a68e2416ce4264ca8d50d34acc20041d91289110eea152c52ff3dc39",
+      "name": "sDAI",
+      "symbol": "sDAI",
+      "decimals": 9,
+      "borrow_collateral_factor": 900000000000000000,
+      "liquidate_collateral_factor": 950000000000000000,
+      "liquidation_penalty": 950000000000000000,
+      "supply_cap": 10000000000000000,
+      "is_active": true
     }
   ]
 }
