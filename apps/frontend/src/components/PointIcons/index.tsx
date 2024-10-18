@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import type { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import Image from 'next/image';
 import {
@@ -32,7 +33,10 @@ export const PointIcons = ({ points, value }: PointIconsProps) => {
               <Tooltip>
                 <TooltipTrigger onClick={(e) => e.preventDefault()}>
                   <div
-                    className={`border-2 border-primary ${value ? 'px-2' : 'px-1'} ${value && 'bg-primary/10'} py-1 rounded-full  flex items-center gap-x-2`}
+                    className={clsx(
+                      'border-2 border-primary py-1 rounded-full flex items-center gap-x-2',
+                      value ? 'bg-primary/10 pl-2 w-[74px]' : 'px-1'
+                    )}
                   >
                     {value && (
                       <div className="text-lg text-primary font-semibold">
