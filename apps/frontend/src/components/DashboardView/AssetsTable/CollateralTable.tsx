@@ -77,17 +77,18 @@ const POINTS_COLLATERAL: Point[] = [
     description: (
       <div className="text-md">
         Earn <span className="text-lavender font-semibold">Passive Points</span>{' '}
-        by supplying collateral on Swaylend.
-        <br />
-        Note that Passive Points are not the same as Activity Points <br />
-        earned by Lending or Borrowing.{' '}
+        by holding <span className="text-lavender">unused</span> collateral{' '}
+        <br /> on Swaylend. Note that Collateral used in <br /> Borrow positions
+        earns{' '}
+        <span className="text-lavender font-semibold">Activity Points</span>{' '}
+        instead. <br />{' '}
         <a
           href="https://fuel.mirror.xyz/UfX-NnWGvYy56K8lq5gPfGLPI58DGD3KOHBJupHIibk"
           className="text-primary underline"
           target="_blank"
           rel="noreferrer"
         >
-          Learn more about <br /> the different types of points here
+          Learn more
         </a>
         .
       </div>
@@ -252,7 +253,10 @@ const CollateralTableRow = ({
         </div>
       </TableCell>
       <TableCell>
-        <PointIcons points={POINTS_COLLATERAL} />
+        <PointIcons
+          value={symbol === 'USDT' || symbol === 'ETH' ? '2x' : undefined}
+          points={POINTS_COLLATERAL}
+        />
       </TableCell>
       <TableCell>
         <div className="flex gap-x-2 w-full">
