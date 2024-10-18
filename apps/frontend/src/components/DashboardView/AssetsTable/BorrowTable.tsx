@@ -57,9 +57,9 @@ const POINTS_BORROW: Point[] = [
     name: 'Activity Points',
     description: (
       <div className="text-md">
-        Earn <span className="text-primary">2x</span>{' '}
-        <span className="text-lavender font-semibold">Activity Points</span> by
-        borrowing assets on Swaylend.{' '}
+        Earn up to <span className="text-primary">4x</span>{' '}
+        <span className="text-lavender font-semibold">Activity Points</span> by{' '}
+        borrowing <br /> assets on Swaylend.{' '}
         <a
           href="https://fuel.mirror.xyz/UfX-NnWGvYy56K8lq5gPfGLPI58DGD3KOHBJupHIibk"
           className="text-primary underline"
@@ -277,7 +277,7 @@ export const BorrowTable = () => {
               </TableCell>
               <TableCell>{borrowedBalance}</TableCell>
               <TableCell>
-                <PointIcons value="2x" points={POINTS_BORROW} />
+                <PointIcons value="4x" points={POINTS_BORROW} />
               </TableCell>
               <TableCell>
                 {userRole === USER_ROLE.LENDER ? (
@@ -411,7 +411,7 @@ export const BorrowTable = () => {
                   <div className="w-1/2 text-moon font-medium">
                     Borrow Points
                   </div>
-                  <PointIcons value="2x" points={POINTS_BORROW} />
+                  <PointIcons value="4x" points={POINTS_BORROW} />
                 </div>
               </div>
             </CardContent>

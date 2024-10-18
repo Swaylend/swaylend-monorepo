@@ -54,9 +54,9 @@ const POINTS_LEND: Point[] = [
     name: 'Activity Points',
     description: (
       <div className="text-md">
-        Earn <span className="text-primary">2x</span>{' '}
+        Earn <span className="text-primary">4x</span>{' '}
         <span className="text-lavender font-semibold">Activity Points</span> by
-        lending assets on Swaylend.{' '}
+        lending assets <br /> on Swaylend.{' '}
         <a
           href="https://fuel.mirror.xyz/UfX-NnWGvYy56K8lq5gPfGLPI58DGD3KOHBJupHIibk"
           className="text-primary underline"
@@ -251,7 +251,7 @@ export const LendTable = () => {
                 {appConfig.assets[marketConfiguration?.baseToken.bits ?? '']}
               </TableCell>
               <TableCell>
-                <PointIcons value="2x" points={POINTS_LEND} />
+                <PointIcons value="4x" points={POINTS_LEND} />
               </TableCell>
               <TableCell>
                 {userRole === USER_ROLE.BORROWER ? (
@@ -389,7 +389,7 @@ export const LendTable = () => {
                   <div className="w-1/2 text-moon font-medium">
                     Supply Points
                   </div>
-                  <PointIcons value="2x" points={POINTS_LEND} />
+                  <PointIcons value="4x" points={POINTS_LEND} />
                 </div>
               </div>
             </CardContent>
