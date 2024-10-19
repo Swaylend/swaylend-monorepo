@@ -439,6 +439,16 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
 
       const id = `${chainId}_${ctx.contractAddress}_${address}_${asset_id}`;
 
+      // Collateral price
+      const collateralPrice = await getPriceBySymbol(
+        appConfig.assets[asset_id],
+        ctx.timestamp
+      );
+
+      if (!collateralPrice) {
+        throw new Error(`No price found for ${asset_id} at ${ctx.timestamp}`);
+      }
+
       let collateralPosition = await ctx.store.get(CollateralPosition, id);
 
       if (!collateralPosition) {
@@ -460,6 +470,9 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
           collateralAmountNormalized: BigDecimal(amount.toString()).dividedBy(
             BigDecimal(10).pow(collateralConfiguration.decimals)
           ),
+          collateralAmountUsd: BigDecimal(amount.toString())
+            .dividedBy(BigDecimal(10).pow(collateralConfiguration.decimals))
+            .times(BigDecimal(collateralPrice)),
         });
       } else {
         collateralPosition.collateralAmount =
@@ -468,6 +481,9 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
           collateralPosition.collateralAmount
             .asBigDecimal()
             .dividedBy(BigDecimal(10).pow(collateralConfiguration.decimals));
+        collateralPosition.collateralAmountUsd = BigDecimal(amount.toString())
+          .dividedBy(BigDecimal(10).pow(collateralConfiguration.decimals))
+          .times(BigDecimal(collateralPrice));
       }
 
       await ctx.store.upsert(collateralPosition);
@@ -482,18 +498,6 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       if (!collateralPool) {
         throw new Error(
           `Collateral pool not found for market ${ctx.contractAddress} on chain ${chainId}`
-        );
-      }
-
-      // Collateral price
-      const collateralPrice = await getPriceBySymbol(
-        appConfig.assets[collateralPool.underlyingTokenAddress],
-        ctx.timestamp
-      );
-
-      if (!collateralPrice) {
-        throw new Error(
-          `No price found for ${appConfig.assets[collateralPool.underlyingTokenAddress]} at ${ctx.timestamp}`
         );
       }
 
