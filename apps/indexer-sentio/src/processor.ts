@@ -246,7 +246,11 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       const {
         data: {
           asset_id: { bits: asset_id },
-          configuration: { decimals, borrow_collateral_factor },
+          configuration: {
+            decimals,
+            borrow_collateral_factor,
+            liquidate_collateral_factor,
+          },
         },
       } = event;
 
@@ -322,6 +326,9 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
         collateralFactor: BigDecimal(
           borrow_collateral_factor.toString()
         ).dividedBy(FACTOR_SCALE_18.asBigDecimal()),
+        liquidationFactor: BigDecimal(
+          liquidate_collateral_factor.toString()
+        ).dividedBy(FACTOR_SCALE_18.asBigDecimal()),
         supplyIndex: BigDecimal(0),
         supplyApr: BigDecimal(0),
         borrowedAmount: 0n,
@@ -343,7 +350,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       const {
         data: {
           asset_id: { bits: asset_id },
-          configuration: { decimals },
+          configuration: { decimals }, // TODO: Update other field
         },
       } = event;
 

@@ -155,6 +155,7 @@ type CollateralPool @entity {
     collateralAmountNormalized: BigDecimal!
     collateralAmountUsd: BigDecimal
     collateralFactor: BigDecimal!
+    liquidationFactor: BigDecimal!
     supplyIndex: BigDecimal!
     supplyApr: BigDecimal!
     borrowedAmount: BigInt!
@@ -206,6 +207,7 @@ type CollateralPoolSnapshot @entity {
     collateralAmountNormalized: BigDecimal!
     collateralAmountUsd: BigDecimal
     collateralFactor: BigDecimal!
+    liquidationFactor: BigDecimal!
     supplyIndex: BigDecimal!
     supplyApr: BigDecimal!
     borrowedAmount: BigInt!

@@ -558,6 +558,10 @@ export class CollateralPool extends AbstractEntity  {
 
 	@Required
 	@Column("BigDecimal")
+	liquidationFactor: BigDecimal
+
+	@Required
+	@Column("BigDecimal")
 	supplyIndex: BigDecimal
 
 	@Required
@@ -734,6 +738,10 @@ export class CollateralPoolSnapshot extends AbstractEntity  {
 	@Required
 	@Column("BigDecimal")
 	collateralFactor: BigDecimal
+
+	@Required
+	@Column("BigDecimal")
+	liquidationFactor: BigDecimal
 
 	@Required
 	@Column("BigDecimal")
@@ -931,6 +939,7 @@ type CollateralPool @entity {
     collateralAmountNormalized: BigDecimal!
     collateralAmountUsd: BigDecimal
     collateralFactor: BigDecimal!
+    liquidationFactor: BigDecimal!
     supplyIndex: BigDecimal!
     supplyApr: BigDecimal!
     borrowedAmount: BigInt!
@@ -982,6 +991,7 @@ type CollateralPoolSnapshot @entity {
     collateralAmountNormalized: BigDecimal!
     collateralAmountUsd: BigDecimal
     collateralFactor: BigDecimal!
+    liquidationFactor: BigDecimal!
     supplyIndex: BigDecimal!
     supplyApr: BigDecimal!
     borrowedAmount: BigInt!
