@@ -482,13 +482,14 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
             .times(BigDecimal(collateralPrice)),
         });
       } else {
-        collateralPosition.collateralAmount =
+        const newCollateralAmount =
           collateralPosition.collateralAmount + BigInt(amount.toString());
-        collateralPosition.collateralAmountNormalized =
-          collateralPosition.collateralAmount
-            .asBigDecimal()
-            .dividedBy(BigDecimal(10).pow(collateralConfiguration.decimals));
-        collateralPosition.collateralAmountUsd = BigDecimal(amount.toString())
+        collateralPosition.collateralAmount = newCollateralAmount;
+        collateralPosition.collateralAmountNormalized = newCollateralAmount
+          .asBigDecimal()
+          .dividedBy(BigDecimal(10).pow(collateralConfiguration.decimals));
+        collateralPosition.collateralAmountUsd = newCollateralAmount
+          .asBigDecimal()
           .dividedBy(BigDecimal(10).pow(collateralConfiguration.decimals))
           .times(BigDecimal(collateralPrice));
       }
@@ -559,12 +560,26 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
         );
       }
 
-      collateralPosition.collateralAmount =
+      // Collateral price
+      const collateralPrice = await getPriceBySymbol(
+        appConfig.assets[asset_id],
+        ctx.timestamp
+      );
+
+      if (!collateralPrice) {
+        throw new Error(`No price found for ${asset_id} at ${ctx.timestamp}`);
+      }
+
+      const newCollateralAmount =
         collateralPosition.collateralAmount - BigInt(amount.toString());
-      collateralPosition.collateralAmountNormalized =
-        collateralPosition.collateralAmount
-          .asBigDecimal()
-          .dividedBy(BigDecimal(10).pow(collateralConfiguration.decimals));
+      collateralPosition.collateralAmount = newCollateralAmount;
+      collateralPosition.collateralAmountNormalized = newCollateralAmount
+        .asBigDecimal()
+        .dividedBy(BigDecimal(10).pow(collateralConfiguration.decimals));
+      collateralPosition.collateralAmountUsd = newCollateralAmount
+        .asBigDecimal()
+        .dividedBy(BigDecimal(10).pow(collateralConfiguration.decimals))
+        .times(collateralPrice);
 
       // If user withdraws all collatera
       await ctx.store.upsert(collateralPosition);
@@ -588,6 +603,10 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
         collateralPool.collateralAmount
           .asBigDecimal()
           .dividedBy(BigDecimal(10).pow(collateralConfiguration.decimals));
+      collateralPool.collateralAmountUsd = collateralPool.collateralAmount
+        .asBigDecimal()
+        .dividedBy(BigDecimal(10).pow(collateralConfiguration.decimals))
+        .times(collateralPrice);
 
       await ctx.store.upsert(collateralPool);
     })
@@ -597,7 +616,12 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       }
 
       const {
-        data: { account, asset_id, amount, decimals },
+        data: {
+          account,
+          asset_id: { bits: asset_id },
+          amount,
+          decimals,
+        },
       } = event;
 
       // Collateral pool reduced for absorbed collateral
@@ -627,12 +651,26 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
         );
       }
 
+      // Collateral price
+      const collateralPrice = await getPriceBySymbol(
+        appConfig.assets[asset_id],
+        ctx.timestamp
+      );
+
+      if (!collateralPrice) {
+        throw new Error(`No price found for ${asset_id} at ${ctx.timestamp}`);
+      }
+
       collateralPool.collateralAmount =
         collateralPool.collateralAmount - BigInt(amount.toString());
       collateralPool.collateralAmountNormalized =
         collateralPool.collateralAmount
           .asBigDecimal()
           .dividedBy(BigDecimal(10).pow(collateralConfiguration.decimals));
+      collateralPool.collateralAmountUsd = collateralPool.collateralAmount
+        .asBigDecimal()
+        .dividedBy(BigDecimal(10).pow(collateralConfiguration.decimals))
+        .times(collateralPrice);
 
       await ctx.store.upsert(collateralPool);
 
@@ -651,6 +689,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
 
       collateralPosition.collateralAmount = 0n;
       collateralPosition.collateralAmountNormalized = BigDecimal(0);
+      collateralPosition.collateralAmountUsd = BigDecimal(0);
 
       await ctx.store.upsert(collateralPosition);
     })
