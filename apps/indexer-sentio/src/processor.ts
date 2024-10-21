@@ -15,6 +15,7 @@ import {
   CollateralPoolSnapshot,
   CollateralPosition,
   CollateralPositionSnapshot,
+  EventEntity,
   MarketBasic,
   MarketConfiguration,
   Pool,
@@ -427,6 +428,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
           asset_id: { bits: asset_id },
           amount,
         },
+        receiptIndex,
       } = event;
 
       const address = (account.Address?.bits ?? account.ContractId?.bits)!;
@@ -521,6 +523,32 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
         .times(BigDecimal(collateralPrice));
 
       await ctx.store.upsert(collateralPool);
+
+      // Collateral supply event
+      const blockNumber = ctx.transaction?.blockNumber!;
+      const eventId = `${chainId}_${ctx.contractAddress}_${blockNumber}_${receiptIndex}`;
+
+      const eventEntity = new EventEntity({
+        id: eventId,
+        chainId,
+        poolAddress: ctx.contractAddress,
+        blockNumber: Number(blockNumber),
+        logIndex: receiptIndex,
+        transactionHash: ctx.transaction?.id,
+        userAddress: address,
+        takerAddress: address,
+        tokenAddress: asset_id,
+        amount: BigInt(amount.toString()),
+        amountNormalized: BigDecimal(amount.toString()).dividedBy(
+          BigDecimal(10).pow(collateralConfiguration.decimals)
+        ),
+        amountUsd: BigDecimal(amount.toString())
+          .dividedBy(BigDecimal(10).pow(collateralConfiguration.decimals))
+          .times(collateralPrice),
+        eventType: 'Supply',
+      });
+
+      await ctx.store.upsert(eventEntity);
     })
     .onLogUserWithdrawCollateralEvent(async (event, ctx) => {
       if (ctx.transaction?.isStatusFailure) {
@@ -533,6 +561,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
           asset_id: { bits: asset_id },
           amount,
         },
+        receiptIndex,
       } = event;
 
       const address = (account.Address?.bits ?? account.ContractId?.bits)!;
@@ -609,6 +638,32 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
         .times(collateralPrice);
 
       await ctx.store.upsert(collateralPool);
+
+      // Collateral withdraw event
+      const blockNumber = ctx.transaction?.blockNumber!;
+      const eventId = `${chainId}_${ctx.contractAddress}_${blockNumber}_${receiptIndex}`;
+
+      const eventEntity = new EventEntity({
+        id: eventId,
+        chainId,
+        poolAddress: ctx.contractAddress,
+        blockNumber: Number(blockNumber),
+        logIndex: receiptIndex,
+        transactionHash: ctx.transaction?.id,
+        userAddress: address,
+        takerAddress: address,
+        tokenAddress: asset_id,
+        amount: BigInt(amount.toString()),
+        amountNormalized: BigDecimal(amount.toString()).dividedBy(
+          BigDecimal(10).pow(collateralConfiguration.decimals)
+        ),
+        amountUsd: BigDecimal(amount.toString())
+          .dividedBy(BigDecimal(10).pow(collateralConfiguration.decimals))
+          .times(collateralPrice),
+        eventType: 'Withdrawal',
+      });
+
+      await ctx.store.upsert(eventEntity);
     })
     .onLogAbsorbCollateralEvent(async (event, ctx) => {
       if (ctx.transaction?.isStatusFailure) {
@@ -692,6 +747,182 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       collateralPosition.collateralAmountUsd = BigDecimal(0);
 
       await ctx.store.upsert(collateralPosition);
+    })
+    .onLogUserSupplyBaseEvent(async (event, ctx) => {
+      if (ctx.transaction?.isStatusFailure) {
+        return;
+      }
+
+      const {
+        data: { account, repay_amount, supply_amount },
+        receiptIndex,
+      } = event;
+
+      const address = (account.Address?.bits ?? account.ContractId?.bits)!;
+      const chainId = CHAIN_ID_MAP[ctx.chainId as keyof typeof CHAIN_ID_MAP];
+
+      // Market configuration
+      const marketConfiguration = await ctx.store.get(
+        MarketConfiguration,
+        `${chainId}_${ctx.contractAddress}`
+      );
+
+      if (!marketConfiguration) {
+        throw new Error(
+          `Market configuration not found for market ${ctx.contractAddress} on chain ${chainId}`
+        );
+      }
+
+      // Get base asset price
+      const baseAssetPrice = await getPriceBySymbol(
+        appConfig.assets[marketConfiguration.baseTokenAddress],
+        ctx.timestamp
+      );
+
+      if (!baseAssetPrice) {
+        console.error(
+          `No price found for ${marketConfiguration.baseTokenAddress} at ${ctx.timestamp}`
+        );
+      }
+
+      const basePrice = BigDecimal(baseAssetPrice ?? 0);
+
+      const blockNumber = ctx.transaction?.blockNumber!;
+      const eventId = `${chainId}_${ctx.contractAddress}_${blockNumber}_${receiptIndex}`;
+
+      // Repay event
+      let eventEntity = new EventEntity({
+        id: `${eventId}_repay`,
+        chainId,
+        poolAddress: ctx.contractAddress,
+        blockNumber: Number(blockNumber),
+        logIndex: receiptIndex,
+        transactionHash: ctx.transaction?.id,
+        userAddress: address,
+        takerAddress: address,
+        tokenAddress: marketConfiguration.baseTokenAddress,
+        amount: BigInt(repay_amount.toString()),
+        amountNormalized: BigDecimal(repay_amount.toString()).dividedBy(
+          BigDecimal(10).pow(marketConfiguration.baseTokenDecimals)
+        ),
+        amountUsd: BigDecimal(repay_amount.toString())
+          .dividedBy(BigDecimal(10).pow(marketConfiguration.baseTokenDecimals))
+          .times(basePrice),
+        eventType: 'Repay',
+      });
+
+      await ctx.store.upsert(eventEntity);
+
+      // Supply event
+      eventEntity = new EventEntity({
+        id: `${eventId}_supply`,
+        chainId,
+        poolAddress: ctx.contractAddress,
+        blockNumber: Number(blockNumber),
+        logIndex: receiptIndex,
+        transactionHash: ctx.transaction?.id,
+        userAddress: address,
+        takerAddress: address,
+        tokenAddress: marketConfiguration.baseTokenAddress,
+        amount: BigInt(supply_amount.toString()),
+        amountNormalized: BigDecimal(supply_amount.toString()).dividedBy(
+          BigDecimal(10).pow(marketConfiguration.baseTokenDecimals)
+        ),
+        amountUsd: BigDecimal(supply_amount.toString())
+          .dividedBy(BigDecimal(10).pow(marketConfiguration.baseTokenDecimals))
+          .times(basePrice),
+        eventType: 'Deposit',
+      });
+
+      await ctx.store.upsert(eventEntity);
+    })
+    .onLogUserWithdrawBaseEvent(async (event, ctx) => {
+      if (ctx.transaction?.isStatusFailure) {
+        return;
+      }
+
+      const {
+        data: { account, borrow_amount, withdraw_amount },
+        receiptIndex,
+      } = event;
+
+      const address = (account.Address?.bits ?? account.ContractId?.bits)!;
+      const chainId = CHAIN_ID_MAP[ctx.chainId as keyof typeof CHAIN_ID_MAP];
+
+      // Market configuration
+      const marketConfiguration = await ctx.store.get(
+        MarketConfiguration,
+        `${chainId}_${ctx.contractAddress}`
+      );
+
+      if (!marketConfiguration) {
+        throw new Error(
+          `Market configuration not found for market ${ctx.contractAddress} on chain ${chainId}`
+        );
+      }
+
+      // Get base asset price
+      const baseAssetPrice = await getPriceBySymbol(
+        appConfig.assets[marketConfiguration.baseTokenAddress],
+        ctx.timestamp
+      );
+
+      if (!baseAssetPrice) {
+        console.error(
+          `No price found for ${marketConfiguration.baseTokenAddress} at ${ctx.timestamp}`
+        );
+      }
+
+      const basePrice = BigDecimal(baseAssetPrice ?? 0);
+
+      const blockNumber = ctx.transaction?.blockNumber!;
+      const eventId = `${chainId}_${ctx.contractAddress}_${blockNumber}_${receiptIndex}`;
+
+      // Withdraw event
+      let eventEntity = new EventEntity({
+        id: `${eventId}_withdraw`,
+        chainId,
+        poolAddress: ctx.contractAddress,
+        blockNumber: Number(blockNumber),
+        logIndex: receiptIndex,
+        transactionHash: ctx.transaction?.id,
+        userAddress: address,
+        takerAddress: address,
+        tokenAddress: marketConfiguration.baseTokenAddress,
+        amount: BigInt(withdraw_amount.toString()),
+        amountNormalized: BigDecimal(withdraw_amount.toString()).dividedBy(
+          BigDecimal(10).pow(marketConfiguration.baseTokenDecimals)
+        ),
+        amountUsd: BigDecimal(withdraw_amount.toString())
+          .dividedBy(BigDecimal(10).pow(marketConfiguration.baseTokenDecimals))
+          .times(basePrice),
+        eventType: 'Withdraw',
+      });
+
+      await ctx.store.upsert(eventEntity);
+
+      // Borrow event
+      eventEntity = new EventEntity({
+        id: `${eventId}_borrow`,
+        chainId,
+        poolAddress: ctx.contractAddress,
+        blockNumber: Number(blockNumber),
+        logIndex: receiptIndex,
+        transactionHash: ctx.transaction?.id,
+        userAddress: address,
+        takerAddress: address,
+        tokenAddress: marketConfiguration.baseTokenAddress,
+        amount: BigInt(borrow_amount.toString()),
+        amountNormalized: BigDecimal(borrow_amount.toString()).dividedBy(
+          BigDecimal(10).pow(marketConfiguration.baseTokenDecimals)
+        ),
+        amountUsd: BigDecimal(borrow_amount.toString())
+          .dividedBy(BigDecimal(10).pow(marketConfiguration.baseTokenDecimals))
+          .times(basePrice),
+        eventType: 'Borrow',
+      });
+
+      await ctx.store.upsert(eventEntity);
     })
     .onLogMarketBasicEvent(async (event, ctx) => {
       if (ctx.transaction?.isStatusFailure) {

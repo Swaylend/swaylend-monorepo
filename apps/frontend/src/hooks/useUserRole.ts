@@ -18,8 +18,6 @@ export const useUserRole = () => {
     return USER_ROLE.NONE;
   }
 
-  // FIXME: Extract to separate hook to calculate supply/borrow value in dollars
-  // then specify a $ treshold in CONSTANTS for supply/borrow
   const supplyTreshold = BigNumber(0.1).times(
     BigNumber(10).pow(marketConfiguration.baseTokenDecimals)
   );
