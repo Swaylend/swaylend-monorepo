@@ -530,6 +530,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
 
       const eventEntity = new EventEntity({
         id: eventId,
+        timestamp: dayjs(ctx.timestamp.getTime()).utc().unix(),
         chainId,
         poolAddress: ctx.contractAddress,
         blockNumber: Number(blockNumber),
@@ -645,6 +646,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
 
       const eventEntity = new EventEntity({
         id: eventId,
+        timestamp: dayjs(ctx.timestamp.getTime()).utc().unix(),
         chainId,
         poolAddress: ctx.contractAddress,
         blockNumber: Number(blockNumber),
@@ -793,6 +795,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       // Repay event
       let eventEntity = new EventEntity({
         id: `${eventId}_repay`,
+        timestamp: dayjs(ctx.timestamp.getTime()).utc().unix(),
         chainId,
         poolAddress: ctx.contractAddress,
         blockNumber: Number(blockNumber),
@@ -816,6 +819,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       // Supply event
       eventEntity = new EventEntity({
         id: `${eventId}_supply`,
+        timestamp: dayjs(ctx.timestamp.getTime()).utc().unix(),
         chainId,
         poolAddress: ctx.contractAddress,
         blockNumber: Number(blockNumber),
@@ -881,6 +885,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       // Withdraw event
       let eventEntity = new EventEntity({
         id: `${eventId}_withdraw`,
+        timestamp: dayjs(ctx.timestamp.getTime()).utc().unix(),
         chainId,
         poolAddress: ctx.contractAddress,
         blockNumber: Number(blockNumber),
@@ -904,6 +909,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       // Borrow event
       eventEntity = new EventEntity({
         id: `${eventId}_borrow`,
+        timestamp: dayjs(ctx.timestamp.getTime()).utc().unix(),
         chainId,
         poolAddress: ctx.contractAddress,
         blockNumber: Number(blockNumber),

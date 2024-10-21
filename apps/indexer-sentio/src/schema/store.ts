@@ -790,6 +790,10 @@ export class EventEntity extends AbstractEntity  {
 
 	@Required
 	@Column("Int")
+	timestamp: Int
+
+	@Required
+	@Column("Int")
 	chainId: Int
 
 	@Required
@@ -1094,6 +1098,7 @@ type CollateralPoolSnapshot @entity {
 ##################
 type EventEntity @entity {
     id: ID!
+    timestamp: Int!
     chainId: Int!
     poolAddress: String!
     blockNumber: Int!
