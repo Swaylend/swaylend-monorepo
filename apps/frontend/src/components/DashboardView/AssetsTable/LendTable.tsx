@@ -54,17 +54,26 @@ const POINTS_LEND: Point[] = [
     name: 'Activity Points',
     description: (
       <div className="text-md">
-        Earn <span className="text-primary">4x</span>{' '}
-        <span className="text-lavender font-semibold">Activity Points</span> by
-        lending assets <br /> on Swaylend.{' '}
+        By Lending USDC On Swaylend you get{' '}
+        <span className="text-primary">4x</span> Fuel Points Multiplier:
+        <br />-{' '}
+        <span className="text-lavender font-semibold">
+          2x for Lending Activity
+        </span>
+        <br />-{' '}
+        <span className="text-lavender font-semibold">
+          2x for using USDC as Incentivised Asset
+        </span>
+        <br />
+        <br />
+        For more details, check out our{' '}
         <a
-          href="https://fuel.mirror.xyz/UfX-NnWGvYy56K8lq5gPfGLPI58DGD3KOHBJupHIibk"
+          href="https://swaylend.medium.com/incentivizing-useful-liquidity-on-swaylend-with-fuel-points-c2308be4b4c6"
           className="text-primary underline"
           target="_blank"
           rel="noreferrer"
         >
-          {' '}
-          Learn more
+          blog post
         </a>
         .
       </div>
