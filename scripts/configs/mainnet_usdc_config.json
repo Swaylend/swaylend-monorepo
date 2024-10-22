@@ -18,7 +18,7 @@
   "base_min_for_rewards": 1000000000,
   "base_borrow_min": 10000000,
   "target_reserves": 1000000000000,
-  "pyth_contract_id": "0x103465f1c0c901471b868b4a9e4e57c381168ac38ee5b59732943e9e004c488d",
+  "pyth_contract_id": "0x1c86fdd9e0e7bc0d2ae1bf6817ef4834ffa7247655701ee1b031b52a24c523da",
   "base_asset": {
     "asset_id": "0x286c479da40dc953bddc3bb4c453b608bba2e0ac483b077bd475174115395e6b",
     "price_feed_id": "0xeaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a",
@@ -36,7 +36,7 @@
       "borrow_collateral_factor": 600000000000000000,
       "liquidate_collateral_factor": 800000000000000000,
       "liquidation_penalty": 880000000000000000,
-      "supply_cap": 300000000000,
+      "supply_cap": 2200000000000,
       "is_active": true
     },
     {
@@ -48,7 +48,31 @@
       "borrow_collateral_factor": 600000000000000000,
       "liquidate_collateral_factor": 750000000000000000,
       "liquidation_penalty": 850000000000000000,
-      "supply_cap": 300000000000,
+      "supply_cap": 2200000000000,
+      "is_active": true
+    },
+    {
+      "asset_id": "0xa0265fb5c32f6e8db3197af3c7eb05c48ae373605b8165b6f4a51c5b0ba4812e",
+      "price_feed_id": "0x2b89b9dc8fdf9f34709a5b106b472f0f39bb6ca9ce04b0fd7f2e971688e2e53b",
+      "name": "USDT",
+      "symbol": "USDT",
+      "decimals": 6,
+      "borrow_collateral_factor": 900000000000000000,
+      "liquidate_collateral_factor": 950000000000000000,
+      "liquidation_penalty": 950000000000000000,
+      "supply_cap": 10000000000000,
+      "is_active": true
+    },
+    {
+      "asset_id": "0x9e46f919fbf978f3cad7cd34cca982d5613af63ff8aab6c379e4faa179552958",
+      "price_feed_id": "0x710659c5a68e2416ce4264ca8d50d34acc20041d91289110eea152c52ff3dc39",
+      "name": "sDAI",
+      "symbol": "sDAI",
+      "decimals": 9,
+      "borrow_collateral_factor": 900000000000000000,
+      "liquidate_collateral_factor": 950000000000000000,
+      "liquidation_penalty": 950000000000000000,
+      "supply_cap": 10000000000000000,
       "is_active": true
     }
   ]

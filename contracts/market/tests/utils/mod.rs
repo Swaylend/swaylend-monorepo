@@ -50,6 +50,8 @@ pub struct TestData {
     pub market: Market,
     pub usdc: Asset,
     pub usdc_contract: TokenAsset,
+    pub usdt: Asset,
+    pub usdt_contract: TokenAsset,
     pub uni: Asset,
     pub uni_contract: TokenAsset,
     pub eth: Asset,
@@ -82,6 +84,13 @@ pub async fn setup(debug_step: Option<u64>) -> TestData {
         token_contract.contract_id().into(),
         &usdc.symbol,
     );
+    let usdt = assets.get("USDT").unwrap();
+    let usdt_contract = TokenAsset::new(
+        admin.clone(),
+        token_contract.contract_id().into(),
+        &usdt.symbol,
+    );
+
     let uni = assets.get("UNI").unwrap();
     let uni_contract = TokenAsset::new(
         admin.clone(),
@@ -157,6 +166,8 @@ pub async fn setup(debug_step: Option<u64>) -> TestData {
         market,
         usdc: usdc.clone(),
         usdc_contract,
+        usdt: usdt.clone(),
+        usdt_contract,
         uni: uni.clone(),
         uni_contract,
         eth: eth.clone(),
