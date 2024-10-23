@@ -1,3 +1,4 @@
+import { AnnouncementPopover } from '@/components/AnnouncementPopover';
 import { Footer } from '@/components/Footer';
 import { IntroductionDialog } from '@/components/IntroductionDialog';
 import { Navbar } from '@/components/Navbar';
@@ -18,6 +19,7 @@ export default function AppLayout({
         <Navbar mobile={mobile} />
         <div className="bg-background flex-1">{children}</div>
         <Footer />
+        <AnnouncementPopover />
         <IntroductionDialog />
       </div>
     </Providers>
