@@ -1,3 +1,5 @@
+use std::str::FromStr;
+
 use crate::utils::{print_case_title, setup, TestData};
 use chrono::Utc;
 use fuels::{
@@ -6,7 +8,7 @@ use fuels::{
         calls::{CallHandler, CallParameters},
         responses::CallResponse,
     },
-    types::{transaction::TxPolicies, transaction_builders::VariableOutputPolicy},
+    types::{transaction::TxPolicies, transaction_builders::VariableOutputPolicy, U256},
 };
 use market::PriceDataUpdate;
 use market_sdk::{convert_i256_to_u64, is_i256_negative, parse_units};
@@ -22,6 +24,7 @@ async fn main_test() {
 
     let TestData {
         wallets,
+        admin,
         alice,
         alice_account,
         bob,
@@ -195,13 +198,80 @@ async fn main_test() {
 
     // =================================================
     // ==================== Step #4 ====================
+    // 👛 Wallet: Admin
+    // 🤙 Call: update_market_configuration
+    // Description: Set new curve parameters
+
+    print_case_title(
+        4,
+        "Admin",
+        "update_market_configuration",
+        "Set new curve parameters",
+    );
+
+    let mut market_configuration = market.get_market_configuration().await.unwrap().value;
+
+    let new_supply_per_second_interest_rate_base = U256::from_dec_str("0").unwrap();
+    let new_supply_per_second_interest_rate_slope_low = U256::from_dec_str("1150000000").unwrap();
+    let new_supply_per_second_interest_rate_slope_high =
+        U256::from_dec_str("115000000000").unwrap();
+    let new_borrow_per_second_interest_rate_base = U256::from_dec_str("775000000").unwrap();
+    let new_borrow_per_second_interest_rate_slope_low = U256::from_dec_str("1000000000").unwrap();
+    let new_borrow_per_second_interest_rate_slope_high =
+        U256::from_dec_str("127000000000").unwrap();
+
+    println!(
+        "Curve parameter value changes:
+\tSupply per second interest rate base: {} -> {}
+\tSupply per second interest rate slope low: {} -> {}
+\tSupply per second interest rate slope high: {} -> {}
+\tBorrow per second interest rate base: {} -> {}
+\tBorrow per second interest rate slope low: {} -> {}
+\tBorrow per second interest rate slope high: {} -> {}",
+        market_configuration.supply_per_second_interest_rate_base,
+        new_supply_per_second_interest_rate_base,
+        market_configuration.supply_per_second_interest_rate_slope_low,
+        new_supply_per_second_interest_rate_slope_low,
+        market_configuration.supply_per_second_interest_rate_slope_high,
+        new_supply_per_second_interest_rate_slope_high,
+        market_configuration.borrow_per_second_interest_rate_base,
+        new_borrow_per_second_interest_rate_base,
+        market_configuration.borrow_per_second_interest_rate_slope_low,
+        new_borrow_per_second_interest_rate_slope_low,
+        market_configuration.borrow_per_second_interest_rate_slope_high,
+        new_borrow_per_second_interest_rate_slope_high,
+    );
+
+    market_configuration.supply_per_second_interest_rate_base =
+        new_supply_per_second_interest_rate_base;
+    market_configuration.supply_per_second_interest_rate_slope_low =
+        new_supply_per_second_interest_rate_slope_low;
+    market_configuration.supply_per_second_interest_rate_slope_high =
+        new_supply_per_second_interest_rate_slope_high;
+    market_configuration.borrow_per_second_interest_rate_base =
+        new_borrow_per_second_interest_rate_base;
+    market_configuration.borrow_per_second_interest_rate_slope_low =
+        new_borrow_per_second_interest_rate_slope_low;
+    market_configuration.borrow_per_second_interest_rate_slope_high =
+        new_borrow_per_second_interest_rate_slope_high;
+
+    market
+        .with_account(&admin)
+        .await
+        .unwrap()
+        .update_market_configuration(&market_configuration)
+        .await
+        .unwrap();
+
+    // =================================================
+    // ==================== Step #5 ====================
     // 👛 Wallet: Chad 🤵
     // 🤙 Call: supply_base
     // 💰 Amount: 200.00 USDC
 
     let amount = parse_units(200 * AMOUNT_COEFFICIENT, usdc.decimals);
     let log_amount = format!("{} USDC", amount as f64 / scale_6);
-    print_case_title(4, "Chad", "supply_base", log_amount.as_str());
+    print_case_title(5, "Chad", "supply_base", log_amount.as_str());
     println!("💸 Chad + {log_amount}");
 
     // Transfer of 200 USDC to the Chad's wallet
@@ -230,7 +300,7 @@ async fn main_test() {
     market.debug_increment_timestamp().await.unwrap();
 
     // =================================================
-    // ==================== Step #5 ====================
+    // ==================== Step #6 ====================
     // 👛 Wallet: Alice 🦹
     // 🤙 Call: withdraw_base
     // 💰 Amount: ~49.99 USDC (available_to_borrow)
@@ -239,7 +309,7 @@ async fn main_test() {
         .await
         .unwrap();
     let log_amount = format!("{} USDC", amount as f64 / scale_6);
-    print_case_title(5, "Alice", "withdraw_base", log_amount.as_str());
+    print_case_title(6, "Alice", "withdraw_base", log_amount.as_str());
 
     // Alice calls withdraw_base
     market
@@ -293,12 +363,12 @@ async fn main_test() {
     market.debug_increment_timestamp().await.unwrap();
 
     // =================================================
-    // ==================== Step #6 ====================
+    // ==================== Step #7 ====================
     // 👛 Wallet: Admin 🗿
     // 🤙 Drop of collateral price
     // 💰 Amount: -30%
 
-    print_case_title(6, "Admin", "Drop of collateral price", "-30%");
+    print_case_title(7, "Admin", "Drop of collateral price", "-30%");
     let res = oracle.price(uni.price_feed_id).await.unwrap().value;
     let new_price = (res.price as f64 * 0.7) as u64;
     let prices = Vec::from([(
@@ -337,12 +407,12 @@ async fn main_test() {
     market.debug_increment_timestamp().await.unwrap();
 
     // =================================================
-    // ==================== Step #7 ====================
+    // ==================== Step #8 ====================
     // 👛 Wallet: Bob 🦹
     // 🤙 Call: absorb
     // 🔥 Target: Alice
 
-    print_case_title(7, "Bob", "absorb", "Alice");
+    print_case_title(8, "Bob", "absorb", "Alice");
 
     assert!(
         market
@@ -378,7 +448,7 @@ async fn main_test() {
     market.debug_increment_timestamp().await.unwrap();
 
     // =================================================
-    // ==================== Step #8 ====================
+    // ==================== Step #9 ====================
     // 👛 Wallet: Bob 🤵
     // 🤙 Call: buy_collateral
     // 💰 Amount: 119 USDC
@@ -404,7 +474,7 @@ async fn main_test() {
         .value;
 
     let log_amount = format!("{} USDC", amount as f64 / scale_6);
-    print_case_title(8, "Bob", "buy_collateral", log_amount.as_str());
+    print_case_title(9, "Bob", "buy_collateral", log_amount.as_str());
 
     // Transfer of amount to the wallet
     usdc_contract.mint(bob_account, amount).await.unwrap();
@@ -474,14 +544,14 @@ async fn main_test() {
     market.debug_increment_timestamp().await.unwrap();
 
     // =================================================
-    // ==================== Step #9 ====================
+    // ==================== Step #10 ====================
     // 👛 Wallet: Bob 🧛
     // 🤙 Call: withdraw_base
-    // 💰 Amount: 100.002259 USDC
+    // 💰 Amount: 100.0021 USDC
 
     let (amount, _) = market.get_user_supply_borrow(bob_account).await.unwrap();
     let log_amount = format!("{} USDC", amount as f64 / scale_6);
-    print_case_title(9, "Bob", "withdraw_base", log_amount.as_str());
+    print_case_title(10, "Bob", "withdraw_base", log_amount.as_str());
 
     // Bob calls withdraw_base
     market
@@ -510,14 +580,14 @@ async fn main_test() {
     market.debug_increment_timestamp().await.unwrap();
 
     // =================================================
-    // ==================== Step #10 ====================
+    // ==================== Step #11 ====================
     // 👛 Wallet: Chad 🧛
     // 🤙 Call: withdraw_base
-    // 💰 Amount: 200.002043 USDC
+    // 💰 Amount: 200.001901 USDC
 
     let (amount, _) = market.get_user_supply_borrow(chad_account).await.unwrap();
     let log_amount = format!("{} USDC", amount as f64 / scale_6);
-    print_case_title(10, "Chad", "withdraw_base", log_amount.as_str());
+    print_case_title(11, "Chad", "withdraw_base", log_amount.as_str());
 
     // Chad calls withdraw_base
     market
@@ -546,14 +616,14 @@ async fn main_test() {
     market.debug_increment_timestamp().await.unwrap();
 
     // =================================================
-    // ==================== Step #11 ====================
+    // ==================== Step #12 ====================
     // 👛 Wallet: Alice 🧛
     // 🤙 Call: withdraw_base
-    // 💰 Amount: 5.998373 USDC
+    // 💰 Amount: 5.99781 USDC
 
     let (amount, _) = market.get_user_supply_borrow(alice_account).await.unwrap();
     let log_amount = format!("{} USDC", amount as f64 / scale_6);
-    print_case_title(11, "Alice", "withdraw_base", log_amount.as_str());
+    print_case_title(12, "Alice", "withdraw_base", log_amount.as_str());
 
     // Alice calls withdraw_base
     market
@@ -579,7 +649,7 @@ async fn main_test() {
     market.debug_increment_timestamp().await.unwrap();
 
     // =================================================
-    // ==================== Step #12 ====================
+    // ==================== Step #13 ====================
     // 👛 Wallet: Chad 🤵
     // 🤙 Call: withdraw_collateral
     // 💰 Amount: 60 UNI
@@ -590,7 +660,7 @@ async fn main_test() {
         .unwrap()
         .value;
     let log_amount = format!("{} UNI", amount as f64 / scale_9);
-    print_case_title(12, "Chad", "withdraw_collateral", log_amount.as_str());
+    print_case_title(13, "Chad", "withdraw_collateral", log_amount.as_str());
 
     // Chad calls withdraw_collateral
     market
