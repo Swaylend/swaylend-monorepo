@@ -35,6 +35,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Logo from '/public/icons/dark-logo.svg?url';
+import { AnnouncementPopover } from '../AnnouncementPopover';
 import { Line } from '../Line';
 import { Button } from '../ui/button';
 import { ConnectButton } from './ConnectButton';
@@ -59,7 +60,6 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
 
   return (
     <>
-      {/* DESKTOP */}
       <div className="w-full text-center bg-primary font-medium text-md text-primary-foreground py-2 px-4">
         Start earning Fuel Activity Points by Lending and Borrowing!
         <a
@@ -71,6 +71,8 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
           Learn more
         </a>
       </div>
+      <AnnouncementPopover />
+      {/* DESKTOP */}
       <div className="max-lg:hidden">
         <div className="flex justify-between items-center px-16 min-h-[93px]">
           <div className="flex items-center gap-x-[70px]">
