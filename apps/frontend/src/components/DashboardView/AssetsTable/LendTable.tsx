@@ -54,7 +54,7 @@ const POINTS_LEND: Point[] = [
     name: 'Activity Points',
     description: (
       <div className="text-md">
-        By Lending USDC On Swaylend you get{' '}
+        By Lending USDC on Swaylend you get{' '}
         <span className="text-primary">4x</span> Fuel Points Multiplier:
         <br />-{' '}
         <span className="text-lavender font-semibold">
