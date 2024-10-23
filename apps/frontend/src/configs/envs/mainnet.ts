@@ -15,6 +15,8 @@ export function createMainnetConfig() {
       fuelNodeUrl: process.env.NEXT_PUBLIC_FUEL_NODE_URL ?? '',
       alchemyId: process.env.NEXT_PUBLIC_ALCHEMY_ID ?? '',
       fuelOblApi: process.env.NEXT_PUBLIC_FUEL_OBL_API ?? '',
+      announcementEnabled:
+        process.env.NEXT_PUBLIC_ANNOUNCEMENT_ENABLED === 'true',
     },
     server: {
       sentioApi: process.env.SENTIO_API_URL ?? '',

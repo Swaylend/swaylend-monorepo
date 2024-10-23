@@ -59,7 +59,6 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
 
   return (
     <>
-      {/* DESKTOP */}
       <div className="w-full text-center bg-primary font-medium text-md text-primary-foreground py-2 px-4">
         Start earning Fuel Activity Points by Lending and Borrowing!
         <a
@@ -71,6 +70,7 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
           Learn more
         </a>
       </div>
+      {/* DESKTOP */}
       <div className="max-lg:hidden">
         <div className="flex justify-between items-center px-16 min-h-[93px]">
           <div className="flex items-center gap-x-[70px]">

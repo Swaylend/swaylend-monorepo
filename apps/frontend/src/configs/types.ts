@@ -22,6 +22,7 @@ export const AppConfigSchema = z.object({
     fuelExplorerUrl: z.string(),
     alchemyId: z.string(),
     fuelOblApi: z.string(),
+    announcementEnabled: z.boolean(),
   }),
   server: z.object({
     sentioApi: z.string(),
