@@ -74,6 +74,18 @@
       "liquidation_penalty": 950000000000000000,
       "supply_cap": 10000000000000000,
       "is_active": true
+    },
+    {
+      "asset_id": "0x239ed6e12b7ce4089ee245244e3bf906999a6429c2a9a445a1e1faf56914a4ab",
+      "price_feed_id": "0x9ee4e7c60b940440a261eb54b6d8149c23b580ed7da3139f7f08f4ea29dad395",
+      "name": "weETH",
+      "symbol": "weETH",
+      "decimals": 9,
+      "borrow_collateral_factor": 600000000000000000,
+      "liquidate_collateral_factor": 750000000000000000,
+      "liquidation_penalty": 800000000000000000,
+      "supply_cap": 800000000000,
+      "is_active": true
     }
   ]
 }
