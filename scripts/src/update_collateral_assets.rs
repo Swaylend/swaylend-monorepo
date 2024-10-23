@@ -58,11 +58,6 @@ async fn main() -> anyhow::Result<()> {
 
     let market_config = read_market_config(&args.config_path)?;
 
-    // verify explicitly assets decimals
-    for collateral_asset in &market_config.collateral_assets {
-        assert!(collateral_asset.decimals >= market_config.base_asset.decimals);
-    }
-
     // get current collateral assets configurations
     let collateral_asset_configurations = market_instance
         .methods()

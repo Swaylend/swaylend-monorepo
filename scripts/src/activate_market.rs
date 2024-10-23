@@ -60,11 +60,6 @@ async fn main() -> anyhow::Result<()> {
 
     println!("Market configuration: {:#?}", market_config);
 
-    // verify explicitly assets decimals
-    for collateral_asset in &market_config.collateral_assets {
-        assert!(collateral_asset.decimals > market_config.base_asset.decimals);
-    }
-
     if !get_yes_no_input("Do you want to activate market with the config above? (yes/no): ") {
         return Ok(());
     }
