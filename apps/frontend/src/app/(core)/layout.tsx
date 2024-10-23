@@ -19,7 +19,7 @@ export default function AppLayout({
         <Navbar mobile={mobile} />
         <div className="bg-background flex-1">{children}</div>
         <Footer />
-        <AnnouncementPopover />
+        {!mobile && <AnnouncementPopover />}
         <IntroductionDialog />
       </div>
     </Providers>

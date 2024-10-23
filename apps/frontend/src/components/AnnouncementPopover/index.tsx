@@ -28,7 +28,7 @@ export const AnnouncementPopover = () => {
   return (
     <Dialog open={open} modal={false}>
       <DialogContent
-        className="w-auto max-w-[90vw] flex bg-muted top-[15%]"
+        className="w-full sm:w-auto flex bg-muted top-[15%]"
         onOpenAutoFocus={(e) => e.preventDefault()}
       >
         <DialogClose asChild>
@@ -43,8 +43,8 @@ export const AnnouncementPopover = () => {
         <div className="flex">
           <Image src={Logo} height={50} alt="logo" className="pr-2" />
           <div className="w-auto mr-4 px-4 text-center">
-            We've made minor adjustments to the interest rate curves <br /> to
-            better align with the current market conditions.
+            We've made minor adjustments to the interest rate curves to better
+            align with the current market conditions.
           </div>
         </div>
       </DialogContent>
