@@ -10,4 +10,5 @@ mod price_changes;
 mod reserves;
 mod rewards;
 mod supply_withdraw;
+mod update_curve_parameters;
 mod utilization;
