@@ -233,7 +233,7 @@ async fn main_test() {
     // ==================== Step #5 ====================
     // 👛 Wallet: Alice 🦹
     // 🤙 Call: withdraw_base
-    // 💰 Amount: ~99.96 USDC (available_to_borrow)
+    // 💰 Amount: ~49.99 USDC (available_to_borrow)
     let amount = market
         .available_to_borrow(&[&oracle.instance], alice_account)
         .await
@@ -298,7 +298,7 @@ async fn main_test() {
     // 🤙 Drop of collateral price
     // 💰 Amount: -30%
 
-    print_case_title(6, "Admin", "Drop of collateral price", "-10%");
+    print_case_title(6, "Admin", "Drop of collateral price", "-30%");
     let res = oracle.price(uni.price_feed_id).await.unwrap().value;
     let new_price = (res.price as f64 * 0.7) as u64;
     let prices = Vec::from([(
@@ -381,7 +381,7 @@ async fn main_test() {
     // ==================== Step #8 ====================
     // 👛 Wallet: Bob 🤵
     // 🤙 Call: buy_collateral
-    // 💰 Amount: 172.44 USDC
+    // 💰 Amount: 119 USDC
 
     let reserves = market
         .with_account(&bob)
@@ -477,7 +477,7 @@ async fn main_test() {
     // ==================== Step #9 ====================
     // 👛 Wallet: Bob 🧛
     // 🤙 Call: withdraw_base
-    // 💰 Amount: 100.021671 USDC
+    // 💰 Amount: 100.002259 USDC
 
     let (amount, _) = market.get_user_supply_borrow(bob_account).await.unwrap();
     let log_amount = format!("{} USDC", amount as f64 / scale_6);
@@ -513,7 +513,7 @@ async fn main_test() {
     // ==================== Step #10 ====================
     // 👛 Wallet: Chad 🧛
     // 🤙 Call: withdraw_base
-    // 💰 Amount: 200.0233392 USDC
+    // 💰 Amount: 200.002043 USDC
 
     let (amount, _) = market.get_user_supply_borrow(chad_account).await.unwrap();
     let log_amount = format!("{} USDC", amount as f64 / scale_6);
@@ -549,7 +549,7 @@ async fn main_test() {
     // ==================== Step #11 ====================
     // 👛 Wallet: Alice 🧛
     // 🤙 Call: withdraw_base
-    // 💰 Amount: 17.276598 USDC
+    // 💰 Amount: 5.998373 USDC
 
     let (amount, _) = market.get_user_supply_borrow(alice_account).await.unwrap();
     let log_amount = format!("{} USDC", amount as f64 / scale_6);
@@ -582,7 +582,7 @@ async fn main_test() {
     // ==================== Step #12 ====================
     // 👛 Wallet: Chad 🤵
     // 🤙 Call: withdraw_collateral
-    // 💰 Amount: 270 UNI
+    // 💰 Amount: 60 UNI
 
     let amount = market
         .get_user_collateral(chad_account, uni.asset_id)
