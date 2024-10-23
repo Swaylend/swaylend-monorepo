@@ -829,7 +829,7 @@ impl Market for Contract {
 
         // Only allow purchases if reserves are negative or if the reserves are less than the target reserves
         require(
-            reserves < I256::zero() || reserves < I256::try_from(storage.market_configuration.read().target_reserves)
+            reserves < I256::try_from(storage.market_configuration.read().target_reserves)
                 .unwrap(),
             Error::NotForSale,
         );
@@ -1394,7 +1394,7 @@ fn get_price_internal(price_feed_id: PriceFeedId, price_position: PricePosition)
         );
     }
 
-    require(price.price > 0, Error::OraclePriceValidationError);
+    require(price.price != 0, Error::OraclePriceValidationError);
 
     require(
         u256::from(price.confidence) <= (u256::from(price.price) * ORACLE_MAX_CONF_WIDTH / ORACLE_CONF_BASIS_POINTS),
