@@ -76,19 +76,41 @@ const POINTS_COLLATERAL: Point[] = [
     name: 'Passive Points',
     description: (
       <div className="text-md">
-        Earn <span className="text-lavender font-semibold">Passive Points</span>{' '}
-        by holding <span className="text-lavender">unused</span> collateral{' '}
-        <br /> on Swaylend. Note that Collateral used in <br /> Borrow positions
-        earns{' '}
-        <span className="text-lavender font-semibold">Activity Points</span>{' '}
-        instead. <br />{' '}
+        Supply this asset as collateral to earn 1 Fuel Point per dollar value.
+        <br /> Earn up to a <span className="text-primary">2x</span> multiplier
+        if the collateral is actively used for borrowing.
+        <br />
+        <br />
+        For more details, check out our{' '}
         <a
-          href="https://fuel.mirror.xyz/UfX-NnWGvYy56K8lq5gPfGLPI58DGD3KOHBJupHIibk"
+          href="https://swaylend.medium.com/incentivizing-useful-liquidity-on-swaylend-with-fuel-points-c2308be4b4c6"
           className="text-primary underline"
           target="_blank"
           rel="noreferrer"
         >
-          Learn more
+          blog post
+        </a>
+        .
+      </div>
+    ),
+    icon: SYMBOL_TO_ICON.FUEL,
+  },
+  {
+    id: '1',
+    name: 'Passive Points',
+    description: (
+      <div className="text-md">
+        Supply this asset as collateral to earn 1 Fuel Point per dollar value.
+        <br />
+        <br />
+        For more details, check out our{' '}
+        <a
+          href="https://swaylend.medium.com/incentivizing-useful-liquidity-on-swaylend-with-fuel-points-c2308be4b4c6"
+          className="text-primary underline"
+          target="_blank"
+          rel="noreferrer"
+        >
+          blog post
         </a>
         .
       </div>
@@ -255,7 +277,11 @@ const CollateralTableRow = ({
       <TableCell>
         <PointIcons
           value={symbol === 'USDT' || symbol === 'ETH' ? '2x' : undefined}
-          points={POINTS_COLLATERAL}
+          points={
+            symbol === 'USDT' || symbol === 'ETH'
+              ? [POINTS_COLLATERAL[0]]
+              : [POINTS_COLLATERAL[1]]
+          }
         />
       </TableCell>
       <TableCell>
