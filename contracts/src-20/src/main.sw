@@ -174,6 +174,13 @@ abi EmitSRC20Events {
 impl EmitSRC20Events for Contract {
     #[storage(read)]
     fn emit_src20_events() {
+        require(
+            storage
+                .owner
+                .read() == State::Initialized(msg_sender().unwrap()),
+            AccessError::NotOwner,
+        );
+        
         // Metadata that is stored as a configurable should only be emitted once.
         let asset = AssetId::default();
         let sender = msg_sender().unwrap();
