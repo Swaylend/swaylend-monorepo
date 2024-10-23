@@ -96,7 +96,7 @@ const POINTS_COLLATERAL: Point[] = [
     icon: SYMBOL_TO_ICON.FUEL,
   },
   {
-    id: '1',
+    id: '2',
     name: 'Passive Points',
     description: (
       <div className="text-md">
