@@ -701,7 +701,6 @@ impl Market for Contract {
         let len = storage.collateral_configurations_keys.len();
         let market_configuration = storage.market_configuration.read();
 
-
         while index < len {
             let collateral_configuration = storage.collateral_configurations.get(storage.collateral_configurations_keys.get(index).unwrap().read()).read();
 
@@ -714,13 +713,13 @@ impl Market for Contract {
 
             let price = get_price_internal(collateral_configuration.price_feed_id, PricePosition::LowerBound); // decimals: price.exponent
             let price_exponent = price.exponent;
+            let price_scale = u256::from(10_u64).pow(price.exponent);
             let price = u256::from(price.price); // decimals: price.exponent
             let amount = balance * collateral_configuration.borrow_collateral_factor / FACTOR_SCALE_18; // decimals: collateral_configuration.decimals
-            let scale = u256::from(10_u64).pow(
-                collateral_configuration.decimals + price_exponent - market_configuration.base_token_decimals,
-            );
+            let collateral_scale = u256::from(10_u64).pow(collateral_configuration.decimals);
+            let base_asset_scale = u256::from(10_u64).pow(market_configuration.base_token_decimals);
 
-            borrow_limit += amount * price / scale; // decimals: base_token_decimals
+            borrow_limit += amount * price * base_asset_scale / collateral_scale / price_scale; // decimals: base_token_decimals
             index += 1;
         };
 
@@ -876,7 +875,7 @@ impl Market for Contract {
     /// # Number of Storage Accesses
     /// * Reads: `5`
     #[storage(read)]
-    fn collateral_value_to_sell(asset_id: AssetId, collateral_amount: u64) -> u64 { // decimals: base_token_decimals
+    fn collateral_value_to_sell(asset_id: AssetId, collateral_amount: u64) -> u64 { // decimals: collateral_asset.decimals
         let collateral_configuration = storage.collateral_configurations.get(asset_id).read();
         let market_configuration = storage.market_configuration.read();
 
@@ -891,15 +890,11 @@ impl Market for Contract {
         let base_price = get_price_internal(market_configuration.base_token_price_feed_id, PricePosition::Middle); // decimals: base_price.exponent
         let base_price_scale = u256::from(10_u64).pow(base_price.exponent);
         let base_price = u256::from(base_price.price); // decimals: base_price.exponent
-        let scale = u256::from(10_u64).pow(
-            collateral_configuration
-                .decimals - storage
-                .market_configuration
-                .read()
-                .base_token_decimals,
-        );
+        let collateral_scale = u256::from(10_u64).pow(collateral_configuration.decimals);
+        let base_asset_scale = u256::from(10_u64).pow(market_configuration.base_token_decimals);
 
-        let collateral_value = asset_price_discounted * collateral_amount.into() * base_price_scale / asset_price_scale / base_price / scale;
+        let asset_discounted = asset_price_discounted * collateral_amount.into() / asset_price_scale; // decimals: collateral_asset.decimals
+        let collateral_value = asset_discounted * base_asset_scale * base_price_scale / base_price / collateral_scale;
 
         // Native assets are in u64
         <u64 as TryFrom<u256>>::try_from(collateral_value).unwrap()
