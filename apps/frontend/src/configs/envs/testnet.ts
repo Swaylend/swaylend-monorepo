@@ -17,6 +17,7 @@ export function createTestnetConfig() {
       fuelOblApi: process.env.NEXT_PUBLIC_FUEL_OBL_API ?? '',
       announcementEnabled:
         process.env.NEXT_PUBLIC_ANNOUNCEMENT_ENABLED === 'true',
+      orbiterBridge: process.env.NEXT_PUBLIC_ORBITER_BRIDGE ?? '',
     },
     server: {
       sentioApi: process.env.SENTIO_API_URL ?? '',
