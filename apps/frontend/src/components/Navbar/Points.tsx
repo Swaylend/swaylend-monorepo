@@ -25,7 +25,7 @@ export const Points = () => {
 
   const { isConnected } = useIsConnected();
 
-  // const { data: fuelPoints } = useFuelPoints();
+  const { data: fuelPoints } = useFuelPoints();
 
   // const handleCopy = async (value: string) => {
   //   setIsCopied(true);
@@ -71,8 +71,7 @@ export const Points = () => {
             <InfoIcon text="Points earned through the Fuel Points Program" />
           </div>
           <span className="text-lavender font-semibold">
-            {/* {isConnected ? fuelPoints : 'Connect Wallet'} */}
-            Coming Soon
+            {isConnected ? fuelPoints : 'Connect Wallet'}
           </span>
         </div>
         {/* <Link href="/leaderboard" className="w-full mt-4" prefetch={false}>

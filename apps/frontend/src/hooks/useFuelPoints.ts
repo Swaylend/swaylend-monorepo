@@ -29,7 +29,7 @@ export const useFuelPoints = () => {
 
       try {
         const response = await fetch(
-          `${appConfig.client.fuelOblApi}/fuel/epoch1_leaderboard?user_address=${account}`
+          `${appConfig.client.fuelOblApi}/fuel/epoch1_leaderboard?user_address=${account.toLowerCase()}`
         );
 
         if (!response.ok) {
