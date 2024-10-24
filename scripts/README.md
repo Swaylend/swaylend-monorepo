@@ -39,8 +39,6 @@ This script will activate the contract - setup the market configuration, owner o
 cargo run --bin activate_market -- --config-path ./configs/testnet_usdc_config.json
 ```
 
-**Note:** Make sure the base asset decimals is strictly smaller than collateral asset decimals (for each collateral asset).
-
 ### Update collateral assets
 
 This script will update the collateral asset configuration (add new collateral assets, pause collateral assets, unpause collateral assets, update collateral asset configuration ...).
@@ -48,8 +46,6 @@ This script will update the collateral asset configuration (add new collateral a
 ```bash
 cargo run --bin update_collateral_assets -- --config-path ./configs/testnet_usdc_config.json
 ```
-
-**Note:** Make sure the base asset decimals is strictly smaller than collateral asset decimals (for each collateral asset).
 
 ### Upgrade market contract
 
