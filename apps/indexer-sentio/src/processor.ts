@@ -126,7 +126,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
     startBlock: startBlock,
   })
     .onLogMarketConfigurationEvent(async (event, ctx) => {
-      if (ctx.transaction?.isStatusFailure) {
+      if (!ctx.transaction?.isStatusSuccess) {
         return;
       }
 
@@ -240,7 +240,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       }
     })
     .onLogCollateralAssetAdded(async (event, ctx) => {
-      if (ctx.transaction?.isStatusFailure) {
+      if (!ctx.transaction?.isStatusSuccess) {
         return;
       }
 
@@ -344,7 +344,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       await ctx.store.upsert(poolSnapshot);
     })
     .onLogCollateralAssetUpdated(async (event, ctx) => {
-      if (ctx.transaction?.isStatusFailure) {
+      if (!ctx.transaction?.isStatusSuccess) {
         return;
       }
 
@@ -380,7 +380,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       await ctx.store.upsert(collateralConfiguration);
     })
     .onLogUserBasicEvent(async (event, ctx) => {
-      if (ctx.transaction?.isStatusFailure) {
+      if (!ctx.transaction?.isStatusSuccess) {
         return;
       }
 
@@ -418,7 +418,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       await ctx.store.upsert(userBasic);
     })
     .onLogUserSupplyCollateralEvent(async (event, ctx) => {
-      if (ctx.transaction?.isStatusFailure) {
+      if (!ctx.transaction?.isStatusSuccess) {
         return;
       }
 
@@ -552,7 +552,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       await ctx.store.upsert(eventEntity);
     })
     .onLogUserWithdrawCollateralEvent(async (event, ctx) => {
-      if (ctx.transaction?.isStatusFailure) {
+      if (!ctx.transaction?.isStatusSuccess) {
         return;
       }
 
@@ -668,7 +668,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       await ctx.store.upsert(eventEntity);
     })
     .onLogAbsorbCollateralEvent(async (event, ctx) => {
-      if (ctx.transaction?.isStatusFailure) {
+      if (!ctx.transaction?.isStatusSuccess) {
         return;
       }
 
@@ -751,7 +751,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       await ctx.store.upsert(collateralPosition);
     })
     .onLogUserSupplyBaseEvent(async (event, ctx) => {
-      if (ctx.transaction?.isStatusFailure) {
+      if (!ctx.transaction?.isStatusSuccess) {
         return;
       }
 
@@ -841,7 +841,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       await ctx.store.upsert(eventEntity);
     })
     .onLogUserWithdrawBaseEvent(async (event, ctx) => {
-      if (ctx.transaction?.isStatusFailure) {
+      if (!ctx.transaction?.isStatusSuccess) {
         return;
       }
 
@@ -931,7 +931,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       await ctx.store.upsert(eventEntity);
     })
     .onLogMarketBasicEvent(async (event, ctx) => {
-      if (ctx.transaction?.isStatusFailure) {
+      if (!ctx.transaction?.isStatusSuccess) {
         return;
       }
 
