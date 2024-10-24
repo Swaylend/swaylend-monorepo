@@ -23,6 +23,7 @@ export const AppConfigSchema = z.object({
     alchemyId: z.string(),
     fuelOblApi: z.string(),
     announcementEnabled: z.boolean(),
+    orbiterBridge: z.string(),
   }),
   server: z.object({
     sentioApi: z.string(),
