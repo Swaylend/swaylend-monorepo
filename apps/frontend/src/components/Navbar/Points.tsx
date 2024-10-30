@@ -3,14 +3,18 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import { useUser } from '@/hooks';
 import { useFuelPoints } from '@/hooks/useFuelPoints';
 import { cn } from '@/lib/utils';
 import { useIsConnected } from '@fuels/react';
+import { Trophy } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRef, useState } from 'react';
 import { useHover } from 'usehooks-ts';
 import POINTS from '/public/icons/points-icon.svg?url';
 import { InfoIcon } from '../InfoIcon';
+import { Button } from '../ui/button';
 
 export const Points = () => {
   const hoverRef = useRef<HTMLButtonElement | null>(null);
@@ -19,7 +23,7 @@ export const Points = () => {
   const [isManualOpen, setIsManualOpen] = useState(false);
   // const setOpen = useReferralModalStore(selectReferralModalSetOpen);
 
-  // const { data: user, isPending, isLoading, isError, refetch } = useUser();
+  const { data: user } = useUser();
 
   // const [isCopied, setIsCopied] = useState(false);
 
@@ -55,14 +59,9 @@ export const Points = () => {
         className="flex flex-col gap-y-2 items-center w-[258px] px-[24px]"
       >
         <div className="flex flex-col gap-y-2 items-center border border-white/10 w-full p-2 rounded-xl">
-          <div className="text-primary">SwayPoints</div>
-          <div
-            className={cn(
-              'text-lavender font-semibold'
-              // isLoading && 'animate-pulse'
-            )}
-          >
-            Coming Soon
+          <div className="text-primary">Swaylend Points</div>
+          <div className={cn('text-lavender font-semibold')}>
+            {isConnected ? (user ? user.points : '0') : 'Connect Wallet'}
           </div>
         </div>
         <div className="mt-8 flex flex-col gap-y-2 items-center border border-white/10 w-full p-2 rounded-xl">
@@ -74,13 +73,13 @@ export const Points = () => {
             {isConnected ? fuelPoints : 'Connect Wallet'}
           </span>
         </div>
-        {/* <Link href="/leaderboard" className="w-full mt-4" prefetch={false}>
+        <Link href="/leaderboard" className="w-full mt-4" prefetch={false}>
           <Button className="w-full flex gap-x-2" variant="tertiary-card">
             <Trophy className="w-5 h-5" />
             Points Leaderboard
           </Button>
         </Link>
-        <div className="w-full">
+        {/* <div className="w-full">
           <Button
             className={cn('w-full flex gap-x-2', isLoading && 'animate-pulse')}
             variant="tertiary-card"

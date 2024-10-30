@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 
 type User = {
   rank: number;
-  totalPoints: number;
+  points: number;
   address: string;
 };
 type Leaderboard = {
@@ -28,9 +28,8 @@ export const useLeaderboardPoints = () => {
     },
     retry: 3,
     refetchInterval: false,
-    refetchOnWindowFocus: false,
-    gcTime: 60 * 60 * 1000, // Run GC every hour
+    refetchOnWindowFocus: true,
+    gcTime: 2 * 60 * 60 * 1000, // Run GC every 2 hours
     staleTime: 60 * 60 * 1000, // Cache for 1 hour
-    enabled: false, // FIXME: Enable later
   });
 };
