@@ -1,4 +1,4 @@
-use crate::utils::{setup, TestData};
+use crate::utils::{setup, TestBaseAsset, TestData};
 use fuels::types::U256;
 use market::PriceDataUpdate;
 use market_sdk::parse_units;
@@ -22,7 +22,7 @@ async fn rewards_test() {
         prices,
         eth,
         ..
-    } = setup(None).await;
+    } = setup(None, TestBaseAsset::USDC).await;
 
     let price_data_update = PriceDataUpdate {
         update_fee: 0,

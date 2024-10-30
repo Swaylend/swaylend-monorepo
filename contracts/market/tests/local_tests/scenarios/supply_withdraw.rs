@@ -1,4 +1,4 @@
-use crate::utils::{print_case_title, setup, TestData};
+use crate::utils::{print_case_title, setup, TestBaseAsset, TestData};
 use fuels::prelude::ViewOnlyAccount;
 use market::PriceDataUpdate;
 use market_sdk::parse_units;
@@ -21,7 +21,7 @@ async fn supply_withdraw_test() {
         publish_time,
         prices,
         ..
-    } = setup(None).await;
+    } = setup(None, TestBaseAsset::USDC).await;
 
     let price_data_update = PriceDataUpdate {
         update_fee: 1,

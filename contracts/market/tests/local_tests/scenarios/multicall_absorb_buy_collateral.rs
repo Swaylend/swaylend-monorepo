@@ -1,4 +1,4 @@
-use crate::utils::{print_case_title, setup, TestData};
+use crate::utils::{print_case_title, setup, TestBaseAsset, TestData};
 use chrono::Utc;
 use fuels::{
     accounts::ViewOnlyAccount,
@@ -35,7 +35,7 @@ async fn multicall_absorb_buy_collateral_test() {
         prices,
         assets,
         ..
-    } = setup(None).await;
+    } = setup(None, TestBaseAsset::USDC).await;
 
     let price_data_update = PriceDataUpdate {
         update_fee: 1,

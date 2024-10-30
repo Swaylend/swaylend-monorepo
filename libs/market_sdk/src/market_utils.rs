@@ -823,10 +823,13 @@ impl Market {
     pub async fn print_debug_state(
         &self,
         wallets: &Vec<WalletUnlocked>,
-        usdc: &Asset,
+        base: &Asset,
         collateral: &Asset,
     ) -> anyhow::Result<()> {
-        let usdc_asset_id = usdc.asset_id;
+        let base_asset_id = base.asset_id;
+        let base_decimals = base.decimals;
+        let base_symbol = base.symbol.clone();
+
         let collateral_asset_id = collateral.asset_id;
         let collateral_decimals = collateral.decimals;
         let collateral_symbol = collateral.symbol.clone();
@@ -844,7 +847,8 @@ impl Market {
         let scale18 = 10u64.pow(18) as f64;
 
         let market_basic = self.get_market_basics().await?.value;
-        let usdc_balance = self.balance_of(usdc.asset_id).await?.value as f64 / 10u64.pow(6) as f64;
+        let base_balance = self.balance_of(base_asset_id).await?.value as f64
+            / 10u64.pow(base_decimals.try_into().unwrap()) as f64;
         let collateral_balance = format_units(
             self.balance_of(collateral.asset_id).await?.value,
             collateral_decimals,
@@ -854,9 +858,12 @@ impl Market {
         let b_rate = convert_u256_to_u128(market_basic.base_borrow_index) as f64 / scale15;
         let total_collateral = self.totals_collateral(collateral.asset_id).await?.value;
         let last_accrual_time = market_basic.last_accrual_time;
-        let usdc_reserves = convert_i256_to_i128(&self.get_reserves().await?.value);
+        let base_reserves = convert_i256_to_i128(&self.get_reserves().await?.value);
 
-        let usdc_reserves = format!("{} USDC", usdc_reserves as f64 / 10u64.pow(6) as f64);
+        let base_reserves = format!(
+            "{} {base_symbol}",
+            base_reserves as f64 / 10u64.pow(base_decimals.try_into().unwrap()) as f64
+        );
         let collateral_reserves = convert_i256_to_i128(
             &self
                 .get_collateral_reserves(collateral.asset_id)
@@ -868,14 +875,14 @@ impl Market {
             collateral_reserves as f64 / 10u64.pow(collateral_decimals as u32) as f64
         );
         let supply_base = convert_u256_to_u128(market_basic.total_supply_base) as f64 * s_rate
-            / 10u64.pow(6) as f64;
+            / 10u64.pow(base_decimals.try_into().unwrap()) as f64;
         let borrow_base = convert_u256_to_u128(market_basic.total_borrow_base) as f64 * b_rate
-            / 10u64.pow(6) as f64;
+            / 10u64.pow(base_decimals.try_into().unwrap()) as f64;
 
-        println!("🏦 Market\n  Total supply {supply_base} USDC | Total borrow {borrow_base} USDC",);
+        println!("🏦 Market\n  Total supply {supply_base} {base_symbol} | Total borrow {borrow_base} {base_symbol}");
         println!(
-        "  Total USDC balance = {usdc_balance} USDC | Total {collateral_symbol} balance = {collateral_balance} {collateral_symbol}");
-        println!("  reserves: {usdc_reserves} | {collateral_reserves}");
+        "  Total {base_symbol} balance = {base_balance} {base_symbol} | Total {collateral_symbol} balance = {collateral_balance} {collateral_symbol}");
+        println!("  reserves: {base_reserves} | {collateral_reserves}");
         println!("  sRate {s_rate} | bRate {b_rate}");
         println!(
             "  Total collateral {} {collateral_symbol}",
@@ -885,10 +892,10 @@ impl Market {
 
         let basic = self.get_user_basic(alice_account).await?.value;
         let (supply, borrow) = self.get_user_supply_borrow(alice_account).await?;
-        let supply = format_units_u128(supply, 6);
-        let borrow = format_units_u128(borrow, 6);
-        let usdc_balance =
-            alice.get_asset_balance(&usdc_asset_id).await? as f64 / 10u64.pow(6) as f64;
+        let supply = format_units_u128(supply, base_decimals);
+        let borrow = format_units_u128(borrow, base_decimals);
+        let usdc_balance = alice.get_asset_balance(&base_asset_id).await? as f64
+            / 10u64.pow(base_decimals.try_into().unwrap()) as f64;
         let collateral_balance = alice.get_asset_balance(&collateral_asset_id).await? as f64
             / 10u64.pow(collateral_decimals as u32) as f64;
         let collateral_amount = self
@@ -897,19 +904,21 @@ impl Market {
             .value;
         println!("\nAlice 🦹");
         println!("  Principal = {}", convert_i256_to_i128(&basic.principal));
-        println!("  Present supply = {supply} USDC | borrow = {borrow} USDC");
+        println!("  Present supply = {supply} {base_symbol} | borrow = {borrow} {base_symbol}");
         println!(
             "  Supplied collateral {} {collateral_symbol}",
             format_units(collateral_amount, collateral_decimals)
         );
-        println!("  Balance {usdc_balance} USDC | {collateral_balance} {collateral_symbol}");
+        println!(
+            "  Balance {usdc_balance} {base_symbol} | {collateral_balance} {collateral_symbol}"
+        );
 
         let basic = self.get_user_basic(bob_account).await?.value;
         let (supply, borrow) = self.get_user_supply_borrow(bob_account).await?;
-        let supply = format_units_u128(supply, 6);
-        let borrow = format_units_u128(borrow, 6);
-        let usdc_balance =
-            bob.get_asset_balance(&usdc_asset_id).await? as f64 / 10u64.pow(6) as f64;
+        let supply = format_units_u128(supply, base_decimals);
+        let borrow = format_units_u128(borrow, base_decimals);
+        let usdc_balance = bob.get_asset_balance(&base_asset_id).await? as f64
+            / 10u64.pow(base_decimals.try_into().unwrap()) as f64;
         let collateral_balance = bob.get_asset_balance(&collateral_asset_id).await? as f64
             / 10u64.pow(collateral_decimals as u32) as f64;
         let collateral_amount = self
@@ -919,19 +928,21 @@ impl Market {
         println!("\nBob 🧛");
 
         println!("  Principal = {}", convert_i256_to_i128(&basic.principal));
-        println!("  Present supply = {supply} USDC | borrow = {borrow} USDC");
+        println!("  Present supply = {supply} {base_symbol} | borrow = {borrow} {base_symbol}");
         println!(
             "  Supplied collateral {} {collateral_symbol}",
             format_units(collateral_amount, collateral_decimals)
         );
-        println!("  Balance {usdc_balance} USDC | {collateral_balance} {collateral_symbol}");
+        println!(
+            "  Balance {usdc_balance} {base_symbol} | {collateral_balance} {collateral_symbol}"
+        );
 
         let basic = self.get_user_basic(chad_account).await?.value;
         let (supply, borrow) = self.get_user_supply_borrow(chad_account).await?;
-        let supply = format_units_u128(supply, 6);
-        let borrow = format_units_u128(borrow, 6);
-        let usdc_balance =
-            chad.get_asset_balance(&usdc_asset_id).await? as f64 / 10u64.pow(6) as f64;
+        let supply = format_units_u128(supply, base_decimals);
+        let borrow = format_units_u128(borrow, base_decimals);
+        let usdc_balance = chad.get_asset_balance(&base_asset_id).await? as f64
+            / 10u64.pow(base_decimals.try_into().unwrap()) as f64;
         let collateral_balance = chad.get_asset_balance(&collateral_asset_id).await? as f64
             / 10u64.pow(collateral_decimals as u32) as f64;
         let collateral_amount = self
@@ -940,12 +951,14 @@ impl Market {
             .value;
         println!("\nChad 🤵");
         println!("  Principal = {}", convert_i256_to_i128(&basic.principal));
-        println!("  Present supply = {supply} USDC | borrow = {borrow} USDC");
+        println!("  Present supply = {supply} {base_symbol} | borrow = {borrow} {base_symbol}");
         println!(
             "  Supplied collateral {} {collateral_symbol}",
             format_units(collateral_amount, collateral_decimals)
         );
-        println!("  Balance {usdc_balance} USDC | {collateral_balance} {collateral_symbol}");
+        println!(
+            "  Balance {usdc_balance} {base_symbol} | {collateral_balance} {collateral_symbol}"
+        );
 
         Ok(())
     }

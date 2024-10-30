@@ -1,4 +1,4 @@
-use crate::utils::{setup, TestData};
+use crate::utils::{setup, TestBaseAsset, TestData};
 use fuels::types::U256;
 use market::{CollateralConfiguration, MarketConfiguration, PriceDataUpdate};
 use market_sdk::parse_units;
@@ -22,7 +22,7 @@ async fn collateral_configuration_test() {
         usdc_contract,
         eth,
         ..
-    } = setup(None).await;
+    } = setup(None, TestBaseAsset::USDC).await;
 
     let price_data_update = PriceDataUpdate {
         update_fee: 0,
@@ -164,7 +164,7 @@ async fn market_configuration_test() {
         market,
         usdc,
         ..
-    } = setup(None).await;
+    } = setup(None, TestBaseAsset::USDC).await;
 
     let old_market_config = market.get_market_configuration().await.unwrap().value;
     let new_market_config = MarketConfiguration {

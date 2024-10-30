@@ -1,4 +1,4 @@
-use crate::utils::{print_case_title, setup, TestData};
+use crate::utils::{print_case_title, setup, TestBaseAsset, TestData};
 use fuels::accounts::ViewOnlyAccount;
 use market::PriceDataUpdate;
 use market_sdk::parse_units;
@@ -26,7 +26,7 @@ async fn collateral_borrow_test() {
         uni,
         uni_contract,
         ..
-    } = setup(None).await;
+    } = setup(None, TestBaseAsset::USDC).await;
 
     let price_data_update = PriceDataUpdate {
         update_fee: 0,
@@ -256,7 +256,7 @@ async fn collateral_borrow_timeskip_test() {
         uni,
         uni_contract,
         ..
-    } = setup(None).await;
+    } = setup(None, TestBaseAsset::USDC).await;
 
     let price_data_update = PriceDataUpdate {
         update_fee: 0,

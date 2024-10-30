@@ -1,4 +1,4 @@
-use crate::utils::{setup, TestData};
+use crate::utils::{setup, TestBaseAsset, TestData};
 use fuels::{accounts::Account, types::transaction::TxPolicies};
 use market::PriceDataUpdate;
 use market_sdk::{convert_i256_to_i128, convert_i256_to_i64, parse_units};
@@ -24,7 +24,7 @@ async fn reserves_test() {
         admin,
         admin_account,
         ..
-    } = setup(None).await;
+    } = setup(None, TestBaseAsset::USDC).await;
 
     let price_data_update = PriceDataUpdate {
         update_fee: 0,
@@ -151,7 +151,7 @@ async fn add_reserves_test() {
         usdc,
         usdc_contract,
         ..
-    } = setup(None).await;
+    } = setup(None, TestBaseAsset::USDC).await;
 
     let mint_amount = parse_units(150, usdc.decimals);
     usdc_contract

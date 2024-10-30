@@ -1,4 +1,4 @@
-use crate::utils::{print_case_title, setup, TestData};
+use crate::utils::{print_case_title, setup, TestBaseAsset, TestData};
 use chrono::Utc;
 use fuels::{
     accounts::ViewOnlyAccount,
@@ -37,7 +37,7 @@ async fn absorb_and_liquidate() {
         prices,
         usdc_contract,
         ..
-    } = setup(None).await;
+    } = setup(None, TestBaseAsset::USDC).await;
 
     let price_data_update = PriceDataUpdate {
         update_fee: 0,
@@ -322,7 +322,7 @@ async fn all_assets_liquidated() {
         prices,
         usdc_contract,
         ..
-    } = setup(None).await;
+    } = setup(None, TestBaseAsset::USDC).await;
 
     let price_data_update = PriceDataUpdate {
         update_fee: 0,
@@ -597,7 +597,7 @@ async fn is_liquidatable_internal_uses_correct_index() {
         usdc_contract,
         uni_contract,
         ..
-    } = setup(Some(100_000_000)).await;
+    } = setup(Some(100_000_000), TestBaseAsset::USDC).await;
 
     let price_data_update = PriceDataUpdate {
         update_fee: 0,
