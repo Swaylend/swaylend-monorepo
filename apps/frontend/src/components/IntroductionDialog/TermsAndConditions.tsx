@@ -41,15 +41,14 @@ export const TermsAndConditions = ({
             <p>
               This Interface is not available to residents of Belarus, Burundi,
               the Central African Republic, the Democratic Republic of Congo,
-              the Democratic People’s Republic of Korea, the temporarily
-              occupied regions of Ukraine, Cuba, Iran, Libya, the People’s
-              Republic of China, the Russian Federation, Somalia, Sudan, South
-              Sudan, Syria, the United States of America, Venezuela, Yemen, and
-              Zimbabwe or any other jurisdiction in which accessing or using the
-              Swaylend Protocol is prohibited (“Prohibited Jurisdictions”). In
-              using this Interface, you confirm that you are not located in,
-              incorporated or otherwise established in, or resident of, a
-              Prohibited Jurisdiction.
+              the Democratic People’s Republic of Korea, Ukraine, Cuba, Iran,
+              Libya, the People’s Republic of China, the Russian Federation,
+              Somalia, Sudan, South Sudan, Syria, the United States of America,
+              Venezuela, Yemen, and Zimbabwe or any other jurisdiction in which
+              accessing or using the Swaylend Protocol is prohibited
+              (“Prohibited Jurisdictions”). In using this Interface, you confirm
+              that you are not located in, incorporated or otherwise established
+              in, or resident of, a Prohibited Jurisdiction.
             </p>
             <div className="flex max-md:flex-col max-md:gap-y-2 max-md:text-center md:gap-x-2 items-center mt-4">
               <div
