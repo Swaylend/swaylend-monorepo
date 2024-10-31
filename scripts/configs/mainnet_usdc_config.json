@@ -86,6 +86,18 @@
       "liquidation_penalty": 800000000000000000,
       "supply_cap": 800000000000,
       "is_active": true
+    },
+    {
+      "asset_id": "0x1a7815cc9f75db5c24a5b0814bfb706bb9fe485333e98254015de8f48f84c67b",
+      "price_feed_id": "0x6df640f3b8963d8f8358f791f352b8364513f6ab1cca5ed3f1f7b5448980e784",
+      "name": "wstETH",
+      "symbol": "wstETH",
+      "decimals": 9,
+      "borrow_collateral_factor": 600000000000000000,
+      "liquidate_collateral_factor": 750000000000000000,
+      "liquidation_penalty": 800000000000000000,
+      "supply_cap": 800000000000,
+      "is_active": true
     }
   ]
 }
