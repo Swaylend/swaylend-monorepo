@@ -10,6 +10,6 @@ address = "0x657ab45a6eb98a4893a99fd104347179151e8b3828fd8f2a108cc09770d1ebae"
 
 [dependencies]
 market_abi = { path = "../../abis/market_abi" }
-pyth_interface = { git = "https://github.com/pyth-network/pyth-crosschain", rev = "aa9509ccd37cf5dc73fee891a5730c351d15235f" }
+pyth_interface = { git = "https://github.com/pyth-network/pyth-crosschain", rev = "7de4ce3ec8defd97641c1d25302abe117bf5092b" }
 sway_libs = { git = "https://github.com/FuelLabs/sway-libs", tag = "v0.24.0" }
 standards = { git = "https://github.com/FuelLabs/sway-standards", tag = "v0.6.1" }

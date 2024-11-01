@@ -24,7 +24,7 @@ dependencies = [
 
 [[package]]
 name = "pyth_interface"
-source = "git+https://github.com/pyth-network/pyth-crosschain?rev#aa9509ccd37cf5dc73fee891a5730c351d15235f"
+source = "git+https://github.com/pyth-network/pyth-crosschain?rev#7de4ce3ec8defd97641c1d25302abe117bf5092b"
 dependencies = [
     "standards git+https://github.com/FuelLabs/sway-standards?tag=v0.4.4#a001d3c248595112aae67e5633a06ef9bc0536ae",
     "std",
