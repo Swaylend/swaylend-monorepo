@@ -12,7 +12,7 @@ export function createTestnetConfig() {
 const markets: DeployedMarkets = {
   USDC: {
     marketAddress:
-      '0xa42a086b357cdb5ee3e7b981ea67768e38a5b6db4db35ca4dbab32ab60f48475',
+      '0x690a533331fed5062f80f6ff1851abd06c73188c95b663261bce5f0bcd9a5597',
     startBlock: BigInt(11380000),
   },
   USDT: {
