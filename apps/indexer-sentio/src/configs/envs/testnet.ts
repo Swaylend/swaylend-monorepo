@@ -13,7 +13,7 @@ const markets: DeployedMarkets = {
   USDC: {
     marketAddress:
       '0x690a533331fed5062f80f6ff1851abd06c73188c95b663261bce5f0bcd9a5597',
-    startBlock: BigInt(11380000),
+    startBlock: BigInt(14646058),
   },
   USDT: {
     marketAddress:
