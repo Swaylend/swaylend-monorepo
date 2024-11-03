@@ -60,27 +60,7 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
   return (
     <>
       <div className="w-full text-center bg-primary font-medium text-md text-primary-foreground py-2 px-4">
-        All activities on Swaylend are currently paused due to technical issues.
-        Join the{' '}
-        <a
-          href="https://discord.gg/7N796pdHNk"
-          target="_blank"
-          rel="noreferrer"
-          className="underline ml-1"
-        >
-          Discord
-        </a>{' '}
-        or follow the{' '}
-        <a
-          href="https://x.com/swaylend"
-          target="_blank"
-          rel="noreferrer"
-          className="underline ml-1"
-        >
-          X
-        </a>{' '}
-        profile for the latest updates.
-        {/* Start earning Fuel Activity Points by Lending and Borrowing!
+        Start earning Fuel Activity Points by Lending and Borrowing!
         <a
           href="https://app.fuel.network/earn-points"
           target="_blank"
@@ -88,7 +68,7 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
           className="underline ml-1"
         >
           Learn more
-        </a> */}
+        </a>
       </div>
       {/* DESKTOP */}
       <div className="max-lg:hidden">
