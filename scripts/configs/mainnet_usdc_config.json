@@ -1,6 +1,6 @@
 {
-  "supply_paused": true,
-  "withdraw_paused": true,
+  "supply_paused": false,
+  "withdraw_paused": false,
   "absorb_paused": true,
   "buy_paused": true,
   "supply_kink": 800000000000000000,
@@ -37,7 +37,7 @@
       "liquidate_collateral_factor": 800000000000000000,
       "liquidation_penalty": 880000000000000000,
       "supply_cap": 7000000000000,
-      "is_active": false
+      "is_active": true
     },
     {
       "asset_id": "0x91b3559edb2619cde8ffb2aa7b3c3be97efd794ea46700db7092abeee62281b0",
@@ -49,7 +49,7 @@
       "liquidate_collateral_factor": 750000000000000000,
       "liquidation_penalty": 850000000000000000,
       "supply_cap": 4000000000000,
-      "is_active": false
+      "is_active": true
     },
     {
       "asset_id": "0xa0265fb5c32f6e8db3197af3c7eb05c48ae373605b8165b6f4a51c5b0ba4812e",
@@ -61,7 +61,7 @@
       "liquidate_collateral_factor": 950000000000000000,
       "liquidation_penalty": 950000000000000000,
       "supply_cap": 10000000000000,
-      "is_active": false
+      "is_active": true
     },
     {
       "asset_id": "0x9e46f919fbf978f3cad7cd34cca982d5613af63ff8aab6c379e4faa179552958",
@@ -73,7 +73,7 @@
       "liquidate_collateral_factor": 950000000000000000,
       "liquidation_penalty": 950000000000000000,
       "supply_cap": 10000000000000000,
-      "is_active": false
+      "is_active": true
     },
     {
       "asset_id": "0x239ed6e12b7ce4089ee245244e3bf906999a6429c2a9a445a1e1faf56914a4ab",
@@ -85,7 +85,7 @@
       "liquidate_collateral_factor": 750000000000000000,
       "liquidation_penalty": 800000000000000000,
       "supply_cap": 800000000000,
-      "is_active": false
+      "is_active": true
     },
     {
       "asset_id": "0x1a7815cc9f75db5c24a5b0814bfb706bb9fe485333e98254015de8f48f84c67b",
@@ -97,7 +97,7 @@
       "liquidate_collateral_factor": 750000000000000000,
       "liquidation_penalty": 800000000000000000,
       "supply_cap": 800000000000,
-      "is_active": false
+      "is_active": true
     }
   ]
 }
