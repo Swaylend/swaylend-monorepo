@@ -1,6 +1,6 @@
 [[package]]
 name = "core"
-source = "path+from-root-D6AA1FFC7C2DE618"
+source = "path+from-root-F64B6E1A883A7E7B"
 
 [[package]]
 name = "market"
@@ -63,7 +63,7 @@ dependencies = ["std"]
 
 [[package]]
 name = "std"
-source = "git+https://github.com/fuellabs/sway?tag=v0.66.3#5b7d720cf97e88eedc3c069b617ee7493bb16637"
+source = "git+https://github.com/fuellabs/sway?tag=v0.66.4#d7dd104dac4394aa7af56f05b720c975744db853"
 dependencies = ["core"]
 
 [[package]]
