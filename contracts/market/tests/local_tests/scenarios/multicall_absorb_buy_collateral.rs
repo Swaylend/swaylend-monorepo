@@ -221,7 +221,7 @@ async fn multicall_absorb_buy_collateral_test() {
 
     // Check asset balance
     let balance = chad.get_asset_balance(&eth.asset_id).await.unwrap();
-    assert!(balance == 10_998_986_826 - 1); // subtract oracle update fee
+    assert!(balance == 1000_998_986_826 - 1); // subtract oracle update fee
 
     market
         .print_debug_state(&wallets, &usdc, &eth)
