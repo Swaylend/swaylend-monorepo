@@ -1,6 +1,7 @@
 use crate::utils::{print_case_title, setup, TestBaseAsset, TestData};
 use chrono::Utc;
 use fuels::{
+    accounts::Account,
     prelude::ViewOnlyAccount,
     programs::{
         calls::{CallHandler, CallParameters},
@@ -22,17 +23,14 @@ async fn main_test() {
 
     let TestData {
         wallets,
+        admin,
         alice,
         alice_account,
         bob,
         bob_account,
         chad,
         chad_account,
-        usdc_contract,
-        usdc,
         market,
-        uni,
-        uni_contract,
         oracle,
         price_feed_ids,
         assets,
@@ -508,6 +506,18 @@ async fn main_test() {
     print_case_title(10, "Chad", "withdraw_base", log_amount.as_str());
 
     let old_balance = chad.get_asset_balance(&eth.asset_id).await.unwrap();
+
+    // Reserves are negative and we can't withdraw more ETH than is available
+    // So we need to send some ETH to the contract to make the reserves positive
+    admin
+        .force_transfer_to_contract(
+            market.contract_id(),
+            parse_units(10, eth.decimals),
+            eth.asset_id,
+            tx_policies,
+        )
+        .await
+        .unwrap();
 
     // Chad calls withdraw_base
     market
