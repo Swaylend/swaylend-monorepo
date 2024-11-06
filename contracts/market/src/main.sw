@@ -875,7 +875,7 @@ impl Market for Contract {
     /// # Number of Storage Accesses
     /// * Reads: `5`
     #[storage(read)]
-    fn collateral_value_to_sell(asset_id: AssetId, collateral_amount: u64) -> u64 { // decimals: collateral_asset.decimals
+    fn collateral_value_to_sell(asset_id: AssetId, collateral_amount: u64) -> u64 { // decimals: base_token_decimals
         let collateral_configuration = storage.collateral_configurations.get(asset_id).read();
         let market_configuration = storage.market_configuration.read();
 
