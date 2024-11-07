@@ -371,7 +371,13 @@ async fn main_test() {
     // ==================== Step #8 ====================
     // 👛 Wallet: Bob 🤵
     // 🤙 Call: buy_collateral
-    // 💰 Amount: 1.94 ETH
+    // 💰 Amount: ~2.77 ETH
+
+    // Reset prices back to old values
+    market
+        .update_price_feeds_if_necessary(&[&oracle.instance], &price_data_update_old)
+        .await
+        .unwrap();
 
     let reserves = market
         .with_account(&bob)
@@ -396,13 +402,6 @@ async fn main_test() {
     let log_amount = format!("{} ETH", amount as f64 / scale_9);
     print_case_title(8, "Bob", "buy_collateral", log_amount.as_str());
 
-    // Reset prices back to old values
-    // This is used to test that multi_call_handler works correctly
-    market
-        .update_price_feeds_if_necessary(&[&oracle.instance], &price_data_update_old)
-        .await
-        .unwrap();
-
     // Prepare calls for multi_call_handler
     let tx_policies = TxPolicies::default().with_script_gas_limit(1_000_000);
 
@@ -414,7 +413,7 @@ async fn main_test() {
     let update_balance_call = market
         .instance
         .methods()
-        .update_price_feeds_if_necessary(price_data_update.clone())
+        .update_price_feeds_if_necessary(price_data_update_old.clone())
         .with_contracts(&[&oracle.instance])
         .with_tx_policies(tx_policies)
         .call_params(call_params_update_price)
@@ -448,7 +447,7 @@ async fn main_test() {
 
     // Check
     let balance = bob.get_asset_balance(&usdt.asset_id).await.unwrap();
-    assert!(balance == parse_units(10000, usdt.decimals) * AMOUNT_COEFFICIENT);
+    assert!(balance == parse_units(10000, usdt.decimals) * AMOUNT_COEFFICIENT - 2); // -2 because some ETH is spent on tx fees
 
     market
         .print_debug_state(&wallets, &eth, &usdt)
@@ -548,71 +547,38 @@ async fn main_test() {
 
     // // =================================================
     // // ==================== Step #11 ====================
-    // // 👛 Wallet: Alice 🧛
-    // // 🤙 Call: withdraw_base
-    // // 💰 Amount: 17.276598 USDC
-
-    // let (amount, _) = market.get_user_supply_borrow(alice_account).await.unwrap();
-    // let log_amount = format!("{} USDC", amount as f64 / scale_6);
-    // print_case_title(11, "Alice", "withdraw_base", log_amount.as_str());
-
-    // // Alice calls withdraw_base
-    // market
-    //     .with_account(&alice)
-    //     .await
-    //     .unwrap()
-    //     .withdraw_base(
-    //         &[&oracle.instance],
-    //         amount.try_into().unwrap(),
-    //         &price_data_update,
-    //     )
-    //     .await
-    //     .unwrap();
-
-    // // USDC balance check
-    // let (supplied, _) = market.get_user_supply_borrow(alice_account).await.unwrap();
-    // assert!(supplied == 0);
-
-    // market
-    //     .print_debug_state(&wallets, &usdc, &uni)
-    //     .await
-    //     .unwrap();
-    // market.debug_increment_timestamp().await.unwrap();
-
-    // // =================================================
-    // // ==================== Step #12 ====================
     // // 👛 Wallet: Chad 🤵
     // // 🤙 Call: withdraw_collateral
-    // // 💰 Amount: 270 UNI
+    // // 💰 Amount: 15000 USDT
 
-    // let amount = market
-    //     .get_user_collateral(chad_account, uni.asset_id)
-    //     .await
-    //     .unwrap()
-    //     .value;
-    // let log_amount = format!("{} UNI", amount as f64 / scale_9);
-    // print_case_title(12, "Chad", "withdraw_collateral", log_amount.as_str());
+    let amount = market
+        .get_user_collateral(chad_account, usdt.asset_id)
+        .await
+        .unwrap()
+        .value;
+    let log_amount = format!("{} USDT", amount as f64 / scale_6);
+    print_case_title(12, "Chad", "withdraw_collateral", log_amount.as_str());
 
-    // // Chad calls withdraw_collateral
-    // market
-    //     .with_account(&chad)
-    //     .await
-    //     .unwrap()
-    //     .withdraw_collateral(
-    //         &[&oracle.instance],
-    //         uni.asset_id,
-    //         amount.try_into().unwrap(),
-    //         &price_data_update,
-    //     )
-    //     .await
-    //     .unwrap();
+    // Chad calls withdraw_collateral
+    market
+        .with_account(&chad)
+        .await
+        .unwrap()
+        .withdraw_collateral(
+            &[&oracle.instance],
+            usdt.asset_id,
+            amount.try_into().unwrap(),
+            &price_data_update,
+        )
+        .await
+        .unwrap();
 
-    // // UNI balance check
-    // let balance = chad.get_asset_balance(&uni.asset_id).await.unwrap();
-    // assert!(balance == amount);
+    // USDT balance check
+    let balance = chad.get_asset_balance(&usdt.asset_id).await.unwrap();
+    assert!(balance == amount);
 
-    // market
-    //     .print_debug_state(&wallets, &usdc, &uni)
-    //     .await
-    //     .unwrap();
+    market
+        .print_debug_state(&wallets, &eth, &usdt)
+        .await
+        .unwrap();
 }
