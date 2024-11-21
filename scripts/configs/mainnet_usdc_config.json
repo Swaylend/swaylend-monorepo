@@ -9,7 +9,7 @@
   "supply_per_second_interest_rate_slope_high": 70000000000,
   "supply_per_second_interest_rate_base": 0,
   "borrow_per_second_interest_rate_slope_low": 1950000000,
-  "borrow_per_second_interest_rate_slope_high": 70000000000,
+  "borrow_per_second_interest_rate_slope_high": 90000000000,
   "borrow_per_second_interest_rate_base": 775000000,
   "store_front_price_factor": 600000000000000000,
   "base_tracking_index_scale": 1000000000000000,
