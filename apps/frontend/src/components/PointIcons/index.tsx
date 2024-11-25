@@ -13,14 +13,14 @@ export type Point = {
   name: string;
   description: any;
   icon: string | StaticImport;
+  displayMultiplier: string | undefined;
 };
 
 type PointIconsProps = {
   points: Point[];
-  value?: string;
 };
 
-export const PointIcons = ({ points, value }: PointIconsProps) => {
+export const PointIcons = ({ points }: PointIconsProps) => {
   return (
     <div className="flex items-center">
       {points.map((point: Point) => {
@@ -35,12 +35,15 @@ export const PointIcons = ({ points, value }: PointIconsProps) => {
                   <div
                     className={clsx(
                       'border-2 border-primary py-1 rounded-full flex items-center gap-x-2',
-                      value ? 'bg-primary/10 pl-2 w-[74px]' : 'px-1'
+                      point.displayMultiplier
+                        ? 'bg-primary/10 pl-2 w-[74px]'
+                        : 'px-1',
+                      'w-[40px] h-[40px]'
                     )}
                   >
-                    {value && (
+                    {point.displayMultiplier && (
                       <div className="text-lg text-primary font-semibold">
-                        {value}
+                        {point.displayMultiplier}
                       </div>
                     )}
                     <Image
