@@ -13,11 +13,11 @@ function randomDouble(min: number, max: number) {
   return Math.random() * (max - min) + min;
 }
 
-export const useSwaylendPoints = () => {
+export const useSwayPoints = () => {
   const { account } = useAccount();
 
   return useQuery<string>({
-    queryKey: ['swaylendPoints', account],
+    queryKey: ['swayPoints', account],
     queryFn: async () => {
       if (!account) return getFormattedNumber(BigNumber(0));
 
