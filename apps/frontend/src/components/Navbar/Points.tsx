@@ -4,6 +4,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { useFuelPoints } from '@/hooks/useFuelPoints';
+import { useSwaylendPoints } from '@/hooks/useSwaylendPoints';
 import { cn } from '@/lib/utils';
 import { useIsConnected } from '@fuels/react';
 import Image from 'next/image';
@@ -26,6 +27,7 @@ export const Points = () => {
   const { isConnected } = useIsConnected();
 
   const { data: fuelPoints } = useFuelPoints();
+  const { data: swaylendPoints } = useSwaylendPoints();
 
   // const handleCopy = async (value: string) => {
   //   setIsCopied(true);
@@ -55,14 +57,14 @@ export const Points = () => {
         className="flex flex-col gap-y-2 items-center w-[258px] px-[24px]"
       >
         <div className="flex flex-col gap-y-2 items-center border border-white/10 w-full p-2 rounded-xl">
-          <div className="text-primary">SwayPoints</div>
+          <div className="text-primary">Swaylend Points</div>
           <div
             className={cn(
               'text-lavender font-semibold'
               // isLoading && 'animate-pulse'
             )}
           >
-            Coming Soon
+            {swaylendPoints}
           </div>
         </div>
         <div className="mt-8 flex flex-col gap-y-2 items-center border border-white/10 w-full p-2 rounded-xl">
