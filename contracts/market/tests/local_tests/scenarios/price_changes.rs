@@ -1,7 +1,7 @@
 // **Scenario #12 - Collateral asset price increases**
 
 // Description: Check that if collateral asset price increases, you can now borrow more base asset.
-use crate::utils::{print_case_title, setup, TestData};
+use crate::utils::{print_case_title, setup, TestBaseAsset, TestData};
 use chrono::Utc;
 use fuels::accounts::ViewOnlyAccount;
 use market::PriceDataUpdate;
@@ -28,7 +28,7 @@ async fn price_changes() {
         prices,
         usdc_contract,
         ..
-    } = setup(None).await;
+    } = setup(None, TestBaseAsset::USDC).await;
 
     let price_data_update = PriceDataUpdate {
         update_fee: 0,

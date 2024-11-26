@@ -1,4 +1,4 @@
-use crate::utils::{print_case_title, setup, TestData};
+use crate::utils::{print_case_title, setup, TestBaseAsset, TestData};
 use chrono::Utc;
 use fuels::accounts::ViewOnlyAccount;
 use market::PriceDataUpdate;
@@ -27,7 +27,7 @@ async fn negative_reserves_test() {
         prices,
         assets,
         ..
-    } = setup(None).await;
+    } = setup(None, TestBaseAsset::USDC).await;
 
     let price_data_update = PriceDataUpdate {
         update_fee: 1,

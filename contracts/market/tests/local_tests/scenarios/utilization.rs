@@ -5,7 +5,7 @@
 // Code: <insert link to the test file>
 
 // Steps:
-use crate::utils::{print_case_title, setup, TestData};
+use crate::utils::{print_case_title, setup, TestBaseAsset, TestData};
 use fuels::{accounts::ViewOnlyAccount, types::U256};
 use market::PriceDataUpdate;
 use market_sdk::parse_units;
@@ -31,7 +31,7 @@ async fn utilization_above_kinks() {
         prices,
         assets,
         ..
-    } = setup(None).await;
+    } = setup(None, TestBaseAsset::USDC).await;
 
     let price_data_update = PriceDataUpdate {
         update_fee: 1,

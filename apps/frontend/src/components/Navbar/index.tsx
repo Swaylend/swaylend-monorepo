@@ -160,6 +160,27 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
                       </div>
                     </div>
                   </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <div
+                      onMouseDown={() => {
+                        trackExternalPageView(
+                          'https://www.orbiter.finance/?source=Ethereum&dest=Fuel&token=ETH'
+                        );
+                        window.open(
+                          'https://www.orbiter.finance/?source=Ethereum&dest=Fuel&token=ETH',
+                          '_blank'
+                        );
+                        setOpenBridge(false);
+                      }}
+                      rel="noreferrer"
+                      className="w-full"
+                    >
+                      <div className="w-full flex items-center justify-between text-md font-medium text-lavender py-1 px-0.5 gap-x-2 cursor-pointer hover:underline">
+                        Orbiter Bridge
+                        <ExternalLink className="w-4 h-4" />
+                      </div>
+                    </div>
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
               <DropdownMenu open={openDex} onOpenChange={setOpenDex}>

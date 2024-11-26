@@ -7,21 +7,17 @@
     "lint:fix": "biome check --write ."
   },
   "devDependencies": {
-    "@biomejs/biome": "1.8.3",
+    "@biomejs/biome": "1.9.4",
     "@changesets/changelog-github": "^0.5.0",
-    "@changesets/cli": "^2.27.9",
-    "@graphql-codegen/cli": "^5.0.2",
-    "@graphql-codegen/client-preset": "^4.3.3",
-    "@graphql-typed-document-node/core": "^3.2.0",
-    "graphql": "^16.9.0"
+    "@changesets/cli": "^2.27.10"
   },
-  "packageManager": "pnpm@9.11.0",
+  "packageManager": "pnpm@9.14.2",
   "engines": {
-    "node": ">=20.17.0"
+    "node": ">=20.18.0"
   },
   "volta": {
-    "node": "20.17.0",
-    "pnpm": "9.11.0"
+    "node": "20.18.0",
+    "pnpm": "9.14.2"
   },
   "pnpm": {
     "overrides": {

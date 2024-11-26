@@ -5,6 +5,7 @@ import {
 } from '@/components/ui/popover';
 import { useUser } from '@/hooks';
 import { useFuelPoints } from '@/hooks/useFuelPoints';
+import { useSwayPoints } from '@/hooks/useSwaylendPoints';
 import { cn } from '@/lib/utils';
 import { useIsConnected } from '@fuels/react';
 import { Trophy } from 'lucide-react';
@@ -30,6 +31,7 @@ export const Points = () => {
   const { isConnected } = useIsConnected();
 
   const { data: fuelPoints } = useFuelPoints();
+  const { data: swaylendPoints } = useSwayPoints();
 
   // const handleCopy = async (value: string) => {
   //   setIsCopied(true);
@@ -59,7 +61,7 @@ export const Points = () => {
         className="flex flex-col gap-y-2 items-center w-[258px] px-[24px]"
       >
         <div className="flex flex-col gap-y-2 items-center border border-white/10 w-full p-2 rounded-xl">
-          <div className="text-primary">Swaylend Points</div>
+          <div className="text-primary">Swaypoints</div>
           <div className={cn('text-lavender font-semibold')}>
             {isConnected ? (user ? user.points : '0') : 'Connect Wallet'}
           </div>

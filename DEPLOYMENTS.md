@@ -2,7 +2,10 @@
 
 ## USDC Market
 
-* Market implementation contract: `0x8748488e127dccd6f2cf2a536bf248b2f807028e32e3b845d77233ead1ce242c`
+* Market implementation contract:
+    Address: `0x5e9e538e4af3766c25add654d7ddf54a4d0f57d5800b4c3edd2925e5e3d8a2e9`
+
+    Commit hash: [ `c91145c20c582997e68b5cd08780689f4944e725` ](https://github.com/Swaylend/swaylend-monorepo/tree/c91145c20c582997e68b5cd08780689f4944e725)
 
 * Market proxy contract: `0x657ab45a6eb98a4893a99fd104347179151e8b3828fd8f2a108cc09770d1ebae`
 
@@ -18,8 +21,10 @@
 ### Contracts
 
 * Token factory contract: `0x3e4f1948aece07d3f30c8c5c425f914ac74653827de48394466f2a887eebe9c7`
-* Market implementation contract: `0xb34171ca7b5c3bf90bd08b71f86fb1570f0a303f7a9e2cb046764cec63b4e03c`
-* Market proxy contract: `0xa42a086b357cdb5ee3e7b981ea67768e38a5b6db4db35ca4dbab32ab60f48475`
+
+* Market implementation contract: `0x16a854cb3eaebde5dda5768532ef9661e0236261accfc7b4c80970df36fc5f54`
+
+* Market proxy contract: `0xbeaa0e9479a83eb3eab0f66e0f0c0ce4af86a6fe6fd4549ae22d87083e086821`
 
 ### Assets
 
@@ -34,8 +39,10 @@
 ### Contracts
 
 * Token factory contract: `0x1ea9a306a5f280cfe7bd1fdc96815a6438069668e495a2f5a727c7b9b90691cb`
-* Market implementation contract: `0xc0bbc7d7e84e6cad874a0d1bb4c53cc46084764baccb4a4bd2e090493707b6bd`
-* Market proxy contract: `0x44daa228d84335bf2e17b1af1cf7f9de73266977affe6c3445f08bd07a2b0d5d`
+
+* Market implementation contract: `0x88116ee7519e73b0b3af3eb939acc0bcdc38937a41855c63d5aa78020eea8013`
+
+* Market proxy contract: `0x51b9bea7822988e03520018f4a1bb39b9f5ba15c9b4b9c9340a6bc1e5958abd4`
 
 ### Assets
 

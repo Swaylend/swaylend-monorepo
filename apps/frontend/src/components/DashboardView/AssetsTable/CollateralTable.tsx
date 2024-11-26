@@ -1,7 +1,8 @@
 import { AssetName } from '@/components/AssetName';
 import { CircularProgressBar } from '@/components/CircularProgressBar';
 import { InfoIcon } from '@/components/InfoIcon';
-import { type Point, PointIcons } from '@/components/PointIcons';
+import { PointIcons } from '@/components/PointIcons';
+import { POINTS_COLLATERAL } from '@/components/PointIcons/PointsTooltip';
 import { Title } from '@/components/Title';
 import { Button } from '@/components/ui/button';
 import {
@@ -69,61 +70,6 @@ type TableRowProps = {
   collateralAmount: BigNumber;
   price: BigNumber;
 };
-
-const POINTS_COLLATERAL: Point[] = [
-  {
-    id: '1',
-    name: 'Passive Points',
-    description: (
-      <div className="text-md">
-        Supply this asset as collateral to earn 1 Fuel Point per dollar value.
-        <br /> Earn up to a <span className="text-primary">2x</span> multiplier
-        if the collateral is actively used for borrowing.
-        <br />
-        <br />
-        For more details, check out our{' '}
-        <a
-          href="https://swaylend.medium.com/incentivizing-useful-liquidity-on-swaylend-with-fuel-points-c2308be4b4c6"
-          className="text-primary underline"
-          target="_blank"
-          rel="noreferrer"
-        >
-          blog post
-        </a>
-        .
-      </div>
-    ),
-    icon: SYMBOL_TO_ICON.FUEL,
-  },
-  {
-    id: '2',
-    name: 'Passive Points',
-    description: (
-      <div className="text-md">
-        Supply this asset as collateral to earn 1 Fuel Point per dollar value.
-        <br />
-        <br />
-        For more details, check out our{' '}
-        <a
-          href="https://swaylend.medium.com/incentivizing-useful-liquidity-on-swaylend-with-fuel-points-c2308be4b4c6"
-          className="text-primary underline"
-          target="_blank"
-          rel="noreferrer"
-        >
-          blog post
-        </a>
-        .
-      </div>
-    ),
-    icon: SYMBOL_TO_ICON.FUEL,
-  },
-  // {
-  //   id: '2',
-  //   name: 'Swaylend',
-  //   description: 'Earn Swaylend Points by lending assets',
-  //   icon: SYMBOL_TO_ICON.SWAY,
-  // },
-];
 
 const CollateralTableRow = ({
   account,
@@ -275,14 +221,16 @@ const CollateralTableRow = ({
         </div>
       </TableCell>
       <TableCell>
-        <PointIcons
-          value={symbol === 'USDT' || symbol === 'ETH' ? '2x' : undefined}
-          points={
-            symbol === 'USDT' || symbol === 'ETH'
-              ? [POINTS_COLLATERAL[0]]
-              : [POINTS_COLLATERAL[1]]
-          }
-        />
+        <div className=" h-full flex items-center gap-x-2">
+          <PointIcons
+            points={[
+              ...(symbol === 'USDT' || symbol === 'ETH'
+                ? [POINTS_COLLATERAL[0]]
+                : [POINTS_COLLATERAL[1]]),
+              POINTS_COLLATERAL[2],
+            ]}
+          />
+        </div>
       </TableCell>
       <TableCell>
         <div className="flex gap-x-2 w-full">
@@ -393,7 +341,14 @@ const CollateralCard = ({
           </div>
           <div className="w-full flex items-center">
             <div className="w-1/2 text-moon font-medium">Supply Points</div>
-            <PointIcons points={POINTS_COLLATERAL} />
+            <PointIcons
+              points={[
+                ...(symbol === 'USDT' || symbol === 'ETH'
+                  ? [POINTS_COLLATERAL[0]]
+                  : [POINTS_COLLATERAL[1]]),
+                POINTS_COLLATERAL[2],
+              ]}
+            />
           </div>
         </div>
       </CardContent>

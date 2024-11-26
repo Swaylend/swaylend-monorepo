@@ -620,22 +620,22 @@ const abi = {
     {
       "name": "DECIMALS",
       "concreteTypeId": "c89951a24c6ca28c13fd1cfdc646b2b656d69e61a92b91023be7eb58eb914b6b",
-      "offset": 25224
+      "offset": 25616
     },
     {
       "name": "NAME",
       "concreteTypeId": "fd59cdd2c531ab3564f4fcc13eb876860d4d7cd4d12aa1f042a5aeceacde951f",
-      "offset": 25240
+      "offset": 25632
     },
     {
       "name": "SYMBOL",
       "concreteTypeId": "84877f6e98274b9e4721db68b4c0bdb9e52b8e9572c5bd7811c07a41ced882c7",
-      "offset": 25248
+      "offset": 25640
     },
     {
       "name": "MAX_SUPPLY",
       "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
-      "offset": 25232
+      "offset": 25624
     }
   ]
 };

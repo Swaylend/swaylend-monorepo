@@ -1,5 +1,6 @@
 import { InfoIcon } from '@/components/InfoIcon';
-import { type Point, PointIcons } from '@/components/PointIcons';
+import { PointIcons } from '@/components/PointIcons';
+import { POINTS_LEND } from '@/components/PointIcons/PointsTooltip';
 import { Title } from '@/components/Title';
 import { Button } from '@/components/ui/button';
 import {
@@ -47,46 +48,6 @@ import { useAccount } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import BigNumber from 'bignumber.js';
 import Image from 'next/image';
-
-const POINTS_LEND: Point[] = [
-  {
-    id: '1',
-    name: 'Activity Points',
-    description: (
-      <div className="text-md">
-        By Lending USDC on Swaylend you get{' '}
-        <span className="text-primary">4x</span> Fuel Points Multiplier:
-        <br />-{' '}
-        <span className="text-lavender font-semibold">
-          2x for Lending Activity
-        </span>
-        <br />-{' '}
-        <span className="text-lavender font-semibold">
-          2x for using USDC as Incentivised Asset
-        </span>
-        <br />
-        <br />
-        For more details, check out our{' '}
-        <a
-          href="https://swaylend.medium.com/incentivizing-useful-liquidity-on-swaylend-with-fuel-points-c2308be4b4c6"
-          className="text-primary underline"
-          target="_blank"
-          rel="noreferrer"
-        >
-          blog post
-        </a>
-        .
-      </div>
-    ),
-    icon: SYMBOL_TO_ICON.FUEL,
-  },
-  // {
-  //   id: '2',
-  //   name: 'Swaylend',
-  //   description: 'Earn Swaylend Points by lending assets',
-  //   icon: SYMBOL_TO_ICON.SWAY,
-  // },
-];
 
 const SkeletonRow = (
   <TableRow>
@@ -260,7 +221,7 @@ export const LendTable = () => {
                 {appConfig.assets[marketConfiguration?.baseToken.bits ?? '']}
               </TableCell>
               <TableCell>
-                <PointIcons value="4x" points={POINTS_LEND} />
+                <PointIcons points={POINTS_LEND} />
               </TableCell>
               <TableCell>
                 {userRole === USER_ROLE.BORROWER ? (
@@ -398,7 +359,7 @@ export const LendTable = () => {
                   <div className="w-1/2 text-moon font-medium">
                     Supply Points
                   </div>
-                  <PointIcons value="4x" points={POINTS_LEND} />
+                  <PointIcons points={POINTS_LEND} />
                 </div>
               </div>
             </CardContent>

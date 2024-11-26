@@ -17,9 +17,14 @@ export const usePrice = (marketParam?: string) => {
   const [hermesClient, _] = useState(
     () =>
       new HermesClient(
-        process.env.NEXT_PUBLIC_HERMES_API ?? 'https://hermes.pyth.network'
+        process.env.NEXT_PUBLIC_HERMES_API ?? 'https://hermes.pyth.network',
+        {
+          httpRetries: 1,
+          timeout: 3000,
+        }
       )
   );
+
   const { provider } = useProvider();
 
   const storeMarket = useMarketStore(selectMarket);
@@ -74,8 +79,14 @@ export const usePrice = (marketParam?: string) => {
       const priceFeedIds = Array.from(priceFeedIdToAssetId.keys());
 
       // Fetch price updates from Hermes client
-      const priceUpdates =
-        await hermesClient.getLatestPriceUpdates(priceFeedIds);
+      let priceUpdates;
+      try {
+        priceUpdates = await hermesClient.getLatestPriceUpdates(priceFeedIds);
+      } catch (error) {
+        const client = new HermesClient('https://hermes.pyth.network');
+
+        priceUpdates = await client.getLatestPriceUpdates(priceFeedIds);
+      }
 
       if (
         !priceUpdates ||

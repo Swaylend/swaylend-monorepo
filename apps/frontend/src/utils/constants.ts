@@ -30,6 +30,9 @@ export const FAUCET_AMOUNTS: Record<string, number> = {
   USDT: 1000000,
   BNB: 300,
   ezETH: 1,
+  sDAI: 100000,
+  weETH: 1,
+  wstETH: 1,
 };
 
 export const SYMBOL_TO_ICON: Record<string, any> = {

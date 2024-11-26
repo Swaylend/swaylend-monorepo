@@ -86,6 +86,42 @@
       "liquidation_penalty": 950000000000000000,
       "supply_cap": 10000000000000,
       "is_active": true
+    },
+    {
+      "asset_id": "0x66be991ed1fe4217520bdfc25a767e9dbf24e3c7ed411d6c1cd51a7c0b6d0d24",
+      "price_feed_id": "0x710659c5a68e2416ce4264ca8d50d34acc20041d91289110eea152c52ff3dc39",
+      "name": "sDAI",
+      "symbol": "sDAI",
+      "decimals": 9,
+      "borrow_collateral_factor": 900000000000000000,
+      "liquidate_collateral_factor": 950000000000000000,
+      "liquidation_penalty": 950000000000000000,
+      "supply_cap": 10000000000000000,
+      "is_active": true
+    },
+    {
+      "asset_id": "0x0526a5a33267abf138d40be4a1bd982bfb00365310891c6e7e13d0d8e7c3fc23",
+      "price_feed_id": "0x9ee4e7c60b940440a261eb54b6d8149c23b580ed7da3139f7f08f4ea29dad395",
+      "name": "weETH",
+      "symbol": "weETH",
+      "decimals": 9,
+      "borrow_collateral_factor": 600000000000000000,
+      "liquidate_collateral_factor": 750000000000000000,
+      "liquidation_penalty": 800000000000000000,
+      "supply_cap": 800000000000,
+      "is_active": true
+    },
+    {
+      "asset_id": "0x62fb3f091da88a3a520fa7b7fd12fa1ab3cbf306d57a66e345b6e9b0b883d0c2",
+      "price_feed_id": "0x6df640f3b8963d8f8358f791f352b8364513f6ab1cca5ed3f1f7b5448980e784",
+      "name": "wstETH",
+      "symbol": "wstETH",
+      "decimals": 9,
+      "borrow_collateral_factor": 600000000000000000,
+      "liquidate_collateral_factor": 750000000000000000,
+      "liquidation_penalty": 800000000000000000,
+      "supply_cap": 800000000000,
+      "is_active": true
     }
   ]
 }

@@ -1,7 +1,7 @@
 use chrono::Utc;
 use fuels::accounts::wallet::WalletUnlocked;
 use fuels::test_helpers::{
-    launch_custom_provider_and_get_wallets, NodeConfig, Trigger, WalletsConfig,
+    launch_custom_provider_and_get_wallets, NodeConfig, Trigger, WalletsConfig
 };
 use fuels::types::{Bits256, ContractId, Identity};
 use market_sdk::{get_market_config, Market};
@@ -21,11 +21,12 @@ pub fn print_case_title(num: u8, name: &str, call: &str, amount: &str) {
     );
 }
 
-pub async fn init_wallets() -> Vec<WalletUnlocked> {
-    let wallets_config = WalletsConfig::new(Some(5), Some(10), Some(1_000_000_000));
+pub async fn init_wallets(use_gas_price: bool) -> Vec<WalletUnlocked> {
+    let wallets_config = WalletsConfig::new(Some(5), Some(1000), Some(1_000_000_000));
 
     let provider_config = NodeConfig {
         block_production: Trigger::Instant,
+        starting_gas_price: if use_gas_price { 0 } else { 1 },
         ..NodeConfig::default()
     };
 
@@ -35,6 +36,12 @@ pub async fn init_wallets() -> Vec<WalletUnlocked> {
         Ok(wallets) => wallets,
         Err(e) => panic!("wallets init error: {}", e),
     };
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum TestBaseAsset {
+    USDC,
+    ETH,
 }
 
 pub struct TestData {
@@ -62,9 +69,10 @@ pub struct TestData {
     pub prices: Vec<(Bits256, (u64, u32, u64, u64))>,
 }
 
-pub async fn setup(debug_step: Option<u64>) -> TestData {
+pub async fn setup(debug_step: Option<u64>, base_asset: TestBaseAsset) -> TestData {
     //--------------- WALLETS ---------------
-    let wallets = init_wallets().await;
+    let no_fees = base_asset == TestBaseAsset::ETH;
+    let wallets = init_wallets(no_fees).await;
     let admin = &wallets[0];
     let alice = &wallets[1];
     let bob = &wallets[2];
@@ -100,8 +108,14 @@ pub async fn setup(debug_step: Option<u64>) -> TestData {
     let eth = assets.get("ETH").unwrap().clone();
 
     //--------------- MARKET ---------------
-    let market_config =
-        get_market_config(usdc.asset_id, usdc.decimals as u32, usdc.price_feed_id).unwrap();
+    let market_config = match base_asset {
+        TestBaseAsset::USDC => {
+            get_market_config(usdc.asset_id, usdc.decimals as u32, usdc.price_feed_id).unwrap()
+        }
+        TestBaseAsset::ETH => {
+            get_market_config(eth.asset_id, eth.decimals as u32, eth.price_feed_id).unwrap()
+        }
+    };
 
     // debug step
     let debug_step: u64 = debug_step.unwrap_or(10_000);

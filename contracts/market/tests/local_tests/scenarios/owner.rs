@@ -13,7 +13,7 @@
 
 use std::str::FromStr;
 
-use crate::utils::{setup, TestData};
+use crate::utils::{setup, TestBaseAsset, TestData};
 use fuels::types::{ContractId, U256};
 use market::{CollateralConfiguration, PauseConfiguration};
 use market_sdk::get_market_config;
@@ -31,7 +31,7 @@ async fn owner_test() {
         assets,
         usdc,
         ..
-    } = setup(None).await;
+    } = setup(None, TestBaseAsset::USDC).await;
 
     let asset_id = assets["ETH"].asset_id;
 

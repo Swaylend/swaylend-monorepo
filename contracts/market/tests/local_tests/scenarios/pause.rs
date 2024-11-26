@@ -1,3 +1,4 @@
+use crate::utils::TestBaseAsset;
 use crate::utils::{setup, TestData};
 use chrono::Utc;
 use fuels::prelude::ViewOnlyAccount;
@@ -26,7 +27,7 @@ async fn pause_test() {
         publish_time,
         prices,
         ..
-    } = setup(None).await;
+    } = setup(None, TestBaseAsset::USDC).await;
 
     let price_data_update = PriceDataUpdate {
         update_fee: 1,

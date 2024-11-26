@@ -24,9 +24,7 @@
 
 ### Envio hosted service
 
-[Playground](https://envio.dev/app/swaylend/swaylend-monorepo/acb4662/playground)
-
-Current version endpoint: https://indexer.bigdevenergy.link/c755070/v1/graphql
+Current version endpoint: https://indexer.hyperindex.xyz/bfc2f60/v1/graphql
 
 ### Docker compose
 
