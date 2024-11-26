@@ -38,7 +38,7 @@ const markets: DeployedMarkets = {
     marketAddress:
       '0x657ab45a6eb98a4893a99fd104347179151e8b3828fd8f2a108cc09770d1ebae',
     tokenFactoryAddress: '',
-    graphqlUrl: 'https://indexer.bigdevenergy.link/bfc2f60/v1/graphql',
+    graphqlUrl: 'https://indexer.hyperindex.xyz/bfc2f60/v1/graphql',
   },
 };
 

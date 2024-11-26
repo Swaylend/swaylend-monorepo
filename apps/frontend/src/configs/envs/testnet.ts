@@ -39,7 +39,7 @@ const markets: DeployedMarkets = {
       '0xbeaa0e9479a83eb3eab0f66e0f0c0ce4af86a6fe6fd4549ae22d87083e086821',
     tokenFactoryAddress:
       '0x3e4f1948aece07d3f30c8c5c425f914ac74653827de48394466f2a887eebe9c7',
-    graphqlUrl: 'https://indexer.bigdevenergy.link/c755070/v1/graphql',
+    graphqlUrl: '',
   },
   USDT: {
     oracleAddress:
@@ -48,7 +48,7 @@ const markets: DeployedMarkets = {
       '0x51b9bea7822988e03520018f4a1bb39b9f5ba15c9b4b9c9340a6bc1e5958abd4',
     tokenFactoryAddress:
       '0x1ea9a306a5f280cfe7bd1fdc96815a6438069668e495a2f5a727c7b9b90691cb',
-    graphqlUrl: 'https://indexer.bigdevenergy.link/8ce655e/v1/graphql',
+    graphqlUrl: '',
   },
 };
 
