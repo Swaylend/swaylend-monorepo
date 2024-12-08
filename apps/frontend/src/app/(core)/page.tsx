@@ -12,13 +12,7 @@ export default function Home() {
   const mobile = isMobile(userAgent);
   return (
     <div className="max-h-full">
-      {mobile ? (
-        <div className="w-full h-[60dvh] flex items-center justify-center">
-          This page is not available on mobile devices.
-        </div>
-      ) : (
-        <DashboardView />
-      )}
+      <DashboardView />
     </div>
   );
 }
