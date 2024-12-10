@@ -9,16 +9,23 @@ const PROVIDER_URL =
 const PRIVATE_KEY = process.env.SIGNING_KEY!;
 const VAULT_ADDRESS = process.env.VAULT_ADDRESS!;
 const PROXY_CONTRACT_ID = process.env.PROXY_CONTRACT_ID!;
+const TARGET_CONTRACT_ID = process.env.TARGET_CONTRACT_ID!;
 
 const main = async () => {
+  const args = process.argv.slice(2);
+  if (args.length < 1) {
+    console.error('Please provide the amount as a command-line argument.');
+    process.exit(1);
+  }
+  const amount = Number.parseInt(args[0], 10);
+  const wallet = Wallet.fromPrivateKey(PRIVATE_KEY);
+
   console.log('Sanity check');
   console.log('Provider URL:', PROVIDER_URL);
   console.log('Vault Address:', VAULT_ADDRESS);
   console.log('Proxy contract: ', PROXY_CONTRACT_ID);
-
-  const wallet = Wallet.fromPrivateKey(PRIVATE_KEY);
-
-  const amount = 10;
+  console.log('Target contract: ', TARGET_CONTRACT_ID);
+  console.log(`Send ${amount} units of reserves to ${VAULT_ADDRESS}`);
 
   // Create a challenge to authenticate in BakoProvider
   const challenge = await BakoProvider.setup({
@@ -46,8 +53,8 @@ const main = async () => {
   script.setConfigurableConstants(configurableConstants);
 
   const receiverId = { bits: VAULT_ADDRESS.toString() };
-  const receiverIdentityInput = { ContractId: receiverId };
-  const market = new Market(PROXY_CONTRACT_ID, provider);
+  const receiverIdentityInput = { Address: receiverId };
+  const market = new Market(TARGET_CONTRACT_ID, provider);
   const request = await script.functions
     .main(receiverIdentityInput, amount)
     .addContracts([market])

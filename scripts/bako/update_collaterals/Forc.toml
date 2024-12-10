@@ -1,0 +1,8 @@
+[project]
+authors = ["Urban Vidovič"]
+entry = "main.sw"
+license = "Apache-2.0"
+name = "update_collaterals"
+
+[dependencies]
+market_abi = { path = "../../../abis/market_abi" }
