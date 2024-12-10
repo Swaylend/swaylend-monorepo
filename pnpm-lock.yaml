@@ -259,6 +259,19 @@ importers:
         specifier: ^5.6.3
         version: 5.6.3
 
+  scripts/bako:
+    dependencies:
+      bakosafe:
+        specifier: 0.0.94-beta
+        version: 0.0.94-beta(fuels@0.96.1(encoding@0.1.13))
+      fuels:
+        specifier: 0.96.1
+        version: 0.96.1(encoding@0.1.13)
+    devDependencies:
+      tsx:
+        specifier: 4.19.2
+        version: 4.19.2
+
 packages:
 
   '@0no-co/graphql.web@1.0.11':
@@ -4657,6 +4670,11 @@ packages:
     resolution: {integrity: sha512-9ywCsCvo1ojrw0b+XYk7aFvTH6D9064t0RIL1rtMf3nsa02Xw41MS7sZw216Im35xj/UY0PDBQsa1brUDDF1Ow==}
     peerDependencies:
       '@babel/core': ^7.0.0
+
+  bakosafe@0.0.94-beta:
+    resolution: {integrity: sha512-Sozdo2EJDIvsRtaMYhSzGJMOwWxgZFzYiu/OJ8ZkMzty5FlQ1i61neSYJMncWM/j+IF2/4sMGEM1jeDtp/1a3Q==}
+    peerDependencies:
+      fuels: 0.96.1
 
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
@@ -16702,6 +16720,15 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  bakosafe@0.0.94-beta(fuels@0.96.1(encoding@0.1.13)):
+    dependencies:
+      '@noble/curves': 1.6.0
+      axios: 1.7.4
+      fuels: 0.96.1(encoding@0.1.13)
+      uuid: 9.0.1
+    transitivePeerDependencies:
+      - debug
+
   balanced-match@1.0.2: {}
 
   base-x@3.0.10:
@@ -18186,7 +18213,7 @@ snapshots:
 
   foreground-child@3.3.0:
     dependencies:
-      cross-spawn: 7.0.3
+      cross-spawn: 7.0.6
       signal-exit: 4.1.0
 
   form-data@2.5.2:

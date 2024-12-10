@@ -37,5 +37,5 @@
   "[rust]": {
     "editor.defaultFormatter": "rust-lang.rust-analyzer"
   },
-  "sway-lsp.diagnostic.disableLsp": true
+  "sway-lsp.diagnostic.disableLsp": false
 }

@@ -1,0 +1,20 @@
+{
+  "name": "bako-scripts",
+  "version": "1.0.0",
+  "description": "Scripts for managing Bako multisig for Swaylend",
+  "scripts": {
+    "start": "tsx src/index.ts",
+    "postinstall": "pnpm fuels build",
+    "build": "pnpm fuels build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bakosafe": "0.0.94-beta",
+    "fuels": "0.96.1"
+  },
+  "devDependencies": {
+    "tsx": "4.19.2"
+  }
+}
