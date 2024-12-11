@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "Scripts for managing Bako multisig for Swaylend",
   "scripts": {
-    "start": "tsx src/withdrawReserves.ts",
-    "postinstall": "pnpm fuels build",
+    "withdrawReserves": "tsx src/withdrawReserves.ts",
+    "updateCollateral": "tsx src/updateCollaterals.ts",
+    "postinstall": "pnpm build",
     "build": "pnpm fuels build"
   },
   "keywords": [],

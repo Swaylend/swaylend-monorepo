@@ -14,7 +14,9 @@ const TARGET_CONTRACT_ID = process.env.TARGET_CONTRACT_ID!;
 const main = async () => {
   const args = process.argv.slice(2);
   if (args.length < 1) {
-    console.error('Please provide the amount as a command-line argument.');
+    console.error(
+      'Please provide the amount as a command-line argument: pnpm start <amount>'
+    );
     process.exit(1);
   }
   const amount = Number.parseInt(args[0], 10);
@@ -39,10 +41,8 @@ const main = async () => {
     address: wallet.address.toB256(),
   });
 
-  // Instance the vault by address
   const vault = await Vault.fromAddress(VAULT_ADDRESS, provider);
 
-  // Create a script instance and get the transaction request
   const script = new WithdrawReserves(vault);
   const proxyId = { bits: PROXY_CONTRACT_ID };
 
@@ -54,13 +54,12 @@ const main = async () => {
 
   const receiverId = { bits: VAULT_ADDRESS.toString() };
   const receiverIdentityInput = { Address: receiverId };
-  const market = new Market(TARGET_CONTRACT_ID, provider);
+  const market = new Market(PROXY_CONTRACT_ID, provider);
   const request = await script.functions
     .main(receiverIdentityInput, amount)
     .addContracts([market])
     .getTransactionRequest();
 
-  // Send the transaction to Vault
   const { hashTxId } = await vault.BakoTransfer(request, {
     name: `Withdraw Reserves: ${amount}`,
   });
