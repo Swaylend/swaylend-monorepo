@@ -5,6 +5,7 @@
   "scripts": {
     "withdrawReserves": "tsx src/withdrawReserves.ts",
     "updateCollateral": "tsx src/updateCollaterals.ts",
+    "updateMarket": "tsx src/updateMarket.ts",
     "postinstall": "pnpm build",
     "build": "pnpm fuels build"
   },
