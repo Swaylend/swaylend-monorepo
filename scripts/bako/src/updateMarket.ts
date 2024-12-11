@@ -1,12 +1,9 @@
 import { Wallet } from 'fuels';
 import { BakoProvider, Vault } from 'bakosafe';
-import { Market, UpdateCollaterals, UpdateMarket } from './types';
+import { Market, UpdateMarket } from './types';
 import dotenv from 'dotenv';
 import { readFileSync } from 'node:fs';
-import type {
-  CollateralConfigurationInput,
-  MarketConfigurationInput,
-} from './types/contracts/Market';
+import type { MarketConfigurationInput } from './types/contracts/Market';
 
 dotenv.config({ path: '../.env' });
 
