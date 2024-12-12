@@ -1,6 +1,6 @@
 import { Wallet } from 'fuels';
 import { BakoProvider, Vault } from 'bakosafe';
-import { WithdrawReserves, Market } from './types';
+import { ChangeMarketOwner, Market } from './types';
 
 require('dotenv').config({ path: '../.env' });
 
@@ -9,25 +9,24 @@ const PROVIDER_URL =
 const PRIVATE_KEY = process.env.SIGNING_KEY!;
 const VAULT_ADDRESS = process.env.VAULT_ADDRESS!;
 const PROXY_CONTRACT_ID = process.env.PROXY_CONTRACT_ID!;
-const TARGET_CONTRACT_ID = process.env.TARGET_CONTRACT_ID!;
+// const TARGET_CONTRACT_ID = process.env.TARGET_CONTRACT_ID!;
 
 const main = async () => {
   const args = process.argv.slice(2);
   if (args.length < 1) {
     console.error(
-      'Please provide the amount as a command-line argument: pnpm withdrawReserves <amount>'
+      'Please provide the new owner as a command-line argument: pnpm changeMarketOwner 0x00000...'
     );
     process.exit(1);
   }
-  const amount = Number.parseInt(args[0], 10);
+  const newOwner = process.argv[2];
   const wallet = Wallet.fromPrivateKey(PRIVATE_KEY);
 
   console.log('Sanity check');
   console.log('Provider URL:', PROVIDER_URL);
   console.log('Vault Address:', VAULT_ADDRESS);
   console.log('Proxy contract: ', PROXY_CONTRACT_ID);
-  console.log('Target contract: ', TARGET_CONTRACT_ID);
-  console.log(`Send ${amount} units of reserves to ${VAULT_ADDRESS}`);
+  // console.log('Target contract: ', TARGET_CONTRACT_ID);
 
   // Create a challenge to authenticate in BakoProvider
   const challenge = await BakoProvider.setup({
@@ -43,7 +42,7 @@ const main = async () => {
 
   const vault = await Vault.fromAddress(VAULT_ADDRESS, provider);
 
-  const script = new WithdrawReserves(vault);
+  const script = new ChangeMarketOwner(vault);
   const proxyId = { bits: PROXY_CONTRACT_ID };
 
   const configurableConstants = {
@@ -51,17 +50,26 @@ const main = async () => {
   };
 
   script.setConfigurableConstants(configurableConstants);
-
-  const receiverId = { bits: VAULT_ADDRESS.toString() };
-  const receiverIdentityInput = { Address: receiverId };
+  const newOwnerIdentity = { bits: newOwner };
+  const newOwnerIdentityInput = { Address: newOwnerIdentity };
   const market = new Market(PROXY_CONTRACT_ID, provider);
+
+  const currOwnerObj = (await market.functions.owner().get()).value;
+  const currOwner = currOwnerObj.Initialized?.Address?.bits;
+  if (currOwner === newOwner) {
+    console.log('The owner is the same');
+    process.exit(0);
+  }
+
+  console.log(`owner: ${currOwner} -> ${newOwner}`);
+
   const request = await script.functions
-    .main(receiverIdentityInput, amount)
+    .main(newOwnerIdentityInput)
     .addContracts([market])
     .getTransactionRequest();
 
   const { hashTxId } = await vault.BakoTransfer(request, {
-    name: `Withdraw Reserves: ${amount}`,
+    name: `New owner: ${newOwner}`,
   });
   console.log('Transaction ID:', hashTxId);
 };

@@ -8,4 +8,7 @@ members = [
     "contracts/token",
     "contracts/pyth-mock",
     "scripts/bako/withdraw_reserves",
+    "scripts/bako/update_collaterals",
+    "scripts/bako/update_market",
+    "scripts/bako/change_market_owner",
 ]

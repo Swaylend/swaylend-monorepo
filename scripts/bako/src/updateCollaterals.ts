@@ -44,7 +44,9 @@ const TARGET_CONTRACT_ID = process.env.TARGET_CONTRACT_ID!;
 const main = async () => {
   const configPath = process.argv[2];
   if (!configPath) {
-    console.error('Please provide the config path as a command-line argument.');
+    console.error(
+      'Please provide the config path as a command-line argument: pnpm updateCollateral ../config/testnet_usdc_config.json'
+    );
     process.exit(1);
   }
 

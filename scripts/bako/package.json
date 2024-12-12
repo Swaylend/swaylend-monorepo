@@ -6,6 +6,7 @@
     "withdrawReserves": "tsx src/withdrawReserves.ts",
     "updateCollateral": "tsx src/updateCollaterals.ts",
     "updateMarket": "tsx src/updateMarket.ts",
+    "changeMarketOwner": "tsx src/changeMarketOwner.ts",
     "postinstall": "pnpm build",
     "build": "pnpm fuels build"
   },
@@ -14,7 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "bakosafe": "0.0.94-beta",
-    "fuels": "0.96.1"
+    "fuels": "0.97.1"
   },
   "devDependencies": {
     "tsx": "4.19.2"
