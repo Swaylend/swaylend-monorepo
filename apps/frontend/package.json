@@ -12,9 +12,9 @@
     "codegen": "graphql-codegen"
   },
   "dependencies": {
-    "@fuel-ts/contract": "0.96.1",
-    "@fuels/connectors": "0.36.0",
-    "@fuels/react": "0.35.1",
+    "@fuel-ts/contract": "0.97.2",
+    "@fuels/connectors": "0.36.1",
+    "@fuels/react": "0.36.1",
     "@pythnetwork/hermes-client": "^1.2.0",
     "@pythnetwork/pyth-fuel-js": "^1.0.7",
     "@radix-ui/react-checkbox": "^1.1.1",
@@ -35,7 +35,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "encoding": "^0.1.13",
-    "fuels": "0.96.1",
+    "fuels": "0.97.2",
     "lucide-react": "^0.460.0",
     "next": "14.2.14",
     "next-themes": "^0.3.0",
