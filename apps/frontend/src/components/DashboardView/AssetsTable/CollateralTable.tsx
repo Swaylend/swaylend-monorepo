@@ -13,6 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
   Table,
@@ -319,10 +320,13 @@ const CollateralCard = ({
           </div>
           <div className="w-full flex items-center">
             <div className="w-1/2 text-moon font-medium">
-              Supply Cap Reached
+              Supply Cap
+              <br />
+              Reached
             </div>
-            <div className="w-[48px] h-[48px]">
-              <CircularProgressBar percent={supplyUsed.div(100)} />
+            <div className="w-[30%] h-[48px] flex items-center gap-x-2">
+              {Number(supplyUsed.decimalPlaces(1))}%
+              <Progress value={Number(supplyUsed)} />
             </div>
           </div>
           <div className="w-full flex items-center">
@@ -348,6 +352,7 @@ const CollateralCard = ({
                   : [POINTS_COLLATERAL[1]]),
                 POINTS_COLLATERAL[2],
               ]}
+              mobile
             />
           </div>
         </div>
