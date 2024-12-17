@@ -10,13 +10,13 @@
     "upload:testnet": "sentio upload --name swaylend-testnet --skip-deps --skip-gen"
   },
   "dependencies": {
-    "@sentio/sdk": "2.48.2",
+    "@sentio/sdk": "2.50.1",
     "dayjs": "^1.11.13",
     "fuels": "0.96.1",
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@sentio/cli": "2.21.10",
+    "@sentio/cli": "2.23.0",
     "typescript": "^5.6.3"
   }
 }
