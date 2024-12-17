@@ -1,5 +1,7 @@
 name: Swaylend USDC Market
 ecosystem: fuel
+hyperfuel_config:
+  url: https://mainnet2.hypersync.xyz
 networks:
   - id: 9889
     start_block: 3000000
