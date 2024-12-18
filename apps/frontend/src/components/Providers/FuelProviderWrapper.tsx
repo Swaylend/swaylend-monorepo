@@ -15,8 +15,6 @@ import {
 } from '@fuels/connectors';
 import { FuelProvider } from '@fuels/react';
 import { CHAIN_IDS, type FuelConnector, Provider } from 'fuels';
-import { UAParser } from 'my-ua-parser';
-// import { isMobile } from 'react-device-detect';
 import { isMobile } from '@/utils/isMobile';
 import { type ReactNode } from 'react';
 import { fallback } from 'viem';
