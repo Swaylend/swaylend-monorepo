@@ -16,6 +16,8 @@ import {
 import { FuelProvider } from '@fuels/react';
 import { CHAIN_IDS, type FuelConnector, Provider } from 'fuels';
 import { UAParser } from 'my-ua-parser';
+// import { isMobile } from 'react-device-detect';
+import { isMobile } from '@/utils/isMobile';
 import { type ReactNode } from 'react';
 import { fallback } from 'viem';
 import { http, createConfig as createConfigWagmiConfig } from 'wagmi';
@@ -77,13 +79,12 @@ const wagmiConfig = createConfigWagmiConfig({
 });
 
 const customDefaultConnectors = (): Array<FuelConnector> => {
-  const isMobile = ['mobile', 'tablet'].includes(
-    new UAParser('user-agent').getDevice().type ?? ''
-  );
   const provider = Provider.create(appConfig.client.fuelNodeUrl);
   const connectors: Array<FuelConnector> = [
     new FueletWalletConnector(),
-    ...(!isMobile ? [new FuelWalletConnector(), new BakoSafeConnector()] : []),
+    ...(!isMobile(navigator.userAgent)
+      ? [new FuelWalletConnector(), new BakoSafeConnector()]
+      : []),
     new WalletConnectConnector({
       projectId: appConfig.client.walletConnectProjectId,
       wagmiConfig: wagmiConfig,
