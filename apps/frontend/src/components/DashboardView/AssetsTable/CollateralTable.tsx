@@ -207,9 +207,66 @@ const CollateralTableRow = ({
         {formattedBalance} {symbol}
       </TableCell>
       <TableCell>
-        <div className="w-[48px] h-[48px]">
-          <CircularProgressBar percent={supplyUsed.div(100)} />
-        </div>
+        <TooltipProvider delayDuration={100}>
+          <Tooltip>
+            <TooltipTrigger onClick={(e) => e.preventDefault()}>
+              <div className="w-[48px] h-[48px]">
+                <CircularProgressBar percent={supplyUsed.div(100)} />
+              </div>
+            </TooltipTrigger>
+            <TooltipContent onPointerDownOutside={(e) => e.preventDefault()}>
+              <div className="p-2 w-[250px]">
+                <div className="font-bold text-lg">
+                  Collateral Supply Details
+                </div>
+                <div className="flex flex-col gap-y-2 mt-2">
+                  <div className="text-md flex justify-between">
+                    <div className="text-lavender">Supply Cap</div>
+                    <div className="font-semibold text-moon">
+                      {getFormattedNumber(
+                        formatUnits(
+                          BigNumber(
+                            collateralConfiguration.supply_cap.toString()
+                          ),
+                          decimals
+                        )
+                      )}{' '}
+                      {appConfig.assets[assetId]}
+                    </div>
+                  </div>
+                  <div className="text-md flex justify-between">
+                    <div className="text-lavender">Supply Cap Value</div>
+                    <div className="font-semibold text-moon">
+                      {getFormattedNumber(
+                        formatUnits(
+                          BigNumber(
+                            collateralConfiguration.supply_cap.toString()
+                          ),
+                          decimals
+                        ).times(price)
+                      )}
+                      {' $'}
+                    </div>
+                  </div>
+                  <div className="text-md flex justify-between">
+                    <div className="text-lavender">Total Supplied</div>
+                    <div className="font-semibold text-moon">
+                      {getFormattedNumber(collateralAmount)}{' '}
+                      {appConfig.assets[assetId]}
+                    </div>
+                  </div>
+                  <div className="text-md flex justify-between">
+                    <div className="text-lavender">Total Supplied Value</div>
+                    <div className="font-semibold text-moon">
+                      {getFormattedNumber(collateralAmount.times(price))}
+                      {' $'}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </TableCell>
       <TableCell>
         <div className=" h-full flex items-center gap-x-2">
