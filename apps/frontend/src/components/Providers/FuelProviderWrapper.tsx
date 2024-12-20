@@ -3,6 +3,7 @@
 import 'react-toastify/dist/ReactToastify.css';
 
 import { appConfig } from '@/configs';
+import { isMobile } from '@/utils/isMobile';
 import {
   BakoSafeConnector,
   BurnerWalletConnector,
@@ -15,7 +16,6 @@ import {
 } from '@fuels/connectors';
 import { FuelProvider } from '@fuels/react';
 import { CHAIN_IDS, type FuelConnector, Provider } from 'fuels';
-import { isMobile } from '@/utils/isMobile';
 import { type ReactNode } from 'react';
 import { fallback } from 'viem';
 import { http, createConfig as createConfigWagmiConfig } from 'wagmi';
