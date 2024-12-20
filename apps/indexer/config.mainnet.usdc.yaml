@@ -3,6 +3,8 @@ ecosystem: fuel
 networks:
   - id: 9889
     start_block: 3000000
+    hyperfuel_config:
+      url: https://mainnet2.hypersync.xyz
     contracts:
       - name: Market
         address: 0x657ab45a6eb98a4893a99fd104347179151e8b3828fd8f2a108cc09770d1ebae
