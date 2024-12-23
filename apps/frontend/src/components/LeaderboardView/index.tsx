@@ -11,7 +11,7 @@ export const LeaderboardView = () => {
 
   return (
     <>
-      <div className="hidden lg:flex pt-[33px] sm:pt-[55px] pb-[55px] w-full items-center justify-center">
+      <div className="flex pt-[33px] sm:pt-[55px] pb-[55px] w-full items-center justify-center">
         <div className="flex flex-col items-center justify-center max-w-[750px] lg:w-[750px]">
           <div className="text-xl font-semibold text-white">
             Swaylend Leaderboard
@@ -26,9 +26,9 @@ export const LeaderboardView = () => {
               <div className="w-full mt-[30px] flex justify-between bg-card p-4 rounded-xl">
                 <div>
                   <div className="text-moon font-semibold">Your Rank</div>
-                  <div className="text-primary text-2xl font-semibold">
+                  <div className="text-primary font-semibold text-xl md:text-2xl">
                     {user?.rank === 0 ? (
-                      <span className="text-xl">Unranked</span>
+                      <span className="text-lg md:text-xl">Unranked</span>
                     ) : (
                       user?.rank
                     )}
@@ -36,17 +36,17 @@ export const LeaderboardView = () => {
                 </div>
                 <div className="flex flex-col items-end">
                   <div className="text-moon font-semibold">Your Points</div>
-                  <div className="text-white text-2xl font-semibold text-right">
+                  <div className="text-white font-semibold text-right text-xl md:text-2xl">
                     {user ? user.points : '0'}
                   </div>
                 </div>
               </div>
             ))}
-          <div className="w-full mt-[55px] flex justify-between">
+          <div className="max-sm:flex max-sm:flex-col max-sm:text-center w-full mt-[55px] flex justify-between">
             <div className="text-lg text-white font-semibold">
               Top Contributors
             </div>
-            <div className="text-sm text-yellow-100 flex items-center px-2">
+            <div className="text-sm text-yellow-100 flex items-center sm:px-2 max-sm:justify-center">
               <TriangleAlert className="w-4 h-4 mr-1" /> Points are updated
               every 24 hours
             </div>
@@ -75,7 +75,15 @@ export const LeaderboardView = () => {
                           {user.rank}
                         </td>
                         <td className="px-4 py-2 text-left text-lavender font-semibold">
-                          {user.address}
+                          <span className="md:hidden">{`${user.address.slice(
+                            0,
+                            6
+                          )}...${user.address.slice(-4)}`}</span>
+                          <span className="max-md:hidden lg:hidden">{`${user.address.slice(
+                            0,
+                            14
+                          )}...${user.address.slice(-14)}`}</span>
+                          <span className="max-lg:hidden">{user.address}</span>
                         </td>
                         <td className="px-4 py-2 text-right text-lavender font-semibold">
                           {user.points}
@@ -89,9 +97,9 @@ export const LeaderboardView = () => {
           </table>
         </div>
       </div>
-      <div className="lg:hidden w-full h-[60dvh] flex items-center justify-center">
+      {/* <div className="lg:hidden w-full h-[60dvh] flex items-center justify-center">
         This page is not supported on this screen size.
-      </div>
+      </div> */}
     </>
   );
 };

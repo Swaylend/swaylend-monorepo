@@ -80,9 +80,6 @@ const customDefaultConnectors = (): Array<FuelConnector> => {
   const provider = Provider.create(appConfig.client.fuelNodeUrl);
   const connectors: Array<FuelConnector> = [
     new FueletWalletConnector(),
-    ...(!isMobile(navigator.userAgent)
-      ? [new FuelWalletConnector(), new BakoSafeConnector()]
-      : []),
     new WalletConnectConnector({
       projectId: appConfig.client.walletConnectProjectId,
       wagmiConfig: wagmiConfig,
@@ -100,6 +97,10 @@ const customDefaultConnectors = (): Array<FuelConnector> => {
           : CHAIN_IDS.fuel.mainnet,
       fuelProvider: provider,
     }),
+    // Add desktop only connectors
+    ...(!isMobile(navigator.userAgent)
+      ? [new FuelWalletConnector(), new BakoSafeConnector()]
+      : []),
   ];
 
   if (appConfig.env === 'testnet') {

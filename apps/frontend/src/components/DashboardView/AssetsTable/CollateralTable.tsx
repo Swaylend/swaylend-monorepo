@@ -269,7 +269,7 @@ const CollateralTableRow = ({
         </TooltipProvider>
       </TableCell>
       <TableCell>
-        <div className=" h-full flex items-center gap-x-2">
+        <div className="h-full flex items-center gap-x-2">
           <span className="text-lavender font-medium">
             {getFormattedPrice(
               formatUnits(protocolBalance, decimals).times(price)
@@ -279,7 +279,7 @@ const CollateralTableRow = ({
         </div>
       </TableCell>
       <TableCell>
-        <div className=" h-full flex items-center gap-x-2">
+        <div className="h-full flex items-center gap-x-2">
           <PointIcons
             points={[
               ...(symbol === 'USDT' || symbol === 'ETH'
