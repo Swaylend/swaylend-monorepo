@@ -215,7 +215,7 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
           </div>
           <div className="flex items-center gap-x-2">
             <Points />
-            {!mobile && <ConnectButton />}
+            <ConnectButton />
           </div>
         </div>
         <Line />

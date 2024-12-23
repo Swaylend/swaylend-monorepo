@@ -97,9 +97,6 @@ export const LeaderboardView = () => {
           </table>
         </div>
       </div>
-      {/* <div className="lg:hidden w-full h-[60dvh] flex items-center justify-center">
-        This page is not supported on this screen size.
-      </div> */}
     </>
   );
 };
