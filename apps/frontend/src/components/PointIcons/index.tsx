@@ -18,9 +18,10 @@ export type Point = {
 
 type PointIconsProps = {
   points: Point[];
+  mobile?: boolean;
 };
 
-export const PointIcons = ({ points }: PointIconsProps) => {
+export const PointIcons = ({ points, mobile = false }: PointIconsProps) => {
   return (
     <div className="flex items-center">
       {points.map((point: Point) => {
@@ -57,6 +58,8 @@ export const PointIcons = ({ points }: PointIconsProps) => {
                 </TooltipTrigger>
                 <TooltipContent
                   onPointerDownOutside={(e) => e.preventDefault()}
+                  className={mobile ? 'w-64' : 'w-128'}
+                  align="center"
                 >
                   <div className="p-1">
                     <div className="font-bold">{point.name}</div>

@@ -381,7 +381,7 @@ export const BorrowTable = () => {
                   <div className="w-1/2 text-moon font-medium">
                     Borrow Points
                   </div>
-                  <PointIcons points={POINTS_BORROW} />
+                  <PointIcons points={POINTS_BORROW} mobile />
                 </div>
               </div>
             </CardContent>

@@ -359,7 +359,7 @@ export const LendTable = () => {
                   <div className="w-1/2 text-moon font-medium">
                     Supply Points
                   </div>
-                  <PointIcons points={POINTS_LEND} />
+                  <PointIcons points={POINTS_LEND} mobile />
                 </div>
               </div>
             </CardContent>
