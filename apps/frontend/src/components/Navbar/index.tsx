@@ -229,7 +229,7 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
           </Link>
           <div className="flex items-center gap-x-2">
             <Points />
-            {!mobile && <ConnectButton />}
+            <ConnectButton />
             <Button
               onMouseDown={() => setOpen(true)}
               className="rounded-full w-[40px] h-[40px] p-0"
