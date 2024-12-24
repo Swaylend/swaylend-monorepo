@@ -1,29 +1,10 @@
 [[package]]
-name = "change_market_owner"
-source = "member"
-dependencies = [
-    "market_abi",
-    "std",
-]
-
-[[package]]
 name = "core"
 source = "path+from-root-6A8836696D55BC6E"
 
 [[package]]
-name = "market"
-source = "member"
-dependencies = [
-    "market_abi",
-    "pyth_interface",
-    "standards git+https://github.com/FuelLabs/sway-standards?tag=v0.6.1#792639cdf391565e6e6a02482ea8a46d9604a6f5",
-    "std",
-    "sway_libs",
-]
-
-[[package]]
 name = "market_abi"
-source = "member"
+source = "path+from-root-DB6CEE9608F8267A"
 dependencies = [
     "pyth_interface",
     "std",
@@ -39,22 +20,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "pyth_mock"
-source = "member"
-dependencies = [
-    "pyth_interface",
-    "std",
-]
-
-[[package]]
-name = "src-20"
-source = "member"
-dependencies = [
-    "standards git+https://github.com/FuelLabs/sway-standards?tag=v0.6.1#792639cdf391565e6e6a02482ea8a46d9604a6f5",
-    "std",
-]
-
-[[package]]
 name = "standards"
 source = "git+https://github.com/FuelLabs/sway-standards?tag=v0.4.4#a001d3c248595112aae67e5633a06ef9bc0536ae"
 dependencies = ["std"]
@@ -62,11 +27,6 @@ dependencies = ["std"]
 [[package]]
 name = "standards"
 source = "git+https://github.com/FuelLabs/sway-standards?tag=v0.6.0#65e09f95ea8b9476b171a66c8a47108f352fa32c"
-dependencies = ["std"]
-
-[[package]]
-name = "standards"
-source = "git+https://github.com/FuelLabs/sway-standards?tag=v0.6.1#792639cdf391565e6e6a02482ea8a46d9604a6f5"
 dependencies = ["std"]
 
 [[package]]
@@ -83,31 +43,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "token"
-source = "member"
-dependencies = [
-    "standards git+https://github.com/FuelLabs/sway-standards?tag=v0.6.1#792639cdf391565e6e6a02482ea8a46d9604a6f5",
-    "std",
-]
-
-[[package]]
 name = "update_collaterals"
-source = "member"
-dependencies = [
-    "market_abi",
-    "std",
-]
-
-[[package]]
-name = "update_market"
-source = "member"
-dependencies = [
-    "market_abi",
-    "std",
-]
-
-[[package]]
-name = "withdraw_reserves"
 source = "member"
 dependencies = [
     "market_abi",

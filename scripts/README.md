@@ -4,7 +4,7 @@ This folder contains all scrips and necessary files for deployments of Swaylend 
 
 If you are interested in testing on local devnet, checkout the `devnet` folder.
 
-## Scripts
+## Scripts for EOA
 
 Before we begin, you need to do a few things:
 
@@ -61,6 +61,8 @@ cd ../contracts/market && /home/vid/Documents/Company/fuel/sway/target/debug/for
 
 This script will change proxy owner.
 
+**Note:** Bako vaults are considered accounts, NOT contracts, so you should provider the argument as contract:0x0...
+
 ```bash
 cargo run --bin change_proxy_owner -- --new-owner contract:0x546403add23accc66d96e853245db1398fb8d0ffbea184395f04ae3d26fd516f
 ```
@@ -68,6 +70,8 @@ cargo run --bin change_proxy_owner -- --new-owner contract:0x546403add23accc66d9
 ### Change market owner
 
 This script will change market owner.
+
+**Note:** Bako vaults are considered accounts, NOT contracts, so you should provider the argument as contract:0x0...
 
 ```bash
 cargo run --bin change_market_owner -- --new-owner address:0x2968d3dd71d8b517fdb57e837c419c58f7404744fb51c16e0e0a2dc18892b1f8
@@ -120,3 +124,23 @@ This script will mint tokens provided in the config file (base asset and collate
 ```bash
 cargo run --bin mint_tokens -- --config-path ./configs/testnet_usdc_config.json --token-contract-id 0xb55fa4f5c9d10d64b272b046e133eac9beab496587e0ed02d5620a69b77b9028 --recipient contract:0x0e5e4311f2ab9bd5dc6ac5d39a363b1488eed59e178367d1702126948951245f --amount 10000000000
 ```
+
+## Bako multisig scripts
+
+For changing the ownership using `bakosafe-proxy-cli` see [their guide](https://github.com/Bako-Labs/bako-safe-proxy-cli/blob/main/.github/doc/dev-guide.md#how-to-secure-your-contracts-using-bako-vaults).
+
+### add_collateral_asset
+
+### pause_collateral_asset
+
+### resume_collateral_asset
+
+### update_collateral_asset
+
+### pause
+
+### set_pyth_contract_id
+
+### update_market_configuration
+
+### withdraw_reserves

@@ -1,0 +1,69 @@
+import { Wallet } from 'fuels';
+import { BakoProvider, Vault } from 'bakosafe';
+import { WithdrawReserves, Market } from './types';
+
+require('dotenv').config({ path: '../.env' });
+
+const PROVIDER_URL =
+  process.env.PROVIDER_URL || 'https://testnet.fuel.network/v1/graphql';
+const PRIVATE_KEY = process.env.SIGNING_KEY!;
+const VAULT_ADDRESS = process.env.VAULT_ADDRESS!;
+const PROXY_CONTRACT_ID = process.env.PROXY_CONTRACT_ID!;
+const TARGET_CONTRACT_ID = process.env.TARGET_CONTRACT_ID!;
+
+const main = async () => {
+  const args = process.argv.slice(2);
+  if (args.length < 1) {
+    console.error(
+      'Please provide the amount as a command-line argument: pnpm withdrawReserves <amount>'
+    );
+    process.exit(1);
+  }
+  const amount = Number.parseInt(args[0], 10);
+  const wallet = Wallet.fromPrivateKey(PRIVATE_KEY);
+
+  console.log('Sanity check');
+  console.log('Provider URL:', PROVIDER_URL);
+  console.log('Vault Address:', VAULT_ADDRESS);
+  console.log('Proxy contract: ', PROXY_CONTRACT_ID);
+  console.log('Target contract: ', TARGET_CONTRACT_ID);
+  console.log(`Send ${amount} units of reserves to ${VAULT_ADDRESS}`);
+
+  // Create a challenge to authenticate in BakoProvider
+  const challenge = await BakoProvider.setup({
+    address: wallet.address.toB256(),
+    provider: PROVIDER_URL,
+  });
+  const token = await wallet.signMessage(challenge);
+  const provider = await BakoProvider.authenticate(PROVIDER_URL, {
+    token,
+    challenge,
+    address: wallet.address.toB256(),
+  });
+
+  const vault = await Vault.fromAddress(VAULT_ADDRESS, provider);
+
+  const script = new WithdrawReserves(vault);
+  const proxyId = { bits: PROXY_CONTRACT_ID };
+
+  const configurableConstants = {
+    MARKET_CONTRACT_ID: proxyId,
+  };
+
+  script.setConfigurableConstants(configurableConstants);
+
+  const receiverId = { bits: VAULT_ADDRESS.toString() };
+  const receiverIdentityInput = { Address: receiverId };
+  const market = new Market(PROXY_CONTRACT_ID, provider);
+  const request = await script.functions
+    .main(receiverIdentityInput, amount)
+    .addContracts([market])
+    .getTransactionRequest();
+
+  const { hashTxId } = await vault.BakoTransfer(request, {
+    name: `Withdraw Reserves: ${amount}`,
+  });
+  console.log('Transaction ID:', hashTxId);
+};
+
+main();
