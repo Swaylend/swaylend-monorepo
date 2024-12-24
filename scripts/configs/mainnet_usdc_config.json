@@ -100,7 +100,7 @@
       "is_active": true
     },
     {
-      "asset_id": "0x1d5d97005e41cae2187a895fd8eab0506111e0e2f3331cd3912c15c24e3c1d8",
+      "asset_id": "0x1d5d97005e41cae2187a895fd8eab0506111e0e2f3331cd3912c15c24e3c1d82",
       "price_feed_id": "0x8a757d54e5d34c7ff1aea8502a2d968686027a304d00418092aaf7e60ed98d95",
       "name": "FUEL",
       "symbol": "FUEL",
