@@ -45,7 +45,9 @@ SELECT timestamp,
     borrowIndex AS borrow_index,
     borrowApr AS borrow_apr,
     totalFeesUsd AS total_fees_usd,
-    userFeesUsd AS user_fees_usd,
+    (
+        borrowedAmountUsd * borrowApr - suppliedAmountUsd * supplyApr
+    ) / 100 / 365 / 24 as user_fees_usd,
     protocolFeesUsd AS protocol_fees_usd
 FROM `BasePoolSnapshot_raw`
 WHERE timestamp > timestamp('{{timestamp}}')
