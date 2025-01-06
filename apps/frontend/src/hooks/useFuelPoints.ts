@@ -36,7 +36,7 @@ export const useFuelPoints = () => {
           return getFormattedNumber(BigNumber(0));
         }
 
-        const data = (await response.json()) as
+        const data = JSON.parse(await response.json()) as
           | OblApiResponse[]
           | null
           | undefined;
