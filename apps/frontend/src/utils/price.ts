@@ -17,6 +17,7 @@ export const getFormattedPrice = (number: BigNumber): string => {
 
 export const getFormattedNumber = (
   number: BigNumber,
+  decimals = 4,
   positive?: boolean
 ): string => {
   if (!number || number.isNaN() || number.eq(0)) return '0.0';
@@ -35,5 +36,5 @@ export const getFormattedNumber = (
     return '0.0';
   }
 
-  return `${number.toFixed(4, BigNumber.ROUND_FLOOR)}`;
+  return `${number.toFixed(decimals, BigNumber.ROUND_FLOOR)}`;
 };
