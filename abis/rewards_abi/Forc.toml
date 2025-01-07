@@ -1,0 +1,6 @@
+[project]
+entry = "abi.sw"
+license = "Apache-2.0"
+name = "rewards_abi"
+
+[dependencies]
