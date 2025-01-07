@@ -278,24 +278,29 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
                       Dashboard
                     </div>
                   </Link>
-                  {NAVBAR_LINKS.map(({ href, label }) => (
-                    <Link
-                      key={href}
-                      href={href}
-                      onMouseDown={() => setOpen(false)}
-                      prefetch={false}
-                    >
-                      <div
-                        className={cn(
-                          pathname === href ? 'text-primary' : 'text-lavender',
-                          pathname !== href && 'hover:text-lavender/80',
-                          'flex font-bold text-xl items-center gap-x-2 h-full'
-                        )}
+                  {NAVBAR_LINKS.map(({ href, label }) => {
+                    if (mobile && href === '/markets') return null;
+                    return (
+                      <Link
+                        key={href}
+                        href={href}
+                        onMouseDown={() => setOpen(false)}
+                        prefetch={false}
                       >
-                        {label}
-                      </div>
-                    </Link>
-                  ))}
+                        <div
+                          className={cn(
+                            pathname === href
+                              ? 'text-primary'
+                              : 'text-lavender',
+                            pathname !== href && 'hover:text-lavender/80',
+                            'flex font-bold text-xl items-center gap-x-2 h-full'
+                          )}
+                        >
+                          {label}
+                        </div>
+                      </Link>
+                    );
+                  })}
                 </div>
               </div>
             </div>
