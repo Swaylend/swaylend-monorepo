@@ -842,6 +842,58 @@ export class EventEntity extends AbstractEntity  {
   constructor(data: Partial<EventEntity>) {super()}
 }
 
+@Entity("Liquidation")
+export class Liquidation extends AbstractEntity  {
+
+	@Required
+	@Column("ID")
+	id: ID
+
+	@Required
+	@Column("Int")
+	timestamp: Int
+
+	@Required
+	@Column("Int")
+	blockNumber: Int
+
+	@Column("Int")
+	logIndex?: Int
+
+	@Required
+	@Column("String")
+	transactionHash: String
+
+	@Required
+	@Column("String")
+	liquidatorAddress: String
+
+	@Required
+	@Column("String")
+	userAddress: String
+
+	@Required
+	@Column("String")
+	poolAddress: String
+
+	@Required
+	@Column("String")
+	tokenAddress: String
+
+	@Required
+	@Column("BigInt")
+	amount: BigInt
+
+	@Required
+	@Column("BigDecimal")
+	amountUsd: BigDecimal
+
+	@Required
+	@Column("BigDecimal")
+	profitUsd: BigDecimal
+  constructor(data: Partial<Liquidation>) {super()}
+}
+
 
 const source = `#############################
 # ASSET STATE ENTITIES #
@@ -1111,6 +1163,22 @@ type EventEntity @entity {
     amountNormalized: BigDecimal!
     amountUsd: BigDecimal!
     eventType: String! # Deposit, Withdrawal, Borrow, Repay, Liquidation
+}
+
+# Liquidations
+type Liquidation @entity {
+    id: ID!
+    timestamp: Int!
+    blockNumber: Int!
+    logIndex: Int
+    transactionHash: String!
+    liquidatorAddress: String!
+    userAddress: String!
+    poolAddress: String!
+    tokenAddress: String!
+    amount: BigInt!
+    amountUsd: BigDecimal!
+    profitUsd: BigDecimal!
 }`
 DatabaseSchema.register({
   source,
@@ -1127,6 +1195,7 @@ DatabaseSchema.register({
 		"CollateralPositionSnapshot": CollateralPositionSnapshot,
 		"BasePoolSnapshot": BasePoolSnapshot,
 		"CollateralPoolSnapshot": CollateralPoolSnapshot,
-		"EventEntity": EventEntity
+		"EventEntity": EventEntity,
+		"Liquidation": Liquidation
   }
 })

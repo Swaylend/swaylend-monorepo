@@ -267,3 +267,19 @@ type EventEntity @entity {
     amountUsd: BigDecimal!
     eventType: String! # Deposit, Withdrawal, Borrow, Repay, Liquidation
 }
+
+# Liquidations
+type Liquidation @entity {
+    id: ID!
+    timestamp: Int!
+    blockNumber: Int!
+    logIndex: Int
+    transactionHash: String!
+    liquidatorAddress: String!
+    userAddress: String!
+    poolAddress: String!
+    tokenAddress: String!
+    amount: BigInt!
+    amountUsd: BigDecimal!
+    profitUsd: BigDecimal!
+}
