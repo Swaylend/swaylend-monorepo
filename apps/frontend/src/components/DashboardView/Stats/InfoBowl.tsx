@@ -6,7 +6,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { useUserCollateralAssets, useUserSupplyBorrow } from '@/hooks';
-import { useApr } from '@/hooks/useApr';
+import { useApr } from '@/hooks';
 import { useUserCollateralUtilization } from '@/hooks/useUserCollateralUtilization';
 import { cn } from '@/lib/utils';
 import { selectMarketMode, useMarketStore } from '@/stores';
