@@ -1,5 +1,5 @@
 import { defineConfig } from '../defineConfig';
-import type { DeployedMarkets } from '../types';
+import type { DeployedMarkets, Rewards } from '../types';
 
 export function createMainnetConfig() {
   return defineConfig({
@@ -28,6 +28,7 @@ export function createMainnetConfig() {
     markets: markets,
     assets: assets,
     useBurnerWallet: false,
+    rewards: rewards,
   });
 }
 
@@ -40,6 +41,21 @@ const markets: DeployedMarkets = {
     tokenFactoryAddress: '',
     graphqlUrl: 'https://indexer.hyperindex.xyz/bfc2f60/v1/graphql',
   },
+};
+
+const rewards: Rewards = {
+  USDC: [
+    {
+      poolSize: 2000000,
+      assetId:
+        '0x1d5d97005e41cae2187a895fd8eab0506111e0e2f3331cd3912c15c24e3c1d82',
+      supplyRewardPercentage: 0.5,
+      borrowRewardPercentage: 0.5,
+      startDate: '2025-01-10T00:00:00Z',
+      endDate: '2025-01-17T00:00:00Z',
+      durationInDays: 7,
+    },
+  ],
 };
 
 const assets: Record<string, string> = {
