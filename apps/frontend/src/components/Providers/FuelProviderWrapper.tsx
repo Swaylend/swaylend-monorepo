@@ -16,7 +16,7 @@ import {
 } from '@fuels/connectors';
 import { FuelProvider } from '@fuels/react';
 import { CHAIN_IDS, type FuelConnector, Provider } from 'fuels';
-import { type ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { fallback } from 'viem';
 import { http, createConfig as createConfigWagmiConfig } from 'wagmi';
 import { mainnet, sepolia } from 'wagmi/chains';

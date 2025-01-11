@@ -13,7 +13,7 @@ import {
   useTotalReserves,
 } from '@/hooks';
 
-import { ChartData } from '@/lib/charts';
+import type { ChartData } from '@/lib/charts';
 import { cn } from '@/lib/utils';
 import {
   SYMBOL_TO_ICON,

@@ -25,10 +25,10 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import {
-  TooltipProvider,
   Tooltip,
-  TooltipTrigger,
   TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { appConfig } from '@/configs';
 import {

@@ -22,20 +22,20 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import {
-  TooltipProvider,
   Tooltip,
-  TooltipTrigger,
   TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { appConfig } from '@/configs';
 import {
   USER_ROLE,
+  useApr,
   useBalance,
   useMarketConfiguration,
   useSupplyRate,
   useUserRole,
   useUserSupplyBorrow,
-  useApr,
 } from '@/hooks';
 import { cn } from '@/lib/utils';
 import {

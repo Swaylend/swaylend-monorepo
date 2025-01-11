@@ -1,4 +1,4 @@
-import { Point } from '@/components/PointIcons';
+import type { Point } from '@/components/PointIcons';
 import { SYMBOL_TO_ICON } from '@/utils';
 
 export const POINTS_COLLATERAL: Point[] = [
