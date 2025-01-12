@@ -36,7 +36,6 @@ import {
   useApr,
   useBalance,
   useBorrowCapacity,
-  useBorrowRate,
   useMarketConfiguration,
   usePrice,
   useUserRole,
@@ -51,12 +50,7 @@ import {
   selectChangeTokenAmount,
   useMarketStore,
 } from '@/stores';
-import {
-  SYMBOL_TO_ICON,
-  formatUnits,
-  getBorrowApr,
-  getFormattedNumber,
-} from '@/utils';
+import { SYMBOL_TO_ICON, formatUnits, getFormattedNumber } from '@/utils';
 import { useAccount, useIsConnected } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import BigNumber from 'bignumber.js';
@@ -136,7 +130,6 @@ export const BorrowTable = () => {
   );
   const changeInputDialogOpen = useMarketStore(selectChangeInputDialogOpen);
 
-  const { data: borrowRate, isPending: isBorrowRatePending } = useBorrowRate();
   const { data: userSupplyBorrow } = useUserSupplyBorrow();
   const { data: priceData } = usePrice();
   const { data: marketConfiguration, isPending: isPendingMarketConfiguration } =
@@ -215,7 +208,7 @@ export const BorrowTable = () => {
                 Net APY
                 <InfoIcon
                   text={
-                    'Net APY shows combined Borrow APY and Reward APY (Net APY = Borrow APY+ Reward APY).'
+                    'Net APY shows combined Borrow APY and Reward APY (Net APY = Borrow APY - Reward APY).'
                   }
                 />
               </div>
@@ -234,7 +227,7 @@ export const BorrowTable = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {isPendingMarketConfiguration ? (
+          {isPendingMarketConfiguration || isAprPending ? (
             SkeletonRow
           ) : (
             <TableRow>
@@ -286,7 +279,7 @@ export const BorrowTable = () => {
               </TableCell>
               <TableCell
                 className={cn(
-                  isBorrowRatePending && 'animate-pulse',
+                  isAprPending && 'animate-pulse',
                   'text-white text-md font-medium'
                 )}
               >
@@ -295,7 +288,7 @@ export const BorrowTable = () => {
               <TableCell>{borrowedBalance}</TableCell>
               <TableCell
                 className={cn(
-                  isBorrowRatePending && 'animate-pulse',
+                  isAprPending && 'animate-pulse',
                   'text-white text-md font-medium'
                 )}
               >
@@ -306,7 +299,7 @@ export const BorrowTable = () => {
               </TableCell>
               <TableCell
                 className={cn(
-                  isBorrowRatePending && 'animate-pulse',
+                  isAprPending && 'animate-pulse',
                   'text-white text-md font-medium'
                 )}
               >
@@ -415,7 +408,7 @@ export const BorrowTable = () => {
               <CardDescription>Card Description</CardDescription>
             </CardHeader>
           </VisuallyHidden.Root>
-          {isPendingMarketConfiguration ? (
+          {isPendingMarketConfiguration || isAprPending ? (
             SkeletonCardContent
           ) : (
             <CardContent>
@@ -473,7 +466,7 @@ export const BorrowTable = () => {
                   <div
                     className={cn(
                       'text-white text-md font-medium',
-                      isBorrowRatePending && 'animate-pulse'
+                      isAprPending && 'animate-pulse'
                     )}
                   >
                     {aprData?.borrowBaseApr.times(100).toFixed(2)}%
@@ -492,7 +485,7 @@ export const BorrowTable = () => {
                   <div
                     className={cn(
                       'text-white text-md font-medium',
-                      isBorrowRatePending && 'animate-pulse'
+                      isAprPending && 'animate-pulse'
                     )}
                   >
                     <div className="flex gap-x-2 items-center">
@@ -508,7 +501,7 @@ export const BorrowTable = () => {
                   <div
                     className={cn(
                       'text-white text-md font-medium',
-                      isBorrowRatePending && 'animate-pulse'
+                      isAprPending && 'animate-pulse'
                     )}
                   >
                     {aprData?.netBorrowApr.times(100).toFixed(2)}%

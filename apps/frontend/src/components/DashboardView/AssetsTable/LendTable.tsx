@@ -130,7 +130,6 @@ export const LendTable = () => {
   );
   const changeInputDialogOpen = useMarketStore(selectChangeInputDialogOpen);
 
-  const { data: supplyRate, isPending: isSupplyRatePending } = useSupplyRate();
   const { data: userSupplyBorrow } = useUserSupplyBorrow();
   const { data: marketConfiguration, isPending: isPendingMarketConfiguration } =
     useMarketConfiguration();
@@ -199,7 +198,7 @@ export const LendTable = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {isPendingMarketConfiguration ? (
+          {isPendingMarketConfiguration || isAprPending ? (
             SkeletonRow
           ) : (
             <TableRow>
@@ -249,7 +248,7 @@ export const LendTable = () => {
               </TableCell>
               <TableCell
                 className={cn(
-                  isSupplyRatePending && 'animate-pulse',
+                  isAprPending && 'animate-pulse',
                   'text-white text-md font-medium'
                 )}
               >
@@ -266,7 +265,7 @@ export const LendTable = () => {
               </TableCell>
               <TableCell
                 className={cn(
-                  isSupplyRatePending && 'animate-pulse',
+                  isAprPending && 'animate-pulse',
                   'text-white text-md font-medium'
                 )}
               >
@@ -277,7 +276,7 @@ export const LendTable = () => {
               </TableCell>
               <TableCell
                 className={cn(
-                  isSupplyRatePending && 'animate-pulse',
+                  isAprPending && 'animate-pulse',
                   'text-white text-md font-medium'
                 )}
               >
@@ -384,7 +383,7 @@ export const LendTable = () => {
               <CardDescription>Card Description</CardDescription>
             </CardHeader>
           </VisuallyHidden.Root>
-          {isPendingMarketConfiguration ? (
+          {isPendingMarketConfiguration || isAprPending ? (
             SkeletonCardContent
           ) : (
             <CardContent>
@@ -436,7 +435,7 @@ export const LendTable = () => {
                   <div
                     className={cn(
                       'text-white',
-                      isSupplyRatePending && 'animate-pulse'
+                      isAprPending && 'animate-pulse'
                     )}
                   >
                     {aprData?.supplyBaseApr.times(100).toFixed(2)}%
@@ -465,7 +464,7 @@ export const LendTable = () => {
                   <div
                     className={cn(
                       'text-white',
-                      isSupplyRatePending && 'animate-pulse'
+                      isAprPending && 'animate-pulse'
                     )}
                   >
                     <div className="flex gap-x-2 items-center">
@@ -479,7 +478,7 @@ export const LendTable = () => {
                   <div
                     className={cn(
                       'text-white',
-                      isSupplyRatePending && 'animate-pulse'
+                      isAprPending && 'animate-pulse'
                     )}
                   >
                     {aprData?.netSupplyApr.times(100).toFixed(2)}%
