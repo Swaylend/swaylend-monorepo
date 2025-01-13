@@ -1,4 +1,4 @@
-import { Point } from '@/components/PointIcons';
+import type { Point } from '@/components/PointIcons';
 import { SYMBOL_TO_ICON } from '@/utils';
 
 export const POINTS_COLLATERAL: Point[] = [
@@ -154,5 +154,15 @@ export const POINTS_LEND: Point[] = [
     ),
     icon: SYMBOL_TO_ICON.SWAY,
     displayMultiplier: '3x',
+  },
+];
+
+export const POINTS_LM: Point[] = [
+  {
+    id: '1',
+    name: 'FUEL Token Rewards',
+    description: <></>,
+    icon: SYMBOL_TO_ICON.FUEL,
+    displayMultiplier: undefined,
   },
 ];

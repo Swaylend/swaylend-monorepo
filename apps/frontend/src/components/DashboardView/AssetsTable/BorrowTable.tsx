@@ -1,6 +1,10 @@
 import { InfoIcon } from '@/components/InfoIcon';
+import { Line } from '@/components/Line';
 import { PointIcons } from '@/components/PointIcons';
-import { POINTS_BORROW } from '@/components/PointIcons/PointsTooltip';
+import {
+  POINTS_BORROW,
+  POINTS_LM,
+} from '@/components/PointIcons/PointsTooltip';
 import { Title } from '@/components/Title';
 import { Button } from '@/components/ui/button';
 import {
@@ -20,12 +24,18 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { appConfig } from '@/configs';
 import {
   USER_ROLE,
+  useApr,
   useBalance,
   useBorrowCapacity,
-  useBorrowRate,
   useMarketConfiguration,
   usePrice,
   useUserRole,
@@ -40,12 +50,7 @@ import {
   selectChangeTokenAmount,
   useMarketStore,
 } from '@/stores';
-import {
-  SYMBOL_TO_ICON,
-  formatUnits,
-  getBorrowApr,
-  getFormattedNumber,
-} from '@/utils';
+import { SYMBOL_TO_ICON, formatUnits, getFormattedNumber } from '@/utils';
 import { useAccount, useIsConnected } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import BigNumber from 'bignumber.js';
@@ -54,6 +59,12 @@ import { useMemo } from 'react';
 
 const SkeletonRow = (
   <TableRow>
+    <TableCell>
+      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+    </TableCell>
+    <TableCell>
+      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+    </TableCell>
     <TableCell>
       <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
     </TableCell>
@@ -95,6 +106,14 @@ const SkeletonCardContent = (
         <Skeleton className="w-1/2 h-[24px] bg-primary/20 rounded-md" />
       </div>
       <div className="w-full flex items-center">
+        <div className="w-1/2 text-moon font-medium">Borrow APY</div>
+        <Skeleton className="w-1/2 h-[24px] bg-primary/20 rounded-md" />
+      </div>
+      <div className="w-full flex items-center">
+        <div className="w-1/2 text-moon font-medium">Borrow APY</div>
+        <Skeleton className="w-1/2 h-[24px] bg-primary/20 rounded-md" />
+      </div>
+      <div className="w-full flex items-center">
         <div className="w-1/2 text-moon font-medium">Supply Points</div>
         <Skeleton className="w-1/2 h-[24px] bg-primary/20 rounded-md" />
       </div>
@@ -111,7 +130,6 @@ export const BorrowTable = () => {
   );
   const changeInputDialogOpen = useMarketStore(selectChangeInputDialogOpen);
 
-  const { data: borrowRate, isPending: isBorrowRatePending } = useBorrowRate();
   const { data: userSupplyBorrow } = useUserSupplyBorrow();
   const { data: priceData } = usePrice();
   const { data: marketConfiguration, isPending: isPendingMarketConfiguration } =
@@ -124,6 +142,8 @@ export const BorrowTable = () => {
     changeActionTokenAssetId(marketConfiguration?.baseToken.bits);
     changeInputDialogOpen(true);
   };
+
+  const { data: aprData, isPending: isAprPending } = useApr();
 
   const { isConnected } = useIsConnected();
 
@@ -161,7 +181,7 @@ export const BorrowTable = () => {
       <Table className="max-lg:hidden">
         <TableHeader>
           <TableRow>
-            <TableHead className="w-3/12">
+            <TableHead className="w-2/12">
               <div className="flex items-center gap-x-2">
                 Borrow Asset
                 <InfoIcon
@@ -171,9 +191,29 @@ export const BorrowTable = () => {
                 />
               </div>
             </TableHead>
-            <TableHead className="w-1/6">Borrow APY</TableHead>
-            <TableHead className="w-1/6">Your Borrow Position</TableHead>
-            <TableHead className="w-1/6">
+            <TableHead className="w-2/12">Borrow APY</TableHead>
+            <TableHead className="w-2/12">Your Borrow Position</TableHead>
+            <TableHead className="w-1/12">
+              <div className="flex items-center gap-x-2">
+                Reward APY
+                <InfoIcon
+                  text={
+                    'Reward APY shows partner token APY that the user earns while taking the Borrow position.'
+                  }
+                />
+              </div>
+            </TableHead>
+            <TableHead className="w-1/12">
+              <div className="flex items-center gap-x-2">
+                Net APY
+                <InfoIcon
+                  text={
+                    'Net APY shows combined Borrow APY and Reward APY (Net APY = Borrow APY - Reward APY).'
+                  }
+                />
+              </div>
+            </TableHead>
+            <TableHead className="w-2/12">
               <div className="flex items-center gap-x-2">
                 Borrow Points
                 <InfoIcon
@@ -183,11 +223,11 @@ export const BorrowTable = () => {
                 />
               </div>
             </TableHead>
-            <TableHead className="w-3/12">{}</TableHead>
+            <TableHead className="w-2/12">{}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {isPendingMarketConfiguration ? (
+          {isPendingMarketConfiguration || isAprPending ? (
             SkeletonRow
           ) : (
             <TableRow>
@@ -239,13 +279,74 @@ export const BorrowTable = () => {
               </TableCell>
               <TableCell
                 className={cn(
-                  isBorrowRatePending && 'animate-pulse',
+                  isAprPending && 'animate-pulse',
                   'text-white text-md font-medium'
                 )}
               >
-                {getBorrowApr(borrowRate)}
+                {aprData?.borrowBaseApr.times(100).toFixed(2)}%
               </TableCell>
               <TableCell>{borrowedBalance}</TableCell>
+              <TableCell
+                className={cn(
+                  isAprPending && 'animate-pulse',
+                  'text-white text-md font-medium'
+                )}
+              >
+                <div className="flex gap-x-2 items-center">
+                  {aprData?.borrowRewardApr.times(100).toFixed(2)}%
+                  <PointIcons points={POINTS_LM} />
+                </div>
+              </TableCell>
+              <TableCell
+                className={cn(
+                  isAprPending && 'animate-pulse',
+                  'text-white text-md font-medium'
+                )}
+              >
+                <TooltipProvider delayDuration={100}>
+                  <Tooltip>
+                    <TooltipTrigger
+                      onClick={(e: { preventDefault: () => any }) =>
+                        e.preventDefault()
+                      }
+                    >
+                      <div>{aprData?.netBorrowApr.times(100).toFixed(2)}%</div>
+                    </TooltipTrigger>
+                    <TooltipContent
+                      onPointerDownOutside={(e: {
+                        preventDefault: () => any;
+                      }) => e.preventDefault()}
+                    >
+                      <div className="w-[200px] p-2">
+                        <div className="flex justify-center font-semibold text-white text-lg">
+                          Net Borrow APY
+                        </div>
+                        <div className="mt-4 mb-2 flex flex-col font-normal">
+                          <div className="flex justify-between text-md">
+                            <div>Borrow APY</div>
+                            <div>
+                              {aprData?.borrowBaseApr.times(100).toFixed(2)}%
+                            </div>
+                          </div>
+                          <div className="flex justify-between text-md">
+                            <div>Reward APY</div>
+                            <div>
+                              {aprData?.borrowRewardApr.times(100).toFixed(2)}%
+                            </div>
+                          </div>
+                        </div>
+                        <Line />
+                        <div className="flex mt-2 justify-between text-md font-normal">
+                          <div>Net Borrow APY</div>
+                          <div>
+                            {aprData?.netBorrowApr.times(100).toFixed(2)}%
+                          </div>
+                        </div>
+                      </div>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </TableCell>
               <TableCell>
                 <PointIcons points={POINTS_BORROW} />
               </TableCell>
@@ -307,7 +408,7 @@ export const BorrowTable = () => {
               <CardDescription>Card Description</CardDescription>
             </CardHeader>
           </VisuallyHidden.Root>
-          {isPendingMarketConfiguration ? (
+          {isPendingMarketConfiguration || isAprPending ? (
             SkeletonCardContent
           ) : (
             <CardContent>
@@ -365,10 +466,10 @@ export const BorrowTable = () => {
                   <div
                     className={cn(
                       'text-white text-md font-medium',
-                      isBorrowRatePending && 'animate-pulse'
+                      isAprPending && 'animate-pulse'
                     )}
                   >
-                    {getBorrowApr(borrowRate)}
+                    {aprData?.borrowBaseApr.times(100).toFixed(2)}%
                   </div>
                 </div>
                 <div className="w-full flex items-center">
@@ -376,6 +477,35 @@ export const BorrowTable = () => {
                     Your Borrow Position
                   </div>
                   <div className="text-moon">{borrowedBalance}</div>
+                </div>
+                <div className="w-full flex items-center">
+                  <div className="w-1/2 text-moon text-md font-medium">
+                    Reward APY
+                  </div>
+                  <div
+                    className={cn(
+                      'text-white text-md font-medium',
+                      isAprPending && 'animate-pulse'
+                    )}
+                  >
+                    <div className="flex gap-x-2 items-center">
+                      {aprData?.borrowRewardApr.times(100).toFixed(2)}%
+                      <PointIcons points={POINTS_LM} />
+                    </div>
+                  </div>
+                </div>
+                <div className="w-full flex items-center">
+                  <div className="w-1/2 text-moon text-md font-medium">
+                    Net APY
+                  </div>
+                  <div
+                    className={cn(
+                      'text-white text-md font-medium',
+                      isAprPending && 'animate-pulse'
+                    )}
+                  >
+                    {aprData?.netBorrowApr.times(100).toFixed(2)}%
+                  </div>
                 </div>
                 <div className="w-full flex items-center">
                   <div className="w-1/2 text-moon font-medium">
