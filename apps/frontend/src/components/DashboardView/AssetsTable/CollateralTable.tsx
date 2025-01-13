@@ -139,7 +139,8 @@ const CollateralTableRow = ({
                             collateralConfiguration.supply_cap.toString()
                           ),
                           decimals
-                        )
+                        ),
+                        2
                       )}{' '}
                       {appConfig.assets[assetId]}
                     </div>
@@ -147,7 +148,7 @@ const CollateralTableRow = ({
                   <div className="text-md flex justify-between">
                     <div className="text-lavender">Total Supplied</div>
                     <div className="font-semibold text-moon">
-                      {getFormattedNumber(collateralAmount)}{' '}
+                      {getFormattedNumber(collateralAmount, 2)}{' '}
                       {appConfig.assets[assetId]}
                     </div>
                   </div>
@@ -229,7 +230,8 @@ const CollateralTableRow = ({
                             collateralConfiguration.supply_cap.toString()
                           ),
                           decimals
-                        )
+                        ),
+                        2
                       )}{' '}
                       {appConfig.assets[assetId]}
                     </div>
@@ -251,7 +253,7 @@ const CollateralTableRow = ({
                   <div className="text-md flex justify-between">
                     <div className="text-lavender">Total Supplied</div>
                     <div className="font-semibold text-moon">
-                      {getFormattedNumber(collateralAmount)}{' '}
+                      {getFormattedNumber(collateralAmount, 2)}{' '}
                       {appConfig.assets[assetId]}
                     </div>
                   </div>
