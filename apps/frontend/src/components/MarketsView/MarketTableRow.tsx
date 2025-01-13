@@ -74,7 +74,7 @@ export const MarketTableRow = ({
   const { data: marketConfiguration } = useMarketConfiguration();
 
   const { data: utilization } = useUtilization(marketName);
-  const { data: aprData, isPending: isAprPending } = useApr();
+  const { data: aprData, isPending: isAprPending } = useApr(marketName);
 
   const {
     data: collateralConfigurations,
@@ -119,7 +119,7 @@ export const MarketTableRow = ({
     );
   }, [totalCollateral, priceData]);
 
-  return isPendingCollateralConfigurations ? (
+  return isPendingCollateralConfigurations || isAprPending ? (
     SkeletonRow
   ) : (
     <TableRow

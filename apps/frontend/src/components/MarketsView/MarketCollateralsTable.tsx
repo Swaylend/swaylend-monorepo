@@ -98,7 +98,6 @@ export const MarketCollateralsTable = ({
 }: { marketName: string }) => {
   const { data: collateralConfigurations } =
     useCollateralConfigurations(marketName);
-  const { data: marketConfiguration } = useMarketConfiguration(marketName);
 
   const collaterals = useMemo(() => {
     if (!collateralConfigurations) return [];

@@ -50,7 +50,7 @@ export default function MarketOverview({
 }: MarketOverviewProps) {
   const { data: totalReserves } = useTotalReserves(baseAsset);
 
-  const { data: aprData, isPending: isAprPending } = useApr();
+  const { data: aprData, isPending: isAprPending } = useApr(baseAsset);
 
   const { data: collateralConfigurations } =
     useCollateralConfigurations(baseAsset);

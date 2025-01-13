@@ -35,9 +35,9 @@ export function createTestnetConfig() {
 const rewards: Rewards = {
   USDC: [
     {
-      poolSize: 2000000,
+      poolSize: 200,
       assetId:
-        '0x1d5d97005e41cae2187a895fd8eab0506111e0e2f3331cd3912c15c24e3c1d82',
+        '0x3aced3c270121c9d85e00fb14f079ecc666b733b12a0d15df1c2ecae26c1167a',
       supplyRewardPercentage: 0.5,
       borrowRewardPercentage: 0.5,
       startDate: '2025-01-07T00:00:00Z',
@@ -45,9 +45,9 @@ const rewards: Rewards = {
       durationInDays: 7,
     },
     {
-      poolSize: 4000000,
+      poolSize: 400,
       assetId:
-        '0x1d5d97005e41cae2187a895fd8eab0506111e0e2f3331cd3912c15c24e3c1d82',
+        '0x3aced3c270121c9d85e00fb14f079ecc666b733b12a0d15df1c2ecae26c1167a',
       supplyRewardPercentage: 0.5,
       borrowRewardPercentage: 0.5,
       startDate: '2025-01-14T00:00:00Z',
@@ -55,9 +55,9 @@ const rewards: Rewards = {
       durationInDays: 7,
     },
     {
-      poolSize: 8000000,
+      poolSize: 800,
       assetId:
-        '0x1d5d97005e41cae2187a895fd8eab0506111e0e2f3331cd3912c15c24e3c1d82',
+        '0x3aced3c270121c9d85e00fb14f079ecc666b733b12a0d15df1c2ecae26c1167a',
       supplyRewardPercentage: 0.5,
       borrowRewardPercentage: 0.5,
       startDate: '2025-01-21T00:00:00Z',
@@ -67,9 +67,9 @@ const rewards: Rewards = {
   ],
   USDT: [
     {
-      poolSize: 2000000,
+      poolSize: 200,
       assetId:
-        '0x1d5d97005e41cae2187a895fd8eab0506111e0e2f3331cd3912c15c24e3c1d82',
+        '0xc264acd28eaf6f33e0e13360a37741dc91221aaa8817e1b4e462d61bb08c5835',
       supplyRewardPercentage: 0.5,
       borrowRewardPercentage: 0.5,
       startDate: '2025-01-11T00:00:00Z',
