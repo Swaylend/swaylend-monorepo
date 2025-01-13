@@ -4,7 +4,6 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { useUser } from '@/hooks';
-import { useFuelPoints } from '@/hooks/useFuelPoints';
 import { cn } from '@/lib/utils';
 import { useIsConnected } from '@fuels/react';
 import { Trophy } from 'lucide-react';
@@ -25,8 +24,6 @@ export const Points = () => {
   const { data: user } = useUser();
 
   const { isConnected } = useIsConnected();
-
-  const { data: fuelPoints } = useFuelPoints();
 
   return (
     <Popover open={isHover || isManualOpen}>
@@ -49,15 +46,6 @@ export const Points = () => {
           <div className={cn('text-lavender font-semibold')}>
             {isConnected ? (user ? user.points : '0') : 'Connect Wallet'}
           </div>
-        </div>
-        <div className="mt-8 flex flex-col gap-y-2 items-center border border-white/10 w-full p-2 rounded-xl">
-          <div className="flex gap-x-1 items-center text-primary">
-            Fuel Points
-            <InfoIcon text="Points earned through the Fuel Points Program" />
-          </div>
-          <span className="text-lavender font-semibold">
-            {isConnected ? fuelPoints : 'Connect Wallet'}
-          </span>
         </div>
         <Link href="/leaderboard" className="w-full mt-4" prefetch={false}>
           <Button className="w-full flex gap-x-2" variant="tertiary-card">
