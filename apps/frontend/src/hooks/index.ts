@@ -29,3 +29,4 @@ export * from './useTotalReserves';
 export * from './useCollateralReserves';
 export * from './useMaxWithdrawableCollateral';
 export * from './useProvider';
+export * from './useApr';

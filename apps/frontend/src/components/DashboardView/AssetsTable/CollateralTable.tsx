@@ -280,14 +280,7 @@ const CollateralTableRow = ({
       </TableCell>
       <TableCell>
         <div className="h-full flex items-center gap-x-2">
-          <PointIcons
-            points={[
-              ...(symbol === 'USDT' || symbol === 'ETH'
-                ? [POINTS_COLLATERAL[0]]
-                : [POINTS_COLLATERAL[1]]),
-              POINTS_COLLATERAL[2],
-            ]}
-          />
+          <PointIcons points={POINTS_COLLATERAL} />
         </div>
       </TableCell>
       <TableCell>
@@ -402,15 +395,7 @@ const CollateralCard = ({
           </div>
           <div className="w-full flex items-center">
             <div className="w-1/2 text-moon font-medium">Supply Points</div>
-            <PointIcons
-              points={[
-                ...(symbol === 'USDT' || symbol === 'ETH'
-                  ? [POINTS_COLLATERAL[0]]
-                  : [POINTS_COLLATERAL[1]]),
-                POINTS_COLLATERAL[2],
-              ]}
-              mobile
-            />
+            <PointIcons points={POINTS_COLLATERAL} mobile />
           </div>
         </div>
       </CardContent>

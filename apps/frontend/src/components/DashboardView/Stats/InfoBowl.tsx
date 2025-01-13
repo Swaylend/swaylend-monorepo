@@ -5,16 +5,11 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import {
-  useBorrowRate,
-  useSupplyRate,
-  useUserCollateralAssets,
-  useUserSupplyBorrow,
-} from '@/hooks';
+import { useUserCollateralAssets, useUserSupplyBorrow } from '@/hooks';
+import { useApr } from '@/hooks';
 import { useUserCollateralUtilization } from '@/hooks/useUserCollateralUtilization';
 import { cn } from '@/lib/utils';
 import { selectMarketMode, useMarketStore } from '@/stores';
-import { getBorrowApr, getSupplyApr } from '@/utils';
 import { useIsConnected } from '@fuels/react';
 import { useMemo } from 'react';
 import Wave from 'react-wavify';
@@ -38,8 +33,7 @@ const WAVE_COLORS = {
 export const InfoBowl = () => {
   const marketMode = useMarketStore(selectMarketMode);
   const { isConnected } = useIsConnected();
-  const { data: borrowRate, isPending: isPendingBorrowRate } = useBorrowRate();
-  const { data: supplyRate, isPending: isPendingSupplyRate } = useSupplyRate();
+
   const { data: userSupplyBorrow, isPending: isPendingUserSupplyBorrow } =
     useUserSupplyBorrow();
   const { data: collateralUtilization } = useUserCollateralUtilization();
@@ -70,23 +64,12 @@ export const InfoBowl = () => {
     return WAVE_COLORS.danger;
   }, [collateralUtilization, collateralBalances]);
 
-  const borrowApr = useMemo(() => getBorrowApr(borrowRate), [borrowRate]);
-
-  const supplyApr = useMemo(() => getSupplyApr(supplyRate), [supplyRate]);
+  const { data: aprData, isPending: isAprPending } = useApr();
 
   const isLoading = useMemo(() => {
-    if (!isConnected) return isPendingBorrowRate || isPendingSupplyRate;
-    return [
-      isPendingBorrowRate,
-      isPendingSupplyRate,
-      isPendingUserSupplyBorrow,
-    ].some((res) => res);
-  }, [
-    isConnected,
-    isPendingBorrowRate,
-    isPendingSupplyRate,
-    isPendingUserSupplyBorrow,
-  ]);
+    if (!isConnected) return isAprPending;
+    return [isPendingUserSupplyBorrow, isAprPending].some((res) => res);
+  }, [isConnected, isAprPending, isPendingUserSupplyBorrow]);
 
   return (
     <TooltipProvider delayDuration={100}>
@@ -165,17 +148,17 @@ export const InfoBowl = () => {
                   )}
                   {bowlMode === 1 && (
                     <div className="text-sm sm:text-lg text-primary-foreground font-bold">
-                      Borrow APY
+                      Net Borrow APY
                       <div className="sm:text-xl text-lg font-semibold">
-                        {borrowApr}
+                        {aprData?.netBorrowApr.times(100).toFixed(2)}%
                       </div>
                     </div>
                   )}
                   {bowlMode === 0 && (
                     <div className="text-sm sm:text-lg text-white font-bold">
-                      Supply APY
+                      Net Supply APY
                       <div className="sm:text-xl text-lg  font-semibold">
-                        {supplyApr}
+                        {aprData?.netSupplyApr.times(100).toFixed(2)}%
                       </div>
                     </div>
                   )}

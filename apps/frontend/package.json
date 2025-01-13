@@ -34,6 +34,7 @@
     "bignumber.js": "^9.1.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "dayjs": "^1.11.13",
     "encoding": "^0.1.13",
     "fuels": "0.96.1",
     "lucide-react": "^0.460.0",
