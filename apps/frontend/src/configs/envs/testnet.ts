@@ -33,8 +33,50 @@ export function createTestnetConfig() {
 }
 
 const rewards: Rewards = {
-  USDC: [],
-  USDT: [],
+  USDC: [
+    {
+      poolSize: 2000000,
+      assetId:
+        '0x1d5d97005e41cae2187a895fd8eab0506111e0e2f3331cd3912c15c24e3c1d82',
+      supplyRewardPercentage: 0.5,
+      borrowRewardPercentage: 0.5,
+      startDate: '2025-01-07T00:00:00Z',
+      endDate: '2025-01-14T00:00:00Z',
+      durationInDays: 7,
+    },
+    {
+      poolSize: 4000000,
+      assetId:
+        '0x1d5d97005e41cae2187a895fd8eab0506111e0e2f3331cd3912c15c24e3c1d82',
+      supplyRewardPercentage: 0.5,
+      borrowRewardPercentage: 0.5,
+      startDate: '2025-01-14T00:00:00Z',
+      endDate: '2025-01-21T00:00:00Z',
+      durationInDays: 7,
+    },
+    {
+      poolSize: 8000000,
+      assetId:
+        '0x1d5d97005e41cae2187a895fd8eab0506111e0e2f3331cd3912c15c24e3c1d82',
+      supplyRewardPercentage: 0.5,
+      borrowRewardPercentage: 0.5,
+      startDate: '2025-01-21T00:00:00Z',
+      endDate: '2025-01-28T00:00:00Z',
+      durationInDays: 7,
+    },
+  ],
+  USDT: [
+    {
+      poolSize: 2000000,
+      assetId:
+        '0x1d5d97005e41cae2187a895fd8eab0506111e0e2f3331cd3912c15c24e3c1d82',
+      supplyRewardPercentage: 0.5,
+      borrowRewardPercentage: 0.5,
+      startDate: '2025-01-11T00:00:00Z',
+      endDate: '2025-01-14T00:00:00Z',
+      durationInDays: 7,
+    },
+  ],
 };
 
 const markets: DeployedMarkets = {

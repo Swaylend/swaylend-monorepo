@@ -51,9 +51,39 @@ const rewards: Rewards = {
         '0x1d5d97005e41cae2187a895fd8eab0506111e0e2f3331cd3912c15c24e3c1d82',
       supplyRewardPercentage: 0.5,
       borrowRewardPercentage: 0.5,
-      startDate: '2025-01-10T00:00:00Z',
-      endDate: '2025-01-17T00:00:00Z',
+      startDate: '2025-01-15T00:00:00Z',
+      endDate: '2025-01-22T00:00:00Z',
       durationInDays: 7,
+    },
+    {
+      poolSize: 2600000,
+      assetId:
+        '0x1d5d97005e41cae2187a895fd8eab0506111e0e2f3331cd3912c15c24e3c1d82',
+      supplyRewardPercentage: 0.5,
+      borrowRewardPercentage: 0.5,
+      startDate: '2025-01-22T00:00:00Z',
+      endDate: '2025-01-29T00:00:00Z',
+      durationInDays: 7,
+    },
+    {
+      poolSize: 2800000,
+      assetId:
+        '0x1d5d97005e41cae2187a895fd8eab0506111e0e2f3331cd3912c15c24e3c1d82',
+      supplyRewardPercentage: 0.5,
+      borrowRewardPercentage: 0.5,
+      startDate: '2025-01-29T00:00:00Z',
+      endDate: '2025-02-05T00:00:00Z',
+      durationInDays: 7,
+    },
+    {
+      poolSize: 3800000,
+      assetId:
+        '0x1d5d97005e41cae2187a895fd8eab0506111e0e2f3331cd3912c15c24e3c1d82',
+      supplyRewardPercentage: 0.5,
+      borrowRewardPercentage: 0.5,
+      startDate: '2025-02-05T00:00:00Z',
+      endDate: '2025-02-14T00:00:00Z',
+      durationInDays: 9,
     },
   ],
 };
