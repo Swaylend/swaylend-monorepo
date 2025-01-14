@@ -59,16 +59,22 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
 
   return (
     <>
-      <div className="w-full text-center bg-purple font-medium text-md text-lavender py-2 px-4">
-        SwayPoints are live! Start earning points now.
+      <div className="w-full text-center bg-purple font-medium text-md text-lavender py-1 px-4">
+        Phase 2 & Fuel Points are over! 🎉 View your points
         <a
-          href="https://docs.swaylend.com/swaypoints"
+          href="https://app.fuel.network/earn-points/phase-2/"
           target="_blank"
           rel="noreferrer"
           className="underline ml-1"
         >
-          Learn more
+          here
         </a>
+        .
+      </div>
+      <div className="w-full text-center bg-purple font-medium text-md text-lavender pb-1 px-4">
+        Fuel Season 1 starts NOW! Earn Fuel tokens by: Borrowing USDC using ETH,
+        FUEL, and USDT as collateral. Supplying USDC. Your journey to greater
+        rewards begins today. 🔥
       </div>
       {/* DESKTOP */}
       <div className="max-lg:hidden">

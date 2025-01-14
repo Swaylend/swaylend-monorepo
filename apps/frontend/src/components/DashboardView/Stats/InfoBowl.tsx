@@ -1,3 +1,5 @@
+import { NetBorrowTooltip } from '@/components/NetBorrowTooltip';
+import { NetEarnTooltip } from '@/components/NetEarnTooltip';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
   Tooltip,
@@ -169,24 +171,36 @@ export const InfoBowl = () => {
         </TooltipTrigger>
         <TooltipContent
           className={cn(
-            bowlMode !== 2 && 'hidden',
+            (bowlMode === undefined || isAprPending) && 'hidden',
             'w-[300px]',
             'max-lg:hidden'
           )}
           side="bottom"
           onPointerDownOutside={(e) => e.preventDefault()}
         >
-          <div className="p-1">
-            <span className="font-semibold text-primary">
-              Liquidation Risk{' '}
-            </span>
-            is a measure of how close your position is to being{' '}
-            <span className="font-semibold text-red-500"> liquidated</span>. The
-            higher the percentage, the closer you are to liquidation. Upon
-            reaching <span className="font-semibold text-red-500"> 100%</span>,
-            your position will be{' '}
-            <span className="font-semibold text-red-500"> liquidated</span>.
-          </div>
+          {bowlMode === 2 && (
+            <div className="p-1">
+              <span className="font-semibold text-primary">
+                Liquidation Risk{' '}
+              </span>
+              is a measure of how close your position is to being{' '}
+              <span className="font-semibold text-red-500"> liquidated</span>.
+              The higher the percentage, the closer you are to liquidation. Upon
+              reaching <span className="font-semibold text-red-500"> 100%</span>
+              , your position will be{' '}
+              <span className="font-semibold text-red-500"> liquidated</span>.
+            </div>
+          )}
+          {bowlMode === 1 && (
+            <div className="p-1">
+              <NetBorrowTooltip aprData={aprData} />
+            </div>
+          )}
+          {bowlMode === 0 && (
+            <div className="p-1 w-full">
+              <NetEarnTooltip aprData={aprData} />
+            </div>
+          )}
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
