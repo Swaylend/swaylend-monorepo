@@ -198,7 +198,18 @@ export const BorrowTable = () => {
                 Reward APY
                 <InfoIcon
                   text={
-                    'Reward APY shows partner token APY that the user earns while taking the Borrow position.'
+                    <div className="flex flex-col gap-y-1">
+                      <div>
+                        <span className="font-bold">Reward APY</span> represents
+                        the annual percentage yield (APY) on partner tokens that
+                        users can earn while holding a Borrow position.
+                      </div>
+                      <div className="text-moon italic">
+                        Please note: Rewards are applicable only when the
+                        collateral asset for the Borrow position is ETH, USDT,
+                        or FUEL.
+                      </div>
+                    </div>
                   }
                 />
               </div>
@@ -208,7 +219,22 @@ export const BorrowTable = () => {
                 Net APY
                 <InfoIcon
                   text={
-                    'Net APY shows combined Borrow APY and Reward APY (Net APY = Borrow APY - Reward APY).'
+                    <div className="flex flex-col gap-y-1">
+                      <div>
+                        <span className="font-bold">Net APY</span> represents
+                        the total of Borrow APY and Reward APY, calculated as
+                        follows:{' '}
+                        <span className="font-bold">
+                          Net APY = Borrow APY - Reward APY
+                        </span>
+                        .
+                      </div>
+                      <div className="text-moon italic">
+                        Please note: Rewards are applicable only when the
+                        collateral asset for the Borrow position is ETH, USDT,
+                        or FUEL.
+                      </div>
+                    </div>
                   }
                 />
               </div>
@@ -321,22 +347,28 @@ export const BorrowTable = () => {
                         <div className="flex justify-center font-semibold text-white text-lg">
                           Net Borrow APY
                         </div>
-                        <div className="mt-4 mb-2 flex flex-col font-normal">
+                        <div className="mt-4 flex flex-col font-normal">
                           <div className="flex justify-between text-md">
                             <div>Borrow APY</div>
                             <div>
                               {aprData?.borrowBaseApr.times(100).toFixed(2)}%
                             </div>
                           </div>
-                          <div className="flex justify-between text-md">
-                            <div>Reward APY</div>
+                          <div className="flex justify-between text-md pb-2">
+                            <div className="flex flex-col gap-y-1">
+                              <div>Reward APY</div>
+                              <div className="text-xs italic text-moon">
+                                Distributed in $FUEL
+                              </div>
+                            </div>
                             <div>
-                              {aprData?.borrowRewardApr.times(100).toFixed(2)}%
+                              - {aprData?.borrowRewardApr.times(100).toFixed(2)}
+                              %
                             </div>
                           </div>
                         </div>
                         <Line />
-                        <div className="flex mt-2 justify-between text-md font-normal">
+                        <div className="flex justify-between text-md font-normal pt-1">
                           <div>Net Borrow APY</div>
                           <div>
                             {aprData?.netBorrowApr.times(100).toFixed(2)}%
@@ -352,7 +384,7 @@ export const BorrowTable = () => {
               </TableCell>
               <TableCell>
                 {userRole === USER_ROLE.LENDER ? (
-                  <div className=" text-lavender bg-primary/20 rounded-lg px-4 py-2 text-sm font-medium text-center w-full">
+                  <div className="text-lavender bg-primary/20 rounded-lg px-4 py-2 text-sm font-medium text-center w-full">
                     You cannot Borrow assets while you have an active Earn
                     position. Learn more about how{' '}
                     <a
