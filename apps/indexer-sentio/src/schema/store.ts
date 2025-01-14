@@ -12,6 +12,17 @@ import { DatabaseSchema } from '@sentio/sdk'
 
 
 
+
+interface MarketBasicConstructorInput {
+  id: ID;
+  chainId: Int;
+  contractAddress: String;
+  baseSupplyIndex: BigInt;
+  baseBorrowIndex: BigInt;
+  totalSupplyBase: BigInt;
+  totalBorrowBase: BigInt;
+  lastAccrualTime: BigInt;
+}
 @Entity("MarketBasic")
 export class MarketBasic extends AbstractEntity  {
 
@@ -46,9 +57,18 @@ export class MarketBasic extends AbstractEntity  {
 	@Required
 	@Column("BigInt")
 	lastAccrualTime: BigInt
-  constructor(data: Partial<MarketBasic>) {super()}
+  constructor(data: MarketBasicConstructorInput) {super()}
 }
 
+
+interface UserBasicConstructorInput {
+  id: ID;
+  chainId: Int;
+  contractAddress: String;
+  address: String;
+  principal: BigInt;
+  isNegative: Boolean;
+}
 @Entity("UserBasic")
 export class UserBasic extends AbstractEntity  {
 
@@ -75,9 +95,27 @@ export class UserBasic extends AbstractEntity  {
 	@Required
 	@Column("Boolean")
 	isNegative: Boolean
-  constructor(data: Partial<UserBasic>) {super()}
+  constructor(data: UserBasicConstructorInput) {super()}
 }
 
+
+interface CollateralPositionConstructorInput {
+  id: ID;
+  chainId: Int;
+  poolAddress: String;
+  underlyingTokenAddress: String;
+  underlyingTokenSymbol: String;
+  userAddress: String;
+  suppliedAmount: BigInt;
+  suppliedAmountNormalized: BigDecimal;
+  suppliedAmountUsd?: BigDecimal;
+  borrowedAmount: BigInt;
+  borrowedAmountNormalized: BigDecimal;
+  borrowedAmountUsd?: BigDecimal;
+  collateralAmount: BigInt;
+  collateralAmountNormalized: BigDecimal;
+  collateralAmountUsd?: BigDecimal;
+}
 @Entity("CollateralPosition")
 export class CollateralPosition extends AbstractEntity  {
 
@@ -137,9 +175,25 @@ export class CollateralPosition extends AbstractEntity  {
 
 	@Column("BigDecimal")
 	collateralAmountUsd?: BigDecimal
-  constructor(data: Partial<CollateralPosition>) {super()}
+  constructor(data: CollateralPositionConstructorInput) {super()}
 }
 
+
+interface MarketConfigurationConstructorInput {
+  id: ID;
+  chainId: Int;
+  contractAddress: String;
+  baseTokenAddress: String;
+  baseTokenDecimals: Int;
+  supplyKink: BigInt;
+  borrowKink: BigInt;
+  supplyPerSecondInterestRateBase: BigInt;
+  supplyPerSecondInterestRateSlopeLow: BigInt;
+  supplyPerSecondInterestRateSlopeHigh: BigInt;
+  borrowPerSecondInterestRateBase: BigInt;
+  borrowPerSecondInterestRateSlopeLow: BigInt;
+  borrowPerSecondInterestRateSlopeHigh: BigInt;
+}
 @Entity("MarketConfiguration")
 export class MarketConfiguration extends AbstractEntity  {
 
@@ -194,9 +248,17 @@ export class MarketConfiguration extends AbstractEntity  {
 	@Required
 	@Column("BigInt")
 	borrowPerSecondInterestRateSlopeHigh: BigInt
-  constructor(data: Partial<MarketConfiguration>) {super()}
+  constructor(data: MarketConfigurationConstructorInput) {super()}
 }
 
+
+interface CollateralConfigurationConstructorInput {
+  id: ID;
+  chainId: Int;
+  contractAddress: String;
+  assetAddress: String;
+  decimals: Int;
+}
 @Entity("CollateralConfiguration")
 export class CollateralConfiguration extends AbstractEntity  {
 
@@ -219,9 +281,22 @@ export class CollateralConfiguration extends AbstractEntity  {
 	@Required
 	@Column("Int")
 	decimals: Int
-  constructor(data: Partial<CollateralConfiguration>) {super()}
+  constructor(data: CollateralConfigurationConstructorInput) {super()}
 }
 
+
+interface PoolConstructorInput {
+  id: ID;
+  chainId: Int;
+  creationBlockNumber: Int;
+  creationTimestamp: Int;
+  underlyingTokenAddress: String;
+  underlyingTokenSymbol: String;
+  receiptTokenAddress: String;
+  receiptTokenSymbol: String;
+  poolAddress: String;
+  poolType: String;
+}
 @Entity("Pool")
 export class Pool extends AbstractEntity  {
 
@@ -264,9 +339,23 @@ export class Pool extends AbstractEntity  {
 	@Required
 	@Column("String")
 	poolType: String
-  constructor(data: Partial<Pool>) {super()}
+  constructor(data: PoolConstructorInput) {super()}
 }
 
+
+interface BasePoolConstructorInput {
+  id: ID;
+  chainId: Int;
+  poolAddress: String;
+  suppliedAmount: BigInt;
+  suppliedAmountNormalized: BigDecimal;
+  suppliedAmountUsd?: BigDecimal;
+  supplyApr: BigDecimal;
+  borrowedAmount: BigInt;
+  borrowedAmountNormalized: BigDecimal;
+  borrowedAmountUsd?: BigDecimal;
+  borrowApr: BigDecimal;
+}
 @Entity("BasePool")
 export class BasePool extends AbstractEntity  {
 
@@ -311,9 +400,39 @@ export class BasePool extends AbstractEntity  {
 	@Required
 	@Column("BigDecimal")
 	borrowApr: BigDecimal
-  constructor(data: Partial<BasePool>) {super()}
+  constructor(data: BasePoolConstructorInput) {super()}
 }
 
+
+interface CollateralPoolConstructorInput {
+  id: ID;
+  chainId: Int;
+  poolAddress: String;
+  underlyingTokenAddress: String;
+  underlyingTokenSymbol: String;
+  underlyingTokenPriceUsd?: BigDecimal;
+  availableAmount: BigInt;
+  availableAmountNormalized: BigDecimal;
+  availableAmountUsd?: BigDecimal;
+  suppliedAmount: BigInt;
+  suppliedAmountNormalized: BigDecimal;
+  suppliedAmountUsd?: BigDecimal;
+  collateralAmount: BigInt;
+  collateralAmountNormalized: BigDecimal;
+  collateralAmountUsd?: BigDecimal;
+  collateralFactor: BigDecimal;
+  liquidationFactor: BigDecimal;
+  supplyIndex: BigDecimal;
+  supplyApr: BigDecimal;
+  borrowedAmount: BigInt;
+  borrowedAmountNormalized: BigDecimal;
+  borrowedAmountUsd?: BigDecimal;
+  borrowIndex: BigDecimal;
+  borrowApr: BigDecimal;
+  totalFeesUsd?: BigDecimal;
+  userFeesUsd?: BigDecimal;
+  protocolFeesUsd?: BigDecimal;
+}
 @Entity("CollateralPool")
 export class CollateralPool extends AbstractEntity  {
 
@@ -416,9 +535,29 @@ export class CollateralPool extends AbstractEntity  {
 
 	@Column("BigDecimal")
 	protocolFeesUsd?: BigDecimal
-  constructor(data: Partial<CollateralPool>) {super()}
+  constructor(data: CollateralPoolConstructorInput) {super()}
 }
 
+
+interface BasePositionSnapshotConstructorInput {
+  id: ID;
+  timestamp: Int;
+  blockDate: String;
+  chainId: Int;
+  poolAddress: String;
+  underlyingTokenAddress: String;
+  underlyingTokenSymbol: String;
+  userAddress: String;
+  suppliedAmount: BigInt;
+  suppliedAmountNormalized: BigDecimal;
+  suppliedAmountUsd?: BigDecimal;
+  borrowedAmount: BigInt;
+  borrowedAmountNormalized: BigDecimal;
+  borrowedAmountUsd?: BigDecimal;
+  collateralAmount: BigInt;
+  collateralAmountNormalized: BigDecimal;
+  collateralAmountUsd?: BigDecimal;
+}
 @Entity("BasePositionSnapshot")
 export class BasePositionSnapshot extends AbstractEntity  {
 
@@ -486,9 +625,29 @@ export class BasePositionSnapshot extends AbstractEntity  {
 
 	@Column("BigDecimal")
 	collateralAmountUsd?: BigDecimal
-  constructor(data: Partial<BasePositionSnapshot>) {super()}
+  constructor(data: BasePositionSnapshotConstructorInput) {super()}
 }
 
+
+interface CollateralPositionSnapshotConstructorInput {
+  id: ID;
+  timestamp: Int;
+  blockDate: String;
+  chainId: Int;
+  poolAddress: String;
+  underlyingTokenAddress: String;
+  underlyingTokenSymbol: String;
+  userAddress: String;
+  suppliedAmount: BigInt;
+  suppliedAmountNormalized: BigDecimal;
+  suppliedAmountUsd?: BigDecimal;
+  borrowedAmount: BigInt;
+  borrowedAmountNormalized: BigDecimal;
+  borrowedAmountUsd?: BigDecimal;
+  collateralAmount: BigInt;
+  collateralAmountNormalized: BigDecimal;
+  collateralAmountUsd?: BigDecimal;
+}
 @Entity("CollateralPositionSnapshot")
 export class CollateralPositionSnapshot extends AbstractEntity  {
 
@@ -556,9 +715,40 @@ export class CollateralPositionSnapshot extends AbstractEntity  {
 
 	@Column("BigDecimal")
 	collateralAmountUsd?: BigDecimal
-  constructor(data: Partial<CollateralPositionSnapshot>) {super()}
+  constructor(data: CollateralPositionSnapshotConstructorInput) {super()}
 }
 
+
+interface BasePoolSnapshotConstructorInput {
+  id: ID;
+  timestamp: Int;
+  blockDate: String;
+  chainId: Int;
+  poolAddress: String;
+  underlyingTokenAddress: String;
+  underlyingTokenSymbol: String;
+  underlyingTokenPriceUsd?: BigDecimal;
+  availableAmount: BigInt;
+  availableAmountNormalized: BigDecimal;
+  availableAmountUsd?: BigDecimal;
+  suppliedAmount: BigInt;
+  suppliedAmountNormalized: BigDecimal;
+  suppliedAmountUsd?: BigDecimal;
+  collateralAmount: BigInt;
+  collateralAmountNormalized: BigDecimal;
+  collateralAmountUsd?: BigDecimal;
+  collateralFactor: BigDecimal;
+  supplyIndex: BigDecimal;
+  supplyApr: BigDecimal;
+  borrowedAmount: BigInt;
+  borrowedAmountNormalized: BigDecimal;
+  borrowedAmountUsd?: BigDecimal;
+  borrowIndex: BigDecimal;
+  borrowApr: BigDecimal;
+  totalFeesUsd?: BigDecimal;
+  userFeesUsd?: BigDecimal;
+  protocolFeesUsd?: BigDecimal;
+}
 @Entity("BasePoolSnapshot")
 export class BasePoolSnapshot extends AbstractEntity  {
 
@@ -665,9 +855,41 @@ export class BasePoolSnapshot extends AbstractEntity  {
 
 	@Column("BigDecimal")
 	protocolFeesUsd?: BigDecimal
-  constructor(data: Partial<BasePoolSnapshot>) {super()}
+  constructor(data: BasePoolSnapshotConstructorInput) {super()}
 }
 
+
+interface CollateralPoolSnapshotConstructorInput {
+  id: ID;
+  timestamp: Int;
+  blockDate: String;
+  chainId: Int;
+  poolAddress: String;
+  underlyingTokenAddress: String;
+  underlyingTokenSymbol: String;
+  underlyingTokenPriceUsd?: BigDecimal;
+  availableAmount: BigInt;
+  availableAmountNormalized: BigDecimal;
+  availableAmountUsd?: BigDecimal;
+  suppliedAmount: BigInt;
+  suppliedAmountNormalized: BigDecimal;
+  suppliedAmountUsd?: BigDecimal;
+  collateralAmount: BigInt;
+  collateralAmountNormalized: BigDecimal;
+  collateralAmountUsd?: BigDecimal;
+  collateralFactor: BigDecimal;
+  liquidationFactor: BigDecimal;
+  supplyIndex: BigDecimal;
+  supplyApr: BigDecimal;
+  borrowedAmount: BigInt;
+  borrowedAmountNormalized: BigDecimal;
+  borrowedAmountUsd?: BigDecimal;
+  borrowIndex: BigDecimal;
+  borrowApr: BigDecimal;
+  totalFeesUsd?: BigDecimal;
+  userFeesUsd?: BigDecimal;
+  protocolFeesUsd?: BigDecimal;
+}
 @Entity("CollateralPoolSnapshot")
 export class CollateralPoolSnapshot extends AbstractEntity  {
 
@@ -778,9 +1000,26 @@ export class CollateralPoolSnapshot extends AbstractEntity  {
 
 	@Column("BigDecimal")
 	protocolFeesUsd?: BigDecimal
-  constructor(data: Partial<CollateralPoolSnapshot>) {super()}
+  constructor(data: CollateralPoolSnapshotConstructorInput) {super()}
 }
 
+
+interface EventEntityConstructorInput {
+  id: ID;
+  timestamp: Int;
+  chainId: Int;
+  poolAddress: String;
+  blockNumber: Int;
+  logIndex: Int;
+  transactionHash: String;
+  userAddress: String;
+  takerAddress: String;
+  tokenAddress: String;
+  amount: BigInt;
+  amountNormalized: BigDecimal;
+  amountUsd: BigDecimal;
+  eventType: String;
+}
 @Entity("EventEntity")
 export class EventEntity extends AbstractEntity  {
 
@@ -839,9 +1078,24 @@ export class EventEntity extends AbstractEntity  {
 	@Required
 	@Column("String")
 	eventType: String
-  constructor(data: Partial<EventEntity>) {super()}
+  constructor(data: EventEntityConstructorInput) {super()}
 }
 
+
+interface LiquidationConstructorInput {
+  id: ID;
+  timestamp: Int;
+  blockNumber: Int;
+  logIndex?: Int;
+  transactionHash: String;
+  liquidatorAddress: String;
+  userAddress: String;
+  poolAddress: String;
+  tokenAddress: String;
+  amount: BigInt;
+  amountUsd: BigDecimal;
+  profitUsd: BigDecimal;
+}
 @Entity("Liquidation")
 export class Liquidation extends AbstractEntity  {
 
@@ -891,7 +1145,7 @@ export class Liquidation extends AbstractEntity  {
 	@Required
 	@Column("BigDecimal")
 	profitUsd: BigDecimal
-  constructor(data: Partial<Liquidation>) {super()}
+  constructor(data: LiquidationConstructorInput) {super()}
 }
 
 
