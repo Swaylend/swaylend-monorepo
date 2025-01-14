@@ -320,10 +320,13 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
         underlyingTokenSymbol: appConfig.assets[asset_id],
         underlyingTokenPriceUsd: BigDecimal(0),
         availableAmount: 0n,
+        availableAmountNormalized: BigDecimal(0),
         availableAmountUsd: BigDecimal(0),
         suppliedAmount: 0n,
+        suppliedAmountNormalized: BigDecimal(0),
         suppliedAmountUsd: BigDecimal(0),
         collateralAmount: 0n,
+        collateralAmountNormalized: BigDecimal(0),
         collateralAmountUsd: BigDecimal(0),
         collateralFactor: BigDecimal(
           borrow_collateral_factor.toString()
@@ -334,6 +337,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
         supplyIndex: BigDecimal(0),
         supplyApr: BigDecimal(0),
         borrowedAmount: 0n,
+        borrowedAmountNormalized: BigDecimal(0),
         borrowedAmountUsd: BigDecimal(0),
         borrowIndex: BigDecimal(0),
         borrowApr: BigDecimal(0),
@@ -1128,9 +1132,9 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
         blockNumber: Number(ctx.transaction.blockNumber),
         logIndex: receiptIndex,
         transactionHash: ctx.transaction.id,
-        liquidatorAddress:
-          liquidator.Address?.bits ?? liquidator.ContractId?.bits,
-        userAddress: account.Address?.bits ?? account.ContractId?.bits,
+        liquidatorAddress: (liquidator.Address?.bits ??
+          liquidator.ContractId?.bits)!,
+        userAddress: (account.Address?.bits ?? account.ContractId?.bits)!,
         poolAddress: ctx.contractAddress,
         tokenAddress: marketConfiguration.baseTokenAddress,
         amount: BigInt(amount.toFixed(0)),

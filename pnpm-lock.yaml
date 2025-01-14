@@ -243,8 +243,8 @@ importers:
   apps/indexer-sentio:
     dependencies:
       '@sentio/sdk':
-        specifier: 2.50.1
-        version: 2.50.1(bufferutil@4.0.8)(encoding@0.1.13)(prettier@3.3.3)(typescript@5.6.3)(utf-8-validate@5.0.10)
+        specifier: 2.54.2
+        version: 2.54.2(bufferutil@4.0.8)(encoding@0.1.13)(prettier@3.3.3)(typescript@5.6.3)(utf-8-validate@5.0.10)
       dayjs:
         specifier: ^1.11.13
         version: 1.11.13
@@ -256,8 +256,8 @@ importers:
         version: 3.23.8
     devDependencies:
       '@sentio/cli':
-        specifier: 2.23.0
-        version: 2.23.0(@types/node@22.9.1)(bufferutil@4.0.8)(encoding@0.1.13)(jiti@2.3.3)(node-fetch@2.7.0(encoding@0.1.13))(postcss@8.4.49)(typescript@5.6.3)(utf-8-validate@5.0.10)(yaml@2.6.1)
+        specifier: 2.24.1
+        version: 2.24.1(@types/node@22.9.1)(bufferutil@4.0.8)(encoding@0.1.13)(jiti@2.3.3)(node-fetch@2.7.0(encoding@0.1.13))(postcss@8.4.49)(typescript@5.6.3)(utf-8-validate@5.0.10)(yaml@2.6.1)
       typescript:
         specifier: ^5.6.3
         version: 5.6.3
@@ -1467,11 +1467,13 @@ packages:
   '@coinbase/wallet-sdk@4.0.4':
     resolution: {integrity: sha512-74c040CRnGhfRjr3ArnkAgud86erIqdkPHNt5HR1k9u97uTIZCJww9eGYT67Qf7gHPpGS/xW8Be1D4dvRm63FA==}
 
-  '@coral-xyz/borsh@0.26.0':
-    resolution: {integrity: sha512-uCZ0xus0CszQPHYfWAqKS5swS1UxvePu83oOF+TWpUkedsNlg6p2p4azxZNSSqwXb9uXMFgxhuMBX9r3Xoi0vQ==}
+  '@coral-xyz/anchor-errors@0.30.1':
+    resolution: {integrity: sha512-9Mkradf5yS5xiLWrl9WrpjqOrAV+/W2RQHDlbnAZBivoGpOs1ECjoDCkVk4aRG8ZdiFiB8zQEVlxf+8fKkmSfQ==}
     engines: {node: '>=10'}
-    peerDependencies:
-      '@solana/web3.js': ^1.68.0
+
+  '@coral-xyz/anchor@0.30.1':
+    resolution: {integrity: sha512-gDXFoF5oHgpriXAaLpxyWBHdCs8Awgf/gLHIo6crv7Aqm937CNdY+x+6hoj7QR5vaJV7MxWSQ0NGFzL3kPbWEQ==}
+    engines: {node: '>=11'}
 
   '@coral-xyz/borsh@0.30.1':
     resolution: {integrity: sha512-aaxswpPrCFKl8vZTbxLssA2RvwX2zmKLlRCIktJOwW+VpVwYtXRtlWiIP+c2pPRKneiTiWCN2GEMSH9j1zTlWQ==}
@@ -2599,11 +2601,11 @@ packages:
     resolution: {integrity: sha512-z10PF9JV6SbjFq+/rYabM+8CVlMokgl8RFGvieSGNTmrkQanfHn+15XBrhG3BgUfvmTeSeyShfOHpG0i9zEdcg==}
     deprecated: Motion One for Vue is deprecated. Use Oku Motion instead https://oku-ui.com/motion
 
-  '@mysten/bcs@1.1.1':
-    resolution: {integrity: sha512-8X3IwmVfkwgHnNHR4izpi7f7aD0iVDU2B8p2KoIzCA9sCGcl9O2RnFDezHbNGgT+yBT+dKVDpTAczhnwZ6eUkQ==}
+  '@mysten/bcs@1.2.0':
+    resolution: {integrity: sha512-LuKonrGdGW7dq/EM6U2L9/as7dFwnhZnsnINzB/vu08Xfrj0qzWwpLOiXagAa5yZOPLK7anRZydMonczFkUPzA==}
 
-  '@mysten/sui@1.15.1':
-    resolution: {integrity: sha512-q8m+xtuh//rHEwEmk6pr7Dguw6/2ySNye2Oy1w6ivbkeRFgqoEE64+fYuMK+lX/SEPhOTEZtN7fp/Trno0KMnw==}
+  '@mysten/sui@1.17.0':
+    resolution: {integrity: sha512-vL6QrH3l10dTatimPmz/feqMbYfEjvh8MPf3Xwn5tjuwDwBCS0ha1kdN+4vUpu6t0aCFviK+Df/vanORS8cbGQ==}
     engines: {node: '>=18'}
 
   '@next/env@14.2.14':
@@ -2828,10 +2830,6 @@ packages:
     resolution: {integrity: sha512-Yb569su456XNx5BsH/Vyem7xD6g/y9iLmLUzRKM1a/dhU/D7HqqvkAG72znulXlMXztbV0iiu9O5AL8K98TzZQ==}
     peerDependencies:
       prettier: '*'
-
-  '@project-serum/anchor@0.26.0':
-    resolution: {integrity: sha512-Nq+COIjE1135T7qfnOHEn7E0q39bQTgXLFk837/rgFe6Hkew9WML7eHsS+lSYD2p3OJaTiUOHTAq1lHy36oIqQ==}
-    engines: {node: '>=11'}
 
   '@protobufjs/aspromise@1.1.2':
     resolution: {integrity: sha512-j+gKExEuLmKwvz3OgROXtrJ2UG2x8Ch2YZUxahh+s1F2HZ+wAceUNLkvy6zKCPVRkU++ZWQrdxsUeQXmcg4uoQ==}
@@ -3541,11 +3539,11 @@ packages:
   '@sentio/bigdecimal@9.1.1-patch.3':
     resolution: {integrity: sha512-O5w8XdyeatUcwI+ZbpSw60/cXFPJk3NbpIupwMHfYmW8fpxpXyRbyGESNJNufWWrB6CadsWGh1R3rd7owvrmlw==}
 
-  '@sentio/chain@2.3.1':
-    resolution: {integrity: sha512-aCILesEDU3GGEMF0xANkx10pozi2LlyTLChivw0mWOYKvmeUtMcPm55hwhA9GDrxGjx1nBrj9NBq4+vadX4h+Q==}
+  '@sentio/chain@2.4.2':
+    resolution: {integrity: sha512-5ZTSJYneolFC5kwweE/BGFE5CHCsm+T8D+Jj7FwRG0nSOHO2Bj98h/DMMSSCerV2dE+wtLUPtFj3BZ7qBk8CUg==}
 
-  '@sentio/cli@2.23.0':
-    resolution: {integrity: sha512-EpHoOuHFXfRQ5bDuRe3mSbMcuzK3g/BVfR61cCY7k6W1e4velLP+qXw2Iuh8/jSUCOGOTBS+it2mULDUEfyPKQ==}
+  '@sentio/cli@2.24.1':
+    resolution: {integrity: sha512-36+ktT7xV0pnnmAUPtOkLg+WlWdM3rIjOf74KxAadO9viwrt95n086FMOUPEFpK1y8Orvmw9zKKfcsbbR4WmOQ==}
     engines: {node: '>=20'}
     hasBin: true
 
@@ -3555,8 +3553,8 @@ packages:
       ethers: ^6.0.0
       typescript: '>=4.3.0'
 
-  '@sentio/ethers@6.13.1-patch.1':
-    resolution: {integrity: sha512-bGDXv4S8/wsV4ymvanE/mBJ6quJmJUxwI6uy+4nh0rJfb6wjzph6bZ44+jjAXHQpG9nkGj4uc3vRYiV2Tpoj+w==}
+  '@sentio/ethers@6.13.1-patch.3':
+    resolution: {integrity: sha512-W1ON4P1+nYjmtXT09gYO1J83r8cddUXtYdELIm8NisA44PetIeNtJaCPomYoOcoD50l7icJxRTaLrVT51gtDpA==}
     engines: {node: '>=14.0.0'}
 
   '@sentio/graph-cli@0.80.0-patch.1':
@@ -3564,17 +3562,17 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
-  '@sentio/protos@2.50.1':
-    resolution: {integrity: sha512-knss3YfrnnO+jlIpSv7d7UjEfuKDL0svnpMPQa2c/whDe7m6z6wszFgBl9KBAPcdT2nLvVwY4OlsCCO6VIXF9Q==}
+  '@sentio/protos@2.54.2':
+    resolution: {integrity: sha512-WjYB35i5UBkbbQkQcr14Q2eunj+jn2ZM7oaAd1lBRRJ5+u5JsvWFZJ2SeCLdihVPHIeqsd388a3pSIv331/aMw==}
     engines: {node: '>=20'}
 
-  '@sentio/runtime@2.50.1':
-    resolution: {integrity: sha512-GHbjDLVhSvbT+76rJeUaDzzjQJrQnZahrgEYkl3yt7n/xX5LR9gEovVUBvg+wPpjCqTOBu6qlr36Ksjh7ExFrA==}
+  '@sentio/runtime@2.54.2':
+    resolution: {integrity: sha512-4l566D7uDDHczyoO3QjsKH7+TAdqoW/w66srRBI9dORxGLUbNJilTZmVR/ybK6RhEH3uOQi9qFC5pcSRqJqmRg==}
     engines: {node: '>=20'}
     hasBin: true
 
-  '@sentio/sdk@2.50.1':
-    resolution: {integrity: sha512-cGGFmJmWfS6x4yOM2ya+6kM5TJTmqDIZ5j0f27ICRdutkq964TcGPJcZAcxpUJMopQY7JXv42hH50I5a6mltXQ==}
+  '@sentio/sdk@2.54.2':
+    resolution: {integrity: sha512-ghpWq9r0xuBvIcw5BKxJdr7ZkBtIJGwEB/YragovAuozs3OxJjSoeG3vng1NWy30OxxDOTRB/OrQC3SyHENpiA==}
     engines: {node: '>=20'}
     peerDependencies:
       tsup: npm:@sentio/tsup@^8.3.5-rc.1
@@ -3606,6 +3604,10 @@ packages:
 
   '@sideway/pinpoint@2.0.0':
     resolution: {integrity: sha512-RNiOoTPkptFtSVzQevY/yWtZwf/RxyVnPy/OcA9HBM3MlGDnBEYL5B41H0MTn0Uec8Hi+2qUtTfG2WWZBmMejQ==}
+
+  '@simplewebauthn/typescript-types@7.4.0':
+    resolution: {integrity: sha512-8/ZjHeUPe210Bt5oyaOIGx4h8lHdsQs19BiOT44gi/jBEgK7uBGA0Fy7NRsyh777al3m6WM0mBf0UR7xd4R7WQ==}
+    deprecated: This package has been renamed to @simplewebauthn/types. Please install @simplewebauthn/types instead to ensure you receive future updates.
 
   '@sinclair/typebox@0.27.8':
     resolution: {integrity: sha512-+Fj43pSMwJs4KRrH/938Uf+uAELIgVBmQzg/q1YG10djyfA3TnrU8N8XzqCh/okZdszqBQTZf96idMfE5lnwTA==}
@@ -3675,11 +3677,11 @@ packages:
   '@solana/web3.js@1.91.7':
     resolution: {integrity: sha512-HqljZKDwk6Z4TajKRGhGLlRsbGK4S8EY27DA7v1z6yakewiUY3J7ZKDZRxcqz2MYV/ZXRrJ6wnnpiHFkPdv0WA==}
 
-  '@solana/web3.js@1.91.8':
-    resolution: {integrity: sha512-USa6OS1jbh8zOapRJ/CBZImZ8Xb7AJjROZl5adql9TpOoBN9BUzyyouS5oPuZHft7S7eB8uJPuXWYjMi6BHgOw==}
-
   '@solana/web3.js@1.93.1':
     resolution: {integrity: sha512-3TzngqyzukYbuuweL1ejJJEPXmSRoOjaUsfBcfdx9RyDZtyP9av/GerV52mF6Lj2zEVkE7ZczpEP4tKJ8anxVQ==}
+
+  '@solana/web3.js@1.95.8':
+    resolution: {integrity: sha512-sBHzNh7dHMrmNS5xPD1d0Xa2QffW/RXaxu/OysRXBfwTp+LYqGGmMtCYYwrHPrN5rjAmJCsQRNAwv4FM0t3B6g==}
 
   '@solflare-wallet/metamask-sdk@1.0.3':
     resolution: {integrity: sha512-os5Px5PTMYKGS5tzOoyjDxtOtj0jZKnbI1Uwt8+Jsw1HHIA+Ib2UACCGNhQ/un2f8sIbTfLD1WuucNMOy8KZpQ==}
@@ -3875,15 +3877,15 @@ packages:
   '@tsconfig/node16@1.0.4':
     resolution: {integrity: sha512-vxhUy4J8lyeyinH7Azl1pdd43GJhZH/tP2weN8TntQblOY+A0XbT8DJk1/oCPuOOyg/Ja757rG0CgHcWC8OfMA==}
 
-  '@typemove/aptos@1.7.1':
-    resolution: {integrity: sha512-U3s6nIvKNyMO320MCWX8hx4fbYHYyzNf0lYXvt6rCAvQD1hx/2D8IX1ggU02WzthA0Nh3bkVBmhBEBY7bxR0Rw==}
+  '@typemove/aptos@1.8.3':
+    resolution: {integrity: sha512-p8dqWae23rgasqvdUp2w4brgBtA1ZwvkFIzTklvc4esqFSR/qu3mbyzTNnpPLgP0VDNOc3Gkxb9LaYmlO1Wvsw==}
     hasBin: true
 
-  '@typemove/move@1.7.1':
-    resolution: {integrity: sha512-Of4nIoUKaBUCGpsS09HmEXfZc3kMptpWSR4+b6yBMYCHKiJF9QfA6YuqkgmcIsljDxMiSFRH6Ol0xRfh+5K/Dg==}
+  '@typemove/move@1.8.3':
+    resolution: {integrity: sha512-c+r527++o1WXDivoFAkWPX9rYpLD2agKO7YGEYyw+E8HpcZeQ8OHiyXIKqUbXyA/yNBl04bMGH+hA4uYid1/2w==}
 
-  '@typemove/sui@1.7.1':
-    resolution: {integrity: sha512-JSSjNM+RGsFqRMCZqhON6VJDIBe9rV1P4vMiCbrjdp9mrcMDhF9hLFBus524+rEm+8PqNmzfEm+kNup6WU6LtA==}
+  '@typemove/sui@1.8.3':
+    resolution: {integrity: sha512-3rrI3palzchKT2tGev3YFXPO950UVyLVxwqbE6cUEBfsgOIo7R8C3OWpSYBz/ywdA4UvCVm1VdRlfb2v4Ew+aA==}
     hasBin: true
 
   '@types/bn.js@5.1.6':
@@ -6706,9 +6708,6 @@ packages:
   js-base64@3.7.7:
     resolution: {integrity: sha512-7rCnleh0z2CkXhH67J8K1Ytz0b2Y+yxTPL+/KOJoa20hfnVQ/3/T6W/KflYI4bRHRagNeXeU2bkNGI3v1oS/lw==}
 
-  js-sha256@0.9.0:
-    resolution: {integrity: sha512-sga3MHh9sgQN2+pJ9VYZ+1LPwXOxuBJBA5nrR5/ofPfuiJBE2hnjsaN8se8JznOmGLN2p49Pe5U/ttafcs/apA==}
-
   js-sha3@0.8.0:
     resolution: {integrity: sha512-gF1cRrHhIzNfToc802P800N8PpXS+evLLXfsVpowqmAFR9uwbi89WvXg2QspOmXL8QL86J4T1EpFu+yUkwJY3Q==}
 
@@ -8793,6 +8792,10 @@ packages:
 
   superstruct@1.0.4:
     resolution: {integrity: sha512-7JpaAoX2NGyoFlI9NBh66BQXGONc+uE+MRS5i2iOBKuS4e+ccgMDjATgZldkah+33DakBxDHiss9kvUcGAO8UQ==}
+    engines: {node: '>=14.0.0'}
+
+  superstruct@2.0.2:
+    resolution: {integrity: sha512-uV+TFRZdXsqXTL2pRvujROjdZQ4RAlBUS5BTh9IGm+jTqQntYThciG/qu57Gs69yjnVUSqdxF9YLmSnpupBW9A==}
     engines: {node: '>=14.0.0'}
 
   supports-color@5.5.0:
@@ -11531,15 +11534,33 @@ snapshots:
       preact: 10.24.3
       sha.js: 2.4.11
 
-  '@coral-xyz/borsh@0.26.0(@solana/web3.js@1.93.1(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10))':
-    dependencies:
-      '@solana/web3.js': 1.93.1(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10)
-      bn.js: 5.2.1
-      buffer-layout: 1.2.2
+  '@coral-xyz/anchor-errors@0.30.1': {}
 
-  '@coral-xyz/borsh@0.30.1(@solana/web3.js@1.91.8(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10))':
+  '@coral-xyz/anchor@0.30.1(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10)':
     dependencies:
-      '@solana/web3.js': 1.91.8(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10)
+      '@coral-xyz/anchor-errors': 0.30.1
+      '@coral-xyz/borsh': 0.30.1(@solana/web3.js@1.95.8(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10))
+      '@noble/hashes': 1.5.0
+      '@solana/web3.js': 1.95.8(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10)
+      bn.js: 5.2.1
+      bs58: 4.0.1
+      buffer-layout: 1.2.2
+      camelcase: 6.3.0
+      cross-fetch: 3.1.8(encoding@0.1.13)
+      crypto-hash: 1.3.0
+      eventemitter3: 4.0.7
+      pako: 2.1.0
+      snake-case: 3.0.4
+      superstruct: 0.15.5
+      toml: 3.0.0
+    transitivePeerDependencies:
+      - bufferutil
+      - encoding
+      - utf-8-validate
+
+  '@coral-xyz/borsh@0.30.1(@solana/web3.js@1.95.8(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10))':
+    dependencies:
+      '@solana/web3.js': 1.95.8(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10)
       bn.js: 5.2.1
       buffer-layout: 1.2.2
 
@@ -13082,22 +13103,25 @@ snapshots:
       '@motionone/dom': 10.18.0
       tslib: 2.8.1
 
-  '@mysten/bcs@1.1.1':
+  '@mysten/bcs@1.2.0':
     dependencies:
       bs58: 6.0.0
 
-  '@mysten/sui@1.15.1(typescript@5.6.3)':
+  '@mysten/sui@1.17.0(typescript@5.6.3)':
     dependencies:
       '@graphql-typed-document-node/core': 3.2.0(graphql@16.9.0)
-      '@mysten/bcs': 1.1.1
+      '@mysten/bcs': 1.2.0
       '@noble/curves': 1.6.0
       '@noble/hashes': 1.5.0
       '@scure/bip32': 1.5.0
       '@scure/bip39': 1.4.0
+      '@simplewebauthn/typescript-types': 7.4.0
       '@suchipi/femver': 1.0.0
       bech32: 2.0.0
       gql.tada: 1.8.10(graphql@16.9.0)(typescript@5.6.3)
       graphql: 16.9.0
+      jose: 5.9.6
+      poseidon-lite: 0.2.1
       tweetnacl: 1.0.3
       valibot: 0.36.0
     transitivePeerDependencies:
@@ -13358,28 +13382,6 @@ snapshots:
     dependencies:
       make-synchronized: 0.2.9
       prettier: 3.3.3
-
-  '@project-serum/anchor@0.26.0(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10)':
-    dependencies:
-      '@coral-xyz/borsh': 0.26.0(@solana/web3.js@1.93.1(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10))
-      '@solana/web3.js': 1.93.1(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10)
-      base64-js: 1.5.1
-      bn.js: 5.2.1
-      bs58: 4.0.1
-      buffer-layout: 1.2.2
-      camelcase: 6.3.0
-      cross-fetch: 3.1.8(encoding@0.1.13)
-      crypto-hash: 1.3.0
-      eventemitter3: 4.0.7
-      js-sha256: 0.9.0
-      pako: 2.1.0
-      snake-case: 3.0.4
-      superstruct: 0.15.5
-      toml: 3.0.0
-    transitivePeerDependencies:
-      - bufferutil
-      - encoding
-      - utf-8-validate
 
   '@protobufjs/aspromise@1.1.2': {}
 
@@ -14257,9 +14259,9 @@ snapshots:
 
   '@sentio/bigdecimal@9.1.1-patch.3': {}
 
-  '@sentio/chain@2.3.1': {}
+  '@sentio/chain@2.4.2': {}
 
-  '@sentio/cli@2.23.0(@types/node@22.9.1)(bufferutil@4.0.8)(encoding@0.1.13)(jiti@2.3.3)(node-fetch@2.7.0(encoding@0.1.13))(postcss@8.4.49)(typescript@5.6.3)(utf-8-validate@5.0.10)(yaml@2.6.1)':
+  '@sentio/cli@2.24.1(@types/node@22.9.1)(bufferutil@4.0.8)(encoding@0.1.13)(jiti@2.3.3)(node-fetch@2.7.0(encoding@0.1.13))(postcss@8.4.49)(typescript@5.6.3)(utf-8-validate@5.0.10)(yaml@2.6.1)':
     dependencies:
       '@sentio/graph-cli': 0.80.0-patch.1(@types/node@22.9.1)(bufferutil@4.0.8)(encoding@0.1.13)(node-fetch@2.7.0(encoding@0.1.13))(typescript@5.6.3)(utf-8-validate@5.0.10)
       dotenv: 16.4.5
@@ -14280,14 +14282,14 @@ snapshots:
       - utf-8-validate
       - yaml
 
-  '@sentio/ethers-v6@1.0.29(@sentio/ethers@6.13.1-patch.1(bufferutil@4.0.8)(utf-8-validate@5.0.10))(typescript@5.6.3)':
+  '@sentio/ethers-v6@1.0.29(@sentio/ethers@6.13.1-patch.3(bufferutil@4.0.8)(utf-8-validate@5.0.10))(typescript@5.6.3)':
     dependencies:
-      ethers: '@sentio/ethers@6.13.1-patch.1(bufferutil@4.0.8)(utf-8-validate@5.0.10)'
+      ethers: '@sentio/ethers@6.13.1-patch.3(bufferutil@4.0.8)(utf-8-validate@5.0.10)'
       lodash: 4.17.21
       ts-essentials: 7.0.3(typescript@5.6.3)
       typescript: 5.6.3
 
-  '@sentio/ethers@6.13.1-patch.1(bufferutil@4.0.8)(utf-8-validate@5.0.10)':
+  '@sentio/ethers@6.13.1-patch.3(bufferutil@4.0.8)(utf-8-validate@5.0.10)':
     dependencies:
       '@adraffy/ens-normalize': 1.10.1
       '@noble/curves': 1.2.0
@@ -14341,7 +14343,7 @@ snapshots:
       - typescript
       - utf-8-validate
 
-  '@sentio/protos@2.50.1':
+  '@sentio/protos@2.54.2':
     dependencies:
       google-protobuf: 3.21.4
       long: 5.2.3
@@ -14349,31 +14351,31 @@ snapshots:
       nice-grpc-common: 2.0.2
       protobufjs: 7.4.0
 
-  '@sentio/runtime@2.50.1': {}
+  '@sentio/runtime@2.54.2': {}
 
-  '@sentio/sdk@2.50.1(bufferutil@4.0.8)(encoding@0.1.13)(prettier@3.3.3)(typescript@5.6.3)(utf-8-validate@5.0.10)':
+  '@sentio/sdk@2.54.2(bufferutil@4.0.8)(encoding@0.1.13)(prettier@3.3.3)(typescript@5.6.3)(utf-8-validate@5.0.10)':
     dependencies:
       '@aptos-labs/ts-sdk': 1.33.1
-      '@coral-xyz/borsh': 0.30.1(@solana/web3.js@1.91.8(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10))
+      '@coral-xyz/anchor': 0.30.1(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10)
+      '@coral-xyz/borsh': 0.30.1(@solana/web3.js@1.95.8(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10))
       '@fuel-ts/program': 0.96.1(encoding@0.1.13)
-      '@mysten/sui': 1.15.1(typescript@5.6.3)
+      '@mysten/sui': 1.17.0(typescript@5.6.3)
       '@prettier/sync': 0.5.2(prettier@3.3.3)
-      '@project-serum/anchor': 0.26.0(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10)
       '@sentio/abi-wan-kanabi': 2.2.2-1
       '@sentio/api': 1.0.2-rc.11
       '@sentio/bigdecimal': 9.1.1-patch.3
-      '@sentio/chain': 2.3.1
-      '@sentio/ethers-v6': 1.0.29(@sentio/ethers@6.13.1-patch.1(bufferutil@4.0.8)(utf-8-validate@5.0.10))(typescript@5.6.3)
-      '@sentio/protos': 2.50.1
-      '@sentio/runtime': 2.50.1
-      '@solana/web3.js': 1.91.8(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10)
-      '@typemove/aptos': 1.7.1
-      '@typemove/move': 1.7.1
-      '@typemove/sui': 1.7.1(typescript@5.6.3)
+      '@sentio/chain': 2.4.2
+      '@sentio/ethers-v6': 1.0.29(@sentio/ethers@6.13.1-patch.3(bufferutil@4.0.8)(utf-8-validate@5.0.10))(typescript@5.6.3)
+      '@sentio/protos': 2.54.2
+      '@sentio/runtime': 2.54.2
+      '@solana/web3.js': 1.95.8(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10)
+      '@typemove/aptos': 1.8.3
+      '@typemove/move': 1.8.3
+      '@typemove/sui': 1.8.3(typescript@5.6.3)
       bs58: 5.0.0
       chalk: 5.3.0
       csv-parse: 5.5.6
-      ethers: '@sentio/ethers@6.13.1-patch.1(bufferutil@4.0.8)(utf-8-validate@5.0.10)'
+      ethers: '@sentio/ethers@6.13.1-patch.3(bufferutil@4.0.8)(utf-8-validate@5.0.10)'
       fuels: 0.96.1(encoding@0.1.13)
       graphql: 16.9.0
       js-sha3: 0.9.3
@@ -14387,6 +14389,7 @@ snapshots:
       p-queue: 8.0.1
       radash: 12.1.0
       reflect-metadata: 0.2.2
+      rxjs: 7.8.1
       starknet: 6.11.0(encoding@0.1.13)
       typechain: 8.3.2(typescript@5.6.3)
       utility-types: 3.11.0
@@ -14436,6 +14439,8 @@ snapshots:
   '@sideway/formula@3.0.1': {}
 
   '@sideway/pinpoint@2.0.0': {}
+
+  '@simplewebauthn/typescript-types@7.4.0': {}
 
   '@sinclair/typebox@0.27.8': {}
 
@@ -14540,28 +14545,6 @@ snapshots:
       - encoding
       - utf-8-validate
 
-  '@solana/web3.js@1.91.8(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10)':
-    dependencies:
-      '@babel/runtime': 7.26.0
-      '@noble/curves': 1.6.0
-      '@noble/hashes': 1.5.0
-      '@solana/buffer-layout': 4.0.1
-      agentkeepalive: 4.5.0
-      bigint-buffer: 1.1.5
-      bn.js: 5.2.1
-      borsh: 0.7.0
-      bs58: 4.0.1
-      buffer: 6.0.3
-      fast-stable-stringify: 1.0.0
-      jayson: 4.1.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)
-      node-fetch: 2.7.0(encoding@0.1.13)
-      rpc-websockets: 7.11.2
-      superstruct: 0.14.2
-    transitivePeerDependencies:
-      - bufferutil
-      - encoding
-      - utf-8-validate
-
   '@solana/web3.js@1.93.1(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10)':
     dependencies:
       '@babel/runtime': 7.26.0
@@ -14579,6 +14562,28 @@ snapshots:
       node-fetch: 2.7.0(encoding@0.1.13)
       rpc-websockets: 9.0.4
       superstruct: 1.0.4
+    transitivePeerDependencies:
+      - bufferutil
+      - encoding
+      - utf-8-validate
+
+  '@solana/web3.js@1.95.8(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10)':
+    dependencies:
+      '@babel/runtime': 7.26.0
+      '@noble/curves': 1.6.0
+      '@noble/hashes': 1.5.0
+      '@solana/buffer-layout': 4.0.1
+      agentkeepalive: 4.5.0
+      bigint-buffer: 1.1.5
+      bn.js: 5.2.1
+      borsh: 0.7.0
+      bs58: 4.0.1
+      buffer: 6.0.3
+      fast-stable-stringify: 1.0.0
+      jayson: 4.1.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+      node-fetch: 2.7.0(encoding@0.1.13)
+      rpc-websockets: 9.0.4
+      superstruct: 2.0.2
     transitivePeerDependencies:
       - bufferutil
       - encoding
@@ -14817,10 +14822,10 @@ snapshots:
 
   '@tsconfig/node16@1.0.4': {}
 
-  '@typemove/aptos@1.7.1':
+  '@typemove/aptos@1.8.3':
     dependencies:
       '@aptos-labs/ts-sdk': 1.33.1
-      '@typemove/move': 1.7.1
+      '@typemove/move': 1.8.3
       chalk: 5.3.0
       commander: 12.1.0
       prettier: 3.3.3
@@ -14828,14 +14833,14 @@ snapshots:
     transitivePeerDependencies:
       - debug
 
-  '@typemove/move@1.7.1':
+  '@typemove/move@1.8.3':
     dependencies:
       radash: 12.1.0
 
-  '@typemove/sui@1.7.1(typescript@5.6.3)':
+  '@typemove/sui@1.8.3(typescript@5.6.3)':
     dependencies:
-      '@mysten/sui': 1.15.1(typescript@5.6.3)
-      '@typemove/move': 1.7.1
+      '@mysten/sui': 1.17.0(typescript@5.6.3)
+      '@typemove/move': 1.8.3
       chalk: 5.3.0
       commander: 12.1.0
       prettier: 3.3.3
@@ -19115,8 +19120,6 @@ snapshots:
 
   js-base64@3.7.7: {}
 
-  js-sha256@0.9.0: {}
-
   js-sha3@0.8.0: {}
 
   js-sha3@0.9.3: {}
@@ -21451,6 +21454,8 @@ snapshots:
   superstruct@0.15.5: {}
 
   superstruct@1.0.4: {}
+
+  superstruct@2.0.2: {}
 
   supports-color@5.5.0:
     dependencies:
