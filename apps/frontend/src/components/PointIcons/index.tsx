@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import type { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import Image from 'next/image';
+import { ReactNode } from 'react';
 import {
   Tooltip,
   TooltipContent,
@@ -11,7 +12,7 @@ import {
 export type Point = {
   id: string;
   name: string;
-  description: any;
+  description: ReactNode;
   icon: string | StaticImport;
   displayMultiplier: string | undefined;
 };
@@ -63,9 +64,11 @@ export const PointIcons = ({ points, mobile = false }: PointIconsProps) => {
                 >
                   <div className="p-1">
                     <div className="font-bold">{point.name}</div>
-                    <div className="text-sm mt-2 text-gray-400">
-                      {point.description}
-                    </div>
+                    {point.description && (
+                      <div className="text-sm mt-2 text-gray-400">
+                        {point.description}
+                      </div>
+                    )}
                   </div>
                 </TooltipContent>
               </Tooltip>

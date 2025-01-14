@@ -156,7 +156,7 @@ export const InfoBowl = () => {
                   )}
                   {bowlMode === 0 && (
                     <div className="text-sm sm:text-lg text-white font-bold">
-                      Net Supply APY
+                      Net Earn APY
                       <div className="sm:text-xl text-lg  font-semibold">
                         {aprData?.netSupplyApr.times(100).toFixed(2)}%
                       </div>

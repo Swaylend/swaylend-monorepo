@@ -49,7 +49,7 @@ export const POINTS_LM: Point[] = [
   {
     id: '1',
     name: 'FUEL Token Rewards',
-    description: <></>,
+    description: null,
     icon: SYMBOL_TO_ICON.FUEL,
     displayMultiplier: undefined,
   },

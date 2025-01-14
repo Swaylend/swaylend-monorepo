@@ -289,23 +289,29 @@ export default function MarketOverview({
                           <div className="flex justify-center font-semibold text-white text-lg">
                             Net Borrow APY
                           </div>
-                          <div className="mt-4 mb-2 flex flex-col font-normal">
+                          <div className="mt-4 flex flex-col font-normal">
                             <div className="flex justify-between text-md">
                               <div>Borrow APY</div>
                               <div>
                                 {aprData?.borrowBaseApr.times(100).toFixed(2)}%
                               </div>
                             </div>
-                            <div className="flex justify-between text-md">
-                              <div>Reward APY</div>
+                            <div className="flex justify-between text-md pb-2">
+                              <div className="flex flex-col gap-y-1">
+                                <div>Reward APY</div>
+                                <div className="text-xs italic text-moon">
+                                  Distributed in $FUEL
+                                </div>
+                              </div>
                               <div>
+                                -{' '}
                                 {aprData?.borrowRewardApr.times(100).toFixed(2)}
                                 %
                               </div>
                             </div>
                           </div>
                           <Line />
-                          <div className="flex mt-2 justify-between text-md font-normal">
+                          <div className="flex justify-between text-md font-normal pt-1">
                             <div>Net Borrow APY</div>
                             <div>
                               {aprData?.netBorrowApr.times(100).toFixed(2)}%
@@ -346,26 +352,32 @@ export default function MarketOverview({
                           <div className="flex justify-center font-semibold text-white text-lg">
                             Net Earn APY
                           </div>
-                          <div className="mt-4 mb-2 flex flex-col font-normal">
+                          <div className="mt-4 flex flex-col font-normal">
                             <div className="flex justify-between text-md">
-                              <div>Supply APY</div>
+                              <div>Earn APY</div>
                               <div>
                                 {aprData?.supplyBaseApr.times(100).toFixed(2)}%
                               </div>
                             </div>
-                            <div className="flex justify-between text-md">
-                              <div>Reward APY</div>
+                            <div className="flex justify-between text-md pb-2">
+                              <div className="flex flex-col gap-y-1">
+                                <div>Reward APY</div>
+                                <div className="text-xs italic text-moon">
+                                  Distributed in $FUEL
+                                </div>
+                              </div>
                               <div>
+                                +{' '}
                                 {aprData?.supplyRewardApr.times(100).toFixed(2)}
                                 %
                               </div>
                             </div>
-                          </div>
-                          <Line />
-                          <div className="flex mt-2 justify-between text-md font-normal">
-                            <div>Net Supply APY</div>
-                            <div>
-                              {aprData?.netSupplyApr.times(100).toFixed(2)}%
+                            <Line />
+                            <div className="flex justify-between text-md font-normal pt-1">
+                              <div>Net Earn APY</div>
+                              <div>
+                                {aprData?.netSupplyApr.times(100).toFixed(2)}%
+                              </div>
                             </div>
                           </div>
                         </div>

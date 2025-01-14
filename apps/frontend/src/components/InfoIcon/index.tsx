@@ -7,7 +7,8 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { Info } from 'lucide-react';
-export const InfoIcon = ({ text }: { text: string }) => {
+import { ReactNode } from 'react';
+export const InfoIcon = ({ text }: { text: ReactNode }) => {
   return (
     <TooltipProvider delayDuration={100}>
       <Tooltip>
@@ -15,7 +16,7 @@ export const InfoIcon = ({ text }: { text: string }) => {
           <Info className="w-4 h-4" />
         </TooltipTrigger>
         <TooltipContent onPointerDownOutside={(e) => e.preventDefault()}>
-          <div>{text}</div>
+          <div className="font-normal">{text}</div>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>
