@@ -35,6 +35,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '../ui/tooltip';
+import { NetBorrowTooltip } from '../NetBorrowTooltip';
+import { NetEarnTooltip } from '../NetEarnTooltip';
 
 const SkeletonRow = (
   <TableRow>
@@ -179,33 +181,7 @@ export const MarketTableRow = ({
                 preventDefault: () => any;
               }) => e.preventDefault()}
             >
-              <div className="w-[200px] p-2">
-                <div className="flex justify-center font-semibold text-white text-lg">
-                  Net Earn APY
-                </div>
-                <div className="mt-4 flex flex-col font-normal">
-                  <div className="flex justify-between text-md">
-                    <div>Earn APY</div>
-                    <div>{aprData?.supplyBaseApr.times(100).toFixed(2)}%</div>
-                  </div>
-                  <div className="flex justify-between text-md pb-2">
-                    <div className="flex flex-col gap-y-1">
-                      <div>Reward APY</div>
-                      <div className="text-xs italic text-moon">
-                        Distributed in $FUEL
-                      </div>
-                    </div>
-                    <div>
-                      + {aprData?.supplyRewardApr.times(100).toFixed(2)}%
-                    </div>
-                  </div>
-                  <Line />
-                  <div className="flex justify-between text-md font-normal pt-1">
-                    <div>Net Earn APY</div>
-                    <div>{aprData?.netSupplyApr.times(100).toFixed(2)}%</div>
-                  </div>
-                </div>
-              </div>
+              <NetEarnTooltip aprData={aprData} />
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
@@ -228,33 +204,7 @@ export const MarketTableRow = ({
                 preventDefault: () => any;
               }) => e.preventDefault()}
             >
-              <div className="w-[200px] p-2">
-                <div className="flex justify-center font-semibold text-white text-lg">
-                  Net Borrow APY
-                </div>
-                <div className="mt-4 flex flex-col font-normal">
-                  <div className="flex justify-between text-md">
-                    <div>Borrow APY</div>
-                    <div>{aprData?.borrowBaseApr.times(100).toFixed(2)}%</div>
-                  </div>
-                  <div className="flex justify-between text-md pb-2">
-                    <div className="flex flex-col gap-y-1">
-                      <div>Reward APY</div>
-                      <div className="text-xs italic text-moon">
-                        Distributed in $FUEL
-                      </div>
-                    </div>
-                    <div>
-                      - {aprData?.borrowRewardApr.times(100).toFixed(2)}%
-                    </div>
-                  </div>
-                </div>
-                <Line />
-                <div className="flex justify-between text-md font-normal pt-1">
-                  <div>Net Borrow APY</div>
-                  <div>{aprData?.netBorrowApr.times(100).toFixed(2)}%</div>
-                </div>
-              </div>
+              <NetBorrowTooltip aprData={aprData} />
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
