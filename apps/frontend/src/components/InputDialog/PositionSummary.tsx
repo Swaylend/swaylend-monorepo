@@ -133,6 +133,7 @@ export const PositionSummary = () => {
               priceData?.prices[marketConfiguration?.baseToken.bits ?? ''] ?? 1
             )
           ),
+          4,
           true
         )} USDC`,
         changeValue: possibleBorrowCapacity
@@ -144,6 +145,7 @@ export const PositionSummary = () => {
                   ] ?? 1
                 )
               ),
+              4,
               true
             )} USDC`
           : null,
@@ -161,6 +163,7 @@ export const PositionSummary = () => {
         tooltip: 'The amount of base asset you can borrow',
         value: `${getFormattedNumber(
           updatedBorrowCapacity ?? BigNumber(0),
+          4,
           true
         )} USDC`,
         changeValue: possibleAvailableToBorrow
@@ -172,6 +175,7 @@ export const PositionSummary = () => {
                   ] ?? 1
                 )
               ),
+              4,
               true
             )} USDC`
           : null,

@@ -34,7 +34,6 @@ import {
   useApr,
   useBalance,
   useMarketConfiguration,
-  useSupplyRate,
   useUserRole,
   useUserSupplyBorrow,
 } from '@/hooks';
@@ -47,12 +46,7 @@ import {
   selectChangeTokenAmount,
   useMarketStore,
 } from '@/stores';
-import {
-  SYMBOL_TO_ICON,
-  formatUnits,
-  getFormattedNumber,
-  getSupplyApr,
-} from '@/utils';
+import { SYMBOL_TO_ICON, formatUnits, getFormattedNumber } from '@/utils';
 import { useAccount } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import BigNumber from 'bignumber.js';
