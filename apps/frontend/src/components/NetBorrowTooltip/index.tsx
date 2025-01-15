@@ -16,7 +16,7 @@ type NetBorrowTooltipProps = {
 
 export const NetBorrowTooltip = ({ aprData }: NetBorrowTooltipProps) => {
   return (
-    <div className="min-w-[200px] p-2">
+    <div className="min-w-[200px] max-w-[300px] py-2 px-4">
       <div className="flex justify-center font-semibold text-white text-lg">
         Net Borrow APY
       </div>
@@ -38,7 +38,7 @@ export const NetBorrowTooltip = ({ aprData }: NetBorrowTooltipProps) => {
         <div>Net Borrow APY</div>
         <div>{aprData?.netBorrowApr.times(100).toFixed(2)}%</div>
       </div>
-      <div className="text-xs italic text-moon">
+      <div className="mt-1 text-center text-xs italic text-moon">
         A negative Net Borrow APY means you are earning interest on your
         borrowed funds.
       </div>
