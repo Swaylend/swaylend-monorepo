@@ -7,7 +7,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { Info } from 'lucide-react';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 export const InfoIcon = ({ text }: { text: ReactNode }) => {
   return (
     <TooltipProvider delayDuration={100}>
