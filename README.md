@@ -11,7 +11,7 @@
 <h6 align="center">
   <a target="_blank" href="https://swaylend.com">Website</a>
   ·
-  <a target="_blank" href="https://docs.swaylend.com/">Docs</a>
+  <a target="_blank" href="https://swaylend.gitbook.io/swaylend-docs/">Docs</a>
   ·
   <a target="_blank" href="https://x.com/swaylend">Twitter</a>
 </h6>

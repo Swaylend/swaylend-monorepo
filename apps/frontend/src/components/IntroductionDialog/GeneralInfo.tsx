@@ -48,7 +48,7 @@ export const GeneralInfo = ({
               , for smart contract review. To learn more about the audit reports
               and risks involved with using Swaylend, please visit the{' '}
               <a
-                href="https://docs.swaylend.com/"
+                href="https://swaylend.gitbook.io/swaylend-docs/"
                 className="text-primary underline"
                 target="_blank"
                 rel="noreferrer"

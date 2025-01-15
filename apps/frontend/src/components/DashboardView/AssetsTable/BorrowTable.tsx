@@ -358,7 +358,7 @@ export const BorrowTable = () => {
                     You cannot Borrow assets while you have an active Earn
                     position. Learn more about how{' '}
                     <a
-                      href="https://docs.swaylend.com/navigate-swaylend"
+                      href="https://swaylend.gitbook.io/swaylend-docs/get-started/navigate-swaylend"
                       target="_blank"
                       rel="noreferrer"
                       className="underline hover:opacity-90 text-white"
@@ -524,7 +524,7 @@ export const BorrowTable = () => {
                 You cannot Borrow assets while you have an active Earn position.
                 Learn more about how{' '}
                 <a
-                  href="https://docs.swaylend.com/navigate-swaylend"
+                  href="https://swaylend.gitbook.io/swaylend-docs/get-started/navigate-swaylend"
                   target="_blank"
                   rel="noreferrer"
                   className="underline hover:opacity-90 text-white"

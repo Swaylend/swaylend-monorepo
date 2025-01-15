@@ -314,7 +314,7 @@ export const LendTable = () => {
                     You cannot Lend assets while you have an active borrowing
                     position. Learn more about how{' '}
                     <a
-                      href="https://docs.swaylend.com/navigate-swaylend"
+                      href="https://swaylend.gitbook.io/swaylend-docs/get-started/navigate-swaylend"
                       target="_blank"
                       rel="noreferrer"
                       className="underline hover:opacity-90 text-white"
@@ -480,7 +480,7 @@ export const LendTable = () => {
                 You cannot Lend assets while you have an active borrowing
                 position. Learn more about how{' '}
                 <a
-                  href="https://docs.swaylend.com/navigate-swaylend"
+                  href="https://swaylend.gitbook.io/swaylend-docs/get-started/navigate-swaylend"
                   target="_blank"
                   rel="noreferrer"
                   className="underline hover:opacity-90 text-white"
