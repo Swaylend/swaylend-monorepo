@@ -1,4 +1,4 @@
-import BigNumber from 'bignumber.js';
+import type BigNumber from 'bignumber.js';
 import { Line } from '../Line';
 
 type NetBorrowTooltipProps = {
@@ -16,7 +16,7 @@ type NetBorrowTooltipProps = {
 
 export const NetBorrowTooltip = ({ aprData }: NetBorrowTooltipProps) => {
   return (
-    <div className="min-w-[200px] p-2">
+    <div className="min-w-[200px] max-w-[300px] py-2 px-4">
       <div className="flex justify-center font-semibold text-white text-lg">
         Net Borrow APY
       </div>
@@ -37,6 +37,10 @@ export const NetBorrowTooltip = ({ aprData }: NetBorrowTooltipProps) => {
       <div className="flex justify-between text-md font-normal pt-1">
         <div>Net Borrow APY</div>
         <div>{aprData?.netBorrowApr.times(100).toFixed(2)}%</div>
+      </div>
+      <div className="mt-1 text-center text-xs italic text-moon">
+        A negative Net Borrow APY means you are earning interest on your
+        borrowed funds.
       </div>
     </div>
   );

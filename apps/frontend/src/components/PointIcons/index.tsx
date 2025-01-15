@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import type { StaticImport } from 'next/dist/shared/lib/get-img-props';
 import Image from 'next/image';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import {
   Tooltip,
   TooltipContent,
