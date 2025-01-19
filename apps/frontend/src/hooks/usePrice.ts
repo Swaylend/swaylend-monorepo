@@ -140,13 +140,14 @@ export const usePrice = (marketParam?: string) => {
         priceUpdateData,
       };
     },
-    refetchInterval: 3000,
+    refetchInterval: 5000,
     enabled:
       !!provider &&
       !!priceFeedIdToAssetId &&
       !!marketContract &&
       !!pythContract,
-    staleTime: 3000,
-    refetchOnWindowFocus: false,
+    staleTime: 5000,
+    refetchOnWindowFocus: true,
+    refetchIntervalInBackground: true,
   });
 };
