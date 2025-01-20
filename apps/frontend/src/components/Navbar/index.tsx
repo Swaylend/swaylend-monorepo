@@ -215,6 +215,13 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
                       </div>
                     </div>
                   </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <Link href="/swap" className="w-full">
+                      <div className="w-full flex items-center justify-between text-md font-medium text-lavender py-1 px-0.5 gap-x-2 cursor-pointer hover:underline">
+                        Embedded
+                      </div>
+                    </Link>
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
@@ -282,6 +289,21 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
                       )}
                     >
                       Dashboard
+                    </div>
+                  </Link>
+                  <Link
+                    href="/swap"
+                    onMouseDown={() => setOpen(false)}
+                    prefetch={false}
+                  >
+                    <div
+                      className={cn(
+                        pathname === '/swap' ? 'text-primary' : 'text-lavender',
+                        pathname !== '/swap' && 'hover:text-lavender/80',
+                        'flex font-bold text-xl items-center gap-x-2 h-full'
+                      )}
+                    >
+                      Swap
                     </div>
                   </Link>
                   {NAVBAR_LINKS.map(({ href, label }) => {
