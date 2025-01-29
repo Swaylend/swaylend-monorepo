@@ -4,9 +4,9 @@ import { useAccount } from '@fuels/react';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 
-export const useUserSupplyBorrow = () => {
+export const useUserSupplyBorrow = (marketParam?: string) => {
   const { account } = useAccount();
-  const market = useMarketStore(selectMarket);
+  const market = marketParam || useMarketStore(selectMarket);
 
   const marketContract = useMarketContract(market);
 

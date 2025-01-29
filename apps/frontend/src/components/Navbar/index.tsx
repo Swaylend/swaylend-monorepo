@@ -42,6 +42,7 @@ import { Points } from './Points';
 
 const NAVBAR_LINKS = [
   { href: '/markets', label: 'Markets', icon: <ChartLine /> },
+  { href: '/portfolio', label: 'Portfolio', icon: <Coins /> },
   ...(appConfig.env === 'testnet'
     ? [{ href: '/faucet', label: 'Faucet', icon: <Coins /> }]
     : []),
