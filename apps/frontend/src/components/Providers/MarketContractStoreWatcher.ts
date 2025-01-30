@@ -9,6 +9,8 @@ import {
 } from '@/stores/marketAddressBasedContractsStore';
 import { useWallet } from '@fuels/react';
 import { PythContract } from '@pythnetwork/pyth-fuel-js';
+import { FuelPricesContractConnector } from '@redstone-finance/fuel-connector';
+import { Provider, Wallet } from 'fuels';
 import { useEffect } from 'react';
 
 export default function MarketContractStoreWatcher(): null {
@@ -24,7 +26,7 @@ export default function MarketContractStoreWatcher(): null {
 
     Object.keys(appConfig.markets).forEach((market) => {
       const pythContract = new PythContract(
-        appConfig.markets[market].oracleAddress,
+        appConfig.markets[market].pythOracleAddress,
         walletOrProvider
       );
 
@@ -33,7 +35,16 @@ export default function MarketContractStoreWatcher(): null {
         walletOrProvider
       );
 
-      updateContracts(market, pythContract, marketContract);
+      const redstoneContract = new FuelPricesContractConnector(
+        walletOrProvider instanceof Provider
+          ? Wallet.generate({
+              provider: walletOrProvider,
+            })
+          : walletOrProvider,
+        appConfig.markets[market].redstoneOracleAddress
+      );
+
+      updateContracts(market, pythContract, redstoneContract, marketContract);
     });
   }, [walletOrProvider]);
 

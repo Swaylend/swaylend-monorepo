@@ -14,7 +14,8 @@ import wsteth from '/public/tokens/wsteth.svg?url';
 
 // Contract addresses
 export type MarketConfiguration = {
-  oracleAddress: string;
+  pythOracleAddress: string;
+  redstoneOracleAddress: string;
   marketAddress: string;
   tokenFactoryAddress: string;
   graphqlUrl: string;

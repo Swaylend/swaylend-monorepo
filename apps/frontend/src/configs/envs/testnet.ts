@@ -81,8 +81,10 @@ const rewards: Rewards = {
 
 const markets: DeployedMarkets = {
   USDC: {
-    oracleAddress:
+    pythOracleAddress:
       '0x25146735b29d4216639f7f8b1d7b921ff87a1d3051de62d6cceaacabeb33b8e7',
+    redstoneOracleAddress:
+      '0xd7ae6565970e67593caf50c5e0e0ada1a7ded444754334741058fe5dab2f7c7b',
     marketAddress:
       '0xbeaa0e9479a83eb3eab0f66e0f0c0ce4af86a6fe6fd4549ae22d87083e086821',
     tokenFactoryAddress:
@@ -90,8 +92,10 @@ const markets: DeployedMarkets = {
     graphqlUrl: '',
   },
   USDT: {
-    oracleAddress:
+    pythOracleAddress:
       '0x25146735b29d4216639f7f8b1d7b921ff87a1d3051de62d6cceaacabeb33b8e7',
+    redstoneOracleAddress:
+      '0xd7ae6565970e67593caf50c5e0e0ada1a7ded444754334741058fe5dab2f7c7b',
     marketAddress:
       '0x51b9bea7822988e03520018f4a1bb39b9f5ba15c9b4b9c9340a6bc1e5958abd4',
     tokenFactoryAddress:

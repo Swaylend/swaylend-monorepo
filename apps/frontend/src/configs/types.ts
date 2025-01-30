@@ -3,7 +3,8 @@ import { z } from 'zod';
 export const DeployedMarketsSchema = z.record(
   z.string(),
   z.object({
-    oracleAddress: z.string(),
+    pythOracleAddress: z.string(),
+    redstoneOracleAddress: z.string(),
     marketAddress: z.string(),
     tokenFactoryAddress: z.string(),
     graphqlUrl: z.string(),
