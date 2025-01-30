@@ -20,6 +20,7 @@ export * from './useUserCollateralValue';
 export * from './usePossiblePositionSummary';
 export * from './useUser';
 export * from './useRedeemInvite';
+export * from './useRedstonePrice';
 export * from './useUserRole';
 export * from './useMarketBalanceOfBase';
 export * from './useMarketBasics';
