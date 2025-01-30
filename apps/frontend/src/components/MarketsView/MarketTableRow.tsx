@@ -6,7 +6,7 @@ import {
   useCollateralConfigurations,
   useMarketBasics,
   useMarketConfiguration,
-  usePrice,
+  usePythPrice,
   useTotalCollateral,
   useUtilization,
 } from '@/hooks';
@@ -27,7 +27,6 @@ import { useMemo } from 'react';
 import SWAY from '/public/tokens/sway.svg?url';
 import { CircularProgressBar } from '../CircularProgressBar';
 import { type Collateral, CollateralIcons } from '../CollateralIcons';
-import { Line } from '../Line';
 import { NetBorrowTooltip } from '../NetBorrowTooltip';
 import { NetEarnTooltip } from '../NetEarnTooltip';
 import { Skeleton } from '../ui/skeleton';
@@ -98,7 +97,7 @@ export const MarketTableRow = ({
 
   const { data: totalCollateral } = useTotalCollateral(marketName);
 
-  const { data: priceData } = usePrice(marketName);
+  const { data: priceData } = usePythPrice(marketName);
 
   const totalCollateralValue = useMemo(() => {
     if (!priceData || !totalCollateral || !collateralConfigurations) {

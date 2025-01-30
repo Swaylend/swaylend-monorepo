@@ -34,7 +34,7 @@ import type { CollateralConfigurationOutput } from '@/contract-types/Market';
 import {
   useBalance,
   useCollateralConfigurations,
-  usePrice,
+  usePythPrice,
   useTotalCollateral,
   useUserCollateralAssets,
 } from '@/hooks';
@@ -472,12 +472,18 @@ export const CollateralTable = () => {
 
   const { data: collateralBalances } = useTotalCollateral();
 
-  const { data: priceData, isPending: isPendingPriceData } = usePrice();
+  const { data: priceData, isPending: isPendingPriceData } = usePythPrice();
 
   const {
     data: collateralConfigurations,
     isPending: isPendingCollateralConfigurations,
   } = useCollateralConfigurations();
+  for (const [assetId, collateralConfiguration] of Object.entries(
+    collateralConfigurations ?? {}
+  )) {
+    console.log(assetId);
+    console.log(collateralConfiguration);
+  }
 
   const collaterals = useMemo(() => {
     if (!collateralConfigurations) return [];

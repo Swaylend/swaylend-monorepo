@@ -13,7 +13,7 @@ import {
   useMarketBalanceOfBase,
   useMarketConfiguration,
   useMaxWithdrawableCollateral,
-  usePrice,
+  usePythPrice,
   useSupplyBase,
   useSupplyCollateral,
   useTotalCollateral,
@@ -81,7 +81,7 @@ export const InputDialog = () => {
   const changeTokenAmount = useMarketStore(selectChangeTokenAmount);
   const setOpen = useMarketStore(selectChangeInputDialogOpen);
 
-  const { data: priceData } = usePrice();
+  const { data: priceData } = usePythPrice();
   const { data: marketBalanceOfBase } = useMarketBalanceOfBase();
 
   const { mutate: supplyCollateral, isPending: isSupplyCollateralPending } =

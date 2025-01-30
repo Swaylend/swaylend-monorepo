@@ -4,7 +4,7 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
 import { useMarketConfiguration } from './useMarketConfiguration';
-import { usePrice } from './usePrice';
+import { usePythPrice } from './usePythPrice';
 import { useUserCollateralAssets } from './useUserCollateralAssets';
 import { useUserSupplyBorrow } from './useUserSupplyBorrow';
 
@@ -13,7 +13,7 @@ export const useBorrowCapacity = () => {
   const { data: supplyBorrow } = useUserSupplyBorrow();
   const { data: collateralConfigurations } = useCollateralConfigurations();
   const { data: userCollateralAssets } = useUserCollateralAssets();
-  const { data: priceData } = usePrice();
+  const { data: priceData } = usePythPrice();
   const { data: marketConfiguration } = useMarketConfiguration();
 
   return useQuery({

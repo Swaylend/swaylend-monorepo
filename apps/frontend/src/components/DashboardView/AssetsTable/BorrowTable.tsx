@@ -38,7 +38,7 @@ import {
   useBalance,
   useBorrowCapacity,
   useMarketConfiguration,
-  usePrice,
+  usePythPrice,
   useUserRole,
   useUserSupplyBorrow,
 } from '@/hooks';
@@ -132,7 +132,7 @@ export const BorrowTable = () => {
   const changeInputDialogOpen = useMarketStore(selectChangeInputDialogOpen);
 
   const { data: userSupplyBorrow } = useUserSupplyBorrow();
-  const { data: priceData } = usePrice();
+  const { data: priceData } = usePythPrice();
   const { data: marketConfiguration, isPending: isPendingMarketConfiguration } =
     useMarketConfiguration();
   const { data: maxBorrowAmount } = useBorrowCapacity();

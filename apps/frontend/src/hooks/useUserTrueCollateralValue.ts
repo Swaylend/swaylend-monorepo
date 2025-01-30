@@ -2,14 +2,14 @@ import { formatUnits } from '@/utils';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
-import { usePrice } from './usePrice';
+import { usePythPrice } from './usePythPrice';
 import { useUserCollateralAssets } from './useUserCollateralAssets';
 
 // Value of collateral in USD times the liquidation factor
 export const useUserTrueCollateralValue = () => {
   const { data: collateralBalances } = useUserCollateralAssets();
   const { data: collateralConfig } = useCollateralConfigurations();
-  const { data: priceData } = usePrice();
+  const { data: priceData } = usePythPrice();
 
   return useQuery({
     queryKey: [

@@ -4,10 +4,9 @@ import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import { useMemo } from 'react';
 import { useMarketBasicsWithInterest } from './useMarketBasicsWithInterest';
 import { useMarketConfiguration } from './useMarketConfiguration';
-import { usePrice } from './usePrice';
+import { usePythPrice } from './usePythPrice';
 
 dayjs.extend(utc);
 
@@ -29,7 +28,7 @@ export const useRewards = (marketParam?: string) => {
   const market = marketParam ?? storeMarket;
 
   const { data: marketBasics } = useMarketBasicsWithInterest(market);
-  const { data: priceData } = usePrice(market);
+  const { data: priceData } = usePythPrice(market);
   const { data: marketConfiguration } = useMarketConfiguration(market);
 
   return useQuery({

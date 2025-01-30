@@ -3,7 +3,7 @@ import {
   useMarketBalanceOfBase,
   useMarketConfiguration,
   usePossiblePositionSummary,
-  usePrice,
+  usePythPrice,
   useUserCollateralUtilization,
   useUserCollateralValue,
   useUserSupplyBorrow,
@@ -26,7 +26,7 @@ export const PositionSummary = () => {
   const { data: collateralValue } = useUserCollateralValue();
   const { data: liquidationPoint } = useUserLiquidationPoint();
 
-  const { data: priceData } = usePrice();
+  const { data: priceData } = usePythPrice();
 
   const totalBorrowCapacity = useMemo(() => {
     if (

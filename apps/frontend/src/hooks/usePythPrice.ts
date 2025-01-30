@@ -6,14 +6,13 @@ import { usePythContract } from '@/contracts/usePythContract';
 import { HermesClient } from '@pythnetwork/hermes-client';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
-import { arrayify } from 'fuels';
-import { DateTime } from 'fuels';
+import { DateTime, arrayify } from 'fuels';
 import { useMemo, useState } from 'react';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
 import { useMarketConfiguration } from './useMarketConfiguration';
 import { useProvider } from './useProvider';
 
-export const usePrice = (marketParam?: string) => {
+export const usePythPrice = (marketParam?: string) => {
   const [hermesClient, _] = useState(
     () =>
       new HermesClient(

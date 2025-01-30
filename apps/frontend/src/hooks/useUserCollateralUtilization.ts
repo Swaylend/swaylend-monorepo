@@ -2,7 +2,7 @@ import { formatUnits } from '@/utils';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { useMarketConfiguration } from './useMarketConfiguration';
-import { usePrice } from './usePrice';
+import { usePythPrice } from './usePythPrice';
 import { useUserSupplyBorrow } from './useUserSupplyBorrow';
 import { useUserTrueCollateralValue } from './useUserTrueCollateralValue';
 
@@ -10,7 +10,7 @@ export const useUserCollateralUtilization = () => {
   const { data: userSupplyBorrow } = useUserSupplyBorrow();
   const { data: marketConfiguration } = useMarketConfiguration();
   const { data: trueCollateralValue } = useUserTrueCollateralValue();
-  const { data: priceData } = usePrice();
+  const { data: priceData } = usePythPrice();
 
   return useQuery({
     queryKey: [
