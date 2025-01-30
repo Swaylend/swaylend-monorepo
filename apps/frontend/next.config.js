@@ -25,6 +25,10 @@ const CONNECT_DOMAINS = [
   // Hermes
   'https://gateway-lon.liquify.com',
   'https://hermes.pyth.network',
+  // Redstone
+  'https://oracle-gateway-1.a.redstone.vip',
+  'https://oracle-gateway-1.b.redstone.finance',
+  'https://oracle-gateway-2.a.redstone.finance',
   // OpenBlock
   'https://www.data-openblocklabs.com',
 ];
@@ -60,7 +64,7 @@ module.exports = (phase, { defaultConfig }) => {
   const nextConfig = {
     assetPrefix: assetPrefix,
     /* config options here */
-    webpack: (config, _) => {
+    webpack: (config, { isServer }) => {
       // SVGR Config from: https://react-svgr.com/docs/next/
       // Grab the existing rule that handles SVG imports
       const fileLoaderRule = config.module.rules.find((rule) =>
@@ -92,6 +96,13 @@ module.exports = (phase, { defaultConfig }) => {
         url: false,
         https: false,
       };
+
+      if (!isServer) {
+        config.resolve.fallback = {
+          ...config.resolve.fallback,
+          fs: false,
+        };
+      }
 
       return config;
     },
