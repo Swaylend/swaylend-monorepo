@@ -38,6 +38,28 @@ import {
   TableHeader,
   TableRow,
 } from '../../ui/table';
+import { Skeleton } from '@/components/ui/skeleton';
+
+
+const SkeletonRow = (
+  <TableRow>
+    <TableCell>
+      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+    </TableCell>
+    <TableCell>
+      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+    </TableCell>
+    <TableCell>
+      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+    </TableCell>
+    <TableCell>
+      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+    </TableCell>
+    <TableCell>
+      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+    </TableCell>
+  </TableRow>
+);
 
 export const Liquidity = () => {
   const {
@@ -191,156 +213,164 @@ export const Liquidity = () => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {!suppliedUSDC && !suppliedUSDT ? (
-          <TableRow>
-            <TableCell colSpan={8}>
-              <div className="w-full text-md font-semibold text-moon flex justify-center items-center">
-                No Lend Positions Open.
-              </div>
-            </TableCell>
-          </TableRow>
+        {isLoading ? (
+          <>
+            {SkeletonRow}
+          </>
         ) : (
           <>
-            {suppliedUSDC && (
+            {!suppliedUSDC && !suppliedUSDT ? (
               <TableRow>
-                <TableCell>
-                  <div className="flex gap-x-2 items-center">
-                    <div>
-                      <Image
-                        src={SYMBOL_TO_ICON.USDC}
-                        alt={'USDC'}
-                        width={32}
-                        height={32}
-                        className={'rounded-full'}
-                      />
-                    </div>
-                    <div>
-                      <div className="flex gap-x-2 items-baseline">
-                        <div className="text-white text-md font-semibold">
-                          {SYMBOL_TO_NAME.USDC}
-                        </div>
-                        <div className="text-sm font-semibold text-moon">
-                          {'USDC'}
-                        </div>
-                      </div>
-                    </div>
+                <TableCell colSpan={8}>
+                  <div className="w-full text-md font-semibold text-moon flex justify-center items-center">
+                    No Lend Positions Open.
                   </div>
-                </TableCell>
-                <TableCell>
-                  <span className="text-lavender font-medium">
-                    {getFormattedPrice(suppliedUSDCPrice)}
-                  </span>{' '}
-                  {suppliedUSDC.toFixed(2)} USDC
-                </TableCell>
-                <TableCell>
-                  <div className="flex gap-x-2 items-center text-md font-medium text-white">
-                    <div>
-                      {aprDataUSDC?.supplyBaseApr.times(100).toFixed(2)}% +
-                    </div>
-                    <div className="flex gap-x-1 items-center text-primary">
-                      <Image
-                        src={SYMBOL_TO_ICON.FUEL}
-                        alt={'USDC'}
-                        width={16}
-                        height={16}
-                        className={'rounded-full'}
-                      />
-                      <div>
-                        {' '}
-                        {aprDataUSDC?.supplyRewardApr.times(100).toFixed(2)}%
-                      </div>
-                    </div>
-                  </div>
-                </TableCell>
-                <TableCell>ha?</TableCell>
-                <TableCell>
-                  <Link href="/">
-                    <Button
-                      onMouseDown={() => {
-                        handleBaseTokenClick(
-                          ACTION_TYPE.SUPPLY,
-                          marketConfigurationUSDC?.baseToken.bits ?? '',
-                          'USDC'
-                        );
-                      }}
-                    >
-                      <MoveUpRightIcon size={20} />
-                    </Button>
-                  </Link>
                 </TableCell>
               </TableRow>
-            )}
-            {suppliedUSDT && (
-              <TableRow>
-                <TableCell>
-                  <div className="flex gap-x-2 items-center">
-                    <div>
-                      <Image
-                        src={SYMBOL_TO_ICON.USDT}
-                        alt={'USDT'}
-                        width={32}
-                        height={32}
-                        className={'rounded-full'}
-                      />
-                    </div>
-                    <div>
-                      <div className="flex gap-x-2 items-baseline">
-                        <div className="text-white text-md font-semibold">
-                          {SYMBOL_TO_NAME.USDT}
+            ) : (
+              <>
+                {suppliedUSDC && (
+                  <TableRow>
+                    <TableCell>
+                      <div className="flex gap-x-2 items-center">
+                        <div>
+                          <Image
+                            src={SYMBOL_TO_ICON.USDC}
+                            alt={'USDC'}
+                            width={32}
+                            height={32}
+                            className={'rounded-full'}
+                          />
                         </div>
-                        <div className="text-sm font-semibold text-moon">
-                          {'USDT'}
+                        <div>
+                          <div className="flex gap-x-2 items-baseline">
+                            <div className="text-white text-md font-semibold">
+                              {SYMBOL_TO_NAME.USDC}
+                            </div>
+                            <div className="text-sm font-semibold text-moon">
+                              {'USDC'}
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                </TableCell>
-                <TableCell className="">
-                  <span className="text-lavender font-medium">
-                    {getFormattedPrice(suppliedUSDTPrice)}
-                  </span>{' '}
-                  {suppliedUSDT.toFixed(2)} USDT
-                </TableCell>
-                <TableCell>
-                  <div className="flex gap-x-2 items-center text-md font-medium text-white">
-                    <div>
-                      {aprDataUSDT?.supplyBaseApr.times(100).toFixed(2)}% +
-                    </div>
-                    <div className="flex gap-x-1 items-center text-primary">
-                      <Image
-                        src={SYMBOL_TO_ICON.FUEL}
-                        alt={'USDT'}
-                        width={16}
-                        height={16}
-                        className={'rounded-full'}
-                      />
-                      <div>
-                        {' '}
-                        {aprDataUSDT?.supplyRewardApr.times(100).toFixed(2)}%
+                    </TableCell>
+                    <TableCell>
+                      <span className="text-lavender font-medium">
+                        {getFormattedPrice(suppliedUSDCPrice)}
+                      </span>{' '}
+                      {suppliedUSDC.toFixed(2)} USDC
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex gap-x-2 items-center text-md font-medium text-white">
+                        <div>
+                          {aprDataUSDC?.supplyBaseApr.times(100).toFixed(2)}% +
+                        </div>
+                        <div className="flex gap-x-1 items-center text-primary">
+                          <Image
+                            src={SYMBOL_TO_ICON.FUEL}
+                            alt={'USDC'}
+                            width={16}
+                            height={16}
+                            className={'rounded-full'}
+                          />
+                          <div>
+                            {' '}
+                            {aprDataUSDC?.supplyRewardApr.times(100).toFixed(2)}%
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                </TableCell>
-                <TableCell>ha?</TableCell>
-                <TableCell>
-                  <Link href="/">
-                    <Button
-                      onMouseDown={() => {
-                        handleBaseTokenClick(
-                          ACTION_TYPE.SUPPLY,
-                          marketConfigurationUSDT?.baseToken.bits ?? '',
-                          'USDT'
-                        );
-                      }}
-                    >
-                      <MoveUpRightIcon size={20} />
-                    </Button>
-                  </Link>
-                </TableCell>
-              </TableRow>
+                    </TableCell>
+                    <TableCell>ha?</TableCell>
+                    <TableCell>
+                      <Link href="/">
+                        <Button
+                          onMouseDown={() => {
+                            handleBaseTokenClick(
+                              ACTION_TYPE.SUPPLY,
+                              marketConfigurationUSDC?.baseToken.bits ?? '',
+                              'USDC'
+                            );
+                          }}
+                        >
+                          <MoveUpRightIcon size={20} />
+                        </Button>
+                      </Link>
+                    </TableCell>
+                  </TableRow>
+                )}
+                {suppliedUSDT && (
+                  <TableRow>
+                    <TableCell>
+                      <div className="flex gap-x-2 items-center">
+                        <div>
+                          <Image
+                            src={SYMBOL_TO_ICON.USDT}
+                            alt={'USDT'}
+                            width={32}
+                            height={32}
+                            className={'rounded-full'}
+                          />
+                        </div>
+                        <div>
+                          <div className="flex gap-x-2 items-baseline">
+                            <div className="text-white text-md font-semibold">
+                              {SYMBOL_TO_NAME.USDT}
+                            </div>
+                            <div className="text-sm font-semibold text-moon">
+                              {'USDT'}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell className="">
+                      <span className="text-lavender font-medium">
+                        {getFormattedPrice(suppliedUSDTPrice)}
+                      </span>{' '}
+                      {suppliedUSDT.toFixed(2)} USDT
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex gap-x-2 items-center text-md font-medium text-white">
+                        <div>
+                          {aprDataUSDT?.supplyBaseApr.times(100).toFixed(2)}% +
+                        </div>
+                        <div className="flex gap-x-1 items-center text-primary">
+                          <Image
+                            src={SYMBOL_TO_ICON.FUEL}
+                            alt={'USDT'}
+                            width={16}
+                            height={16}
+                            className={'rounded-full'}
+                          />
+                          <div>
+                            {' '}
+                            {aprDataUSDT?.supplyRewardApr.times(100).toFixed(2)}%
+                          </div>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>ha?</TableCell>
+                    <TableCell>
+                      <Link href="/">
+                        <Button
+                          onMouseDown={() => {
+                            handleBaseTokenClick(
+                              ACTION_TYPE.SUPPLY,
+                              marketConfigurationUSDT?.baseToken.bits ?? '',
+                              'USDT'
+                            );
+                          }}
+                        >
+                          <MoveUpRightIcon size={20} />
+                        </Button>
+                      </Link>
+                    </TableCell>
+                  </TableRow>
+                )}
+              </>
             )}
-          </>
-        )}
+          </>)
+        }
       </TableBody>
     </Table>
   );

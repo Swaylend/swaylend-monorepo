@@ -4,11 +4,9 @@ import { appConfig } from '@/configs';
 import {
   useApr,
   useCollateralConfigurations,
-  useMarketConfiguration,
   usePrice,
   useUserCollateralAssets,
   useUserCollateralUtilization,
-  useUserSupplyBorrow,
 } from '@/hooks';
 import {
   ACTION_TYPE,
@@ -25,7 +23,6 @@ import {
   SYMBOL_TO_ICON,
   SYMBOL_TO_NAME,
   formatUnits,
-  getFormattedNumber,
   getFormattedPrice,
 } from '@/utils';
 import BigNumber from 'bignumber.js';
@@ -42,6 +39,7 @@ import {
   TableHeader,
   TableRow,
 } from '../../ui/table';
+import { Skeleton } from '@/components/ui/skeleton';
 
 type TableRowProps = {
   market: string;
@@ -154,6 +152,34 @@ const CollateralTableRow = ({
     </TableRow>
   );
 };
+
+
+
+const SkeletonRow = (
+  <TableRow>
+    <TableCell>
+      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+    </TableCell>
+    <TableCell>
+      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+    </TableCell>
+    <TableCell>
+      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+    </TableCell>
+    <TableCell>
+      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+    </TableCell>
+    <TableCell>
+      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+    </TableCell>
+    <TableCell>
+      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+    </TableCell>
+    <TableCell>
+      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+    </TableCell>
+  </TableRow>
+);
 
 export const Collateral = () => {
   const { data: priceDataUSDC, isPending: isPendingPriceDataUSDC } =
@@ -322,38 +348,47 @@ export const Collateral = () => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {suppliedCollateralsUSDT.length === 0 &&
-          suppliedCollateralsUSDC.length === 0 && (
-            <TableRow>
-              <TableCell colSpan={8}>
-                <div className="w-full text-md font-semibold text-moon flex justify-center items-center">
-                  No Collateral Supplied.
-                </div>
-              </TableCell>
-            </TableRow>
-          )}
-        {suppliedCollateralsUSDT.map((collateral) => (
-          <CollateralTableRow
-            key={collateral.assetId}
-            market={collateral.market}
-            assetId={collateral.assetId}
-            amount={collateral.amount}
-            value={collateral.value}
-            apy={aprDataUSDT}
-            liquidationRisk={currentCollateralUtilizationUSDT}
-          />
-        ))}
-        {suppliedCollateralsUSDC.map((collateral) => (
-          <CollateralTableRow
-            key={collateral.assetId}
-            market={collateral.market}
-            assetId={collateral.assetId}
-            amount={collateral.amount}
-            value={collateral.value}
-            apy={aprDataUSDC}
-            liquidationRisk={currentCollateralUtilizationUSDC}
-          />
-        ))}
+        {
+          isLoading ? (
+            <>
+              {SkeletonRow}
+            </>
+          ) :
+            <>
+              {suppliedCollateralsUSDT.length === 0 &&
+                suppliedCollateralsUSDC.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={8}>
+                      <div className="w-full text-md font-semibold text-moon flex justify-center items-center">
+                        No Collateral Supplied.
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                )}
+              {suppliedCollateralsUSDT.map((collateral) => (
+                <CollateralTableRow
+                  key={collateral.assetId}
+                  market={collateral.market}
+                  assetId={collateral.assetId}
+                  amount={collateral.amount}
+                  value={collateral.value}
+                  apy={aprDataUSDT}
+                  liquidationRisk={currentCollateralUtilizationUSDT}
+                />
+              ))}
+              {suppliedCollateralsUSDC.map((collateral) => (
+                <CollateralTableRow
+                  key={collateral.assetId}
+                  market={collateral.market}
+                  assetId={collateral.assetId}
+                  amount={collateral.amount}
+                  value={collateral.value}
+                  apy={aprDataUSDC}
+                  liquidationRisk={currentCollateralUtilizationUSDC}
+                />
+              ))}
+            </>
+        }
       </TableBody>
     </Table>
   );

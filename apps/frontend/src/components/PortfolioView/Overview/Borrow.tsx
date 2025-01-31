@@ -3,7 +3,6 @@ import { Button } from '@/components/ui/button';
 import { appConfig } from '@/configs';
 import {
   useApr,
-  useCollateralConfigurations,
   useMarketConfiguration,
   usePrice,
   useUserCollateralAssets,
@@ -41,6 +40,33 @@ import {
   TableHeader,
   TableRow,
 } from '../../ui/table';
+import { Skeleton } from '@/components/ui/skeleton';
+
+const SkeletonRow = (
+  <TableRow>
+    <TableCell>
+      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+    </TableCell>
+    <TableCell>
+      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+    </TableCell>
+    <TableCell>
+      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+    </TableCell>
+    <TableCell>
+      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+    </TableCell>
+    <TableCell>
+      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+    </TableCell>
+    <TableCell>
+      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+    </TableCell>
+    <TableCell>
+      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+    </TableCell>
+  </TableRow>
+);
 
 export const Borrow = () => {
   const {
@@ -101,6 +127,10 @@ export const Borrow = () => {
       isPendingPriceDataUSDT,
       isAprPendingUSDC,
       isAprPendingUSDT,
+      isPendingColUtilUSDC,
+      isPendingColUtilUSDT,
+      isPendingUserCollateralAssetsUSDC,
+      isPendingUserCollateralAssetsUSDT,
     ].some((res) => res);
   }, [
     isPendingMarketConfigurationUSDT,
@@ -111,6 +141,10 @@ export const Borrow = () => {
     isPendingPriceDataUSDT,
     isAprPendingUSDC,
     isAprPendingUSDT,
+    isPendingColUtilUSDC,
+    isPendingColUtilUSDT,
+    isPendingUserCollateralAssetsUSDC,
+    isPendingUserCollateralAssetsUSDT,
   ]);
 
   const borrowedUSDC = useMemo(() => {
@@ -265,176 +299,184 @@ export const Borrow = () => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {!borrowedUSDC && !borrowedUSDC ? (
-          <TableRow>
-            <TableCell colSpan={8}>
-              <div className="w-full text-md font-semibold text-moon flex justify-center items-center">
-                No Lend Positions Open.
-              </div>
-            </TableCell>
-          </TableRow>
-        ) : (
-          <>
-            {borrowedUSDC && (
+        {
+          isLoading ? (
+            <>
+              {SkeletonRow}
+            </>
+          ) : <>
+            {!borrowedUSDC && !borrowedUSDC ? (
               <TableRow>
-                <TableCell>
-                  <div className="flex gap-x-2 items-center">
-                    <div>
-                      <Image
-                        src={SYMBOL_TO_ICON.USDC}
-                        alt={'USDC'}
-                        width={32}
-                        height={32}
-                        className={'rounded-full'}
-                      />
-                    </div>
-                    <div>
-                      <div className="flex gap-x-2 items-baseline">
-                        <div className="text-white text-md font-semibold">
-                          {SYMBOL_TO_NAME.USDC}
-                        </div>
-                        <div className="text-sm font-semibold text-moon">
-                          {'USDC'}
-                        </div>
-                      </div>
-                    </div>
+                <TableCell colSpan={8}>
+                  <div className="w-full text-md font-semibold text-moon flex justify-center items-center">
+                    No Lend Positions Open.
                   </div>
-                </TableCell>
-                <TableCell>
-                  <CollateralIcons collaterals={collateralIconsUSDC} />
-                </TableCell>
-
-                <TableCell>
-                  <span className="text-lavender font-medium">
-                    {getFormattedPrice(borrowedUSDCPrice)}
-                  </span>{' '}
-                  {borrowedUSDC.toFixed(2)} USDC
-                </TableCell>
-                <TableCell
-                  className={`font-semibold bg-card ${currentCollateralUtilizationUSDC > 80 && 'text-red-500'} ${currentCollateralUtilizationUSDC > 60 && currentCollateralUtilizationUSDC <= 80 && 'text-yellow-500'} ${currentCollateralUtilizationUSDC <= 60 && 'text-primary'}`}
-                >
-                  {currentCollateralUtilizationUSDC}%
-                </TableCell>
-                <TableCell>
-                  <div className="flex gap-x-2 items-center text-md font-medium text-white">
-                    <div>
-                      {aprDataUSDC?.borrowBaseApr.times(100).toFixed(2)}%
-                    </div>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="flex gap-x-1 items-center text-primary">
-                    <Image
-                      src={SYMBOL_TO_ICON.FUEL}
-                      alt={'USDC'}
-                      width={16}
-                      height={16}
-                      className={'rounded-full'}
-                    />
-                    <div>
-                      {' '}
-                      {aprDataUSDC?.borrowRewardApr.times(100).toFixed(2)}%
-                    </div>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <Link href="/">
-                    <Button
-                      onMouseDown={() => {
-                        handleBaseTokenClick(
-                          ACTION_TYPE.BORROW,
-                          marketConfigurationUSDC?.baseToken.bits ?? '',
-                          'USDC'
-                        );
-                      }}
-                    >
-                      <MoveUpRightIcon size={20} />
-                    </Button>
-                  </Link>
                 </TableCell>
               </TableRow>
-            )}
-            {borrowedUSDT && (
-              <TableRow>
-                <TableCell>
-                  <div className="flex gap-x-2 items-center">
-                    <div>
-                      <Image
-                        src={SYMBOL_TO_ICON.USDT}
-                        alt={'USDT'}
-                        width={32}
-                        height={32}
-                        className={'rounded-full'}
-                      />
-                    </div>
-                    <div>
-                      <div className="flex gap-x-2 items-baseline">
-                        <div className="text-white text-md font-semibold">
-                          {SYMBOL_TO_NAME.USDT}
+            ) : (
+              <>
+                {borrowedUSDC && (
+                  <TableRow>
+                    <TableCell>
+                      <div className="flex gap-x-2 items-center">
+                        <div>
+                          <Image
+                            src={SYMBOL_TO_ICON.USDC}
+                            alt={'USDC'}
+                            width={32}
+                            height={32}
+                            className={'rounded-full'}
+                          />
                         </div>
-                        <div className="text-sm font-semibold text-moon">
-                          {'USDT'}
+                        <div>
+                          <div className="flex gap-x-2 items-baseline">
+                            <div className="text-white text-md font-semibold">
+                              {SYMBOL_TO_NAME.USDC}
+                            </div>
+                            <div className="text-sm font-semibold text-moon">
+                              {'USDC'}
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <CollateralIcons collaterals={collateralIconsUSDT} />
-                </TableCell>
+                    </TableCell>
+                    <TableCell>
+                      <CollateralIcons collaterals={collateralIconsUSDC} />
+                    </TableCell>
 
-                <TableCell>
-                  <span className="text-lavender font-medium">
-                    {getFormattedPrice(borrowedUSDTPrice)}
-                  </span>{' '}
-                  {borrowedUSDT.toFixed(2)} USDT
-                </TableCell>
-                <TableCell
-                  className={`font-semibold bg-card ${currentCollateralUtilizationUSDT > 80 && 'text-red-500'} ${currentCollateralUtilizationUSDT > 60 && currentCollateralUtilizationUSDT <= 80 && 'text-yellow-500'} ${currentCollateralUtilizationUSDT <= 60 && 'text-primary'}`}
-                >
-                  {currentCollateralUtilizationUSDT}%
-                </TableCell>
-                <TableCell>
-                  <div className="flex gap-x-2 items-center text-md font-medium text-white">
-                    <div>
-                      {aprDataUSDT?.borrowBaseApr.times(100).toFixed(2)}%
-                    </div>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="flex gap-x-1 items-center text-primary">
-                    <Image
-                      src={SYMBOL_TO_ICON.FUEL}
-                      alt={'USDT'}
-                      width={16}
-                      height={16}
-                      className={'rounded-full'}
-                    />
-                    <div>
-                      {' '}
-                      {aprDataUSDT?.borrowRewardApr.times(100).toFixed(2)}%
-                    </div>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <Link href="/">
-                    <Button
-                      onMouseDown={() => {
-                        handleBaseTokenClick(
-                          ACTION_TYPE.BORROW,
-                          marketConfigurationUSDT?.baseToken.bits ?? '',
-                          'USDT'
-                        );
-                      }}
+                    <TableCell>
+                      <span className="text-lavender font-medium">
+                        {getFormattedPrice(borrowedUSDCPrice)}
+                      </span>{' '}
+                      {borrowedUSDC.toFixed(2)} USDC
+                    </TableCell>
+                    <TableCell
+                      className={`font-semibold bg-card ${currentCollateralUtilizationUSDC > 80 && 'text-red-500'} ${currentCollateralUtilizationUSDC > 60 && currentCollateralUtilizationUSDC <= 80 && 'text-yellow-500'} ${currentCollateralUtilizationUSDC <= 60 && 'text-primary'}`}
                     >
-                      <MoveUpRightIcon size={20} />
-                    </Button>
-                  </Link>
-                </TableCell>
-              </TableRow>
+                      {currentCollateralUtilizationUSDC}%
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex gap-x-2 items-center text-md font-medium text-white">
+                        <div>
+                          {aprDataUSDC?.borrowBaseApr.times(100).toFixed(2)}%
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex gap-x-1 items-center text-primary">
+                        <Image
+                          src={SYMBOL_TO_ICON.FUEL}
+                          alt={'USDC'}
+                          width={16}
+                          height={16}
+                          className={'rounded-full'}
+                        />
+                        <div>
+                          {' '}
+                          {aprDataUSDC?.borrowRewardApr.times(100).toFixed(2)}%
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Link href="/">
+                        <Button
+                          onMouseDown={() => {
+                            handleBaseTokenClick(
+                              ACTION_TYPE.BORROW,
+                              marketConfigurationUSDC?.baseToken.bits ?? '',
+                              'USDC'
+                            );
+                          }}
+                        >
+                          <MoveUpRightIcon size={20} />
+                        </Button>
+                      </Link>
+                    </TableCell>
+                  </TableRow>
+                )}
+                {borrowedUSDT && (
+                  <TableRow>
+                    <TableCell>
+                      <div className="flex gap-x-2 items-center">
+                        <div>
+                          <Image
+                            src={SYMBOL_TO_ICON.USDT}
+                            alt={'USDT'}
+                            width={32}
+                            height={32}
+                            className={'rounded-full'}
+                          />
+                        </div>
+                        <div>
+                          <div className="flex gap-x-2 items-baseline">
+                            <div className="text-white text-md font-semibold">
+                              {SYMBOL_TO_NAME.USDT}
+                            </div>
+                            <div className="text-sm font-semibold text-moon">
+                              {'USDT'}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <CollateralIcons collaterals={collateralIconsUSDT} />
+                    </TableCell>
+
+                    <TableCell>
+                      <span className="text-lavender font-medium">
+                        {getFormattedPrice(borrowedUSDTPrice)}
+                      </span>{' '}
+                      {borrowedUSDT.toFixed(2)} USDT
+                    </TableCell>
+                    <TableCell
+                      className={`font-semibold bg-card ${currentCollateralUtilizationUSDT > 80 && 'text-red-500'} ${currentCollateralUtilizationUSDT > 60 && currentCollateralUtilizationUSDT <= 80 && 'text-yellow-500'} ${currentCollateralUtilizationUSDT <= 60 && 'text-primary'}`}
+                    >
+                      {currentCollateralUtilizationUSDT}%
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex gap-x-2 items-center text-md font-medium text-white">
+                        <div>
+                          {aprDataUSDT?.borrowBaseApr.times(100).toFixed(2)}%
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex gap-x-1 items-center text-primary">
+                        <Image
+                          src={SYMBOL_TO_ICON.FUEL}
+                          alt={'USDT'}
+                          width={16}
+                          height={16}
+                          className={'rounded-full'}
+                        />
+                        <div>
+                          {' '}
+                          {aprDataUSDT?.borrowRewardApr.times(100).toFixed(2)}%
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Link href="/">
+                        <Button
+                          onMouseDown={() => {
+                            handleBaseTokenClick(
+                              ACTION_TYPE.BORROW,
+                              marketConfigurationUSDT?.baseToken.bits ?? '',
+                              'USDT'
+                            );
+                          }}
+                        >
+                          <MoveUpRightIcon size={20} />
+                        </Button>
+                      </Link>
+                    </TableCell>
+                  </TableRow>
+                )}
+              </>
             )}
           </>
-        )}
+        }
       </TableBody>
     </Table>
   );

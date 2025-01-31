@@ -1,3 +1,4 @@
+import { Skeleton } from '@/components/ui/skeleton';
 import {
   useCollateralConfigurations,
   useMarketConfiguration,
@@ -76,6 +77,8 @@ export const Stats = () => {
       isPendingUserSupplyBorrowUSDC,
       isPendingPriceDataUSDC,
       isPendingPriceDataUSDT,
+      isPendingColUtilUSDC,
+      isPendingColUtilUSDT,
     ].some((res) => res);
   }, [
     isPendingCollateralConfigurationsUSDT,
@@ -88,6 +91,8 @@ export const Stats = () => {
     isPendingUserSupplyBorrowUSDC,
     isPendingPriceDataUSDC,
     isPendingPriceDataUSDT,
+    isPendingColUtilUSDC,
+    isPendingColUtilUSDT,
   ]);
 
   const riskMeter = useMemo(() => {
@@ -217,9 +222,15 @@ export const Stats = () => {
       <div>
         <div className="flex flex-col justify-end">
           <div className="text-moon text-sm font-semibold">Total Assets</div>
-          <div className="text-white font-bold text-2xl">
-            {getFormattedPrice(totalSuppliedBalance ?? BigNumber(0))}
-          </div>
+          {isLoading ? (
+            <>
+              <Skeleton className="w-[240px] h-[60px] bg-primary/20 rounded-md" />
+            </>
+          ) : (
+            <div className="text-white font-bold text-2xl">
+              {getFormattedPrice(totalSuppliedBalance ?? BigNumber(0))}
+            </div>
+          )}
         </div>
         <div className="mt-8 flex w-full justify-between">
           <div className="flex items-end gap-x-16">
@@ -228,9 +239,15 @@ export const Stats = () => {
                 <div className="w-2 h-2 rounded-full bg-purple" />
                 <div className="text-sm font-semibold text-purple">Earning</div>
               </div>
-              <div className="text-white font-bold text-xl">
-                {getFormattedPrice(totalSuppliedBaseAssets ?? BigNumber(0))}
-              </div>
+              {isLoading ? (
+                <>
+                  <Skeleton className="w-[100px] h-[40px] rounded-md bg-primary/20" />
+                </>
+              ) : (
+                <div className="text-white font-bold text-xl">
+                  {getFormattedPrice(totalSuppliedBaseAssets ?? BigNumber(0))}
+                </div>
+              )}
             </div>
             <div>
               <div className="flex gap-x-2 items-center">
@@ -239,9 +256,14 @@ export const Stats = () => {
                   Borrowing{' '}
                 </div>
               </div>
-              <div className="text-white font-bold text-xl">
-                {getFormattedPrice(totalBorrowedBaseAssets ?? BigNumber(0))}
-              </div>
+              {isLoading ? (
+                <>
+                  <Skeleton className="w-[100px] h-[40px] rounded-md bg-primary/20" />
+                </>
+              ) : (
+                <div className="text-white font-bold text-xl">
+                  {getFormattedPrice(totalBorrowedBaseAssets ?? BigNumber(0))}
+                </div>)}
             </div>
             <div>
               <div className="flex gap-x-2 items-center">
@@ -250,9 +272,16 @@ export const Stats = () => {
                   Collateral
                 </div>
               </div>
-              <div className="text-white font-bold text-xl">
-                {getFormattedPrice(totalSuppliedCollateral ?? BigNumber(0))}
-              </div>
+
+              {isLoading ? (
+                <>
+                  <Skeleton className="w-[100px] h-[40px] rounded-md bg-primary/20" />
+                </>
+              ) : (
+                <div className="text-white font-bold text-xl">
+                  {getFormattedPrice(totalSuppliedCollateral ?? BigNumber(0))}
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -260,21 +289,29 @@ export const Stats = () => {
       <div>
         <div className="flex justify-between items-end px-4 p-2 text-lg font-medium text-lavender">
           <div>Risk Meter</div>
-          <div
-            className={`text-xl font-semibold ${riskMeter > 80 && 'text-red-500'} ${riskMeter > 60 && riskMeter <= 80 && 'text-yellow-500'} ${riskMeter <= 60 && 'text-primary'}`}
-          >
-            {riskMeter}%
+          {!isLoading && (
+            <div
+              className={`text-xl font-semibold ${riskMeter > 80 && 'text-red-500'} ${riskMeter > 60 && riskMeter <= 80 && 'text-yellow-500'} ${riskMeter <= 60 && 'text-primary'}`}
+            >
+              {riskMeter}%
+            </div>
+          )}
+        </div>
+        {isLoading ? (
+          <>
+            <Skeleton className="w-[33vw] max-w-[500px] h-[60px] rounded-full bg-primary/20" />
+          </>
+        ) : (
+          <div className="w-[33vw] max-w-[500px] h-[60px] rounded-full bg-white/5 overflow-hidden">
+            <div
+              className={cn(
+                'h-full w-full flex-1 transition-all rounded-full',
+                `${riskMeter > 80 && 'bg-red-500'} ${riskMeter > 60 && riskMeter <= 80 && 'bg-yellow-500'} ${riskMeter <= 60 && 'bg-primary'}`
+              )}
+              style={{ transform: `translateX(-${100 - (riskMeter || 0)}%)` }}
+            />
           </div>
-        </div>
-        <div className="w-[33vw] max-w-[500px] h-[60px] rounded-full bg-white/5 overflow-hidden">
-          <div
-            className={cn(
-              'h-full w-full flex-1 transition-all rounded-full',
-              `${riskMeter > 80 && 'bg-red-500'} ${riskMeter > 60 && riskMeter <= 80 && 'bg-yellow-500'} ${riskMeter <= 60 && 'bg-primary'}`
-            )}
-            style={{ transform: `translateX(-${100 - (riskMeter || 0)}%)` }}
-          />
-        </div>
+        )}
       </div>
     </div>
   );
