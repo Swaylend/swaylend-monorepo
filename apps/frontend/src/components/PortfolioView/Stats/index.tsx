@@ -3,8 +3,10 @@ import {
   useMarketConfiguration,
   usePrice,
   useUserCollateralAssets,
+  useUserCollateralUtilization,
   useUserSupplyBorrow,
 } from '@/hooks';
+import { cn } from '@/lib/utils';
 import { formatUnits, getFormattedPrice } from '@/utils';
 import BigNumber from 'bignumber.js';
 import React, { useMemo } from 'react';
@@ -49,6 +51,18 @@ export const Stats = () => {
     isPending: isPendingCollateralConfigurationsUSDT,
   } = useCollateralConfigurations('USDT');
 
+  const { data: collateralUtilizationUSDC, isPending: isPendingColUtilUSDC } = useUserCollateralUtilization('USDC');
+  const { data: collateralUtilizationUSDT, isPending: isPendingColUtilUSDT } = useUserCollateralUtilization('USDT');
+
+
+  const currentCollateralUtilizationUSDC = useMemo(() => {
+    return Number(collateralUtilizationUSDC?.times(100).toFixed(2));
+  }, [collateralUtilizationUSDC]);
+
+  const currentCollateralUtilizationUSDT = useMemo(() => {
+    return Number(collateralUtilizationUSDT?.times(100).toFixed(2));
+  }, [collateralUtilizationUSDT]);
+
   const isLoading = useMemo(() => {
     return [
       isPendingCollateralConfigurationsUSDT,
@@ -74,6 +88,10 @@ export const Stats = () => {
     isPendingPriceDataUSDC,
     isPendingPriceDataUSDT,
   ]);
+
+  const riskMeter = useMemo(() => {
+    return Math.max(currentCollateralUtilizationUSDC, currentCollateralUtilizationUSDT);
+  }, [currentCollateralUtilizationUSDC, currentCollateralUtilizationUSDT]);
 
   const totalSuppliedCollateral = useMemo(() => {
     if (
@@ -191,7 +209,7 @@ export const Stats = () => {
   }, [totalSuppliedCollateral, totalSuppliedBaseAssets]);
 
   return (
-    <div className="flex justify-between">
+    <div className="flex justify-between items-center">
       <div>
         <div className="flex flex-col justify-end">
           <div className="text-moon text-sm font-semibold">Total Assets</div>
@@ -232,17 +250,16 @@ export const Stats = () => {
                 {getFormattedPrice(totalSuppliedCollateral ?? BigNumber(0))}
               </div>
             </div>
-            <div>
-              <div className="flex gap-x-2 items-center">
-                <div className="w-2 h-2 rounded-full bg-red-500" />
-                <div className="text-red-500 text-sm font-semibold">Debt</div>
-              </div>
-              <div className="text-white font-bold text-xl">123</div>
-            </div>
           </div>
         </div>
       </div>
-      <div>Risk Meter</div>
+      <div>
+        <div className='flex justify-between items-end px-4 p-2 text-lg font-medium text-lavender'><div>Risk Meter</div><div className={`text-xl font-semibold ${riskMeter > 80 && 'text-red-500'} ${riskMeter > 60 && riskMeter <= 80 && 'text-yellow-500'} ${riskMeter <= 60 && 'text-primary'}`}>{riskMeter}%</div></div>
+        <div className='w-[33vw] max-w-[500px] h-[60px] rounded-full bg-white/5 overflow-hidden'>
+          <div className={cn('h-full w-full flex-1 transition-all rounded-full', `${riskMeter > 80 && 'bg-red-500'} ${riskMeter > 60 && riskMeter <= 80 && 'bg-yellow-500'} ${riskMeter <= 60 && 'bg-primary'}`)}
+            style={{ transform: `translateX(-${100 - (riskMeter || 0)}%)` }} /></div>
+
+      </div>
     </div>
   );
 };
