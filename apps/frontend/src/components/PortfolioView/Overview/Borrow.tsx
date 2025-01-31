@@ -342,7 +342,7 @@ export const Borrow = () => {
                     <Button
                       onMouseDown={() => {
                         handleBaseTokenClick(
-                          ACTION_TYPE.SUPPLY,
+                          ACTION_TYPE.BORROW,
                           marketConfigurationUSDC?.baseToken.bits ?? '',
                           'USDC'
                         );
@@ -421,7 +421,7 @@ export const Borrow = () => {
                     <Button
                       onMouseDown={() => {
                         handleBaseTokenClick(
-                          ACTION_TYPE.SUPPLY,
+                          ACTION_TYPE.BORROW,
                           marketConfigurationUSDT?.baseToken.bits ?? '',
                           'USDT'
                         );
