@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
   useApr,
   useCollateralConfigurations,
@@ -38,8 +39,6 @@ import {
   TableHeader,
   TableRow,
 } from '../../ui/table';
-import { Skeleton } from '@/components/ui/skeleton';
-
 
 const SkeletonRow = (
   <TableRow>
@@ -214,9 +213,7 @@ export const Liquidity = () => {
       </TableHeader>
       <TableBody>
         {isLoading ? (
-          <>
-            {SkeletonRow}
-          </>
+          <>{SkeletonRow}</>
         ) : (
           <>
             {!suppliedUSDC && !suppliedUSDT ? (
@@ -275,7 +272,8 @@ export const Liquidity = () => {
                           />
                           <div>
                             {' '}
-                            {aprDataUSDC?.supplyRewardApr.times(100).toFixed(2)}%
+                            {aprDataUSDC?.supplyRewardApr.times(100).toFixed(2)}
+                            %
                           </div>
                         </div>
                       </div>
@@ -344,7 +342,8 @@ export const Liquidity = () => {
                           />
                           <div>
                             {' '}
-                            {aprDataUSDT?.supplyRewardApr.times(100).toFixed(2)}%
+                            {aprDataUSDT?.supplyRewardApr.times(100).toFixed(2)}
+                            %
                           </div>
                         </div>
                       </div>
@@ -369,8 +368,8 @@ export const Liquidity = () => {
                 )}
               </>
             )}
-          </>)
-        }
+          </>
+        )}
       </TableBody>
     </Table>
   );

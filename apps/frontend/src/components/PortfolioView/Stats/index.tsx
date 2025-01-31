@@ -263,7 +263,8 @@ export const Stats = () => {
               ) : (
                 <div className="text-white font-bold text-xl">
                   {getFormattedPrice(totalBorrowedBaseAssets ?? BigNumber(0))}
-                </div>)}
+                </div>
+              )}
             </div>
             <div>
               <div className="flex gap-x-2 items-center">

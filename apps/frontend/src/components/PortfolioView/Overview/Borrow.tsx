@@ -1,5 +1,6 @@
 import { CollateralIcons } from '@/components/CollateralIcons';
 import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
 import { appConfig } from '@/configs';
 import {
   useApr,
@@ -40,7 +41,6 @@ import {
   TableHeader,
   TableRow,
 } from '../../ui/table';
-import { Skeleton } from '@/components/ui/skeleton';
 
 const SkeletonRow = (
   <TableRow>
@@ -299,12 +299,10 @@ export const Borrow = () => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {
-          isLoading ? (
-            <>
-              {SkeletonRow}
-            </>
-          ) : <>
+        {isLoading ? (
+          <>{SkeletonRow}</>
+        ) : (
+          <>
             {!borrowedUSDC && !borrowedUSDC ? (
               <TableRow>
                 <TableCell colSpan={8}>
@@ -476,7 +474,7 @@ export const Borrow = () => {
               </>
             )}
           </>
-        }
+        )}
       </TableBody>
     </Table>
   );
