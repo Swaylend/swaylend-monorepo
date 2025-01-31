@@ -7,7 +7,7 @@ import {
   useMarketBalanceOfBase,
   useMarketBasics,
   useMarketConfiguration,
-  usePythPrice,
+  usePrice,
   useTotalCollateral,
   useTotalReserves,
 } from '@/hooks';
@@ -62,7 +62,7 @@ export default function MarketOverview({
   const { data: totalCollateral } = useTotalCollateral(baseAsset);
   const { data: marketBasics } = useMarketBasics(baseAsset);
 
-  const { data: priceData } = usePythPrice(baseAsset);
+  const { data: priceData } = usePrice(baseAsset);
 
   const totalCollateralValue = useMemo(() => {
     if (!priceData || !totalCollateral || !collateralConfigurations) {

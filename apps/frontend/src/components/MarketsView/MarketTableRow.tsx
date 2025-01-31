@@ -6,7 +6,7 @@ import {
   useCollateralConfigurations,
   useMarketBasics,
   useMarketConfiguration,
-  usePythPrice,
+  usePrice,
   useTotalCollateral,
   useUtilization,
 } from '@/hooks';
@@ -97,7 +97,7 @@ export const MarketTableRow = ({
 
   const { data: totalCollateral } = useTotalCollateral(marketName);
 
-  const { data: priceData } = usePythPrice(marketName);
+  const { data: priceData } = usePrice(marketName);
 
   const totalCollateralValue = useMemo(() => {
     if (!priceData || !totalCollateral || !collateralConfigurations) {

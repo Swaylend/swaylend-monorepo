@@ -1,7 +1,7 @@
 import {
   useBorrowCapacity,
   useMarketConfiguration,
-  usePythPrice,
+  usePrice,
   useUserSupplyBorrow,
 } from '@/hooks';
 import { useUserLiquidationPoint } from '@/hooks/useUserLiquidationPoint';
@@ -20,7 +20,7 @@ export const BorrowPositionSummary = () => {
   const { data: borrowCapacity } = useBorrowCapacity();
   const { data: userLiquidationPoint } = useUserLiquidationPoint();
   const { data: userSupplyBorrow } = useUserSupplyBorrow();
-  const { data: priceData } = usePythPrice();
+  const { data: priceData } = usePrice();
   const { data: marketConfiguration } = useMarketConfiguration();
   const [open, setOpen] = useState(false);
 

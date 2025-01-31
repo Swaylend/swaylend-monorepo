@@ -38,7 +38,8 @@ const priceResolutionFunction = (
 
 export const usePrice = (
   marketParam?: string,
-  priceResolution: PriceResolutionMethod = 'avg'
+  priceResolution: PriceResolutionMethod = 'avg',
+  oracle: 'pyth' | 'redstone' | undefined = undefined
 ) => {
   const storeMarket = useMarketStore(selectMarket);
   const market = marketParam ?? storeMarket;
@@ -56,6 +57,25 @@ export const usePrice = (
       redstonePrices?.priceUpdateData,
     ],
     queryFn: async () => {
+      if (!pythPrices && !redstonePrices) {
+        throw new Error('Failed to fetch price');
+      }
+
+      if (oracle === 'pyth' && pythPrices)
+        return {
+          prices: pythPrices.prices,
+          confidenceIntervals: pythPrices.confidenceIntervals,
+          pythPriceUpdateData: pythPrices.priceUpdateData,
+          redstonePriceUpdateData: redstonePrices?.priceUpdateData,
+        };
+
+      if (oracle === 'redstone' && redstonePrices)
+        return {
+          prices: redstonePrices.prices,
+          confidenceIntervals: pythPrices?.confidenceIntervals,
+          pythPriceUpdateData: pythPrices?.priceUpdateData,
+          redstonePriceUpdateData: redstonePrices.priceUpdateData,
+        };
       const combinedPrices = priceResolutionFunction(
         pythPrices?.prices,
         redstonePrices?.prices,
@@ -71,10 +91,6 @@ export const usePrice = (
         redstonePriceUpdateData: redstonePrices?.priceUpdateData,
       };
     },
-    refetchInterval: 5000,
     enabled: !!pythPrices && !!redstonePrices,
-    staleTime: 5000,
-    refetchOnWindowFocus: true,
-    refetchIntervalInBackground: true,
   });
 };

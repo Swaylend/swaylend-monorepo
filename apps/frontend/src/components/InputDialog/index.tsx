@@ -13,7 +13,7 @@ import {
   useMarketBalanceOfBase,
   useMarketConfiguration,
   useMaxWithdrawableCollateral,
-  usePythPrice,
+  usePrice,
   useSupplyBase,
   useSupplyCollateral,
   useTotalCollateral,
@@ -81,7 +81,7 @@ export const InputDialog = () => {
   const changeTokenAmount = useMarketStore(selectChangeTokenAmount);
   const setOpen = useMarketStore(selectChangeInputDialogOpen);
 
-  const { data: priceData } = usePythPrice();
+  const { data: priceData } = usePrice();
   const { data: marketBalanceOfBase } = useMarketBalanceOfBase();
 
   const { mutate: supplyCollateral, isPending: isSupplyCollateralPending } =
@@ -135,7 +135,7 @@ export const InputDialog = () => {
     useMaxWithdrawableCollateral(actionTokenAssetId);
 
   const handleSubmit = () => {
-    if (!marketConfiguration) return;
+    if (!marketConfiguration || !priceData?.pythPriceUpdateData) return;
 
     switch (action) {
       case ACTION_TYPE.SUPPLY: {
@@ -152,12 +152,12 @@ export const InputDialog = () => {
         if (actionTokenAssetId === marketConfiguration.baseToken.bits) {
           withdrawBase({
             tokenAmount,
-            priceUpdateData: priceData.priceUpdateData,
+            priceUpdateData: priceData.pythPriceUpdateData,
           });
         } else {
           withdrawCollateral({
             tokenAmount,
-            priceUpdateData: priceData.priceUpdateData,
+            priceUpdateData: priceData.pythPriceUpdateData,
           });
         }
         break;
@@ -167,7 +167,7 @@ export const InputDialog = () => {
 
         borrowBase({
           tokenAmount,
-          priceUpdateData: priceData.priceUpdateData,
+          priceUpdateData: priceData.pythPriceUpdateData,
         });
         break;
       case ACTION_TYPE.REPAY:

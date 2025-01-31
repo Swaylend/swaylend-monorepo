@@ -34,7 +34,7 @@ import type { CollateralConfigurationOutput } from '@/contract-types/Market';
 import {
   useBalance,
   useCollateralConfigurations,
-  usePythPrice,
+  usePrice,
   useTotalCollateral,
   useUserCollateralAssets,
 } from '@/hooks';
@@ -472,7 +472,7 @@ export const CollateralTable = () => {
 
   const { data: collateralBalances } = useTotalCollateral();
 
-  const { data: priceData, isPending: isPendingPriceData } = usePythPrice();
+  const { data: priceData, isPending: isPendingPriceData } = usePrice();
 
   const {
     data: collateralConfigurations,

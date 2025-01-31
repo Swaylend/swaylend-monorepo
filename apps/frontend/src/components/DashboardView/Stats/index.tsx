@@ -2,7 +2,7 @@ import {
   useBorrowCapacity,
   useCollateralConfigurations,
   useMarketConfiguration,
-  usePythPrice,
+  usePrice,
   useUserCollateralAssets,
   useUserSupplyBorrow,
 } from '@/hooks';
@@ -27,7 +27,7 @@ export const Stats = () => {
     data: userCollateralAssets,
     isPending: isPendingUserCollateralAssets,
   } = useUserCollateralAssets();
-  const { data: priceData, isPending: isPendingPriceData } = usePythPrice();
+  const { data: priceData, isPending: isPendingPriceData } = usePrice();
   const { data: marketConfiguration, isPending: isPendingMarketConfiguration } =
     useMarketConfiguration();
   const {

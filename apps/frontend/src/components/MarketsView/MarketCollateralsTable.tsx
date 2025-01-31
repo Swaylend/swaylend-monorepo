@@ -11,7 +11,7 @@ import { appConfig } from '@/configs';
 import {
   useCollateralConfigurations,
   useCollateralReserves,
-  usePythPrice,
+  usePrice,
   useTotalCollateral,
 } from '@/hooks';
 import {
@@ -105,7 +105,7 @@ export const MarketCollateralsTable = ({
   }, [collateralConfigurations]);
   const { data: totalCollateral } = useTotalCollateral(marketName);
 
-  const { data: priceData } = usePythPrice(marketName);
+  const { data: priceData } = usePrice(marketName);
 
   return (
     <div className="w-full border bg-gradient-to-b from-white/10 to-card rounded-lg ">

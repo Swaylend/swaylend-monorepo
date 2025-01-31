@@ -19,6 +19,7 @@ export * from './useUserTrueCollateralValue';
 export * from './useUserCollateralValue';
 export * from './usePossiblePositionSummary';
 export * from './useUser';
+export * from './usePrice';
 export * from './useRedeemInvite';
 export * from './useRedstonePrice';
 export * from './useUserRole';
