@@ -478,12 +478,6 @@ export const CollateralTable = () => {
     data: collateralConfigurations,
     isPending: isPendingCollateralConfigurations,
   } = useCollateralConfigurations();
-  for (const [assetId, collateralConfiguration] of Object.entries(
-    collateralConfigurations ?? {}
-  )) {
-    console.log(assetId);
-    console.log(collateralConfiguration);
-  }
 
   const collaterals = useMemo(() => {
     if (!collateralConfigurations) return [];
