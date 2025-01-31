@@ -55,7 +55,6 @@ export const Liquidity = () => {
   const { data: aprDataUSDC, isPending: isAprPendingUSDC } = useApr('USDC');
   const { data: aprDataUSDT, isPending: isAprPendingUSDT } = useApr('USDT');
 
-
   const {
     data: marketConfigurationUSDC,
     isPending: isPendingMarketConfigurationUSDC,
@@ -117,19 +116,22 @@ export const Liquidity = () => {
     return res;
   }, [userSupplyBorrowUSDT, marketConfigurationUSDT]);
 
-
   const suppliedUSDTPrice = useMemo(() => {
     if (!priceDataUSDT || !suppliedUSDT || !marketConfigurationUSDT) {
       return BigNumber(0);
     }
-    return priceDataUSDT.prices[marketConfigurationUSDT?.baseToken.bits].times(suppliedUSDT);
+    return priceDataUSDT.prices[marketConfigurationUSDT?.baseToken.bits].times(
+      suppliedUSDT
+    );
   }, [priceDataUSDT, suppliedUSDT, marketConfigurationUSDT]);
 
   const suppliedUSDCPrice = useMemo(() => {
     if (!priceDataUSDC || !suppliedUSDC || !marketConfigurationUSDC) {
       return BigNumber(0);
     }
-    return priceDataUSDC.prices[marketConfigurationUSDC?.baseToken.bits].times(suppliedUSDC);
+    return priceDataUSDC.prices[marketConfigurationUSDC?.baseToken.bits].times(
+      suppliedUSDC
+    );
   }, [priceDataUSDC, suppliedUSDC, marketConfigurationUSDC]);
 
   const changeAction = useMarketStore(selectChangeAction);
@@ -226,12 +228,10 @@ export const Liquidity = () => {
                 </TableCell>
                 <TableCell>
                   <span className="text-lavender font-medium">
-                    {getFormattedPrice(
-                      suppliedUSDCPrice,
-                    )}
-                  </span>
-                  {' '}
-                  {suppliedUSDC.toFixed(2)} USDC</TableCell>
+                    {getFormattedPrice(suppliedUSDCPrice)}
+                  </span>{' '}
+                  {suppliedUSDC.toFixed(2)} USDC
+                </TableCell>
                 <TableCell>
                   <div className="flex gap-x-2 items-center text-md font-medium text-white">
                     <div>
@@ -295,13 +295,12 @@ export const Liquidity = () => {
                     </div>
                   </div>
                 </TableCell>
-                <TableCell className=''><span className="text-lavender font-medium">
-                  {getFormattedPrice(
-                    suppliedUSDTPrice,
-                  )}
-                </span>
-                  {' '}
-                  {suppliedUSDT.toFixed(2)} USDT</TableCell>
+                <TableCell className="">
+                  <span className="text-lavender font-medium">
+                    {getFormattedPrice(suppliedUSDTPrice)}
+                  </span>{' '}
+                  {suppliedUSDT.toFixed(2)} USDT
+                </TableCell>
                 <TableCell>
                   <div className="flex gap-x-2 items-center text-md font-medium text-white">
                     <div>

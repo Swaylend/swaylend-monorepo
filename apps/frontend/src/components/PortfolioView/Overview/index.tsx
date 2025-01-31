@@ -8,9 +8,9 @@ import {
   TableHeader,
   TableRow,
 } from '../../ui/table';
-import { Liquidity } from './Liquidity';
-import { Collateral } from './Collateral';
 import { Borrow } from './Borrow';
+import { Collateral } from './Collateral';
+import { Liquidity } from './Liquidity';
 
 export const Overview = () => {
   return (
