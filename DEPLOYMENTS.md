@@ -3,9 +3,9 @@
 ## USDC Market
 
 * Market implementation contract:
-    Address: `0x5e9e538e4af3766c25add654d7ddf54a4d0f57d5800b4c3edd2925e5e3d8a2e9`
+    Address: `0x1f5e247ad67b8b8c90a6456bbd50bdd3360946291a7e828a5743a56840cc2b94`
 
-    Commit hash: [ `c91145c20c582997e68b5cd08780689f4944e725` ](https://github.com/Swaylend/swaylend-monorepo/tree/c91145c20c582997e68b5cd08780689f4944e725)
+    Commit hash: [ `608ce7f26d16c448b1f778e17329903fbc5f96cb` ](https://github.com/Swaylend/swaylend-monorepo/tree/608ce7f26d16c448b1f778e17329903fbc5f96cb)
 
 * Market proxy contract: `0x657ab45a6eb98a4893a99fd104347179151e8b3828fd8f2a108cc09770d1ebae`
 
