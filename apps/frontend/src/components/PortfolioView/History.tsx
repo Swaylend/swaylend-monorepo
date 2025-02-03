@@ -1,4 +1,5 @@
-import React from 'react';
+import { useLiquidationHistory, useTransactionHistory } from '@/hooks';
+import React, { useState } from 'react';
 import { InfoIcon } from '../InfoIcon';
 import {
   Table,
@@ -10,6 +11,10 @@ import {
 } from '../ui/table';
 
 export const History = () => {
+  const [page, setPage] = useState<number>(1);
+  const { data: transactionHistory } = useTransactionHistory(page);
+  const { data: liquidationHistory } = useLiquidationHistory();
+
   return (
     <Table className="max-lg:hidden mt-12">
       <TableHeader>
