@@ -1,5 +1,10 @@
-import { useLiquidationHistory, useTransactionHistory } from '@/hooks';
-import React, { useState } from 'react';
+import {
+  TX_HISTORY_PAGE_SIZE,
+  useLiquidationHistory,
+  useTotalTransactionCount,
+  useTransactionHistory,
+} from '@/hooks';
+import React, { useMemo, useState } from 'react';
 import { InfoIcon } from '../InfoIcon';
 import {
   Table,
@@ -14,6 +19,15 @@ export const History = () => {
   const [page, setPage] = useState<number>(1);
   const { data: transactionHistory } = useTransactionHistory(page);
   const { data: liquidationHistory } = useLiquidationHistory();
+  const { data: totalTransactionCount } = useTotalTransactionCount();
+
+  const totalPages = useMemo(() => {
+    if (!totalTransactionCount) {
+      return 1;
+    }
+
+    return Math.ceil(totalTransactionCount / TX_HISTORY_PAGE_SIZE);
+  }, [totalTransactionCount]);
 
   return (
     <Table className="max-lg:hidden mt-12">

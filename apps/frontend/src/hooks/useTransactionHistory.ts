@@ -18,7 +18,7 @@ type Row = {
   eventType: string;
 };
 
-const TX_HISTORY_PAGE_SIZE = 10;
+export const TX_HISTORY_PAGE_SIZE = 10;
 
 const transactionHistoryQuery = (
   account: string,
