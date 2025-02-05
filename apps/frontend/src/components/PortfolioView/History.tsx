@@ -141,7 +141,7 @@ export const History = () => {
                       <TableCell>
                         <div className="flex gap-x-2 items-center">
                           <span className="text-lavender font-medium">
-                            {tx.amountUsd}
+                            $ {tx.amountUsd}
                           </span>
                           <span>
                             {Number.parseFloat(tx.amount).toFixed(2)} {tx.token}

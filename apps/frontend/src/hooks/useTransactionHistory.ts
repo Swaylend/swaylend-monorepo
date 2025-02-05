@@ -38,6 +38,7 @@ const transactionHistoryQuery = (
             eventType
         FROM EventEntity 
         WHERE userAddress = lower('${account}')
+        AND amountUsd > 0
         ORDER BY timestamp DESC, id
         LIMIT ${pageSize}
         OFFSET ${(page - 1) * pageSize}

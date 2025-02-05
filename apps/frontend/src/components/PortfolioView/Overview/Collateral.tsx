@@ -178,9 +178,6 @@ const SkeletonRow = (
 export const Collateral = () => {
   const { data: priceDataUSDC, isPending: isPendingPriceDataUSDC } =
     usePrice('USDC');
-  const { data: priceDataUSDT, isPending: isPendingPriceDataUSDT } =
-    usePrice('USDT');
-
   const {
     data: userCollateralAssetsUSDC,
     isPending: isPendingUserCollateralAssetsUSDC,
@@ -189,86 +186,86 @@ export const Collateral = () => {
     data: colateralConfigurationsUSDC,
     isPending: isPendingCollateralConfigurationsUSDC,
   } = useCollateralConfigurations('USDC');
-
-  const {
-    data: userCollateralAssetsUSDT,
-    isPending: isPendingUserCollateralAssetsUSDT,
-  } = useUserCollateralAssets('USDT');
-
-  const {
-    data: colateralConfigurationsUSDT,
-    isPending: isPendingCollateralConfigurationsUSDT,
-  } = useCollateralConfigurations('USDT');
-
   const { data: aprDataUSDC, isPending: isAprPendingUSDC } = useApr('USDC');
-  const { data: aprDataUSDT, isPending: isAprPendingUSDT } = useApr('USDT');
-
   const { data: collateralUtilizationUSDC, isPending: isPendingColUtilUSDC } =
     useUserCollateralUtilization('USDC');
-  const { data: collateralUtilizationUSDT, isPending: isPendingColUtilUSDT } =
-    useUserCollateralUtilization('USDT');
+
+  // const { data: collateralUtilizationUSDT, isPending: isPendingColUtilUSDT } =
+  // useUserCollateralUtilization('USDT');
+  // const { data: aprDataUSDT, isPending: isAprPendingUSDT } = useApr('USDT');
+  // const {
+  //   data: userCollateralAssetsUSDT,
+  //   isPending: isPendingUserCollateralAssetsUSDT,
+  // } = useUserCollateralAssets('USDT');
+
+  // const { data: priceDataUSDT, isPending: isPendingPriceDataUSDT } =
+  //   usePrice('USDT');
+  //   const {
+  //   data: colateralConfigurationsUSDT,
+  //   isPending: isPendingCollateralConfigurationsUSDT,
+  // } = useCollateralConfigurations('USDT');
 
   const currentCollateralUtilizationUSDC = useMemo(() => {
     return Number(collateralUtilizationUSDC?.times(100).toFixed(2));
   }, [collateralUtilizationUSDC]);
 
-  const currentCollateralUtilizationUSDT = useMemo(() => {
-    return Number(collateralUtilizationUSDT?.times(100).toFixed(2));
-  }, [collateralUtilizationUSDT]);
+  // const currentCollateralUtilizationUSDT = useMemo(() => {
+  //   return Number(collateralUtilizationUSDT?.times(100).toFixed(2));
+  // }, [collateralUtilizationUSDT]);
 
   const isLoading = useMemo(() => {
     return [
-      isPendingCollateralConfigurationsUSDT,
-      isPendingUserCollateralAssetsUSDT,
       isPendingCollateralConfigurationsUSDC,
       isPendingUserCollateralAssetsUSDC,
       isPendingPriceDataUSDC,
-      isPendingPriceDataUSDT,
       isAprPendingUSDC,
-      isAprPendingUSDT,
       isPendingColUtilUSDC,
-      isPendingColUtilUSDT,
+      // isPendingCollateralConfigurationsUSDT,
+      // isPendingUserCollateralAssetsUSDT,
+      // isPendingPriceDataUSDT,
+      // isAprPendingUSDT,
+      // isPendingColUtilUSDT,
     ].some((x) => x);
   }, [
-    isPendingCollateralConfigurationsUSDT,
-    isPendingUserCollateralAssetsUSDT,
     isPendingCollateralConfigurationsUSDC,
     isPendingUserCollateralAssetsUSDC,
     isPendingPriceDataUSDC,
-    isPendingPriceDataUSDT,
     isAprPendingUSDC,
-    isAprPendingUSDT,
     isPendingColUtilUSDC,
-    isPendingColUtilUSDT,
+    // isPendingPriceDataUSDT,
+    // isAprPendingUSDT,
+    // isPendingColUtilUSDT,
+    // isPendingCollateralConfigurationsUSDT,
+    // isPendingUserCollateralAssetsUSDT,
   ]);
 
-  const suppliedCollateralsUSDT = useMemo(() => {
-    if (
-      !priceDataUSDT ||
-      !userCollateralAssetsUSDT ||
-      !colateralConfigurationsUSDT
-    )
-      return [];
+  // const suppliedCollateralsUSDT = useMemo(() => {
+  //   if (
+  //     !priceDataUSDT ||
+  //     !userCollateralAssetsUSDT ||
+  //     !colateralConfigurationsUSDT
+  //   )
+  //     return [];
 
-    const assetIDs = Object.keys(userCollateralAssetsUSDT);
+  //   const assetIDs = Object.keys(userCollateralAssetsUSDT);
 
-    return assetIDs
-      .filter((assetId) => {
-        if (userCollateralAssetsUSDT[assetId].isZero()) return false;
-        return true;
-      })
-      .map((assetId) => {
-        const amount = formatUnits(
-          userCollateralAssetsUSDT[assetId],
-          colateralConfigurationsUSDT[assetId].decimals
-        );
-        const market = 'USDT';
-        const value = getFormattedPrice(
-          priceDataUSDT.prices[assetId].times(amount)
-        );
-        return { market, assetId, value, amount };
-      });
-  }, [priceDataUSDT, userCollateralAssetsUSDT, colateralConfigurationsUSDT]);
+  //   return assetIDs
+  //     .filter((assetId) => {
+  //       if (userCollateralAssetsUSDT[assetId].isZero()) return false;
+  //       return true;
+  //     })
+  //     .map((assetId) => {
+  //       const amount = formatUnits(
+  //         userCollateralAssetsUSDT[assetId],
+  //         colateralConfigurationsUSDT[assetId].decimals
+  //       );
+  //       const market = 'USDT';
+  //       const value = getFormattedPrice(
+  //         priceDataUSDT.prices[assetId].times(amount)
+  //       );
+  //       return { market, assetId, value, amount };
+  //     });
+  // }, [priceDataUSDT, userCollateralAssetsUSDT, colateralConfigurationsUSDT]);
 
   const suppliedCollateralsUSDC = useMemo(() => {
     if (
@@ -334,38 +331,51 @@ export const Collateral = () => {
           <>{SkeletonRow}</>
         ) : (
           <>
-            {suppliedCollateralsUSDT.length === 0 &&
-              suppliedCollateralsUSDC.length === 0 && (
-                <TableRow>
-                  <TableCell colSpan={8}>
-                    <div className="w-full text-md font-semibold text-moon flex justify-center items-center">
-                      No Collateral Supplied.
-                    </div>
-                  </TableCell>
-                </TableRow>
-              )}
-            {suppliedCollateralsUSDT.map((collateral) => (
-              <CollateralTableRow
-                key={collateral.assetId}
-                market={collateral.market}
-                assetId={collateral.assetId}
-                amount={collateral.amount}
-                value={collateral.value}
-                apy={aprDataUSDT}
-                liquidationRisk={currentCollateralUtilizationUSDT}
-              />
-            ))}
-            {suppliedCollateralsUSDC.map((collateral) => (
-              <CollateralTableRow
-                key={collateral.assetId}
-                market={collateral.market}
-                assetId={collateral.assetId}
-                amount={collateral.amount}
-                value={collateral.value}
-                apy={aprDataUSDC}
-                liquidationRisk={currentCollateralUtilizationUSDC}
-              />
-            ))}
+            {suppliedCollateralsUSDC.length ===
+            0 /* && suppliedCollateralsUSDT.length === 0 */ ? (
+              <TableRow>
+                <TableCell colSpan={8}>
+                  <div className="w-full text-md font-semibold text-moon flex justify-center items-center">
+                    No Collateral Supplied.
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : (
+              <>
+                {/* {suppliedCollateralsUSDT.length === 0 &&
+                        suppliedCollateralsUSDC.length === 0 && (
+                          <TableRow>
+                          <TableCell colSpan={8}>
+                          <div className="w-full text-md font-semibold text-moon flex justify-center items-center">
+                          No Collateral Supplied.
+                          </div>
+                          </TableCell>
+                          </TableRow>
+                          )}
+                          {suppliedCollateralsUSDT.map((collateral) => (
+                            <CollateralTableRow
+                            key={collateral.assetId}
+                            market={collateral.market}
+                            assetId={collateral.assetId}
+                            amount={collateral.amount}
+                            value={collateral.value}
+                            apy={aprDataUSDT}
+                            liquidationRisk={currentCollateralUtilizationUSDT}
+                            />
+                            ))} */}
+                {suppliedCollateralsUSDC.map((collateral) => (
+                  <CollateralTableRow
+                    key={collateral.assetId}
+                    market={collateral.market}
+                    assetId={collateral.assetId}
+                    amount={collateral.amount}
+                    value={collateral.value}
+                    apy={aprDataUSDC}
+                    liquidationRisk={currentCollateralUtilizationUSDC}
+                  />
+                ))}
+              </>
+            )}
           </>
         )}
       </TableBody>

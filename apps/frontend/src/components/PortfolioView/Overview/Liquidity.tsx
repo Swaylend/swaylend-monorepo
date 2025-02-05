@@ -30,7 +30,6 @@ import { MoveUpRightIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useMemo } from 'react';
-import { InfoIcon } from '../../InfoIcon';
 import {
   Table,
   TableBody,
@@ -65,47 +64,46 @@ export const Liquidity = () => {
     data: userSupplyBorrowUSDC,
     isPending: isPendingUserSupplyBorrowUSDC,
   } = useUserSupplyBorrow('USDC');
-  const {
-    data: userSupplyBorrowUSDT,
-    isPending: isPendingUserSupplyBorrowUSDT,
-  } = useUserSupplyBorrow('USDT');
   const { data: priceDataUSDC, isPending: isPendingPriceDataUSDC } =
     usePrice('USDC');
-  const { data: priceDataUSDT, isPending: isPendingPriceDataUSDT } =
-    usePrice('USDT');
   const { data: aprDataUSDC, isPending: isAprPendingUSDC } = useApr('USDC');
-  const { data: aprDataUSDT, isPending: isAprPendingUSDT } = useApr('USDT');
-
   const {
     data: marketConfigurationUSDC,
     isPending: isPendingMarketConfigurationUSDC,
   } = useMarketConfiguration('USDC');
 
-  const {
-    data: marketConfigurationUSDT,
-    isPending: isPendingMarketConfigurationUSDT,
-  } = useMarketConfiguration('USDT');
+  // const {
+  //   data: userSupplyBorrowUSDT,
+  //   isPending: isPendingUserSupplyBorrowUSDT,
+  // } = useUserSupplyBorrow('USDT');
+  // const { data: priceDataUSDT, isPending: isPendingPriceDataUSDT } =
+  //   usePrice('USDT');
+  // const { data: aprDataUSDT, isPending: isAprPendingUSDT } = useApr('USDT');
+  // const {
+  //   data: marketConfigurationUSDT,
+  //   isPending: isPendingMarketConfigurationUSDT,
+  // } = useMarketConfiguration('USDT');
 
   const isLoading = useMemo(() => {
     return [
-      isPendingMarketConfigurationUSDT,
       isPendingMarketConfigurationUSDC,
-      isPendingUserSupplyBorrowUSDT,
       isPendingUserSupplyBorrowUSDC,
       isPendingPriceDataUSDC,
-      isPendingPriceDataUSDT,
       isAprPendingUSDC,
-      isAprPendingUSDT,
+      // isPendingMarketConfigurationUSDT,
+      // isPendingUserSupplyBorrowUSDT,
+      // isPendingPriceDataUSDT,
+      // isAprPendingUSDT,
     ].some((res) => res);
   }, [
-    isPendingMarketConfigurationUSDT,
     isPendingMarketConfigurationUSDC,
-    isPendingUserSupplyBorrowUSDT,
     isPendingUserSupplyBorrowUSDC,
     isPendingPriceDataUSDC,
-    isPendingPriceDataUSDT,
+    // isPendingMarketConfigurationUSDT,
     isAprPendingUSDC,
-    isAprPendingUSDT,
+    // isPendingUserSupplyBorrowUSDT,
+    // isPendingPriceDataUSDT,
+    // isAprPendingUSDT,
   ]);
 
   const suppliedUSDC = useMemo(() => {
@@ -123,28 +121,28 @@ export const Liquidity = () => {
     return res;
   }, [userSupplyBorrowUSDC, marketConfigurationUSDC]);
 
-  const suppliedUSDT = useMemo(() => {
-    if (!userSupplyBorrowUSDT || !marketConfigurationUSDT) {
-      return null;
-    }
-    const res = formatUnits(
-      userSupplyBorrowUSDT.supplied,
-      marketConfigurationUSDT.baseTokenDecimals
-    );
-    if (res.eq(0)) {
-      return null;
-    }
-    return res;
-  }, [userSupplyBorrowUSDT, marketConfigurationUSDT]);
+  // const suppliedUSDT = useMemo(() => {
+  //   if (!userSupplyBorrowUSDT || !marketConfigurationUSDT) {
+  //     return null;
+  //   }
+  //   const res = formatUnits(
+  //     userSupplyBorrowUSDT.supplied,
+  //     marketConfigurationUSDT.baseTokenDecimals
+  //   );
+  //   if (res.eq(0)) {
+  //     return null;
+  //   }
+  //   return res;
+  // }, [userSupplyBorrowUSDT, marketConfigurationUSDT]);
 
-  const suppliedUSDTPrice = useMemo(() => {
-    if (!priceDataUSDT || !suppliedUSDT || !marketConfigurationUSDT) {
-      return BigNumber(0);
-    }
-    return priceDataUSDT.prices[marketConfigurationUSDT?.baseToken.bits].times(
-      suppliedUSDT
-    );
-  }, [priceDataUSDT, suppliedUSDT, marketConfigurationUSDT]);
+  // const suppliedUSDTPrice = useMemo(() => {
+  //   if (!priceDataUSDT || !suppliedUSDT || !marketConfigurationUSDT) {
+  //     return BigNumber(0);
+  //   }
+  //   return priceDataUSDT.prices[marketConfigurationUSDT?.baseToken.bits].times(
+  //     suppliedUSDT
+  //   );
+  // }, [priceDataUSDT, suppliedUSDT, marketConfigurationUSDT]);
 
   const suppliedUSDCPrice = useMemo(() => {
     if (!priceDataUSDC || !suppliedUSDC || !marketConfigurationUSDC) {
@@ -210,7 +208,7 @@ export const Liquidity = () => {
           <>{SkeletonRow}</>
         ) : (
           <>
-            {!suppliedUSDC && !suppliedUSDT ? (
+            {!suppliedUSDC /*&& !suppliedUSDT */ ? (
               <TableRow>
                 <TableCell colSpan={8}>
                   <div className="w-full text-md font-semibold text-moon flex justify-center items-center">
@@ -290,7 +288,7 @@ export const Liquidity = () => {
                     </TableCell>
                   </TableRow>
                 )}
-                {suppliedUSDT && (
+                {/* {suppliedUSDT && (
                   <TableRow>
                     <TableCell>
                       <div className="flex gap-x-2 items-center">
@@ -359,7 +357,7 @@ export const Liquidity = () => {
                       </Link>
                     </TableCell>
                   </TableRow>
-                )}
+                )} */}
               </>
             )}
           </>

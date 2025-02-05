@@ -8,6 +8,7 @@ const totalTransactionCountQuery = (account: string) => {
           count(*) as total_count
         FROM EventEntity 
         WHERE userAddress = lower('${account}')
+        AND amountUsd > 0
     `;
 };
 

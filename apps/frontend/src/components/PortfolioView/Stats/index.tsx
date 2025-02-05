@@ -17,14 +17,8 @@ export const Stats = () => {
     data: userSupplyBorrowUSDC,
     isPending: isPendingUserSupplyBorrowUSDC,
   } = useUserSupplyBorrow('USDC');
-  const {
-    data: userSupplyBorrowUSDT,
-    isPending: isPendingUserSupplyBorrowUSDT,
-  } = useUserSupplyBorrow('USDT');
   const { data: priceDataUSDC, isPending: isPendingPriceDataUSDC } =
     usePrice('USDC');
-  const { data: priceDataUSDT, isPending: isPendingPriceDataUSDT } =
-    usePrice('USDT');
 
   const {
     data: userCollateralAssetsUSDC,
@@ -38,78 +32,84 @@ export const Stats = () => {
     data: colateralConfigurationsUSDC,
     isPending: isPendingCollateralConfigurationsUSDC,
   } = useCollateralConfigurations('USDC');
-
-  const {
-    data: userCollateralAssetsUSDT,
-    isPending: isPendingUserCollateralAssetsUSDT,
-  } = useUserCollateralAssets('USDT');
-  const {
-    data: marketConfigurationUSDT,
-    isPending: isPendingMarketConfigurationUSDT,
-  } = useMarketConfiguration('USDT');
-  const {
-    data: colateralConfigurationsUSDT,
-    isPending: isPendingCollateralConfigurationsUSDT,
-  } = useCollateralConfigurations('USDT');
-
   const { data: collateralUtilizationUSDC, isPending: isPendingColUtilUSDC } =
     useUserCollateralUtilization('USDC');
-  const { data: collateralUtilizationUSDT, isPending: isPendingColUtilUSDT } =
-    useUserCollateralUtilization('USDT');
+
+  // const {
+  //   data: userSupplyBorrowUSDT,
+  //   isPending: isPendingUserSupplyBorrowUSDT,
+  // } = useUserSupplyBorrow('USDT');
+  // const { data: priceDataUSDT, isPending: isPendingPriceDataUSDT } =
+  //   usePrice('USDT');
+  // const {
+  //   data: userCollateralAssetsUSDT,
+  //   isPending: isPendingUserCollateralAssetsUSDT,
+  // } = useUserCollateralAssets('USDT');
+  // const {
+  //   data: marketConfigurationUSDT,
+  //   isPending: isPendingMarketConfigurationUSDT,
+  // } = useMarketConfiguration('USDT');
+  // const {
+  //   data: colateralConfigurationsUSDT,
+  //   isPending: isPendingCollateralConfigurationsUSDT,
+  // } = useCollateralConfigurations('USDT');
+
+  // const { data: collateralUtilizationUSDT, isPending: isPendingColUtilUSDT } =
+  //   useUserCollateralUtilization('USDT');
 
   const currentCollateralUtilizationUSDC = useMemo(() => {
     return Number(collateralUtilizationUSDC?.times(100).toFixed(2));
   }, [collateralUtilizationUSDC]);
 
-  const currentCollateralUtilizationUSDT = useMemo(() => {
-    return Number(collateralUtilizationUSDT?.times(100).toFixed(2));
-  }, [collateralUtilizationUSDT]);
+  // const currentCollateralUtilizationUSDT = useMemo(() => {
+  //   return Number(collateralUtilizationUSDT?.times(100).toFixed(2));
+  // }, [collateralUtilizationUSDT]);
 
   const isLoading = useMemo(() => {
     return [
-      isPendingCollateralConfigurationsUSDT,
-      isPendingMarketConfigurationUSDT,
-      isPendingUserCollateralAssetsUSDT,
       isPendingCollateralConfigurationsUSDC,
       isPendingMarketConfigurationUSDC,
       isPendingUserCollateralAssetsUSDC,
-      isPendingUserSupplyBorrowUSDT,
       isPendingUserSupplyBorrowUSDC,
       isPendingPriceDataUSDC,
-      isPendingPriceDataUSDT,
       isPendingColUtilUSDC,
-      isPendingColUtilUSDT,
+      // isPendingCollateralConfigurationsUSDT,
+      // isPendingMarketConfigurationUSDT,
+      // isPendingUserCollateralAssetsUSDT,
+      // isPendingUserSupplyBorrowUSDT,
+      // isPendingPriceDataUSDT,
+      // isPendingColUtilUSDT,
     ].some((res) => res);
   }, [
-    isPendingCollateralConfigurationsUSDT,
-    isPendingMarketConfigurationUSDT,
-    isPendingUserCollateralAssetsUSDT,
     isPendingCollateralConfigurationsUSDC,
     isPendingMarketConfigurationUSDC,
     isPendingUserCollateralAssetsUSDC,
-    isPendingUserSupplyBorrowUSDT,
     isPendingUserSupplyBorrowUSDC,
     isPendingPriceDataUSDC,
-    isPendingPriceDataUSDT,
     isPendingColUtilUSDC,
-    isPendingColUtilUSDT,
+    // isPendingCollateralConfigurationsUSDT,
+    // isPendingMarketConfigurationUSDT,
+    // isPendingUserCollateralAssetsUSDT,
+    // isPendingUserSupplyBorrowUSDT,
+    // isPendingPriceDataUSDT,
+    // isPendingColUtilUSDT,
   ]);
 
   const riskMeter = useMemo(() => {
     return Math.max(
-      currentCollateralUtilizationUSDC,
-      currentCollateralUtilizationUSDT
+      currentCollateralUtilizationUSDC
+      // currentCollateralUtilizationUSDT
     );
-  }, [currentCollateralUtilizationUSDC, currentCollateralUtilizationUSDT]);
+  }, [currentCollateralUtilizationUSDC /*, currentCollateralUtilizationUSDT*/]);
 
   const totalSuppliedCollateral = useMemo(() => {
     if (
       !priceDataUSDC ||
-      !priceDataUSDT ||
+      // !priceDataUSDT ||
       !userCollateralAssetsUSDC ||
-      !userCollateralAssetsUSDT ||
-      !colateralConfigurationsUSDC ||
-      !colateralConfigurationsUSDT
+      // !userCollateralAssetsUSDT ||
+      !colateralConfigurationsUSDC
+      // || !colateralConfigurationsUSDT
     )
       return BigNumber(0);
 
@@ -125,34 +125,36 @@ export const Stats = () => {
       );
     }, new BigNumber(0));
     // Get supplied assets for USDT
-    const suppliedCollateralUSDT = Object.entries(
-      userCollateralAssetsUSDT
-    ).reduce((acc, [key, value]) => {
-      return acc.plus(
-        formatUnits(
-          value.times(priceDataUSDT.prices[key]),
-          colateralConfigurationsUSDT[key].decimals
-        )
-      );
-    }, new BigNumber(0));
-    return suppliedCollateralUSDC.plus(suppliedCollateralUSDT);
+    // const suppliedCollateralUSDT = Object.entries(
+    //   userCollateralAssetsUSDT
+    // ).reduce((acc, [key, value]) => {
+    //   return acc.plus(
+    //     formatUnits(
+    //       value.times(priceDataUSDT.prices[key]),
+    //       colateralConfigurationsUSDT[key].decimals
+    //     )
+    //   );
+    // }, new BigNumber(0));
+    // return suppliedCollateralUSDC.plus(suppliedCollateralUSDT);
+
+    return suppliedCollateralUSDC;
   }, [
     priceDataUSDC,
-    priceDataUSDT,
     userCollateralAssetsUSDC,
-    userCollateralAssetsUSDT,
     colateralConfigurationsUSDC,
-    colateralConfigurationsUSDT,
+    // priceDataUSDT,
+    // userCollateralAssetsUSDT,
+    // colateralConfigurationsUSDT,
   ]);
 
   const totalSuppliedBaseAssets = useMemo(() => {
     if (
       !marketConfigurationUSDC ||
-      !marketConfigurationUSDT ||
+      // !marketConfigurationUSDT ||
       !priceDataUSDC ||
-      !priceDataUSDT ||
-      !userSupplyBorrowUSDC ||
-      !userSupplyBorrowUSDT
+      // !priceDataUSDT ||
+      !userSupplyBorrowUSDC
+      // || !userSupplyBorrowUSDT
     )
       return BigNumber(0);
 
@@ -162,28 +164,29 @@ export const Stats = () => {
       marketConfigurationUSDC.baseTokenDecimals
     );
     // Get supplied USDT
-    const suppliedUSDT = formatUnits(
-      userSupplyBorrowUSDT.supplied,
-      marketConfigurationUSDT.baseTokenDecimals
-    );
-    return suppliedUSDC.plus(suppliedUSDT);
+    // const suppliedUSDT = formatUnits(
+    //   userSupplyBorrowUSDT.supplied,
+    //   marketConfigurationUSDT.baseTokenDecimals
+    // );
+    //return suppliedUSDC.plus(suppliedUSDT);
+    return suppliedUSDC;
   }, [
     marketConfigurationUSDC,
-    marketConfigurationUSDT,
+    // marketConfigurationUSDT,
     priceDataUSDC,
-    priceDataUSDT,
+    // priceDataUSDT,
     userSupplyBorrowUSDC,
-    userSupplyBorrowUSDT,
+    // userSupplyBorrowUSDT,
   ]);
 
   const totalBorrowedBaseAssets = useMemo(() => {
     if (
       !marketConfigurationUSDC ||
-      !marketConfigurationUSDT ||
+      // !marketConfigurationUSDT ||
       !priceDataUSDC ||
-      !priceDataUSDT ||
-      !userSupplyBorrowUSDC ||
-      !userSupplyBorrowUSDT
+      // !priceDataUSDT ||
+      !userSupplyBorrowUSDC
+      // || !userSupplyBorrowUSDT
     )
       return BigNumber(0);
 
@@ -193,18 +196,19 @@ export const Stats = () => {
       marketConfigurationUSDC.baseTokenDecimals
     );
     // Get borrowed USDT
-    const borrowedUSDT = formatUnits(
-      userSupplyBorrowUSDT.borrowed,
-      marketConfigurationUSDT.baseTokenDecimals
-    );
-    return borrowedUSDC.plus(borrowedUSDT);
+    // const borrowedUSDT = formatUnits(
+    //   userSupplyBorrowUSDT.borrowed,
+    //   marketConfigurationUSDT.baseTokenDecimals
+    // );
+    // return borrowedUSDC.plus(borrowedUSDT);
+    return borrowedUSDC;
   }, [
     marketConfigurationUSDC,
-    marketConfigurationUSDT,
+    // marketConfigurationUSDT,
     priceDataUSDC,
-    priceDataUSDT,
+    // priceDataUSDT,
     userSupplyBorrowUSDC,
-    userSupplyBorrowUSDT,
+    // userSupplyBorrowUSDT,
   ]);
 
   const totalSuppliedBalance = useMemo(() => {

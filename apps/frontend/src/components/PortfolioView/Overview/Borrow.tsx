@@ -32,7 +32,6 @@ import { MoveUpRightIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useMemo } from 'react';
-import { InfoIcon } from '../../InfoIcon';
 import {
   Table,
   TableBody,
@@ -73,78 +72,77 @@ export const Borrow = () => {
     data: userSupplyBorrowUSDC,
     isPending: isPendingUserSupplyBorrowUSDC,
   } = useUserSupplyBorrow('USDC');
-  const {
-    data: userSupplyBorrowUSDT,
-    isPending: isPendingUserSupplyBorrowUSDT,
-  } = useUserSupplyBorrow('USDT');
   const { data: priceDataUSDC, isPending: isPendingPriceDataUSDC } =
     usePrice('USDC');
-  const { data: priceDataUSDT, isPending: isPendingPriceDataUSDT } =
-    usePrice('USDT');
   const { data: aprDataUSDC, isPending: isAprPendingUSDC } = useApr('USDC');
-  const { data: aprDataUSDT, isPending: isAprPendingUSDT } = useApr('USDT');
 
   const {
     data: marketConfigurationUSDC,
     isPending: isPendingMarketConfigurationUSDC,
   } = useMarketConfiguration('USDC');
 
-  const {
-    data: marketConfigurationUSDT,
-    isPending: isPendingMarketConfigurationUSDT,
-  } = useMarketConfiguration('USDT');
-
   const { data: collateralUtilizationUSDC, isPending: isPendingColUtilUSDC } =
     useUserCollateralUtilization('USDC');
-  const { data: collateralUtilizationUSDT, isPending: isPendingColUtilUSDT } =
-    useUserCollateralUtilization('USDT');
-
-  const currentCollateralUtilizationUSDC = useMemo(() => {
-    return Number(collateralUtilizationUSDC?.times(100).toFixed(2));
-  }, [collateralUtilizationUSDC]);
-
-  const currentCollateralUtilizationUSDT = useMemo(() => {
-    return Number(collateralUtilizationUSDT?.times(100).toFixed(2));
-  }, [collateralUtilizationUSDT]);
 
   const {
     data: userCollateralAssetsUSDC,
     isPending: isPendingUserCollateralAssetsUSDC,
   } = useUserCollateralAssets('USDC');
 
-  const {
-    data: userCollateralAssetsUSDT,
-    isPending: isPendingUserCollateralAssetsUSDT,
-  } = useUserCollateralAssets('USDT');
+  // const {
+  //   data: userCollateralAssetsUSDT,
+  //   isPending: isPendingUserCollateralAssetsUSDT,
+  // } = useUserCollateralAssets('USDT');
+  // const { data: collateralUtilizationUSDT, isPending: isPendingColUtilUSDT } =
+  // useUserCollateralUtilization('USDT');
+  // const {
+  //   data: userSupplyBorrowUSDT,
+  //   isPending: isPendingUserSupplyBorrowUSDT,
+  // } = useUserSupplyBorrow('USDT');
+  // const { data: priceDataUSDT, isPending: isPendingPriceDataUSDT } =
+  //   usePrice('USDT');
+  // const { data: aprDataUSDT, isPending: isAprPendingUSDT } = useApr('USDT');
+  // const {
+  //   data: marketConfigurationUSDT,
+  //   isPending: isPendingMarketConfigurationUSDT,
+  // } = useMarketConfiguration('USDT');
+
+  const currentCollateralUtilizationUSDC = useMemo(() => {
+    return Number(collateralUtilizationUSDC?.times(100).toFixed(2));
+  }, [collateralUtilizationUSDC]);
+
+  // const currentCollateralUtilizationUSDT = useMemo(() => {
+  //   return Number(collateralUtilizationUSDT?.times(100).toFixed(2));
+  // }, [collateralUtilizationUSDT]);
 
   const isLoading = useMemo(() => {
     return [
-      isPendingMarketConfigurationUSDT,
       isPendingMarketConfigurationUSDC,
-      isPendingUserSupplyBorrowUSDT,
       isPendingUserSupplyBorrowUSDC,
       isPendingPriceDataUSDC,
-      isPendingPriceDataUSDT,
       isAprPendingUSDC,
-      isAprPendingUSDT,
       isPendingColUtilUSDC,
-      isPendingColUtilUSDT,
       isPendingUserCollateralAssetsUSDC,
-      isPendingUserCollateralAssetsUSDT,
+      // isPendingUserCollateralAssetsUSDT,
+      // isPendingPriceDataUSDT,
+      // isPendingUserSupplyBorrowUSDT,
+      // isAprPendingUSDT,
+      // isPendingMarketConfigurationUSDT,
+      // isPendingColUtilUSDT,
     ].some((res) => res);
   }, [
-    isPendingMarketConfigurationUSDT,
     isPendingMarketConfigurationUSDC,
-    isPendingUserSupplyBorrowUSDT,
     isPendingUserSupplyBorrowUSDC,
     isPendingPriceDataUSDC,
-    isPendingPriceDataUSDT,
     isAprPendingUSDC,
-    isAprPendingUSDT,
     isPendingColUtilUSDC,
-    isPendingColUtilUSDT,
     isPendingUserCollateralAssetsUSDC,
-    isPendingUserCollateralAssetsUSDT,
+    // isPendingUserCollateralAssetsUSDT,
+    // isPendingUserSupplyBorrowUSDT,
+    // isPendingMarketConfigurationUSDT,
+    // isPendingPriceDataUSDT,
+    // isAprPendingUSDT,
+    // isPendingColUtilUSDT,
   ]);
 
   const borrowedUSDC = useMemo(() => {
@@ -162,28 +160,28 @@ export const Borrow = () => {
     return res;
   }, [userSupplyBorrowUSDC, marketConfigurationUSDC]);
 
-  const borrowedUSDT = useMemo(() => {
-    if (!userSupplyBorrowUSDT || !marketConfigurationUSDT) {
-      return null;
-    }
-    const res = formatUnits(
-      userSupplyBorrowUSDT.borrowed,
-      marketConfigurationUSDT.baseTokenDecimals
-    );
-    if (res.eq(0)) {
-      return null;
-    }
-    return res;
-  }, [userSupplyBorrowUSDT, marketConfigurationUSDT]);
+  // const borrowedUSDT = useMemo(() => {
+  //   if (!userSupplyBorrowUSDT || !marketConfigurationUSDT) {
+  //     return null;
+  //   }
+  //   const res = formatUnits(
+  //     userSupplyBorrowUSDT.borrowed,
+  //     marketConfigurationUSDT.baseTokenDecimals
+  //   );
+  //   if (res.eq(0)) {
+  //     return null;
+  //   }
+  //   return res;
+  // }, [userSupplyBorrowUSDT, marketConfigurationUSDT]);
 
-  const borrowedUSDTPrice = useMemo(() => {
-    if (!priceDataUSDT || !borrowedUSDT || !marketConfigurationUSDT) {
-      return BigNumber(0);
-    }
-    return priceDataUSDT.prices[marketConfigurationUSDT?.baseToken.bits].times(
-      borrowedUSDT
-    );
-  }, [priceDataUSDT, borrowedUSDT, marketConfigurationUSDT]);
+  // const borrowedUSDTPrice = useMemo(() => {
+  //   if (!priceDataUSDT || !borrowedUSDT || !marketConfigurationUSDT) {
+  //     return BigNumber(0);
+  //   }
+  //   return priceDataUSDT.prices[marketConfigurationUSDT?.baseToken.bits].times(
+  //     borrowedUSDT
+  //   );
+  // }, [priceDataUSDT, borrowedUSDT, marketConfigurationUSDT]);
 
   const borrowedUSDCPrice = useMemo(() => {
     if (!priceDataUSDC || !borrowedUSDC || !marketConfigurationUSDC) {
@@ -194,26 +192,26 @@ export const Borrow = () => {
     );
   }, [priceDataUSDC, borrowedUSDC, marketConfigurationUSDC]);
 
-  const collateralIconsUSDT = useMemo(() => {
-    if (!userCollateralAssetsUSDT) return [];
+  // const collateralIconsUSDT = useMemo(() => {
+  //   if (!userCollateralAssetsUSDT) return [];
 
-    const assetIDs = Object.keys(userCollateralAssetsUSDT);
+  //   const assetIDs = Object.keys(userCollateralAssetsUSDT);
 
-    return assetIDs
-      .filter((assetId) => {
-        if (userCollateralAssetsUSDT[assetId].isZero()) return false;
-        return true;
-      })
-      .map((assetId) => {
-        const symbol = appConfig.assets[assetId];
-        return {
-          id: symbol,
-          name: symbol,
-          description: '',
-          icon: SYMBOL_TO_ICON[symbol],
-        };
-      });
-  }, [userCollateralAssetsUSDT]);
+  //   return assetIDs
+  //     .filter((assetId) => {
+  //       if (userCollateralAssetsUSDT[assetId].isZero()) return false;
+  //       return true;
+  //     })
+  //     .map((assetId) => {
+  //       const symbol = appConfig.assets[assetId];
+  //       return {
+  //         id: symbol,
+  //         name: symbol,
+  //         description: '',
+  //         icon: SYMBOL_TO_ICON[symbol],
+  //       };
+  //     });
+  // }, [userCollateralAssetsUSDT]);
 
   const collateralIconsUSDC = useMemo(() => {
     if (!userCollateralAssetsUSDC) return [];
@@ -386,7 +384,7 @@ export const Borrow = () => {
                     </TableCell>
                   </TableRow>
                 )}
-                {borrowedUSDT && (
+                {/* {borrowedUSDT && (
                   <TableRow>
                     <TableCell>
                       <div className="flex gap-x-2 items-center">
@@ -464,7 +462,7 @@ export const Borrow = () => {
                       </Link>
                     </TableCell>
                   </TableRow>
-                )}
+                )} */}
               </>
             )}
           </>
