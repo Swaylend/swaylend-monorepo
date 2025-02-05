@@ -1,9 +1,11 @@
 import {
   useBorrowCapacity,
+  useLTV,
   useMarketConfiguration,
   usePrice,
   useUserSupplyBorrow,
 } from '@/hooks';
+import { useHealthFactor } from '@/hooks/useHealthFactor';
 import { useUserLiquidationPoint } from '@/hooks/useUserLiquidationPoint';
 import { getFormattedPrice } from '@/utils';
 import { useIsConnected } from '@fuels/react';
@@ -23,6 +25,8 @@ export const BorrowPositionSummary = () => {
   const { data: priceData } = usePrice();
   const { data: marketConfiguration } = useMarketConfiguration();
   const [open, setOpen] = useState(false);
+  const { data: ltv } = useLTV();
+  const { data: healthFactor } = useHealthFactor();
 
   const updatedBorrowCapacity = useMemo(() => {
     if (!marketConfiguration || !priceData || !borrowCapacity) {
@@ -98,6 +102,18 @@ export const BorrowPositionSummary = () => {
                   </div>
                   <div className="text-primary text-right">
                     {getFormattedPrice(updatedBorrowCapacity)}
+                  </div>
+                </div>
+                <div className="text-md font-semibold text-lavender flex justify-between">
+                  <div className="flex gap-x-1">Loan-to-Value (LTV) Ratio </div>
+                  <div className="text-primary text-right">
+                    {ltv?.times(100).toFixed(2)}%
+                  </div>
+                </div>
+                <div className="text-md font-semibold text-lavender flex justify-between">
+                  <div className="flex gap-x-1">Health Factor </div>
+                  <div className="text-primary text-right">
+                    {healthFactor?.toFixed(2)}
                   </div>
                 </div>
               </div>
