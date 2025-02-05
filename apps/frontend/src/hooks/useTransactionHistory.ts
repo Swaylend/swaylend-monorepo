@@ -60,7 +60,7 @@ export const useTransactionHistory = (page: number) => {
         },
         body: JSON.stringify({
           sqlQuery: {
-            sql: transactionHistoryQuery(account, 1, TX_HISTORY_PAGE_SIZE),
+            sql: transactionHistoryQuery(account, page, TX_HISTORY_PAGE_SIZE),
           },
           version: appConfig.client.sentioProcessorVersion,
         }),

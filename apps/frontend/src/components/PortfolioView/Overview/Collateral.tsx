@@ -137,7 +137,6 @@ const CollateralTableRow = ({
           <div> {apy?.borrowRewardApr.times(100).toFixed(2)}%</div>
         </div>
       </TableCell>
-      <TableCell className="">Oh man</TableCell>
       <TableCell className="text-white font-semibold bg-card">
         <Link href="/">
           <Button
@@ -155,9 +154,6 @@ const CollateralTableRow = ({
 
 const SkeletonRow = (
   <TableRow>
-    <TableCell>
-      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
-    </TableCell>
     <TableCell>
       <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
     </TableCell>
@@ -320,25 +316,13 @@ export const Collateral = () => {
             Collateral Asset
           </TableHead>
           <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
-            <div className="flex gap-x-1 items-center">
-              Assets
-              <InfoIcon text="Assets that can be used as Collateral in this market." />
-            </div>
+            Assets
           </TableHead>
           <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
-            <div className="flex gap-x-1 items-center">
-              Liquidation Risk
-              <InfoIcon text="Percentage of Supplied Base Assets that is being borrowed." />
-            </div>
+            Liquidation Risk
           </TableHead>
           <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
-            <div className="flex gap-x-1 items-center">
-              APY
-              <InfoIcon text="Percentage of Supplied Base Assets that is being borrowed." />
-            </div>
-          </TableHead>
-          <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
-            Total Rewards
+            Rewards APY
           </TableHead>
           <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
             Action

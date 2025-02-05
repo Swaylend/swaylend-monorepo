@@ -192,19 +192,13 @@ export const Liquidity = () => {
             Market
           </TableHead>
           <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
-            <div className="flex gap-x-1 items-center">
-              Assets
-              <InfoIcon text="Assets that can be used as Collateral in this market." />
-            </div>
+            Assets
           </TableHead>
           <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
-            <div className="flex gap-x-1 items-center">
-              APY
-              <InfoIcon text="Percentage of Supplied Base Assets that is being borrowed." />
-            </div>
+            APY
           </TableHead>
           <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
-            Total Rewards
+            Rewards APY
           </TableHead>
           <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
             Action
@@ -330,25 +324,25 @@ export const Liquidity = () => {
                     <TableCell>
                       <div className="flex gap-x-2 items-center text-md font-medium text-white">
                         <div>
-                          {aprDataUSDT?.supplyBaseApr.times(100).toFixed(2)}% +
-                        </div>
-                        <div className="flex gap-x-1 items-center text-primary">
-                          <Image
-                            src={SYMBOL_TO_ICON.FUEL}
-                            alt={'USDT'}
-                            width={16}
-                            height={16}
-                            className={'rounded-full'}
-                          />
-                          <div>
-                            {' '}
-                            {aprDataUSDT?.supplyRewardApr.times(100).toFixed(2)}
-                            %
-                          </div>
+                          {aprDataUSDT?.supplyBaseApr.times(100).toFixed(2)}%
                         </div>
                       </div>
                     </TableCell>
-                    <TableCell>ha?</TableCell>
+                    <TableCell>
+                      <div className="flex gap-x-1 items-center text-primary">
+                        <Image
+                          src={SYMBOL_TO_ICON.FUEL}
+                          alt={'USDT'}
+                          width={16}
+                          height={16}
+                          className={'rounded-full'}
+                        />
+                        <div>
+                          {' '}
+                          {aprDataUSDT?.supplyRewardApr.times(100).toFixed(2)}%
+                        </div>
+                      </div>
+                    </TableCell>
                     <TableCell>
                       <Link href="/">
                         <Button

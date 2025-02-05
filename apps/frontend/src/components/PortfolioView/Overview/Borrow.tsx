@@ -273,16 +273,10 @@ export const Borrow = () => {
             Market
           </TableHead>
           <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
-            <div className="flex gap-x-1 items-center">
-              Collateral
-              <InfoIcon text="Assets that can be used as Collateral in this market." />
-            </div>
+            Collateral
           </TableHead>
           <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
-            <div className="flex gap-x-1 items-center">
-              Borrow Value
-              <InfoIcon text="Percentage of Supplied Base Assets that is being borrowed." />
-            </div>
+            Borrow Value
           </TableHead>
           <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
             <div className="flex gap-x-1 items-center">Liquidation Risk</div>
@@ -443,7 +437,7 @@ export const Borrow = () => {
                       <div className="flex gap-x-1 items-center text-primary">
                         <Image
                           src={SYMBOL_TO_ICON.FUEL}
-                          alt={'USDT'}
+                          alt={'FUEL'}
                           width={16}
                           height={16}
                           className={'rounded-full'}

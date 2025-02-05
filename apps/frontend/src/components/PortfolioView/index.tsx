@@ -5,13 +5,23 @@ import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
 import { History } from './History';
 import { Overview } from './Overview';
 import { Stats } from './Stats';
+import { useIsConnected } from '@fuels/react';
 
 export const PortfolioView = () => {
   const [portfolioView, setPortfolioView] = useState('overview');
+  const { isConnected } = useIsConnected();
 
   const handleChange = (value: any) => {
     setPortfolioView(value);
   };
+
+  if (!isConnected) {
+    return (
+      <div className="w-full text-lg flex items-center justify-center h-[300px]">
+        Connect Wallet to view your portfolio.
+      </div>
+    );
+  }
 
   return (
     <div className="w-full">
