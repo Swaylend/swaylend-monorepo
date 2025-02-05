@@ -1,12 +1,16 @@
+import { appConfig } from '@/configs';
 import {
   TX_HISTORY_PAGE_SIZE,
   useLiquidationHistory,
   useTotalTransactionCount,
   useTransactionHistory,
 } from '@/hooks';
+import { SYMBOL_TO_ICON, SYMBOL_TO_NAME } from '@/utils';
 import Image from 'next/image';
 import React, { useMemo, useState } from 'react';
+import { AssetName } from '../AssetName';
 import { InfoIcon } from '../InfoIcon';
+import { Skeleton } from '../ui/skeleton';
 import {
   Table,
   TableBody,
@@ -15,10 +19,6 @@ import {
   TableHeader,
   TableRow,
 } from '../ui/table';
-import { Skeleton } from '../ui/skeleton';
-import { SYMBOL_TO_ICON, SYMBOL_TO_NAME } from '@/utils';
-import { AssetName } from '../AssetName';
-import { appConfig } from '@/configs';
 
 const SkeletonRow = (
   <TableRow>

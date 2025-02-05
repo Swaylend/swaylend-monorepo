@@ -1,11 +1,11 @@
 'use client';
 
+import { useIsConnected } from '@fuels/react';
 import React, { useState } from 'react';
 import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
 import { History } from './History';
 import { Overview } from './Overview';
 import { Stats } from './Stats';
-import { useIsConnected } from '@fuels/react';
 
 export const PortfolioView = () => {
   const [portfolioView, setPortfolioView] = useState('overview');
