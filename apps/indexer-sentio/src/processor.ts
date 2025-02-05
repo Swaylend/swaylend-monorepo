@@ -667,7 +667,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
         amountUsd: BigDecimal(amount.toString())
           .dividedBy(BigDecimal(10).pow(collateralConfiguration.decimals))
           .times(collateralPrice),
-        eventType: 'Withdrawal',
+        eventType: 'Withdraw',
       });
 
       await ctx.store.upsert(eventEntity);
