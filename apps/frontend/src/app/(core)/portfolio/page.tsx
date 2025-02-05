@@ -4,7 +4,7 @@ import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 
 export const metadata: Metadata = {
-  title: 'Markets',
+  title: 'Portfolio',
 };
 
 export const revalidate = 300;

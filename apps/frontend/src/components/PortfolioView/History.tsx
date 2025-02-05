@@ -129,7 +129,9 @@ export const History = () => {
                         </div>
                       </TableCell>
                       <TableCell className="text-lavender font-semibold text-md">
-                        {tx.eventType}
+                        {tx.eventType === 'Withdrawal'
+                          ? 'Withdraw'
+                          : tx.eventType}
                       </TableCell>
                       <TableCell className="text-moon">
                         <AssetName
