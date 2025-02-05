@@ -58,6 +58,7 @@ export class MarketBasic extends AbstractEntity  {
 	@Column("BigInt")
 	lastAccrualTime: BigInt
   constructor(data: MarketBasicConstructorInput) {super()}
+  
 }
 
 
@@ -96,6 +97,7 @@ export class UserBasic extends AbstractEntity  {
 	@Column("Boolean")
 	isNegative: Boolean
   constructor(data: UserBasicConstructorInput) {super()}
+  
 }
 
 
@@ -176,6 +178,7 @@ export class CollateralPosition extends AbstractEntity  {
 	@Column("BigDecimal")
 	collateralAmountUsd?: BigDecimal
   constructor(data: CollateralPositionConstructorInput) {super()}
+  
 }
 
 
@@ -249,6 +252,7 @@ export class MarketConfiguration extends AbstractEntity  {
 	@Column("BigInt")
 	borrowPerSecondInterestRateSlopeHigh: BigInt
   constructor(data: MarketConfigurationConstructorInput) {super()}
+  
 }
 
 
@@ -282,6 +286,7 @@ export class CollateralConfiguration extends AbstractEntity  {
 	@Column("Int")
 	decimals: Int
   constructor(data: CollateralConfigurationConstructorInput) {super()}
+  
 }
 
 
@@ -340,6 +345,7 @@ export class Pool extends AbstractEntity  {
 	@Column("String")
 	poolType: String
   constructor(data: PoolConstructorInput) {super()}
+  
 }
 
 
@@ -401,6 +407,7 @@ export class BasePool extends AbstractEntity  {
 	@Column("BigDecimal")
 	borrowApr: BigDecimal
   constructor(data: BasePoolConstructorInput) {super()}
+  
 }
 
 
@@ -536,6 +543,7 @@ export class CollateralPool extends AbstractEntity  {
 	@Column("BigDecimal")
 	protocolFeesUsd?: BigDecimal
   constructor(data: CollateralPoolConstructorInput) {super()}
+  
 }
 
 
@@ -626,6 +634,7 @@ export class BasePositionSnapshot extends AbstractEntity  {
 	@Column("BigDecimal")
 	collateralAmountUsd?: BigDecimal
   constructor(data: BasePositionSnapshotConstructorInput) {super()}
+  
 }
 
 
@@ -716,6 +725,7 @@ export class CollateralPositionSnapshot extends AbstractEntity  {
 	@Column("BigDecimal")
 	collateralAmountUsd?: BigDecimal
   constructor(data: CollateralPositionSnapshotConstructorInput) {super()}
+  
 }
 
 
@@ -856,6 +866,7 @@ export class BasePoolSnapshot extends AbstractEntity  {
 	@Column("BigDecimal")
 	protocolFeesUsd?: BigDecimal
   constructor(data: BasePoolSnapshotConstructorInput) {super()}
+  
 }
 
 
@@ -1001,6 +1012,7 @@ export class CollateralPoolSnapshot extends AbstractEntity  {
 	@Column("BigDecimal")
 	protocolFeesUsd?: BigDecimal
   constructor(data: CollateralPoolSnapshotConstructorInput) {super()}
+  
 }
 
 
@@ -1079,6 +1091,7 @@ export class EventEntity extends AbstractEntity  {
 	@Column("String")
 	eventType: String
   constructor(data: EventEntityConstructorInput) {super()}
+  
 }
 
 
@@ -1146,6 +1159,7 @@ export class Liquidation extends AbstractEntity  {
 	@Column("BigDecimal")
 	profitUsd: BigDecimal
   constructor(data: LiquidationConstructorInput) {super()}
+  
 }
 
 

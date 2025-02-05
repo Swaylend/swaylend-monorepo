@@ -1255,77 +1255,80 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
           ])
         ).filter((val) => val.chainId === chainId);
 
-        for (const userBasic of userBasics) {
-          const basePositionSnapshotId = `${userBasic.chainId}_${userBasic.contractAddress}_${marketConfiguration.baseTokenAddress}_${userBasic.address}`;
+        await Promise.all(
+          userBasics.map(async (userBasic) => {
+            const basePositionSnapshotId = `${userBasic.chainId}_${userBasic.contractAddress}_${marketConfiguration.baseTokenAddress}_${userBasic.address}`;
 
-          const presentValue = getPresentValueWithScale(
-            userBasic.principal,
-            userBasic.isNegative
-              ? marketBasic.baseBorrowIndex
-              : marketBasic.baseSupplyIndex
-          );
-
-          const presentValueNormalized = BigDecimal(presentValue.toString())
-            .dividedBy(FACTOR_SCALE_15.asBigDecimal())
-            .dividedBy(
-              BigDecimal(10).pow(marketConfiguration.baseTokenDecimals)
+            const presentValue = getPresentValueWithScale(
+              userBasic.principal,
+              userBasic.isNegative
+                ? marketBasic.baseBorrowIndex
+                : marketBasic.baseSupplyIndex
             );
 
-          let basePositionSnapshot = await ctx.store.get(
-            BasePositionSnapshot,
-            basePositionSnapshotId
-          );
+            const presentValueNormalized = BigDecimal(presentValue.toString())
+              .dividedBy(FACTOR_SCALE_15.asBigDecimal())
+              .dividedBy(
+                BigDecimal(10).pow(marketConfiguration.baseTokenDecimals)
+              );
 
-          const suppliedAmount = userBasic.isNegative ? 0n : presentValue;
-          const suppliedAmountNormalized = userBasic.isNegative
-            ? BigDecimal(0)
-            : presentValueNormalized;
+            let basePositionSnapshot = await ctx.store.get(
+              BasePositionSnapshot,
+              basePositionSnapshotId
+            );
 
-          const borrowedAmount = userBasic.isNegative ? presentValue : 0n;
-          const borrowedAmountNormalized = userBasic.isNegative
-            ? presentValueNormalized
-            : BigDecimal(0);
+            const suppliedAmount = userBasic.isNegative ? 0n : presentValue;
+            const suppliedAmountNormalized = userBasic.isNegative
+              ? BigDecimal(0)
+              : presentValueNormalized;
 
-          // Create base position snapshot if it doesn't exist
-          if (!basePositionSnapshot) {
-            const underlyingTokenAddress = marketConfiguration.baseTokenAddress;
+            const borrowedAmount = userBasic.isNegative ? presentValue : 0n;
+            const borrowedAmountNormalized = userBasic.isNegative
+              ? presentValueNormalized
+              : BigDecimal(0);
 
-            basePositionSnapshot = new BasePositionSnapshot({
-              id: basePositionSnapshotId,
-              timestamp: START_TIME_UNIX,
-              blockDate: START_TIME_FORMATED,
-              chainId: chainId,
-              poolAddress: userBasic.contractAddress,
-              underlyingTokenAddress: underlyingTokenAddress,
-              underlyingTokenSymbol: appConfig.assets[underlyingTokenAddress],
-              userAddress: userBasic.address,
-              suppliedAmount: suppliedAmount,
-              suppliedAmountNormalized: suppliedAmountNormalized,
-              suppliedAmountUsd: suppliedAmountNormalized.times(basePrice),
-              borrowedAmount: borrowedAmount,
-              borrowedAmountNormalized: borrowedAmountNormalized,
-              borrowedAmountUsd: borrowedAmountNormalized.times(basePrice),
-              collateralAmount: 0n,
-              collateralAmountNormalized: BigDecimal(0),
-              collateralAmountUsd: BigDecimal(0),
-            });
-          } else {
-            basePositionSnapshot.timestamp = START_TIME_UNIX;
-            basePositionSnapshot.blockDate = START_TIME_FORMATED;
-            basePositionSnapshot.suppliedAmount = suppliedAmount;
-            basePositionSnapshot.suppliedAmountNormalized =
-              suppliedAmountNormalized;
-            basePositionSnapshot.suppliedAmountUsd =
-              suppliedAmountNormalized.times(basePrice);
-            basePositionSnapshot.borrowedAmount = borrowedAmount;
-            basePositionSnapshot.borrowedAmountNormalized =
-              borrowedAmountNormalized;
-            basePositionSnapshot.borrowedAmountUsd =
-              borrowedAmountNormalized.times(basePrice);
-          }
+            // Create base position snapshot if it doesn't exist
+            if (!basePositionSnapshot) {
+              const underlyingTokenAddress =
+                marketConfiguration.baseTokenAddress;
 
-          await ctx.store.upsert(basePositionSnapshot);
-        }
+              basePositionSnapshot = new BasePositionSnapshot({
+                id: basePositionSnapshotId,
+                timestamp: START_TIME_UNIX,
+                blockDate: START_TIME_FORMATED,
+                chainId: chainId,
+                poolAddress: userBasic.contractAddress,
+                underlyingTokenAddress: underlyingTokenAddress,
+                underlyingTokenSymbol: appConfig.assets[underlyingTokenAddress],
+                userAddress: userBasic.address,
+                suppliedAmount: suppliedAmount,
+                suppliedAmountNormalized: suppliedAmountNormalized,
+                suppliedAmountUsd: suppliedAmountNormalized.times(basePrice),
+                borrowedAmount: borrowedAmount,
+                borrowedAmountNormalized: borrowedAmountNormalized,
+                borrowedAmountUsd: borrowedAmountNormalized.times(basePrice),
+                collateralAmount: 0n,
+                collateralAmountNormalized: BigDecimal(0),
+                collateralAmountUsd: BigDecimal(0),
+              });
+            } else {
+              basePositionSnapshot.timestamp = START_TIME_UNIX;
+              basePositionSnapshot.blockDate = START_TIME_FORMATED;
+              basePositionSnapshot.suppliedAmount = suppliedAmount;
+              basePositionSnapshot.suppliedAmountNormalized =
+                suppliedAmountNormalized;
+              basePositionSnapshot.suppliedAmountUsd =
+                suppliedAmountNormalized.times(basePrice);
+              basePositionSnapshot.borrowedAmount = borrowedAmount;
+              basePositionSnapshot.borrowedAmountNormalized =
+                borrowedAmountNormalized;
+              basePositionSnapshot.borrowedAmountUsd =
+                borrowedAmountNormalized.times(basePrice);
+            }
+
+            await ctx.store.upsert(basePositionSnapshot);
+          })
+        );
 
         // Create BasePoolSnapshot
         const underlyingTokenAddress = marketConfiguration.baseTokenAddress;
