@@ -208,7 +208,8 @@ export const Liquidity = () => {
           <>{SkeletonRow}</>
         ) : (
           <>
-            {!suppliedUSDC /*&& !suppliedUSDT */ ? (
+            {!suppliedUSDC ||
+            suppliedUSDC.toNumber() < 0.01 /*&& !suppliedUSDT */ ? (
               <TableRow>
                 <TableCell colSpan={8}>
                   <div className="w-full text-md font-semibold text-moon flex justify-center items-center">
@@ -252,25 +253,25 @@ export const Liquidity = () => {
                     <TableCell>
                       <div className="flex gap-x-2 items-center text-md font-medium text-white">
                         <div>
-                          {aprDataUSDC?.supplyBaseApr.times(100).toFixed(2)}% +
-                        </div>
-                        <div className="flex gap-x-1 items-center text-primary">
-                          <Image
-                            src={SYMBOL_TO_ICON.FUEL}
-                            alt={'USDC'}
-                            width={16}
-                            height={16}
-                            className={'rounded-full'}
-                          />
-                          <div>
-                            {' '}
-                            {aprDataUSDC?.supplyRewardApr.times(100).toFixed(2)}
-                            %
-                          </div>
+                          {aprDataUSDC?.supplyBaseApr.times(100).toFixed(2)}%
                         </div>
                       </div>
                     </TableCell>
-                    <TableCell>ha?</TableCell>
+                    <TableCell>
+                      <div className="flex gap-x-1 items-center text-primary">
+                        <Image
+                          src={SYMBOL_TO_ICON.FUEL}
+                          alt={'USDC'}
+                          width={16}
+                          height={16}
+                          className={'rounded-full'}
+                        />
+                        <div>
+                          {' '}
+                          {aprDataUSDC?.supplyRewardApr.times(100).toFixed(2)}%
+                        </div>
+                      </div>
+                    </TableCell>
                     <TableCell>
                       <Link href="/">
                         <Button
