@@ -101,6 +101,9 @@ abi Market {
     #[storage(read)]
     fn get_collateral_reserves(asset_id: AssetId) -> I256;
 
+    #[storage(read)]
+    fn get_redstone_price(feed_ids: Vec<u256>, payload_bytes: Bytes) -> (Vec<u256>, u64);
+
     // # 8. Pause management
     #[storage(write)]
     fn pause(config: PauseConfiguration);
