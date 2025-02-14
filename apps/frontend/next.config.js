@@ -1,9 +1,6 @@
 // @ts-check
 
 const CONNECT_DOMAINS = [
-  // CDN
-  'https://static.swaylend.com',
-  'https://testnet-swaylend.b-cdn.net',
   // Swaylend API
   'https://testnet-api.swaylend.com',
   'https://api.swaylend.com',
@@ -32,10 +29,10 @@ const CONNECT_DOMAINS = [
 const CSP_HEADER = `
     default-src 'self';
     connect-src 'self' https://app.swaylend.com ${CONNECT_DOMAINS.join(' ')};
-    script-src 'self' 'unsafe-eval' 'unsafe-inline' https://vercel.live https://static.swaylend.com https://testnet-swaylend.b-cdn.net;
-    style-src 'self' 'unsafe-inline' https://static.swaylend.com https://testnet-swaylend.b-cdn.net https://fonts.googleapis.com;
-    img-src 'self' blob: data: https://static.swaylend.com https://testnet-swaylend.b-cdn.net;
-    font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://static.swaylend.com https://testnet-swaylend.b-cdn.net;
+    script-src 'self' 'unsafe-eval' 'unsafe-inline' https://vercel.live;
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+    img-src 'self' blob: data: ;
+    font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com;
     object-src 'none';
     base-uri 'self';
     frame-src 'self' https://verify.walletconnect.com https://verify.walletconnect.org;
@@ -46,19 +43,10 @@ const CSP_HEADER = `
 
 /** @type {import('next').NextConfig} */
 module.exports = (phase, { defaultConfig }) => {
-  let assetPrefix = undefined;
-
-  if (process.env.USE_CDN === 'mainnet') {
-    assetPrefix = 'https://static.swaylend.com';
-  } else if (process.env.USE_CDN === 'testnet') {
-    assetPrefix = 'https://testnet-swaylend.b-cdn.net';
-  }
-
   /**
    * @type {import('next').NextConfig}
    */
   const nextConfig = {
-    assetPrefix: assetPrefix,
     /* config options here */
     webpack: (config, _) => {
       // SVGR Config from: https://react-svgr.com/docs/next/
