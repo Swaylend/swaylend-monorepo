@@ -76,7 +76,7 @@ const rewards: Rewards = {
       durationInDays: 7,
     },
     {
-      poolSize: 2800000,
+      poolSize: 1620500,
       assetId:
         '0x1d5d97005e41cae2187a895fd8eab0506111e0e2f3331cd3912c15c24e3c1d82',
       supplyRewardPercentage: 0.35,
@@ -86,7 +86,7 @@ const rewards: Rewards = {
       durationInDays: 9,
     },
     {
-      poolSize: 3000000,
+      poolSize: 1620500,
       assetId:
         '0x1d5d97005e41cae2187a895fd8eab0506111e0e2f3331cd3912c15c24e3c1d82',
       supplyRewardPercentage: 0.35,
@@ -96,7 +96,7 @@ const rewards: Rewards = {
       durationInDays: 7,
     },
     {
-      poolSize: 3460000,
+      poolSize: 1620500,
       assetId:
         '0x1d5d97005e41cae2187a895fd8eab0506111e0e2f3331cd3912c15c24e3c1d82',
       supplyRewardPercentage: 0.35,
