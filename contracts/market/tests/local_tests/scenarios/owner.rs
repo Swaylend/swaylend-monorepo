@@ -38,6 +38,7 @@ async fn owner_test() {
     let mock_collateral_config = CollateralConfiguration {
         asset_id: assets["USDC"].asset_id.into(),
         price_feed_id: assets["USDC"].price_feed_id,
+        redstone_feed_id: U256::from(usdc.symbol.as_bytes()),
         decimals: assets["USDC"].decimals.try_into().unwrap(),
         borrow_collateral_factor: U256::from(18), // decimals: 18
         liquidate_collateral_factor: U256::from(18), // decimals: 18

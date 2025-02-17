@@ -182,6 +182,7 @@ async fn market_configuration_test() {
         base_tracking_borrow_speed: 1.into(),
         base_min_for_rewards: 2000000000.into(),
         base_borrow_min: 2000.into(),
+        base_token_redstone_feed_id: U256::from(usdc.symbol.as_bytes()),
         target_reserves: 2000000000000u64.into(),
         base_token: usdc.asset_id,
         base_token_decimals: usdc.decimals.try_into().unwrap(),

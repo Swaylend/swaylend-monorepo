@@ -26,7 +26,7 @@ async function main() {
   const cpp: ContractParamsProvider = new ContractParamsProvider({
     dataServiceId: 'redstone-primary-prod',
     dataPackagesIds: ['BTC', 'ETH'],
-    uniqueSignersCount: 2,
+    uniqueSignersCount: 1,
   });
   const dataPackages = await cpp.requestDataPackages();
   const payloadHex = await cpp.getPayloadData();

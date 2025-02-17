@@ -135,6 +135,7 @@ impl From<MarketConfig> for MarketConfiguration {
             base_tracking_borrow_speed: config.base_tracking_borrow_speed.into(),
             base_min_for_rewards: config.base_min_for_rewards.into(),
             base_borrow_min: config.base_borrow_min.into(),
+            base_token_redstone_feed_id: U256::from(config.base_asset.symbol.as_bytes()),
             target_reserves: config.target_reserves.into(),
             base_token: AssetId::from_str(config.base_asset.asset_id.as_str()).unwrap(),
             base_token_decimals: config.base_asset.decimals,
@@ -162,6 +163,7 @@ impl From<CollateralAssetConfig> for CollateralConfiguration {
         CollateralConfiguration {
             asset_id: AssetId::from_str(value.asset_id.as_str()).unwrap(),
             price_feed_id: Bits256::from_hex_str(value.price_feed_id.as_str()).unwrap(),
+            redstone_feed_id: U256::from(value.symbol.as_bytes()),
             decimals: value.decimals,
             borrow_collateral_factor: value.borrow_collateral_factor.into(),
             liquidate_collateral_factor: value.liquidate_collateral_factor.into(),

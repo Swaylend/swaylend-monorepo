@@ -7,7 +7,7 @@ use fuels::{
         calls::{CallHandler, CallParameters},
         responses::CallResponse,
     },
-    types::{transaction::TxPolicies, transaction_builders::VariableOutputPolicy},
+    types::{transaction::TxPolicies, transaction_builders::VariableOutputPolicy, Bytes},
 };
 use market::PriceDataUpdate;
 use market_sdk::{convert_i256_to_u64, is_i256_negative, parse_units};
@@ -428,7 +428,12 @@ async fn main_test() {
     let buy_collateral_call = market
         .instance
         .methods()
-        .buy_collateral(usdt.asset_id, 1u64.into(), bob_account)
+        .buy_collateral(
+            usdt.asset_id,
+            1u64.into(),
+            bob_account,
+            Bytes::from_hex_str("0x00").unwrap(),
+        )
         .with_contracts(&[&oracle.instance])
         .with_tx_policies(tx_policies)
         .call_params(call_params_base_asset)

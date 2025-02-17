@@ -45,7 +45,12 @@ abi Market {
     fn supply_collateral(); // Payment is required: any collateral asset
 
     #[payable, storage(write)]
-    fn withdraw_collateral(asset_id: AssetId, amount: u64, price_data_update: PriceDataUpdate);
+    fn withdraw_collateral(
+        asset_id: AssetId,
+        amount: u64,
+        price_data_update: PriceDataUpdate,
+        redstone_payload: Bytes,
+    );
 
     #[storage(read)]
     fn get_user_collateral(account: Identity, asset_id: AssetId) -> u64;
@@ -65,31 +70,31 @@ abi Market {
     fn supply_base(); // Payment is required: base asset (USDC)
 
     #[payable, storage(write)]
-    fn withdraw_base(amount: u64, price_data_update: PriceDataUpdate);
+    fn withdraw_base(amount: u64, price_data_update: PriceDataUpdate, redstone_payload: Bytes);
 
     #[storage(read)]
     fn get_user_supply_borrow(account: Identity) -> (u256, u256); 
 
     #[storage(read)]
-    fn available_to_borrow(account: Identity) -> u256;
+    fn available_to_borrow(account: Identity, redstone_payload: Bytes) -> u256;
 
     // # 5. Liquidation management
     // Liquidates the user if there is insufficient collateral for the borrowing. 
     #[payable, storage(write)]
-    fn absorb(accounts: Vec<Identity>, price_data_update: PriceDataUpdate);
+    fn absorb(accounts: Vec<Identity>, price_data_update: PriceDataUpdate, redstone_payload: Bytes);
 
     #[storage(read)]
-    fn is_liquidatable(account: Identity) -> bool;
+    fn is_liquidatable(account: Identity, redstone_payload: Bytes) -> bool;
 
     // # 6. Protocol collateral management
     #[payable, storage(read)]
-    fn buy_collateral(asset_id: AssetId, min_amount: u64, recipient: Identity); // Payment is required: base asset (USDC)
+    fn buy_collateral(asset_id: AssetId, min_amount: u64, recipient: Identity, redstone_payload: Bytes); // Payment is required: base asset (USDC)
 
     #[storage(read)]
-    fn collateral_value_to_sell(asset_id: AssetId, collateral_amount: u64) -> u64;
+    fn collateral_value_to_sell(asset_id: AssetId, collateral_amount: u64, redstone_payload: Bytes) -> u64;
 
     #[storage(read)]
-    fn quote_collateral(asset_id: AssetId, base_amount: u64) -> u64;
+    fn quote_collateral(asset_id: AssetId, base_amount: u64, redstone_payload: Bytes) -> u64;
 
     // ## 7. Reserves management
     #[storage(read)]
@@ -100,9 +105,6 @@ abi Market {
 
     #[storage(read)]
     fn get_collateral_reserves(asset_id: AssetId) -> I256;
-
-    #[storage(read)]
-    fn get_redstone_price(feed_ids: Vec<u256>, payload_bytes: Bytes) -> (Vec<u256>, u64);
 
     // # 8. Pause management
     #[storage(write)]
@@ -147,7 +149,7 @@ abi Market {
     fn get_pyth_contract_id() -> ContractId;
     
     #[storage(read)]
-    fn get_price(price_feed_id: PriceFeedId) -> Price;
+    fn get_price(price_feed_id: PriceFeedId, redstone_feed_id: u256, redstone_payload: Bytes) -> Price;
 
     #[storage(read)]
     fn update_fee(update_data: Vec<Bytes>) -> u64;

@@ -9,7 +9,7 @@ use fuels::{
     types::{
         bech32::Bech32ContractId, transaction::TxPolicies,
         transaction_builders::VariableOutputPolicy, AssetId, Bits256, Bytes, Bytes32, ContractId,
-        Identity,
+        Identity, U256,
     },
 };
 use market::*;
@@ -24,7 +24,7 @@ pub struct Market {
     pub instance: MarketContract<WalletUnlocked>,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 struct MarketConfig {
     supply_kink: u64,
     borrow_kink: u64,
@@ -41,6 +41,7 @@ struct MarketConfig {
     base_min_for_rewards: u64,                      // decimals base_token_decimals
     base_borrow_min: u64,                           // decimals base_token_decimals
     target_reserves: u64,
+    base_token_symbol: String,
 }
 
 pub fn get_market_config(
@@ -52,11 +53,13 @@ pub fn get_market_config(
         .join("contracts/market/tests/market-config.json");
     let config_json_str = std::fs::read_to_string(config_json_path)?;
     let config: MarketConfig = serde_json::from_str(&config_json_str)?;
+    println!("🚀 ~ get_market_config ~ config: {:?}", config);
 
     Ok(MarketConfiguration {
         base_token,
         base_token_decimals,
         base_token_price_feed_id,
+        base_token_redstone_feed_id: U256::from(config.base_token_symbol.as_bytes()),
         supply_kink: config.supply_kink.into(),
         borrow_kink: config.borrow_kink.into(),
         supply_per_second_interest_rate_slope_low: config
@@ -279,7 +282,12 @@ impl Market {
         Ok(self
             .instance
             .methods()
-            .withdraw_collateral(asset_id, amount, price_data_update.clone())
+            .withdraw_collateral(
+                asset_id,
+                amount,
+                price_data_update.clone(),
+                Bytes::from_hex_str("0x00").unwrap(),
+            )
             .with_tx_policies(tx_policies)
             .call_params(call_params)?
             .with_contracts(contract_ids)
@@ -375,7 +383,11 @@ impl Market {
         Ok(self
             .instance
             .methods()
-            .withdraw_base(amount.into(), price_data_update.clone())
+            .withdraw_base(
+                amount.into(),
+                price_data_update.clone(),
+                Bytes::from_hex_str("0x00").unwrap(),
+            )
             .with_variable_output_policy(VariableOutputPolicy::Exactly(1))
             .with_contracts(contract_ids)
             .with_tx_policies(tx_policies)
@@ -409,7 +421,7 @@ impl Market {
         let res = self
             .instance
             .methods()
-            .available_to_borrow(account)
+            .available_to_borrow(account, Bytes::from_hex_str("0x00").unwrap())
             .with_tx_policies(tx_policies)
             .with_contracts(contract_ids)
             .call()
@@ -432,7 +444,11 @@ impl Market {
         Ok(self
             .instance
             .methods()
-            .absorb(accounts, price_data_update.clone())
+            .absorb(
+                accounts,
+                price_data_update.clone(),
+                Bytes::from_hex_str("0x00").unwrap(),
+            )
             .with_tx_policies(tx_policies)
             .with_contracts(contract_ids)
             .call_params(call_params)?
@@ -450,7 +466,7 @@ impl Market {
         Ok(self
             .instance
             .methods()
-            .is_liquidatable(account)
+            .is_liquidatable(account, Bytes::from_hex_str("0x00").unwrap())
             .with_tx_policies(tx_policies)
             .with_contracts(contract_ids)
             .call()
@@ -476,7 +492,12 @@ impl Market {
         Ok(self
             .instance
             .methods()
-            .buy_collateral(asset_id, min_amount.into(), recipient)
+            .buy_collateral(
+                asset_id,
+                min_amount.into(),
+                recipient,
+                Bytes::from_hex_str("0x00").unwrap(),
+            )
             .with_tx_policies(tx_policies)
             .with_contracts(contract_ids)
             .call_params(call_params_base_asset)?
@@ -496,7 +517,11 @@ impl Market {
         Ok(self
             .instance
             .methods()
-            .collateral_value_to_sell(asset_id, collateral_amount)
+            .collateral_value_to_sell(
+                asset_id,
+                collateral_amount,
+                Bytes::from_hex_str("0x00").unwrap(),
+            )
             .with_tx_policies(tx_policies)
             .with_contracts(contract_ids)
             .call()
@@ -514,7 +539,11 @@ impl Market {
         Ok(self
             .instance
             .methods()
-            .quote_collateral(asset_id.into(), base_amount)
+            .quote_collateral(
+                asset_id.into(),
+                base_amount,
+                Bytes::from_hex_str("0x00").unwrap(),
+            )
             .with_tx_policies(tx_policies)
             .with_contracts(contract_ids)
             .call()
@@ -726,13 +755,18 @@ impl Market {
         &self,
         contract_ids: &[&dyn ContractDependency],
         price_feed_id: Bits256,
+        redstone_feed_id: U256,
     ) -> anyhow::Result<CallResponse<Price>> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
 
         Ok(self
             .instance
             .methods()
-            .get_price(price_feed_id)
+            .get_price(
+                price_feed_id,
+                redstone_feed_id,
+                Bytes::from_hex_str("0x00").unwrap(),
+            )
             .with_contracts(contract_ids)
             .with_tx_policies(tx_policies)
             .call()
