@@ -130,7 +130,6 @@ impl TokenContract {
                     paused: false,
                 });
             }
-            println!("redstone_feed_id: {:?}", U256::from(symbol.as_bytes()));
 
             assets.insert(
                 symbol.clone(),
