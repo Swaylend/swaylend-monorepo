@@ -71,8 +71,14 @@ export const Points = () => {
           <div className=" w-full mt-2 flex justify-center">
             <div>
               <div>
-                - <span className="font-semibold">After Day 30</span>: Initial
-                distribution of rewards.
+                <span className="line-through">
+                  - <span className="font-semibold">After Day 30</span>: Initial
+                  distribution of rewards.
+                </span>
+                <span className="text-[#F4B845]">
+                  {' '}
+                  Distributed on 17th of February
+                </span>
               </div>
               <div>
                 - <span className="font-semibold">End of Day 45</span>: Final
