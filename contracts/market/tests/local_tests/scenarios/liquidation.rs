@@ -6,7 +6,7 @@ use fuels::{
         calls::{CallHandler, CallParameters},
         responses::CallResponse,
     },
-    types::{transaction::TxPolicies, transaction_builders::VariableOutputPolicy},
+    types::{transaction::TxPolicies, transaction_builders::VariableOutputPolicy, Bytes},
 };
 use market::PriceDataUpdate;
 use market_sdk::{
@@ -266,7 +266,12 @@ async fn absorb_and_liquidate() {
     let buy_collateral_call = market
         .instance
         .methods()
-        .buy_collateral(eth.asset_id, 1u64.into(), alice_account)
+        .buy_collateral(
+            eth.asset_id,
+            1u64.into(),
+            alice_account,
+            Bytes::from_hex_str("0x00").unwrap(),
+        )
         .with_contracts(&[&oracle.instance])
         .with_tx_policies(tx_policies)
         .call_params(call_params_base_asset)
@@ -550,7 +555,12 @@ async fn all_assets_liquidated() {
     let buy_collateral_call = market
         .instance
         .methods()
-        .buy_collateral(eth.asset_id, 1u64.into(), alice_account)
+        .buy_collateral(
+            eth.asset_id,
+            1u64.into(),
+            alice_account,
+            Bytes::from_hex_str("0x00").unwrap(),
+        )
         .with_contracts(&[&oracle.instance])
         .with_tx_policies(tx_policies)
         .call_params(call_params_base_asset)

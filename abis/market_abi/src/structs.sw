@@ -8,6 +8,7 @@ pub const BASE_ACCRUAL_SCALE: u256 = 1_000_000; // 1e6
 pub const BASE_INDEX_SCALE_15: u256 = 1_000_000_000_000_000; // 1e15
 pub const FACTOR_SCALE_18: u256 = 1_000_000_000_000_000_000; // 1e18
 pub const ORACLE_CONF_BASIS_POINTS: u256 = 10_000; // 1e4
+pub const TAI64_UNIX_ADJUSTMENT = (10 + (1 << 62));
 
 /// This struct contains the configuration details for collateral management.
 pub struct CollateralConfiguration {
@@ -15,6 +16,8 @@ pub struct CollateralConfiguration {
     pub asset_id: AssetId,
     /// This field holds the price feed ID for the asset.
     pub price_feed_id: b256,
+    /// This field holds the redstone feed ID for the asset.
+    pub redstone_feed_id: u256,
     /// This field represents the number of decimals for the asset.
     pub decimals: u32,
     /// This field represents the collateral factor for borrowing.
@@ -37,6 +40,8 @@ pub struct MarketConfiguration {
     pub base_token_decimals: u32,
     /// This field holds the price feed ID for the base token.
     pub base_token_price_feed_id: b256,
+    /// This field holds the redstone feed ID for the base token.
+    pub base_token_redstone_feed_id: u256,
     /// This field represents the supply kink.
     pub supply_kink: u256, // decimals: 18
     /// This field represents the borrow kink.
@@ -75,6 +80,7 @@ impl MarketConfiguration {
             base_token: AssetId::zero(),
             base_token_decimals: 0,
             base_token_price_feed_id: b256::zero(),
+            base_token_redstone_feed_id: 0,
             supply_kink: 0,
             borrow_kink: 0,
             supply_per_second_interest_rate_slope_low: 0,

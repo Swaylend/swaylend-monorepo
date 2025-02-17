@@ -5,7 +5,7 @@ use fuels::{
         calls::{CallHandler, CallParameters},
         responses::CallResponse,
     },
-    types::{transaction::TxPolicies, transaction_builders::VariableOutputPolicy},
+    types::{transaction::TxPolicies, transaction_builders::VariableOutputPolicy, Bytes},
 };
 use market::PriceDataUpdate;
 use market_sdk::parse_units;
@@ -118,7 +118,11 @@ async fn multicall_withdraw_supply_test() {
     let withdraw_base_call = market
         .instance
         .methods()
-        .withdraw_base(bob_withdraw_amount.into(), price_data_update.clone())
+        .withdraw_base(
+            bob_withdraw_amount.into(),
+            price_data_update.clone(),
+            Bytes::from_hex_str("0x00").unwrap(),
+        )
         .with_contracts(&[&oracle.instance])
         .with_tx_policies(tx_policies)
         .call_params(CallParameters::default().with_amount(price_data_update.update_fee))

@@ -6,7 +6,7 @@ use fuels::accounts::wallet::WalletUnlocked;
 use fuels::programs::contract::{Contract, LoadConfiguration};
 use fuels::types::bech32::Bech32ContractId;
 use fuels::types::transaction::TxPolicies;
-use fuels::types::{AssetId, Bits256, Bytes32, ContractId};
+use fuels::types::{AssetId, Bits256, Bytes32, ContractId, U256};
 use serde::Deserialize;
 use std::collections::HashMap;
 use std::path::PathBuf;
@@ -121,6 +121,7 @@ impl TokenContract {
                 asset_configs.push(CollateralConfiguration {
                     asset_id: asset_id.into(),
                     price_feed_id: Bits256::from_hex_str(config.price_feed_id.as_str()).unwrap(),
+                    redstone_feed_id: U256::from(symbol.as_bytes()),
                     decimals: config.decimals,
                     borrow_collateral_factor: config.borrow_collateral_factor.unwrap().into(), // decimals: 18
                     liquidate_collateral_factor: config.liquidate_collateral_factor.unwrap().into(), // decimals: 18
@@ -129,6 +130,7 @@ impl TokenContract {
                     paused: false,
                 });
             }
+            println!("redstone_feed_id: {:?}", U256::from(symbol.as_bytes()));
 
             assets.insert(
                 symbol.clone(),
@@ -189,6 +191,7 @@ impl TokenContract {
                     asset_id: asset_id.into(),
                     decimals: config.decimals,
                     price_feed_id: Bits256::from_hex_str(config.price_feed_id.as_str()).unwrap(),
+                    redstone_feed_id: U256::from(symbol.as_bytes()),
                     borrow_collateral_factor: config.borrow_collateral_factor.unwrap().into(), // decimals: 18
                     liquidate_collateral_factor: config.liquidate_collateral_factor.unwrap().into(), // decimals: 18
                     liquidation_penalty: config.liquidation_penalty.unwrap().into(), // decimals: 18
