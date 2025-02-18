@@ -1465,31 +1465,27 @@ fn get_price_internal(
 
     let oracle = abi(PythCore, contract_id.bits());
     let mut price = oracle.price(pyth_price_feed_id);
-    // Validate values
-    let now = std::block::timestamp();
-    let time_diff = if price.publish_time < now {
-        now - price.publish_time
+    // validate values
+    if price.publish_time < std::block::timestamp() {
+        let staleness = std::block::timestamp() - price.publish_time;
+        if staleness > ORACLE_MAX_STALENESS
+            && staleness > ORACLE_DOWNTIME_THRESHOLD
+        {
+            let mut price_feeds: Vec<u256> = Vec::new();
+            price_feeds.push(redstone_feed_id);
+            let (redstone_price, _) = get_redstone_price_internal(price_feeds, redstone_payload);
+            let price_from_u256: Option<u64> = <u64 as TryFrom<u256>>::try_from(redstone_price);
+            price.price = price_from_u256.unwrap();
+            price.exponent = REDSTONE_PRICE_EXPONENT;
+            price.confidence = 0;
+            price.publish_time = std::block::timestamp();
+        }
     } else {
-        price.publish_time - now
-    };
-
-    require(
-        time_diff < ORACLE_DOWNTIME_THRESHOLD,
-        Error::OraclePriceValidationError,
-    );
-
-    if time_diff > ORACLE_MAX_STALENESS
-        || time_diff > ORACLE_MAX_AHEADNESS
-        || price.price == 0
-    {
-        let mut price_feeds: Vec<u256> = Vec::new();
-        price_feeds.push(redstone_feed_id);
-        let (redstone_price, _) = get_redstone_price_internal(price_feeds, redstone_payload);
-        let price_from_u256: Option<u64> = <u64 as TryFrom<u256>>::try_from(redstone_price);
-        price.price = price_from_u256.unwrap();
-        price.exponent = REDSTONE_PRICE_EXPONENT;
-        price.confidence = 0;
-        price.publish_time = now;
+        let aheadness = price.publish_time - std::block::timestamp();
+        require(
+            aheadness <= ORACLE_MAX_AHEADNESS,
+            Error::OraclePriceValidationError,
+        );
     }
 
     require(price.price != 0, Error::OraclePriceValidationError);
