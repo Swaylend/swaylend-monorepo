@@ -5,7 +5,7 @@ import { useCollateralConfigurations } from './useCollateralConfigurations';
 import { usePythPrice } from './usePythPrice';
 import { useUserCollateralAssets } from './useUserCollateralAssets';
 
-// Value of collateral in USD times the liquidation factor
+// Value of collateral in USD
 export const useUserCollateralValue = () => {
   const { data: collateralBalances } = useUserCollateralAssets();
   const { data: collateralConfig } = useCollateralConfigurations();

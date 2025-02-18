@@ -2,15 +2,15 @@ import { formatUnits } from '@/utils';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { useMarketConfiguration } from './useMarketConfiguration';
-import { usePythPrice } from './usePythPrice';
+import { usePrice } from './usePrice';
 import { useUserSupplyBorrow } from './useUserSupplyBorrow';
 import { useUserTrueCollateralValue } from './useUserTrueCollateralValue';
 
-export const useUserCollateralUtilization = () => {
-  const { data: userSupplyBorrow } = useUserSupplyBorrow();
-  const { data: marketConfiguration } = useMarketConfiguration();
-  const { data: trueCollateralValue } = useUserTrueCollateralValue();
-  const { data: priceData } = usePythPrice();
+export const useUserCollateralUtilization = (marketParam?: string) => {
+  const { data: userSupplyBorrow } = useUserSupplyBorrow(marketParam);
+  const { data: marketConfiguration } = useMarketConfiguration(marketParam);
+  const { data: trueCollateralValue } = useUserTrueCollateralValue(marketParam);
+  const { data: priceData } = usePrice(marketParam);
 
   return useQuery({
     queryKey: [
@@ -18,6 +18,7 @@ export const useUserCollateralUtilization = () => {
       userSupplyBorrow,
       marketConfiguration,
       trueCollateralValue,
+      marketParam,
       priceData?.prices,
     ],
     queryFn: async () => {

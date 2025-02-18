@@ -17,13 +17,13 @@ export function createTestnetConfig() {
       fuelOblApi: process.env.NEXT_PUBLIC_FUEL_OBL_API ?? '',
       announcementEnabled:
         process.env.NEXT_PUBLIC_ANNOUNCEMENT_ENABLED === 'true',
-    },
-    server: {
-      sentioApi: process.env.SENTIO_API_URL ?? '',
-      sentioApiKey: process.env.SENTIO_API_KEY ?? '',
-      sentioProcessorVersion: process.env.SENTIO_PROCESSOR_VERSION ?? '',
+      sentioApi: process.env.NEXT_PUBLIC_SENTIO_API_URL ?? '',
+      sentioApiKey: process.env.NEXT_PUBLIC_SENTIO_API_KEY ?? '',
+      sentioProcessorVersion:
+        process.env.NEXT_PUBLIC_SENTIO_PROCESSOR_VERSION ?? '',
     },
     markets: markets,
+    marketAddressToBaseAssetName: marketAddressToBaseAssetName,
     assets: assets,
     baseAssetId:
       '0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07',
@@ -102,6 +102,11 @@ const markets: DeployedMarkets = {
       '0x1ea9a306a5f280cfe7bd1fdc96815a6438069668e495a2f5a727c7b9b90691cb',
     graphqlUrl: '',
   },
+};
+
+const marketAddressToBaseAssetName: Record<string, string> = {
+  '0xbeaa0e9479a83eb3eab0f66e0f0c0ce4af86a6fe6fd4549ae22d87083e086821': 'USDC',
+  '0x51b9bea7822988e03520018f4a1bb39b9f5ba15c9b4b9c9340a6bc1e5958abd4': 'USDT',
 };
 
 const assets: Record<string, string> = {

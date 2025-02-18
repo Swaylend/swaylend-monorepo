@@ -39,7 +39,7 @@ const priceResolutionFunction = (
 export const usePrice = (
   marketParam?: string,
   priceResolution: PriceResolutionMethod = 'avg',
-  oracle: 'pyth' | 'redstone' | undefined = undefined
+  oracle: 'pyth' | 'redstone' | undefined = 'pyth'
 ) => {
   const storeMarket = useMarketStore(selectMarket);
   const market = marketParam ?? storeMarket;

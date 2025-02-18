@@ -32,3 +32,8 @@ export * from './useCollateralReserves';
 export * from './useMaxWithdrawableCollateral';
 export * from './useProvider';
 export * from './useApr';
+export * from './useTransactionHistory';
+export * from './useLiquidationHistory';
+export * from './useTotalTransactionCount';
+export * from './useLTV';
+export * from './useLMRewards';

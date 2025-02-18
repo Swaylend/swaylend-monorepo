@@ -5,9 +5,9 @@ import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
 
-export const useUserCollateralAssets = () => {
+export const useUserCollateralAssets = (marketParam?: string) => {
   const { account } = useAccount();
-  const market = useMarketStore(selectMarket);
+  const market = marketParam || useMarketStore(selectMarket);
   const { data: collateralConfigurations } = useCollateralConfigurations();
   const marketContract = useMarketContract(market);
 
