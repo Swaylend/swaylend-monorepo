@@ -25,15 +25,23 @@ https.request = function (...args) {
 async function main() {
   const cpp: ContractParamsProvider = new ContractParamsProvider({
     dataServiceId: 'redstone-primary-prod',
-    dataPackagesIds: ['BTC', 'ETH'],
+    dataPackagesIds: [
+      'ETH',
+      'ezETH',
+      'USDC',
+      'USDT',
+      // 'FUEL',
+      'sDAI',
+      'weETH',
+      'wstETH',
+    ],
     uniqueSignersCount: 1,
   });
   const dataPackages = await cpp.requestDataPackages();
   const payloadHex = await cpp.getPayloadData();
   const hexlified = cpp.getHexlifiedFeedIds();
   const dataFeedIds = cpp.getDataFeedIds();
-  console.log('🚀 ~ main ~ dataPackages: ', dataPackages);
-  console.log('🚀 ~ main ~ payloadBytes: ', payloadHex);
+  console.log('🚀 ~ main ~ payloadBytes: ', payloadHex.toString());
   console.log('🚀 ~ main ~ hexlified: ', hexlified);
   console.log('🚀 ~ main ~ feedIds: ', dataFeedIds);
 }

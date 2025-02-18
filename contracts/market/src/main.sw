@@ -1421,12 +1421,20 @@ impl SRC5 for Contract {
 #[storage(read)]
 fn get_redstone_price_internal(feed_ids: Vec<u256>, payload_bytes: Bytes) -> (u256, u64) {
     let signer_count_threshold = SIGNER_COUNT_THRESHOLD;
+    let timestamp = timestamp();
+    let mut block_timestamp = timestamp;
+    if timestamp > TAI64_UNIX_ADJUSTMENT {
+        block_timestamp = timestamp - TAI64_UNIX_ADJUSTMENT;
+    } else if DEBUG_STEP != 0 {
+        block_timestamp = 173988088000 / 100
+    }
+
     let config = Config {
         feed_ids: feed_ids,
         // be careful with this array, check xarr.sw for implemented trait
         signers: ALLOWED_SIGNERS.to_vec(),
         signer_count_threshold,
-        block_timestamp: timestamp() - TAI64_UNIX_ADJUSTMENT,
+        block_timestamp,
     };
 
     let (price, timestamp) = process_input(payload_bytes, config);
@@ -1467,16 +1475,21 @@ fn get_price_internal(
     let mut price = oracle.price(pyth_price_feed_id);
     // validate values
     if price.publish_time < std::block::timestamp() {
+        log(price.publish_time);
+        log(std::block::timestamp());
         let staleness = std::block::timestamp() - price.publish_time;
         if staleness > ORACLE_DOWNTIME_THRESHOLD {
             let mut price_feeds: Vec<u256> = Vec::new();
             price_feeds.push(redstone_feed_id);
-            let (redstone_price, _) = get_redstone_price_internal(price_feeds, redstone_payload);
+            let (redstone_price, redstone_timestamp) = get_redstone_price_internal(price_feeds, redstone_payload);
             let price_from_u256: Option<u64> = <u64 as TryFrom<u256>>::try_from(redstone_price);
             price.price = price_from_u256.unwrap();
             price.exponent = REDSTONE_PRICE_EXPONENT;
             price.confidence = 0;
-            price.publish_time = std::block::timestamp();
+            price.publish_time = redstone_timestamp;
+            if DEBUG_STEP != 0 {
+                price.publish_time = 1739880880000;
+            }
         } else {
             require(
                 staleness <= ORACLE_MAX_STALENESS,

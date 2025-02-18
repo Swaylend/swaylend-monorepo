@@ -27,6 +27,7 @@ pub struct Asset {
     pub bits256: Bits256,
     pub default_price: u64,
     pub price_feed_id: Bits256,
+    pub redstone_feed_id: U256,
     pub price_feed_decimals: u32,
 }
 
@@ -136,6 +137,7 @@ impl TokenContract {
                 Asset {
                     asset_id: asset_id.into(),
                     price_feed_id: Bits256::from_hex_str(config.price_feed_id.as_str()).unwrap(),
+                    redstone_feed_id: U256::from(symbol.as_bytes()),
                     price_feed_decimals: config.price_feed_decimals,
                     decimals: token.decimals,
                     symbol: token.symbol,
@@ -176,6 +178,7 @@ impl TokenContract {
                 Asset {
                     asset_id: asset_id.into(),
                     price_feed_id: Bits256::from_hex_str(config.price_feed_id.as_str()).unwrap(),
+                    redstone_feed_id: U256::from(symbol.as_bytes()),
                     price_feed_decimals: config.price_feed_decimals,
                     decimals: config.decimals.into(),
                     symbol: symbol.clone(),
