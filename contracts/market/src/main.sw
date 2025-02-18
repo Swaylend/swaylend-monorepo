@@ -1468,8 +1468,7 @@ fn get_price_internal(
     // validate values
     if price.publish_time < std::block::timestamp() {
         let staleness = std::block::timestamp() - price.publish_time;
-        if staleness > ORACLE_MAX_STALENESS
-            && staleness > ORACLE_DOWNTIME_THRESHOLD
+        if staleness > ORACLE_DOWNTIME_THRESHOLD
         {
             let mut price_feeds: Vec<u256> = Vec::new();
             price_feeds.push(redstone_feed_id);
