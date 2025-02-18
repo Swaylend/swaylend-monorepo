@@ -13,5 +13,6 @@
   "base_tracking_borrow_speed": 821759259259,
   "base_min_for_rewards": 1000000000,
   "base_borrow_min": 10000000,
+  "base_token_symbol": "USDC",
   "target_reserves": 1000000000000
 }

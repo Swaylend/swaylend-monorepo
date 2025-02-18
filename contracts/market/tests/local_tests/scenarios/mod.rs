@@ -7,6 +7,7 @@ mod negative_reserves;
 mod owner;
 mod pause;
 mod price_changes;
+mod redstone;
 mod reserves;
 mod rewards;
 mod supply_withdraw;

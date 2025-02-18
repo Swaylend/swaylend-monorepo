@@ -6,7 +6,7 @@ use fuels::accounts::wallet::WalletUnlocked;
 use fuels::programs::contract::{Contract, LoadConfiguration};
 use fuels::types::bech32::Bech32ContractId;
 use fuels::types::transaction::TxPolicies;
-use fuels::types::{AssetId, Bits256, Bytes32, ContractId};
+use fuels::types::{AssetId, Bits256, Bytes32, ContractId, U256};
 use serde::Deserialize;
 use std::collections::HashMap;
 use std::path::PathBuf;
@@ -27,6 +27,7 @@ pub struct Asset {
     pub bits256: Bits256,
     pub default_price: u64,
     pub price_feed_id: Bits256,
+    pub redstone_feed_id: U256,
     pub price_feed_decimals: u32,
 }
 
@@ -121,6 +122,7 @@ impl TokenContract {
                 asset_configs.push(CollateralConfiguration {
                     asset_id: asset_id.into(),
                     price_feed_id: Bits256::from_hex_str(config.price_feed_id.as_str()).unwrap(),
+                    redstone_feed_id: U256::from(symbol.as_bytes()),
                     decimals: config.decimals,
                     borrow_collateral_factor: config.borrow_collateral_factor.unwrap().into(), // decimals: 18
                     liquidate_collateral_factor: config.liquidate_collateral_factor.unwrap().into(), // decimals: 18
@@ -135,6 +137,7 @@ impl TokenContract {
                 Asset {
                     asset_id: asset_id.into(),
                     price_feed_id: Bits256::from_hex_str(config.price_feed_id.as_str()).unwrap(),
+                    redstone_feed_id: U256::from(symbol.as_bytes()),
                     price_feed_decimals: config.price_feed_decimals,
                     decimals: token.decimals,
                     symbol: token.symbol,
@@ -175,6 +178,7 @@ impl TokenContract {
                 Asset {
                     asset_id: asset_id.into(),
                     price_feed_id: Bits256::from_hex_str(config.price_feed_id.as_str()).unwrap(),
+                    redstone_feed_id: U256::from(symbol.as_bytes()),
                     price_feed_decimals: config.price_feed_decimals,
                     decimals: config.decimals.into(),
                     symbol: symbol.clone(),
@@ -189,6 +193,7 @@ impl TokenContract {
                     asset_id: asset_id.into(),
                     decimals: config.decimals,
                     price_feed_id: Bits256::from_hex_str(config.price_feed_id.as_str()).unwrap(),
+                    redstone_feed_id: U256::from(symbol.as_bytes()),
                     borrow_collateral_factor: config.borrow_collateral_factor.unwrap().into(), // decimals: 18
                     liquidate_collateral_factor: config.liquidate_collateral_factor.unwrap().into(), // decimals: 18
                     liquidation_penalty: config.liquidation_penalty.unwrap().into(), // decimals: 18

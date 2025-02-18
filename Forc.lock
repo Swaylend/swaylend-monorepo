@@ -8,6 +8,7 @@ source = "member"
 dependencies = [
     "market_abi",
     "pyth_interface",
+    "redstone",
     "standards git+https://github.com/FuelLabs/sway-standards?tag=v0.6.1#792639cdf391565e6e6a02482ea8a46d9604a6f5",
     "std",
     "sway_libs",
@@ -37,6 +38,11 @@ dependencies = [
     "pyth_interface",
     "std",
 ]
+
+[[package]]
+name = "redstone"
+source = "git+https://github.com/redstone-finance/redstone-fuel-sdk?tag=testnet-0.65.2#dc1a0a3550a005db05a2664fac87524ab8acf216"
+dependencies = ["std"]
 
 [[package]]
 name = "src-20"

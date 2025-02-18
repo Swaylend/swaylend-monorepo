@@ -36,5 +36,8 @@
       "@fuel-ts/versions": "0.96.1",
       "@fuel-ts/program": "0.96.1"
     }
+  },
+  "dependencies": {
+    "@redstone-finance/sdk": "0.7.5"
   }
 }

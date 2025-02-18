@@ -6,7 +6,7 @@ use fuels::{
         calls::{CallHandler, CallParameters},
         responses::CallResponse,
     },
-    types::{transaction::TxPolicies, transaction_builders::VariableOutputPolicy},
+    types::{transaction::TxPolicies, transaction_builders::VariableOutputPolicy, Bytes},
 };
 use market::PriceDataUpdate;
 use market_sdk::{is_i256_negative, parse_units};
@@ -167,7 +167,11 @@ async fn multicall_absorb_buy_collateral_test() {
     let absorb_call = market
         .instance
         .methods()
-        .absorb(vec![bob_account], price_data_update.clone())
+        .absorb(
+            vec![bob_account],
+            price_data_update.clone(),
+            Bytes::from_hex_str("0x00").unwrap(),
+        )
         .with_contracts(&[&oracle.instance])
         .call_params(CallParameters::default().with_amount(price_data_update.update_fee))
         .unwrap();
@@ -196,7 +200,12 @@ async fn multicall_absorb_buy_collateral_test() {
     let buy_collateral_call = market
         .instance
         .methods()
-        .buy_collateral(eth.asset_id, amount, chad_account)
+        .buy_collateral(
+            eth.asset_id,
+            amount,
+            chad_account,
+            Bytes::from_hex_str("0x00").unwrap(),
+        )
         .with_contracts(&[&oracle.instance])
         .call_params(
             CallParameters::default()

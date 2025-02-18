@@ -1,7 +1,7 @@
 use chrono::Utc;
 use fuels::accounts::wallet::WalletUnlocked;
 use fuels::test_helpers::{
-    launch_custom_provider_and_get_wallets, NodeConfig, Trigger, WalletsConfig
+    launch_custom_provider_and_get_wallets, NodeConfig, Trigger, WalletsConfig,
 };
 use fuels::types::{Bits256, ContractId, Identity};
 use market_sdk::{get_market_config, Market};
