@@ -1,6 +1,6 @@
-import { ContractParamsProvider } from '@redstone-finance/sdk';
 import http from 'node:http';
 import https from 'node:https';
+import { ContractParamsProvider } from '@redstone-finance/sdk';
 
 const originalHttpRequest = http.request;
 http.request = function (...args) {
