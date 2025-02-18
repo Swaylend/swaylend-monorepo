@@ -1479,11 +1479,12 @@ fn get_price_internal(
             price.exponent = REDSTONE_PRICE_EXPONENT;
             price.confidence = 0;
             price.publish_time = std::block::timestamp();
+        } else {
+            require(
+                staleness <= ORACLE_MAX_STALENESS,
+                Error::OraclePriceValidationError,
+            );
         }
-        require(
-            staleness <= ORACLE_MAX_STALENESS,
-            Error::OraclePriceValidationError,
-        );
     } else {
         let aheadness = price.publish_time - std::block::timestamp();
         require(
