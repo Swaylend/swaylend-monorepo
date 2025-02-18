@@ -756,17 +756,13 @@ impl Market {
         contract_ids: &[&dyn ContractDependency],
         price_feed_id: Bits256,
         redstone_feed_id: U256,
+        redstone_payload: Bytes,
     ) -> anyhow::Result<CallResponse<Price>> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
-
         Ok(self
             .instance
             .methods()
-            .get_price(
-                price_feed_id,
-                redstone_feed_id,
-                Bytes::from_hex_str("0x00").unwrap(),
-            )
+            .get_price(price_feed_id, redstone_feed_id, redstone_payload)
             .with_contracts(contract_ids)
             .with_tx_policies(tx_policies)
             .call()
