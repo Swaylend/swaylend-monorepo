@@ -1480,6 +1480,10 @@ fn get_price_internal(
             price.confidence = 0;
             price.publish_time = std::block::timestamp();
         }
+        require(
+            staleness <= ORACLE_MAX_STALENESS,
+            Error::OraclePriceValidationError,
+        );
     } else {
         let aheadness = price.publish_time - std::block::timestamp();
         require(
