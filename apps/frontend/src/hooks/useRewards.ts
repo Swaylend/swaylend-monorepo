@@ -4,7 +4,6 @@ import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
-import { useMemo } from 'react';
 import { useMarketBasicsWithInterest } from './useMarketBasicsWithInterest';
 import { useMarketConfiguration } from './useMarketConfiguration';
 import { usePrice } from './usePrice';

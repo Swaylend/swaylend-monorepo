@@ -17,15 +17,15 @@ export function createMainnetConfig() {
       fuelOblApi: process.env.NEXT_PUBLIC_FUEL_OBL_API ?? '',
       announcementEnabled:
         process.env.NEXT_PUBLIC_ANNOUNCEMENT_ENABLED === 'true',
-    },
-    server: {
-      sentioApi: process.env.SENTIO_API_URL ?? '',
-      sentioApiKey: process.env.SENTIO_API_KEY ?? '',
-      sentioProcessorVersion: process.env.SENTIO_PROCESSOR_VERSION ?? '',
+      sentioApi: process.env.NEXT_PUBLIC_SENTIO_API_URL ?? '',
+      sentioApiKey: process.env.NEXT_PUBLIC_SENTIO_API_KEY ?? '',
+      sentioProcessorVersion:
+        process.env.NEXT_PUBLIC_SENTIO_PROCESSOR_VERSION ?? '',
     },
     baseAssetId:
       '0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07',
     markets: markets,
+    marketAddressToBaseAssetName: marketAddressToBaseAssetName,
     assets: assets,
     useBurnerWallet: false,
     rewards: rewards,
@@ -41,6 +41,10 @@ const markets: DeployedMarkets = {
     tokenFactoryAddress: '',
     graphqlUrl: 'https://indexer.hyperindex.xyz/bfc2f60/v1/graphql',
   },
+};
+
+const marketAddressToBaseAssetName: Record<string, string> = {
+  '0x657ab45a6eb98a4893a99fd104347179151e8b3828fd8f2a108cc09770d1ebae': 'USDC',
 };
 
 const rewards: Rewards = {
