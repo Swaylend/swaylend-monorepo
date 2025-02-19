@@ -412,8 +412,9 @@ impl Market for Contract {
             .insert((caller, asset_id), user_collateral);
 
         // Update price data
-        update_price_feeds_if_necessary_internal(price_data_update);
-
+        if price_data_update.price_feed_ids.len() > 0 {
+            update_price_feeds_if_necessary_internal(price_data_update);
+        }
         // Note: no accrue interest, BorrowCollateralFactor < LiquidationCollateralFactor covers small changes
         // Check if the user is borrow collateralized
         require(
@@ -664,7 +665,9 @@ impl Market for Contract {
             );
 
             // Update price data
-            update_price_feeds_if_necessary_internal(price_data_update);
+            if price_data_update.price_feed_ids.len() > 0 {
+                update_price_feeds_if_necessary_internal(price_data_update);
+            }
 
             // Check that the user is borrow collateralized
             require(
@@ -800,7 +803,9 @@ impl Market for Contract {
         accrue_internal();
 
         // Update price data
-        update_price_feeds_if_necessary_internal(price_data_update);
+        if price_data_update.price_feed_ids.len() > 0 {
+            update_price_feeds_if_necessary_internal(price_data_update);
+        }
 
         let mut index = 0;
         // Loop and absorb each account
