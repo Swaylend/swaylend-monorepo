@@ -525,7 +525,7 @@ async fn main_test() {
         .add_call(buy_collateral_call)
         .with_variable_output_policy(VariableOutputPolicy::Exactly(2));
 
-    // Sumbit tx
+    // Submit tx
     let submitted_tx = mutli_call_handler.submit().await.unwrap();
 
     // Wait for response

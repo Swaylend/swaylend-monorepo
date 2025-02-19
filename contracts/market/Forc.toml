@@ -3,7 +3,7 @@ entry = "main.sw"
 license = "Apache-2.0"
 name = "market"
 
-# address will be the addres of the proxy contract
+# address will be the address of the proxy contract
 [proxy]
 enabled = true
 address = "0x657ab45a6eb98a4893a99fd104347179151e8b3828fd8f2a108cc09770d1ebae"
