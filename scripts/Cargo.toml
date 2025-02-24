@@ -44,6 +44,10 @@ path = "src/deploy_pyth.rs"
 name = "fill_reserves"
 path = "src/fill_reserves.rs"
 
+[[bin]]
+name = "get_market_owner"
+path = "src/get_market_owner.rs"
+
 [dependencies]
 fuels = { workspace = true }
 clap = { workspace = true }
