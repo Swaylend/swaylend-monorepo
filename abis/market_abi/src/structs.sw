@@ -16,8 +16,6 @@ pub struct CollateralConfiguration {
     pub asset_id: AssetId,
     /// This field holds the price feed ID for the asset.
     pub price_feed_id: b256,
-    /// This field holds the redstone feed ID for the asset.
-    pub redstone_feed_id: u256,
     /// This field represents the number of decimals for the asset.
     pub decimals: u32,
     /// This field represents the collateral factor for borrowing.
@@ -30,6 +28,8 @@ pub struct CollateralConfiguration {
     pub supply_cap: u64, // decimals: asset decimals
     /// This field indicates whether the collateral is paused.
     pub paused: bool,
+    /// This field holds the redstone feed ID for the asset.
+    pub redstone_feed_id: u256,
 }
 
 /// This struct contains the configuration details for a market.

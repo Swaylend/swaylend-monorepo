@@ -5,7 +5,8 @@ name = "market"
 
 # address will be the addres of the proxy contract
 [proxy]
-address = "0x657ab45a6eb98a4893a99fd104347179151e8b3828fd8f2a108cc09770d1ebae"
+# address = "0x657ab45a6eb98a4893a99fd104347179151e8b3828fd8f2a108cc09770d1ebae"
+address = "0xbeaa0e9479a83eb3eab0f66e0f0c0ce4af86a6fe6fd4549ae22d87083e086821"
 enabled = true
 
 [dependencies]
