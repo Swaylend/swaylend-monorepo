@@ -37,13 +37,13 @@ use sway_libs::ownership::*;
 use sway_libs::signed_integers::i256::I256;
 
 // version of the smart contract
-const VERSION: u8 = 6_u8;
+const VERSION: u8 = 7_u8;
 
 // pyth oracle configuration params
 const ORACLE_MAX_STALENESS: u64 = 60; // 60 seconds
-const ORACLE_DOWNTIME_THRESHOLD: u64 = 300; // 5 minutes
 const ORACLE_MAX_AHEADNESS: u64 = 60; // 60 seconds
 const ORACLE_MAX_CONF_WIDTH: u256 = 300; // 300 / 10000 = 3.0 %
+const ORACLE_DOWNTIME_THRESHOLD: u64 = 300; // 5 minutes
 const REDSTONE_PRICE_EXPONENT: u32 = 8;
 // This is set during deployment of the contract
 configurable {
