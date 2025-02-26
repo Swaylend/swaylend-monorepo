@@ -21,6 +21,7 @@ const CONNECT_DOMAINS = [
   'https://app.sentio.xyz',
   // Hermes
   'https://gateway-lon.liquify.com',
+  'https://gateway.liquify.com',
   'https://hermes.pyth.network',
   // OpenBlock
   'https://www.data-openblocklabs.com',
