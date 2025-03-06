@@ -8,9 +8,7 @@ export const useProvider = () => {
   const { provider } = useFuelProvider();
 
   useEffect(() => {
-    Provider.create(appConfig.client.fuelNodeUrl)
-      .then((_provider) => setCustomProvider(_provider))
-      .catch((error) => console.error(`Error creating provider: ${error}`));
+    setCustomProvider(new Provider(appConfig.client.fuelNodeUrl));
   }, []);
 
   return { provider: provider ?? customProvider };

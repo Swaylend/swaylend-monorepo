@@ -5,15 +5,15 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 
 /*
-  Fuels version: 0.96.1
+  Fuels version: 0.99.0
 */
 
-import { Contract, Interface } from "fuels";
+import { Contract as __Contract, Interface } from "fuels";
 import type {
   Provider,
   Account,
   StorageSlot,
-  AbstractAddress,
+  Address,
   BigNumberish,
   BN,
   Bytes,
@@ -676,7 +676,7 @@ export class Src20Interface extends Interface {
   };
 }
 
-export class Src20 extends Contract {
+export class Src20 extends __Contract {
   static readonly abi = abi;
   static readonly storageSlots = storageSlots;
 
@@ -697,7 +697,7 @@ export class Src20 extends Contract {
   };
 
   constructor(
-    id: string | AbstractAddress,
+    id: string | Address,
     accountOrProvider: Account | Provider,
   ) {
     super(id, abi, accountOrProvider);
