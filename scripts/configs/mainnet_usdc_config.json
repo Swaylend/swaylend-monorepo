@@ -108,7 +108,7 @@
       "borrow_collateral_factor": 400000000000000000,
       "liquidate_collateral_factor": 750000000000000000,
       "liquidation_penalty": 750000000000000000,
-      "supply_cap": 50000000000000000,
+      "supply_cap": 30000000000000000,
       "is_active": true
     }
   ]

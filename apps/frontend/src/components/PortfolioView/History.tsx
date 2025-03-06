@@ -71,7 +71,7 @@ export const History = () => {
           <TableRow>
             <TableHead colSpan={8}>
               <div className="w-full flex items-center justify-center gap-x-2 text-white font-semibold">
-                Borrow Positions
+                Transaction history
               </div>
             </TableHead>
           </TableRow>

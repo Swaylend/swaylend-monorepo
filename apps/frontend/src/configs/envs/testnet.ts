@@ -80,15 +80,15 @@ const rewards: Rewards = {
 };
 
 const markets: DeployedMarkets = {
-  USDC: {
-    oracleAddress:
-      '0x25146735b29d4216639f7f8b1d7b921ff87a1d3051de62d6cceaacabeb33b8e7',
-    marketAddress:
-      '0xbeaa0e9479a83eb3eab0f66e0f0c0ce4af86a6fe6fd4549ae22d87083e086821',
-    tokenFactoryAddress:
-      '0x3e4f1948aece07d3f30c8c5c425f914ac74653827de48394466f2a887eebe9c7',
-    graphqlUrl: '',
-  },
+  // USDC: {
+  //   oracleAddress:
+  //     '0x25146735b29d4216639f7f8b1d7b921ff87a1d3051de62d6cceaacabeb33b8e7',
+  //   marketAddress:
+  //     '0x6030cf103746576706d7dcc2ae6f6b32ba0db66907a8f9901a0170de5f06acc0',
+  //   tokenFactoryAddress:
+  //     '0x3e4f1948aece07d3f30c8c5c425f914ac74653827de48394466f2a887eebe9c7',
+  //   graphqlUrl: '',
+  // },
   USDT: {
     oracleAddress:
       '0x25146735b29d4216639f7f8b1d7b921ff87a1d3051de62d6cceaacabeb33b8e7',
@@ -101,7 +101,7 @@ const markets: DeployedMarkets = {
 };
 
 const marketAddressToBaseAssetName: Record<string, string> = {
-  '0xbeaa0e9479a83eb3eab0f66e0f0c0ce4af86a6fe6fd4549ae22d87083e086821': 'USDC',
+  '0x6030cf103746576706d7dcc2ae6f6b32ba0db66907a8f9901a0170de5f06acc0': 'USDC',
   '0x51b9bea7822988e03520018f4a1bb39b9f5ba15c9b4b9c9340a6bc1e5958abd4': 'USDT',
 };
 

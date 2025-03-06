@@ -80,14 +80,34 @@ const rewards: Rewards = {
       durationInDays: 7,
     },
     {
-      poolSize: 3800000,
+      poolSize: 2160666,
       assetId:
         '0x1d5d97005e41cae2187a895fd8eab0506111e0e2f3331cd3912c15c24e3c1d82',
-      supplyRewardPercentage: 0.5,
-      borrowRewardPercentage: 0.5,
+      supplyRewardPercentage: 0.35,
+      borrowRewardPercentage: 0.65,
       startDate: '2025-02-05T00:00:00Z',
       endDate: '2025-02-14T00:00:00Z',
       durationInDays: 9,
+    },
+    {
+      poolSize: 2160666,
+      assetId:
+        '0x1d5d97005e41cae2187a895fd8eab0506111e0e2f3331cd3912c15c24e3c1d82',
+      supplyRewardPercentage: 0.35,
+      borrowRewardPercentage: 0.65,
+      startDate: '2025-02-14T00:00:00Z',
+      endDate: '2025-02-21T00:00:00Z',
+      durationInDays: 7,
+    },
+    {
+      poolSize: 2160666,
+      assetId:
+        '0x1d5d97005e41cae2187a895fd8eab0506111e0e2f3331cd3912c15c24e3c1d82',
+      supplyRewardPercentage: 0.35,
+      borrowRewardPercentage: 0.65,
+      startDate: '2025-02-21T00:00:00Z',
+      endDate: '2025-02-29T00:00:00Z',
+      durationInDays: 8,
     },
   ],
 };

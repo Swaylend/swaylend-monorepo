@@ -34,3 +34,4 @@ export * from './useTransactionHistory';
 export * from './useLiquidationHistory';
 export * from './useTotalTransactionCount';
 export * from './useLTV';
+export * from './useLMRewards';
