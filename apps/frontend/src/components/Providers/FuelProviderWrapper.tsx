@@ -77,7 +77,7 @@ const wagmiConfig = createConfigWagmiConfig({
 });
 
 const customDefaultConnectors = (): Array<FuelConnector> => {
-  const provider = Provider.create(appConfig.client.fuelNodeUrl);
+  const provider = new Provider(appConfig.client.fuelNodeUrl);
   const connectors: Array<FuelConnector> = [
     new FueletWalletConnector(),
     new WalletConnectConnector({

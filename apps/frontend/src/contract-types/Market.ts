@@ -5,15 +5,15 @@
 /* eslint-disable @typescript-eslint/consistent-type-imports */
 
 /*
-  Fuels version: 0.96.1
+  Fuels version: 0.99.0
 */
 
-import { Contract, Interface } from "fuels";
+import { Contract as __Contract, Interface } from "fuels";
 import type {
   Provider,
   Account,
   StorageSlot,
-  AbstractAddress,
+  Address,
   BigNumberish,
   BN,
   Bytes,
@@ -4812,7 +4812,7 @@ const abi = {
     {
       "name": "DEBUG_STEP",
       "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
-      "offset": 137368
+      "offset": 137816
     }
   ]
 };
@@ -4987,7 +4987,7 @@ export class MarketInterface extends Interface {
   };
 }
 
-export class Market extends Contract {
+export class Market extends __Contract {
   static readonly abi = abi;
   static readonly storageSlots = storageSlots;
 
@@ -5042,7 +5042,7 @@ export class Market extends Contract {
   };
 
   constructor(
-    id: string | AbstractAddress,
+    id: string | Address,
     accountOrProvider: Account | Provider,
   ) {
     super(id, abi, accountOrProvider);
