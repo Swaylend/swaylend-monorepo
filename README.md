@@ -20,9 +20,9 @@
 
 Swaylend is a decentralized lending platform operating on the [Fuel Network](https://fuel.network), which utilizes an Ethereum consensus layer. Our platform offers a secure and trustworthy environment for crypto users to earn passive income by supplying liquidity to the market.
 
-With Swaylend, users can supply up to six different crypto assets as collateral and borrow USDC, the base asset. Suppliers earn passive income by providing liquidity, while borrowers can borrow in either an overcollateralized (perpetually) or undercollateralized manner.
+With Swaylend, users can supply up to six different crypto assets as collateral and borrow USDC, the base asset. Suppliers earn passive income by providing liquidity, while borrowers can borrow in either an overcollateralized (perpetual) or undercollateralized manner.
 
-The Swaylend protocol is built on a re-engineered solution from the Ethereum blockchain, rewritten in the Sway programming language. Our platform reimagines the [Compound](https://compound.finance/) architecture, offering all its features and benefits with the added security and stability of the [Fuel Network](https://fuel.network). Our dedicated team continuously monitors and improves the platform, always available to answer questions or provide support.
+The Swaylend protocol is built on a re-engineered solution from the Ethereum blockchain, rewritten in the Sway programming language. Our platform reimagines the [Compound](https://compound.finance/) architecture, offering all its features and benefits with the added security and stability of the [Fuel Network](https://fuel.network). Our dedicated team continuously monitors and improves the platform and is always available to answer questions or provide support.
 
 Swaylend is live at [https://swaylend.com](https://swaylend.com).
 
