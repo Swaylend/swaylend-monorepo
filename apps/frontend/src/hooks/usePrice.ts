@@ -101,7 +101,6 @@ export const usePrice = (marketParam?: string) => {
 
       const { value: fee } = await marketContract.functions
         .update_fee(updateData)
-        .addContracts([pythContract])
         .get();
 
       // Prepare the PriceDateUpdateInput object

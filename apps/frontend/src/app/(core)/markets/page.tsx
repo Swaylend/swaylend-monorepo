@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   title: 'Markets',
 };
 
-export const revalidate = 300;
+export const dynamic = 'force-dynamic';
 
 export default async function Page() {
   const userAgent = headers().get('user-agent') || '';

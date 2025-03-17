@@ -3,7 +3,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { useUser } from '@/hooks';
+import { useLMRewards, useUser } from '@/hooks';
 import { cn } from '@/lib/utils';
 import { useIsConnected } from '@fuels/react';
 import { Trophy } from 'lucide-react';
@@ -12,7 +12,6 @@ import Link from 'next/link';
 import { useRef, useState } from 'react';
 import { useHover } from 'usehooks-ts';
 import POINTS from '/public/icons/points-icon.svg?url';
-import { InfoIcon } from '../InfoIcon';
 import { Button } from '../ui/button';
 
 export const Points = () => {
@@ -22,6 +21,7 @@ export const Points = () => {
   const [isManualOpen, setIsManualOpen] = useState(false);
 
   const { data: user } = useUser();
+  const { data: lmRewards } = useLMRewards();
 
   const { isConnected } = useIsConnected();
 
@@ -54,33 +54,23 @@ export const Points = () => {
           </Button>
         </Link>
 
-        <div className="flex flex-col mt-4 gap-y-2 items-center border border-white/10 w-full p-2 rounded-xl">
-          <div className="text-primary">Fuel Rewards</div>
-          <div className={cn('text-lavender font-semibold')}>
-            Season 1 - Part 1
-          </div>
-          <div className=" text-[#F4B845] text-lg font-semibold">
-            Calculating
-          </div>
-        </div>
-        <div className="px-1 text-[10px] italic text-moon">
-          <div className="">
-            <span className="font-semibold">Disclaimer</span>: Fuel Rewards will
-            be visible after the distribution:
-          </div>
-          <div className=" w-full mt-2 flex justify-center">
-            <div>
-              <div>
-                - <span className="font-semibold">After Day 30</span>: Initial
-                distribution of rewards.
-              </div>
-              <div>
-                - <span className="font-semibold">End of Day 45</span>: Final
-                distribution of rewards.
-              </div>
+        {isConnected && (
+          <div className="flex flex-col mt-4 gap-y-2 items-center border border-white/10 w-full p-2 rounded-xl">
+            <div className="text-primary">Fuel Rewards</div>
+            <div className={cn('text-lavender font-semibold')}>
+              Season 1 - Part 1
+            </div>
+            <div className="text-[#F4B845] text-lg font-semibold">
+              {lmRewards ? lmRewards.part_1 : 'Calculating'}
+            </div>
+            <div className={cn('text-lavender font-semibold')}>
+              Season 1 - Part 2
+            </div>
+            <div className="text-[#F4B845] text-lg font-semibold">
+              {lmRewards ? lmRewards.part_2 : 'Calculating'}
             </div>
           </div>
-        </div>
+        )}
       </PopoverContent>
     </Popover>
   );
