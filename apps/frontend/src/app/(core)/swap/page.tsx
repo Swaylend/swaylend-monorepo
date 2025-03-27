@@ -10,7 +10,7 @@ export default async function Page() {
       <iframe
         title="mira.ly"
         className="w-full h-screen rounded-2xl border-0 scrollbar-none"
-        src="https://mira.ly/"
+        src="https://mira.ly/widget/"
       />
     </div>
   );
