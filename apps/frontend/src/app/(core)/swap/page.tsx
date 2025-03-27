@@ -9,7 +9,8 @@ export default async function Page() {
     <div className="w-full h-full p-4">
       <iframe
         title="mira.ly"
-        className="w-full h-screen rounded-2xl border-0 scrollbar-none"
+        allowTransparency={true}
+        className="w-full h-[75vh] md:h-[85vh] rounded-2xl border-0 scrollbar-none"
         src="https://mira.ly/widget/"
       />
     </div>
