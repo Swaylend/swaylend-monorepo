@@ -40,6 +40,7 @@ import {
   TableHeader,
   TableRow,
 } from '../../ui/table';
+import { useUserLiquidationPoint } from '@/hooks/useUserLiquidationPoint';
 
 const SkeletonRow = (
   <TableRow>
@@ -89,6 +90,9 @@ export const Borrow = () => {
     isPending: isPendingUserCollateralAssetsUSDC,
   } = useUserCollateralAssets('USDC');
 
+  const { data: userLiquidationPoint, isPending: isPendingLP } =
+    useUserLiquidationPoint();
+
   // const {
   //   data: userCollateralAssetsUSDT,
   //   isPending: isPendingUserCollateralAssetsUSDT,
@@ -123,6 +127,7 @@ export const Borrow = () => {
       isAprPendingUSDC,
       isPendingColUtilUSDC,
       isPendingUserCollateralAssetsUSDC,
+      isPendingLP,
       // isPendingUserCollateralAssetsUSDT,
       // isPendingPriceDataUSDT,
       // isPendingUserSupplyBorrowUSDT,
@@ -137,6 +142,7 @@ export const Borrow = () => {
     isAprPendingUSDC,
     isPendingColUtilUSDC,
     isPendingUserCollateralAssetsUSDC,
+    isPendingLP,
     // isPendingUserCollateralAssetsUSDT,
     // isPendingUserSupplyBorrowUSDT,
     // isPendingMarketConfigurationUSDT,
@@ -274,16 +280,19 @@ export const Borrow = () => {
             Collateral
           </TableHead>
           <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
-            Borrow Value
+            Borrowed Assets
           </TableHead>
           <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
-            <div className="flex gap-x-1 items-center">Liquidation Risk</div>
+            Net APY
           </TableHead>
           <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
-            Interest
+            Liquidation Risk
           </TableHead>
           <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
-            Rewards APY
+            Liquidation Point
+          </TableHead>
+          <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
+            Points
           </TableHead>
           <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
             Action
@@ -299,7 +308,7 @@ export const Borrow = () => {
               <TableRow>
                 <TableCell colSpan={8}>
                   <div className="w-full text-md font-semibold text-moon flex justify-center items-center">
-                    No Lend Positions Open.
+                    No Borrow Positions Open.
                   </div>
                 </TableCell>
               </TableRow>
@@ -340,11 +349,6 @@ export const Borrow = () => {
                       </span>{' '}
                       {borrowedUSDC.toFixed(2)} USDC
                     </TableCell>
-                    <TableCell
-                      className={`font-semibold bg-card ${currentCollateralUtilizationUSDC > 80 && 'text-red-500'} ${currentCollateralUtilizationUSDC > 60 && currentCollateralUtilizationUSDC <= 80 && 'text-yellow-500'} ${currentCollateralUtilizationUSDC <= 60 && 'text-primary'}`}
-                    >
-                      {currentCollateralUtilizationUSDC}%
-                    </TableCell>
                     <TableCell>
                       <div className="flex gap-x-2 items-center text-md font-medium text-white">
                         <div>
@@ -352,19 +356,23 @@ export const Borrow = () => {
                         </div>
                       </div>
                     </TableCell>
+                    <TableCell
+                      className={`font-semibold bg-card ${currentCollateralUtilizationUSDC > 80 && 'text-red-500'} ${currentCollateralUtilizationUSDC > 60 && currentCollateralUtilizationUSDC <= 80 && 'text-yellow-500'} ${currentCollateralUtilizationUSDC <= 60 && 'text-primary'}`}
+                    >
+                      {currentCollateralUtilizationUSDC}%
+                    </TableCell>
+                    <TableCell className="text-white font-medium">
+                      {getFormattedPrice(userLiquidationPoint ?? BigNumber(0))}
+                    </TableCell>
                     <TableCell>
                       <div className="flex gap-x-1 items-center text-primary">
                         <Image
-                          src={SYMBOL_TO_ICON.FUEL}
+                          src={SYMBOL_TO_ICON.SWAY}
                           alt={'USDC'}
-                          width={16}
-                          height={16}
+                          width={24}
+                          height={24}
                           className={'rounded-full'}
                         />
-                        <div>
-                          {' '}
-                          {aprDataUSDC?.borrowRewardApr.times(100).toFixed(2)}%
-                        </div>
                       </div>
                     </TableCell>
                     <TableCell>

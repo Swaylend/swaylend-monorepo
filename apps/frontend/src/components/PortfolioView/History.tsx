@@ -64,6 +64,8 @@ export const History = () => {
     return Math.ceil(totalTransactionCount / TX_HISTORY_PAGE_SIZE);
   }, [totalTransactionCount]);
 
+  console.log('ttc', totalTransactionCount);
+
   return (
     <div>
       <Table className="max-lg:hidden mt-12">
@@ -243,7 +245,7 @@ export const History = () => {
             </TableRow>
           ) : (
             <>
-              {liquidationHistory.length > 0 ? (
+              {liquidationHistory && liquidationHistory.length > 0 ? (
                 <>
                   {liquidationHistory?.map((tx: any) => (
                     <TableRow key={tx.id}>

@@ -181,7 +181,7 @@ export const Liquidity = () => {
         <TableRow>
           <TableHead colSpan={8}>
             <div className="w-full flex items-center justify-center gap-x-2 text-white font-semibold">
-              Liquidity
+              Earn Positions
             </div>
           </TableHead>
         </TableRow>
@@ -193,10 +193,10 @@ export const Liquidity = () => {
             Assets
           </TableHead>
           <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
-            APY
+            Net APY
           </TableHead>
           <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
-            Rewards APY
+            Points
           </TableHead>
           <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
             Action
@@ -213,7 +213,7 @@ export const Liquidity = () => {
               <TableRow>
                 <TableCell colSpan={8}>
                   <div className="w-full text-md font-semibold text-moon flex justify-center items-center">
-                    No Lend Positions Open.
+                    No Earn Positions Open.
                   </div>
                 </TableCell>
               </TableRow>
@@ -260,16 +260,12 @@ export const Liquidity = () => {
                     <TableCell>
                       <div className="flex gap-x-1 items-center text-primary">
                         <Image
-                          src={SYMBOL_TO_ICON.FUEL}
+                          src={SYMBOL_TO_ICON.SWAY}
                           alt={'USDC'}
-                          width={16}
-                          height={16}
+                          width={24}
+                          height={24}
                           className={'rounded-full'}
                         />
-                        <div>
-                          {' '}
-                          {aprDataUSDC?.supplyRewardApr.times(100).toFixed(2)}%
-                        </div>
                       </div>
                     </TableCell>
                     <TableCell>
@@ -332,8 +328,8 @@ export const Liquidity = () => {
                         <Image
                           src={SYMBOL_TO_ICON.FUEL}
                           alt={'USDT'}
-                          width={16}
-                          height={16}
+                          width={24}
+                          height={24}
                           className={'rounded-full'}
                         />
                         <div>
