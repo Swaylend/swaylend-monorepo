@@ -3,8 +3,7 @@ library;
 use sway_libs::signed_integers::i256::I256;
 use std::bytes::Bytes;
 use pyth_interface::data_structures::price::PriceFeedId;
-pub const BASE_ACCRUAL_SCALE:
- u256 = 1_000_000; // 1e6
+pub const BASE_ACCRUAL_SCALE: u256 = 1_000_000; // 1e6
 pub const BASE_INDEX_SCALE_15: u256 = 1_000_000_000_000_000; // 1e15
 pub const FACTOR_SCALE_18: u256 = 1_000_000_000_000_000_000; // 1e18
 pub const ORACLE_CONF_BASIS_POINTS: u256 = 10_000; // 1e4
@@ -67,8 +66,7 @@ pub struct MarketConfiguration {
     pub target_reserves: u256, // decimals: base_asset_decimals
 }
 impl MarketConfiguration {
-    pub
- fn default() -> Self {
+    pub fn default() -> Self {
         MarketConfiguration {
             base_token: AssetId::zero(),
             base_token_decimals: 0,
@@ -103,8 +101,7 @@ pub struct PauseConfiguration {
     pub buy_paused: bool,
 }
 impl PauseConfiguration {
-    pub
- fn default() -> Self {
+    pub fn default() -> Self {
         PauseConfiguration {
             supply_paused: true,
             withdraw_paused: true,
@@ -123,8 +120,7 @@ pub struct UserBasic {
     pub base_tracking_accrued: u256, // decimals: base_accrual_scale
 }
 impl UserBasic {
-    pub
- fn default() -> Self {
+    pub fn default() -> Self {
         UserBasic {
             principal: I256::new(),
             base_tracking_index: 0,
@@ -150,8 +146,7 @@ pub struct MarketBasics {
     pub last_accrual_time: u256,
 }
 impl MarketBasics {
-    pub
- fn default() -> Self {
+    pub fn default() -> Self {
         MarketBasics {
             base_supply_index: BASE_INDEX_SCALE_15,
             base_borrow_index: BASE_INDEX_SCALE_15,
@@ -175,13 +170,11 @@ pub struct PriceDataUpdate {
     pub update_data: Vec<Bytes>,
 }
 pub enum PricePosition {
-
     LowerBound: (),
     Middle: (),
     UpperBound: (),
 }
-impl core::ops::Eq for PricePosition
- {
+impl core::ops::Eq for PricePosition {
     fn eq(self, other: Self) -> bool {
         match (self, other) {
             (PricePosition::LowerBound, PricePosition::LowerBound) => true,
@@ -192,7 +185,6 @@ impl core::ops::Eq for PricePosition
     }
 }
 pub enum Error {
-
     AlreadyInitialized: (),
     Paused: (),
     Unauthorized: (),

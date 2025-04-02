@@ -6,8 +6,7 @@ use pyth_interface::data_structures::price::{Price, PriceFeedId};
 use structs::*;
 use std::bytes::Bytes;
 use sway_libs::signed_integers::i256::I256;
-abi Market
- {
+abi Market {
     // Get version of the smart contract
     fn get_version() -> u8;
     // # 0. Activate contract (un-pause)
@@ -97,8 +96,7 @@ abi Market
     fn get_user_balance_with_interest(account: Identity) -> I256;
     #[storage(read)]
     fn get_utilization() -> u256;
-    fn balance_of
-(asset_id: AssetId) -> u64;
+    fn balance_of(asset_id: AssetId) -> u64;
     // Formulas to help calculate supply and borrow rates
     #[storage(read)]
     fn get_supply_rate(utilization: u256) -> u256;
