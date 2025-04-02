@@ -10,8 +10,6 @@ export const metadata: Metadata = {
   title: 'Markets',
 };
 
-export const dynamic = 'force-dynamic';
-
 export default async function Page() {
   const userAgent = headers().get('user-agent') || '';
   const mobile = isMobile(userAgent);
