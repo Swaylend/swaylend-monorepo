@@ -223,9 +223,9 @@ export const Stats = () => {
 
   return (
     <div>
-      <div className="flex justify-between items-center gap-x-16">
+      <div className="flex justify-between items-start gap-x-16">
         <div className="w-1/2">
-          <div className="flex flex-col justify-end">
+          <div className="flex flex-col justify-start items-start">
             <div className="text-moon text-sm font-semibold">Total Assets</div>
             {isLoading ? (
               <>
