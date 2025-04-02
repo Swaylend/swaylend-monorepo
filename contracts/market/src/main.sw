@@ -13,7 +13,8 @@ mod events;
 use events::*;
 
 use pyth_interface::{data_structures::price::{Price, PriceFeedId}, PythCore};
-use market_abi::{Market, structs::*,};
+use market_abi::{Market, structs::*};
+use flashloan_abi::{FlashLoaner};
 use std::asset::{mint_to, transfer};
 use std::auth::{AuthError, msg_sender};
 use std::call_frames::msg_asset_id;
@@ -33,7 +34,7 @@ use sway_libs::ownership::*;
 use sway_libs::signed_integers::i256::I256;
 
 // version of the smart contract
-const VERSION: u8 = 5_u8;
+const VERSION: u8 = 6_u8;
 
 // pyth oracle configuration params
 const ORACLE_MAX_STALENESS: u64 = 60; // 60 seconds
@@ -1337,6 +1338,59 @@ impl Market for Contract {
     #[storage(write)]
     fn renounce_ownership() {
         renounce_ownership();
+    }
+
+    /// Execute a flash loan for the base token
+    /// # Arguments
+    /// * `amount`: [u64] - Amount to borrow
+    /// * `receiver`: [ContractId] - Contract to receive the flash loan
+    /// * `data`: [Vec<u8>] - Arbitrary data to pass to the receiver
+    ///
+    /// # Reverts
+    /// * When amount is zero
+    /// * When asset is not base token
+    /// * When receiver fails to handle the flash loan
+    /// * When full amount is not returned
+    #[payable, storage(read)]
+    fn flash_loan(
+        amount: u64,
+        receiver: ContractId,
+        data: Vec<u8>
+    ) {
+        require(amount > 0, Error::InvalidAmount);
+        
+        let base_token = storage.market_configuration.read().base_token;
+        
+        // Get initial balance
+        let initial_balance = this_balance(base_token);
+
+        // Transfer requested amount to receiver
+        transfer(Identity::ContractId(receiver), base_token, amount);
+
+        // Call receiver's execute_op
+        let flash_borrower = abi(FlashLoaner, receiver.bits());
+        require(
+            flash_borrower.execute_operation(
+                amount,
+                msg_sender().unwrap(),
+                data
+            ),
+            Error::FlashLoanFailed
+        );
+
+        // Verify full repayment
+        let final_balance = this_balance(base_token);
+        require(
+            final_balance >= initial_balance,
+            Error::RepaymentNotMet
+        );
+
+        // Emit flash loan event
+        log(FlashLoanEvent {
+            initiator: msg_sender().unwrap(),
+            amount,
+            receiver,
+        });
     }
 }
 

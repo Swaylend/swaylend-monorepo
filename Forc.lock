@@ -3,9 +3,18 @@ name = "core"
 source = "path+from-root-F64B6E1A883A7E7B"
 
 [[package]]
+name = "flashloan_abi"
+source = "path+from-root-9ED3421BB02FBE52"
+dependencies = [
+    "std",
+    "sway_libs",
+]
+
+[[package]]
 name = "market"
 source = "member"
 dependencies = [
+    "flashloan_abi",
     "market_abi",
     "pyth_interface",
     "standards git+https://github.com/FuelLabs/sway-standards?tag=v0.6.1#792639cdf391565e6e6a02482ea8a46d9604a6f5",

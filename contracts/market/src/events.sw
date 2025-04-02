@@ -163,6 +163,13 @@ pub struct MarketConfigurationEvent {
     pub market_config: MarketConfiguration,
 }
 
+pub struct FlashLoanEvent {
+    /// This field holds the market configuration details.
+    pub initiator: Identity,
+    pub amount: u64,
+    pub receiver: ContractId,
+}
+
 // Set pyth contract id event
 pub struct SetPythContractIdEvent {
     pub contract_id: ContractId,

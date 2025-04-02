@@ -162,4 +162,11 @@ abi Market {
 
     #[storage(write)]
     fn renounce_ownership();
+
+    #[payable, storage(read)]
+    fn flash_loan(
+        amount: u64,
+        receiver: ContractId,
+        data: Vec<u8>
+    );
 }
