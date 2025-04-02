@@ -36,7 +36,7 @@ const CSP_HEADER = `
     font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com;
     object-src 'none';
     base-uri 'self';
-    frame-src 'self' https://verify.walletconnect.com https://verify.walletconnect.org;
+    frame-src 'self' https://verify.walletconnect.com https://verify.walletconnect.org https://mira.ly/;
     form-action 'self';
     frame-ancestors 'none';
     upgrade-insecure-requests;
