@@ -1,19 +1,19 @@
 contract;
- 
+
 use standards::{src20::SRC20, src3::SRC3};
 use std::{
-    hash::Hash,
     asset::{
         burn,
         mint_to,
     },
-    storage::storage_string::*,
     call_frames::msg_asset_id,
     constants::DEFAULT_SUB_ID,
     context::msg_amount,
+    hash::Hash,
+    storage::storage_string::*,
     string::String,
 };
- 
+
 storage {
     /// The total number of distinguishable assets minted by this contract.
     total_assets: u64 = 0,
@@ -44,7 +44,14 @@ impl SetContractStorage for Contract {
         let asset_id = AssetId::new(ContractId::this(), sub_id);
 
         // Check if decimals is already set
-        require(storage.decimals.get(asset_id).try_read().is_none(), "Already set");
+        require(
+            storage
+                .decimals
+                .get(asset_id)
+                .try_read()
+                .is_none(),
+            "Already set",
+        );
         storage.decimals.insert(asset_id, decimals);
     }
 
@@ -53,7 +60,14 @@ impl SetContractStorage for Contract {
         let asset_id = AssetId::new(ContractId::this(), sub_id);
 
         // Check if name is already set
-        require(storage.name.get(asset_id).try_read().is_none(), "Already set");
+        require(
+            storage
+                .name
+                .get(asset_id)
+                .try_read()
+                .is_none(),
+            "Already set",
+        );
 
         let storage_key = storage.name.get(asset_id);
         storage_key.write_slice(name);
@@ -64,13 +78,20 @@ impl SetContractStorage for Contract {
         let asset_id = AssetId::new(ContractId::this(), sub_id);
 
         // Check if symbol is already set
-        require(storage.symbol.get(asset_id).try_read().is_none(), "Already set");
+        require(
+            storage
+                .symbol
+                .get(asset_id)
+                .try_read()
+                .is_none(),
+            "Already set",
+        );
 
         let storage_key = storage.symbol.get(asset_id);
         storage_key.write_slice(symbol);
     }
 }
- 
+
 impl SRC20 for Contract {
     /// Returns the total number of individual assets minted  by this contract.
     ///
@@ -101,7 +122,7 @@ impl SRC20 for Contract {
     fn total_assets() -> u64 {
         storage.total_assets.read()
     }
- 
+
     /// Returns the total supply of coins for an asset.
     ///
     /// # Arguments
@@ -132,7 +153,7 @@ impl SRC20 for Contract {
     fn total_supply(asset: AssetId) -> Option<u64> {
         storage.total_supply.get(asset).try_read()
     }
- 
+
     /// Returns the name of an asset.
     ///
     /// # Arguments
@@ -163,7 +184,7 @@ impl SRC20 for Contract {
     fn name(asset: AssetId) -> Option<String> {
         storage.name.get(asset).read_slice()
     }
- 
+
     /// Returns the symbol of am asset.
     ///
     /// # Arguments
@@ -194,7 +215,7 @@ impl SRC20 for Contract {
     fn symbol(asset: AssetId) -> Option<String> {
         storage.symbol.get(asset).read_slice()
     }
- 
+
     /// Returns the number of decimals an asset uses.
     ///
     /// # Arguments
@@ -254,12 +275,12 @@ impl SRC3 for Contract {
     /// ```
     #[storage(read, write)]
     fn mint(recipient: Identity, sub_id: Option<SubId>, amount: u64) {
-         let sub_id = match sub_id {
+        let sub_id = match sub_id {
             Some(s) => s,
             None => DEFAULT_SUB_ID,
         };
         let asset_id = AssetId::new(ContractId::this(), sub_id);
- 
+
         // If this SubId is new, increment the total number of distinguishable assets this contract has minted.
         let asset_supply = storage.total_supply.get(asset_id).try_read();
         match asset_supply {
@@ -268,14 +289,14 @@ impl SRC3 for Contract {
             },
             _ => {},
         }
- 
+
         // Increment total supply of the asset and mint to the recipient.
         storage
             .total_supply
             .insert(asset_id, amount + asset_supply.unwrap_or(0));
         mint_to(recipient, sub_id, amount);
     }
- 
+
     /// Unconditionally burns assets sent with the `sub_id` sub-identifier.
     ///
     /// # Arguments
@@ -314,7 +335,7 @@ impl SRC3 for Contract {
         let asset_id = AssetId::new(ContractId::this(), sub_id);
         require(msg_amount() == amount, "Incorrect amount provided");
         require(msg_asset_id() == asset_id, "Incorrect asset provided");
- 
+
         // Decrement total supply of the asset and burn.
         storage
             .total_supply

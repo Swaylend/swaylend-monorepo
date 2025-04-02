@@ -4,7 +4,7 @@ contract;
 
 use standards::src3::SRC3;
 use standards::src5::{AccessError, SRC5, State};
-use standards::src20::{SRC20, SetDecimalsEvent, SetNameEvent, SetSymbolEvent, TotalSupplyEvent};
+use standards::src20::{SetDecimalsEvent, SetNameEvent, SetSymbolEvent, SRC20, TotalSupplyEvent};
 use std::{
     asset::{
         burn,
@@ -180,16 +180,17 @@ impl EmitSRC20Events for Contract {
                 .read() == State::Initialized(msg_sender().unwrap()),
             AccessError::NotOwner,
         );
-        
+
         // Metadata that is stored as a configurable should only be emitted once.
         let asset = AssetId::default();
         let sender = msg_sender().unwrap();
         let name = Some(String::from_ascii_str(from_str_array(NAME)));
         let symbol = Some(String::from_ascii_str(from_str_array(SYMBOL)));
- 
+
         SetNameEvent::new(asset, name, sender).log();
         SetSymbolEvent::new(asset, symbol, sender).log();
         SetDecimalsEvent::new(asset, DECIMALS, sender).log();
-        TotalSupplyEvent::new(asset, storage.total_supply.read(), sender).log();
+        TotalSupplyEvent::new(asset, storage.total_supply.read(), sender)
+            .log();
     }
 }

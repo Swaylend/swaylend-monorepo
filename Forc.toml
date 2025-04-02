@@ -1,10 +1,10 @@
 [workspace]
 members = [
-    # ABIs
-    "abis/market_abi",
-    # Contracts
-    "contracts/market",
-    "contracts/src-20",
-    "contracts/token",
-    "contracts/pyth-mock",
+  # ABIs
+  "abis/market_abi",
+  # Contracts
+  "contracts/market",
+  "contracts/src-20",
+  "contracts/token",
+  "contracts/pyth-mock",
 ]

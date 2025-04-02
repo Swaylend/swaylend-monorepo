@@ -1,12 +1,6 @@
 contract;
 
-use pyth_interface::{
-    PythCore, 
-    errors::PythError,
-    data_structures::{
-        price::*,
-    },
-};
+use pyth_interface::{data_structures::{price::*,}, errors::PythError, PythCore,};
 use std::bytes::Bytes;
 use std::hash::Hash;
 
@@ -78,7 +72,6 @@ impl PythCore for Contract {
         // 2: exponent -> u32
         // 3: publish_time -> u64
         // 4: confidence -> u64
-
         while index < update_data.len() {
             let payload = update_data.get(index).unwrap();
             let (price_feed_id, price) = decode_bytes(payload);
@@ -102,7 +95,6 @@ impl PythCore for Contract {
         // 2: exponent -> u32
         // 3: publish_time -> u64
         // 4: confidence -> u64
-
         while index < update_data.len() {
             let payload = update_data.get(index).unwrap();
             let (price_feed_id, price) = decode_bytes(payload);
@@ -120,95 +112,84 @@ impl PythCore for Contract {
 
 fn decode_bytes(bytes: Bytes) -> (PriceFeedId, Price) {
     // First 32 bytes are price feed id
-    let price_feed_id = b256::from_be_bytes(
-       [
-            bytes.get(0).unwrap(),
-            bytes.get(1).unwrap(),
-            bytes.get(2).unwrap(),
-            bytes.get(3).unwrap(),
-            bytes.get(4).unwrap(),
-            bytes.get(5).unwrap(),
-            bytes.get(6).unwrap(),
-            bytes.get(7).unwrap(),
-            bytes.get(8).unwrap(),
-            bytes.get(9).unwrap(),
-            bytes.get(10).unwrap(),
-            bytes.get(11).unwrap(),
-            bytes.get(12).unwrap(),
-            bytes.get(13).unwrap(),
-            bytes.get(14).unwrap(),
-            bytes.get(15).unwrap(),
-            bytes.get(16).unwrap(),
-            bytes.get(17).unwrap(),
-            bytes.get(18).unwrap(),
-            bytes.get(19).unwrap(),
-            bytes.get(20).unwrap(),
-            bytes.get(21).unwrap(),
-            bytes.get(22).unwrap(),
-            bytes.get(23).unwrap(),
-            bytes.get(24).unwrap(),
-            bytes.get(25).unwrap(),
-            bytes.get(26).unwrap(),
-            bytes.get(27).unwrap(),
-            bytes.get(28).unwrap(),
-            bytes.get(29).unwrap(),
-            bytes.get(30).unwrap(),
-            bytes.get(31).unwrap(),
-       ]
-    );
+    let price_feed_id = b256::from_be_bytes([
+        bytes.get(0).unwrap(),
+        bytes.get(1).unwrap(),
+        bytes.get(2).unwrap(),
+        bytes.get(3).unwrap(),
+        bytes.get(4).unwrap(),
+        bytes.get(5).unwrap(),
+        bytes.get(6).unwrap(),
+        bytes.get(7).unwrap(),
+        bytes.get(8).unwrap(),
+        bytes.get(9).unwrap(),
+        bytes.get(10).unwrap(),
+        bytes.get(11).unwrap(),
+        bytes.get(12).unwrap(),
+        bytes.get(13).unwrap(),
+        bytes.get(14).unwrap(),
+        bytes.get(15).unwrap(),
+        bytes.get(16).unwrap(),
+        bytes.get(17).unwrap(),
+        bytes.get(18).unwrap(),
+        bytes.get(19).unwrap(),
+        bytes.get(20).unwrap(),
+        bytes.get(21).unwrap(),
+        bytes.get(22).unwrap(),
+        bytes.get(23).unwrap(),
+        bytes.get(24).unwrap(),
+        bytes.get(25).unwrap(),
+        bytes.get(26).unwrap(),
+        bytes.get(27).unwrap(),
+        bytes.get(28).unwrap(),
+        bytes.get(29).unwrap(),
+        bytes.get(30).unwrap(),
+        bytes.get(31).unwrap(),
+    ]);
 
     // Next 8 bytes are price
-    let price = u64::from_be_bytes(
-        [
-            bytes.get(32).unwrap(),
-            bytes.get(33).unwrap(),
-            bytes.get(34).unwrap(),
-            bytes.get(35).unwrap(),
-            bytes.get(36).unwrap(),
-            bytes.get(37).unwrap(),
-            bytes.get(38).unwrap(),
-            bytes.get(39).unwrap(),
-        ]
-    );
+    let price = u64::from_be_bytes([
+        bytes.get(32).unwrap(),
+        bytes.get(33).unwrap(),
+        bytes.get(34).unwrap(),
+        bytes.get(35).unwrap(),
+        bytes.get(36).unwrap(),
+        bytes.get(37).unwrap(),
+        bytes.get(38).unwrap(),
+        bytes.get(39).unwrap(),
+    ]);
 
     // Next 4 bytes are exponent
-    let exponent = u32::from_be_bytes(
-        [
-            bytes.get(40).unwrap(),
-            bytes.get(41).unwrap(),
-            bytes.get(42).unwrap(),
-            bytes.get(43).unwrap(),
-        ]
-    );
+    let exponent = u32::from_be_bytes([
+        bytes.get(40).unwrap(),
+        bytes.get(41).unwrap(),
+        bytes.get(42).unwrap(),
+        bytes.get(43).unwrap(),
+    ]);
 
     // Next 8 bytes are publish time
-    let publish_time = u64::from_be_bytes(
-        [
-            bytes.get(44).unwrap(),
-            bytes.get(45).unwrap(),
-            bytes.get(46).unwrap(),
-            bytes.get(47).unwrap(),
-            bytes.get(48).unwrap(),
-            bytes.get(49).unwrap(),
-            bytes.get(50).unwrap(),
-            bytes.get(51).unwrap(),
-        ]
-    );
+    let publish_time = u64::from_be_bytes([
+        bytes.get(44).unwrap(),
+        bytes.get(45).unwrap(),
+        bytes.get(46).unwrap(),
+        bytes.get(47).unwrap(),
+        bytes.get(48).unwrap(),
+        bytes.get(49).unwrap(),
+        bytes.get(50).unwrap(),
+        bytes.get(51).unwrap(),
+    ]);
 
     // Next 8 bytes are confidence
-    let confidence = u64::from_be_bytes(
-        [
-            bytes.get(52).unwrap(),
-            bytes.get(53).unwrap(),
-            bytes.get(54).unwrap(),
-            bytes.get(55).unwrap(),
-            bytes.get(56).unwrap(),
-            bytes.get(57).unwrap(),
-            bytes.get(58).unwrap(),
-            bytes.get(59).unwrap(),
-        ]
-    );
-
+    let confidence = u64::from_be_bytes([
+        bytes.get(52).unwrap(),
+        bytes.get(53).unwrap(),
+        bytes.get(54).unwrap(),
+        bytes.get(55).unwrap(),
+        bytes.get(56).unwrap(),
+        bytes.get(57).unwrap(),
+        bytes.get(58).unwrap(),
+        bytes.get(59).unwrap(),
+    ]);
 
     return (
         PriceFeedId::from(price_feed_id),

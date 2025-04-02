@@ -2,13 +2,12 @@ library;
 
 use sway_libs::signed_integers::i256::I256;
 use std::bytes::Bytes;
-use pyth_interface::{data_structures::price::{PriceFeedId}};
-
-pub const BASE_ACCRUAL_SCALE: u256 = 1_000_000; // 1e6
+use pyth_interface::data_structures::price::PriceFeedId;
+pub const BASE_ACCRUAL_SCALE:
+ u256 = 1_000_000; // 1e6
 pub const BASE_INDEX_SCALE_15: u256 = 1_000_000_000_000_000; // 1e15
 pub const FACTOR_SCALE_18: u256 = 1_000_000_000_000_000_000; // 1e18
 pub const ORACLE_CONF_BASIS_POINTS: u256 = 10_000; // 1e4
-
 /// This struct contains the configuration details for collateral management.
 pub struct CollateralConfiguration {
     /// This field represents the ID of the asset.
@@ -28,7 +27,6 @@ pub struct CollateralConfiguration {
     /// This field indicates whether the collateral is paused.
     pub paused: bool,
 }
-
 /// This struct contains the configuration details for a market.
 pub struct MarketConfiguration {
     /// This field represents the ID of the base token asset.
@@ -68,9 +66,9 @@ pub struct MarketConfiguration {
     /// This field holds the target reserves.
     pub target_reserves: u256, // decimals: base_asset_decimals
 }
-
 impl MarketConfiguration {
-    pub fn default() -> Self {
+    pub
+ fn default() -> Self {
         MarketConfiguration {
             base_token: AssetId::zero(),
             base_token_decimals: 0,
@@ -93,7 +91,6 @@ impl MarketConfiguration {
         }
     }
 }
-
 /// This struct defines the configuration for pausing various market actions.
 pub struct PauseConfiguration {
     /// This field indicates whether supply actions are paused.
@@ -105,9 +102,9 @@ pub struct PauseConfiguration {
     /// This field indicates whether buy actions are paused.
     pub buy_paused: bool,
 }
-
 impl PauseConfiguration {
-    pub fn default() -> Self {
+    pub
+ fn default() -> Self {
         PauseConfiguration {
             supply_paused: true,
             withdraw_paused: true,
@@ -116,7 +113,6 @@ impl PauseConfiguration {
         }
     }
 }
-
 /// This struct contains basic user information related to a market.
 pub struct UserBasic {
     /// This field represents the user's principal amount.
@@ -126,9 +122,9 @@ pub struct UserBasic {
     /// This field holds the accrued base tracking value.
     pub base_tracking_accrued: u256, // decimals: base_accrual_scale
 }
-
 impl UserBasic {
-    pub fn default() -> Self {
+    pub
+ fn default() -> Self {
         UserBasic {
             principal: I256::new(),
             base_tracking_index: 0,
@@ -136,7 +132,6 @@ impl UserBasic {
         }
     }
 }
-
 /// This struct contains the basic information about a market.
 pub struct MarketBasics {
     /// This field represents the supply index of the base asset.
@@ -154,9 +149,9 @@ pub struct MarketBasics {
     /// This field contains the timestamp of the last accrual event.
     pub last_accrual_time: u256,
 }
-
 impl MarketBasics {
-    pub fn default() -> Self {
+    pub
+ fn default() -> Self {
         MarketBasics {
             base_supply_index: BASE_INDEX_SCALE_15,
             base_borrow_index: BASE_INDEX_SCALE_15,
@@ -168,7 +163,6 @@ impl MarketBasics {
         }
     }
 }
-
 /// This struct contains data necessary for updating price feeds.
 pub struct PriceDataUpdate {
     /// This field represents the fee required to perform the update.
@@ -180,14 +174,14 @@ pub struct PriceDataUpdate {
     /// This field includes the actual update data in bytes format.
     pub update_data: Vec<Bytes>,
 }
-
 pub enum PricePosition {
+
     LowerBound: (),
     Middle: (),
     UpperBound: (),
 }
-
-impl core::ops::Eq for PricePosition {
+impl core::ops::Eq for PricePosition
+ {
     fn eq(self, other: Self) -> bool {
         match (self, other) {
             (PricePosition::LowerBound, PricePosition::LowerBound) => true,
@@ -197,8 +191,8 @@ impl core::ops::Eq for PricePosition {
         }
     }
 }
-
 pub enum Error {
+
     AlreadyInitialized: (),
     Paused: (),
     Unauthorized: (),
