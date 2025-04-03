@@ -241,8 +241,8 @@ export const Stats = () => {
             <div className="flex items-end gap-x-16">
               <div>
                 <div className="flex gap-x-2 items-center">
-                  <div className="w-2 h-2 rounded-full bg-purple" />
-                  <div className="text-sm font-semibold text-purple">
+                  <div className="w-2 h-2 rounded-full bg-primary" />
+                  <div className="text-sm font-semibold text-primary">
                     Earning
                   </div>
                 </div>
@@ -258,8 +258,8 @@ export const Stats = () => {
               </div>
               <div>
                 <div className="flex gap-x-2 items-center">
-                  <div className="w-2 h-2 rounded-full bg-primary" />
-                  <div className="text-sm font-semibold text-primary">
+                  <div className="w-2 h-2 rounded-full bg-purple" />
+                  <div className="text-sm font-semibold text-purple">
                     Borrowing{' '}
                   </div>
                 </div>
@@ -294,7 +294,14 @@ export const Stats = () => {
             </div>
           </div>
         </div>
-        <Chart />
+        <Chart
+          lastRow={{
+            timestamp: Math.floor(Date.now() / 1000),
+            suppliedAmountUsd: totalSuppliedBaseAssets.toFixed(2),
+            borrowedAmountUsd: totalBorrowedBaseAssets.toFixed(2),
+            collateralAmountUsd: totalSuppliedCollateral.toFixed(2),
+          }}
+        />
       </div>
     </div>
   );

@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/chart';
 import { getFormattedPrice } from '@/utils';
 import BigNumber from 'bignumber.js';
+import { useMemo } from 'react';
 
 type Row = {
   timestamp: number;
@@ -26,14 +27,36 @@ type Row = {
 
 export const UserHistoryChart = ({
   chartData,
+  lastRow,
 }: {
   chartData: Row[] | undefined;
+  lastRow: any | undefined;
 }) => {
   if (!chartData || chartData.length === 0) {
     return (
       <div className="w-full text-center py-4">No chart data available</div>
     );
   }
+
+  const updatedChartData = useMemo(() => {
+    if (!lastRow || chartData.length === 0) return chartData;
+
+    const {
+      collateralAmountUsd: collateralValueUsd,
+      suppliedAmountUsd: suppliedValueUsd,
+      borrowedAmountUsd: borrowedValueUsd,
+    } = lastRow;
+
+    const newChartData = [...chartData];
+    newChartData[newChartData.length - 1] = {
+      timestamp: newChartData[newChartData.length - 1].timestamp,
+      suppliedValueUsd,
+      borrowedValueUsd,
+      collateralValueUsd,
+    };
+
+    return newChartData;
+  }, [lastRow, chartData]);
 
   const chartConfig = {
     suppliedValueUsd: {
@@ -69,14 +92,14 @@ export const UserHistoryChart = ({
           </div>
           <div className="flex justify-between gap-x-2 items-center mt-2">
             <div className="flex gap-x-2 items-center">
-              <div className="w-2 h-2 rounded-full bg-[#8B5CF6]" />
+              <div className="w-2 h-2 rounded-full bg-[#3FE8BD]" />
               <div className="text-white/60 text-xs font-normal">Earning</div>
             </div>
             <div>{getFormattedPrice(BigNumber(payload[0].value))}</div>
           </div>
           <div className="flex justify-between gap-x-2 items-center mt-2">
             <div className="flex gap-x-2 items-center">
-              <div className="w-2 h-2 rounded-full bg-[#3FE8BD]" />
+              <div className="w-2 h-2 rounded-full bg-[#8B5CF6]" />
               <div className="text-white/60 text-xs font-normal">Borrowing</div>
             </div>
             <div>{getFormattedPrice(BigNumber(payload[1].value))}</div>
@@ -141,7 +164,7 @@ export const UserHistoryChart = ({
           <AreaChart
             className="max-lg:hidden"
             accessibilityLayer
-            data={chartData}
+            data={updatedChartData}
             margin={{
               left: 16,
               right: 16,
@@ -157,7 +180,6 @@ export const UserHistoryChart = ({
               tickMargin={10}
               minTickGap={30}
               padding={{ left: 10, right: 10 }}
-              interval="preserveStartEnd"
               tickFormatter={(value: number) => {
                 return dateFormatter.format(new Date(value * 1000));
               }}
@@ -189,11 +211,11 @@ export const UserHistoryChart = ({
               cursor={<CustomCursor />}
             />
             <defs>
-              <linearGradient id="color1" x1="0" y1="0" x2="0" y2="1">
+              <linearGradient id="color2" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="#8b5cf6" stopOpacity={0.9} />
                 <stop offset="100%" stopColor="#8b5cf6" stopOpacity={0.2} />
               </linearGradient>
-              <linearGradient id="color2" x1="0" y1="0" x2="0" y2="1">
+              <linearGradient id="color1" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="#3FE8BD" stopOpacity={0.9} />
                 <stop offset="100%" stopColor="#3FE8BD" stopOpacity={0.2} />
               </linearGradient>
@@ -212,7 +234,7 @@ export const UserHistoryChart = ({
               type="monotone"
               fill="url(#color1)"
               fillOpacity={0.4}
-              stroke="#8B5CF6"
+              stroke="#3FE8BD"
               strokeWidth={2}
               stackId="1"
             />
@@ -222,7 +244,7 @@ export const UserHistoryChart = ({
               fill="url(#color2)"
               fillOpacity={0.4}
               strokeWidth={2}
-              stroke="#3FE8BD"
+              stroke="#8B5CF6"
               stackId="2"
             />
             <Area

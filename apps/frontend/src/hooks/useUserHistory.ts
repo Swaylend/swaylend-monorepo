@@ -79,9 +79,9 @@ export const useUserHistory = () => {
 
       const userHistory = data.result.rows.map((row: Row) => ({
         timestamp: row.timestampUnix,
-        suppliedValueUsd: Number(row.suppliedAmountUsd ?? 0).toFixed(0),
-        borrowedValueUsd: Number(row.borrowedAmountUsd ?? 0).toFixed(0),
-        collateralValueUsd: Number(row.collateralAmountUsd ?? 0).toFixed(0),
+        suppliedValueUsd: Number(row.suppliedAmountUsd ?? 0).toFixed(2),
+        borrowedValueUsd: Number(row.borrowedAmountUsd ?? 0).toFixed(2),
+        collateralValueUsd: Number(row.collateralAmountUsd ?? 0).toFixed(2),
       }));
 
       return userHistory;

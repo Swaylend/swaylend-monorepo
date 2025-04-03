@@ -346,7 +346,7 @@ export const Markets = () => {
 
           <div className="flex justify-start gap-x-12 mt-8">
             <div>
-              <div className="text-lg font-medium text-purple">
+              <div className="text-lg font-medium text-primary">
                 My Borrowing
               </div>
               <div className="text-xl font-medium">
@@ -362,7 +362,7 @@ export const Markets = () => {
               </div>
             </div>
             <div>
-              <div className="text-lg font-medium text-primary">My Earning</div>
+              <div className="text-lg font-medium text-purple">My Earning</div>
               <div className="text-xl font-medium">
                 {getFormattedPrice(totalSuppliedBaseAssets)}
               </div>

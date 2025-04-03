@@ -59,14 +59,14 @@ export const MultiMarketChart = ({
           </div>
           <div className="flex justify-between gap-x-2 items-center mt-2">
             <div className="flex gap-x-2 items-center">
-              <div className="w-2 h-2 rounded-full bg-purple" />
+              <div className="w-2 h-2 rounded-full bg-primary" />
               <div className="text-white/60 text-xs font-normal">Earning</div>
             </div>
             <div>{getFormattedPrice(BigNumber(payload[0].value))}</div>
           </div>
           <div className="flex justify-between gap-x-2 items-center mt-2">
             <div className="flex gap-x-2 items-center">
-              <div className="w-2 h-2 rounded-full bg-primary" />
+              <div className="w-2 h-2 rounded-full bg-purple" />
               <div className="text-white/60 text-xs font-normal">Borrowing</div>
             </div>
             <div>{getFormattedPrice(BigNumber(payload[1].value))}</div>
@@ -177,11 +177,11 @@ export const MultiMarketChart = ({
               cursor={<CustomCursor />}
             />
             <defs>
-              <linearGradient id="color1" x1="0" y1="0" x2="0" y2="1">
+              <linearGradient id="color2" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="#8b5cf6" stopOpacity={0.9} />
                 <stop offset="100%" stopColor="#8b5cf6" stopOpacity={0.2} />
               </linearGradient>
-              <linearGradient id="color2" x1="0" y1="0" x2="0" y2="1">
+              <linearGradient id="color1" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="#3FE8BD" stopOpacity={0.9} />
                 <stop offset="100%" stopColor="#3FE8BD" stopOpacity={0.2} />
               </linearGradient>
