@@ -14,29 +14,62 @@ import {
   ChartContainer,
   ChartTooltip,
 } from '@/components/ui/chart';
-import type { ChartData } from '@/lib/charts';
 import { getFormattedPrice } from '@/utils';
 import BigNumber from 'bignumber.js';
+import { useMemo } from 'react';
 
-export const MultiMarketChart = ({
+type Row = {
+  timestamp: number;
+  suppliedValueUsd: number;
+  borrowedValueUsd: number;
+  collateralValueUsd: number;
+};
+
+export const UserHistoryChart = ({
   chartData,
+  lastRow,
 }: {
-  chartData: ChartData[] | undefined;
+  chartData: Row[] | undefined;
+  lastRow: any | undefined;
 }) => {
-  if (!chartData) return null;
+  if (!chartData || chartData.length === 0) {
+    return (
+      <div className="w-full text-center py-4">No chart data available</div>
+    );
+  }
+
+  const updatedChartData = useMemo(() => {
+    if (!lastRow || chartData.length === 0) return chartData;
+
+    const {
+      collateralAmountUsd: collateralValueUsd,
+      suppliedAmountUsd: suppliedValueUsd,
+      borrowedAmountUsd: borrowedValueUsd,
+    } = lastRow;
+
+    const newChartData = [...chartData];
+    newChartData[newChartData.length - 1] = {
+      timestamp: newChartData[newChartData.length - 1].timestamp,
+      suppliedValueUsd,
+      borrowedValueUsd,
+      collateralValueUsd,
+    };
+
+    return newChartData;
+  }, [lastRow, chartData]);
 
   const chartConfig = {
     suppliedValueUsd: {
       label: 'Earning',
-      color: 'hsl(var(--primary))',
+      color: '#8B5CF6', // Match the gradient color
     },
     borrowedValueUsd: {
       label: 'Borrowing',
-      color: '#918E8E',
+      color: '#3FE8BD', // Match the gradient color
     },
     collateralValueUsd: {
       label: 'Collateral',
-      color: '#8B5CF6',
+      color: '#918E8E',
     },
   } satisfies ChartConfig;
 
@@ -59,14 +92,14 @@ export const MultiMarketChart = ({
           </div>
           <div className="flex justify-between gap-x-2 items-center mt-2">
             <div className="flex gap-x-2 items-center">
-              <div className="w-2 h-2 rounded-full bg-primary" />
+              <div className="w-2 h-2 rounded-full bg-[#3FE8BD]" />
               <div className="text-white/60 text-xs font-normal">Earning</div>
             </div>
             <div>{getFormattedPrice(BigNumber(payload[0].value))}</div>
           </div>
           <div className="flex justify-between gap-x-2 items-center mt-2">
             <div className="flex gap-x-2 items-center">
-              <div className="w-2 h-2 rounded-full bg-purple" />
+              <div className="w-2 h-2 rounded-full bg-[#8B5CF6]" />
               <div className="text-white/60 text-xs font-normal">Borrowing</div>
             </div>
             <div>{getFormattedPrice(BigNumber(payload[1].value))}</div>
@@ -125,16 +158,18 @@ export const MultiMarketChart = ({
   }
 
   return (
-    <ResponsiveContainer width="100%">
-      {chartData ? (
+    <div className="max-w-[540px] w-full h-[240px]">
+      <ResponsiveContainer width="100%" height="100%">
         <ChartContainer config={chartConfig}>
           <AreaChart
             className="max-lg:hidden"
             accessibilityLayer
-            data={chartData}
+            data={updatedChartData}
             margin={{
               left: 16,
               right: 16,
+              top: 10,
+              bottom: 10,
             }}
           >
             <CartesianGrid vertical={false} stroke="#ffffff" opacity={0.2} />
@@ -145,7 +180,6 @@ export const MultiMarketChart = ({
               tickMargin={10}
               minTickGap={30}
               padding={{ left: 10, right: 10 }}
-              interval="preserveStartEnd"
               tickFormatter={(value: number) => {
                 return dateFormatter.format(new Date(value * 1000));
               }}
@@ -200,9 +234,9 @@ export const MultiMarketChart = ({
               type="monotone"
               fill="url(#color1)"
               fillOpacity={0.4}
-              stroke="url(#color1)"
+              stroke="#3FE8BD"
               strokeWidth={2}
-              stackId="a"
+              stackId="1"
             />
             <Area
               dataKey="borrowedValueUsd"
@@ -210,8 +244,8 @@ export const MultiMarketChart = ({
               fill="url(#color2)"
               fillOpacity={0.4}
               strokeWidth={2}
-              stroke="url(#color2)"
-              stackId="b"
+              stroke="#8B5CF6"
+              stackId="2"
             />
             <Area
               dataKey="collateralValueUsd"
@@ -219,14 +253,12 @@ export const MultiMarketChart = ({
               fill="url(#color3)"
               fillOpacity={0.4}
               strokeWidth={2}
-              stroke="url(#color3)"
-              stackId="c"
+              stroke="#918E8E"
+              stackId="3"
             />
           </AreaChart>
         </ChartContainer>
-      ) : (
-        <div className="max-md:hidden">Loading...</div>
-      )}
-    </ResponsiveContainer>
+      </ResponsiveContainer>
+    </div>
   );
 };
