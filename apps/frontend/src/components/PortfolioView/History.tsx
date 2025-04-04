@@ -64,8 +64,6 @@ export const History = () => {
     return Math.ceil(totalTransactionCount / TX_HISTORY_PAGE_SIZE);
   }, [totalTransactionCount]);
 
-  console.log('ttc', totalTransactionCount);
-
   return (
     <div>
       <Table className="max-lg:hidden mt-12">

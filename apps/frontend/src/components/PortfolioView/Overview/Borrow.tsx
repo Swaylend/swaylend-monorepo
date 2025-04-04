@@ -41,6 +41,7 @@ import {
   TableHeader,
   TableRow,
 } from '../../ui/table';
+import { cn } from '@/lib/utils';
 
 const SkeletonRow = (
   <TableRow>
@@ -357,7 +358,14 @@ export const Borrow = () => {
                       </div>
                     </TableCell>
                     <TableCell
-                      className={`font-semibold bg-card ${currentCollateralUtilizationUSDC > 80 && 'text-red-500'} ${currentCollateralUtilizationUSDC > 60 && currentCollateralUtilizationUSDC <= 80 && 'text-yellow-500'} ${currentCollateralUtilizationUSDC <= 60 && 'text-primary'}`}
+                      className={cn(
+                        'font-semibold bg-card',
+                        currentCollateralUtilizationUSDC > 80 && 'text-red-500',
+                        currentCollateralUtilizationUSDC > 60 &&
+                          currentCollateralUtilizationUSDC <= 80 &&
+                          'text-yellow-500',
+                        currentCollateralUtilizationUSDC <= 60 && 'text-primary'
+                      )}
                     >
                       {currentCollateralUtilizationUSDC}%
                     </TableCell>
