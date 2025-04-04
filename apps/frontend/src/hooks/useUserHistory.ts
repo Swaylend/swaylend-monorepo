@@ -17,7 +17,7 @@ const userHistoryQuery = (account: string) => {
   const poolAddress =
     '0x657ab45a6eb98a4893a99fd104347179151e8b3828fd8f2a108cc09770d1ebae';
   return `
-        WITH FML AS (
+        WITH bps AS (
             SELECT 
                 MAX(borrowedAmountUsd) as borrowedAmountUsd,
                 MIN(suppliedAmountUsd) as suppliedAmountUsd,
@@ -30,7 +30,7 @@ const userHistoryQuery = (account: string) => {
                 AND __timestamp__ >= toDate(DATE_SUB(NOW(), INTERVAL 6 DAY))
             GROUP BY DATE(timestamp)
         ),
-        FMLTWO AS (
+        cps AS (
             SELECT MAX(collateralAmountUsd) as collateralAmountUsd,
             MAX(toUnixTimestamp(timestamp)) as timestampUnix,
             DATE(timestamp) AS day
@@ -43,8 +43,8 @@ const userHistoryQuery = (account: string) => {
         )
         SELECT 
             *
-        FROM FML AS SUP
-        LEFT JOIN FMLTWO AS COL ON SUP.day = COL.day`;
+        FROM bps
+        LEFT JOIN cps ON bps.day = cps.day`;
 };
 
 export const useUserHistory = () => {
