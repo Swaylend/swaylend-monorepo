@@ -4,9 +4,9 @@ import { useIsConnected } from '@fuels/react';
 import React, { useState } from 'react';
 import { Tabs, TabsList, TabsTrigger } from '../ui/tabs';
 import { History } from './History';
+import { Markets } from './Markets';
 import { Overview } from './Overview';
 import { Stats } from './Stats';
-import { Markets } from './Markets';
 
 export const PortfolioView = () => {
   const [portfolioView, setPortfolioView] = useState('markets');

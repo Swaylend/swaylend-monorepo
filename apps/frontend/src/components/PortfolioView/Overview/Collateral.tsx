@@ -9,6 +9,7 @@ import {
   useUserCollateralAssets,
   useUserCollateralUtilization,
 } from '@/hooks';
+import { useUserLiquidationPoint } from '@/hooks/useUserLiquidationPoint';
 import {
   ACTION_TYPE,
   MARKET_MODE,
@@ -40,7 +41,6 @@ import {
   TableHeader,
   TableRow,
 } from '../../ui/table';
-import { useUserLiquidationPoint } from '@/hooks/useUserLiquidationPoint';
 
 type TableRowProps = {
   market: string;

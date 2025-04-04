@@ -1,23 +1,18 @@
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import React, { useMemo } from 'react';
-import Image from 'next/image';
-import { formatUnits, getFormattedPrice, SYMBOL_TO_ICON } from '@/utils';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
-  useUserSupplyBorrow,
-  usePrice,
-  useUserCollateralAssets,
-  useMarketConfiguration,
-  useCollateralConfigurations,
-  useUserCollateralUtilization,
   useApr,
   useBorrowCapacity,
+  useCollateralConfigurations,
+  useMarketConfiguration,
+  usePrice,
+  useUserCollateralAssets,
+  useUserCollateralUtilization,
+  useUserSupplyBorrow,
 } from '@/hooks';
 import { useUserLiquidationPoint } from '@/hooks/useUserLiquidationPoint';
-import BigNumber from 'bignumber.js';
-import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
 import {
   ACTION_TYPE,
   MARKET_MODE,
@@ -29,7 +24,12 @@ import {
   selectChangeTokenAmount,
   useMarketStore,
 } from '@/stores';
+import { SYMBOL_TO_ICON, formatUnits, getFormattedPrice } from '@/utils';
+import BigNumber from 'bignumber.js';
 import { MoveUpRightIcon } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import React, { useMemo } from 'react';
 
 export const Markets = () => {
   const changeAction = useMarketStore(selectChangeAction);
