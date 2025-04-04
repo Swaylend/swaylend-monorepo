@@ -11,6 +11,7 @@ import {
   useUserSupplyBorrow,
 } from '@/hooks';
 import { useUserLiquidationPoint } from '@/hooks/useUserLiquidationPoint';
+import { cn } from '@/lib/utils';
 import {
   ACTION_TYPE,
   MARKET_MODE,
@@ -41,7 +42,6 @@ import {
   TableHeader,
   TableRow,
 } from '../../ui/table';
-import { cn } from '@/lib/utils';
 
 const SkeletonRow = (
   <TableRow>
