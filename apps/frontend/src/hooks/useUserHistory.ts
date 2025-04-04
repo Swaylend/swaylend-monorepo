@@ -27,17 +27,19 @@ const userHistoryQuery = (account: string) => {
             WHERE chainId = ${appConfig.env === 'testnet' ? 0 : 9889}
                 AND poolAddress = '${poolAddress}'
                 AND userAddress = lower('${account}')
-                AND __timestamp__ >= toDate(DATE_SUB(NOW(), INTERVAL 7 DAY))
+                AND __timestamp__ >= toDate(DATE_SUB(NOW(), INTERVAL 6 DAY))
             GROUP BY DATE(timestamp)
         ),
         FMLTWO AS (
-            SELECT MAX(collateralAmountUsd) as collateralAmountUsd, DATE(__timestamp__) AS day
-                FROM CollateralPosition_raw
+            SELECT MAX(collateralAmountUsd) as collateralAmountUsd,
+            MAX(toUnixTimestamp(timestamp)) as timestampUnix,
+            DATE(timestamp) AS day
+                FROM CollateralPositionSnapshot_raw
                 WHERE chainId = ${appConfig.env === 'testnet' ? 0 : 9889}
                     AND poolAddress = '${poolAddress}'
                     AND userAddress = lower('${account}')
-                    AND __timestamp__ >= toDate(DATE_SUB(NOW(), INTERVAL 7 DAY))
-                GROUP BY DATE(__timestamp__)   
+                    AND __timestamp__ >= toDate(DATE_SUB(NOW(), INTERVAL 6 DAY))
+                GROUP BY DATE(timestamp)   
         )
         SELECT 
             *
@@ -78,7 +80,7 @@ export const useUserHistory = () => {
       }
 
       const userHistory = data.result.rows.map((row: Row) => ({
-        timestamp: row.timestampUnix,
+        timestamp: row.timestampUnix - 7200,
         suppliedValueUsd: Number(row.suppliedAmountUsd ?? 0).toFixed(2),
         borrowedValueUsd: Number(row.borrowedAmountUsd ?? 0).toFixed(2),
         collateralValueUsd: Number(row.collateralAmountUsd ?? 0).toFixed(2),

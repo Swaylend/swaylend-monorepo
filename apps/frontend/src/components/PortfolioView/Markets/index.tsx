@@ -97,12 +97,6 @@ export const Markets = () => {
       isAprPendingUSDC,
       isPendingLP,
       isPendingBC,
-      // isPendingCollateralConfigurationsUSDT,
-      // isPendingMarketConfigurationUSDT,
-      // isPendingUserCollateralAssetsUSDT,
-      // isPendingUserSupplyBorrowUSDT,
-      // isPendingPriceDataUSDT,
-      // isPendingColUtilUSDT,
     ].some((res) => res);
   }, [
     isPendingCollateralConfigurationsUSDC,
@@ -114,33 +108,20 @@ export const Markets = () => {
     isAprPendingUSDC,
     isPendingLP,
     isPendingBC,
-    // isPendingCollateralConfigurationsUSDT,
-    // isPendingMarketConfigurationUSDT,
-    // isPendingUserCollateralAssetsUSDT,
-    // isPendingUserSupplyBorrowUSDT,
-    // isPendingPriceDataUSDT,
-    // isPendingColUtilUSDT,
   ]);
 
   const riskMeter = useMemo(() => {
-    return Math.max(
-      currentCollateralUtilizationUSDC
-      // currentCollateralUtilizationUSDT
-    );
-  }, [currentCollateralUtilizationUSDC /*, currentCollateralUtilizationUSDT*/]);
+    return Math.max(currentCollateralUtilizationUSDC);
+  }, [currentCollateralUtilizationUSDC]);
 
   const totalSuppliedCollateral = useMemo(() => {
     if (
       !priceDataUSDC ||
-      // !priceDataUSDT ||
       !userCollateralAssetsUSDC ||
-      // !userCollateralAssetsUSDT ||
       !colateralConfigurationsUSDC
-      // || !colateralConfigurationsUSDT
     )
       return BigNumber(0);
 
-    // Get supplied assets for USDC
     const suppliedCollateralUSDC = Object.entries(
       userCollateralAssetsUSDC
     ).reduce((acc, [key, value]) => {
@@ -151,92 +132,33 @@ export const Markets = () => {
         )
       );
     }, new BigNumber(0));
-    // Get supplied assets for USDT
-    // const suppliedCollateralUSDT = Object.entries(
-    //   userCollateralAssetsUSDT
-    // ).reduce((acc, [key, value]) => {
-    //   return acc.plus(
-    //     formatUnits(
-    //       value.times(priceDataUSDT.prices[key]),
-    //       colateralConfigurationsUSDT[key].decimals
-    //     )
-    //   );
-    // }, new BigNumber(0));
-    // return suppliedCollateralUSDC.plus(suppliedCollateralUSDT);
 
     return suppliedCollateralUSDC;
-  }, [
-    priceDataUSDC,
-    userCollateralAssetsUSDC,
-    colateralConfigurationsUSDC,
-    // priceDataUSDT,
-    // userCollateralAssetsUSDT,
-    // colateralConfigurationsUSDT,
-  ]);
+  }, [priceDataUSDC, userCollateralAssetsUSDC, colateralConfigurationsUSDC]);
 
   const totalSuppliedBaseAssets = useMemo(() => {
-    if (
-      !marketConfigurationUSDC ||
-      // !marketConfigurationUSDT ||
-      !priceDataUSDC ||
-      // !priceDataUSDT ||
-      !userSupplyBorrowUSDC
-      // || !userSupplyBorrowUSDT
-    )
+    if (!marketConfigurationUSDC || !priceDataUSDC || !userSupplyBorrowUSDC)
       return BigNumber(0);
 
-    // Get supplied USDC
     const suppliedUSDC = formatUnits(
       userSupplyBorrowUSDC.supplied,
       marketConfigurationUSDC.baseTokenDecimals
     );
-    // Get supplied USDT
-    // const suppliedUSDT = formatUnits(
-    //   userSupplyBorrowUSDT.supplied,
-    //   marketConfigurationUSDT.baseTokenDecimals
-    // );
-    //return suppliedUSDC.plus(suppliedUSDT);
+
     return suppliedUSDC;
-  }, [
-    marketConfigurationUSDC,
-    // marketConfigurationUSDT,
-    priceDataUSDC,
-    // priceDataUSDT,
-    userSupplyBorrowUSDC,
-    // userSupplyBorrowUSDT,
-  ]);
+  }, [marketConfigurationUSDC, priceDataUSDC, userSupplyBorrowUSDC]);
 
   const totalBorrowedBaseAssets = useMemo(() => {
-    if (
-      !marketConfigurationUSDC ||
-      // !marketConfigurationUSDT ||
-      !priceDataUSDC ||
-      // !priceDataUSDT ||
-      !userSupplyBorrowUSDC
-      // || !userSupplyBorrowUSDT
-    )
+    if (!marketConfigurationUSDC || !priceDataUSDC || !userSupplyBorrowUSDC)
       return BigNumber(0);
 
-    // Get borrowed USDC
     const borrowedUSDC = formatUnits(
       userSupplyBorrowUSDC.borrowed,
       marketConfigurationUSDC.baseTokenDecimals
     );
-    // Get borrowed USDT
-    // const borrowedUSDT = formatUnits(
-    //   userSupplyBorrowUSDT.borrowed,
-    //   marketConfigurationUSDT.baseTokenDecimals
-    // );
-    // return borrowedUSDC.plus(borrowedUSDT);
+
     return borrowedUSDC;
-  }, [
-    marketConfigurationUSDC,
-    // marketConfigurationUSDT,
-    priceDataUSDC,
-    // priceDataUSDT,
-    userSupplyBorrowUSDC,
-    // userSupplyBorrowUSDT,
-  ]);
+  }, [marketConfigurationUSDC, priceDataUSDC, userSupplyBorrowUSDC]);
 
   const marketType = useMemo(() => {
     if (totalBorrowedBaseAssets.gte(totalSuppliedBaseAssets)) {
@@ -320,19 +242,31 @@ export const Markets = () => {
           <div className="flex justify-start gap-x-12">
             <div>
               <div className="text-md text-gray-400">Market Position</div>
-              <div className="text-lg font-medium">{marketType}</div>
+              {isLoading ? (
+                <Skeleton className="h-6 w-16 bg-white/5" />
+              ) : (
+                <div className="text-lg font-medium">{marketType}</div>
+              )}
             </div>
             <div>
               <div className="text-md text-gray-400">APY</div>
-              <div className="text-lg font-medium">{apy}%</div>
+              {isLoading ? (
+                <Skeleton className="h-6 w-16 bg-white/5" />
+              ) : (
+                <div className="text-lg font-medium">{apy}%</div>
+              )}
             </div>
             <div>
               <div className="text-md text-gray-400">Rewards APY</div>
-              <div className="text-lg font-medium">{rewardApy}%</div>
+              {isLoading ? (
+                <Skeleton className="h-6 w-16 bg-white/5" />
+              ) : (
+                <div className="text-lg font-medium">{rewardApy}%</div>
+              )}
             </div>
             <div>
               <div className="text-md text-gray-400">Points</div>
-              <div className="text-lg font-medium">
+              <div className="text-lg flex justify-center font-medium">
                 <Image
                   src={SYMBOL_TO_ICON.SWAY}
                   alt={'USDC'}
@@ -349,23 +283,35 @@ export const Markets = () => {
               <div className="text-lg font-medium text-primary">
                 My Borrowing
               </div>
-              <div className="text-xl font-medium">
-                {getFormattedPrice(totalBorrowedBaseAssets)}
-              </div>
+              {isLoading ? (
+                <Skeleton className="h-7 w-24 bg-white/5" />
+              ) : (
+                <div className="text-xl font-medium">
+                  {getFormattedPrice(totalBorrowedBaseAssets)}
+                </div>
+              )}
             </div>
             <div>
               <div className="text-lg font-medium text-gray-400">
                 My Collateral
               </div>
-              <div className="text-xl font-medium">
-                {getFormattedPrice(totalSuppliedCollateral)}
-              </div>
+              {isLoading ? (
+                <Skeleton className="h-7 w-24 bg-white/5" />
+              ) : (
+                <div className="text-xl font-medium">
+                  {getFormattedPrice(totalSuppliedCollateral)}
+                </div>
+              )}
             </div>
             <div>
               <div className="text-lg font-medium text-purple">My Earning</div>
-              <div className="text-xl font-medium">
-                {getFormattedPrice(totalSuppliedBaseAssets)}
-              </div>
+              {isLoading ? (
+                <Skeleton className="h-7 w-24 bg-white/5" />
+              ) : (
+                <div className="text-xl font-medium">
+                  {getFormattedPrice(totalSuppliedBaseAssets)}
+                </div>
+              )}
             </div>
           </div>
           {marketType === 'Borrow' && (
@@ -381,9 +327,7 @@ export const Markets = () => {
                 )}
               </div>
               {isLoading ? (
-                <>
-                  <Skeleton className="w-full h-[45px] rounded-full bg-primary/20" />
-                </>
+                <Skeleton className="w-full h-[45px] rounded-full bg-white/5" />
               ) : (
                 <div className="w-full h-[45px] rounded-full bg-white/5 overflow-hidden">
                   <div
@@ -403,30 +347,52 @@ export const Markets = () => {
 
         <div className="">
           {marketType === 'Borrow' && (
-            <div>
-              <div className="flex justify-between items-center">
-                <div className="text-gray-400">Available to Borrow</div>
-                <div className="text-white font-medium">
-                  {getFormattedPrice(updatedBorrowCapacity)}
+            <div className="flex flex-col justify-between h-full">
+              <div>
+                <div className="flex justify-between items-center">
+                  <div className="text-gray-400">Available to Borrow</div>
+                  {isLoading ? (
+                    <Skeleton className="h-6 w-24 bg-white/5" />
+                  ) : (
+                    <div className="text-white font-medium">
+                      {getFormattedPrice(updatedBorrowCapacity)}
+                    </div>
+                  )}
                 </div>
-              </div>
-              <div className="flex justify-between items-center">
-                <div className="text-gray-400">Loan to Value (LTV)</div>
-                <div className="text-white font-medium">{LTV}%</div>
-              </div>
-              <div className="flex justify-between items-center">
-                <div className="text-gray-400">Health Factor</div>
-                <div className="text-white font-medium">{healthFactor}</div>
-              </div>
-              <div className="flex justify-between items-center">
-                <div className="text-gray-400">Liquidation Point</div>
-                <div className="text-white font-medium">
-                  {getFormattedPrice(userLiquidationPoint ?? BigNumber(0))}
+                <div className="flex justify-between items-center">
+                  <div className="text-gray-400">Loan to Value (LTV)</div>
+                  {isLoading ? (
+                    <Skeleton className="h-6 w-16 bg-white/5" />
+                  ) : (
+                    <div className="text-white font-medium">{LTV}%</div>
+                  )}
                 </div>
-              </div>
-              <div className="flex justify-between items-center">
-                <div className="text-gray-400">Net APY</div>
-                <div className="text-white font-medium">{netApy}%</div>
+                <div className="flex justify-between items-center">
+                  <div className="text-gray-400">Health Factor</div>
+                  {isLoading ? (
+                    <Skeleton className="h-6 w-16 bg-white/5" />
+                  ) : (
+                    <div className="text-white font-medium">{healthFactor}</div>
+                  )}
+                </div>
+                <div className="flex justify-between items-center">
+                  <div className="text-gray-400">Liquidation Point</div>
+                  {isLoading ? (
+                    <Skeleton className="h-6 w-24 bg-white/5" />
+                  ) : (
+                    <div className="text-white font-medium">
+                      {getFormattedPrice(userLiquidationPoint ?? BigNumber(0))}
+                    </div>
+                  )}
+                </div>
+                <div className="flex justify-between items-center">
+                  <div className="text-gray-400">Net APY</div>
+                  {isLoading ? (
+                    <Skeleton className="h-6 w-16 bg-white/5" />
+                  ) : (
+                    <div className="text-white font-medium">{netApy}%</div>
+                  )}
+                </div>
               </div>
               <div className="flex w-full justify-end">
                 <Link href="/" className="mt-4">
@@ -439,6 +405,7 @@ export const Markets = () => {
                         'USDC'
                       );
                     }}
+                    disabled={isLoading}
                   >
                     Open Market
                   </Button>
@@ -448,10 +415,14 @@ export const Markets = () => {
           )}
 
           {marketType === 'Earn' && (
-            <div>
+            <div className="flex flex-col justify-between h-full">
               <div className="flex justify-between items-center">
                 <div className="text-gray-400">Net APY</div>
-                <div className="text-white font-medium">{netApy}%</div>
+                {isLoading ? (
+                  <Skeleton className="h-6 w-16 bg-white/5" />
+                ) : (
+                  <div className="text-white font-medium">{netApy}%</div>
+                )}
               </div>
               <div className="flex w-full justify-end">
                 <Link href="/" className="mt-4">
@@ -464,6 +435,7 @@ export const Markets = () => {
                         'USDC'
                       );
                     }}
+                    disabled={isLoading}
                   >
                     Open Market
                   </Button>
