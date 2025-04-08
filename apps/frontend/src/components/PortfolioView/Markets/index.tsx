@@ -27,7 +27,6 @@ import {
 } from '@/stores';
 import { SYMBOL_TO_ICON, formatUnits, getFormattedPrice } from '@/utils';
 import BigNumber from 'bignumber.js';
-import { MoveUpRightIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useMemo } from 'react';
@@ -191,19 +190,26 @@ export const Markets = () => {
 
   const LTV = useMemo(() => {
     if (marketType === 'Borrow') {
+      if (totalSuppliedCollateral.eq(0)) {
+        return '0';
+      }
+
       return totalBorrowedBaseAssets
         .div(totalSuppliedCollateral)
         .times(100)
         .toFixed(2);
     }
-    return 'N/A';
+    return '0';
   }, [marketType, collateralUtilizationUSDC]);
 
   const healthFactor = useMemo(() => {
     if (marketType === 'Borrow') {
+      if (totalSuppliedCollateral.eq(0)) {
+        return '0';
+      }
       return BigNumber(100).minus(LTV).toFixed(2);
     }
-    return 'N/A';
+    return '0';
   }, [marketType, collateralUtilizationUSDC]);
 
   const updatedBorrowCapacity = useMemo(() => {
