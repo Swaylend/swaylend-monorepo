@@ -1,3 +1,4 @@
+import { InfoIcon } from '@/components/InfoIcon';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -237,7 +238,7 @@ export const Markets = () => {
           USDC Market
         </div>
       </CardHeader>
-      <CardContent className="grid grid-cols-2 gap-x-16 pt-4">
+      <CardContent className="flex justify-between gap-x-16 pt-4">
         <div>
           <div className="flex justify-start gap-x-12">
             <div>
@@ -245,7 +246,11 @@ export const Markets = () => {
               {isLoading ? (
                 <Skeleton className="h-6 w-16 bg-white/5" />
               ) : (
-                <div className="text-lg font-medium">{marketType}</div>
+                <div
+                  className={`text-lg ${marketType === 'Earn' ? 'text-primary' : 'text-purple'}`}
+                >
+                  {marketType}
+                </div>
               )}
             </div>
             <div>
@@ -253,7 +258,11 @@ export const Markets = () => {
               {isLoading ? (
                 <Skeleton className="h-6 w-16 bg-white/5" />
               ) : (
-                <div className="text-lg font-medium">{apy}%</div>
+                <div
+                  className={`text-lg ${marketType === 'Earn' ? 'text-primary' : 'text-purple'}`}
+                >
+                  {apy}%
+                </div>
               )}
             </div>
             <div>
@@ -261,7 +270,9 @@ export const Markets = () => {
               {isLoading ? (
                 <Skeleton className="h-6 w-16 bg-white/5" />
               ) : (
-                <div className="text-lg font-medium">{rewardApy}%</div>
+                <div className="text-lg text-primary font-medium">
+                  {rewardApy}%
+                </div>
               )}
             </div>
             <div>
@@ -280,7 +291,7 @@ export const Markets = () => {
 
           <div className="flex justify-start gap-x-12 mt-8">
             <div>
-              <div className="text-lg font-medium text-primary">
+              <div className="text-lg font-medium text-purple">
                 My Borrowing
               </div>
               {isLoading ? (
@@ -304,7 +315,7 @@ export const Markets = () => {
               )}
             </div>
             <div>
-              <div className="text-lg font-medium text-purple">My Earning</div>
+              <div className="text-lg font-medium text-primary">My Earning</div>
               {isLoading ? (
                 <Skeleton className="h-7 w-24 bg-white/5" />
               ) : (
@@ -345,12 +356,15 @@ export const Markets = () => {
           )}
         </div>
 
-        <div className="">
+        <div className="w-full max-w-[320px]">
           {marketType === 'Borrow' && (
             <div className="flex flex-col justify-between h-full">
               <div>
                 <div className="flex justify-between items-center">
-                  <div className="text-gray-400">Available to Borrow</div>
+                  <div className="text-white flex items-center gap-x-1">
+                    Available to Borrow{' '}
+                    <InfoIcon text="Amount available to borrow based on your deposited collateral represented in USD." />
+                  </div>
                   {isLoading ? (
                     <Skeleton className="h-6 w-24 bg-white/5" />
                   ) : (
@@ -360,7 +374,10 @@ export const Markets = () => {
                   )}
                 </div>
                 <div className="flex justify-between items-center">
-                  <div className="text-gray-400">Loan to Value (LTV)</div>
+                  <div className="text-white flex items-center gap-x-1">
+                    Loan to Value (LTV){' '}
+                    <InfoIcon text="Show the amount of loan you can secure using your crypto as collateral. LTV is calculated by dividing the amount of credit you have borrowed by the value of your collateral, expressed as a percentage." />
+                  </div>
                   {isLoading ? (
                     <Skeleton className="h-6 w-16 bg-white/5" />
                   ) : (
@@ -368,15 +385,25 @@ export const Markets = () => {
                   )}
                 </div>
                 <div className="flex justify-between items-center">
-                  <div className="text-gray-400">Health Factor</div>
+                  <div className="text-white flex items-center gap-x-1">
+                    Health Factor{' '}
+                    <InfoIcon text="Collateralization status of a position, defined as the ratio of the borrowing capacity over the outstanding debts. The higher the value is, the safer the state of your funds. If the health factor reaches 1, the liquidation of your collateral will be triggered." />
+                  </div>
                   {isLoading ? (
                     <Skeleton className="h-6 w-16 bg-white/5" />
                   ) : (
-                    <div className="text-white font-medium">{healthFactor}</div>
+                    <div
+                      className={`${Number(healthFactor) > 80 && 'text-red-500'} ${Number(healthFactor) <= 50 && 'text-primary'} ${Number(healthFactor) > 50 && Number(healthFactor) <= 80 && 'text-yellow-500'} font-medium`}
+                    >
+                      {healthFactor}
+                    </div>
                   )}
                 </div>
                 <div className="flex justify-between items-center">
-                  <div className="text-gray-400">Liquidation Point</div>
+                  <div className="text-white flex items-center gap-x-1">
+                    Liquidation Point
+                    <InfoIcon text="Total value of supplied collateral at which your position will be liquidated represented in USD." />
+                  </div>
                   {isLoading ? (
                     <Skeleton className="h-6 w-24 bg-white/5" />
                   ) : (
@@ -386,11 +413,17 @@ export const Markets = () => {
                   )}
                 </div>
                 <div className="flex justify-between items-center">
-                  <div className="text-gray-400">Net APY</div>
+                  <div className="text-white flex gap-x-1 items-center">
+                    Net APY
+                    <InfoIcon
+                      text="Net APY represents the total of Borrow APY and Reward APY, calculated as follows: Net APY = Borrow APY - Reward APY.
+"
+                    />
+                  </div>
                   {isLoading ? (
                     <Skeleton className="h-6 w-16 bg-white/5" />
                   ) : (
-                    <div className="text-white font-medium">{netApy}%</div>
+                    <div className="text-primary font-medium">{netApy}%</div>
                   )}
                 </div>
               </div>
@@ -417,11 +450,17 @@ export const Markets = () => {
           {marketType === 'Earn' && (
             <div className="flex flex-col justify-between h-full">
               <div className="flex justify-between items-center">
-                <div className="text-gray-400">Net APY</div>
+                <div className="text-white flex gap-x-1 items-center">
+                  Net APY
+                  <InfoIcon
+                    text="Net APY represents the total of Earn APY and Reward APY, calculated as follows: Net APY = Earn APY + Reward APY.
+"
+                  />
+                </div>
                 {isLoading ? (
                   <Skeleton className="h-6 w-16 bg-white/5" />
                 ) : (
-                  <div className="text-white font-medium">{netApy}%</div>
+                  <div className="text-primary font-medium">{netApy}%</div>
                 )}
               </div>
               <div className="flex w-full justify-end">

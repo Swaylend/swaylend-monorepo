@@ -158,7 +158,7 @@ export const UserHistoryChart = ({
   }
 
   return (
-    <div className="max-w-[540px] w-full h-[240px]">
+    <div className="w-full h-[240px]">
       <ResponsiveContainer width="100%" height="100%">
         <ChartContainer config={chartConfig}>
           <AreaChart
