@@ -351,7 +351,7 @@ export const Borrow = () => {
                       {borrowedUSDC.toFixed(2)} USDC
                     </TableCell>
                     <TableCell>
-                      <div className="flex gap-x-2 items-center text-md font-medium text-white">
+                      <div className="flex gap-x-2 items-center text-md font-medium text-primary underline">
                         <div>
                           {aprDataUSDC?.borrowBaseApr.times(100).toFixed(2)}%
                         </div>
@@ -383,7 +383,7 @@ export const Borrow = () => {
                         />
                       </div>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="flex gap-x-2">
                       <Link href="/">
                         <Button
                           onMouseDown={() => {
@@ -394,7 +394,21 @@ export const Borrow = () => {
                             );
                           }}
                         >
-                          <MoveUpRightIcon size={20} />
+                          +
+                        </Button>
+                      </Link>
+                      <Link href="/">
+                        <Button
+                          variant={'secondary'}
+                          onMouseDown={() => {
+                            handleBaseTokenClick(
+                              ACTION_TYPE.REPAY,
+                              marketConfigurationUSDC?.baseToken.bits ?? '',
+                              'USDC'
+                            );
+                          }}
+                        >
+                          -
                         </Button>
                       </Link>
                     </TableCell>

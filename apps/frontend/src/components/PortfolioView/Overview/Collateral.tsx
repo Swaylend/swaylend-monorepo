@@ -142,14 +142,24 @@ const CollateralTableRow = ({
           />
         </div>
       </TableCell>
-      <TableCell className="text-white font-semibold bg-card">
+      <TableCell className="text-white font-semibold flex gap-x-2 bg-card">
         <Link href="/">
           <Button
+            onMouseDown={() => {
+              handleCollateralTokenClick(ACTION_TYPE.SUPPLY, assetId, market);
+            }}
+          >
+            +
+          </Button>
+        </Link>
+        <Link href="/">
+          <Button
+            variant={'secondary'}
             onMouseDown={() => {
               handleCollateralTokenClick(ACTION_TYPE.WITHDRAW, assetId, market);
             }}
           >
-            <MoveUpRightIcon size={20} />
+            -
           </Button>
         </Link>
       </TableCell>

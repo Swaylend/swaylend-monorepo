@@ -251,7 +251,7 @@ export const Liquidity = () => {
                       {suppliedUSDC.toFixed(2)} USDC
                     </TableCell>
                     <TableCell>
-                      <div className="flex gap-x-2 items-center text-md font-medium text-white">
+                      <div className="flex gap-x-2 items-center text-md font-medium text-primary underline">
                         <div>
                           {aprDataUSDC?.supplyBaseApr.times(100).toFixed(2)}%
                         </div>
@@ -269,19 +269,35 @@ export const Liquidity = () => {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Link href="/">
-                        <Button
-                          onMouseDown={() => {
-                            handleBaseTokenClick(
-                              ACTION_TYPE.SUPPLY,
-                              marketConfigurationUSDC?.baseToken.bits ?? '',
-                              'USDC'
-                            );
-                          }}
-                        >
-                          <MoveUpRightIcon size={20} />
-                        </Button>
-                      </Link>
+                      <div className="flex gap-x-2">
+                        <Link href="/">
+                          <Button
+                            onMouseDown={() => {
+                              handleBaseTokenClick(
+                                ACTION_TYPE.SUPPLY,
+                                marketConfigurationUSDC?.baseToken.bits ?? '',
+                                'USDC'
+                              );
+                            }}
+                          >
+                            +
+                          </Button>
+                        </Link>
+                        <Link href="/">
+                          <Button
+                            variant={'secondary'}
+                            onMouseDown={() => {
+                              handleBaseTokenClick(
+                                ACTION_TYPE.WITHDRAW,
+                                marketConfigurationUSDC?.baseToken.bits ?? '',
+                                'USDC'
+                              );
+                            }}
+                          >
+                            -
+                          </Button>
+                        </Link>
+                      </div>
                     </TableCell>
                   </TableRow>
                 )}
