@@ -44,7 +44,7 @@ export const PortfolioView = () => {
               My Positions
             </TabsTrigger>
             <TabsTrigger className="max-sm:py-1.5 max-sm:px-6" value="history">
-              Transaction History
+              My Transactions
             </TabsTrigger>
           </TabsList>
         </Tabs>

@@ -223,8 +223,8 @@ export const Stats = () => {
 
   return (
     <div>
-      <div className="flex justify-between items-start gap-x-12">
-        <div className="h-[240px] w-1/2 flex flex-col ">
+      <div className="flex justify-between items-start gap-x-10">
+        <div className="h-[240px] w-3/5 xl:w-1/2 flex flex-col ">
           <div className="flex flex-1 flex-col justify-start items-start">
             <div className="text-moon text-sm font-semibold">Total Assets</div>
             {isLoading ? (
@@ -238,7 +238,7 @@ export const Stats = () => {
             )}
           </div>
           <div className="flex w-full justify-between pb-9">
-            <div className="flex items-end gap-x-16">
+            <div className="w-full flex items-end gap-x-8">
               <div>
                 <div className="flex gap-x-2 items-center">
                   <div className="w-2 h-2 rounded-full bg-primary" />
