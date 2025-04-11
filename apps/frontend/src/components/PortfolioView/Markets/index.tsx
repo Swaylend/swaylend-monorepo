@@ -246,7 +246,7 @@ export const Markets = () => {
       </CardHeader>
       <CardContent className="flex justify-between gap-x-16 pt-4">
         <div>
-          <div className="flex justify-start gap-x-12">
+          <div className="flex justify-start gap-x-7">
             <div>
               <div className="text-md text-gray-400">Market Position</div>
               {isLoading ? (
@@ -297,35 +297,35 @@ export const Markets = () => {
 
           <div className="flex justify-start gap-x-12 mt-8">
             <div>
-              <div className="text-lg font-medium text-purple">
+              <div className="text-md font-medium text-purple">
                 My Borrowing
               </div>
               {isLoading ? (
                 <Skeleton className="h-7 w-24 bg-white/5" />
               ) : (
-                <div className="text-xl font-medium">
+                <div className="text-[24px] font-medium">
                   {getFormattedPrice(totalBorrowedBaseAssets)}
                 </div>
               )}
             </div>
             <div>
-              <div className="text-lg font-medium text-gray-400">
+              <div className="text-md font-medium text-gray-400">
                 My Collateral
               </div>
               {isLoading ? (
                 <Skeleton className="h-7 w-24 bg-white/5" />
               ) : (
-                <div className="text-xl font-medium">
+                <div className="text-[24px] font-medium">
                   {getFormattedPrice(totalSuppliedCollateral)}
                 </div>
               )}
             </div>
             <div>
-              <div className="text-lg font-medium text-primary">My Earning</div>
+              <div className="text-md font-medium text-primary">My Earning</div>
               {isLoading ? (
                 <Skeleton className="h-7 w-24 bg-white/5" />
               ) : (
-                <div className="text-xl font-medium">
+                <div className="text-[24px] font-medium">
                   {getFormattedPrice(totalSuppliedBaseAssets)}
                 </div>
               )}
@@ -365,7 +365,7 @@ export const Markets = () => {
         <div className="w-full max-w-[320px]">
           {marketType === 'Borrow' && (
             <div className="flex flex-col justify-between h-full">
-              <div>
+              <div className="flex flex-col gap-y-[5px]">
                 <div className="flex justify-between items-center">
                   <div className="text-white flex items-center gap-x-1">
                     Available to Borrow{' '}

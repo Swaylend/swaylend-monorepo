@@ -223,9 +223,9 @@ export const Stats = () => {
 
   return (
     <div>
-      <div className="flex justify-between items-start gap-x-16">
-        <div className="w-1/2">
-          <div className="flex flex-col justify-start items-start">
+      <div className="flex justify-between items-start gap-x-12">
+        <div className="h-[240px] w-1/2 flex flex-col ">
+          <div className="flex flex-1 flex-col justify-start items-start">
             <div className="text-moon text-sm font-semibold">Total Assets</div>
             {isLoading ? (
               <>
@@ -237,7 +237,7 @@ export const Stats = () => {
               </div>
             )}
           </div>
-          <div className="mt-8 flex w-full justify-between">
+          <div className="flex w-full justify-between pb-9">
             <div className="flex items-end gap-x-16">
               <div>
                 <div className="flex gap-x-2 items-center">
@@ -251,7 +251,7 @@ export const Stats = () => {
                     <Skeleton className="w-[100px] h-[40px] rounded-md bg-primary/20" />
                   </>
                 ) : (
-                  <div className="text-white font-bold text-xl">
+                  <div className="text-white font-bold text-[22px] 2xl:text-xl">
                     {getFormattedPrice(totalSuppliedBaseAssets ?? BigNumber(0))}
                   </div>
                 )}
@@ -268,7 +268,7 @@ export const Stats = () => {
                     <Skeleton className="w-[100px] h-[40px] rounded-md bg-primary/20" />
                   </>
                 ) : (
-                  <div className="text-white font-bold text-xl">
+                  <div className="text-white font-bold text-[22px] 2xl:text-xl">
                     {getFormattedPrice(totalBorrowedBaseAssets ?? BigNumber(0))}
                   </div>
                 )}
@@ -286,7 +286,7 @@ export const Stats = () => {
                     <Skeleton className="w-[100px] h-[40px] rounded-md bg-primary/20" />
                   </>
                 ) : (
-                  <div className="text-white font-bold text-xl">
+                  <div className="text-white font-bold text-[22px] 2xl:text-xl">
                     {getFormattedPrice(totalSuppliedCollateral ?? BigNumber(0))}
                   </div>
                 )}
