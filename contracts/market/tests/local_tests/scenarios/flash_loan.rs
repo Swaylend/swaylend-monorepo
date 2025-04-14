@@ -1,6 +1,6 @@
 use crate::utils::{setup, TestBaseAsset, TestData};
 use fuels::types::U256;
-use market::{CollateralConfiguration, FlashLoanScript, MarketConfiguration, PriceDataUpdate};
+use market::{CollateralConfiguration, FlashLoanContract, MarketConfiguration, PriceDataUpdate};
 use market_sdk::parse_units;
 use std::process::Command;
 
@@ -22,6 +22,7 @@ async fn flash_loan_test() {
         prices,
         usdc_contract,
         eth,
+        flash_loaner,
         ..
     } = setup(None, TestBaseAsset::USDC).await;
 
@@ -39,11 +40,10 @@ async fn flash_loan_test() {
         .await;
     assert!(res.is_ok());
 
-    let bin_path = "../flash-loan/out/release/flash-loan.bin";
+    let result = flash_loaner
+        .execute_operation(1000, alice_account, vec![])
+        .await
+        .unwrap();
 
-    let instance = FlashLoanScript::new(bob.clone(), bin_path);
-    let response = instance.main().call().await.unwrap();
-
-    let logs = response.decode_logs();
-    println!("{:?}", logs);
+    assert!(result);
 }

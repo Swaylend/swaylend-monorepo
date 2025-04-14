@@ -1,15 +1,16 @@
 use chrono::Utc;
+
 use fuels::accounts::wallet::WalletUnlocked;
 use fuels::test_helpers::{
-    launch_custom_provider_and_get_wallets, NodeConfig, Trigger, WalletsConfig
+    launch_custom_provider_and_get_wallets, NodeConfig, Trigger, WalletsConfig,
 };
 use fuels::types::{Bits256, ContractId, Identity};
+use market::FlashLoanContract;
 use market_sdk::{get_market_config, Market};
 use pyth_mock_sdk::PythMockContract;
 use std::collections::HashMap;
 use std::result::Result::Ok;
 use token_sdk::{Asset, TokenAsset, TokenContract};
-
 pub fn print_case_title(num: u8, name: &str, call: &str, amount: &str) {
     println!(
         r#"
@@ -55,6 +56,7 @@ pub struct TestData {
     pub chad_account: Identity,
     pub oracle: PythMockContract,
     pub market: Market,
+    pub flash_loaner: FlashLoanContract<WalletUnlocked>,
     pub usdc: Asset,
     pub usdc_contract: TokenAsset,
     pub usdt: Asset,
@@ -117,6 +119,9 @@ pub async fn setup(debug_step: Option<u64>, base_asset: TestBaseAsset) -> TestDa
         }
     };
 
+    //--------------- FLASH LOAN ---------------
+    let flash_loaner = FlashLoan::deploy(&admin).await.unwrap();
+
     // debug step
     let debug_step: u64 = debug_step.unwrap_or(10_000);
     let market = Market::deploy(&admin, debug_step, false).await.unwrap();
@@ -178,6 +183,7 @@ pub async fn setup(debug_step: Option<u64>, base_asset: TestBaseAsset) -> TestDa
         chad_account: chad.address().into(),
         oracle,
         market,
+        flash_loaner,
         usdc: usdc.clone(),
         usdc_contract,
         usdt: usdt.clone(),
