@@ -6,7 +6,7 @@ edition = "2021"
 license = "Apache-2.0"
 
 [lib]
-path = "src/lib.rs"
+path = "core/lib.rs"
 
 [dependencies]
 fuels = { workspace = true }

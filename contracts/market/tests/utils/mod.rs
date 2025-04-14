@@ -121,7 +121,7 @@ pub async fn setup(debug_step: Option<u64>, base_asset: TestBaseAsset) -> TestDa
     };
 
     //--------------- FLASH LOAN ---------------
-    let flash_loaner = FlashLoan::deploy(&admin).await.unwrap();
+    let flash_loaner = FlashLoan::deploy(&admin, false).await.unwrap();
 
     // debug step
     let debug_step: u64 = debug_step.unwrap_or(10_000);

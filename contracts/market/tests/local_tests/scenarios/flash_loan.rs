@@ -45,5 +45,5 @@ async fn flash_loan_test() {
         .await
         .unwrap();
 
-    assert!(result);
+    assert!(result.value);
 }

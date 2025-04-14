@@ -30,7 +30,7 @@ impl FlashLoan {
         let root = PathBuf::from(env!("CARGO_WORKSPACE_DIR"));
 
         let storage_configuration = StorageConfiguration::default().add_slot_overrides_from_file(
-            root.join("contracts/flash_loan/out/release/flash-loan-storage_slots.json"),
+            root.join("contracts/flash-loan/out/release/flash-loan-storage_slots.json"),
         )?;
 
         let config = LoadConfiguration::default()
@@ -41,14 +41,20 @@ impl FlashLoan {
             let mut rng = rand::thread_rng();
             let salt = rng.gen::<[u8; 32]>();
 
-            Contract::load_from("./out/release/flash-loan.bin", config)?
-                .with_salt(salt)
-                .deploy(wallet, TxPolicies::default())
-                .await?
+            Contract::load_from(
+                root.join("contracts/flash-loan/out/release/flash-loan.bin"),
+                config,
+            )?
+            .with_salt(salt)
+            .deploy(wallet, TxPolicies::default())
+            .await?
         } else {
-            Contract::load_from("./out/release/flash-loan.bin", config)?
-                .deploy(wallet, TxPolicies::default())
-                .await?
+            Contract::load_from(
+                root.join("contracts/flash-loan/out/release/flash-loan.bin"),
+                config,
+            )?
+            .deploy(wallet, TxPolicies::default())
+            .await?
         };
 
         let flash_loan = FlashLoanContract::new(id.clone(), wallet.clone());
@@ -85,7 +91,7 @@ impl FlashLoan {
         amount: u64,
         initiator: Identity,
         data: Vec<u8>,
-    ) -> anyhow::Result<CallResponse<()>> {
+    ) -> anyhow::Result<CallResponse<bool>> {
         Ok(self
             .instance
             .methods()

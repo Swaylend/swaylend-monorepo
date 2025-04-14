@@ -5,6 +5,7 @@ version = "0.1.0"
 edition = "2021"
 license = "Apache-2.0"
 
+
 [dependencies]
 flash_loan = { workspace = true }
 pyth_sdk = { workspace = true }
