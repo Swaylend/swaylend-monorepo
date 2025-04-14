@@ -42,7 +42,7 @@ import { Points } from './Points';
 
 const NAVBAR_LINKS = [
   { href: '/markets', label: 'Markets', icon: <ChartLine /> },
-  { href: '/portfolio', label: 'Portfolio', icon: <Coins /> },
+  // { href: '/portfolio', label: 'Portfolio', icon: <Coins /> },
   ...(appConfig.env === 'testnet'
     ? [{ href: '/faucet', label: 'Faucet', icon: <Coins /> }]
     : []),
@@ -175,13 +175,13 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
                       </div>
                     </div>
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  {/* <DropdownMenuItem>
                     <Link href="/bridge" className="w-full">
                       <div className="w-full flex items-center justify-between text-md font-medium text-lavender py-1 px-0.5 gap-x-2 cursor-pointer hover:underline">
                         Embedded
                       </div>
                     </Link>
-                  </DropdownMenuItem>
+                  </DropdownMenuItem> */}
                 </DropdownMenuContent>
               </DropdownMenu>
               <DropdownMenu open={openDex} onOpenChange={setOpenDex}>
@@ -210,13 +210,13 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
                       </div>
                     </div>
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
+                  {/* <DropdownMenuItem>
                     <Link href="/swap" className="w-full">
                       <div className="w-full flex items-center justify-between text-md font-medium text-lavender py-1 px-0.5 gap-x-2 cursor-pointer hover:underline">
                         Embedded
                       </div>
                     </Link>
-                  </DropdownMenuItem>
+                  </DropdownMenuItem> */}
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
