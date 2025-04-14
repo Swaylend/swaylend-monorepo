@@ -1,11 +1,12 @@
 use chrono::Utc;
 
+use flash_loan_sdk::FlashLoan;
 use fuels::accounts::wallet::WalletUnlocked;
 use fuels::test_helpers::{
     launch_custom_provider_and_get_wallets, NodeConfig, Trigger, WalletsConfig,
 };
 use fuels::types::{Bits256, ContractId, Identity};
-use market::FlashLoanContract;
+
 use market_sdk::{get_market_config, Market};
 use pyth_mock_sdk::PythMockContract;
 use std::collections::HashMap;
@@ -56,7 +57,7 @@ pub struct TestData {
     pub chad_account: Identity,
     pub oracle: PythMockContract,
     pub market: Market,
-    pub flash_loaner: FlashLoanContract<WalletUnlocked>,
+    pub flash_loaner: FlashLoan,
     pub usdc: Asset,
     pub usdc_contract: TokenAsset,
     pub usdt: Asset,

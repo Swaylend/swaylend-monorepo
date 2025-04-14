@@ -2,9 +2,11 @@
 members = [
   # ABIs
   "abis/market_abi",
+  "abis/flash_loan_abi",
   # Contracts
   "contracts/market",
   "contracts/src-20",
   "contracts/token",
   "contracts/pyth-mock",
+  "contracts/flash-loan",
 ]

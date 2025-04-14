@@ -1,4 +1,4 @@
-use crate::{convert_i256_to_i128, convert_u256_to_u128, format_units, format_units_u128};
+use flash_loan::*;
 use fuels::{
     accounts::{wallet::WalletUnlocked, ViewOnlyAccount},
     programs::{
@@ -12,7 +12,6 @@ use fuels::{
         Identity,
     },
 };
-use market::*;
 use rand::Rng;
 use serde::Deserialize;
 use std::path::PathBuf;
@@ -25,10 +24,7 @@ pub struct FlashLoan {
 }
 
 impl FlashLoan {
-    pub async fn deploy(
-        wallet: &WalletUnlocked,
-        random_address: bool,
-    ) -> anyhow::Result<Self> {
+    pub async fn deploy(wallet: &WalletUnlocked, random_address: bool) -> anyhow::Result<Self> {
         let configurables = FlashLoanContractConfigurables::default();
 
         let root = PathBuf::from(env!("CARGO_WORKSPACE_DIR"));
@@ -57,7 +53,9 @@ impl FlashLoan {
 
         let flash_loan = FlashLoanContract::new(id.clone(), wallet.clone());
 
-        Ok(Self { instance: flash_loan })
+        Ok(Self {
+            instance: flash_loan,
+        })
     }
 
     pub async fn new(contract_id: ContractId, wallet: WalletUnlocked) -> Self {

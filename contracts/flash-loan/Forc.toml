@@ -5,4 +5,4 @@ license = "Apache-2.0"
 name = "flash-loan"
 
 [dependencies]
-flashloan_abi = { path = "../../abis/flashloan_abi" }
+flash_loan_abi = { path = "../../abis/flash_loan_abi" }

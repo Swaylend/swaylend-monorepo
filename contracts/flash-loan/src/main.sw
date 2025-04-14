@@ -1,6 +1,6 @@
 contract;
 
-use flashloan_abi::FlashLoaner;
+use flash_loan_abi::FlashLoaner;
 
 impl FlashLoaner for Contract {
     #[storage(read)]

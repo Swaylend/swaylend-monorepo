@@ -14,7 +14,7 @@ use events::*;
 
 use pyth_interface::{data_structures::price::{Price, PriceFeedId}, PythCore};
 use market_abi::{Market, structs::*};
-use flashloan_abi::FlashLoaner;
+use flash_loan_abi::FlashLoaner;
 use std::asset::{mint_to, transfer};
 use std::auth::{AuthError, msg_sender};
 use std::call_frames::msg_asset_id;

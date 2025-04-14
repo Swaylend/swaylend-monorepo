@@ -5,10 +5,12 @@ members = [
     "contracts/src-20",
     "contracts/pyth-mock",
     "contracts/token",
+    "contracts/flash-loan",
     # Libs
     "libs/market_sdk",
     "libs/token_sdk",
     "libs/pyth_mock_sdk",
+    "libs/flash_loan_sdk",
     # Scripts
     "scripts",
 ]
@@ -22,12 +24,12 @@ rust-version = "1.79.0"
 market_sdk = { path = "libs/market_sdk" }
 token_sdk = { path = "libs/token_sdk" }
 pyth_mock_sdk = { path = "libs/pyth_mock_sdk" }
-
+flash_loan_sdk = { path = "libs/flash_loan_sdk" }
 # Local contracts (types)
 pyth_mock = { path = "contracts/pyth-mock" }
 market = { path = "contracts/market" }
 token = { path = "contracts/token" }
-
+flash_loan = { path = "contracts/flash-loan" }
 # External
 pyth_sdk = { git = "https://github.com/pyth-network/pyth-crosschain", rev = "aa9509ccd37cf5dc73fee891a5730c351d15235f" }
 tokio = { version = "1.12", features = ["full"] }
