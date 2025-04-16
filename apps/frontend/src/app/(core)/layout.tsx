@@ -1,4 +1,5 @@
 import { AnnouncementPopover } from '@/components/AnnouncementPopover';
+import { BanxaIframeDialog } from '@/components/BanxaIframeDialog';
 import { Footer } from '@/components/Footer';
 import { IntroductionDialog } from '@/components/IntroductionDialog';
 import { Navbar } from '@/components/Navbar';
@@ -24,6 +25,7 @@ export default function AppLayout({
           <AnnouncementPopover />
         )}
         <IntroductionDialog />
+        <BanxaIframeDialog />
       </div>
     </Providers>
   );

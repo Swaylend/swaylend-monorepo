@@ -35,6 +35,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Logo from '/public/icons/dark-logo.svg?url';
+import { BuyCryptoButton } from '../BuyCryptoButton';
 import { Line } from '../Line';
 import { Button } from '../ui/button';
 import { ConnectButton } from './ConnectButton';
@@ -222,6 +223,7 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
             </div>
           </div>
           <div className="flex items-center gap-x-2">
+            <BuyCryptoButton />
             <Points />
             <ConnectButton />
           </div>
