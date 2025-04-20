@@ -21,7 +21,7 @@ export const Points = () => {
   const [isManualOpen, setIsManualOpen] = useState(false);
 
   const { data: user } = useUser();
-  const { data: lmRewards } = useLMRewards();
+  // const { data: lmRewards } = useLMRewards();
 
   const { isConnected } = useIsConnected();
 
@@ -54,7 +54,7 @@ export const Points = () => {
           </Button>
         </Link>
 
-        {isConnected && (
+        {/* {isConnected && (
           <div className="flex flex-col mt-4 gap-y-2 items-center border border-white/10 w-full p-2 rounded-xl">
             <div className="text-primary">Fuel Rewards</div>
             <div className={cn('text-lavender font-semibold')}>
@@ -70,7 +70,7 @@ export const Points = () => {
               {lmRewards ? lmRewards.part_2 : 'Calculating'}
             </div>
           </div>
-        )}
+        )} */}
       </PopoverContent>
     </Popover>
   );
