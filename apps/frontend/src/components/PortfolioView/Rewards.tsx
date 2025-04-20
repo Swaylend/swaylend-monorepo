@@ -152,22 +152,20 @@ const RewardCard = ({ data }: { data: Airdrop }) => {
                   <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
                   <span>Claiming...</span>
                 </div>
-              ) : status === 'Active' ? (
-                isEligible ? (
-                  !wallet?.address ? (
-                    'Connect wallet'
-                  ) : isAirdropClaimed ? (
-                    'Already claimed'
-                  ) : (
-                    'Claim'
-                  )
-                ) : (
+              ) : status === 'Active' || status === 'Completed' ? (
+                !wallet?.address ? (
+                  'Connect wallet'
+                ) : !data.isEligible.isEligible ? (
                   'Not eligible'
+                ) : isAirdropClaimed ? (
+                  'Already claimed'
+                ) : status === 'Active' ? (
+                  'Claim'
+                ) : (
+                  'Not claimed'
                 )
-              ) : status === 'Upcoming' ? (
-                'Coming soon'
               ) : (
-                'Completed'
+                'Coming soon'
               )}
             </button>
           </div>
