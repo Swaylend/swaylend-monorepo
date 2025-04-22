@@ -36,6 +36,6 @@ export const useAirdrops = () => {
     },
     initialData: null,
     placeholderData: keepPreviousData,
-    staleTime: 1000 * 60 * 60, // 1 hours
+    staleTime: 1000 * 60 * 1, // 1 minute
   });
 };
