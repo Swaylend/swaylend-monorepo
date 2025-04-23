@@ -61,8 +61,8 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
   return (
     <>
       <div className="w-full text-center bg-purple font-medium text-md text-lavender py-1 px-4">
-        Fuel Season 1 has ended! 🚀 Rewards have been distributed to all
-        eligible wallets. Stay tuned for what’s next!
+        New Functionality live! 🚀 Discover <b>Portfolio</b>: Track your
+        markets, positions, and transactions now.
       </div>
       {/* DESKTOP */}
       <div className="max-lg:hidden">
