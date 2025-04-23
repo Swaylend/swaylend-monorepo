@@ -269,10 +269,11 @@ const RewardCard = ({ data }: { data: Airdrop }) => {
 };
 
 export const Rewards = () => {
-  const { data: airdrops, isPending } = useAirdrops();
+  // const { data: airdrops, isPending } = useAirdrops();
   const { data: lmRewards, isPending: isLMRewardsPending } = useLMRewards();
 
-  if (isPending || isLMRewardsPending) {
+  // if (isPending || isLMRewardsPending) {
+  if (isLMRewardsPending) {
     return (
       <div className="w-full p-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -296,9 +297,9 @@ export const Rewards = () => {
         userAmount={lmRewards?.part_2 ?? '0'}
         distributionDate="2025-03-01"
       />
-      {airdrops?.map((data) => (
+      {/* {airdrops?.map((data) => (
         <RewardCard key={data.id} data={data} />
-      ))}
+      ))} */}
     </div>
   );
 };
