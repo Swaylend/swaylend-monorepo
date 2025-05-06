@@ -42,7 +42,7 @@ import { Points } from './Points';
 
 const NAVBAR_LINKS = [
   { href: '/markets', label: 'Markets', icon: <ChartLine /> },
-  // { href: '/portfolio', label: 'Portfolio', icon: <Coins /> },
+  { href: '/portfolio', label: 'Portfolio', icon: <Coins /> },
   ...(appConfig.env === 'testnet'
     ? [{ href: '/faucet', label: 'Faucet', icon: <Coins /> }]
     : []),
@@ -61,21 +61,8 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
   return (
     <>
       <div className="w-full text-center bg-purple font-medium text-md text-lavender py-1 px-4">
-        Phase 2 & Fuel Points are over! 🎉 View your points
-        <a
-          href="https://app.fuel.network/earn-points/phase-2/"
-          target="_blank"
-          rel="noreferrer"
-          className="underline ml-1"
-        >
-          here
-        </a>
-        .
-      </div>
-      <div className="w-full text-center bg-purple font-medium text-md text-lavender pb-1 px-4">
-        Fuel Season 1 starts NOW! Earn Fuel tokens by: Borrowing USDC using ETH,
-        FUEL, and USDT as collateral. Supplying USDC. Your journey to greater
-        rewards begins today. 🔥
+        New Functionality live! 🚀 Discover <b>Portfolio</b>: Track your
+        markets, positions, and transactions now.
       </div>
       {/* DESKTOP */}
       <div className="max-lg:hidden">
@@ -188,6 +175,13 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
                       </div>
                     </div>
                   </DropdownMenuItem>
+                  {/* <DropdownMenuItem>
+                    <Link href="/bridge" className="w-full">
+                      <div className="w-full flex items-center justify-between text-md font-medium text-lavender py-1 px-0.5 gap-x-2 cursor-pointer hover:underline">
+                        Embedded
+                      </div>
+                    </Link>
+                  </DropdownMenuItem> */}
                 </DropdownMenuContent>
               </DropdownMenu>
               <DropdownMenu open={openDex} onOpenChange={setOpenDex}>
@@ -216,6 +210,13 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
                       </div>
                     </div>
                   </DropdownMenuItem>
+                  {/* <DropdownMenuItem>
+                    <Link href="/swap" className="w-full">
+                      <div className="w-full flex items-center justify-between text-md font-medium text-lavender py-1 px-0.5 gap-x-2 cursor-pointer hover:underline">
+                        Embedded
+                      </div>
+                    </Link>
+                  </DropdownMenuItem> */}
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
@@ -283,6 +284,21 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
                       )}
                     >
                       Dashboard
+                    </div>
+                  </Link>
+                  <Link
+                    href="/swap"
+                    onMouseDown={() => setOpen(false)}
+                    prefetch={false}
+                  >
+                    <div
+                      className={cn(
+                        pathname === '/swap' ? 'text-primary' : 'text-lavender',
+                        pathname !== '/swap' && 'hover:text-lavender/80',
+                        'flex font-bold text-xl items-center gap-x-2 h-full'
+                      )}
+                    >
+                      Swap
                     </div>
                   </Link>
                   {NAVBAR_LINKS.map(({ href, label }) => {

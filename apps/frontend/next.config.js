@@ -21,6 +21,7 @@ const CONNECT_DOMAINS = [
   'https://app.sentio.xyz',
   // Hermes
   'https://gateway-lon.liquify.com',
+  'https://gateway.liquify.com',
   'https://hermes.pyth.network',
   // Redstone
   'https://oracle-gateway-1.a.redstone.vip',
@@ -39,7 +40,7 @@ const CSP_HEADER = `
     font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com;
     object-src 'none';
     base-uri 'self';
-    frame-src 'self' https://verify.walletconnect.com https://verify.walletconnect.org;
+    frame-src 'self' https://verify.walletconnect.com https://verify.walletconnect.org https://layerswap.io https://mira.ly;
     form-action 'self';
     frame-ancestors 'none';
     upgrade-insecure-requests;

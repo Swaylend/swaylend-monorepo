@@ -9,6 +9,7 @@ import {
   useUserCollateralAssets,
   useUserCollateralUtilization,
 } from '@/hooks';
+import { useUserLiquidationPoint } from '@/hooks/useUserLiquidationPoint';
 import {
   ACTION_TYPE,
   MARKET_MODE,
@@ -48,6 +49,7 @@ type TableRowProps = {
   amount: BigNumber;
   apy: any;
   liquidationRisk: number;
+  liquidationPoint: BigNumber;
 };
 
 const CollateralTableRow = ({
@@ -57,6 +59,7 @@ const CollateralTableRow = ({
   amount,
   apy,
   liquidationRisk,
+  liquidationPoint,
 }: TableRowProps) => {
   const symbol = appConfig.assets[assetId];
 
@@ -125,26 +128,38 @@ const CollateralTableRow = ({
       >
         {liquidationRisk}%
       </TableCell>
+      <TableCell className="text-white font-medium">
+        {getFormattedPrice(liquidationPoint ?? BigNumber(0))}
+      </TableCell>
       <TableCell className="text-white font-semibold bg-card">
         <div className="flex gap-x-1 items-center text-primary">
           <Image
-            src={SYMBOL_TO_ICON.FUEL}
-            alt={'FUEL'}
-            width={16}
-            height={16}
+            src={SYMBOL_TO_ICON.SWAY}
+            alt={'SWAY'}
+            width={24}
+            height={24}
             className={'rounded-full'}
           />
-          <div> {apy?.borrowRewardApr.times(100).toFixed(2)}%</div>
         </div>
       </TableCell>
-      <TableCell className="text-white font-semibold bg-card">
+      <TableCell className="text-white font-semibold flex gap-x-2 bg-card">
         <Link href="/">
           <Button
+            onMouseDown={() => {
+              handleCollateralTokenClick(ACTION_TYPE.SUPPLY, assetId, market);
+            }}
+          >
+            +
+          </Button>
+        </Link>
+        <Link href="/">
+          <Button
+            variant={'secondary'}
             onMouseDown={() => {
               handleCollateralTokenClick(ACTION_TYPE.WITHDRAW, assetId, market);
             }}
           >
-            <MoveUpRightIcon size={20} />
+            -
           </Button>
         </Link>
       </TableCell>
@@ -213,6 +228,9 @@ export const Collateral = () => {
   //   return Number(collateralUtilizationUSDT?.times(100).toFixed(2));
   // }, [collateralUtilizationUSDT]);
 
+  const { data: userLiquidationPoint, isPending: isPendingLP } =
+    useUserLiquidationPoint();
+
   const isLoading = useMemo(() => {
     return [
       isPendingCollateralConfigurationsUSDC,
@@ -220,6 +238,7 @@ export const Collateral = () => {
       isPendingPriceDataUSDC,
       isAprPendingUSDC,
       isPendingColUtilUSDC,
+      isPendingLP,
       // isPendingCollateralConfigurationsUSDT,
       // isPendingUserCollateralAssetsUSDT,
       // isPendingPriceDataUSDT,
@@ -232,6 +251,7 @@ export const Collateral = () => {
     isPendingPriceDataUSDC,
     isAprPendingUSDC,
     isPendingColUtilUSDC,
+    isPendingLP,
     // isPendingPriceDataUSDT,
     // isAprPendingUSDT,
     // isPendingColUtilUSDT,
@@ -319,7 +339,10 @@ export const Collateral = () => {
             Liquidation Risk
           </TableHead>
           <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
-            Rewards APY
+            Liquidation Point
+          </TableHead>
+          <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
+            Points
           </TableHead>
           <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
             Action
@@ -372,6 +395,7 @@ export const Collateral = () => {
                     value={collateral.value}
                     apy={aprDataUSDC}
                     liquidationRisk={currentCollateralUtilizationUSDC}
+                    liquidationPoint={userLiquidationPoint ?? BigNumber(0)}
                   />
                 ))}
               </>

@@ -71,7 +71,7 @@ export const History = () => {
           <TableRow>
             <TableHead colSpan={8}>
               <div className="w-full flex items-center justify-center gap-x-2 text-white font-semibold">
-                Borrow Positions
+                My Transactions
               </div>
             </TableHead>
           </TableRow>
@@ -243,7 +243,7 @@ export const History = () => {
             </TableRow>
           ) : (
             <>
-              {liquidationHistory.length > 0 ? (
+              {liquidationHistory && liquidationHistory.length > 0 ? (
                 <>
                   {liquidationHistory?.map((tx: any) => (
                     <TableRow key={tx.id}>

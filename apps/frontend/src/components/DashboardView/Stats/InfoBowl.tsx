@@ -138,7 +138,7 @@ export const InfoBowl = () => {
                   </>
                 )}
                 <div
-                  className={`w-full h-full ${bowlMode === 2 && 'bg-white/5 ring-2 ring-white/20'} flex-col ${bowlMode === 0 && 'bg-purple text-white cursor-default'} ${bowlMode === 1 && 'bg-primary text-secondary cursor-default'} ring-2 ring-white/20 rounded-full flex justify-center items-center sm:text-xl text-md text-center font-semibold`}
+                  className={`w-full h-full ${bowlMode === 2 && 'bg-white/5 ring-2 ring-white/20'} flex-col ${bowlMode === 0 && 'bg-primary text-secondary cursor-default'} ${bowlMode === 1 && 'bg-purple text-white cursor-default'} ring-2 ring-white/20 rounded-full flex justify-center items-center sm:text-xl text-md text-center font-semibold`}
                 >
                   {bowlMode === 2 && (
                     <div className="z-10 text-xs sm:text-lg text-white font-bold">
@@ -149,7 +149,7 @@ export const InfoBowl = () => {
                     </div>
                   )}
                   {bowlMode === 1 && (
-                    <div className="text-sm sm:text-lg text-primary-foreground font-bold">
+                    <div className="text-sm sm:text-lg text-white font-bold">
                       Net Borrow APY
                       <div className="sm:text-xl text-lg font-semibold">
                         {aprData?.netBorrowApr.times(100).toFixed(2)}%
@@ -157,7 +157,7 @@ export const InfoBowl = () => {
                     </div>
                   )}
                   {bowlMode === 0 && (
-                    <div className="text-sm sm:text-lg text-white font-bold">
+                    <div className="text-sm sm:text-lg text-primary-foreground font-bold">
                       Net Earn APY
                       <div className="sm:text-xl text-lg  font-semibold">
                         {aprData?.netSupplyApr.times(100).toFixed(2)}%
