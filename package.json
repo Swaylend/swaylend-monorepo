@@ -38,6 +38,6 @@
     }
   },
   "dependencies": {
-    "@redstone-finance/sdk": "0.7.5"
+    "@redstone-finance/sdk": "0.8.0"
   }
 }

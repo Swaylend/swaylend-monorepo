@@ -1,7 +1,11 @@
 import { appConfig } from '@/configs';
 import { useRedstoneContract } from '@/contracts/useRedstoneContract';
 import { selectMarket, useMarketStore } from '@/stores';
-import { ContractParamsProvider } from '@redstone-finance/sdk';
+import {
+  ContractParamsProvider,
+  getOracleRegistryState,
+  getSignersForDataServiceId,
+} from '@redstone-finance/sdk';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { utils } from 'ethers';
@@ -9,7 +13,7 @@ import { useMemo } from 'react';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
 import { useMarketConfiguration } from './useMarketConfiguration';
 
-export const useRedstonePrice = (marketParam?: string) => {
+export const useRedstonePrice = async (marketParam?: string) => {
   const storeMarket = useMarketStore(selectMarket);
   const market = marketParam ?? storeMarket;
 
@@ -18,6 +22,7 @@ export const useRedstonePrice = (marketParam?: string) => {
     useCollateralConfigurations(market);
 
   const redstoneContract = useRedstoneContract(market);
+  const oracleRegistry = await getOracleRegistryState();
 
   const assetIdToSymbol = useMemo(() => {
     if (!marketConfiguration || !collateralConfigurations) return null;
@@ -39,7 +44,11 @@ export const useRedstonePrice = (marketParam?: string) => {
   const dataPackageRequestParams = useMemo(() => {
     return {
       dataServiceId: 'redstone-primary-prod',
-      uniqueSignersCount: 1,
+      uniqueSignersCount: 3,
+      authorizedSigners: getSignersForDataServiceId(
+        oracleRegistry,
+        'redstone-primary-prod'
+      ),
       dataPackagesIds: assetIdToSymbol
         ? Array.from(assetIdToSymbol.values())
         : [],
