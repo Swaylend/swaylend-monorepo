@@ -1431,7 +1431,7 @@ fn get_redstone_price_internal(feed_ids: u256, payload_bytes: Bytes) -> (u256, u
     if timestamp > TAI64_UNIX_ADJUSTMENT {
         block_timestamp = timestamp - TAI64_UNIX_ADJUSTMENT;
     } else if DEBUG_STEP != 0 {
-        block_timestamp = 173988088000 / 100
+        block_timestamp = 1746548510000 / 1000
     }
     let mut feed_ids_vec: Vec<u256> = Vec::new();
     feed_ids_vec.push(feed_ids);
@@ -1490,7 +1490,7 @@ fn get_price_internal(
             price.confidence = 0;
             price.publish_time = redstone_timestamp;
             if DEBUG_STEP != 0 {
-                price.publish_time = 1739880880000;
+                price.publish_time = 1746548510000;
             }
         } else {
             require(

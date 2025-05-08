@@ -197,8 +197,8 @@ async fn redstone_test() {
         .await
         .unwrap();
 
-    assert_eq!(response.value.publish_time, 1_739_880_880_000);
-    assert_eq!(response.value.price, 268_619_077_870);
+    assert_eq!(response.value.publish_time, 1_746_548_510_000);
+    assert_eq!(response.value.price, 176_673_132_015);
 
     println!(
         "🔺 ETH price: {}",

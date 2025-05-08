@@ -46,7 +46,7 @@ async function main() {
     ),
     uniqueSignersCount: 3,
   });
-  const dataPackages = await cpp.requestDataPackages();
+  // const dataPackages = await cpp.requestDataPackages();
   const payloadHex = await cpp.getPayloadData();
   const hexlified = cpp.getHexlifiedFeedIds();
   const dataFeedIds = cpp.getDataFeedIds();
