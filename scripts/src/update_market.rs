@@ -56,13 +56,13 @@ async fn main() -> anyhow::Result<()> {
         contract_version.unwrap().value
     );
 
-    let curr_market_config = market_instance
-        .methods()
-        .get_market_configuration()
-        .with_contract_ids(&[market_contract_id.clone()])
-        .call()
-        .await?
-        .value;
+    // let curr_market_config = market_instance
+    //     .methods()
+    //     .get_market_configuration()
+    //     .with_contract_ids(&[market_contract_id.clone()])
+    //     .call()
+    //     .await?
+    //     .value;
     let pyth_contract_id = market_instance
         .methods()
         .get_pyth_contract_id()
@@ -81,19 +81,19 @@ async fn main() -> anyhow::Result<()> {
     let market_config = read_market_config(&args.config_path)?;
 
     // market configuration
-    if curr_market_config != market_config {
-        println!("Updating market configuration",);
-        println!("Old market configuration: {:#?}", curr_market_config);
-        println!("New market configuration: {:#?}", market_config);
-        if get_yes_no_input("Do you really want to update market configuration? (yes/no): ") {
-            market_instance
-                .methods()
-                .update_market_configuration(market_config.clone().into())
-                .with_contract_ids(&[market_contract_id.clone()])
-                .call()
-                .await?;
-        }
+    // if curr_market_config != market_config {
+    println!("Updating market configuration",);
+    // println!("Old market configuration: {:#?}", curr_market_config);
+    println!("New market configuration: {:#?}", market_config);
+    if get_yes_no_input("Do you really want to update market configuration? (yes/no): ") {
+        market_instance
+            .methods()
+            .update_market_configuration(market_config.clone().into())
+            .with_contract_ids(&[market_contract_id.clone()])
+            .call()
+            .await?;
     }
+    // }
 
     // pyth contract id
     if pyth_contract_id

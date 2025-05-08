@@ -75,76 +75,84 @@ async fn main() -> anyhow::Result<()> {
     // iterater over collateral assets configurations in the market config file
     // if the collateral asset is already added, check if all properties are the same
     // otherwise, add the collateral asset
-    for collateral_asset_config in market_config.collateral_assets {
-        let asset_id = collateral_asset_config.clone().asset_id;
-        // let asset_config = collateral_asset_configurations
-        //     .iter()
-        //     .find(|config| config.asset_id == AssetId::from_str(asset_id.as_str()).unwrap());
-        market_instance
-            .methods()
-            .update_collateral_asset(
-                AssetId::from_str(asset_id.as_str()).unwrap(),
-                collateral_asset_config.into(),
-            )
-            .with_contract_ids(&[market_contract_id.clone()])
-            .call()
-            .await?;
-        // match asset_config {
-        //     Some(asset_config) => {
-        //         if asset_config != &collateral_asset_config {
-        //             println!(
-        //                 "Updating collateral asset configuration for asset_id: {}",
-        //                 asset_id
-        //             );
-        //             println!("Old collateral asset configuration: {:#?}", asset_config);
-        //             println!(
-        //                 "New collateral asset configuration: {:#?}",
-        //                 collateral_asset_config
-        //             );
-        //             if !get_yes_no_input(
-        //                 "Do you really want to update this collateral asset? (yes/no): ",
-        //             ) {
-        //                 continue;
-        //             }
+    // for collateral_asset_config in market_config.collateral_assets {
+    //     let asset_id = collateral_asset_config.clone().asset_id;
+    //     // let asset_config = collateral_asset_configurations
+    //     //     .iter()
+    //     //     .find(|config| config.asset_id == AssetId::from_str(asset_id.as_str()).unwrap());
+    //     println!(
+    //         "Updating collateral asset configuration for asset_id: {}",
+    //         asset_id
+    //     );
+    //     println!(
+    //         "Collateral asset configuration: {:#?}",
+    //         collateral_asset_config
+    //     );
+    //     market_instance
+    //         .methods()
+    //         .update_collateral_asset(
+    //             AssetId::from_str(asset_id.as_str()).unwrap(),
+    //             collateral_asset_config.into(),
+    //         )
+    //         .with_contract_ids(&[market_contract_id.clone()])
+    //         .call()
+    //         .await?;
+    // match asset_config {
+    //     Some(asset_config) => {
+    //         if asset_config != &collateral_asset_config {
+    //             println!(
+    //                 "Updating collateral asset configuration for asset_id: {}",
+    //                 asset_id
+    //             );
+    //             println!("Old collateral asset configuration: {:#?}", asset_config);
+    //             println!(
+    //                 "New collateral asset configuration: {:#?}",
+    //                 collateral_asset_config
+    //             );
+    //             if !get_yes_no_input(
+    //                 "Do you really want to update this collateral asset? (yes/no): ",
+    //             ) {
+    //                 continue;
+    //             }
 
-        //             market_instance
-        //                 .methods()
-        //                 .update_collateral_asset(
-        //                     AssetId::from_str(asset_id.as_str()).unwrap(),
-        //                     collateral_asset_config.into(),
-        //                 )
-        //                 .with_contract_ids(&[market_contract_id.clone()])
-        //                 .call()
-        //                 .await?;
-        //         } else {
-        //             println!(
-        //                 "Collateral asset configuration for asset_id: {} is already up-to-date",
-        //                 asset_id
-        //             );
-        //         }
-        //     }
-        //     None => {
-        //         println!(
-        //             "Adding collateral asset configuration for asset_id: {}",
-        //             asset_id
-        //         );
-        //         println!(
-        //             "Collateral asset configuration: {:#?}",
-        //             collateral_asset_config
-        //         );
-        //         if !get_yes_no_input("Do you really want to add this collateral asset? (yes/no): ")
-        //         {
-        //             continue;
-        //         }
-        //         market_instance
-        //             .methods()
-        //             .add_collateral_asset(collateral_asset_config.into())
-        //             .with_contract_ids(&[market_contract_id.clone()])
-        //             .call()
-        //             .await?;
-        //     }
-        // }
-    }
+    //             market_instance
+    //                 .methods()
+    //                 .update_collateral_asset(
+    //                     AssetId::from_str(asset_id.as_str()).unwrap(),
+    //                     collateral_asset_config.into(),
+    //                 )
+    //                 .with_contract_ids(&[market_contract_id.clone()])
+    //                 .call()
+    //                 .await?;
+    //         } else {
+    //             println!(
+    //                 "Collateral asset configuration for asset_id: {} is already up-to-date",
+    //                 asset_id
+    //             );
+    //         }
+    //     }
+    //     None => {
+    //         println!(
+    //             "Adding collateral asset configuration for asset_id: {}",
+    //             asset_id
+    //         );
+    //         println!(
+    //             "Collateral asset configuration: {:#?}",
+    //             collateral_asset_config
+    //         );
+    //         if !get_yes_no_input("Do you really want to add this collateral asset? (yes/no): ")
+    //         {
+    //             continue;
+    //         }
+    //         market_instance
+    //             .methods()
+    //             .add_collateral_asset(collateral_asset_config.into())
+    //             .with_contract_ids(&[market_contract_id.clone()])
+    //             .call()
+    //             .await?;
+    //     }
+    // }
+    // }
 
     // read values to see if they are set correctly
     let collateral_asset_configurations = market_instance
