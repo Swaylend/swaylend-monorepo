@@ -12,6 +12,6 @@ enabled = true
 [dependencies]
 market_abi = { path = "../../abis/market_abi" }
 pyth_interface = { git = "https://github.com/pyth-network/pyth-crosschain", rev = "7de4ce3ec8defd97641c1d25302abe117bf5092b" }
-redstone = { git = "https://github.com/redstone-finance/redstone-fuel-sdk", tag = "testnet-0.65.2" }
+redstone = { git = "https://github.com/redstone-finance/redstone-fuel-sdk", tag = "v0.66.2-1" }
 standards = { git = "https://github.com/FuelLabs/sway-standards", tag = "v0.6.1" }
 sway_libs = { git = "https://github.com/FuelLabs/sway-libs", tag = "v0.24.0" }

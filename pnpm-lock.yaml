@@ -25,8 +25,11 @@ importers:
   .:
     dependencies:
       '@redstone-finance/sdk':
-        specifier: 0.7.5
-        version: 0.7.5(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+        specifier: 0.8.0
+        version: 0.8.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      tsx:
+        specifier: 4.19.4
+        version: 4.19.4
     devDependencies:
       '@biomejs/biome':
         specifier: 1.9.4
@@ -4003,17 +4006,17 @@ packages:
       '@types/react':
         optional: true
 
-  '@redstone-finance/oracles-smartweave-contracts@0.7.5':
-    resolution: {integrity: sha512-js9X7HbKqLAttbElOLQO9/kf6kU/pGMtfUyd2PuOPFWcLgSGWPBoXQgtGstJyeY91Uhzg2TveqgbrZow+4PstQ==}
+  '@redstone-finance/oracles-smartweave-contracts@0.8.0':
+    resolution: {integrity: sha512-7lRYSIFeOdLkamUNTzGW5oaP07eXZtfa1jnyuloyIFTgEhSKA2JiAAo7tGqAFvI10Z3kdrLPp1XM4AEVxEMlNQ==}
 
-  '@redstone-finance/protocol@0.7.5':
-    resolution: {integrity: sha512-Yh/tCDqBM293JdDg84f1jPlmxHcg76UboDs5OnRwv3T0Ra0M5NH8GKydKNaAc83LVQhxbA7z829brPDaefbPLQ==}
+  '@redstone-finance/protocol@0.8.0':
+    resolution: {integrity: sha512-QnNjRnMVn8IgGJvPjNet/E5Y0h7+OngqxdboKHBf9DKxmewOdDR/iYFQAfynDafoqUmsTp/+6caAZbhVkBZvYQ==}
 
-  '@redstone-finance/sdk@0.7.5':
-    resolution: {integrity: sha512-IAJDpHxsHg0hv5yW26Gocn5WScR/LRB/+mnSKZzUk72ILBq6vUkV9J9lE/zdgKYBBlMtzj7OElIkcDNjkR2xKQ==}
+  '@redstone-finance/sdk@0.8.0':
+    resolution: {integrity: sha512-yVVbIuZFi7u8ROWQ0php3h44z6SB1U6jVNsMxRt/nfq/jy/+CGdTkAfDX5s7CJDzgV8z9apEycLoJCHaPZL0QQ==}
 
-  '@redstone-finance/utils@0.7.5':
-    resolution: {integrity: sha512-hldeC00/V397GMn/UHtYQ9ybbUET9bAM2sinlyK0bnLNx+nLlPAV9ePltqh56V5/7Bn+BDYYDDkRSGy7cj9X5w==}
+  '@redstone-finance/utils@0.8.0':
+    resolution: {integrity: sha512-GT+G5gYDQ2tPD9cgnIa3a3m9EK3n2fVJbl7FSfqU4q5aSpMUWFW/CY20L243bb2bz76e151RFq01p6GXn/Cs7Q==}
 
   '@repeaterjs/repeater@3.0.6':
     resolution: {integrity: sha512-Javneu5lsuhwNCryN+pXH93VPQ8g0dBX7wItHFgYiwQmzE1sVdg5tWHiOgHywzL2W21XQopa7IwIEnNbmeUJYA==}
@@ -10002,6 +10005,11 @@ packages:
 
   tsx@4.19.2:
     resolution: {integrity: sha512-pOUl6Vo2LUq/bSa8S5q7b91cgNSjctn9ugq/+Mvow99qW6x/UZYwzxy/3NmqoT66eHYfCVvFvACC58UBPFf28g==}
+    engines: {node: '>=18.0.0'}
+    hasBin: true
+
+  tsx@4.19.4:
+    resolution: {integrity: sha512-gK5GVzDkJK1SI1zwHf32Mqxf2tSJkNx+eYcNly5+nHvWqXUJYUkWBQtKauoESz3ymezAI++ZwT855x5p5eop+Q==}
     engines: {node: '>=18.0.0'}
     hasBin: true
 
@@ -16080,9 +16088,9 @@ snapshots:
     optionalDependencies:
       '@types/react': 18.3.12
 
-  '@redstone-finance/oracles-smartweave-contracts@0.7.5': {}
+  '@redstone-finance/oracles-smartweave-contracts@0.8.0': {}
 
-  '@redstone-finance/protocol@0.7.5(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
+  '@redstone-finance/protocol@0.8.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
       decimal.js: 10.5.0
       ethers: 5.7.2(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -16091,13 +16099,13 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  '@redstone-finance/sdk@0.7.5(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
+  '@redstone-finance/sdk@0.8.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
       '@ethersproject/bytes': 5.7.0
       '@ethersproject/strings': 5.7.0
-      '@redstone-finance/oracles-smartweave-contracts': 0.7.5
-      '@redstone-finance/protocol': 0.7.5(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@redstone-finance/utils': 0.7.5(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@redstone-finance/oracles-smartweave-contracts': 0.8.0
+      '@redstone-finance/protocol': 0.8.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
+      '@redstone-finance/utils': 0.8.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@types/lodash': 4.17.15
       axios: 1.7.9
       ethers: 5.7.2(bufferutil@4.0.9)(utf-8-validate@5.0.10)
@@ -16108,7 +16116,7 @@ snapshots:
       - debug
       - utf-8-validate
 
-  '@redstone-finance/utils@0.7.5(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
+  '@redstone-finance/utils@0.8.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
     dependencies:
       '@types/lodash': 4.17.15
       axios: 1.7.9
@@ -24215,6 +24223,13 @@ snapshots:
   tsx@4.19.2:
     dependencies:
       esbuild: 0.23.1
+      get-tsconfig: 4.10.0
+    optionalDependencies:
+      fsevents: 2.3.3
+
+  tsx@4.19.4:
+    dependencies:
+      esbuild: 0.25.0
       get-tsconfig: 4.10.0
     optionalDependencies:
       fsevents: 2.3.3
