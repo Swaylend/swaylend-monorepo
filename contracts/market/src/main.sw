@@ -44,7 +44,6 @@ const ORACLE_MAX_STALENESS: u64 = 60; // 60 seconds
 const ORACLE_DOWNTIME_THRESHOLD: u64 = 300; // 5 minutes
 const ORACLE_MAX_AHEADNESS: u64 = 60; // 60 seconds
 const ORACLE_MAX_CONF_WIDTH: u256 = 300; // 300 / 10000 = 3.0 %
-const ORACLE_DOWNTIME_THRESHOLD: u64 = 300; // 5 minutes
 const REDSTONE_PRICE_EXPONENT: u32 = 8;
 // This is set during deployment of the contract
 configurable {
