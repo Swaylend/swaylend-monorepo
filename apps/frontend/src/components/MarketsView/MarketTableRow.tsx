@@ -27,7 +27,6 @@ import { useMemo } from 'react';
 import SWAY from '/public/tokens/sway.svg?url';
 import { CircularProgressBar } from '../CircularProgressBar';
 import { type Collateral, CollateralIcons } from '../CollateralIcons';
-import { Line } from '../Line';
 import { NetBorrowTooltip } from '../NetBorrowTooltip';
 import { NetEarnTooltip } from '../NetEarnTooltip';
 import { Skeleton } from '../ui/skeleton';

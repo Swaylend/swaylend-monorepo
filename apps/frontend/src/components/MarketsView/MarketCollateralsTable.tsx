@@ -11,7 +11,6 @@ import { appConfig } from '@/configs';
 import {
   useCollateralConfigurations,
   useCollateralReserves,
-  useMarketConfiguration,
   usePrice,
   useTotalCollateral,
 } from '@/hooks';

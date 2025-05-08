@@ -53,6 +53,7 @@ pub fn get_market_config(
         .join("contracts/market/tests/market-config.json");
     let config_json_str = std::fs::read_to_string(config_json_path)?;
     let config: MarketConfig = serde_json::from_str(&config_json_str)?;
+    println!("🚀 ~ get_market_config ~ config: {:?}", config);
 
     Ok(MarketConfiguration {
         base_token,

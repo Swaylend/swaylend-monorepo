@@ -135,7 +135,7 @@ export const InputDialog = () => {
     useMaxWithdrawableCollateral(actionTokenAssetId);
 
   const handleSubmit = () => {
-    if (!marketConfiguration) return;
+    if (!marketConfiguration || !priceData?.pythPriceUpdateData) return;
 
     switch (action) {
       case ACTION_TYPE.SUPPLY: {
@@ -152,12 +152,14 @@ export const InputDialog = () => {
         if (actionTokenAssetId === marketConfiguration.baseToken.bits) {
           withdrawBase({
             tokenAmount,
-            priceUpdateData: priceData.priceUpdateData,
+            priceUpdateData: priceData.pythPriceUpdateData,
+            redstonePriceUpdateData: priceData.redstonePriceUpdateData!.payload,
           });
         } else {
           withdrawCollateral({
             tokenAmount,
-            priceUpdateData: priceData.priceUpdateData,
+            priceUpdateData: priceData.pythPriceUpdateData,
+            redstonePriceUpdateData: priceData.redstonePriceUpdateData!.payload,
           });
         }
         break;
@@ -167,7 +169,8 @@ export const InputDialog = () => {
 
         borrowBase({
           tokenAmount,
-          priceUpdateData: priceData.priceUpdateData,
+          priceUpdateData: priceData.pythPriceUpdateData,
+          redstonePriceUpdateData: priceData.redstonePriceUpdateData!.payload,
         });
         break;
       case ACTION_TYPE.REPAY:

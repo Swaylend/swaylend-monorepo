@@ -41,9 +41,9 @@ const VERSION: u8 = 7_u8;
 
 // pyth oracle configuration params
 const ORACLE_MAX_STALENESS: u64 = 60; // 60 seconds
+const ORACLE_DOWNTIME_THRESHOLD: u64 = 300; // 5 minutes
 const ORACLE_MAX_AHEADNESS: u64 = 60; // 60 seconds
 const ORACLE_MAX_CONF_WIDTH: u256 = 300; // 300 / 10000 = 3.0 %
-const ORACLE_DOWNTIME_THRESHOLD: u64 = 300; // 5 minutes
 const REDSTONE_PRICE_EXPONENT: u32 = 8;
 // This is set during deployment of the contract
 configurable {
@@ -1481,6 +1481,8 @@ fn get_price_internal(
     let mut price = oracle.price(pyth_price_feed_id);
     // validate values
     if price.publish_time < std::block::timestamp() {
+        log(price.publish_time);
+        log(std::block::timestamp());
         let staleness = std::block::timestamp() - price.publish_time;
         if staleness > ORACLE_DOWNTIME_THRESHOLD {
             let (redstone_price, redstone_timestamp) = get_redstone_price_internal(redstone_feed_id, redstone_payload);

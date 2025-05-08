@@ -11,7 +11,7 @@ import { useMemo, useState } from 'react';
 import { useBorrowCapacity } from './useBorrowCapacity';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
 import { useMarketConfiguration } from './useMarketConfiguration';
-import { usePrice } from './usePrice';
+import { usePythPrice } from './usePythPrice';
 import { useUserCollateralAssets } from './useUserCollateralAssets';
 import { useUserCollateralValue } from './useUserCollateralValue';
 import { useUserSupplyBorrow } from './useUserSupplyBorrow';
@@ -21,7 +21,7 @@ export const usePossiblePositionSummary = () => {
   const actionTokenAssetId = useMarketStore(selectActionTokenAssetId);
   const tokenAmount = useMarketStore(selectTokenAmount);
   const action = useMarketStore(selectAction);
-  const { data: priceData } = usePrice();
+  const { data: priceData } = usePythPrice();
   const { data: marketConfiguration } = useMarketConfiguration();
   const { data: userCollateralAssets } = useUserCollateralAssets();
   const { data: collateralConfigurations } = useCollateralConfigurations();

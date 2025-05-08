@@ -2,7 +2,7 @@ import { useIsConnected } from '@fuels/react';
 import BigNumber from 'bignumber.js';
 import { useMemo } from 'react';
 import { useMarketConfiguration } from './useMarketConfiguration';
-import { usePrice } from './usePrice';
+import { usePythPrice } from './usePythPrice';
 import { useUserSupplyBorrow } from './useUserSupplyBorrow';
 
 export enum USER_ROLE {
@@ -15,7 +15,7 @@ export const useUserRole = () => {
   const { isConnected } = useIsConnected();
   const { data: userSupplyBorrow } = useUserSupplyBorrow();
   const { data: marketConfiguration } = useMarketConfiguration();
-  const { data: priceData } = usePrice();
+  const { data: priceData } = usePythPrice();
 
   return useMemo(() => {
     if (

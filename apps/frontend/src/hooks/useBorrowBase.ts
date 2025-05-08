@@ -20,6 +20,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { toast } from 'react-toastify';
 import { useMarketConfiguration } from './useMarketConfiguration';
+import { Bytes } from 'fuels';
 
 export const useBorrowBase = () => {
   const { account } = useAccount();
@@ -49,9 +50,11 @@ export const useBorrowBase = () => {
     mutationFn: async ({
       tokenAmount,
       priceUpdateData,
+      redstonePriceUpdateData,
     }: {
       tokenAmount: BigNumber;
       priceUpdateData: PriceDataUpdateInput;
+      redstonePriceUpdateData: Bytes;
     }) => {
       if (
         !account ||
@@ -66,7 +69,11 @@ export const useBorrowBase = () => {
         10 ** marketConfiguration.baseTokenDecimals
       );
       const { waitForResult } = await marketContract.functions
-        .withdraw_base(amount.toFixed(0), priceUpdateData)
+        .withdraw_base(
+          amount.toFixed(0),
+          priceUpdateData,
+          redstonePriceUpdateData
+        )
         .callParams({
           forward: {
             amount: priceUpdateData.update_fee,

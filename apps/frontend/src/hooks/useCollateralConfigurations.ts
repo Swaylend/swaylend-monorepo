@@ -36,6 +36,7 @@ export const useCollateralConfigurations = (marketParam?: string) => {
           liquidate_collateral_factor: config.liquidate_collateral_factor,
           supply_cap: config.supply_cap,
           liquidation_penalty: config.liquidation_penalty,
+          redstone_feed_id: config.redstone_feed_id,
         };
       }
 

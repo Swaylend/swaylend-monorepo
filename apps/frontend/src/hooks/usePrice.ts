@@ -1,152 +1,96 @@
-import type { PriceDataUpdateInput } from '@/contract-types/Market';
 import { selectMarket, useMarketStore } from '@/stores';
 
-import { useMarketContract } from '@/contracts/useMarketContract';
-import { usePythContract } from '@/contracts/usePythContract';
-import { HermesClient } from '@pythnetwork/hermes-client';
 import { useQuery } from '@tanstack/react-query';
+import { usePythPrice } from './usePythPrice';
+import { useRedstonePrice } from './useRedstonePrice';
 import BigNumber from 'bignumber.js';
-import { arrayify } from 'fuels';
-import { DateTime } from 'fuels';
-import { useMemo, useState } from 'react';
-import { useCollateralConfigurations } from './useCollateralConfigurations';
-import { useMarketConfiguration } from './useMarketConfiguration';
-import { useProvider } from './useProvider';
 
-export const usePrice = (marketParam?: string) => {
-  const [hermesClient, _] = useState(
-    () =>
-      new HermesClient(
-        process.env.NEXT_PUBLIC_HERMES_API ?? 'https://hermes.pyth.network',
-        {
-          httpRetries: 1,
-          timeout: 3000,
-        }
-      )
-  );
+type PriceResolutionMethod = 'high' | 'low' | 'avg';
 
-  const { provider } = useProvider();
+const priceResolutionFunction = (
+  map1?: Record<string, BigNumber>,
+  map2?: Record<string, BigNumber>,
+  mode: PriceResolutionMethod = 'avg'
+): Record<string, BigNumber> | null => {
+  if (!map1) return map2 || null;
+  if (!map2) return map1;
+  const resultMap: Record<string, BigNumber> = {};
 
+  const allKeys = new Set([...Object.keys(map1), ...Object.keys(map2)]);
+
+  const resolutionFunctions: Record<
+    PriceResolutionMethod,
+    (a: BigNumber, b: BigNumber) => BigNumber
+  > = {
+    high: BigNumber.maximum,
+    low: BigNumber.minimum,
+    avg: (a, b) => a.plus(b).div(2),
+  };
+
+  allKeys.forEach((key) => {
+    const value1 = map1[key] || new BigNumber(0);
+    const value2 = map2[key] || new BigNumber(0);
+    resultMap[key] = resolutionFunctions[mode](value1, value2);
+  });
+
+  return resultMap;
+};
+
+export const usePrice = (
+  marketParam?: string,
+  priceResolution: PriceResolutionMethod = 'avg',
+  oracle: 'pyth' | 'redstone' | undefined = 'pyth'
+) => {
   const storeMarket = useMarketStore(selectMarket);
   const market = marketParam ?? storeMarket;
 
-  const { data: marketConfiguration } = useMarketConfiguration(market);
-  const { data: collateralConfigurations } =
-    useCollateralConfigurations(market);
-
-  const marketContract = useMarketContract(market);
-  const pythContract = usePythContract(market);
-
-  // Create a map of priceFeedId to assetId
-  const priceFeedIdToAssetId = useMemo(() => {
-    if (!marketConfiguration || !collateralConfigurations) return null;
-
-    const assets: Map<string, string> = new Map();
-
-    assets.set(
-      marketConfiguration.baseTokenPriceFeedId,
-      marketConfiguration.baseToken.bits
-    );
-
-    for (const [assetId, collateralConfiguration] of Object.entries(
-      collateralConfigurations
-    )) {
-      assets.set(collateralConfiguration.price_feed_id, assetId);
-    }
-
-    return assets;
-  }, [marketConfiguration, collateralConfigurations]);
-
-  const priceFeedIdToAssetIdKey = useMemo(
-    () => Object.fromEntries(priceFeedIdToAssetId?.entries() ?? []),
-    [priceFeedIdToAssetId]
-  );
+  const { data: pythPrices } = usePythPrice(market);
+  const { data: redstonePrices } = useRedstonePrice(market);
 
   return useQuery({
     queryKey: [
-      'pythPrices',
-      priceFeedIdToAssetIdKey,
-      marketContract?.account?.address,
-      marketContract?.id,
-      pythContract?.account?.address,
-      pythContract?.id,
+      'oraclePrices',
+      pythPrices?.prices,
+      pythPrices?.priceUpdateData,
+      pythPrices?.confidenceIntervals,
+      redstonePrices?.prices,
+      redstonePrices?.priceUpdateData,
     ],
     queryFn: async () => {
-      if (!priceFeedIdToAssetId || !marketContract || !pythContract) {
-        return null;
-      }
-
-      const priceFeedIds = Array.from(priceFeedIdToAssetId.keys());
-
-      // Fetch price updates from Hermes client
-      let priceUpdates;
-      try {
-        priceUpdates = await hermesClient.getLatestPriceUpdates(priceFeedIds);
-      } catch (error) {
-        const client = new HermesClient('https://hermes.pyth.network');
-
-        priceUpdates = await client.getLatestPriceUpdates(priceFeedIds);
-      }
-
-      if (
-        !priceUpdates ||
-        !priceUpdates.parsed ||
-        priceUpdates.parsed.length === 0
-      ) {
+      if (!pythPrices && !redstonePrices) {
         throw new Error('Failed to fetch price');
       }
 
-      const buffer = Buffer.from(priceUpdates.binary.data[0], 'hex');
-      const updateData = [arrayify(buffer)];
+      if (oracle === 'pyth' && pythPrices)
+        return {
+          prices: pythPrices.prices,
+          confidenceIntervals: pythPrices.confidenceIntervals,
+          pythPriceUpdateData: pythPrices.priceUpdateData,
+          redstonePriceUpdateData: redstonePrices?.priceUpdateData,
+        };
 
-      const { value: fee } = await marketContract.functions
-        .update_fee(updateData)
-        .get();
-
-      // Prepare the PriceDateUpdateInput object
-      const priceUpdateData: PriceDataUpdateInput = {
-        update_fee: fee,
-        publish_times: priceUpdates.parsed.map((parsedPrice) =>
-          DateTime.fromUnixSeconds(parsedPrice.price.publish_time).toTai64()
-        ),
-        price_feed_ids: priceFeedIds,
-        update_data: updateData,
-      };
-
-      // Format prices to BigNumber
-      const prices = Object.fromEntries(
-        priceUpdates.parsed.map((parsedPrice) => [
-          priceFeedIdToAssetId.get(`0x${parsedPrice.id}`)!,
-          BigNumber(parsedPrice.price.price).times(
-            BigNumber(10).pow(BigNumber(parsedPrice.price.expo))
-          ),
-        ])
+      if (oracle === 'redstone' && redstonePrices)
+        return {
+          prices: redstonePrices.prices,
+          confidenceIntervals: pythPrices?.confidenceIntervals,
+          pythPriceUpdateData: pythPrices?.priceUpdateData,
+          redstonePriceUpdateData: redstonePrices.priceUpdateData,
+        };
+      const combinedPrices = priceResolutionFunction(
+        pythPrices?.prices,
+        redstonePrices?.prices,
+        priceResolution
       );
 
-      // Format confidence intervals to BigNumber
-      const confidenceIntervals = Object.fromEntries(
-        priceUpdates.parsed.map((parsedPrice) => [
-          priceFeedIdToAssetId.get(`0x${parsedPrice.id}`)!,
-          BigNumber(parsedPrice.price.conf).times(
-            BigNumber(10).pow(BigNumber(parsedPrice.price.expo))
-          ),
-        ])
-      );
+      if (!combinedPrices) return null;
 
       return {
-        prices,
-        confidenceIntervals,
-        priceUpdateData,
+        prices: combinedPrices,
+        confidenceIntervals: pythPrices?.confidenceIntervals,
+        pythPriceUpdateData: pythPrices?.priceUpdateData,
+        redstonePriceUpdateData: redstonePrices?.priceUpdateData,
       };
     },
-    refetchInterval: 5000,
-    enabled:
-      !!provider &&
-      !!priceFeedIdToAssetId &&
-      !!marketContract &&
-      !!pythContract,
-    staleTime: 5000,
-    refetchOnWindowFocus: true,
-    refetchIntervalInBackground: true,
+    enabled: !!pythPrices && !!redstonePrices,
   });
 };

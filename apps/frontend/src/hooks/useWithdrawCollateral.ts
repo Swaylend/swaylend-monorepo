@@ -20,6 +20,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { toast } from 'react-toastify';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
+import { Bytes } from 'fuels';
 
 type useWithdrawCollateralProps = {
   actionTokenAssetId: string | null | undefined;
@@ -55,9 +56,11 @@ export const useWithdrawCollateral = ({
     mutationFn: async ({
       tokenAmount,
       priceUpdateData,
+      redstonePriceUpdateData,
     }: {
       tokenAmount: BigNumber;
       priceUpdateData: PriceDataUpdateInput;
+      redstonePriceUpdateData: Bytes;
     }) => {
       if (
         !account ||
@@ -77,7 +80,8 @@ export const useWithdrawCollateral = ({
         .withdraw_collateral(
           { bits: actionTokenAssetId },
           amount.toFixed(0),
-          priceUpdateData
+          priceUpdateData,
+          redstonePriceUpdateData
         )
         .callParams({
           forward: {
