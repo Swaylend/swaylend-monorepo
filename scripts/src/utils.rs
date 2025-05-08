@@ -70,6 +70,7 @@ pub struct BaseAssetConfig {
 pub struct CollateralAssetConfig {
     pub asset_id: String,
     pub price_feed_id: String,
+    pub redstone_feed_id: Option<U256>,
     pub name: String,
     pub symbol: String,
     pub decimals: u32,
@@ -263,8 +264,13 @@ impl PartialEq<CollateralConfiguration> for CollateralAssetConfig {
 pub fn read_market_config(path: &str) -> anyhow::Result<MarketConfig> {
     let config_path = PathBuf::from(path);
     let config_str = std::fs::read_to_string(config_path)?;
-    serde_json::from_str(&config_str)
+    let mut market_config: MarketConfig = serde_json::from_str(&config_str)
         .map_err(|e| anyhow::anyhow!("Failed to parse market config: {}", e))
+        .unwrap();
+    for asset in &mut market_config.collateral_assets {
+        asset.redstone_feed_id = Some(U256::from(asset.symbol.as_bytes()));
+    }
+    Ok(market_config)
 }
 
 pub async fn verify_connected_network(

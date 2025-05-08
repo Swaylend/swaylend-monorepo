@@ -1,6 +1,10 @@
 import http from 'node:http';
 import https from 'node:https';
-import { ContractParamsProvider } from '@redstone-finance/sdk';
+import {
+  ContractParamsProvider,
+  getOracleRegistryState,
+  getSignersForDataServiceId,
+} from '@redstone-finance/sdk';
 
 const originalHttpRequest = http.request;
 http.request = function (...args) {
@@ -23,6 +27,7 @@ https.request = function (...args) {
 };
 
 async function main() {
+  const oracleRegistry = await getOracleRegistryState();
   const cpp: ContractParamsProvider = new ContractParamsProvider({
     dataServiceId: 'redstone-primary-prod',
     dataPackagesIds: [
@@ -35,9 +40,13 @@ async function main() {
       'weETH',
       'wstETH',
     ],
-    uniqueSignersCount: 1,
+    authorizedSigners: getSignersForDataServiceId(
+      oracleRegistry,
+      'redstone-primary-prod'
+    ),
+    uniqueSignersCount: 3,
   });
-  const dataPackages = await cpp.requestDataPackages();
+  // const dataPackages = await cpp.requestDataPackages();
   const payloadHex = await cpp.getPayloadData();
   const hexlified = cpp.getHexlifiedFeedIds();
   const dataFeedIds = cpp.getDataFeedIds();

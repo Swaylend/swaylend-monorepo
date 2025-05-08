@@ -3,6 +3,7 @@
   "private": true,
   "license": "MIT",
   "scripts": {
+    "fetchRedstone": "tsx fetchRedstone.ts",
     "lint": "biome check .",
     "lint:fix": "biome check --write ."
   },
@@ -38,6 +39,7 @@
     }
   },
   "dependencies": {
-    "@redstone-finance/sdk": "0.8.0"
+    "@redstone-finance/sdk": "0.8.0",
+    "tsx": "4.19.4"
   }
 }

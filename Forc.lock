@@ -41,7 +41,7 @@ dependencies = [
 
 [[package]]
 name = "redstone"
-source = "git+https://github.com/redstone-finance/redstone-fuel-sdk?tag=testnet-0.65.2#dc1a0a3550a005db05a2664fac87524ab8acf216"
+source = "git+https://github.com/redstone-finance/redstone-fuel-sdk?tag=v0.66.2-1#b0f4cf36f569bc4d7e0c7ec57754de1dafd8b7d5"
 dependencies = ["std"]
 
 [[package]]
