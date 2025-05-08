@@ -84,7 +84,7 @@ const markets: DeployedMarkets = {
     pythOracleAddress:
       '0x25146735b29d4216639f7f8b1d7b921ff87a1d3051de62d6cceaacabeb33b8e7',
     redstoneOracleAddress:
-      '0x25146735b29d4216639f7f8b1d7b921ff87a1d3051de62d6cceaacabeb33b8e7',
+      '0xd7ae6565970e67593caf50c5e0e0ada1a7ded444754334741058fe5dab2f7c7b',
     marketAddress:
       '0x6030cf103746576706d7dcc2ae6f6b32ba0db66907a8f9901a0170de5f06acc0',
     tokenFactoryAddress:
