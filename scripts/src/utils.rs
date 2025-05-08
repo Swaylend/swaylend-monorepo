@@ -61,6 +61,7 @@ pub fn read_env() {
 pub struct BaseAssetConfig {
     pub asset_id: String,
     pub price_feed_id: String,
+    pub redstone_feed_id: Option<U256>,
     pub name: String,
     pub symbol: String,
     pub decimals: u32,
@@ -270,6 +271,8 @@ pub fn read_market_config(path: &str) -> anyhow::Result<MarketConfig> {
     for asset in &mut market_config.collateral_assets {
         asset.redstone_feed_id = Some(U256::from(asset.symbol.as_bytes()));
     }
+    market_config.base_asset.redstone_feed_id =
+        Some(U256::from(market_config.base_asset.symbol.as_bytes()));
     Ok(market_config)
 }
 
