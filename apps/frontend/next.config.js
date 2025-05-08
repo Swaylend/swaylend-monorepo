@@ -27,6 +27,7 @@ const CONNECT_DOMAINS = [
   'https://oracle-gateway-1.a.redstone.vip',
   'https://oracle-gateway-1.b.redstone.finance',
   'https://oracle-gateway-2.a.redstone.finance',
+  'https://oracle-gateway-1.a.redstone.finance',
   // OpenBlock
   'https://www.data-openblocklabs.com',
 ];
