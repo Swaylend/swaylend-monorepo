@@ -153,11 +153,13 @@ export const InputDialog = () => {
           withdrawBase({
             tokenAmount,
             priceUpdateData: priceData.pythPriceUpdateData,
+            redstonePriceUpdateData: priceData.redstonePriceUpdateData!.payload,
           });
         } else {
           withdrawCollateral({
             tokenAmount,
             priceUpdateData: priceData.pythPriceUpdateData,
+            redstonePriceUpdateData: priceData.redstonePriceUpdateData!.payload,
           });
         }
         break;
@@ -168,6 +170,7 @@ export const InputDialog = () => {
         borrowBase({
           tokenAmount,
           priceUpdateData: priceData.pythPriceUpdateData,
+          redstonePriceUpdateData: priceData.redstonePriceUpdateData!.payload,
         });
         break;
       case ACTION_TYPE.REPAY:

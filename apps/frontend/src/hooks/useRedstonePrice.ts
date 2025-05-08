@@ -13,7 +13,7 @@ import { useMemo } from 'react';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
 import { useMarketConfiguration } from './useMarketConfiguration';
 
-export const useRedstonePrice = async (marketParam?: string) => {
+export const useRedstonePrice = (marketParam?: string) => {
   const storeMarket = useMarketStore(selectMarket);
   const market = marketParam ?? storeMarket;
 
@@ -22,7 +22,6 @@ export const useRedstonePrice = async (marketParam?: string) => {
     useCollateralConfigurations(market);
 
   const redstoneContract = useRedstoneContract(market);
-  const oracleRegistry = await getOracleRegistryState();
 
   const assetIdToSymbol = useMemo(() => {
     if (!marketConfiguration || !collateralConfigurations) return null;
@@ -41,35 +40,27 @@ export const useRedstonePrice = async (marketParam?: string) => {
     return assets;
   }, [marketConfiguration, collateralConfigurations]);
 
-  const dataPackageRequestParams = useMemo(() => {
-    return {
-      dataServiceId: 'redstone-primary-prod',
-      uniqueSignersCount: 3,
-      authorizedSigners: getSignersForDataServiceId(
-        oracleRegistry,
-        'redstone-primary-prod'
-      ),
-      dataPackagesIds: assetIdToSymbol
-        ? Array.from(assetIdToSymbol.values())
-        : [],
-    };
-  }, [assetIdToSymbol]);
-
-  const paramsProvider = new ContractParamsProvider(dataPackageRequestParams);
-
   return useQuery({
-    queryKey: [
-      'redstonePrices',
-      paramsProvider,
-      assetIdToSymbol,
-      dataPackageRequestParams,
-    ],
+    queryKey: ['redstonePrices', assetIdToSymbol, market],
     queryFn: async () => {
-      if (!paramsProvider || !redstoneContract || !assetIdToSymbol) {
+      if (!assetIdToSymbol || !redstoneContract) {
         return null;
       }
 
       try {
+        const oracleRegistry = await getOracleRegistryState();
+        const dataPackageRequestParams = {
+          dataServiceId: 'redstone-primary-prod',
+          uniqueSignersCount: 3,
+          authorizedSigners: getSignersForDataServiceId(
+            oracleRegistry,
+            'redstone-primary-prod'
+          ),
+          dataPackagesIds: Array.from(assetIdToSymbol.values()),
+        };
+        const paramsProvider = new ContractParamsProvider(
+          dataPackageRequestParams
+        );
         // Pass both to swaylend contract for contract price update
         const payload = await paramsProvider.getPayloadData(); // payload
         const feed_ids = paramsProvider.getHexlifiedFeedIds(); // feed_ids
@@ -97,7 +88,7 @@ export const useRedstonePrice = async (marketParam?: string) => {
       }
     },
     refetchInterval: 5000,
-    enabled: !!paramsProvider && !!redstoneContract,
+    enabled: !!assetIdToSymbol && !!redstoneContract,
     staleTime: 5000,
     refetchOnWindowFocus: true,
     refetchIntervalInBackground: true,
