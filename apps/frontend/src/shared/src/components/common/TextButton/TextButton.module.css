@@ -1,0 +1,14 @@
+.textButton {
+  border: none;
+  background-color: transparent;
+  padding: 0;
+  color: var(--accent-primary);
+  font: inherit;
+  cursor: pointer;
+  display: inline-block;
+  transition: opacity 0.2s;
+}
+
+.textButton:hover {
+  opacity: 0.8;
+}

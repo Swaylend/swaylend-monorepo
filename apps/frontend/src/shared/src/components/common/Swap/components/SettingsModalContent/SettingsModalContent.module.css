@@ -1,0 +1,72 @@
+.settingsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.settingsSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.settingsText {
+  color: var(--content-dimmed-light);
+}
+
+.slippageButtons {
+  display: flex;
+  gap: 8px;
+}
+
+.slippageButton {
+  width: 100%;
+  padding: 14px 12px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: var(--content-dimmed-light);
+  background-color: var(--background-grey-dark);
+}
+
+.slippageButton:hover {
+  color: var(--content-primary);
+  border-color: var(--accent-primary);
+  cursor: pointer;
+}
+
+.slippageButton:disabled {
+  color: var(--content-dimmed-light);
+  background-color: var(--background-grey-dark);
+  cursor: not-allowed;
+}
+
+.slippageButton:disabled:hover {
+  color: var(--content-dimmed-light);
+  background-color: var(--background-grey-dark);
+  border-color: transparent;
+  cursor: not-allowed;
+}
+
+.slippageButtonActive {
+  border-color: var(--accent-primary);
+}
+
+.slippageInput {
+  width: 100%;
+  padding: 14px 12px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: var(--content-dimmed-light);
+  background-color: var(--background-grey-dark);
+}
+
+.slippageInput:focus {
+  color: var(--content-primary);
+  border-color: var(--accent-primary);
+}
+
+.infoHeading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

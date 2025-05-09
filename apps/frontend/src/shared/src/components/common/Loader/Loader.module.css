@@ -1,0 +1,29 @@
+.loader {
+  display: inline-block;
+  border: 2px solid var(--background-primary);
+  border-bottom-color: transparent;
+  border-radius: 50%;
+  box-sizing: border-box;
+  animation: rotation 1s linear infinite;
+  width: 17px;
+  height: 17px;
+}
+
+.outlined {
+  border: 2px solid var(--accent-primary);
+}
+
+.gray {
+  border: 2px solid var(--content-tertiary);
+  border-bottom-color: transparent;
+  animation: rotation 1s linear infinite;
+}
+
+@keyframes rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

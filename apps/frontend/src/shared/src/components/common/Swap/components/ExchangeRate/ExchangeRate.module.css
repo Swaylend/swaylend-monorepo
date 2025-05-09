@@ -1,0 +1,18 @@
+.exchangeRate {
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  line-height: 18px;
+  color: var(--content-dimmed-light);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+@media (min-width: 1024px) {
+  .exchangeRate {
+    font-size: 13px;
+  }
+}

@@ -1,0 +1,34 @@
+.priceImpact {
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  line-height: 18px;
+  color: #ffffffa3;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.redText {
+  color: var(--accent-warning);
+}
+
+.orangeText {
+  color: #e56910;
+}
+
+.yellowText {
+  color: #d4b226;
+}
+
+.hidden {
+  opacity: 0;
+}
+
+@media (min-width: 1024px) {
+  .priceImpact {
+    font-size: 13px;
+  }
+}

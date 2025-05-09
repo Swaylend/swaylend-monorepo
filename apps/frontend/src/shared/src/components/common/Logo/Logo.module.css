@@ -1,0 +1,12 @@
+.logo {
+  width: 64px;
+  height: 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  color: var(--content-primary);
+}
+
+.logo:hover {
+  color: var(--content-primary) !important;
+}

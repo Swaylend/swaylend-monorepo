@@ -1,0 +1,99 @@
+button.connected {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 8px;
+  color: var(--content-primary);
+  background-color: transparent;
+  border: 1px solid var(--accent-primary);
+  box-shadow: none;
+}
+
+button.connected:hover {
+  box-shadow: none;
+}
+
+button.connected:active {
+  background-color: transparent;
+}
+
+.disconnectLabel {
+  border-radius: 20px;
+  font-weight: 500;
+  font-size: 10px;
+  line-height: 14px;
+  color: var(--background-primary);
+  background-color: var(--accent-primary);
+  opacity: 0;
+  padding: 0;
+  max-width: 0;
+  transition:
+    opacity 0.5s,
+    max-width 0.5s,
+    padding 0s 0.3s,
+    margin-left 0s 0.3s;
+}
+
+button.connected:hover .disconnectLabel {
+  opacity: 1;
+  max-width: 200px;
+  padding: 2px 8px 3px;
+  transition-delay: 0s;
+  margin-left: 4px;
+}
+
+.modalTitle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+  line-height: 16px;
+}
+
+.modalContent {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.modalText {
+  font-size: 25px;
+  font-weight: 500;
+  line-height: 32px;
+  text-align: left;
+}
+
+.connectButtonDropDown {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.dropDownOverlay {
+  width: 100%;
+  height: 100vh;
+  background: #00000059;
+  backdrop-filter: blur(4px);
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+}
+
+.dropDownTouchClose {
+  position: absolute;
+  top: 8px;
+  left: 46%;
+  border: none;
+  padding: 0;
+  background: none;
+}
+
+.dropDownClose {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  border: none;
+  padding: 0;
+  background: none;
+}

@@ -1,0 +1,29 @@
+.tokenSearch {
+  display: flex;
+  gap: 10px;
+  padding: 14px 12px;
+  border-radius: 8px;
+  color: var(--content-grey);
+  background-color: var(--background-grey-dark);
+}
+
+.tokenSearchInput {
+  font-size: 16px;
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--content-primary);
+}
+
+.tokenList {
+}
+
+.tokenListItem {
+  padding: 8px 16px;
+  border-radius: 8px;
+}
+
+.tokenListItem:hover {
+  background-color: var(--background-grey-dark);
+  cursor: pointer;
+}

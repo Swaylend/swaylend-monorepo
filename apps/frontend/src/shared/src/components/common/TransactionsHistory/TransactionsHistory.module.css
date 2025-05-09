@@ -1,0 +1,274 @@
+.overlayOpened {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #00000059;
+  backdrop-filter: blur(4px);
+  z-index: 100;
+}
+
+.overlayClosed {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+}
+
+.wrapper {
+  background: #262834;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 20px;
+  gap: 24px;
+  height: calc(100vh - 197px);
+  overflow-y: auto;
+  position: fixed;
+  right: 0;
+  top: 72px;
+  width: 100%;
+  max-width: 472px;
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  z-index: 200;
+}
+
+.open {
+  transform: translateX(0);
+}
+
+.close {
+  transform: translateX(100%);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+.transactionCloseButton {
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.transactionCloseButton:hover {
+  opacity: 0.64;
+}
+
+.accountInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 12px;
+  border-radius: 10px;
+  background: linear-gradient(95.91deg, #663e92 -15.22%, #29294e 83.17%);
+}
+
+.accountUserInfo {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.accountAvatar {
+  width: 32px;
+  height: 32px;
+}
+
+.accountWallet {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+}
+
+.copyButton {
+  border: none;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.copyButton:hover {
+  opacity: 0.64;
+}
+
+.accountBalance {
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+.transactionsList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.transaction {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.transactionDate {
+  color: var(--content-primary) a3;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 22px;
+}
+
+.transactionInfo {
+  display: flex;
+  gap: 28px;
+  padding: 10px;
+  background: #3b3d48;
+  border-radius: 8px;
+}
+
+.transactionCoins {
+  display: flex;
+  position: relative;
+}
+
+.transactionCoins svg,
+.transactionCoins img {
+  height: 28px;
+  width: 28px;
+}
+
+.secondCoin {
+  position: absolute;
+  top: 0;
+  left: 20px;
+  z-index: 2;
+}
+
+.transactionText {
+  display: flex;
+  flex-direction: column;
+  font-size: 16px;
+  line-height: 22px;
+  font-weight: 400;
+  gap: 5px;
+}
+
+.transactionName {
+  color: var(--content-primary);
+}
+
+.transactionAmount {
+  color: var(--content-primary) a3;
+}
+
+.transactions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.transactionGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.transactionType {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.typeCircle {
+  width: 12px;
+  height: 12px;
+  border-radius: 100px;
+}
+
+.withdrawal {
+  background-color: var(--accent-warning);
+}
+
+.added {
+  background-color: var(--content-positive);
+}
+
+.linerVisible {
+  background: linear-gradient(
+    to bottom,
+    rgba(38, 40, 52, 0) 0%,
+    rgba(38, 40, 52, 0.2) 15%,
+    rgba(38, 40, 52, 0.5) 25%,
+    /* Прозрачный цвет в начале */ rgba(38, 40, 52, 0.5) 50%,
+    rgba(38, 40, 52, 0.5) 75%,
+    /* Полупрозрачный основной цвет */ rgba(38, 40, 52, 0.8) 100%
+      /* Прозрачный цвет в конце */
+  );
+  height: 10%;
+  width: 100%;
+  max-width: 472px;
+  position: fixed;
+  right: 0;
+  bottom: 125px;
+  z-index: 300;
+  border-radius: 12px;
+  transform: translateX(0);
+  transition: transform 0.3s ease;
+}
+
+.linerHidden {
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+}
+
+@media (min-width: 480px) and (max-width: 800px) {
+  .wrapper {
+    opacity: 0;
+    transform: translateX(100%);
+    width: 100%;
+    max-width: 800px;
+    pointer-events: none;
+    transition:
+      transform 0.3s ease,
+      opacity 0.3s ease;
+  }
+
+  .wrapper.open {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: all;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 800px) {
+  .linerVisible {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .wrapper {
+    height: 100vh;
+    top: 0;
+    left: 0;
+  }
+
+  .linerVisible {
+    display: none;
+  }
+}
+
+@media (min-width: 769px) {
+  .wrapper {
+    border-radius: 12px;
+  }
+}

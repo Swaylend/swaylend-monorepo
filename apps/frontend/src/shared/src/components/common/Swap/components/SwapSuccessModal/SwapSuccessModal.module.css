@@ -1,0 +1,34 @@
+.claimFailureModal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.mainText {
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 26px;
+  text-align: center;
+}
+
+.subText {
+  font-size: 14px;
+  line-height: 16px;
+  color: var(--content-dimmed-dark);
+}
+
+.viewButton {
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .claimFailureModal {
+    gap: 24px;
+  }
+
+  .claimFailureModal > svg {
+    width: 80px;
+    height: 80px;
+  }
+}

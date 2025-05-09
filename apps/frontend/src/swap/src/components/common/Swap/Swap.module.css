@@ -1,0 +1,153 @@
+.swapAndRate {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.swapContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px 16px 18px;
+  border-radius: 16px;
+  background-color: var(--background-grey-dark);
+}
+
+.widgetSwapContainer {
+  background-color: var(--background-primary) !important;
+}
+
+.widgetBoxBg {
+  background-color: var(--background-grey-dark) !important;
+}
+
+.swapContainerLoading {
+  z-index: 5;
+}
+
+.loadingOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(5px);
+  z-index: 4;
+  pointer-events: auto;
+}
+
+.heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 19px;
+  color: var(--content-grey);
+}
+
+.title {
+  flex: 1;
+  color: var(--content-primary);
+}
+
+.splitter {
+  position: relative;
+  width: 100%;
+  height: 1px;
+  background-color: var(--background-grey-dark);
+  margin: 16px 0;
+}
+
+.convertButton {
+  position: absolute;
+  top: calc(50% - 16px);
+  left: calc(50% - 16px);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  border-radius: 40px;
+  color: var(--content-grey);
+  background-color: var(--background-primary) !important;
+}
+
+.convertButton:hover > svg {
+  transform: rotate(180deg);
+  transition: transform 0.3s;
+}
+
+.convertButton:hover {
+  color: var(--content-primary);
+}
+
+.summary {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: var(--content-tertiary);
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.summaryEntry {
+  display: flex;
+  justify-content: space-between;
+}
+
+.feeLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+}
+
+.feeLine > p:first-child {
+  margin-right: 4px;
+}
+
+.poolsFee {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.poolsFee > img {
+  height: 16px;
+  width: 16px;
+}
+
+.poolsFee > img:first-child {
+  margin-right: -8px;
+}
+
+.rates {
+  display: flex;
+  justify-content: space-between;
+}
+
+.connectWallet {
+  min-width: 100px;
+  height: 20px;
+  font-size: 10px !important;
+  line-height: 24px !important;
+}
+
+@media (min-width: 1024px) {
+  .swapAndRate {
+    gap: 16px;
+  }
+
+  .heading {
+    font-size: 20px;
+    line-height: 24px;
+  }
+
+  .summary,
+  .summary p {
+    font-size: 13px;
+    line-height: 18px;
+  }
+}

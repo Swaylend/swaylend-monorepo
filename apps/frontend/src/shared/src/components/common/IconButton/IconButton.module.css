@@ -1,0 +1,18 @@
+.iconButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: inherit;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.iconButton:hover {
+  opacity: 0.8;
+}
+
+.iconButton:active {
+  opacity: 0.9;
+}
