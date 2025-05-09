@@ -1,18 +1,13 @@
-import type { Metadata } from 'next';
+"use client"
 
-export const metadata: Metadata = {
-  title: 'Swap',
-};
+import { Swap } from '@/swap/src';
 
-export default async function Page() {
+export default function Page() {
   return (
     <div className="w-full h-full p-4">
-      <iframe
-        title="mira.ly"
-        allowTransparency={true}
-        className="w-full h-[75vh] md:h-[85vh] rounded-2xl border-0 scrollbar-none"
-        src="https://mira.ly/widget/"
-      />
+      <div className="max-w-xl mx-auto">
+        <Swap />
+      </div>
     </div>
   );
 }
