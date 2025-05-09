@@ -50,6 +50,29 @@ body > div > div[role="dialog"] {
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
+
+    /* Mira Swap start */
+    --background-primary: #0E111E;
+    --background-secondary: #1B1C23;
+    --background-grey-darker: rgba(255, 255, 255, 0.05);
+    --background-grey-dark: rgba(255, 255, 255, 0.1);
+    --background-grey-light: rgba(255, 255, 255, 0.2);
+    --content-primary: #FFFFFF;
+    --content-secondary: rgba(255, 255, 255, 0.8);
+    --content-tertiary: rgba(255, 255, 255, 0.72);
+    --content-dimmed-light: rgba(255, 255, 255, 0.64);
+    --content-dimmed-dark: rgba(255, 255, 255, 0.4);
+    --content-grey: #9D9D9D;
+    --content-grey-dark: #6D6D6D;
+    --content-inverse: #28282F;
+    --accent-primary: #AEED0D;
+    --accent-secondary: rgba(174, 237, 13, 0.4);
+    --accent-dimmed: rgba(174, 237, 13, 0.1);
+    --accent-warning: #F55353;
+    --accent-alert: #d4b226;
+    --content-positive: #46CC44;
+    --points-gradient: linear-gradient(170deg, #262f5f 35%, #c41cff 100%);
+    /* Mira Swap End */
   }
 
   .dark {
@@ -88,3 +111,5 @@ body > div > div[role="dialog"] {
     @apply bg-background text-foreground;
   }
 }
+
+
