@@ -25,6 +25,21 @@ const CONNECT_DOMAINS = [
   'https://hermes.pyth.network',
   // OpenBlock
   'https://www.data-openblocklabs.com',
+
+  // Mira
+  "https://mainnet-explorer.fuel.network",
+  "https://explorer-indexer-mainnet.fuel.network",
+  "https://verified-assets.fuel.network",
+  "https://mira-dex.squids.live/mira-indexer@v3/api/graphql",
+  "https://firebasestorage.googleapis.com",
+  "https://github.com",
+  "https://img.icons8.com",
+  "https://upload.wikimedia.org",
+  "https://12factor.net",
+  "https://firebasestorage.googleapis.com",
+  "https://verified-assets.fuel.network",
+  "https://4021016264-files.gitbook.io",
+  "https://i.imgur.com"
 ];
 
 const CSP_HEADER = `
@@ -32,7 +47,7 @@ const CSP_HEADER = `
     connect-src 'self' https://app.swaylend.com ${CONNECT_DOMAINS.join(' ')};
     script-src 'self' 'unsafe-eval' 'unsafe-inline' https://vercel.live;
     style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-    img-src 'self' blob: data: ;
+    img-src 'self'  blob: data: ${CONNECT_DOMAINS.join(' ')};
     font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com;
     object-src 'none';
     base-uri 'self';
@@ -48,6 +63,14 @@ module.exports = (phase, { defaultConfig }) => {
    * @type {import('next').NextConfig}
    */
   const nextConfig = {
+    images: {
+      remotePatterns: [
+        {
+          protocol: "https",
+          hostname: "**",
+        },
+      ],
+    },
     /* config options here */
     webpack: (config, _) => {
       // SVGR Config from: https://react-svgr.com/docs/next/
