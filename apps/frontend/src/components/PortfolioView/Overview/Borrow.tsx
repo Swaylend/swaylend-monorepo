@@ -351,7 +351,7 @@ export const Borrow = () => {
                       {borrowedUSDC.toFixed(2)} USDC
                     </TableCell>
                     <TableCell>
-                      <div className="flex gap-x-2 items-center text-md font-medium text-primary underline">
+                      <div className="flex gap-x-2 items-center text-md font-medium text-purple underline">
                         <div>
                           {aprDataUSDC?.borrowBaseApr.times(100).toFixed(2)}%
                         </div>

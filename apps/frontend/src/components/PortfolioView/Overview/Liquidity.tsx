@@ -251,7 +251,7 @@ export const Liquidity = () => {
                       {suppliedUSDC.toFixed(2)} USDC
                     </TableCell>
                     <TableCell>
-                      <div className="flex gap-x-2 items-center text-md font-medium text-purple underline">
+                      <div className="flex gap-x-2 items-center text-md font-medium text-primary underline">
                         <div>
                           {aprDataUSDC?.supplyBaseApr.times(100).toFixed(2)}%
                         </div>
