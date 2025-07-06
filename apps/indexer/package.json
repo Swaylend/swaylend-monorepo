@@ -5,7 +5,7 @@
   "scripts": {
     "build": "tsc --build --clean",
     "codegen": "envio codegen",
-    "dev": "envio dev --config config.mainnet.usdc.yaml",
+    "dev": "envio dev",
     "test": "ts-mocha test/**/*.spec.ts",
     "start": "envio start"
   },
