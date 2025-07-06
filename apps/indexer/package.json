@@ -3,12 +3,11 @@
   "version": "0.3.0",
   "license": "MIT",
   "scripts": {
-    "clean": "tsc --clean",
-    "build": "tsc --build",
+    "build": "tsc --build --clean",
     "codegen": "envio codegen --config config.mainnet.usdc.yaml",
-    "dev": "envio dev",
+    "dev": "envio dev --config config.mainnet.usdc.yaml",
     "test": "ts-mocha test/**/*.spec.ts",
-    "start": "ts-node generated/src/Index.bs.js"
+    "start": "envio start --config config.mainnet.usdc.yaml"
   },
   "dependencies": {
     "chai": "4.3.10",
