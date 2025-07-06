@@ -13,6 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { Progress } from '@/components/ui/progress';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
   Table,
@@ -138,7 +139,8 @@ const CollateralTableRow = ({
                             collateralConfiguration.supply_cap.toString()
                           ),
                           decimals
-                        )
+                        ),
+                        2
                       )}{' '}
                       {appConfig.assets[assetId]}
                     </div>
@@ -146,7 +148,7 @@ const CollateralTableRow = ({
                   <div className="text-md flex justify-between">
                     <div className="text-lavender">Total Supplied</div>
                     <div className="font-semibold text-moon">
-                      {getFormattedNumber(collateralAmount)}{' '}
+                      {getFormattedNumber(collateralAmount, 2)}{' '}
                       {appConfig.assets[assetId]}
                     </div>
                   </div>
@@ -206,12 +208,70 @@ const CollateralTableRow = ({
         {formattedBalance} {symbol}
       </TableCell>
       <TableCell>
-        <div className="w-[48px] h-[48px]">
-          <CircularProgressBar percent={supplyUsed.div(100)} />
-        </div>
+        <TooltipProvider delayDuration={100}>
+          <Tooltip>
+            <TooltipTrigger onClick={(e) => e.preventDefault()}>
+              <div className="w-[48px] h-[48px]">
+                <CircularProgressBar percent={supplyUsed.div(100)} />
+              </div>
+            </TooltipTrigger>
+            <TooltipContent onPointerDownOutside={(e) => e.preventDefault()}>
+              <div className="p-2 w-[250px]">
+                <div className="font-bold text-lg">
+                  Collateral Supply Details
+                </div>
+                <div className="flex flex-col gap-y-2 mt-2">
+                  <div className="text-md flex justify-between">
+                    <div className="text-lavender">Supply Cap</div>
+                    <div className="font-semibold text-moon">
+                      {getFormattedNumber(
+                        formatUnits(
+                          BigNumber(
+                            collateralConfiguration.supply_cap.toString()
+                          ),
+                          decimals
+                        ),
+                        2
+                      )}{' '}
+                      {appConfig.assets[assetId]}
+                    </div>
+                  </div>
+                  <div className="text-md flex justify-between">
+                    <div className="text-lavender">Supply Cap Value</div>
+                    <div className="font-semibold text-moon">
+                      {getFormattedNumber(
+                        formatUnits(
+                          BigNumber(
+                            collateralConfiguration.supply_cap.toString()
+                          ),
+                          decimals
+                        ).times(price)
+                      )}
+                      {' $'}
+                    </div>
+                  </div>
+                  <div className="text-md flex justify-between">
+                    <div className="text-lavender">Total Supplied</div>
+                    <div className="font-semibold text-moon">
+                      {getFormattedNumber(collateralAmount, 2)}{' '}
+                      {appConfig.assets[assetId]}
+                    </div>
+                  </div>
+                  <div className="text-md flex justify-between">
+                    <div className="text-lavender">Total Supplied Value</div>
+                    <div className="font-semibold text-moon">
+                      {getFormattedNumber(collateralAmount.times(price))}
+                      {' $'}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </TableCell>
       <TableCell>
-        <div className=" h-full flex items-center gap-x-2">
+        <div className="h-full flex items-center gap-x-2">
           <span className="text-lavender font-medium">
             {getFormattedPrice(
               formatUnits(protocolBalance, decimals).times(price)
@@ -221,15 +281,8 @@ const CollateralTableRow = ({
         </div>
       </TableCell>
       <TableCell>
-        <div className=" h-full flex items-center gap-x-2">
-          <PointIcons
-            points={[
-              ...(symbol === 'USDT' || symbol === 'ETH'
-                ? [POINTS_COLLATERAL[0]]
-                : [POINTS_COLLATERAL[1]]),
-              POINTS_COLLATERAL[2],
-            ]}
-          />
+        <div className="h-full flex items-center gap-x-2">
+          <PointIcons points={POINTS_COLLATERAL} />
         </div>
       </TableCell>
       <TableCell>
@@ -319,10 +372,13 @@ const CollateralCard = ({
           </div>
           <div className="w-full flex items-center">
             <div className="w-1/2 text-moon font-medium">
-              Supply Cap Reached
+              Supply Cap
+              <br />
+              Reached
             </div>
-            <div className="w-[48px] h-[48px]">
-              <CircularProgressBar percent={supplyUsed.div(100)} />
+            <div className="w-[30%] h-[48px] flex items-center gap-x-2">
+              {Number(supplyUsed.decimalPlaces(1))}%
+              <Progress value={Number(supplyUsed)} />
             </div>
           </div>
           <div className="w-full flex items-center">
@@ -341,14 +397,7 @@ const CollateralCard = ({
           </div>
           <div className="w-full flex items-center">
             <div className="w-1/2 text-moon font-medium">Supply Points</div>
-            <PointIcons
-              points={[
-                ...(symbol === 'USDT' || symbol === 'ETH'
-                  ? [POINTS_COLLATERAL[0]]
-                  : [POINTS_COLLATERAL[1]]),
-                POINTS_COLLATERAL[2],
-              ]}
-            />
+            <PointIcons points={POINTS_COLLATERAL} mobile />
           </div>
         </div>
       </CardContent>

@@ -5,8 +5,6 @@ import { isMobile } from '@/utils/isMobile';
 import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 
-export const revalidate = 300;
-
 export async function generateMetadata({
   params,
 }: { params: { pair: string } }) {

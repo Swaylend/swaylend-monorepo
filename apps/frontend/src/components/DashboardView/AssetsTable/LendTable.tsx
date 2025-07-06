@@ -1,6 +1,8 @@
 import { InfoIcon } from '@/components/InfoIcon';
+import { Line } from '@/components/Line';
+import { NetEarnTooltip } from '@/components/NetEarnTooltip';
 import { PointIcons } from '@/components/PointIcons';
-import { POINTS_LEND } from '@/components/PointIcons/PointsTooltip';
+import { POINTS_LEND, POINTS_LM } from '@/components/PointIcons/PointsTooltip';
 import { Title } from '@/components/Title';
 import { Button } from '@/components/ui/button';
 import {
@@ -20,12 +22,18 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { appConfig } from '@/configs';
 import {
   USER_ROLE,
+  useApr,
   useBalance,
   useMarketConfiguration,
-  useSupplyRate,
   useUserRole,
   useUserSupplyBorrow,
 } from '@/hooks';
@@ -38,12 +46,7 @@ import {
   selectChangeTokenAmount,
   useMarketStore,
 } from '@/stores';
-import {
-  SYMBOL_TO_ICON,
-  formatUnits,
-  getFormattedNumber,
-  getSupplyApr,
-} from '@/utils';
+import { SYMBOL_TO_ICON, formatUnits, getFormattedNumber } from '@/utils';
 import { useAccount } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import BigNumber from 'bignumber.js';
@@ -51,6 +54,12 @@ import Image from 'next/image';
 
 const SkeletonRow = (
   <TableRow>
+    <TableCell>
+      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+    </TableCell>
+    <TableCell>
+      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+    </TableCell>
     <TableCell>
       <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
     </TableCell>
@@ -84,11 +93,19 @@ const SkeletonCardContent = (
         <Skeleton className="w-1/2 h-[24px] bg-primary/20 rounded-md" />
       </div>
       <div className="w-full flex items-center">
-        <div className="w-1/2 text-moon font-medium">Supply APY</div>
+        <div className="w-1/2 text-moon font-medium">Earn APY</div>
         <Skeleton className="w-1/2 h-[24px] bg-primary/20 rounded-md" />
       </div>
       <div className="w-full flex items-center">
         <div className="w-1/2 text-moon font-medium">Your Supplied Assets</div>
+        <Skeleton className="w-1/2 h-[24px] bg-primary/20 rounded-md" />
+      </div>
+      <div className="w-full flex items-center">
+        <div className="w-1/2 text-moon font-medium">Reward APY</div>
+        <Skeleton className="w-1/2 h-[24px] bg-primary/20 rounded-md" />
+      </div>
+      <div className="w-full flex items-center">
+        <div className="w-1/2 text-moon font-medium">Net APY</div>
         <Skeleton className="w-1/2 h-[24px] bg-primary/20 rounded-md" />
       </div>
       <div className="w-full flex items-center">
@@ -108,7 +125,6 @@ export const LendTable = () => {
   );
   const changeInputDialogOpen = useMarketStore(selectChangeInputDialogOpen);
 
-  const { data: supplyRate, isPending: isSupplyRatePending } = useSupplyRate();
   const { data: userSupplyBorrow } = useUserSupplyBorrow();
   const { data: marketConfiguration, isPending: isPendingMarketConfiguration } =
     useMarketConfiguration();
@@ -125,6 +141,8 @@ export const LendTable = () => {
     assetId: marketConfiguration?.baseToken.bits,
   });
 
+  const { data: aprData, isPending: isAprPending } = useApr();
+
   const userRole = useUserRole();
 
   return (
@@ -133,15 +151,46 @@ export const LendTable = () => {
       <Table className="max-lg:hidden">
         <TableHeader>
           <TableRow>
-            <TableHead className="w-3/12">
+            <TableHead className="w-2/12">
               <div className="flex items-center gap-x-2">
                 Earn Asset
                 <InfoIcon text={'Base asset available for lending.'} />
               </div>
             </TableHead>
-            <TableHead className="w-1/6">Supply APY</TableHead>
-            <TableHead className="w-1/6">Your Supplied Assets</TableHead>
-            <TableHead className="w-1/6">
+            <TableHead className="w-2/12">Earn APY</TableHead>
+            <TableHead className="w-2/12">Your Supplied Assets</TableHead>
+            <TableHead className="w-1/12">
+              <div className="flex items-center gap-x-2">
+                Reward APY
+                <InfoIcon
+                  text={
+                    <div>
+                      <span className="font-bold">Reward APY</span> represents
+                      the annual percentage yield (APY) on partner tokens that
+                      users can earn while holding a Earn position.
+                    </div>
+                  }
+                />
+              </div>
+            </TableHead>
+            <TableHead className="w-1/12">
+              <div className="flex items-center gap-x-2">
+                Net APY
+                <InfoIcon
+                  text={
+                    <div>
+                      <span className="font-bold">Net APY</span> represents the
+                      total of Earn APY and Reward APY, calculated as follows:{' '}
+                      <span className="font-bold">
+                        Net APY = Earn APY + Reward APY
+                      </span>
+                      .
+                    </div>
+                  }
+                />
+              </div>
+            </TableHead>
+            <TableHead className="w-2/12">
               <div className="flex items-center gap-x-2">
                 Earn Points
                 <InfoIcon
@@ -151,11 +200,11 @@ export const LendTable = () => {
                 />
               </div>
             </TableHead>
-            <TableHead className="w-3/12">{}</TableHead>
+            <TableHead className="w-2/12">{}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {isPendingMarketConfiguration ? (
+          {isPendingMarketConfiguration || isAprPending ? (
             SkeletonRow
           ) : (
             <TableRow>
@@ -205,11 +254,11 @@ export const LendTable = () => {
               </TableCell>
               <TableCell
                 className={cn(
-                  isSupplyRatePending && 'animate-pulse',
+                  isAprPending && 'animate-pulse',
                   'text-white text-md font-medium'
                 )}
               >
-                {getSupplyApr(supplyRate)}
+                {aprData?.supplyBaseApr.times(100).toFixed(2)}%
               </TableCell>
               <TableCell>
                 {getFormattedNumber(
@@ -220,6 +269,42 @@ export const LendTable = () => {
                 )}{' '}
                 {appConfig.assets[marketConfiguration?.baseToken.bits ?? '']}
               </TableCell>
+              <TableCell
+                className={cn(
+                  isAprPending && 'animate-pulse',
+                  'text-white text-md font-medium'
+                )}
+              >
+                <div className="flex gap-x-2 items-center">
+                  {aprData?.supplyRewardApr.times(100).toFixed(2)}%
+                  <PointIcons points={POINTS_LM} />
+                </div>
+              </TableCell>
+              <TableCell
+                className={cn(
+                  isAprPending && 'animate-pulse',
+                  'text-white text-md font-medium'
+                )}
+              >
+                <TooltipProvider delayDuration={100}>
+                  <Tooltip>
+                    <TooltipTrigger
+                      onClick={(e: { preventDefault: () => any }) =>
+                        e.preventDefault()
+                      }
+                    >
+                      <div>{aprData?.netSupplyApr.times(100).toFixed(2)}%</div>
+                    </TooltipTrigger>
+                    <TooltipContent
+                      onPointerDownOutside={(e: {
+                        preventDefault: () => any;
+                      }) => e.preventDefault()}
+                    >
+                      <NetEarnTooltip aprData={aprData} />
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </TableCell>
               <TableCell>
                 <PointIcons points={POINTS_LEND} />
               </TableCell>
@@ -229,7 +314,7 @@ export const LendTable = () => {
                     You cannot Lend assets while you have an active borrowing
                     position. Learn more about how{' '}
                     <a
-                      href="https://docs.swaylend.com/navigate-swaylend"
+                      href="https://swaylend.gitbook.io/swaylend-docs/get-started/navigate-swaylend"
                       target="_blank"
                       rel="noreferrer"
                       className="underline hover:opacity-90 text-white"
@@ -279,7 +364,7 @@ export const LendTable = () => {
               <CardDescription>Card Description</CardDescription>
             </CardHeader>
           </VisuallyHidden.Root>
-          {isPendingMarketConfiguration ? (
+          {isPendingMarketConfiguration || isAprPending ? (
             SkeletonCardContent
           ) : (
             <CardContent>
@@ -327,14 +412,14 @@ export const LendTable = () => {
                   </div>
                 </div>
                 <div className="w-full flex items-center">
-                  <div className="w-1/2 text-moon font-medium">Supply APY</div>
+                  <div className="w-1/2 text-moon font-medium">Earn APY</div>
                   <div
                     className={cn(
                       'text-white',
-                      isSupplyRatePending && 'animate-pulse'
+                      isAprPending && 'animate-pulse'
                     )}
                   >
-                    {getSupplyApr(supplyRate)}
+                    {aprData?.supplyBaseApr.times(100).toFixed(2)}%
                   </div>
                 </div>
                 <div className="w-full flex items-center">
@@ -356,10 +441,35 @@ export const LendTable = () => {
                   </div>
                 </div>
                 <div className="w-full flex items-center">
+                  <div className="w-1/2 text-moon font-medium">Reward APY</div>
+                  <div
+                    className={cn(
+                      'text-white',
+                      isAprPending && 'animate-pulse'
+                    )}
+                  >
+                    <div className="flex gap-x-2 items-center">
+                      {aprData?.supplyRewardApr.times(100).toFixed(2)}%
+                      <PointIcons points={POINTS_LM} />
+                    </div>
+                  </div>
+                </div>
+                <div className="w-full flex items-center">
+                  <div className="w-1/2 text-moon font-medium">Net APY</div>
+                  <div
+                    className={cn(
+                      'text-white',
+                      isAprPending && 'animate-pulse'
+                    )}
+                  >
+                    {aprData?.netSupplyApr.times(100).toFixed(2)}%
+                  </div>
+                </div>
+                <div className="w-full flex items-center">
                   <div className="w-1/2 text-moon font-medium">
                     Supply Points
                   </div>
-                  <PointIcons points={POINTS_LEND} />
+                  <PointIcons points={POINTS_LEND} mobile />
                 </div>
               </div>
             </CardContent>
@@ -370,7 +480,7 @@ export const LendTable = () => {
                 You cannot Lend assets while you have an active borrowing
                 position. Learn more about how{' '}
                 <a
-                  href="https://docs.swaylend.com/navigate-swaylend"
+                  href="https://swaylend.gitbook.io/swaylend-docs/get-started/navigate-swaylend"
                   target="_blank"
                   rel="noreferrer"
                   className="underline hover:opacity-90 text-white"

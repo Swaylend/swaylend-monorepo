@@ -62,7 +62,7 @@ export const TermsAndConditions = ({
                 >
                   I confirm that I have read, understand and accept the{' '}
                   <Link
-                    href="https://docs.swaylend.com/legal/terms-and-condition"
+                    href="https://swaylend.gitbook.io/swaylend-docs/legal/terms-and-condition"
                     className="underline text-primary"
                     target="_blank"
                   >

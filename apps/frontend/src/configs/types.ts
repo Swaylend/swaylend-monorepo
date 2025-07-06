@@ -10,6 +10,21 @@ export const DeployedMarketsSchema = z.record(
   })
 );
 
+export const RewardsSchema = z.record(
+  z.string(),
+  z.array(
+    z.object({
+      poolSize: z.number(),
+      assetId: z.string(),
+      supplyRewardPercentage: z.number(),
+      borrowRewardPercentage: z.number(),
+      startDate: z.string(),
+      endDate: z.string(),
+      durationInDays: z.number(),
+    })
+  )
+);
+
 export const AppConfigSchema = z.object({
   env: z.enum(['testnet', 'mainnet']),
   client: z.object({
@@ -23,17 +38,18 @@ export const AppConfigSchema = z.object({
     alchemyId: z.string(),
     fuelOblApi: z.string(),
     announcementEnabled: z.boolean(),
-  }),
-  server: z.object({
     sentioApi: z.string(),
     sentioApiKey: z.string(),
     sentioProcessorVersion: z.string(),
   }),
   markets: DeployedMarketsSchema,
+  marketAddressToBaseAssetName: z.record(z.string(), z.string()),
   assets: z.record(z.string(), z.string()),
   baseAssetId: z.string(),
   useBurnerWallet: z.boolean(),
+  rewards: RewardsSchema,
 });
 
 export type AppConfig = z.infer<typeof AppConfigSchema>;
 export type DeployedMarkets = z.infer<typeof DeployedMarketsSchema>;
+export type Rewards = z.infer<typeof RewardsSchema>;

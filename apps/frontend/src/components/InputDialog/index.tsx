@@ -44,6 +44,26 @@ import { Button } from '../ui/button';
 import { InputField } from './InputField';
 import { PositionSummary } from './PositionSummary';
 
+const getOverPayAmount = (
+  amount: BigNumber,
+  assetPrice: BigNumber
+): BigNumber => {
+  const assetPriceInUsd = amount.times(assetPrice);
+
+  let overPayAmount;
+
+  // Overpay 0.01 USD
+  if (assetPriceInUsd.lte(10)) {
+    overPayAmount = new BigNumber(0.01).dividedBy(assetPrice);
+  } else if (assetPriceInUsd.lte(100)) {
+    overPayAmount = new BigNumber(0.1).dividedBy(assetPrice);
+  } else {
+    overPayAmount = new BigNumber(1).dividedBy(assetPrice);
+  }
+
+  return overPayAmount;
+};
+
 export const InputDialog = () => {
   const { account } = useAccount();
   const { isConnected } = useIsConnected();
@@ -180,16 +200,17 @@ export const InputDialog = () => {
     }
 
     if (action === 'REPAY') {
-      // Repay 1 cent more than owed to avoid staying in debt
-
-      return formatUnits(
+      const owed = formatUnits(
         userSupplyBorrow.borrowed,
         marketConfiguration.baseTokenDecimals
-      ).plus(
-        BigNumber(0.001).div(
-          priceData?.prices[marketConfiguration.baseToken.bits] ?? 1
-        )
       );
+
+      const overPayAmount = getOverPayAmount(
+        owed,
+        priceData.prices[marketConfiguration.baseToken.bits] ?? 1
+      );
+
+      return owed.plus(overPayAmount);
     }
     if (action === 'SUPPLY') {
       if (actionTokenAssetId === marketConfiguration.baseToken.bits) {
@@ -434,22 +455,12 @@ export const InputDialog = () => {
         marketConfiguration?.baseTokenDecimals
       );
 
-      const userBorrowedModified =
-        userBorrowed.plus(
-          BigNumber(0.002).div(
-            priceData?.prices[marketConfiguration.baseToken.bits] ?? 1
-          )
-        ) ?? BigNumber(0);
+      const overPayAmount = getOverPayAmount(
+        userBorrowed,
+        priceData.prices[marketConfiguration.baseToken.bits] ?? 1
+      );
 
-      const userBorrowedModifiedRepay =
-        userBorrowed
-          .plus(
-            BigNumber(0.001).div(
-              priceData?.prices[marketConfiguration.baseToken.bits] ?? 1
-            )
-          )
-          .decimalPlaces(marketConfiguration?.baseTokenDecimals) ??
-        BigNumber(0);
+      // const userBorrowedModified = userBorrowed.plus(overPayAmount);
 
       const minOpenPositionValue = BigNumber(
         marketConfiguration.baseBorrowMin.toString()
@@ -462,8 +473,9 @@ export const InputDialog = () => {
         return `Your position must be at least ${minOpenPositionValue.toFixed()} ${SYMBOL_TO_NAME[appConfig.assets[marketConfiguration.baseToken.bits]]}. Please repay the entire amount or keep at least ${minOpenPositionValue.toFixed()} ${SYMBOL_TO_NAME[appConfig.assets[marketConfiguration.baseToken.bits]]} in your position.`;
       }
 
-      if (tokenAmount.gt(userBorrowedModified))
-        return 'You are trying to repay more than your debt';
+      // if (tokenAmount.gt(userBorrowedModified)) {
+      //   return 'You are trying to repay more than your debt';
+      // }
     }
 
     return null;

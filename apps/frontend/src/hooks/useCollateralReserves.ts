@@ -17,6 +17,7 @@ export const useCollateralReserves = (
       'collateralReserves',
       marketContract?.account?.address,
       marketContract?.id,
+      assetId,
     ],
     queryFn: async () => {
       if (!assetId || !marketContract) return null;

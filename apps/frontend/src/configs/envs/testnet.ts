@@ -1,5 +1,5 @@
 import { defineConfig } from '../defineConfig';
-import type { DeployedMarkets } from '../types';
+import type { DeployedMarkets, Rewards } from '../types';
 
 export function createTestnetConfig() {
   return defineConfig({
@@ -17,26 +17,74 @@ export function createTestnetConfig() {
       fuelOblApi: process.env.NEXT_PUBLIC_FUEL_OBL_API ?? '',
       announcementEnabled:
         process.env.NEXT_PUBLIC_ANNOUNCEMENT_ENABLED === 'true',
-    },
-    server: {
-      sentioApi: process.env.SENTIO_API_URL ?? '',
-      sentioApiKey: process.env.SENTIO_API_KEY ?? '',
-      sentioProcessorVersion: process.env.SENTIO_PROCESSOR_VERSION ?? '',
+      sentioApi: process.env.NEXT_PUBLIC_SENTIO_API_URL ?? '',
+      sentioApiKey: process.env.NEXT_PUBLIC_SENTIO_API_KEY ?? '',
+      sentioProcessorVersion:
+        process.env.NEXT_PUBLIC_SENTIO_PROCESSOR_VERSION ?? '',
     },
     markets: markets,
+    marketAddressToBaseAssetName: marketAddressToBaseAssetName,
     assets: assets,
     baseAssetId:
       '0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07',
     useBurnerWallet: true,
+    rewards: rewards,
   });
 }
+
+const rewards: Rewards = {
+  USDC: [
+    {
+      poolSize: 200,
+      assetId:
+        '0x3aced3c270121c9d85e00fb14f079ecc666b733b12a0d15df1c2ecae26c1167a',
+      supplyRewardPercentage: 0.5,
+      borrowRewardPercentage: 0.5,
+      startDate: '2025-01-07T00:00:00Z',
+      endDate: '2025-01-14T00:00:00Z',
+      durationInDays: 7,
+    },
+    {
+      poolSize: 400,
+      assetId:
+        '0x3aced3c270121c9d85e00fb14f079ecc666b733b12a0d15df1c2ecae26c1167a',
+      supplyRewardPercentage: 0.5,
+      borrowRewardPercentage: 0.5,
+      startDate: '2025-01-14T00:00:00Z',
+      endDate: '2025-01-21T00:00:00Z',
+      durationInDays: 7,
+    },
+    {
+      poolSize: 800,
+      assetId:
+        '0x3aced3c270121c9d85e00fb14f079ecc666b733b12a0d15df1c2ecae26c1167a',
+      supplyRewardPercentage: 0.5,
+      borrowRewardPercentage: 0.5,
+      startDate: '2025-01-21T00:00:00Z',
+      endDate: '2025-01-28T00:00:00Z',
+      durationInDays: 7,
+    },
+  ],
+  USDT: [
+    {
+      poolSize: 200,
+      assetId:
+        '0xc264acd28eaf6f33e0e13360a37741dc91221aaa8817e1b4e462d61bb08c5835',
+      supplyRewardPercentage: 0.5,
+      borrowRewardPercentage: 0.5,
+      startDate: '2025-01-11T00:00:00Z',
+      endDate: '2025-01-14T00:00:00Z',
+      durationInDays: 7,
+    },
+  ],
+};
 
 const markets: DeployedMarkets = {
   USDC: {
     oracleAddress:
       '0x25146735b29d4216639f7f8b1d7b921ff87a1d3051de62d6cceaacabeb33b8e7',
     marketAddress:
-      '0xbeaa0e9479a83eb3eab0f66e0f0c0ce4af86a6fe6fd4549ae22d87083e086821',
+      '0x6030cf103746576706d7dcc2ae6f6b32ba0db66907a8f9901a0170de5f06acc0',
     tokenFactoryAddress:
       '0x3e4f1948aece07d3f30c8c5c425f914ac74653827de48394466f2a887eebe9c7',
     graphqlUrl: '',
@@ -50,6 +98,11 @@ const markets: DeployedMarkets = {
       '0x1ea9a306a5f280cfe7bd1fdc96815a6438069668e495a2f5a727c7b9b90691cb',
     graphqlUrl: '',
   },
+};
+
+const marketAddressToBaseAssetName: Record<string, string> = {
+  '0x6030cf103746576706d7dcc2ae6f6b32ba0db66907a8f9901a0170de5f06acc0': 'USDC',
+  '0x51b9bea7822988e03520018f4a1bb39b9f5ba15c9b4b9c9340a6bc1e5958abd4': 'USDT',
 };
 
 const assets: Record<string, string> = {

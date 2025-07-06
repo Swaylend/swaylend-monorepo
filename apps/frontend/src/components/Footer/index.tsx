@@ -53,7 +53,7 @@ export const Footer = () => {
                 <Image src={GITHUB} alt="Github logo" width={20} height={20} />
               </a>
               <a
-                href="https://docs.swaylend.com/"
+                href="https://swaylend.gitbook.io/swaylend-docs/"
                 target="_blank"
                 rel="noreferrer"
               >
@@ -91,7 +91,7 @@ export const Footer = () => {
                 <div className="text-primary text-sm font-semibold">LEARN</div>
                 <div className="mt-2 flex flex-col gap-y-1">
                   <a
-                    href="https://docs.swaylend.com/"
+                    href="https://swaylend.gitbook.io/swaylend-docs/"
                     target="_blank"
                     rel="noreferrer"
                   >
@@ -110,14 +110,14 @@ export const Footer = () => {
                 <div className="text-primary text-sm font-semibold">LEGAL</div>
                 <div className="mt-2 flex flex-col gap-y-1">
                   <a
-                    href="https://docs.swaylend.com/legal/swaylend-website-terms-of-use"
+                    href="https://swaylend.gitbook.io/swaylend-docs/legal/swaylend-website-terms-of-use"
                     target="_blank"
                     rel="noreferrer"
                   >
                     Terms of Use
                   </a>
                   <a
-                    href="https://docs.swaylend.com/legal/terms-and-condition"
+                    href="https://swaylend.gitbook.io/swaylend-docs/legal/terms-and-condition"
                     target="_blank"
                     rel="noreferrer"
                   >
@@ -150,7 +150,7 @@ export const Footer = () => {
                 <Image src={GITHUB} alt="GitHub logo" width={21} height={21} />
               </a>
               <a
-                href="https://docs.swaylend.com/"
+                href="https://swaylend.gitbook.io/swaylend-docs/"
                 target="_blank"
                 rel="noreferrer"
               >

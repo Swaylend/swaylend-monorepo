@@ -28,10 +28,7 @@ import { InfoIcon } from '../InfoIcon';
 
 type TableRowProps = {
   assetId: string;
-  baseAsset: {
-    symbol: string;
-    decimals: number;
-  };
+
   symbol: string;
   decimals: number;
   totalSupply: BigNumber | undefined;
@@ -43,7 +40,6 @@ type TableRowProps = {
 
 const MarketCollateralsTableRow = ({
   assetId,
-  baseAsset,
   symbol,
   decimals,
   totalSupply,
@@ -78,7 +74,7 @@ const MarketCollateralsTableRow = ({
       </TableCell>
       <TableCell className="text-lavender font-medium">
         {getFormattedPrice(
-          formatUnits(reserves ?? BigNumber(0), baseAsset.decimals)
+          formatUnits(reserves ?? BigNumber(0), decimals).times(price)
         )}
       </TableCell>
       <TableCell className="text-lavender font-medium">
@@ -102,7 +98,6 @@ export const MarketCollateralsTable = ({
 }: { marketName: string }) => {
   const { data: collateralConfigurations } =
     useCollateralConfigurations(marketName);
-  const { data: marketConfiguration } = useMarketConfiguration(marketName);
 
   const collaterals = useMemo(() => {
     if (!collateralConfigurations) return [];
@@ -169,10 +164,6 @@ export const MarketCollateralsTable = ({
             <MarketCollateralsTableRow
               key={collateral.asset_id.bits}
               assetId={collateral.asset_id.bits}
-              baseAsset={{
-                symbol: appConfig.assets[marketConfiguration?.baseToken.bits!],
-                decimals: marketConfiguration?.baseTokenDecimals ?? 6,
-              }}
               symbol={appConfig.assets[collateral.asset_id.bits]}
               decimals={collateral.decimals}
               totalSupply={totalCollateral?.get(collateral.asset_id.bits)}

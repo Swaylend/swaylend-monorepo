@@ -16,8 +16,8 @@ export const useBalance = ({ address, assetId }: UseBalanceParams) => {
       if (!provider || !address) return null;
 
       const currentFuelBalance = await provider.getBalance(
-        Address.fromString(address),
-        assetId ?? provider.getBaseAssetId() // Use the base asset ID if no asset ID is provided
+        new Address(address),
+        assetId ?? (await provider.getBaseAssetId()) // Use the base asset ID if no asset ID is provided
       );
 
       return currentFuelBalance || null;

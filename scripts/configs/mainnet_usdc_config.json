@@ -35,7 +35,7 @@
       "decimals": 9,
       "borrow_collateral_factor": 600000000000000000,
       "liquidate_collateral_factor": 800000000000000000,
-      "liquidation_penalty": 880000000000000000,
+      "liquidation_penalty": 800000000000000000,
       "supply_cap": 12000000000000,
       "is_active": true
     },
@@ -47,8 +47,8 @@
       "decimals": 9,
       "borrow_collateral_factor": 600000000000000000,
       "liquidate_collateral_factor": 750000000000000000,
-      "liquidation_penalty": 850000000000000000,
-      "supply_cap": 4000000000000,
+      "liquidation_penalty": 750000000000000000,
+      "supply_cap": 1300000000000,
       "is_active": true
     },
     {
@@ -72,7 +72,7 @@
       "borrow_collateral_factor": 900000000000000000,
       "liquidate_collateral_factor": 950000000000000000,
       "liquidation_penalty": 950000000000000000,
-      "supply_cap": 10000000000000000,
+      "supply_cap": 100000000000000,
       "is_active": true
     },
     {
@@ -83,8 +83,8 @@
       "decimals": 9,
       "borrow_collateral_factor": 600000000000000000,
       "liquidate_collateral_factor": 750000000000000000,
-      "liquidation_penalty": 800000000000000000,
-      "supply_cap": 800000000000,
+      "liquidation_penalty": 750000000000000000,
+      "supply_cap": 250000000000,
       "is_active": true
     },
     {
@@ -95,8 +95,20 @@
       "decimals": 9,
       "borrow_collateral_factor": 600000000000000000,
       "liquidate_collateral_factor": 750000000000000000,
-      "liquidation_penalty": 800000000000000000,
-      "supply_cap": 800000000000,
+      "liquidation_penalty": 750000000000000000,
+      "supply_cap": 50000000000,
+      "is_active": true
+    },
+    {
+      "asset_id": "0x1d5d97005e41cae2187a895fd8eab0506111e0e2f3331cd3912c15c24e3c1d82",
+      "price_feed_id": "0x8a757d54e5d34c7ff1aea8502a2d968686027a304d00418092aaf7e60ed98d95",
+      "name": "FUEL",
+      "symbol": "FUEL",
+      "decimals": 9,
+      "borrow_collateral_factor": 400000000000000000,
+      "liquidate_collateral_factor": 750000000000000000,
+      "liquidation_penalty": 750000000000000000,
+      "supply_cap": 40000000000000000,
       "is_active": true
     }
   ]

@@ -1,3 +1,5 @@
+import { NetBorrowTooltip } from '@/components/NetBorrowTooltip';
+import { NetEarnTooltip } from '@/components/NetEarnTooltip';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
   Tooltip,
@@ -5,16 +7,11 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import {
-  useBorrowRate,
-  useSupplyRate,
-  useUserCollateralAssets,
-  useUserSupplyBorrow,
-} from '@/hooks';
+import { useUserCollateralAssets, useUserSupplyBorrow } from '@/hooks';
+import { useApr } from '@/hooks';
 import { useUserCollateralUtilization } from '@/hooks/useUserCollateralUtilization';
 import { cn } from '@/lib/utils';
 import { selectMarketMode, useMarketStore } from '@/stores';
-import { getBorrowApr, getSupplyApr } from '@/utils';
 import { useIsConnected } from '@fuels/react';
 import { useMemo } from 'react';
 import Wave from 'react-wavify';
@@ -38,8 +35,7 @@ const WAVE_COLORS = {
 export const InfoBowl = () => {
   const marketMode = useMarketStore(selectMarketMode);
   const { isConnected } = useIsConnected();
-  const { data: borrowRate, isPending: isPendingBorrowRate } = useBorrowRate();
-  const { data: supplyRate, isPending: isPendingSupplyRate } = useSupplyRate();
+
   const { data: userSupplyBorrow, isPending: isPendingUserSupplyBorrow } =
     useUserSupplyBorrow();
   const { data: collateralUtilization } = useUserCollateralUtilization();
@@ -70,23 +66,12 @@ export const InfoBowl = () => {
     return WAVE_COLORS.danger;
   }, [collateralUtilization, collateralBalances]);
 
-  const borrowApr = useMemo(() => getBorrowApr(borrowRate), [borrowRate]);
-
-  const supplyApr = useMemo(() => getSupplyApr(supplyRate), [supplyRate]);
+  const { data: aprData, isPending: isAprPending } = useApr();
 
   const isLoading = useMemo(() => {
-    if (!isConnected) return isPendingBorrowRate || isPendingSupplyRate;
-    return [
-      isPendingBorrowRate,
-      isPendingSupplyRate,
-      isPendingUserSupplyBorrow,
-    ].some((res) => res);
-  }, [
-    isConnected,
-    isPendingBorrowRate,
-    isPendingSupplyRate,
-    isPendingUserSupplyBorrow,
-  ]);
+    if (!isConnected) return isAprPending;
+    return [isPendingUserSupplyBorrow, isAprPending].some((res) => res);
+  }, [isConnected, isAprPending, isPendingUserSupplyBorrow]);
 
   return (
     <TooltipProvider delayDuration={100}>
@@ -153,7 +138,7 @@ export const InfoBowl = () => {
                   </>
                 )}
                 <div
-                  className={`w-full h-full ${bowlMode === 2 && 'bg-white/5 ring-2 ring-white/20'} flex-col ${bowlMode === 0 && 'bg-purple text-white cursor-default'} ${bowlMode === 1 && 'bg-primary text-secondary cursor-default'} ring-2 ring-white/20 rounded-full flex justify-center items-center sm:text-xl text-md text-center font-semibold`}
+                  className={`w-full h-full ${bowlMode === 2 && 'bg-white/5 ring-2 ring-white/20'} flex-col ${bowlMode === 0 && 'bg-primary text-secondary cursor-default'} ${bowlMode === 1 && 'bg-purple text-white cursor-default'} ring-2 ring-white/20 rounded-full flex justify-center items-center sm:text-xl text-md text-center font-semibold`}
                 >
                   {bowlMode === 2 && (
                     <div className="z-10 text-xs sm:text-lg text-white font-bold">
@@ -164,18 +149,18 @@ export const InfoBowl = () => {
                     </div>
                   )}
                   {bowlMode === 1 && (
-                    <div className="text-sm sm:text-lg text-primary-foreground font-bold">
-                      Borrow APY
+                    <div className="text-sm sm:text-lg text-white font-bold">
+                      Net Borrow APY
                       <div className="sm:text-xl text-lg font-semibold">
-                        {borrowApr}
+                        {aprData?.netBorrowApr.times(100).toFixed(2)}%
                       </div>
                     </div>
                   )}
                   {bowlMode === 0 && (
-                    <div className="text-sm sm:text-lg text-white font-bold">
-                      Supply APY
+                    <div className="text-sm sm:text-lg text-primary-foreground font-bold">
+                      Net Earn APY
                       <div className="sm:text-xl text-lg  font-semibold">
-                        {supplyApr}
+                        {aprData?.netSupplyApr.times(100).toFixed(2)}%
                       </div>
                     </div>
                   )}
@@ -186,24 +171,36 @@ export const InfoBowl = () => {
         </TooltipTrigger>
         <TooltipContent
           className={cn(
-            bowlMode !== 2 && 'hidden',
+            (bowlMode === undefined || isAprPending) && 'hidden',
             'w-[300px]',
             'max-lg:hidden'
           )}
           side="bottom"
           onPointerDownOutside={(e) => e.preventDefault()}
         >
-          <div className="p-1">
-            <span className="font-semibold text-primary">
-              Liquidation Risk{' '}
-            </span>
-            is a measure of how close your position is to being{' '}
-            <span className="font-semibold text-red-500"> liquidated</span>. The
-            higher the percentage, the closer you are to liquidation. Upon
-            reaching <span className="font-semibold text-red-500"> 100%</span>,
-            your position will be{' '}
-            <span className="font-semibold text-red-500"> liquidated</span>.
-          </div>
+          {bowlMode === 2 && (
+            <div className="p-1">
+              <span className="font-semibold text-primary">
+                Liquidation Risk{' '}
+              </span>
+              is a measure of how close your position is to being{' '}
+              <span className="font-semibold text-red-500"> liquidated</span>.
+              The higher the percentage, the closer you are to liquidation. Upon
+              reaching <span className="font-semibold text-red-500"> 100%</span>
+              , your position will be{' '}
+              <span className="font-semibold text-red-500"> liquidated</span>.
+            </div>
+          )}
+          {bowlMode === 1 && (
+            <div className="p-1">
+              <NetBorrowTooltip aprData={aprData} />
+            </div>
+          )}
+          {bowlMode === 0 && (
+            <div className="p-1 w-full">
+              <NetEarnTooltip aprData={aprData} />
+            </div>
+          )}
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>

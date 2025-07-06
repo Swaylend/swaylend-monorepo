@@ -2,12 +2,11 @@
 
 import { TableCell, TableRow } from '@/components/ui/table';
 import {
-  useBorrowRate,
+  useApr,
   useCollateralConfigurations,
   useMarketBasics,
   useMarketConfiguration,
   usePrice,
-  useSupplyRate,
   useTotalCollateral,
   useUtilization,
 } from '@/hooks';
@@ -15,21 +14,29 @@ import {
   SYMBOL_TO_ICON,
   SYMBOL_TO_NAME,
   formatUnits,
-  getBorrowApr,
   getFormattedPrice,
-  getSupplyApr,
 } from '@/utils';
 import BigNumber from 'bignumber.js';
 import Image from 'next/image';
 import type React from 'react';
 
 import { appConfig } from '@/configs';
+import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 import SWAY from '/public/tokens/sway.svg?url';
 import { CircularProgressBar } from '../CircularProgressBar';
 import { type Collateral, CollateralIcons } from '../CollateralIcons';
+import { Line } from '../Line';
+import { NetBorrowTooltip } from '../NetBorrowTooltip';
+import { NetEarnTooltip } from '../NetEarnTooltip';
 import { Skeleton } from '../ui/skeleton';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '../ui/tooltip';
 
 const SkeletonRow = (
   <TableRow>
@@ -69,10 +76,7 @@ export const MarketTableRow = ({
   const { data: marketConfiguration } = useMarketConfiguration();
 
   const { data: utilization } = useUtilization(marketName);
-  const { data: borrowRate } = useBorrowRate(marketName);
-  const { data: supplyRate } = useSupplyRate(marketName);
-  const borrowApr = useMemo(() => getBorrowApr(borrowRate), [borrowRate]);
-  const supplyApr = useMemo(() => getSupplyApr(supplyRate), [supplyRate]);
+  const { data: aprData, isPending: isAprPending } = useApr(marketName);
 
   const {
     data: collateralConfigurations,
@@ -117,7 +121,7 @@ export const MarketTableRow = ({
     );
   }, [totalCollateral, priceData]);
 
-  return isPendingCollateralConfigurations ? (
+  return isPendingCollateralConfigurations || isAprPending ? (
     SkeletonRow
   ) : (
     <TableRow
@@ -159,11 +163,51 @@ export const MarketTableRow = ({
           }
         </div>
       </TableCell>
-      <TableCell>
-        <div className="text-lavender font-medium">{supplyApr}</div>
+      <TableCell
+        className={cn(
+          isAprPending && 'animate-pulse',
+          'text-lavender font-medium'
+        )}
+      >
+        <TooltipProvider delayDuration={100}>
+          <Tooltip>
+            <TooltipTrigger
+              onClick={(e: { preventDefault: () => any }) => e.preventDefault()}
+            >
+              <div>{aprData?.netSupplyApr.times(100).toFixed(2)}%</div>
+            </TooltipTrigger>
+            <TooltipContent
+              onPointerDownOutside={(e: {
+                preventDefault: () => any;
+              }) => e.preventDefault()}
+            >
+              <NetEarnTooltip aprData={aprData} />
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </TableCell>
-      <TableCell>
-        <div className="text-lavender font-medium">{borrowApr}</div>
+      <TableCell
+        className={cn(
+          isAprPending && 'animate-pulse',
+          'text-lavender font-medium'
+        )}
+      >
+        <TooltipProvider delayDuration={100}>
+          <Tooltip>
+            <TooltipTrigger
+              onClick={(e: { preventDefault: () => any }) => e.preventDefault()}
+            >
+              <div>{aprData?.netBorrowApr.times(100).toFixed(2)}%</div>
+            </TooltipTrigger>
+            <TooltipContent
+              onPointerDownOutside={(e: {
+                preventDefault: () => any;
+              }) => e.preventDefault()}
+            >
+              <NetBorrowTooltip aprData={aprData} />
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
       </TableCell>
       <TableCell className="text-lavender font-medium">
         {getFormattedPrice(

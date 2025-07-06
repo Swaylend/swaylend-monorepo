@@ -101,7 +101,6 @@ export const usePrice = (marketParam?: string) => {
 
       const { value: fee } = await marketContract.functions
         .update_fee(updateData)
-        .addContracts([pythContract])
         .get();
 
       // Prepare the PriceDateUpdateInput object
@@ -140,13 +139,14 @@ export const usePrice = (marketParam?: string) => {
         priceUpdateData,
       };
     },
-    refetchInterval: 3000,
+    refetchInterval: 5000,
     enabled:
       !!provider &&
       !!priceFeedIdToAssetId &&
       !!marketContract &&
       !!pythContract,
-    staleTime: 3000,
-    refetchOnWindowFocus: false,
+    staleTime: 5000,
+    refetchOnWindowFocus: true,
+    refetchIntervalInBackground: true,
   });
 };

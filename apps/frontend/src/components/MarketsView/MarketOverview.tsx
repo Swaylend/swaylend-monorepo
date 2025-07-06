@@ -2,26 +2,23 @@
 
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
-  useBorrowRate,
+  useApr,
   useCollateralConfigurations,
   useMarketBalanceOfBase,
   useMarketBasics,
   useMarketConfiguration,
   usePrice,
-  useSupplyRate,
   useTotalCollateral,
   useTotalReserves,
 } from '@/hooks';
 
-import { ChartData } from '@/lib/charts';
+import type { ChartData } from '@/lib/charts';
 import { cn } from '@/lib/utils';
 import {
   SYMBOL_TO_ICON,
   formatUnits,
-  getBorrowApr,
   getFormattedNumber,
   getFormattedPrice,
-  getSupplyApr,
 } from '@/utils';
 import BigNumber from 'bignumber.js';
 import { ChevronLeft } from 'lucide-react';
@@ -29,6 +26,15 @@ import Link from 'next/link';
 import type React from 'react';
 import { useMemo } from 'react';
 import { IconPair } from '../IconPair';
+import { Line } from '../Line';
+import { NetBorrowTooltip } from '../NetBorrowTooltip';
+import { NetEarnTooltip } from '../NetEarnTooltip';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '../ui/tooltip';
 import { KinkChart } from './KinkChart';
 import { MarketChart } from './MarketChart';
 import { MarketCollateralsTable } from './MarketCollateralsTable';
@@ -44,15 +50,13 @@ export default function MarketOverview({
   baseAsset,
   chartData,
 }: MarketOverviewProps) {
-  const { data: borrowRate } = useBorrowRate(baseAsset);
-  const { data: supplyRate } = useSupplyRate(baseAsset);
   const { data: totalReserves } = useTotalReserves(baseAsset);
+
+  const { data: aprData, isPending: isAprPending } = useApr(baseAsset);
 
   const { data: collateralConfigurations } =
     useCollateralConfigurations(baseAsset);
   const { data: marketConfiguration } = useMarketConfiguration(baseAsset);
-  const borrowApr = useMemo(() => getBorrowApr(borrowRate), [borrowRate]);
-  const supplyApr = useMemo(() => getSupplyApr(supplyRate), [supplyRate]);
   const { data: availableLiquidity } = useMarketBalanceOfBase(baseAsset);
 
   const { data: totalCollateral } = useTotalCollateral(baseAsset);
@@ -134,7 +138,7 @@ export default function MarketOverview({
       <div className="w-full mt-12 flex justify-between">
         <div className="w-[47%]">
           <div className="max-lg:hidden">
-            <div className="text-purple text-md font-semibold">
+            <div className="text-primary text-md font-semibold">
               Total Collateral
             </div>
             <div className="text-white font-bold text-[20px]">
@@ -144,13 +148,13 @@ export default function MarketOverview({
           <MarketChart
             chartData={chartData}
             dataKey="collateralValueUsd"
-            color="#8B5CF6"
+            color="#3FE8BD"
           />
         </div>
 
         <div className="w-[47%]">
           <div className="max-lg:hidden">
-            <div className="text-primary text-md font-semibold">
+            <div className="text-purple text-md font-semibold">
               Total Borrowing
             </div>
             <div className="text-white font-bold text-[20px]">
@@ -165,7 +169,7 @@ export default function MarketOverview({
           <MarketChart
             chartData={chartData}
             dataKey="borrowedValueUsd"
-            color="#3FE8BD"
+            color="#8B5CF6"
           />
         </div>
       </div>
@@ -258,18 +262,66 @@ export default function MarketOverview({
           <CardContent>
             <div className="w-full flex justify-between pt-16 px-8">
               <div className="w-1/4 ">
-                <div className="text-primary text-lg font-semibold">
+                <div className="text-purple text-lg font-semibold">
                   Net Borrow APR
                 </div>
-                <div className="text-xl text-white font-semibold">
-                  {borrowApr}
+                <div
+                  className={cn(
+                    isAprPending && 'animate-pulse',
+                    'text-xl text-white font-semibold'
+                  )}
+                >
+                  <TooltipProvider delayDuration={100}>
+                    <Tooltip>
+                      <TooltipTrigger
+                        onClick={(e: { preventDefault: () => any }) =>
+                          e.preventDefault()
+                        }
+                      >
+                        <div>
+                          {aprData?.netBorrowApr.times(100).toFixed(2)}%
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent
+                        onPointerDownOutside={(e: {
+                          preventDefault: () => any;
+                        }) => e.preventDefault()}
+                      >
+                        <NetBorrowTooltip aprData={aprData} />
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </div>
 
-                <div className="text-purple text-lg font-semibold mt-8">
+                <div className="text-primary text-lg font-semibold mt-8">
                   Net Earn APR
                 </div>
-                <div className="text-xl text-white font-semibold">
-                  {supplyApr}
+                <div
+                  className={cn(
+                    isAprPending && 'animate-pulse',
+                    'text-xl text-white font-semibold'
+                  )}
+                >
+                  <TooltipProvider delayDuration={100}>
+                    <Tooltip>
+                      <TooltipTrigger
+                        onClick={(e: { preventDefault: () => any }) =>
+                          e.preventDefault()
+                        }
+                      >
+                        <div>
+                          {aprData?.netSupplyApr.times(100).toFixed(2)}%
+                        </div>
+                      </TooltipTrigger>
+                      <TooltipContent
+                        onPointerDownOutside={(e: {
+                          preventDefault: () => any;
+                        }) => e.preventDefault()}
+                      >
+                        <NetEarnTooltip aprData={aprData} />
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </div>
               </div>
               <div className="w-3/4">

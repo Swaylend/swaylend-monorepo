@@ -42,6 +42,7 @@ import { Points } from './Points';
 
 const NAVBAR_LINKS = [
   { href: '/markets', label: 'Markets', icon: <ChartLine /> },
+  { href: '/portfolio', label: 'Portfolio', icon: <Coins /> },
   ...(appConfig.env === 'testnet'
     ? [{ href: '/faucet', label: 'Faucet', icon: <Coins /> }]
     : []),
@@ -59,16 +60,9 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
 
   return (
     <>
-      <div className="w-full text-center bg-purple font-medium text-md text-lavender py-2 px-4">
-        SwayPoints are live! Start earning points now.
-        <a
-          href="https://docs.swaylend.com/swaypoints"
-          target="_blank"
-          rel="noreferrer"
-          className="underline ml-1"
-        >
-          Learn more
-        </a>
+      <div className="w-full text-center bg-purple font-medium text-md text-lavender py-1 px-4">
+        New Functionality live! 🚀 Discover <b>Portfolio</b>: Track your
+        markets, positions, and transactions now.
       </div>
       {/* DESKTOP */}
       <div className="max-lg:hidden">
@@ -181,6 +175,13 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
                       </div>
                     </div>
                   </DropdownMenuItem>
+                  {/* <DropdownMenuItem>
+                    <Link href="/bridge" className="w-full">
+                      <div className="w-full flex items-center justify-between text-md font-medium text-lavender py-1 px-0.5 gap-x-2 cursor-pointer hover:underline">
+                        Embedded
+                      </div>
+                    </Link>
+                  </DropdownMenuItem> */}
                 </DropdownMenuContent>
               </DropdownMenu>
               <DropdownMenu open={openDex} onOpenChange={setOpenDex}>
@@ -209,13 +210,20 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
                       </div>
                     </div>
                   </DropdownMenuItem>
+                  {/* <DropdownMenuItem>
+                    <Link href="/swap" className="w-full">
+                      <div className="w-full flex items-center justify-between text-md font-medium text-lavender py-1 px-0.5 gap-x-2 cursor-pointer hover:underline">
+                        Embedded
+                      </div>
+                    </Link>
+                  </DropdownMenuItem> */}
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
           </div>
           <div className="flex items-center gap-x-2">
             <Points />
-            {!mobile && <ConnectButton />}
+            <ConnectButton />
           </div>
         </div>
         <Line />
@@ -278,24 +286,44 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
                       Dashboard
                     </div>
                   </Link>
-                  {NAVBAR_LINKS.map(({ href, label }) => (
-                    <Link
-                      key={href}
-                      href={href}
-                      onMouseDown={() => setOpen(false)}
-                      prefetch={false}
+                  <Link
+                    href="/swap"
+                    onMouseDown={() => setOpen(false)}
+                    prefetch={false}
+                  >
+                    <div
+                      className={cn(
+                        pathname === '/swap' ? 'text-primary' : 'text-lavender',
+                        pathname !== '/swap' && 'hover:text-lavender/80',
+                        'flex font-bold text-xl items-center gap-x-2 h-full'
+                      )}
                     >
-                      <div
-                        className={cn(
-                          pathname === href ? 'text-primary' : 'text-lavender',
-                          pathname !== href && 'hover:text-lavender/80',
-                          'flex font-bold text-xl items-center gap-x-2 h-full'
-                        )}
+                      Swap
+                    </div>
+                  </Link>
+                  {NAVBAR_LINKS.map(({ href, label }) => {
+                    if (mobile && href === '/markets') return null;
+                    return (
+                      <Link
+                        key={href}
+                        href={href}
+                        onMouseDown={() => setOpen(false)}
+                        prefetch={false}
                       >
-                        {label}
-                      </div>
-                    </Link>
-                  ))}
+                        <div
+                          className={cn(
+                            pathname === href
+                              ? 'text-primary'
+                              : 'text-lavender',
+                            pathname !== href && 'hover:text-lavender/80',
+                            'flex font-bold text-xl items-center gap-x-2 h-full'
+                          )}
+                        >
+                          {label}
+                        </div>
+                      </Link>
+                    );
+                  })}
                 </div>
               </div>
             </div>
