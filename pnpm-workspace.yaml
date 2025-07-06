@@ -1,3 +1,4 @@
 packages:
   - "apps/frontend"
   - "apps/indexer"
+  - "apps/indexer/generated"
