@@ -1,14 +1,13 @@
 {
   "name": "swaylend-indexer-envio",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "license": "MIT",
   "scripts": {
-    "clean": "tsc --clean",
-    "build": "tsc --build",
-    "codegen": "envio codegen --config config.mainnet.usdc.yaml",
+    "build": "tsc --build --clean",
+    "codegen": "envio codegen",
     "dev": "envio dev",
     "test": "ts-mocha test/**/*.spec.ts",
-    "start": "ts-node generated/src/Index.bs.js"
+    "start": "envio start"
   },
   "dependencies": {
     "chai": "4.3.10",
@@ -25,8 +24,7 @@
     "ts-mocha": "^10.0.0",
     "typescript": "5.6.3"
   },
-  "packageManager": "pnpm@9.14.2",
-  "engines": {
-    "node": ">=20.18.0"
+  "optionalDependencies": {
+    "generated": "./generated"
   }
 }

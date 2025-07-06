@@ -26,6 +26,8 @@
 
 Current version endpoint: https://indexer.hyperindex.xyz/bfc2f60/v1/graphql
 
+Second market endpoint: TODO
+
 ### Docker compose
 
 ```bash

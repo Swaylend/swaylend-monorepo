@@ -2,7 +2,7 @@ name: Swaylend USDC Market (testnet, mock oracle)
 ecosystem: fuel
 networks:
   - id: 0
-    start_block: 11380000
+    start_block: 11380001
     contracts:
       - name: Market
         address: 0xc3b2b490962167949c59a8ff55ceebbcc1878b46d82494e03cec27c082bf489a
