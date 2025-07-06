@@ -123,7 +123,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
   MarketProcessor.bind({
     chainId:
       appConfig.env === 'testnet' ? FuelNetwork.TEST_NET : FuelNetwork.MAIN_NET,
-    address: marketAddress,
+    address: marketAddress.toLowerCase(),
     startBlock: startBlock,
   })
     .onLogMarketConfigurationEvent(async (event, ctx) => {
@@ -150,7 +150,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
 
       // Chain ID, contract address
       const chainId = CHAIN_ID_MAP[ctx.chainId as keyof typeof CHAIN_ID_MAP];
-      const id = `${chainId}_${ctx.contractAddress}`;
+      const id = `${chainId}_${marketAddress.toLowerCase()}`;
 
       let marketConfiguration = await ctx.store.get(MarketConfiguration, id);
 
@@ -158,7 +158,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
         marketConfiguration = new MarketConfiguration({
           id,
           chainId: chainId,
-          contractAddress: ctx.contractAddress,
+          contractAddress: marketAddress.toLowerCase(),
           baseTokenAddress: base_token,
           baseTokenDecimals: base_token_decimals,
           supplyKink: BigInt(supply_kink.toString()),
@@ -186,7 +186,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
         marketConfiguration.baseTokenAddress = base_token;
         marketConfiguration.baseTokenDecimals = base_token_decimals;
         marketConfiguration.chainId = chainId;
-        marketConfiguration.contractAddress = ctx.contractAddress;
+        marketConfiguration.contractAddress = marketAddress.toLowerCase();
         marketConfiguration.supplyKink = BigInt(supply_kink.toString());
         marketConfiguration.borrowKink = BigInt(borrow_kink.toString());
         marketConfiguration.supplyPerSecondInterestRateBase = BigInt(
@@ -212,7 +212,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       await ctx.store.upsert(marketConfiguration);
 
       // Create pool if it doesn't exist
-      const poolId = `${chainId}_${ctx.contractAddress}_${base_token}`;
+      const poolId = `${chainId}_${marketAddress.toLowerCase()}_${base_token}`;
       const pool = await ctx.store.get(Pool, poolId);
 
       if (!pool) {
@@ -233,7 +233,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
           underlyingTokenSymbol: appConfig.assets[base_token],
           receiptTokenAddress: '',
           receiptTokenSymbol: '',
-          poolAddress: ctx.contractAddress,
+          poolAddress: marketAddress.toLowerCase(),
           poolType: 'supply_only',
         });
 
@@ -257,7 +257,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       } = event;
 
       const chainId = CHAIN_ID_MAP[ctx.chainId as keyof typeof CHAIN_ID_MAP];
-      const id = `${chainId}_${ctx.contractAddress}_${asset_id}`;
+      const id = `${chainId}_${marketAddress.toLowerCase()}_${asset_id}`;
 
       let collateralConfiguration = await ctx.store.get(
         CollateralConfiguration,
@@ -268,7 +268,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
         collateralConfiguration = new CollateralConfiguration({
           id,
           chainId: chainId,
-          contractAddress: ctx.contractAddress,
+          contractAddress: marketAddress.toLowerCase(),
           assetAddress: asset_id,
           decimals: decimals,
         });
@@ -281,7 +281,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       await ctx.store.upsert(collateralConfiguration);
 
       // Create pool if it doesn't exist
-      const poolId = `${chainId}_${ctx.contractAddress}_${asset_id}`;
+      const poolId = `${chainId}_${marketAddress.toLowerCase()}_${asset_id}`;
       const pool = await ctx.store.get(Pool, poolId);
 
       if (!pool) {
@@ -302,7 +302,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
           underlyingTokenSymbol: appConfig.assets[asset_id],
           receiptTokenAddress: '',
           receiptTokenSymbol: '',
-          poolAddress: ctx.contractAddress,
+          poolAddress: marketAddress.toLowerCase(),
           poolType: 'collateral_only',
         });
 
@@ -310,12 +310,12 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       }
 
       // Collateral pool
-      const collateralPoolId = `${chainId}_${ctx.contractAddress}_${asset_id}`;
+      const collateralPoolId = `${chainId}_${marketAddress.toLowerCase()}_${asset_id}`;
 
       const poolSnapshot = new CollateralPool({
         id: collateralPoolId,
         chainId: chainId,
-        poolAddress: ctx.contractAddress,
+        poolAddress: marketAddress.toLowerCase(),
         underlyingTokenAddress: asset_id,
         underlyingTokenSymbol: appConfig.assets[asset_id],
         underlyingTokenPriceUsd: BigDecimal(0),
@@ -361,7 +361,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       } = event;
 
       const chainId = CHAIN_ID_MAP[ctx.chainId as keyof typeof CHAIN_ID_MAP];
-      const id = `${chainId}_${ctx.contractAddress}_${asset_id}`;
+      const id = `${chainId}_${marketAddress.toLowerCase()}_${asset_id}`;
 
       let collateralConfiguration = await ctx.store.get(
         CollateralConfiguration,
@@ -377,7 +377,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       collateralConfiguration = new CollateralConfiguration({
         id,
         chainId: chainId,
-        contractAddress: ctx.contractAddress,
+        contractAddress: marketAddress.toLowerCase(),
         assetAddress: asset_id,
         decimals: decimals,
       });
@@ -402,7 +402,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
 
       const address = (account.Address?.bits ?? account.ContractId?.bits)!;
       const chainId = CHAIN_ID_MAP[ctx.chainId as keyof typeof CHAIN_ID_MAP];
-      const userBasicId = `${chainId}_${ctx.contractAddress}_${address}`;
+      const userBasicId = `${chainId}_${marketAddress.toLowerCase()}_${address}`;
 
       let userBasic = await ctx.store.get(UserBasic, userBasicId);
 
@@ -410,7 +410,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
         userBasic = new UserBasic({
           id: userBasicId,
           chainId: chainId,
-          contractAddress: ctx.contractAddress,
+          contractAddress: marketAddress.toLowerCase(),
           address: address,
           principal: value < 0 ? -value : value,
           isNegative: value < 0,
@@ -439,7 +439,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       const address = (account.Address?.bits ?? account.ContractId?.bits)!;
       const chainId = CHAIN_ID_MAP[ctx.chainId as keyof typeof CHAIN_ID_MAP];
 
-      const collateralConfigurationId = `${chainId}_${ctx.contractAddress}_${asset_id}`;
+      const collateralConfigurationId = `${chainId}_${marketAddress.toLowerCase()}_${asset_id}`;
       const collateralConfiguration = await ctx.store.get(
         CollateralConfiguration,
         collateralConfigurationId
@@ -451,7 +451,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
         );
       }
 
-      const id = `${chainId}_${ctx.contractAddress}_${address}_${asset_id}`;
+      const id = `${chainId}_${marketAddress.toLowerCase()}_${address}_${asset_id}`;
 
       // Collateral price
       const collateralPrice = await getPriceBySymbol(
@@ -469,7 +469,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
         collateralPosition = new CollateralPosition({
           id,
           chainId: chainId,
-          poolAddress: ctx.contractAddress,
+          poolAddress: marketAddress.toLowerCase(),
           userAddress: address,
           underlyingTokenAddress: collateralConfiguration.assetAddress,
           underlyingTokenSymbol:
@@ -504,7 +504,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       await ctx.store.upsert(collateralPosition);
 
       // Collateral pool
-      const collateralPoolId = `${chainId}_${ctx.contractAddress}_${collateralConfiguration.assetAddress}`;
+      const collateralPoolId = `${chainId}_${marketAddress.toLowerCase()}_${collateralConfiguration.assetAddress}`;
       const collateralPool = await ctx.store.get(
         CollateralPool,
         collateralPoolId
@@ -512,7 +512,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
 
       if (!collateralPool) {
         throw new Error(
-          `Collateral pool not found for market ${ctx.contractAddress} on chain ${chainId}`
+          `Collateral pool not found for market ${marketAddress.toLowerCase()} on chain ${chainId}`
         );
       }
 
@@ -531,13 +531,13 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
 
       // Collateral supply event
       const blockNumber = ctx.transaction?.blockNumber!;
-      const eventId = `${chainId}_${ctx.contractAddress}_${blockNumber}_${receiptIndex}`;
+      const eventId = `${chainId}_${marketAddress.toLowerCase()}_${blockNumber}_${receiptIndex}`;
 
       const eventEntity = new EventEntity({
         id: eventId,
         timestamp: dayjs(ctx.timestamp.getTime()).utc().unix(),
         chainId,
-        poolAddress: ctx.contractAddress,
+        poolAddress: marketAddress.toLowerCase(),
         blockNumber: Number(blockNumber),
         logIndex: receiptIndex,
         transactionHash: ctx.transaction?.id,
@@ -573,7 +573,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       const address = (account.Address?.bits ?? account.ContractId?.bits)!;
       const chainId = CHAIN_ID_MAP[ctx.chainId as keyof typeof CHAIN_ID_MAP];
 
-      const collateralConfigurationId = `${chainId}_${ctx.contractAddress}_${asset_id}`;
+      const collateralConfigurationId = `${chainId}_${marketAddress.toLowerCase()}_${asset_id}`;
       const collateralConfiguration = await ctx.store.get(
         CollateralConfiguration,
         collateralConfigurationId
@@ -585,7 +585,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
         );
       }
 
-      const id = `${chainId}_${ctx.contractAddress}_${address}_${asset_id}`;
+      const id = `${chainId}_${marketAddress.toLowerCase()}_${address}_${asset_id}`;
 
       const collateralPosition = await ctx.store.get(CollateralPosition, id);
 
@@ -620,7 +620,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       await ctx.store.upsert(collateralPosition);
 
       // Collateral pool
-      const collateralPoolId = `${chainId}_${ctx.contractAddress}_${collateralConfiguration.assetAddress}`;
+      const collateralPoolId = `${chainId}_${marketAddress.toLowerCase()}_${collateralConfiguration.assetAddress}`;
       const collateralPool = await ctx.store.get(
         CollateralPool,
         collateralPoolId
@@ -628,7 +628,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
 
       if (!collateralPool) {
         throw new Error(
-          `Collateral pool not found for market ${ctx.contractAddress} on chain ${chainId}`
+          `Collateral pool not found for market ${marketAddress.toLowerCase()} on chain ${chainId}`
         );
       }
 
@@ -647,13 +647,13 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
 
       // Collateral withdraw event
       const blockNumber = ctx.transaction?.blockNumber!;
-      const eventId = `${chainId}_${ctx.contractAddress}_${blockNumber}_${receiptIndex}`;
+      const eventId = `${chainId}_${marketAddress.toLowerCase()}_${blockNumber}_${receiptIndex}`;
 
       const eventEntity = new EventEntity({
         id: eventId,
         timestamp: dayjs(ctx.timestamp.getTime()).utc().unix(),
         chainId,
-        poolAddress: ctx.contractAddress,
+        poolAddress: marketAddress.toLowerCase(),
         blockNumber: Number(blockNumber),
         logIndex: receiptIndex,
         transactionHash: ctx.transaction?.id,
@@ -689,7 +689,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       // Collateral pool reduced for absorbed collateral
       const address = (account.Address?.bits ?? account.ContractId?.bits)!;
       const chainId = CHAIN_ID_MAP[ctx.chainId as keyof typeof CHAIN_ID_MAP];
-      const collateralPoolId = `${chainId}_${ctx.contractAddress}_${asset_id}`;
+      const collateralPoolId = `${chainId}_${marketAddress.toLowerCase()}_${asset_id}`;
       const collateralPool = await ctx.store.get(
         CollateralPool,
         collateralPoolId
@@ -697,11 +697,11 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
 
       if (!collateralPool) {
         throw new Error(
-          `Collateral pool not found for market ${ctx.contractAddress} on chain ${chainId}`
+          `Collateral pool not found for market ${marketAddress.toLowerCase()} on chain ${chainId}`
         );
       }
 
-      const collateralConfigurationId = `${chainId}_${ctx.contractAddress}_${asset_id}`;
+      const collateralConfigurationId = `${chainId}_${marketAddress.toLowerCase()}_${asset_id}`;
       const collateralConfiguration = await ctx.store.get(
         CollateralConfiguration,
         collateralConfigurationId
@@ -737,7 +737,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       await ctx.store.upsert(collateralPool);
 
       // Get collateral position
-      const collateralPositionId = `${chainId}_${ctx.contractAddress}_${address}_${asset_id}`;
+      const collateralPositionId = `${chainId}_${marketAddress.toLowerCase()}_${address}_${asset_id}`;
       const collateralPosition = await ctx.store.get(
         CollateralPosition,
         collateralPositionId
@@ -771,12 +771,12 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       // Market configuration
       const marketConfiguration = await ctx.store.get(
         MarketConfiguration,
-        `${chainId}_${ctx.contractAddress}`
+        `${chainId}_${marketAddress.toLowerCase()}`
       );
 
       if (!marketConfiguration) {
         throw new Error(
-          `Market configuration not found for market ${ctx.contractAddress} on chain ${chainId}`
+          `Market configuration not found for market ${marketAddress.toLowerCase()} on chain ${chainId}`
         );
       }
 
@@ -795,27 +795,54 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       const basePrice = BigDecimal(baseAssetPrice ?? 0);
 
       const blockNumber = ctx.transaction?.blockNumber!;
-      const eventId = `${chainId}_${ctx.contractAddress}_${blockNumber}_${receiptIndex}`;
+      const eventId = `${chainId}_${marketAddress.toLowerCase()}_${blockNumber}_${receiptIndex}`;
+
+      const marketBasicId = `${chainId}_${marketAddress.toLowerCase()}`;
+      const marketBasic = await ctx.store.get(MarketBasic, marketBasicId);
+
+      if (!marketBasic) {
+        throw new Error(
+          `Market basic not found for market ${marketAddress.toLowerCase()} on chain ${chainId}`
+        );
+      }
+
+      const repayAmountPresentValue = getPresentValueWithScale(
+        BigInt(repay_amount.toString()),
+        marketBasic.baseBorrowIndex
+      );
+
+      const repayAmountPresentValueNormalized = BigDecimal(
+        repayAmountPresentValue.toString()
+      )
+        .dividedBy(FACTOR_SCALE_15.asBigDecimal())
+        .dividedBy(BigDecimal(10).pow(marketConfiguration.baseTokenDecimals));
+
+      const supplyAmountPresentValue = getPresentValueWithScale(
+        BigInt(supply_amount.toString()),
+        marketBasic.baseSupplyIndex
+      );
+
+      const supplyAmountPresentValueNormalized = BigDecimal(
+        supplyAmountPresentValue.toString()
+      )
+        .dividedBy(FACTOR_SCALE_15.asBigDecimal())
+        .dividedBy(BigDecimal(10).pow(marketConfiguration.baseTokenDecimals));
 
       // Repay event
       let eventEntity = new EventEntity({
         id: `${eventId}_repay`,
         timestamp: dayjs(ctx.timestamp.getTime()).utc().unix(),
         chainId,
-        poolAddress: ctx.contractAddress,
+        poolAddress: marketAddress.toLowerCase(),
         blockNumber: Number(blockNumber),
         logIndex: receiptIndex,
         transactionHash: ctx.transaction?.id,
         userAddress: address,
         takerAddress: address,
         tokenAddress: marketConfiguration.baseTokenAddress,
-        amount: BigInt(repay_amount.toString()),
-        amountNormalized: BigDecimal(repay_amount.toString()).dividedBy(
-          BigDecimal(10).pow(marketConfiguration.baseTokenDecimals)
-        ),
-        amountUsd: BigDecimal(repay_amount.toString())
-          .dividedBy(BigDecimal(10).pow(marketConfiguration.baseTokenDecimals))
-          .times(basePrice),
+        amount: repayAmountPresentValue,
+        amountNormalized: repayAmountPresentValueNormalized,
+        amountUsd: repayAmountPresentValueNormalized.times(basePrice),
         eventType: 'Repay',
       });
 
@@ -826,20 +853,16 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
         id: `${eventId}_supply`,
         timestamp: dayjs(ctx.timestamp.getTime()).utc().unix(),
         chainId,
-        poolAddress: ctx.contractAddress,
+        poolAddress: marketAddress.toLowerCase(),
         blockNumber: Number(blockNumber),
         logIndex: receiptIndex,
         transactionHash: ctx.transaction?.id,
         userAddress: address,
         takerAddress: address,
         tokenAddress: marketConfiguration.baseTokenAddress,
-        amount: BigInt(supply_amount.toString()),
-        amountNormalized: BigDecimal(supply_amount.toString()).dividedBy(
-          BigDecimal(10).pow(marketConfiguration.baseTokenDecimals)
-        ),
-        amountUsd: BigDecimal(supply_amount.toString())
-          .dividedBy(BigDecimal(10).pow(marketConfiguration.baseTokenDecimals))
-          .times(basePrice),
+        amount: supplyAmountPresentValue,
+        amountNormalized: supplyAmountPresentValueNormalized,
+        amountUsd: supplyAmountPresentValueNormalized.times(basePrice),
         eventType: 'Deposit',
       });
 
@@ -861,12 +884,12 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       // Market configuration
       const marketConfiguration = await ctx.store.get(
         MarketConfiguration,
-        `${chainId}_${ctx.contractAddress}`
+        `${chainId}_${marketAddress.toLowerCase()}`
       );
 
       if (!marketConfiguration) {
         throw new Error(
-          `Market configuration not found for market ${ctx.contractAddress} on chain ${chainId}`
+          `Market configuration not found for market ${marketAddress.toLowerCase()} on chain ${chainId}`
         );
       }
 
@@ -885,27 +908,54 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       const basePrice = BigDecimal(baseAssetPrice ?? 0);
 
       const blockNumber = ctx.transaction?.blockNumber!;
-      const eventId = `${chainId}_${ctx.contractAddress}_${blockNumber}_${receiptIndex}`;
+      const eventId = `${chainId}_${marketAddress.toLowerCase()}_${blockNumber}_${receiptIndex}`;
+
+      const marketBasicId = `${chainId}_${marketAddress.toLowerCase()}`;
+      const marketBasic = await ctx.store.get(MarketBasic, marketBasicId);
+
+      if (!marketBasic) {
+        throw new Error(
+          `Market basic not found for market ${marketAddress.toLowerCase()} on chain ${chainId}`
+        );
+      }
+
+      const withdrawAmountPresentValue = getPresentValueWithScale(
+        BigInt(withdraw_amount.toString()),
+        marketBasic.baseSupplyIndex
+      );
+
+      const withdrawAmountPresentValueNormalized = BigDecimal(
+        withdrawAmountPresentValue.toString()
+      )
+        .dividedBy(FACTOR_SCALE_15.asBigDecimal())
+        .dividedBy(BigDecimal(10).pow(marketConfiguration.baseTokenDecimals));
+
+      const borrowAmountPresentValue = getPresentValueWithScale(
+        BigInt(borrow_amount.toString()),
+        marketBasic.baseBorrowIndex
+      );
+
+      const borrowAmountPresentValueNormalized = BigDecimal(
+        borrowAmountPresentValue.toString()
+      )
+        .dividedBy(FACTOR_SCALE_15.asBigDecimal())
+        .dividedBy(BigDecimal(10).pow(marketConfiguration.baseTokenDecimals));
 
       // Withdraw event
       let eventEntity = new EventEntity({
         id: `${eventId}_withdraw`,
         timestamp: dayjs(ctx.timestamp.getTime()).utc().unix(),
         chainId,
-        poolAddress: ctx.contractAddress,
+        poolAddress: marketAddress.toLowerCase(),
         blockNumber: Number(blockNumber),
         logIndex: receiptIndex,
         transactionHash: ctx.transaction?.id,
         userAddress: address,
         takerAddress: address,
         tokenAddress: marketConfiguration.baseTokenAddress,
-        amount: BigInt(withdraw_amount.toString()),
-        amountNormalized: BigDecimal(withdraw_amount.toString()).dividedBy(
-          BigDecimal(10).pow(marketConfiguration.baseTokenDecimals)
-        ),
-        amountUsd: BigDecimal(withdraw_amount.toString())
-          .dividedBy(BigDecimal(10).pow(marketConfiguration.baseTokenDecimals))
-          .times(basePrice),
+        amount: withdrawAmountPresentValue,
+        amountNormalized: withdrawAmountPresentValueNormalized,
+        amountUsd: withdrawAmountPresentValueNormalized.times(basePrice),
         eventType: 'Withdraw',
       });
 
@@ -916,20 +966,16 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
         id: `${eventId}_borrow`,
         timestamp: dayjs(ctx.timestamp.getTime()).utc().unix(),
         chainId,
-        poolAddress: ctx.contractAddress,
+        poolAddress: marketAddress.toLowerCase(),
         blockNumber: Number(blockNumber),
         logIndex: receiptIndex,
         transactionHash: ctx.transaction?.id,
         userAddress: address,
         takerAddress: address,
         tokenAddress: marketConfiguration.baseTokenAddress,
-        amount: BigInt(borrow_amount.toString()),
-        amountNormalized: BigDecimal(borrow_amount.toString()).dividedBy(
-          BigDecimal(10).pow(marketConfiguration.baseTokenDecimals)
-        ),
-        amountUsd: BigDecimal(borrow_amount.toString())
-          .dividedBy(BigDecimal(10).pow(marketConfiguration.baseTokenDecimals))
-          .times(basePrice),
+        amount: borrowAmountPresentValue,
+        amountNormalized: borrowAmountPresentValueNormalized,
+        amountUsd: borrowAmountPresentValueNormalized.times(basePrice),
         eventType: 'Borrow',
       });
 
@@ -954,14 +1000,14 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
 
       const chainId = CHAIN_ID_MAP[ctx.chainId as keyof typeof CHAIN_ID_MAP];
 
-      const marketBasicId = `${chainId}_${ctx.contractAddress}`;
+      const marketBasicId = `${chainId}_${marketAddress.toLowerCase()}`;
       let marketBasic = await ctx.store.get(MarketBasic, marketBasicId);
 
       if (!marketBasic) {
         marketBasic = new MarketBasic({
           id: marketBasicId,
           chainId: chainId,
-          contractAddress: ctx.contractAddress,
+          contractAddress: marketAddress.toLowerCase(),
           lastAccrualTime: BigInt(last_accrual_time.toString()),
           baseSupplyIndex: BigInt(base_supply_index.toString()),
           baseBorrowIndex: BigInt(base_borrow_index.toString()),
@@ -985,7 +1031,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
           {
             field: 'poolAddress',
             op: '=',
-            value: ctx.contractAddress,
+            value: marketAddress.toLowerCase(),
           },
         ])
       ).filter((val) => val.chainId === chainId);
@@ -1000,11 +1046,11 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       const pool = pools[0];
 
       // Base pool
-      const basePoolId = `${chainId}_${ctx.contractAddress}`;
+      const basePoolId = `${chainId}_${marketAddress.toLowerCase()}`;
       let basePool = await ctx.store.get(BasePool, basePoolId);
 
       // Get market configuration
-      const marketConfigId = `${chainId}_${ctx.contractAddress}`;
+      const marketConfigId = `${chainId}_${marketAddress.toLowerCase()}`;
       const marketConfiguration = await ctx.store.get(
         MarketConfiguration,
         marketConfigId
@@ -1012,7 +1058,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
 
       if (!marketConfiguration) {
         throw new Error(
-          `Market configuration not found for market ${ctx.contractAddress} on chain ${chainId}`
+          `Market configuration not found for market ${marketAddress.toLowerCase()} on chain ${chainId}`
         );
       }
 
@@ -1054,7 +1100,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
         basePool = new BasePool({
           id: basePoolId,
           chainId: chainId,
-          poolAddress: ctx.contractAddress,
+          poolAddress: marketAddress.toLowerCase(),
           suppliedAmount: BigInt(total_supply_base.toString()),
           suppliedAmountNormalized: suppliedAmountNormalized,
           suppliedAmountUsd: suppliedAmountNormalized.times(basePrice),
@@ -1092,12 +1138,12 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       // Market configuration
       const marketConfiguration = await ctx.store.get(
         MarketConfiguration,
-        `${chainId}_${ctx.contractAddress}`
+        `${chainId}_${marketAddress.toLowerCase()}`
       );
 
       if (!marketConfiguration) {
         throw new Error(
-          `Market configuration not found for market ${ctx.contractAddress} on chain ${chainId}`
+          `Market configuration not found for market ${marketAddress.toLowerCase()} on chain ${chainId}`
         );
       }
 
@@ -1120,7 +1166,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       } = event;
 
       const blockNumber = ctx.transaction?.blockNumber!;
-      const id = `${chainId}_${ctx.contractAddress}_${blockNumber}_${receiptIndex}`;
+      const id = `${chainId}_${marketAddress.toLowerCase()}_${blockNumber}_${receiptIndex}`;
 
       const amount = BigDecimal(base_paid_out.toString()).dividedBy(
         BigDecimal(10).pow(marketConfiguration.baseTokenDecimals)
@@ -1135,7 +1181,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
         liquidatorAddress: (liquidator.Address?.bits ??
           liquidator.ContractId?.bits)!,
         userAddress: (account.Address?.bits ?? account.ContractId?.bits)!,
-        poolAddress: ctx.contractAddress,
+        poolAddress: marketAddress.toLowerCase(),
         tokenAddress: marketConfiguration.baseTokenAddress,
         amount: BigInt(amount.toFixed(0)),
         amountUsd: amount.times(basePrice),
@@ -1161,7 +1207,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
             {
               field: 'poolAddress',
               op: '=',
-              value: ctx.contract.id.toB256(),
+              value: marketAddress.toLowerCase(),
             },
           ])
         ).filter((val) => val.chainId === chainId);
@@ -1447,7 +1493,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
             {
               field: 'poolAddress',
               op: '=',
-              value: ctx.contract.id.toB256(),
+              value: marketAddress.toLowerCase(),
             },
           ])
         ).filter((val) => val.chainId === chainId);
@@ -1533,7 +1579,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
             {
               field: 'poolAddress',
               op: '=',
-              value: ctx.contract.id.toB256(),
+              value: marketAddress.toLowerCase(),
             },
           ])
         ).filter((val) => val.chainId === chainId);
