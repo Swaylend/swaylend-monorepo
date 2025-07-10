@@ -27,10 +27,11 @@ use std::u128::U128;
 use std::vec::Vec;
 use std::bytes::Bytes;
 use std::convert::TryFrom;
-use sway_libs::reentrancy::reentrancy_guard;
-use standards::src5::{SRC5, State};
-use sway_libs::ownership::*;
-use sway_libs::signed_integers::i256::I256;
+
+use reentrancy::reentrancy_guard;
+use src5::{SRC5, State};
+use ownership::*;
+use signed_int::i256::I256;
 
 // version of the smart contract
 const VERSION: u8 = 5_u8;
