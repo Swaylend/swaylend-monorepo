@@ -28,11 +28,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "pyth_mock"
-source = "member"
-dependencies = ["std"]
-
-[[package]]
 name = "reentrancy"
 version = "0.26.0"
 source = "registry+reentrancy?0.26.0#QmP25Uux1SYjT97JiBJGw15NQtKHzbYczhHkwcoh3Bqh4C!"

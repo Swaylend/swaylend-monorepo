@@ -12,7 +12,7 @@ mod events;
 
 use events::*;
 
-use pyth_interface::{data_structures::price::{Price, PriceFeedId}, PythCore};
+// use pyth_interface::{data_structures::price::{Price, PriceFeedId}, PythCore};
 use market_abi::{Market, structs::*,};
 use std::asset::{mint_to, transfer};
 use std::auth::{AuthError, msg_sender};
@@ -1242,24 +1242,6 @@ impl Market for Contract {
         get_price_internal(price_feed_id, PricePosition::Middle)
     }
 
-    /// This function interacts with an external oracle to obtain the update fee and ensures that the contract ID is valid.
-    ///
-    /// # Arguments
-    /// * `update_data`: [Vec<Bytes>] - The data used for the fee update request.
-    ///
-    /// # Returns
-    /// * [u64] - The update fee retrieved from the oracle.
-    ///
-    /// # Reverts
-    /// * When the contract ID is not set (i.e., it is zero).
-    ///
-    /// # Number of Storage Accesses
-    /// * Reads: `1`
-    #[storage(read)]
-    fn update_fee(update_data: Vec<Bytes>) -> u64 {
-        update_fee_internal(update_data)
-    }
-
     /// This function ensures that the provided price data update is valid and performs an update if the conditions are met.
     ///
     /// # Arguments
@@ -1372,64 +1354,44 @@ fn get_price_internal(price_feed_id: PriceFeedId, price_position: PricePosition)
         Error::OracleContractIdNotSet,
     );
 
-    let oracle = abi(PythCore, contract_id.bits());
-    let mut price = oracle.price(price_feed_id);
+    // let oracle = abi(PythCore, contract_id.bits());
+    // let mut price = oracle.price(price_feed_id);
 
-    // validate values
-    if price.publish_time < std::block::timestamp() {
-        let staleness = std::block::timestamp() - price.publish_time;
-        require(
-            staleness <= ORACLE_MAX_STALENESS,
-            Error::OraclePriceValidationError,
-        );
-    } else {
-        let aheadness = price.publish_time - std::block::timestamp();
-        require(
-            aheadness <= ORACLE_MAX_AHEADNESS,
-            Error::OraclePriceValidationError,
-        );
+    // // validate values
+    // if price.publish_time < std::block::timestamp() {
+    //     let staleness = std::block::timestamp() - price.publish_time;
+    //     require(
+    //         staleness <= ORACLE_MAX_STALENESS,
+    //         Error::OraclePriceValidationError,
+    //     );
+    // } else {
+    //     let aheadness = price.publish_time - std::block::timestamp();
+    //     require(
+    //         aheadness <= ORACLE_MAX_AHEADNESS,
+    //         Error::OraclePriceValidationError,
+    //     );
+    // }
+
+    // require(price.price != 0, Error::OraclePriceValidationError);
+
+    // require(
+    //     u256::from(price.confidence) <= (u256::from(price.price) * ORACLE_MAX_CONF_WIDTH / ORACLE_CONF_BASIS_POINTS),
+    //     Error::OraclePriceValidationError,
+    // );
+
+    // if price_position == PricePosition::LowerBound {
+    //     price.price = price.price - price.confidence;
+    // } else if price_position == PricePosition::UpperBound {
+    //     price.price = price.price + price.confidence;
+    // }
+
+    // price
+    Price {
+        price: 0,
+        exponent: 0,
+        confidence: 0,
+        publish_time: 0,
     }
-
-    require(price.price != 0, Error::OraclePriceValidationError);
-
-    require(
-        u256::from(price.confidence) <= (u256::from(price.price) * ORACLE_MAX_CONF_WIDTH / ORACLE_CONF_BASIS_POINTS),
-        Error::OraclePriceValidationError,
-    );
-
-    if price_position == PricePosition::LowerBound {
-        price.price = price.price - price.confidence;
-    } else if price_position == PricePosition::UpperBound {
-        price.price = price.price + price.confidence;
-    }
-
-    price
-}
-
-/// This function interacts with an external oracle to obtain the update fee and ensures that the contract ID is valid.
-///
-/// # Arguments
-/// * `update_data`: [Vec<Bytes>] - The data used for the fee update request.
-///
-/// # Returns
-/// * [u64] - The update fee retrieved from the oracle.
-///
-/// # Reverts
-/// * When the contract ID is not set (i.e., it is zero).
-///
-/// # Number of Storage Accesses
-/// * Reads: `1`
-#[storage(read)]
-fn update_fee_internal(update_data: Vec<Bytes>) -> u64 {
-    let contract_id = storage.pyth_contract_id.read();
-    require(
-        contract_id != ContractId::zero(),
-        Error::OracleContractIdNotSet,
-    );
-
-    let oracle = abi(PythCore, contract_id.bits());
-    let fee = oracle.update_fee(update_data);
-    fee
 }
 
 /// This function ensures that the provided price data update is valid and performs an update if the conditions are met.
@@ -1446,7 +1408,7 @@ fn update_fee_internal(update_data: Vec<Bytes>) -> u64 {
 ///
 /// # Number of Storage Accesses
 /// * Reads: `1`
-#[payable, storage(read)]
+#[storage(read)]
 fn update_price_feeds_if_necessary_internal(price_data_update: PriceDataUpdate) {
     let contract_id = storage.pyth_contract_id.read();
     require(
@@ -1461,19 +1423,19 @@ fn update_price_feeds_if_necessary_internal(price_data_update: PriceDataUpdate) 
         Error::InvalidPayment,
     );
 
-    let oracle = abi(PythCore, contract_id.bits());
-    oracle
-        .update_price_feeds_if_necessary {
-            asset_id: AssetId::base().bits(),
-            coins: price_data_update.update_fee,
-        }(
-            price_data_update
-                .price_feed_ids,
-            price_data_update
-                .publish_times,
-            price_data_update
-                .update_data,
-        );
+    // let oracle = abi(PythCore, contract_id.bits());
+    // oracle
+    //     .update_price_feeds_if_necessary {
+    //         asset_id: AssetId::base().bits(),
+    //         coins: price_data_update.update_fee,
+    //     }(
+    //         price_data_update
+    //             .price_feed_ids,
+    //         price_data_update
+    //             .publish_times,
+    //         price_data_update
+    //             .update_data,
+    //     );
 }
 
 /// Returns the current timestamp or the timestamp of the last debug step if debugging is enabled.

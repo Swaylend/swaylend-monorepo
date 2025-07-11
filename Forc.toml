@@ -6,5 +6,5 @@ members = [
     "contracts/market",
     "contracts/src-20",
     "contracts/token",
-    "contracts/pyth-mock",
+    # "contracts/pyth-mock",
 ]

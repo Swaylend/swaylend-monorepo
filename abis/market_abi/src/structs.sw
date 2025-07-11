@@ -2,12 +2,27 @@ library;
 
 use signed_int::i256::I256;
 use std::bytes::Bytes;
-use pyth_interface::{data_structures::price::{PriceFeedId}};
+// use pyth_interface::{data_structures::price::{PriceFeedId}};
 
 pub const BASE_ACCRUAL_SCALE: u256 = 1_000_000; // 1e6
 pub const BASE_INDEX_SCALE_15: u256 = 1_000_000_000_000_000; // 1e15
 pub const FACTOR_SCALE_18: u256 = 1_000_000_000_000_000_000; // 1e18
 pub const ORACLE_CONF_BASIS_POINTS: u256 = 10_000; // 1e4
+
+// TODO: Remove when pyth updates versions
+pub type PriceFeedId = b256;
+pub struct Price {
+    // Confidence interval around the price
+    pub confidence: u64,
+    // Price exponent
+    // This value represents the absolute value of an i32 in the range -255 to 0. Values other than 0, should be considered negative:
+    // exponent of 5 means the Pyth Price exponent was -5
+    pub exponent: u32,
+    // Price
+    pub price: u64,
+    // The TAI64 timestamp describing when the price was published
+    pub publish_time: u64,
+}
 
 /// This struct contains the configuration details for collateral management.
 pub struct CollateralConfiguration {

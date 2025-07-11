@@ -2,7 +2,7 @@ library;
 
 pub mod structs;
 
-use pyth_interface::{data_structures::price::{Price, PriceFeedId}};
+// use pyth_interface::{data_structures::price::{Price, PriceFeedId}};
 use structs::*;
 use std::bytes::Bytes;
 use signed_int::i256::I256;
@@ -145,9 +145,6 @@ abi Market {
     
     #[storage(read)]
     fn get_price(price_feed_id: PriceFeedId) -> Price;
-
-    #[storage(read)]
-    fn update_fee(update_data: Vec<Bytes>) -> u64;
 
     #[payable, storage(read)]
     fn update_price_feeds_if_necessary(price_data_update: PriceDataUpdate);
