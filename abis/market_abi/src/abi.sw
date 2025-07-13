@@ -41,7 +41,7 @@ abi Market {
     fn supply_collateral(); // Payment is required: any collateral asset
 
     #[payable, storage(write)]
-    fn withdraw_collateral(asset_id: AssetId, amount: u64, price_data_update: Vec<OraclePriceUpdateInput>);
+    fn withdraw_collateral(asset_id: AssetId, amount: u64, oracle_inputs: Vec<OracleInput>);
 
     #[storage(read)]
     fn get_user_collateral(account: Identity, asset_id: AssetId) -> u64;
@@ -61,31 +61,31 @@ abi Market {
     fn supply_base(); // Payment is required: base asset (USDC)
 
     #[payable, storage(write)]
-    fn withdraw_base(amount: u64, price_data_update: Vec<OraclePriceUpdateInput>);
+    fn withdraw_base(amount: u64, oracle_inputs: Vec<OracleInput>);
 
     #[storage(read)]
     fn get_user_supply_borrow(account: Identity) -> (u256, u256); 
 
     #[storage(read)]
-    fn available_to_borrow(account: Identity) -> u256;
+    fn available_to_borrow(account: Identity, oracle_inputs: Vec<OracleInput>) -> u256;
 
     // # 5. Liquidation management
     // Liquidates the user if there is insufficient collateral for the borrowing. 
     #[payable, storage(write)]
-    fn absorb(accounts: Vec<Identity>, price_data_update: Vec<OraclePriceUpdateInput>);
+    fn absorb(accounts: Vec<Identity>, oracle_inputs: Vec<OracleInput>);
 
     #[storage(read)]
-    fn is_liquidatable(account: Identity) -> bool;
+    fn is_liquidatable(account: Identity, oracle_inputs: Vec<OracleInput>) -> bool;
 
     // # 6. Protocol collateral management
     #[payable, storage(read)]
-    fn buy_collateral(asset_id: AssetId, min_amount: u64, recipient: Identity); // Payment is required: base asset (USDC)
+    fn buy_collateral(asset_id: AssetId, min_amount: u64, recipient: Identity, oracle_inputs: Vec<OracleInput>); // Payment is required: base asset (USDC)
 
     #[storage(read)]
-    fn collateral_value_to_sell(asset_id: AssetId, collateral_amount: u64) -> u64;
+    fn collateral_value_to_sell(asset_id: AssetId, collateral_amount: u64, oracle_inputs: Vec<OracleInput>) -> u64;
 
     #[storage(read)]
-    fn quote_collateral(asset_id: AssetId, base_amount: u64) -> u64;
+    fn quote_collateral(asset_id: AssetId, base_amount: u64, oracle_inputs: Vec<OracleInput>) -> u64;
 
     // ## 7. Reserves management
     #[storage(read)]
@@ -134,10 +134,10 @@ abi Market {
 
     // ## 10. Oracle calls
     #[storage(read)]
-    fn get_price(asset_id: AssetId) -> Price;
+    fn get_price(asset_id: AssetId, oracle_inputs: Vec<OracleInput>) -> Price;    
 
     #[payable, storage(read)]
-    fn update_price_feeds(price_data_update: Vec<OraclePriceUpdateInput>);
+    fn update_price_feeds(oracle_inputs: Vec<OracleInput>);
         
     // ## 11. Changing market configuration
     #[storage(write)]

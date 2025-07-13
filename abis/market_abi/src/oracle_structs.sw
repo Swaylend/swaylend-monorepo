@@ -22,11 +22,11 @@ pub enum OracleType {
     Stork: (),
 }
 
-pub enum OraclePriceUpdateInput {
-    Pyth: PythOraclePriceUpdateInput,
-    Redstone: RedstoneOraclePriceUpdateInput,
-    Twrap: TwrapOraclePriceUpdateInput,
-    Stork: StorkOraclePriceUpdateInput,
+pub enum OracleInput {
+    Pyth: PythOracleInput,
+    Redstone: RedstoneOracleInput,
+    Twrap: TwrapOracleInput,
+    Stork: StorkOracleInput,
 }
 
 /// This struct contains the configuration details for contract-wide oracle settings.
@@ -44,7 +44,7 @@ pub struct OracleAssetConfiguration {
 }
 
 
-pub struct PythOraclePriceUpdateInput {
+pub struct PythOracleInput {
     /// Contract ID of the Pyth contract.
     pub contract_id: b256,
 
@@ -58,21 +58,21 @@ pub struct PythOraclePriceUpdateInput {
     pub update_data: Vec<Bytes>,
 }
 
-pub struct RedstoneOraclePriceUpdateInput {
+pub struct RedstoneOracleInput {
     /// Contract ID of the Redstone contract.
     pub contract_id: b256,
     
     pub placeholder: (),
 }
 
-pub struct TwrapOraclePriceUpdateInput {
+pub struct TwrapOracleInput {
     /// Contract ID of the Twrap contract.
     pub contract_id: b256,
 
     pub placeholder: (),    
 }
 
-pub struct StorkOraclePriceUpdateInput {
+pub struct StorkOracleInput {
     /// Contract ID of the Stork contract.
     pub contract_id: b256,
 
@@ -91,7 +91,7 @@ pub const ORACLE_MAX_CONF_WIDTH: u256 = 300; // 300 / 10000 = 3.0 %
 pub const ORACLE_CONF_BASIS_POINTS: u256 = 10_000; // 1e4
 
 impl Oracle {
-    pub fn get_price(self, price_feed_id: b256) -> (bool, Price) {
+    pub fn get_price(self, price_feed_id: b256, oracle_inputs: Vec<OracleInput>) -> (bool, Price) {
         let contract_id = self.contract_id;
         let oracle_type = self.oracle_type;
 
@@ -139,6 +139,34 @@ impl Oracle {
                 }
             },
             OracleType::Redstone => {
+                // Redstone needs to use the `OracleInput` struct to get the price.
+                
+                // Find correct oracle input
+                let mut index = 0;
+                let len = oracle_inputs.len();
+                let mut found_oracle_input = false;
+
+                while index < len {
+                    let oracle_inputs: OracleInput = oracle_inputs.get(index).unwrap();
+                    match oracle_inputs {
+                        OracleInput::Redstone(input) => {
+                            // Redstone does not need to be updated.
+                            // It uses the `OracleInput` struct in the `get_price` function.
+                            found_oracle_input = true;
+
+                            // TODO: Implement (fetch price and validate)
+                            break;
+                        },
+                        _ => {
+                            index += 1;
+                        }
+                    }
+                }
+
+                if !found_oracle_input {
+                    is_price_valid = false;
+                }
+                
                 require(false, "Not implemented yet");
             },
             OracleType::Twrap => {
@@ -155,9 +183,9 @@ impl Oracle {
         return (is_price_valid, final_price);
     }
 
-    pub fn update_price_feeds(price_data_update: OraclePriceUpdateInput) {
-         match price_data_update {
-            OraclePriceUpdateInput::Pyth(input) => {
+    pub fn update_price_feeds(oracle_input: OracleInput) {
+         match oracle_input {
+            OracleInput::Pyth(input) => {
                 let contract_id = input.contract_id;
 
                 // Check if the payment is sufficient
@@ -179,23 +207,23 @@ impl Oracle {
                         .update_data,
                 );
             },
-            OraclePriceUpdateInput::Redstone(input) => {
+            OracleInput::Redstone(input) => {
+               // Redstone does not need to be updated.
+               // It uses the `OracleInput` struct in the `get_price` function.
+               return;
+            },
+            OracleInput::Twrap(input) => {
                 let contract_id = input.contract_id;
                 // TODO: Implement
                 require(false, "Not implemented yet");
             },
-            OraclePriceUpdateInput::Twrap(input) => {
-                let contract_id = input.contract_id;
-                // TODO: Implement
-                require(false, "Not implemented yet");
-            },
-            OraclePriceUpdateInput::Stork(input) => {
+            OracleInput::Stork(input) => {
                 let contract_id = input.contract_id;
                 // TODO: Implement
                 require(false, "Not implemented yet");
             },
             _ => {
-                require(false, Error::InvalidPriceUpdateInput);
+                require(false, Error::InvalidOracleInput);
             }
         }
     }

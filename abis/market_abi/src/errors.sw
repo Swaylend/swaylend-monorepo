@@ -20,5 +20,5 @@ pub enum Error {
     OraclePriceValidationError: (),
     UnknownOracle: (),
     InvalidOracleType: (),
-    InvalidPriceUpdateInput: (),
+    InvalidOracleInput: (),
 }
