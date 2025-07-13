@@ -1,0 +1,24 @@
+library;
+
+pub enum Error {
+    AlreadyInitialized: (),
+    Paused: (),
+    Unauthorized: (),
+    InsufficientReserves: (),
+    NotLiquidatable: (),
+    NotForSale: (),
+    TooMuchSlippage: (),
+    SupplyCapExceeded: (),
+    NotCollateralized: (),
+    BorrowTooSmall: (),
+    NotPermitted: (),
+    InvalidPayment: (),
+    UnknownAsset: (),
+    DebuggingDisabled: (),
+    NotYetActive: (),
+    AlreadyActive: (),
+    OraclePriceValidationError: (),
+    UnknownOracle: (),
+    InvalidOracleType: (),
+    InvalidPriceUpdateInput: (),
+}
