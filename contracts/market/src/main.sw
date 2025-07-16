@@ -1468,6 +1468,7 @@ fn get_price_internal(asset_id: AssetId, price_position: PricePosition, oracle_i
         // Check if oracle is disabled
         if !oracle_asset_configuration.is_disabled {
             // Get the price feed id
+            // FIXME: Probably need to be changed to Option<b256> as Redstone does not require a price feed id
             let price_feed_id = oracle_asset_configuration.price_feed_id;
 
             // Get global oracle configuration

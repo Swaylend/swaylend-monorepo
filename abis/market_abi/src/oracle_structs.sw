@@ -31,7 +31,7 @@ pub enum OracleInput {
 
 /// This struct contains the configuration details for contract-wide oracle settings.
 pub struct OracleGlobalConfiguration {
-    pub contract_id: b256,
+    pub contract_id: ContractId,
     pub is_disabled: bool,
     pub oracle_type: OracleType,
 }
@@ -46,7 +46,7 @@ pub struct OracleAssetConfiguration {
 
 pub struct PythOracleInput {
     /// Contract ID of the Pyth contract.
-    pub contract_id: b256,
+    pub contract_id: ContractId,
 
     /// This field represents the fee required to perform the update.
     pub update_fee: u64,
@@ -60,27 +60,27 @@ pub struct PythOracleInput {
 
 pub struct RedstoneOracleInput {
     /// Contract ID of the Redstone contract.
-    pub contract_id: b256,
+    pub contract_id: ContractId,
     
     pub placeholder: (),
 }
 
 pub struct TwrapOracleInput {
     /// Contract ID of the Twrap contract.
-    pub contract_id: b256,
+    pub contract_id: ContractId,
 
     pub placeholder: (),    
 }
 
 pub struct StorkOracleInput {
     /// Contract ID of the Stork contract.
-    pub contract_id: b256,
+    pub contract_id: ContractId,
 
     pub placeholder: (),
 }
 
 pub struct Oracle {
-    pub contract_id: b256,
+    pub contract_id: ContractId,
     pub oracle_type: OracleType,
 }
 
@@ -105,7 +105,7 @@ impl Oracle {
 
         match oracle_type {
             OracleType::Pyth => {
-                let oracle = abi(PythCore, contract_id);
+                let oracle = abi(PythCore, contract_id.bits());
                 let price = oracle.price_unsafe(price_feed_id);
 
                 // validate values
@@ -194,7 +194,7 @@ impl Oracle {
                     Error::InvalidPayment,
                 );
 
-                let oracle = abi(PythCore, contract_id);
+                let oracle = abi(PythCore, contract_id.bits());
 
 
                 oracle.update_price_feeds_if_necessary {
