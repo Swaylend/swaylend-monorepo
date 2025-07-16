@@ -152,13 +152,19 @@ abi Market {
 
     // ## 13. Oracle management
     #[storage(write)]
-    fn add_new_oracle(oracle_configuration: OracleGlobalConfiguration);
+    fn add_new_global_oracle(oracle_configuration: OracleGlobalConfiguration);
 
     #[storage(write)]
-    fn update_oracle(oracle_id: u64, oracle_configuration: OracleGlobalConfiguration);
+    fn update_global_oracle(oracle_id: u64, oracle_configuration: OracleGlobalConfiguration);
 
     #[storage(read)]
     fn get_oracle_global_configurations() -> Vec<OracleGlobalConfiguration>;
+
+    #[storage(write)]
+    fn add_new_asset_oracle(asset_id: AssetId, oracle_configuration: OracleAssetConfiguration);
+
+    #[storage(write)]
+    fn update_asset_oracle(asset_id: AssetId, oracle_configuration: OracleAssetConfiguration);
 
     #[storage(read)]
     fn get_oracle_asset_configurations() -> Vec<(AssetId, Vec<OracleAssetConfiguration>)>;

@@ -190,6 +190,10 @@ impl Market for Contract {
             .collateral_configurations_keys
             .push(configuration.asset_id);
 
+        // Add empty oracle asset configurations
+        storage.oracle_asset_configurations.insert(configuration.asset_id, StorageVec {});
+        storage.oracle_asset_configurations_keys.push(configuration.asset_id);
+
         log(CollateralAssetAdded {
             asset_id: configuration.asset_id,
             configuration,
@@ -1240,52 +1244,54 @@ impl Market for Contract {
     // ## 13. Oracle management
     /// TODO: Docs
     #[storage(write)]
-    fn add_new_oracle(oracle_configuration: OracleGlobalConfiguration) {
+    fn add_new_global_oracle(oracle_configuration: OracleGlobalConfiguration) {
         // Only owner can add a new oracle
         only_owner();
 
-        // let oracle_id = storage.oracle_configurations_keys.len();
-        // storage.oracle_configurations_keys.push(oracle_id);
-        // storage.oracle_configurations.insert(oracle_id, oracle_configuration);
+        // Check if oracle with contract_id already exists
+        let len = storage.oracle_global_configurations_keys.len();
+        let mut index = 0;
 
-        // TODO: ORACLE EVENTS
-        // Emit oracle added event
-        // log(OracleAddedEvent {
-        //     oracle_id,
-        //     oracle_configuration,
-        // });
+        while index < len {
+            let oracle_configuration = storage.oracle_global_configurations.get(storage.oracle_global_configurations_keys.get(index).unwrap().read()).read();
+            require(oracle_configuration.contract_id != oracle_configuration.contract_id, Error::GlobalOracleAlreadyExists);
+            index += 1;
+        }
+
+        let oracle_id = storage.oracle_global_configurations_keys.len();
+        storage.oracle_global_configurations_keys.push(oracle_id);
+        storage.oracle_global_configurations.insert(oracle_id, oracle_configuration);
+
+        // Emit global oracle added event
+        log(GlobalOracleAddedEvent {
+            oracle_id,
+            oracle_configuration,
+        });
     }
 
     /// TODO: Docs
     #[storage(write)]
-    fn update_oracle(oracle_id: u64, oracle_configuration: OracleGlobalConfiguration) {
+    fn update_global_oracle(oracle_id: u64, oracle_configuration: OracleGlobalConfiguration) {
         // Only owner can update an oracle
         only_owner();
 
-        // // Update the oracle configuration
-        // storage.oracle_configurations.insert(oracle_id, oracle_configuration);
+        // Check if oracle exists
+        require(
+            storage
+                .oracle_global_configurations
+                .get(oracle_id)
+                .try_read()
+                .is_some(),
+            Error::GlobalOracleNotFound,
+        );
 
-        // // Check if asset exists
-        // require(
-        //     storage
-        //         .oracle_configurations
-        //         .get(oracle_id)
-        //         .try_read()
-        //         .is_some(),
-        //     Error::UnknownOracle,
-        // );
-
-        // storage
-        //     .oracle_configurations
-        //     .insert(oracle_id, oracle_configuration);
-
-
-        // TODO: ORACLE EVENTS
-        // Emit oracle updated event
-        // log(OracleUpdatedEvent {
-        //     oracle_id,
-        //     oracle_configuration,
-        // });
+        storage.oracle_global_configurations.insert(oracle_id, oracle_configuration);
+        
+        // Emit global oracle updated event
+        log(GlobalOracleUpdatedEvent {
+            oracle_id,
+            oracle_configuration,
+        });
     }
 
     /// TODO: Docs
@@ -1304,6 +1310,87 @@ impl Market for Contract {
 
         result
     }
+
+    /// TODO: Docs
+    #[storage(write)]
+    fn add_new_asset_oracle(asset_id: AssetId, oracle_configuration: OracleAssetConfiguration) {
+        // Only owner can add a new oracle
+        only_owner();
+
+        // Global oracle configuration must exist
+        require(
+            storage
+                .oracle_global_configurations
+                .get(oracle_configuration.oracle_id)
+                .try_read()
+                .is_some(),
+            Error::GlobalOracleNotFound,
+        );
+
+        // Check if oracle with contract_id already exists
+        let asset_oracle_configurations: StorageKey<StorageVec<OracleAssetConfiguration>> = storage.oracle_asset_configurations.get(asset_id);
+        let len = asset_oracle_configurations.len();
+        let mut index = 0;
+
+        while index < len {
+            let oracle_configuration = asset_oracle_configurations.get(index).unwrap().try_read().unwrap();
+            require(oracle_configuration.oracle_id != oracle_configuration.oracle_id, Error::AssetOracleAlreadyExists);
+            index += 1;
+        }
+
+        asset_oracle_configurations.push(oracle_configuration);
+
+        // Emit asset oracle added event
+        log(AssetOracleAddedEvent {
+            asset_id,
+            oracle_configuration,
+        });
+    }
+
+    /// TODO: Docs
+    #[storage(write)]
+    fn update_asset_oracle(asset_id: AssetId, oracle_configuration: OracleAssetConfiguration) {
+        // Only owner can update an oracle
+        only_owner();
+
+        // Global oracle configuration must exist
+        require(
+            storage
+                .oracle_global_configurations
+                .get(oracle_configuration.oracle_id)
+                .try_read()
+                .is_some(),
+            Error::GlobalOracleNotFound,
+        );
+
+        // Check if oracle exists
+        let asset_oracle_configurations: StorageKey<StorageVec<OracleAssetConfiguration>> = storage.oracle_asset_configurations.get(asset_id);
+        let len = asset_oracle_configurations.len();
+        let mut index = 0;
+        let mut found = false;
+
+        while index < len {
+            let oracle_configuration = asset_oracle_configurations.get(index).unwrap().try_read().unwrap();
+            if oracle_configuration.oracle_id == oracle_configuration.oracle_id {
+                found = true;
+                asset_oracle_configurations.remove(index);
+                break;
+            }
+            index += 1;
+        }
+
+        require(found, Error::AssetOracleNotFound);
+
+        asset_oracle_configurations.push(oracle_configuration);
+
+       
+        // Emit asset oracle updated event
+        log(AssetOracleUpdatedEvent {
+            asset_id,
+            oracle_configuration,
+        });
+    }
+
 
     /// TODO: Docs
     #[storage(read)]

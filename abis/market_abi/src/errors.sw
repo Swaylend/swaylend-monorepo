@@ -21,4 +21,8 @@ pub enum Error {
     UnknownOracle: (),
     InvalidOracleType: (),
     InvalidOracleInput: (),
+    GlobalOracleAlreadyExists: (),
+    AssetOracleAlreadyExists: (),
+    GlobalOracleNotFound: (),
+    AssetOracleNotFound: (),
 }
