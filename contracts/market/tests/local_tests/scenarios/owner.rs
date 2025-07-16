@@ -154,32 +154,7 @@ async fn owner_test() {
     assert!(admin_pause_collat_res.is_ok());
     assert!(alice_pause_collat_res.is_err());
 
-    let contract_id =
-        ContractId::from_str("0x0000000000000000000000000000000000000000000000000000000000000000")
-            .unwrap();
-
-    let admin_set_pyth_contract_id_res = market
-        .with_account(&admin)
-        .await
-        .unwrap()
-        .set_pyth_contract_id(contract_id)
-        .await;
-    let alice_set_pyth_contract_id_res = market
-        .with_account(&alice)
-        .await
-        .unwrap()
-        .set_pyth_contract_id(contract_id)
-        .await;
-    // make sure set_pyth_contract_id was ok
-    assert!(admin_set_pyth_contract_id_res.is_ok());
-    assert!(alice_set_pyth_contract_id_res.is_err());
-
-    let market_config = get_market_config(
-        usdc.asset_id,
-        usdc.decimals as u32,
-        assets["USDC"].price_feed_id,
-    )
-    .unwrap();
+    let market_config = get_market_config(usdc.asset_id, usdc.decimals as u32).unwrap();
 
     let alice_update_market_configuration_res = market
         .with_account(&alice)

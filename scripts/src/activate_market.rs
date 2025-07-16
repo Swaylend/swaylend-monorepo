@@ -64,23 +64,11 @@ async fn main() -> anyhow::Result<()> {
         return Ok(());
     }
 
-    let tx_policies = TxPolicies::default().with_script_gas_limit(2_000_000);
-
     // activate contract
     market_instance
         .methods()
         .activate_contract(market_config.clone().into(), wallet.address().into())
         .with_contract_ids(&[market_contract_id.clone()])
-        .call()
-        .await?;
-
-    // set pyth contract id
-    let oracle_id = ContractId::from_str(&market_config.pyth_contract_id).unwrap();
-    market_instance
-        .methods()
-        .set_pyth_contract_id(oracle_id)
-        .with_contract_ids(&[market_contract_id.clone()])
-        .with_tx_policies(tx_policies)
         .call()
         .await?;
 

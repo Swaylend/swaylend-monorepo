@@ -46,7 +46,6 @@ struct MarketConfig {
 pub fn get_market_config(
     base_token: AssetId,
     base_token_decimals: u32,
-    base_token_price_feed_id: Bits256,
 ) -> anyhow::Result<MarketConfiguration> {
     let config_json_path = PathBuf::from(env!("CARGO_WORKSPACE_DIR"))
         .join("contracts/market/tests/market-config.json");
@@ -56,7 +55,6 @@ pub fn get_market_config(
     Ok(MarketConfiguration {
         base_token,
         base_token_decimals,
-        base_token_price_feed_id,
         supply_kink: config.supply_kink.into(),
         borrow_kink: config.borrow_kink.into(),
         supply_per_second_interest_rate_slope_low: config
@@ -184,36 +182,6 @@ impl Market {
             .await?)
     }
 
-    pub async fn pause_collateral_asset(
-        &self,
-        asset_id: AssetId,
-    ) -> anyhow::Result<CallResponse<()>> {
-        let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
-
-        Ok(self
-            .instance
-            .methods()
-            .pause_collateral_asset(asset_id.into())
-            .with_tx_policies(tx_policies)
-            .call()
-            .await?)
-    }
-
-    pub async fn resume_collateral_asset(
-        &self,
-        asset_id: AssetId,
-    ) -> anyhow::Result<CallResponse<()>> {
-        let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
-
-        Ok(self
-            .instance
-            .methods()
-            .resume_collateral_asset(asset_id.into())
-            .with_tx_policies(tx_policies)
-            .call()
-            .await?)
-    }
-
     pub async fn update_collateral_asset(
         &self,
         asset_id: AssetId,
@@ -271,17 +239,15 @@ impl Market {
         contract_ids: &[&dyn ContractDependency],
         asset_id: AssetId,
         amount: u64,
-        price_data_update: &PriceDataUpdate,
+        oracle_inputs: &Vec<OracleInput>,
     ) -> anyhow::Result<CallResponse<()>> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
-        let call_params = CallParameters::default().with_amount(price_data_update.update_fee);
 
         Ok(self
             .instance
             .methods()
-            .withdraw_collateral(asset_id, amount, price_data_update.clone())
+            .withdraw_collateral(asset_id, amount, oracle_inputs.clone())
             .with_tx_policies(tx_policies)
-            .call_params(call_params)?
             .with_contracts(contract_ids)
             .with_variable_output_policy(VariableOutputPolicy::Exactly(1))
             .call()
@@ -367,19 +333,17 @@ impl Market {
         &self,
         contract_ids: &[&dyn ContractDependency],
         amount: u64,
-        price_data_update: &PriceDataUpdate,
+        oracle_inputs: &Vec<OracleInput>,
     ) -> anyhow::Result<CallResponse<()>> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
-        let call_params = CallParameters::default().with_amount(price_data_update.update_fee);
 
         Ok(self
             .instance
             .methods()
-            .withdraw_base(amount.into(), price_data_update.clone())
+            .withdraw_base(amount.into(), oracle_inputs.clone())
             .with_variable_output_policy(VariableOutputPolicy::Exactly(1))
             .with_contracts(contract_ids)
             .with_tx_policies(tx_policies)
-            .call_params(call_params)?
             .call()
             .await?)
     }
@@ -403,13 +367,14 @@ impl Market {
         &self,
         contract_ids: &[&dyn ContractDependency],
         account: Identity,
+        oracle_inputs: &Vec<OracleInput>,
     ) -> anyhow::Result<u128> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
 
         let res = self
             .instance
             .methods()
-            .available_to_borrow(account)
+            .available_to_borrow(account, oracle_inputs.clone())
             .with_tx_policies(tx_policies)
             .with_contracts(contract_ids)
             .call()
@@ -424,18 +389,16 @@ impl Market {
         &self,
         contract_ids: &[&dyn ContractDependency],
         accounts: Vec<Identity>,
-        price_data_update: &PriceDataUpdate,
+        oracle_inputs: &Vec<OracleInput>,
     ) -> anyhow::Result<CallResponse<()>> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
-        let call_params = CallParameters::default().with_amount(price_data_update.update_fee);
 
         Ok(self
             .instance
             .methods()
-            .absorb(accounts, price_data_update.clone())
+            .absorb(accounts, oracle_inputs.clone())
             .with_tx_policies(tx_policies)
             .with_contracts(contract_ids)
-            .call_params(call_params)?
             .call()
             .await?)
     }
@@ -444,13 +407,14 @@ impl Market {
         &self,
         contract_ids: &[&dyn ContractDependency],
         account: Identity,
+        oracle_inputs: &Vec<OracleInput>,
     ) -> anyhow::Result<CallResponse<bool>> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
 
         Ok(self
             .instance
             .methods()
-            .is_liquidatable(account)
+            .is_liquidatable(account, oracle_inputs.clone())
             .with_tx_policies(tx_policies)
             .with_contracts(contract_ids)
             .call()
@@ -466,6 +430,7 @@ impl Market {
         asset_id: AssetId,
         min_amount: u64,
         recipient: Identity,
+        oracle_inputs: &Vec<OracleInput>,
     ) -> anyhow::Result<CallResponse<()>> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
 
@@ -476,7 +441,12 @@ impl Market {
         Ok(self
             .instance
             .methods()
-            .buy_collateral(asset_id, min_amount.into(), recipient)
+            .buy_collateral(
+                asset_id,
+                min_amount.into(),
+                recipient,
+                oracle_inputs.clone(),
+            )
             .with_tx_policies(tx_policies)
             .with_contracts(contract_ids)
             .call_params(call_params_base_asset)?
@@ -490,13 +460,14 @@ impl Market {
         contract_ids: &[&dyn ContractDependency],
         asset_id: AssetId,
         collateral_amount: u64,
+        oracle_inputs: &Vec<OracleInput>,
     ) -> anyhow::Result<CallResponse<u64>> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
 
         Ok(self
             .instance
             .methods()
-            .collateral_value_to_sell(asset_id, collateral_amount)
+            .collateral_value_to_sell(asset_id, collateral_amount, oracle_inputs.clone())
             .with_tx_policies(tx_policies)
             .with_contracts(contract_ids)
             .call()
@@ -508,13 +479,14 @@ impl Market {
         contract_ids: &[&dyn ContractDependency],
         asset_id: AssetId,
         base_amount: u64,
+        oracle_inputs: &Vec<OracleInput>,
     ) -> anyhow::Result<CallResponse<u64>> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
 
         Ok(self
             .instance
             .methods()
-            .quote_collateral(asset_id.into(), base_amount)
+            .quote_collateral(asset_id.into(), base_amount, oracle_inputs.clone())
             .with_tx_policies(tx_policies)
             .with_contracts(contract_ids)
             .call()
@@ -706,72 +678,38 @@ impl Market {
         Ok(convert_u256_to_u128(value))
     }
 
-    // # 10. Pyth Oracle management
-    pub async fn set_pyth_contract_id(
-        &self,
-        contract_id: ContractId,
-    ) -> anyhow::Result<CallResponse<()>> {
-        let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
-
-        Ok(self
-            .instance
-            .methods()
-            .set_pyth_contract_id(contract_id)
-            .with_tx_policies(tx_policies)
-            .call()
-            .await?)
-    }
-
+    // # 10. Oracle calls
     pub async fn get_price(
         &self,
         contract_ids: &[&dyn ContractDependency],
-        price_feed_id: Bits256,
+        asset_id: AssetId,
+        oracle_inputs: &Vec<OracleInput>,
     ) -> anyhow::Result<CallResponse<Price>> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
 
         Ok(self
             .instance
             .methods()
-            .get_price(price_feed_id)
+            .get_price(asset_id, oracle_inputs.clone())
             .with_contracts(contract_ids)
             .with_tx_policies(tx_policies)
             .call()
             .await?)
     }
 
-    pub async fn update_fee(
+    pub async fn update_price_feeds(
         &self,
         contract_ids: &[&dyn ContractDependency],
-        update_data: Vec<Bytes>,
-    ) -> anyhow::Result<CallResponse<u64>> {
-        let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
-
-        Ok(self
-            .instance
-            .methods()
-            .update_fee(update_data)
-            .with_contracts(contract_ids)
-            .with_tx_policies(tx_policies)
-            .call()
-            .await?)
-    }
-
-    pub async fn update_price_feeds_if_necessary(
-        &self,
-        contract_ids: &[&dyn ContractDependency],
-        price_data_update: &PriceDataUpdate,
+        oracle_inputs: &Vec<OracleInput>,
     ) -> anyhow::Result<CallResponse<()>> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
 
-        let call_params = CallParameters::default().with_amount(price_data_update.update_fee);
-
         Ok(self
             .instance
             .methods()
-            .update_price_feeds_if_necessary(price_data_update.clone())
+            .update_price_feeds(oracle_inputs.clone())
             .with_contracts(contract_ids)
             .with_tx_policies(tx_policies)
-            .call_params(call_params)?
             .call()
             .await?)
     }
@@ -815,6 +753,98 @@ impl Market {
             .instance
             .methods()
             .renounce_ownership()
+            .with_tx_policies(tx_policies)
+            .call()
+            .await?)
+    }
+
+    // # 13. Oracle management
+    pub async fn add_new_global_oracle(
+        &self,
+        oracle_configuration: &OracleGlobalConfiguration,
+    ) -> anyhow::Result<CallResponse<()>> {
+        let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
+
+        Ok(self
+            .instance
+            .methods()
+            .add_new_global_oracle(oracle_configuration.clone())
+            .with_tx_policies(tx_policies)
+            .call()
+            .await?)
+    }
+
+    pub async fn update_global_oracle(
+        &self,
+        oracle_id: u64,
+        oracle_configuration: &OracleGlobalConfiguration,
+    ) -> anyhow::Result<CallResponse<()>> {
+        let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
+
+        Ok(self
+            .instance
+            .methods()
+            .update_global_oracle(oracle_id, oracle_configuration.clone())
+            .with_tx_policies(tx_policies)
+            .call()
+            .await?)
+    }
+
+    pub async fn get_oracle_global_configurations(
+        &self,
+    ) -> anyhow::Result<CallResponse<Vec<OracleGlobalConfiguration>>> {
+        let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
+
+        Ok(self
+            .instance
+            .methods()
+            .get_oracle_global_configurations()
+            .with_tx_policies(tx_policies)
+            .call()
+            .await?)
+    }
+
+    pub async fn add_new_asset_oracle(
+        &self,
+        asset_id: AssetId,
+        oracle_configuration: &OracleAssetConfiguration,
+    ) -> anyhow::Result<CallResponse<()>> {
+        let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
+
+        Ok(self
+            .instance
+            .methods()
+            .add_new_asset_oracle(asset_id, oracle_configuration.clone())
+            .with_tx_policies(tx_policies)
+            .call()
+            .await?)
+    }
+
+    pub async fn update_asset_oracle(
+        &self,
+        asset_id: AssetId,
+        oracle_configuration: &OracleAssetConfiguration,
+    ) -> anyhow::Result<CallResponse<()>> {
+        let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
+
+        Ok(self
+            .instance
+            .methods()
+            .update_asset_oracle(asset_id, oracle_configuration.clone())
+            .with_tx_policies(tx_policies)
+            .call()
+            .await?)
+    }
+
+    pub async fn get_oracle_asset_configurations(
+        &self,
+    ) -> anyhow::Result<CallResponse<Vec<(AssetId, Vec<OracleAssetConfiguration>)>>> {
+        let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
+
+        Ok(self
+            .instance
+            .methods()
+            .get_oracle_asset_configurations()
             .with_tx_policies(tx_policies)
             .call()
             .await?)

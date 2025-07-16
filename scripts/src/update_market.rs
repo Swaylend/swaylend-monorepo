@@ -63,13 +63,7 @@ async fn main() -> anyhow::Result<()> {
         .call()
         .await?
         .value;
-    let pyth_contract_id = market_instance
-        .methods()
-        .get_pyth_contract_id()
-        .with_contract_ids(&[market_contract_id.clone()])
-        .call()
-        .await?
-        .value;
+
     let pause_config = market_instance
         .methods()
         .get_pause_configuration()
@@ -89,28 +83,6 @@ async fn main() -> anyhow::Result<()> {
             market_instance
                 .methods()
                 .update_market_configuration(market_config.clone().into())
-                .with_contract_ids(&[market_contract_id.clone()])
-                .call()
-                .await?;
-        }
-    }
-
-    // pyth contract id
-    if pyth_contract_id
-        != ContractId::from_str(market_config.clone().pyth_contract_id.as_str()).unwrap()
-    {
-        println!("Updating pyth contract id",);
-        println!("Old pyth contract id: {:#?}", pyth_contract_id);
-        println!(
-            "New pyth contract id: {:#?}",
-            ContractId::from_str(market_config.clone().pyth_contract_id.as_str()).unwrap()
-        );
-        if get_yes_no_input("Do you really want to update pyth contract id? (yes/no): ") {
-            market_instance
-                .methods()
-                .set_pyth_contract_id(
-                    ContractId::from_str(market_config.pyth_contract_id.as_str()).unwrap(),
-                )
                 .with_contract_ids(&[market_contract_id.clone()])
                 .call()
                 .await?;
@@ -153,14 +125,7 @@ async fn main() -> anyhow::Result<()> {
         .await?
         .value;
     println!("Market configuration: {:#?}", market_configuration);
-    let pyth_contract_id = market_instance
-        .methods()
-        .get_pyth_contract_id()
-        .with_contract_ids(&[market_contract_id.clone()])
-        .call()
-        .await?
-        .value;
-    println!("Pyth contract id: {:#?}", pyth_contract_id);
+
     let pause_config = market_instance
         .methods()
         .get_pause_configuration()

@@ -1,9 +1,12 @@
 use chrono::Utc;
 use fuels::accounts::wallet::WalletUnlocked;
 use fuels::test_helpers::{
-    launch_custom_provider_and_get_wallets, NodeConfig, Trigger, WalletsConfig
+    launch_custom_provider_and_get_wallets, NodeConfig, Trigger, WalletsConfig,
 };
 use fuels::types::{Bits256, ContractId, Identity};
+use market::{
+    OracleAssetConfiguration, OracleGlobalConfiguration, OracleInput, OracleType, PythOracleInput,
+};
 use market_sdk::{get_market_config, Market};
 use pyth_mock_sdk::PythMockContract;
 use std::collections::HashMap;
@@ -63,10 +66,8 @@ pub struct TestData {
     pub uni_contract: TokenAsset,
     pub eth: Asset,
     pub wallets: Vec<WalletUnlocked>,
-    pub price_feed_ids: Vec<Bits256>,
-    pub publish_time: u64,
     pub assets: HashMap<String, Asset>,
-    pub prices: Vec<(Bits256, (u64, u32, u64, u64))>,
+    pub oracle_inputs: Vec<OracleInput>,
 }
 
 pub async fn setup(debug_step: Option<u64>, base_asset: TestBaseAsset) -> TestData {
@@ -80,11 +81,11 @@ pub async fn setup(debug_step: Option<u64>, base_asset: TestBaseAsset) -> TestDa
 
     //--------------- ORACLE ---------------
     let oracle = PythMockContract::deploy(&admin).await.unwrap();
-    let oracle_contract_id = ContractId::from(oracle.instance.contract_id());
 
     //--------------- TOKENS ---------------
     let token_contract = TokenContract::deploy(&admin).await.unwrap();
-    let (assets, asset_configs) = token_contract.deploy_tokens(&admin, Some(true)).await;
+    let (assets, asset_configs, oracle_configs) =
+        token_contract.deploy_tokens(&admin, Some(true)).await;
 
     let usdc = assets.get("USDC").unwrap();
     let usdc_contract = TokenAsset::new(
@@ -109,12 +110,8 @@ pub async fn setup(debug_step: Option<u64>, base_asset: TestBaseAsset) -> TestDa
 
     //--------------- MARKET ---------------
     let market_config = match base_asset {
-        TestBaseAsset::USDC => {
-            get_market_config(usdc.asset_id, usdc.decimals as u32, usdc.price_feed_id).unwrap()
-        }
-        TestBaseAsset::ETH => {
-            get_market_config(eth.asset_id, eth.decimals as u32, eth.price_feed_id).unwrap()
-        }
+        TestBaseAsset::USDC => get_market_config(usdc.asset_id, usdc.decimals as u32).unwrap(),
+        TestBaseAsset::ETH => get_market_config(eth.asset_id, eth.decimals as u32).unwrap(),
     };
 
     // debug step
@@ -127,45 +124,88 @@ pub async fn setup(debug_step: Option<u64>, base_asset: TestBaseAsset) -> TestDa
         .await
         .unwrap();
 
-    // Set Pyth contract ID
-    market
-        .set_pyth_contract_id(oracle_contract_id)
-        .await
-        .unwrap();
-
     //--------------- SETUP COLLATERALS ---------------
     for config in &asset_configs {
         market.add_collateral_asset(&config).await.unwrap();
     }
 
+    //--------------- SETUP GLOBAL ORACLES ---------------
+    // We only add Pyth for now
+    let global_oracle_configurations = vec![OracleGlobalConfiguration {
+        contract_id: ContractId::from(oracle.instance.contract_id()),
+        is_disabled: false,
+        oracle_type: OracleType::Pyth,
+    }];
+
+    for config in &global_oracle_configurations {
+        market.add_new_global_oracle(config).await.unwrap();
+    }
+
+    //--------------- SETUP ASSET ORACLES ---------------
+    for (asset_id, configs) in &oracle_configs {
+        for config in configs {
+            market
+                .add_new_asset_oracle(
+                    *asset_id,
+                    &OracleAssetConfiguration {
+                        oracle_id: config.oracle_id,
+                        price_feed_id: Bits256::from_hex_str(&config.price_feed_id).unwrap(),
+                        is_disabled: false,
+                    },
+                )
+                .await
+                .unwrap();
+        }
+    }
+
+    // FIXME: Implement oracle inputs
+    let mut oracle_inputs: Vec<OracleInput> = Vec::new();
+
     // ==================== Set oracle prices ====================
+
+    // Prepare PythOracleInput
     let mut prices = Vec::new();
     let mut price_feed_ids = Vec::new();
     let publish_time: u64 = tai64::Tai64::from_unix(Utc::now().timestamp().try_into().unwrap()).0;
     let confidence = 0;
 
     for asset in &assets {
-        let price = asset.1.default_price * 10u64.pow(asset.1.price_feed_decimals);
+        let oracle_configs = oracle_configs.get(&asset.1.asset_id).unwrap();
+        let config = oracle_configs.iter().find(|c| c.oracle_id == 1);
+
+        if config.is_none() {
+            continue;
+        }
+
+        let config = config.unwrap();
+        let price = asset.1.default_price * 10u64.pow(config.price_feed_decimals as u32);
 
         prices.push((
-            asset.1.price_feed_id,
-            (price, asset.1.price_feed_decimals, publish_time, confidence),
-        ))
+            Bits256::from_hex_str(&config.price_feed_id).unwrap(),
+            (price, config.price_feed_decimals, publish_time, confidence),
+        ));
+
+        price_feed_ids.push(Bits256::from_hex_str(&config.price_feed_id).unwrap());
+
+        println!(
+            "[Pyth] Price for {} = {}",
+            asset.1.symbol,
+            price as f64 / 10u64.pow(config.price_feed_decimals as u32) as f64
+        );
     }
 
     oracle.update_prices(&prices).await.unwrap();
 
-    for asset in &assets {
-        let price = oracle.price(asset.1.price_feed_id).await.unwrap().value;
+    oracle_inputs.push(OracleInput::Pyth(PythOracleInput {
+        contract_id: ContractId::from(oracle.instance.contract_id()),
+        update_fee: 1,
+        publish_times: vec![publish_time; price_feed_ids.len()],
+        price_feed_ids,
+        update_data: oracle.create_update_data(&prices).await.unwrap(),
+    }));
 
-        price_feed_ids.push(asset.1.price_feed_id);
+    // TODO: Prepare redstone input
 
-        println!(
-            "Price for {} = {}",
-            asset.1.symbol,
-            price.price as f64 / 10u64.pow(asset.1.price_feed_decimals as u32) as f64
-        );
-    }
     TestData {
         wallets: wallets.clone(),
         admin: admin.clone(),
@@ -185,9 +225,7 @@ pub async fn setup(debug_step: Option<u64>, base_asset: TestBaseAsset) -> TestDa
         uni: uni.clone(),
         uni_contract,
         eth: eth.clone(),
-        price_feed_ids,
-        publish_time,
         assets,
-        prices,
+        oracle_inputs,
     }
 }

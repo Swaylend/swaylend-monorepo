@@ -1,6 +1,6 @@
 use crate::utils::{print_case_title, setup, TestBaseAsset, TestData};
 use fuels::accounts::ViewOnlyAccount;
-use market::PriceDataUpdate;
+use market::OracleInput;
 use market_sdk::parse_units;
 
 const AMOUNT_COEFFICIENT: u64 = 10u64.pow(0);
@@ -19,21 +19,22 @@ async fn collateral_borrow_test() {
         assets,
         usdc,
         oracle,
-        price_feed_ids,
-        publish_time,
-        prices,
         usdc_contract,
         uni,
         uni_contract,
         ..
     } = setup(None, TestBaseAsset::USDC).await;
 
-    let price_data_update = PriceDataUpdate {
-        update_fee: 0,
-        price_feed_ids,
-        publish_times: vec![publish_time; assets.len()],
-        update_data: oracle.create_update_data(&prices).await.unwrap(),
-    };
+    // TODO: Remove
+    // let price_data_update = PriceDataUpdate {
+    //     update_fee: 0,
+    //     price_feed_ids,
+    //     publish_times: vec![publish_time; assets.len()],
+    //     update_data: oracle.create_update_data(&prices).await.unwrap(),
+    // };
+
+    // FIXME: Implement oracle inputs
+    let oracle_inputs = Vec::new();
 
     // =================================================
     // ==================== Step #0 ====================
@@ -108,7 +109,7 @@ async fn collateral_borrow_test() {
         .with_account(&bob)
         .await
         .unwrap()
-        .withdraw_base(&[&oracle.instance], amount_to_fail, &price_data_update)
+        .withdraw_base(&[&oracle.instance], amount_to_fail, &oracle_inputs)
         .await;
     assert!(withdraw_base_fail.is_err());
 
@@ -119,7 +120,7 @@ async fn collateral_borrow_test() {
         .with_account(&bob)
         .await
         .unwrap()
-        .withdraw_base(&[&oracle.instance], amount, &price_data_update)
+        .withdraw_base(&[&oracle.instance], amount, &oracle_inputs)
         .await;
     assert!(bob_withdraw_res.is_ok());
     let balance = bob.get_asset_balance(&usdc.asset_id).await.unwrap();
@@ -169,7 +170,7 @@ async fn collateral_borrow_test() {
             &[&oracle.instance],
             uni.asset_id,
             bob_collateral_amount,
-            &price_data_update,
+            &oracle_inputs,
         )
         .await;
     // it should fail because bob has not repayed everything yet
@@ -208,7 +209,7 @@ async fn collateral_borrow_test() {
             &[&oracle.instance],
             uni.asset_id,
             bob_withdraw_amount_fail,
-            &price_data_update,
+            &oracle_inputs,
         )
         .await;
     assert!(withdraw_collateral_fail_res.is_err());
@@ -226,7 +227,7 @@ async fn collateral_borrow_test() {
             &[&oracle.instance],
             uni.asset_id,
             bob_withdraw_amount.try_into().unwrap(),
-            &price_data_update,
+            &oracle_inputs,
         )
         .await;
 
@@ -249,21 +250,14 @@ async fn collateral_borrow_timeskip_test() {
         assets,
         usdc,
         oracle,
-        price_feed_ids,
-        publish_time,
-        prices,
         usdc_contract,
         uni,
         uni_contract,
         ..
     } = setup(None, TestBaseAsset::USDC).await;
 
-    let price_data_update = PriceDataUpdate {
-        update_fee: 0,
-        price_feed_ids,
-        publish_times: vec![publish_time; assets.len()],
-        update_data: oracle.create_update_data(&prices).await.unwrap(),
-    };
+    // FIXME: Implement oracle inputs
+    let oracle_inputs: Vec<OracleInput> = Vec::new();
 
     // =================================================
     // ==================== Step #0 ====================
@@ -340,7 +334,7 @@ async fn collateral_borrow_timeskip_test() {
         .with_account(&bob)
         .await
         .unwrap()
-        .withdraw_base(&[&oracle.instance], amount, &price_data_update)
+        .withdraw_base(&[&oracle.instance], amount, &oracle_inputs)
         .await;
     assert!(bob_withdraw_res.is_ok());
 
@@ -411,7 +405,7 @@ async fn collateral_borrow_timeskip_test() {
             &[&oracle.instance],
             uni.asset_id,
             bob_withdraw_amount,
-            &price_data_update,
+            &oracle_inputs,
         )
         .await;
 

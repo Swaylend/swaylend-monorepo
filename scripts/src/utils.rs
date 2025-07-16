@@ -138,10 +138,6 @@ impl From<MarketConfig> for MarketConfiguration {
             target_reserves: config.target_reserves.into(),
             base_token: AssetId::from_str(config.base_asset.asset_id.as_str()).unwrap(),
             base_token_decimals: config.base_asset.decimals,
-            base_token_price_feed_id: Bits256::from_hex_str(
-                config.base_asset.price_feed_id.as_str(),
-            )
-            .unwrap(),
         }
     }
 }
@@ -161,7 +157,6 @@ impl From<CollateralAssetConfig> for CollateralConfiguration {
     fn from(value: CollateralAssetConfig) -> Self {
         CollateralConfiguration {
             asset_id: AssetId::from_str(value.asset_id.as_str()).unwrap(),
-            price_feed_id: Bits256::from_hex_str(value.price_feed_id.as_str()).unwrap(),
             decimals: value.decimals,
             borrow_collateral_factor: value.borrow_collateral_factor.into(),
             liquidate_collateral_factor: value.liquidate_collateral_factor.into(),
@@ -197,8 +192,6 @@ impl PartialEq<MarketConfig> for MarketConfiguration {
             && self.target_reserves == other.target_reserves.into()
             && self.base_token == AssetId::from_str(other.base_asset.asset_id.as_str()).unwrap()
             && self.base_token_decimals == other.base_asset.decimals
-            && self.base_token_price_feed_id
-                == Bits256::from_hex_str(other.base_asset.price_feed_id.as_str()).unwrap()
     }
 }
 
@@ -227,15 +220,12 @@ impl PartialEq<MarketConfiguration> for MarketConfig {
             && other.target_reserves == self.target_reserves.into()
             && AssetId::from_str(self.base_asset.asset_id.as_str()).unwrap() == other.base_token
             && self.base_asset.decimals == other.base_token_decimals
-            && Bits256::from_hex_str(self.base_asset.price_feed_id.as_str()).unwrap()
-                == other.base_token_price_feed_id
     }
 }
 
 impl PartialEq<CollateralAssetConfig> for CollateralConfiguration {
     fn eq(&self, other: &CollateralAssetConfig) -> bool {
         self.asset_id == AssetId::from_str(other.asset_id.as_str()).unwrap()
-            && self.price_feed_id == Bits256::from_hex_str(other.price_feed_id.as_str()).unwrap()
             && self.decimals == other.decimals
             && self.borrow_collateral_factor == other.borrow_collateral_factor.into()
             && self.liquidate_collateral_factor == other.liquidate_collateral_factor.into()
@@ -248,7 +238,6 @@ impl PartialEq<CollateralAssetConfig> for CollateralConfiguration {
 impl PartialEq<CollateralConfiguration> for CollateralAssetConfig {
     fn eq(&self, other: &CollateralConfiguration) -> bool {
         AssetId::from_str(self.asset_id.as_str()).unwrap() == other.asset_id
-            && Bits256::from_hex_str(self.price_feed_id.as_str()).unwrap() == other.price_feed_id
             && self.decimals == other.decimals
             && other.borrow_collateral_factor == self.borrow_collateral_factor.into()
             && other.liquidate_collateral_factor == self.liquidate_collateral_factor.into()
