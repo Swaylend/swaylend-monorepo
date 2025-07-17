@@ -642,7 +642,7 @@ impl Market for Contract {
     ///
     /// # Number of Storage Accesses
     /// * Reads: `4 + storage.collateral_configurations_keys.len() * 5`
-    #[storage(read)]
+    #[payable,storage(read)]
     fn available_to_borrow(account: Identity, oracle_inputs: Vec<OracleInput>) -> u256 {
         // Get user's supply and borrow
         let (_, borrow) = get_user_supply_borrow_internal(account);
@@ -735,7 +735,7 @@ impl Market for Contract {
     ///
     /// # Number of Storage Accesses
     /// * Reads: 1
-    #[storage(read)]
+    #[payable, storage(read)]
     fn is_liquidatable(account: Identity, oracle_inputs: Vec<OracleInput>) -> bool {
         let present = get_user_balance_with_interest_internal(account);
         is_liquidatable_internal(account, present, oracle_inputs)
@@ -827,7 +827,7 @@ impl Market for Contract {
     ///
     /// # Number of Storage Accesses
     /// * Reads: `5`
-    #[storage(read)]
+    #[payable, storage(read)]
     fn collateral_value_to_sell(asset_id: AssetId, collateral_amount: u64, oracle_inputs: Vec<OracleInput>) -> u64 { // decimals: base_token_decimals
         let collateral_configuration = storage.collateral_configurations.get(asset_id).read();
         let market_configuration = storage.market_configuration.read();
@@ -868,7 +868,7 @@ impl Market for Contract {
     ///
     /// # Number of Storage Accesses
     /// * Reads: `2`
-    #[storage(read)]
+    #[payable, storage(read)]
     fn quote_collateral(asset_id: AssetId, base_amount: u64, oracle_inputs: Vec<OracleInput>) -> u64 {
         quote_collateral_internal(asset_id, base_amount, oracle_inputs)
     }
@@ -1156,7 +1156,7 @@ impl Market for Contract {
     ///
     /// # Number of Storage Accesses
     /// * Reads: `1`
-    #[storage(read)]
+    #[payable, storage(read)]
     fn get_price(asset_id: AssetId, oracle_inputs: Vec<OracleInput>) -> Price {
         get_price_internal(asset_id, PricePosition::Middle, oracle_inputs)
     }
@@ -1479,6 +1479,7 @@ fn get_price_internal(asset_id: AssetId, price_position: PricePosition, oracle_i
                     contract_id: oracle_configuration.contract_id,
                     oracle_type: oracle_configuration.oracle_type,
                 };
+
 
                 let (is_fetched_price_valid, fetched_price) = oracle.get_price(price_feed_id, oracle_inputs);
 
@@ -1851,6 +1852,7 @@ fn is_borrow_collateralized(account: Identity, oracle_inputs: Vec<OracleInput>) 
     let mut index = 0;
     let len = storage.collateral_configurations_keys.len();
 
+
     while index < len {
         let collateral_configuration = storage.collateral_configurations.get(storage.collateral_configurations_keys.get(index).unwrap().read()).read();
 
@@ -1861,6 +1863,8 @@ fn is_borrow_collateralized(account: Identity, oracle_inputs: Vec<OracleInput>) 
             continue;
         }
 
+
+
         let price = get_price_internal(collateral_configuration.asset_id, PricePosition::LowerBound, oracle_inputs); // decimals: price.exponent decimals
         let price_scale = u256::from(10_u64).pow(price.exponent);
         let price = u256::from(price.price); // decimals: price.exponent
@@ -1870,7 +1874,9 @@ fn is_borrow_collateralized(account: Identity, oracle_inputs: Vec<OracleInput>) 
         let amount = balance * price / price_scale; // decimals: collateral_configuration.decimals
         borrow_limit += amount * collateral_configuration.borrow_collateral_factor * base_scale / FACTOR_SCALE_18 / collateral_scale; // decimals: base_token_decimals
         index += 1;
+
     }
+
 
     let base_token_price = get_price_internal(storage.market_configuration.read().base_token, PricePosition::Middle, oracle_inputs); // decimals: base_token_price.exponent 
     let base_token_price_scale = u256::from(10_u64).pow(base_token_price.exponent);

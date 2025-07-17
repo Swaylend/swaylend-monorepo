@@ -128,7 +128,7 @@ impl TokenContract {
             // Everything except USDC is collateral
             if symbol != "USDC" {
                 asset_configs.push(CollateralConfiguration {
-                    asset_id: asset_id.into(),
+                    asset_id: asset_id,
                     decimals: config.decimals,
                     borrow_collateral_factor: config.borrow_collateral_factor.unwrap().into(), // decimals: 18
                     liquidate_collateral_factor: config.liquidate_collateral_factor.unwrap().into(), // decimals: 18
@@ -141,7 +141,7 @@ impl TokenContract {
             assets.insert(
                 symbol.clone(),
                 Asset {
-                    asset_id: asset_id.into(),
+                    asset_id: asset_id,
                     decimals: token.decimals,
                     symbol: token.symbol,
                     bits256: asset_id.into(),

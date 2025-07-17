@@ -106,6 +106,7 @@ impl Oracle {
         match oracle_type {
             OracleType::Pyth => {
                 let oracle = abi(PythCore, contract_id.bits());
+
                 let price = oracle.price_unsafe(price_feed_id);
 
                 // validate values

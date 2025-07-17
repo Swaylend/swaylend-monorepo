@@ -66,7 +66,7 @@ abi Market {
     #[storage(read)]
     fn get_user_supply_borrow(account: Identity) -> (u256, u256); 
 
-    #[storage(read)]
+    #[payable, storage(read)]
     fn available_to_borrow(account: Identity, oracle_inputs: Vec<OracleInput>) -> u256;
 
     // # 5. Liquidation management
@@ -74,17 +74,17 @@ abi Market {
     #[payable, storage(write)]
     fn absorb(accounts: Vec<Identity>, oracle_inputs: Vec<OracleInput>);
 
-    #[storage(read)]
+    #[payable, storage(read)]
     fn is_liquidatable(account: Identity, oracle_inputs: Vec<OracleInput>) -> bool;
 
     // # 6. Protocol collateral management
     #[payable, storage(read)]
     fn buy_collateral(asset_id: AssetId, min_amount: u64, recipient: Identity, oracle_inputs: Vec<OracleInput>); // Payment is required: base asset (USDC)
 
-    #[storage(read)]
+    #[payable, storage(read)]
     fn collateral_value_to_sell(asset_id: AssetId, collateral_amount: u64, oracle_inputs: Vec<OracleInput>) -> u64;
 
-    #[storage(read)]
+    #[payable, storage(read)]
     fn quote_collateral(asset_id: AssetId, base_amount: u64, oracle_inputs: Vec<OracleInput>) -> u64;
 
     // ## 7. Reserves management
@@ -133,7 +133,7 @@ abi Market {
     fn get_borrow_rate(utilization: u256) -> u256;
 
     // ## 10. Oracle calls
-    #[storage(read)]
+    #[payable, storage(read)]
     fn get_price(asset_id: AssetId, oracle_inputs: Vec<OracleInput>) -> Price;    
 
     #[payable, storage(read)]

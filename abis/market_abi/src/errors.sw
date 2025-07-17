@@ -25,4 +25,5 @@ pub enum Error {
     AssetOracleAlreadyExists: (),
     GlobalOracleNotFound: (),
     AssetOracleNotFound: (),
+    Unknown: (),
 }
