@@ -42,9 +42,6 @@ async fn main_test() {
 
     let oracle_contracts: Vec<&dyn ContractDependency> = vec![&pyth_mock_oracle.instance];
 
-    println!("oracle_inputs: {:?}", oracle_inputs);
-    println!("oracle_total_update_fee: {}", oracle_total_update_fee);
-
     // =================================================
     // ==================== Step #0 ====================
     // 👛 Wallet: Bob 🧛
@@ -498,9 +495,14 @@ async fn main_test() {
     assert!(balance == (amount as u64));
 
     // Reset prices back to old values
-    // This is used to test that multi_call_handler works correctly
+    // This is used to test that `multi_call_handler` method works correctly
+    // And it will use the new price feeds (not the old ones, as we set them here)
     market
-        .update_price_feeds(&oracle_contracts, &oracle_inputs, oracle_total_update_fee)
+        .update_price_feeds(
+            &oracle_contracts,
+            &old_oracle_inputs,
+            oracle_total_update_fee,
+        )
         .await
         .unwrap();
 
@@ -553,6 +555,11 @@ async fn main_test() {
 
     // Check
     let balance = bob.get_asset_balance(&uni.asset_id).await.unwrap();
+    println!("balance: {}", balance);
+    println!(
+        "expected: {}",
+        parse_units(40, uni.decimals) * AMOUNT_COEFFICIENT
+    );
     assert!(balance == parse_units(40, uni.decimals) * AMOUNT_COEFFICIENT);
 
     market
