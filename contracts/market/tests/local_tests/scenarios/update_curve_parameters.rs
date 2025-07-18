@@ -1,14 +1,13 @@
 use crate::utils::{print_case_title, setup, TestBaseAsset, TestData};
-use chrono::Utc;
 use fuels::{
     prelude::ViewOnlyAccount,
     programs::{
-        calls::{CallHandler, CallParameters},
+        calls::{CallHandler, CallParameters, ContractDependency},
         responses::CallResponse,
     },
-    types::{transaction::TxPolicies, transaction_builders::VariableOutputPolicy, U256},
+    types::{transaction::TxPolicies, transaction_builders::VariableOutputPolicy, Bits256, U256},
 };
-use market::PriceDataUpdate;
+use market::{OracleInput, PythOracleInput};
 use market_sdk::{convert_i256_to_u64, is_i256_negative, parse_units};
 
 // Multiplies all values by this number
@@ -34,20 +33,15 @@ async fn main_test() {
         market,
         uni,
         uni_contract,
-        oracle,
-        price_feed_ids,
-        assets,
-        publish_time,
-        prices,
+        pyth_mock_oracle,
+        pyth_prices,
+        pyth_asset_price_feeds,
+        mut oracle_inputs,
+        oracle_total_update_fee,
         ..
     } = setup(None, TestBaseAsset::USDC).await;
 
-    let price_data_update = PriceDataUpdate {
-        update_fee: 1,
-        price_feed_ids,
-        publish_times: vec![publish_time; assets.len()],
-        update_data: oracle.create_update_data(&prices).await.unwrap(),
-    };
+    let oracle_contracts: Vec<&dyn ContractDependency> = vec![&pyth_mock_oracle.instance];
 
     // =================================================
     // ==================== Step #0 ====================
@@ -140,7 +134,12 @@ async fn main_test() {
         .with_account(&alice)
         .await
         .unwrap()
-        .withdraw_base(&[&oracle.instance], amount, &price_data_update)
+        .withdraw_base(
+            &oracle_contracts,
+            amount,
+            &oracle_inputs,
+            oracle_total_update_fee,
+        )
         .await
         .unwrap();
 
@@ -303,7 +302,12 @@ async fn main_test() {
     // 🤙 Call: withdraw_base
     // 💰 Amount: ~49.99 USDC (available_to_borrow)
     let amount = market
-        .available_to_borrow(&[&oracle.instance], alice_account)
+        .available_to_borrow(
+            &oracle_contracts,
+            alice_account,
+            &oracle_inputs,
+            oracle_total_update_fee,
+        )
         .await
         .unwrap();
     let log_amount = format!("{} USDC", amount as f64 / scale_6);
@@ -315,18 +319,24 @@ async fn main_test() {
         .await
         .unwrap()
         .withdraw_base(
-            &[&oracle.instance],
+            &oracle_contracts,
             (amount - u128::from(parse_units(1, usdc.decimals)))
                 .try_into()
                 .unwrap(),
-            &price_data_update,
+            &oracle_inputs,
+            oracle_total_update_fee,
         )
         .await
         .unwrap();
 
     // available_to_borrow should be 1 USDC
     let res = market
-        .available_to_borrow(&[&oracle.instance], alice_account)
+        .available_to_borrow(
+            &oracle_contracts,
+            alice_account,
+            &oracle_inputs,
+            oracle_total_update_fee,
+        )
         .await
         .unwrap();
 
@@ -338,9 +348,10 @@ async fn main_test() {
         .await
         .unwrap()
         .withdraw_base(
-            &[&oracle.instance],
+            &oracle_contracts,
             parse_units(2, usdc.decimals),
-            &price_data_update,
+            &oracle_inputs,
+            oracle_total_update_fee,
         )
         .await
         .is_err();
@@ -367,36 +378,93 @@ async fn main_test() {
     // 💰 Amount: -30%
 
     print_case_title(7, "Admin", "Drop of collateral price", "-30%");
-    let res = oracle.price(uni.price_feed_id).await.unwrap().value;
-    let new_price = (res.price as f64 * 0.7) as u64;
-    let prices = Vec::from([(
-        uni.price_feed_id,
-        (
-            new_price,
-            uni.price_feed_decimals,
-            res.publish_time,
-            res.confidence,
-        ),
-    )]);
+    let old_price = market
+        .get_price(
+            &oracle_contracts,
+            uni.asset_id,
+            &oracle_inputs,
+            oracle_total_update_fee,
+        )
+        .await
+        .unwrap()
+        .value;
 
-    let price_data_update_old = price_data_update.clone();
-    oracle.update_prices(&prices).await.unwrap();
+    let (uni_price_feed_id, uni_price_feed_decimals) =
+        pyth_asset_price_feeds.get(&uni.asset_id).unwrap();
+    let old_oracle_inputs = oracle_inputs.clone();
+    let mut new_oracle_inputs = Vec::new();
 
-    // New `price_data_update` that will be used in the next steps
-    let price_data_update = PriceDataUpdate {
-        update_fee: 1,
-        price_feed_ids: vec![uni.price_feed_id],
-        publish_times: vec![tai64::Tai64::from_unix(Utc::now().timestamp().try_into().unwrap()).0],
-        update_data: oracle.create_update_data(&prices).await.unwrap(),
-    };
+    for input in oracle_inputs.iter() {
+        let input = input.clone();
+
+        let processed_input = match input {
+            OracleInput::Pyth(pyth_input) => {
+                let new_prices = pyth_prices
+                    .iter()
+                    .map(
+                        |(
+                            price_feed_id,
+                            (price, price_feed_decimals, publish_time, confidence),
+                        )| {
+                            (
+                                *price_feed_id,
+                                (
+                                    if *price_feed_id == *uni_price_feed_id {
+                                        (*price as f64 * 0.7) as u64
+                                    } else {
+                                        *price
+                                    },
+                                    *price_feed_decimals,
+                                    *publish_time,
+                                    *confidence,
+                                ),
+                            )
+                        },
+                    )
+                    .collect::<Vec<(Bits256, (u64, u32, u64, u64))>>();
+
+                OracleInput::Pyth(PythOracleInput {
+                    contract_id: pyth_input.contract_id,
+                    update_fee: pyth_input.update_fee,
+                    publish_times: pyth_input.publish_times,
+                    price_feed_ids: pyth_input.price_feed_ids,
+                    update_data: pyth_mock_oracle
+                        .create_update_data(&new_prices)
+                        .await
+                        .unwrap(),
+                })
+            }
+            _ => input,
+        };
+
+        new_oracle_inputs.push(processed_input);
+    }
+
+    oracle_inputs = new_oracle_inputs;
+
+    // Update price feeds
+    market
+        .update_price_feeds(&oracle_contracts, &oracle_inputs, oracle_total_update_fee)
+        .await
+        .unwrap();
+
+    // Get new price
+    let new_price = market
+        .get_price(
+            &oracle_contracts,
+            uni.asset_id,
+            &oracle_inputs,
+            oracle_total_update_fee,
+        )
+        .await
+        .unwrap()
+        .value;
 
     println!(
         "🔻 UNI price drops: ${}  -> ${}",
-        res.price as f64 / 10_u64.pow(uni.price_feed_decimals) as f64,
-        new_price as f64 / 10_u64.pow(uni.price_feed_decimals) as f64
+        old_price.price as f64 / 10_u64.pow(*uni_price_feed_decimals) as f64,
+        new_price.price as f64 / 10_u64.pow(*uni_price_feed_decimals) as f64
     );
-    let res = oracle.price(uni.price_feed_id).await.unwrap().value;
-    assert!(new_price == res.price);
 
     market
         .print_debug_state(&wallets, &usdc, &uni)
@@ -414,7 +482,12 @@ async fn main_test() {
 
     assert!(
         market
-            .is_liquidatable(&[&oracle.instance], alice_account)
+            .is_liquidatable(
+                &oracle_contracts,
+                alice_account,
+                &oracle_inputs,
+                oracle_total_update_fee
+            )
             .await
             .unwrap()
             .value
@@ -424,7 +497,12 @@ async fn main_test() {
         .with_account(&bob)
         .await
         .unwrap()
-        .absorb(&[&oracle.instance], vec![alice_account], &price_data_update)
+        .absorb(
+            &oracle_contracts,
+            vec![alice_account],
+            &oracle_inputs,
+            oracle_total_update_fee,
+        )
         .await
         .unwrap();
 
@@ -463,9 +541,11 @@ async fn main_test() {
 
     let amount = market
         .collateral_value_to_sell(
-            &[&oracle.instance],
+            &oracle_contracts,
             uni.asset_id,
             convert_i256_to_u64(&reserves),
+            &oracle_inputs,
+            oracle_total_update_fee,
         )
         .await
         .unwrap()
@@ -484,7 +564,11 @@ async fn main_test() {
     // Reset prices back to old values
     // This is used to test that multi_call_handler works correctly
     market
-        .update_price_feeds_if_necessary(&[&oracle.instance], &price_data_update_old)
+        .update_price_feeds(
+            &oracle_contracts,
+            &old_oracle_inputs,
+            oracle_total_update_fee,
+        )
         .await
         .unwrap();
 
@@ -492,15 +576,14 @@ async fn main_test() {
     let tx_policies = TxPolicies::default().with_script_gas_limit(1_000_000);
 
     // Params for update_price_feeds_if_necessary
-    let call_params_update_price =
-        CallParameters::default().with_amount(price_data_update.update_fee);
+    let call_params_update_price = CallParameters::default().with_amount(oracle_total_update_fee);
 
     // Update price feeds if necessary
     let update_balance_call = market
         .instance
         .methods()
-        .update_price_feeds_if_necessary(price_data_update.clone())
-        .with_contracts(&[&oracle.instance])
+        .update_price_feeds(oracle_inputs.clone())
+        .with_contracts(&oracle_contracts)
         .with_tx_policies(tx_policies)
         .call_params(call_params_update_price)
         .unwrap();
@@ -514,8 +597,13 @@ async fn main_test() {
     let buy_collateral_call = market
         .instance
         .methods()
-        .buy_collateral(uni.asset_id, 1u64.into(), bob_account)
-        .with_contracts(&[&oracle.instance])
+        .buy_collateral(
+            uni.asset_id,
+            1u64.into(),
+            bob_account,
+            oracle_inputs.clone(),
+        )
+        .with_contracts(&oracle_contracts)
         .with_tx_policies(tx_policies)
         .call_params(call_params_base_asset)
         .unwrap();
@@ -557,9 +645,10 @@ async fn main_test() {
         .await
         .unwrap()
         .withdraw_base(
-            &[&oracle.instance],
+            &oracle_contracts,
             amount.try_into().unwrap(),
-            &price_data_update,
+            &oracle_inputs,
+            oracle_total_update_fee,
         )
         .await
         .unwrap();
@@ -593,9 +682,10 @@ async fn main_test() {
         .await
         .unwrap()
         .withdraw_base(
-            &[&oracle.instance],
+            &oracle_contracts,
             amount.try_into().unwrap(),
-            &price_data_update,
+            &oracle_inputs,
+            oracle_total_update_fee,
         )
         .await
         .unwrap();
@@ -629,9 +719,10 @@ async fn main_test() {
         .await
         .unwrap()
         .withdraw_base(
-            &[&oracle.instance],
+            &oracle_contracts,
             amount.try_into().unwrap(),
-            &price_data_update,
+            &oracle_inputs,
+            oracle_total_update_fee,
         )
         .await
         .unwrap();
@@ -666,10 +757,11 @@ async fn main_test() {
         .await
         .unwrap()
         .withdraw_collateral(
-            &[&oracle.instance],
+            &oracle_contracts,
             uni.asset_id,
             amount.try_into().unwrap(),
-            &price_data_update,
+            &oracle_inputs,
+            oracle_total_update_fee,
         )
         .await
         .unwrap();

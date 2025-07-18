@@ -2,9 +2,8 @@
 
 // Description: Check that if collateral asset price increases, you can now borrow more base asset.
 use crate::utils::{print_case_title, setup, TestBaseAsset, TestData};
-use chrono::Utc;
-use fuels::accounts::ViewOnlyAccount;
-use market::PriceDataUpdate;
+use fuels::{accounts::ViewOnlyAccount, programs::calls::ContractDependency, types::Bits256};
+use market::{OracleInput, PythOracleInput};
 use market_sdk::parse_units;
 
 const AMOUNT_COEFFICIENT: u64 = 10u64.pow(0);
@@ -19,23 +18,18 @@ async fn price_changes() {
         bob,
         bob_account,
         market,
-        assets,
         usdc,
         eth,
-        oracle,
-        price_feed_ids,
-        publish_time,
-        prices,
+        mut oracle_inputs,
+        pyth_mock_oracle,
+        pyth_prices,
+        pyth_asset_price_feeds,
+        oracle_total_update_fee,
         usdc_contract,
         ..
     } = setup(None, TestBaseAsset::USDC).await;
 
-    let price_data_update = PriceDataUpdate {
-        update_fee: 0,
-        price_feed_ids,
-        publish_times: vec![publish_time; assets.len()],
-        update_data: oracle.create_update_data(&prices).await.unwrap(),
-    };
+    let oracle_contracts: Vec<&dyn ContractDependency> = vec![&pyth_mock_oracle.instance];
 
     // =================================================
     // ==================== Step #0 ====================
@@ -63,6 +57,7 @@ async fn price_changes() {
     assert!(alice_supply_res.is_ok());
 
     market.debug_increment_timestamp().await.unwrap();
+
     // =================================================
     // ==================== Step #1 ====================
     // 👛 Wallet: Bob 🧛
@@ -90,13 +85,19 @@ async fn price_changes() {
         .unwrap();
 
     market.debug_increment_timestamp().await.unwrap();
+
     // =================================================
     // ==================== Step #2 ====================
     // 👛 Wallet: Bob 🧛
     // 🤙 Call: withdraw_base
     // 💰 Amount: <MAX HE CAN BORROW>
     let max_borrow_amount_before = market
-        .available_to_borrow(&[&oracle.instance], bob_account)
+        .available_to_borrow(
+            &oracle_contracts,
+            bob_account,
+            &oracle_inputs,
+            oracle_total_update_fee,
+        )
         .await
         .unwrap();
     let log_amount_before = format!("{} USDC", max_borrow_amount_before as f64 / SCALE_6);
@@ -106,9 +107,10 @@ async fn price_changes() {
         .await
         .unwrap()
         .withdraw_base(
-            &[&oracle.instance],
+            &oracle_contracts,
             max_borrow_amount_before.try_into().unwrap(),
-            &price_data_update,
+            &oracle_inputs,
+            oracle_total_update_fee,
         )
         .await;
     assert!(bob_withdraw_res.is_ok());
@@ -126,48 +128,113 @@ async fn price_changes() {
     // 🤙 Increase ETH price
     // 💰 Amount: +50%
     print_case_title(3, "Admin", "Increase of ETH price", "+50%");
-    let res = oracle.price(eth.price_feed_id).await.unwrap().value;
-    let new_price = (res.price as f64 * 1.5) as u64;
-    let prices = Vec::from([(
-        eth.price_feed_id,
-        (
-            new_price,
-            eth.price_feed_decimals,
-            res.publish_time,
-            res.confidence,
-        ),
-    )]);
+    let old_price = market
+        .get_price(
+            &oracle_contracts,
+            eth.asset_id,
+            &oracle_inputs,
+            oracle_total_update_fee,
+        )
+        .await
+        .unwrap()
+        .value;
 
-    oracle.update_prices(&prices).await.unwrap();
+    let (eth_price_feed_id, eth_price_feed_decimals) =
+        pyth_asset_price_feeds.get(&eth.asset_id).unwrap();
+    let mut new_oracle_inputs = Vec::new();
 
-    let price_data_update = PriceDataUpdate {
-        update_fee: 0,
-        price_feed_ids: vec![eth.price_feed_id],
-        publish_times: vec![tai64::Tai64::from_unix(Utc::now().timestamp().try_into().unwrap()).0],
-        update_data: oracle.create_update_data(&prices).await.unwrap(),
-    };
+    for input in oracle_inputs.iter() {
+        let input = input.clone();
+
+        let processed_input = match input {
+            OracleInput::Pyth(pyth_input) => {
+                let new_prices = pyth_prices
+                    .iter()
+                    .map(
+                        |(
+                            price_feed_id,
+                            (price, price_feed_decimals, publish_time, confidence),
+                        )| {
+                            (
+                                *price_feed_id,
+                                (
+                                    if *price_feed_id == *eth_price_feed_id {
+                                        (*price as f64 * 1.5) as u64
+                                    } else {
+                                        *price
+                                    },
+                                    *price_feed_decimals,
+                                    *publish_time,
+                                    *confidence,
+                                ),
+                            )
+                        },
+                    )
+                    .collect::<Vec<(Bits256, (u64, u32, u64, u64))>>();
+
+                OracleInput::Pyth(PythOracleInput {
+                    contract_id: pyth_input.contract_id,
+                    update_fee: pyth_input.update_fee,
+                    publish_times: pyth_input.publish_times,
+                    price_feed_ids: pyth_input.price_feed_ids,
+                    update_data: pyth_mock_oracle
+                        .create_update_data(&new_prices)
+                        .await
+                        .unwrap(),
+                })
+            }
+            _ => input,
+        };
+
+        new_oracle_inputs.push(processed_input);
+    }
+
+    oracle_inputs = new_oracle_inputs;
+
+    // Update price feeds
+    market
+        .update_price_feeds(&oracle_contracts, &oracle_inputs, oracle_total_update_fee)
+        .await
+        .unwrap();
+
+    // Get new price
+    let new_price = market
+        .get_price(
+            &oracle_contracts,
+            eth.asset_id,
+            &oracle_inputs,
+            oracle_total_update_fee,
+        )
+        .await
+        .unwrap()
+        .value;
 
     println!(
         "🔺 ETH price increases: ${}  -> ${}",
-        res.price as f64 / 10_u64.pow(eth.price_feed_decimals) as f64,
-        new_price as f64 / 10_u64.pow(eth.price_feed_decimals) as f64
+        old_price.price as f64 / 10_u64.pow(*eth_price_feed_decimals) as f64,
+        new_price.price as f64 / 10_u64.pow(*eth_price_feed_decimals) as f64
     );
-    let res = oracle.price(eth.price_feed_id).await.unwrap().value;
-    assert!(new_price == res.price);
 
     market
         .print_debug_state(&wallets, &usdc, &eth)
         .await
         .unwrap();
+
     // =================================================
     // ==================== Step #4 ====================
     // 👛 Wallet: Bob 🧛
     // 🤙 Call: withdraw_base
     // 💰 Amount: <MAX HE CAN BORROW AFTER PRICE INCREASE>
     let max_borrow_amount_after = market
-        .available_to_borrow(&[&oracle.instance], bob_account)
+        .available_to_borrow(
+            &oracle_contracts,
+            bob_account,
+            &oracle_inputs,
+            oracle_total_update_fee,
+        )
         .await
         .unwrap();
+
     let log_amount_after = format!("{} USDC", max_borrow_amount_after as f64 / SCALE_6);
     print_case_title(4, "Bob", "withdraw_base", &log_amount_after.as_str());
     let bob_withdraw_res = market
@@ -175,9 +242,10 @@ async fn price_changes() {
         .await
         .unwrap()
         .withdraw_base(
-            &[&oracle.instance],
+            &oracle_contracts,
             max_borrow_amount_after.try_into().unwrap(),
-            &price_data_update,
+            &oracle_inputs,
+            oracle_total_update_fee,
         )
         .await;
     assert!(bob_withdraw_res.is_ok());

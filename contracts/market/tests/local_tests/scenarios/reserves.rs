@@ -1,6 +1,7 @@
 use crate::utils::{setup, TestBaseAsset, TestData};
-use fuels::{accounts::Account, types::transaction::TxPolicies};
-use market::PriceDataUpdate;
+use fuels::{
+    accounts::Account, programs::calls::ContractDependency, types::transaction::TxPolicies,
+};
 use market_sdk::{convert_i256_to_i128, convert_i256_to_i64, parse_units};
 const AMOUNT_COEFFICIENT: u64 = 10u64.pow(0);
 
@@ -13,25 +14,18 @@ async fn reserves_test() {
         alice,
         alice_account,
         market,
-        assets,
         usdc,
         usdc_contract,
-        oracle,
-        price_feed_ids,
-        publish_time,
-        prices,
+        oracle_inputs,
+        oracle_total_update_fee,
+        pyth_mock_oracle,
         eth,
         admin,
         admin_account,
         ..
     } = setup(None, TestBaseAsset::USDC).await;
 
-    let price_data_update = PriceDataUpdate {
-        update_fee: 0,
-        price_feed_ids,
-        publish_times: vec![publish_time; assets.len()],
-        update_data: oracle.create_update_data(&prices).await.unwrap(),
-    };
+    let oracle_contracts: Vec<&dyn ContractDependency> = vec![&pyth_mock_oracle.instance];
 
     // Scenario #4 Steps repeated multiple times
     for _ in 0..3 {
@@ -67,7 +61,12 @@ async fn reserves_test() {
             .with_account(&bob)
             .await
             .unwrap()
-            .withdraw_base(&[&oracle.instance], borrow_amount, &price_data_update)
+            .withdraw_base(
+                &oracle_contracts,
+                borrow_amount,
+                &oracle_inputs,
+                oracle_total_update_fee,
+            )
             .await;
         assert!(res.is_ok());
 
@@ -97,10 +96,11 @@ async fn reserves_test() {
             .await
             .unwrap()
             .withdraw_collateral(
-                &[&oracle.instance],
+                &oracle_contracts,
                 eth.asset_id,
                 bob_supply_amount,
-                &price_data_update,
+                &oracle_inputs,
+                oracle_total_update_fee,
             )
             .await;
         assert!(res.is_ok(), "{:?}", res.err());

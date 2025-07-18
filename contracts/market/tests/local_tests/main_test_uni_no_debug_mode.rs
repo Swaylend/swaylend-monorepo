@@ -315,7 +315,6 @@ async fn main_test_no_debug() {
 
     let (uni_price_feed_id, uni_price_feed_decimals) =
         pyth_asset_price_feeds.get(&uni.asset_id).unwrap();
-    let old_oracle_inputs = oracle_inputs.clone();
     let mut new_oracle_inputs = Vec::new();
 
     for input in oracle_inputs.iter() {

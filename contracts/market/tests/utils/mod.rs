@@ -166,7 +166,6 @@ pub async fn setup(debug_step: Option<u64>, base_asset: TestBaseAsset) -> TestDa
         }
     }
 
-    // FIXME: Implement oracle inputs
     let mut oracle_inputs: Vec<OracleInput> = Vec::new();
     let mut oracle_total_update_fee = 0;
 

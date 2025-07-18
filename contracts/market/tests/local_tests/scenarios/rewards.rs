@@ -1,6 +1,5 @@
 use crate::utils::{setup, TestBaseAsset, TestData};
-use fuels::types::U256;
-use market::PriceDataUpdate;
+use fuels::{programs::calls::ContractDependency, types::U256};
 use market_sdk::parse_units;
 const AMOUNT_COEFFICIENT: u64 = 10u64.pow(0);
 
@@ -13,23 +12,16 @@ async fn rewards_test() {
         alice,
         alice_account,
         market,
-        assets,
         usdc,
         usdc_contract,
-        oracle,
-        price_feed_ids,
-        publish_time,
-        prices,
+        oracle_inputs,
+        oracle_total_update_fee,
+        pyth_mock_oracle,
         eth,
         ..
     } = setup(None, TestBaseAsset::USDC).await;
 
-    let price_data_update = PriceDataUpdate {
-        update_fee: 0,
-        price_feed_ids,
-        publish_times: vec![publish_time; assets.len()],
-        update_data: oracle.create_update_data(&prices).await.unwrap(),
-    };
+    let oracle_contracts: Vec<&dyn ContractDependency> = vec![&pyth_mock_oracle.instance];
 
     // Step 0: Alice supplies 5000 USDC
     let alice_supply_amount = parse_units(5000 * AMOUNT_COEFFICIENT, usdc.decimals);
@@ -67,7 +59,12 @@ async fn rewards_test() {
         .with_account(&bob)
         .await
         .unwrap()
-        .withdraw_base(&[&oracle.instance], borrow_amount, &price_data_update)
+        .withdraw_base(
+            &oracle_contracts,
+            borrow_amount,
+            &oracle_inputs,
+            oracle_total_update_fee,
+        )
         .await;
     assert!(res.is_ok(), "{:?}", res.err());
     market.debug_increment_timestamp().await.unwrap();
@@ -95,10 +92,11 @@ async fn rewards_test() {
         .await
         .unwrap()
         .withdraw_collateral(
-            &[&oracle.instance],
+            &oracle_contracts,
             eth.asset_id,
             bob_supply_amount,
-            &price_data_update,
+            &oracle_inputs,
+            oracle_total_update_fee,
         )
         .await;
     assert!(res.is_ok());

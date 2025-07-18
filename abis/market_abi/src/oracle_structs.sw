@@ -197,7 +197,6 @@ impl Oracle {
 
                 let oracle = abi(PythCore, contract_id.bits());
 
-
                 oracle.update_price_feeds_if_necessary {
                     asset_id: AssetId::base().bits(),
                     coins: input.update_fee,

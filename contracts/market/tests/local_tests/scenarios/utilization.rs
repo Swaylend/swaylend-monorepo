@@ -1,13 +1,8 @@
 // **Scenario #13 - Utilization above supply and borrow kinks**
 
 // Description: Test if supply and borrow rates increases very fast (exponentially) when utilization is above supply and borrow kinks.
-
-// Code: <insert link to the test file>
-
-// Steps:
 use crate::utils::{print_case_title, setup, TestBaseAsset, TestData};
-use fuels::{accounts::ViewOnlyAccount, types::U256};
-use market::PriceDataUpdate;
+use fuels::{accounts::ViewOnlyAccount, programs::calls::ContractDependency, types::U256};
 use market_sdk::parse_units;
 
 const AMOUNT_COEFFICIENT: u64 = 10u64.pow(0);
@@ -24,21 +19,14 @@ async fn utilization_above_kinks() {
         market,
         usdc,
         usdc_contract,
-        oracle,
-        price_feed_ids,
         eth,
-        publish_time,
-        prices,
-        assets,
+        pyth_mock_oracle,
+        oracle_inputs,
+        oracle_total_update_fee,
         ..
     } = setup(None, TestBaseAsset::USDC).await;
 
-    let price_data_update = PriceDataUpdate {
-        update_fee: 1,
-        price_feed_ids,
-        publish_times: vec![publish_time; assets.len()],
-        update_data: oracle.create_update_data(&prices).await.unwrap(),
-    };
+    let oracle_contracts: Vec<&dyn ContractDependency> = vec![&pyth_mock_oracle.instance];
 
     // =================================================
     // ==================== Step #0 ====================
@@ -99,7 +87,12 @@ async fn utilization_above_kinks() {
         .with_account(&bob)
         .await
         .unwrap()
-        .withdraw_base(&[&oracle.instance], bob_borrow_amount, &price_data_update)
+        .withdraw_base(
+            &oracle_contracts,
+            bob_borrow_amount,
+            &oracle_inputs,
+            oracle_total_update_fee,
+        )
         .await;
     assert!(bob_borrow_res.is_ok(), "{:?}", bob_borrow_res.err());
 
