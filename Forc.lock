@@ -39,6 +39,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "redstone"
+source = "git+https://github.com/redstone-finance/redstone-fuel-sdk?tag=v0.66.2-1#b0f4cf36f569bc4d7e0c7ec57754de1dafd8b7d5"
+dependencies = ["std"]
+
+[[package]]
+name = "redstone_prices"
+source = "member"
+dependencies = [
+    "redstone",
+    "std",
+]
+
+[[package]]
 name = "src-20"
 source = "member"
 dependencies = [
