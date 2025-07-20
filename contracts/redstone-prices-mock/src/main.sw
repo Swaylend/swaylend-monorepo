@@ -1,11 +1,12 @@
 contract;
 
-use std::{block::timestamp, bytes::Bytes, vec::Vec};
+use std::bytes::Bytes;
 use std::storage::storage_vec::*;
 use std::storage::storage_map::*;
 use std::hash::Hash;
-use redstone::{core::{config::Config, processor::process_input}, utils::vec::*};
+use redstone::utils::vec::*;
 use sway_libs::ownership::*;
+use std::array_conversions::{u32::*, u64::*};
 
 pub struct Price {
     pub price: u256,
@@ -130,38 +131,66 @@ impl RedstonePrices for Contract {
 
     #[storage(write)]
     fn update_prices(feed_ids: Vec<u256>, payload: Bytes) {
-        let timestamp = timestamp();
+        // Bytes structure
+        // 0: price -> u64
+        // 1: exponent -> u32
+        // 2: publish_time -> u64
 
-        let config = Config {
-            feed_ids: feed_ids,
-            signers: Vec::new(), // TODO: Implement,
-            signer_count_threshold: 1,
-            block_timestamp: timestamp,
-        };
+        let mut index = 0;
 
-        let (aggregated_values, timestamp) = process_input(payload, config);
-
-        let mut i = 0;
-        while i < aggregated_values.len() {
-            let price_feed_id = feed_ids.get(i).unwrap();
-
-            let mut current_price = storage.prices.get(price_feed_id).try_read();
-            
-            if current_price.is_some() && current_price.unwrap().publish_time > timestamp {
-                continue;
-            }
-
-            let price = aggregated_values.get(i).unwrap();
-            let exponent = 6; // TODO: What exponent?
-            let confidence = 0;
-            let publish_time = timestamp;
-
-            storage.prices.insert(price_feed_id, Price {
-                price: price,
-                exponent: exponent,
-                confidence: confidence,
-                publish_time: publish_time,
-            });
+        while index < feed_ids.len() {
+            let price_feed_id = feed_ids.get(index).unwrap();
+            let price = decode_bytes(payload, index * 20);
+            storage.prices.insert(price_feed_id, price);
+            index += 1;
         }
+    }
+}
+
+
+fn decode_bytes(bytes: Bytes, offset: u64) -> Price {
+    // First 8 bytes are price
+    let price = u64::from_be_bytes(
+        [
+            bytes.get(offset).unwrap(),
+            bytes.get(offset + 1).unwrap(),
+            bytes.get(offset + 2).unwrap(),
+            bytes.get(offset + 3).unwrap(),
+            bytes.get(offset + 4).unwrap(),
+            bytes.get(offset + 5).unwrap(),
+            bytes.get(offset + 6).unwrap(),
+            bytes.get(offset + 7).unwrap(),
+        ]
+    );
+
+    // Next 4 bytes are exponent
+    let exponent = u32::from_be_bytes(
+        [
+            bytes.get(offset + 8).unwrap(),
+            bytes.get(offset + 9).unwrap(),
+            bytes.get(offset + 10).unwrap(),
+            bytes.get(offset + 11).unwrap(),
+        ]
+    );
+
+    // Next 8 bytes are publish time
+    let publish_time = u64::from_be_bytes(
+        [
+            bytes.get(offset + 12).unwrap(),
+            bytes.get(offset + 13).unwrap(),
+            bytes.get(offset + 14).unwrap(),
+            bytes.get(offset + 15).unwrap(),
+            bytes.get(offset + 16).unwrap(),
+            bytes.get(offset + 17).unwrap(),
+            bytes.get(offset + 18).unwrap(),
+            bytes.get(offset + 19).unwrap(),
+        ]
+    );
+
+    Price {
+        price: price.into(),
+        exponent: exponent,
+        publish_time: publish_time,
+        confidence: 0,
     }
 }

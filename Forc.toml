@@ -8,4 +8,5 @@ members = [
     "contracts/token",
     "contracts/pyth-mock",
     "contracts/redstone-prices",
+    "contracts/redstone-prices-mock",
 ]

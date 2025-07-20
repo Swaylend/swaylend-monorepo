@@ -49,6 +49,16 @@ source = "member"
 dependencies = [
     "redstone",
     "std",
+    "sway_libs",
+]
+
+[[package]]
+name = "redstone_prices_mock"
+source = "member"
+dependencies = [
+    "redstone",
+    "std",
+    "sway_libs",
 ]
 
 [[package]]

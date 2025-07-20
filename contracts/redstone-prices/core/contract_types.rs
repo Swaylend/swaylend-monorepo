@@ -1,6 +1,6 @@
 use fuels::macros::abigen;
 
 abigen!(Contract(
-    name = "PythMock",
-    abi = "contracts/pyth-mock/out/release/pyth_mock-abi.json"
+    name = "RedstonePrices",
+    abi = "contracts/redstone-prices/out/release/redstone_prices-abi.json"
 ));

@@ -5203,6 +5203,39 @@ dependencies = [
 ]
 
 [[package]]
+name = "redstone_prices"
+version = "0.1.0"
+dependencies = [
+ "dotenv",
+ "fuels",
+ "tokio",
+]
+
+[[package]]
+name = "redstone_prices_mock_sdk"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "fuels",
+ "rand",
+ "redstone_prices",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
+name = "redstone_prices_sdk"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "fuels",
+ "rand",
+ "redstone_prices",
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "regalloc2"
 version = "0.9.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"

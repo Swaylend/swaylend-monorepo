@@ -8,8 +8,7 @@ use fuels::{
     },
     types::{
         bech32::Bech32ContractId, transaction::TxPolicies,
-        transaction_builders::VariableOutputPolicy, AssetId, Bits256, Bytes, Bytes32, ContractId,
-        Identity,
+        transaction_builders::VariableOutputPolicy, AssetId, Bytes32, ContractId, Identity,
     },
 };
 use market::*;
