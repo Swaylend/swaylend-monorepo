@@ -101,12 +101,7 @@ async fn absorb_and_liquidate() {
     // 🤙 Call: withdraw_base
     // 💰 Amount: <MAX HE CAN BORROW>
     let max_borrow_amount = market
-        .available_to_borrow(
-            &oracle_contracts,
-            bob_account,
-            &oracle_inputs,
-            oracle_total_update_fee,
-        )
+        .available_to_borrow(&oracle_contracts, bob_account)
         .await
         .unwrap();
     let log_amount = format!("{} USDC", max_borrow_amount as f64 / SCALE_6);
@@ -139,12 +134,7 @@ async fn absorb_and_liquidate() {
     print_case_title(3, "Admin", "Drop of ETH price", "-50%");
 
     let old_price = market
-        .get_price(
-            &oracle_contracts,
-            eth.asset_id,
-            &oracle_inputs,
-            oracle_total_update_fee,
-        )
+        .get_price(&oracle_contracts, eth.asset_id)
         .await
         .unwrap()
         .value;
@@ -209,12 +199,7 @@ async fn absorb_and_liquidate() {
 
     // Get new price
     let new_price = market
-        .get_price(
-            &oracle_contracts,
-            eth.asset_id,
-            &oracle_inputs,
-            oracle_total_update_fee,
-        )
+        .get_price(&oracle_contracts, eth.asset_id)
         .await
         .unwrap()
         .value;
@@ -239,12 +224,7 @@ async fn absorb_and_liquidate() {
 
     assert!(
         market
-            .is_liquidatable(
-                &oracle_contracts,
-                bob_account,
-                &oracle_inputs,
-                oracle_total_update_fee
-            )
+            .is_liquidatable(&oracle_contracts, bob_account)
             .await
             .unwrap()
             .value
@@ -299,8 +279,6 @@ async fn absorb_and_liquidate() {
             &oracle_contracts,
             eth.asset_id,
             convert_i256_to_u64(&reserves),
-            &oracle_inputs,
-            oracle_total_update_fee,
         )
         .await
         .unwrap()
@@ -339,12 +317,7 @@ async fn absorb_and_liquidate() {
     let buy_collateral_call = market
         .instance
         .methods()
-        .buy_collateral(
-            eth.asset_id,
-            1u64.into(),
-            alice_account,
-            oracle_inputs.clone(),
-        )
+        .buy_collateral(eth.asset_id, 1u64.into(), alice_account)
         .with_contracts(&oracle_contracts)
         .with_tx_policies(tx_policies)
         .call_params(call_params_base_asset)
@@ -361,7 +334,7 @@ async fn absorb_and_liquidate() {
     // Wait for response
     let _: CallResponse<((), ())> = submitted_tx.response().await.unwrap();
     let alice_balance = alice.get_asset_balance(&eth.asset_id).await.unwrap();
-    assert!(alice_balance == 1001_000_000_011 * AMOUNT_COEFFICIENT);
+    assert!(alice_balance == 1_000_999_999_992 * AMOUNT_COEFFICIENT);
 
     // check reserves
     let reserves = market
@@ -373,8 +346,7 @@ async fn absorb_and_liquidate() {
         .unwrap()
         .value;
     let normalized_reserves: u64 = convert_i256_to_i128(&reserves).try_into().unwrap();
-
-    assert!(normalized_reserves == 6);
+    assert!(normalized_reserves == 0);
 
     market
         .print_debug_state(&wallets, &usdc, &eth)
@@ -469,12 +441,7 @@ async fn all_assets_liquidated() {
     // 🤙 Call: withdraw_base
     // 💰 Amount: <MAX HE CAN BORROW>
     let max_borrow_amount = market
-        .available_to_borrow(
-            &oracle_contracts,
-            bob_account,
-            &oracle_inputs,
-            oracle_total_update_fee,
-        )
+        .available_to_borrow(&oracle_contracts, bob_account)
         .await
         .unwrap();
     println!("Bob can borrow {max_borrow_amount} USDC");
@@ -508,12 +475,7 @@ async fn all_assets_liquidated() {
     print_case_title(3, "Admin", "Drop of ETH price", "-50%");
 
     let old_price = market
-        .get_price(
-            &oracle_contracts,
-            eth.asset_id,
-            &oracle_inputs,
-            oracle_total_update_fee,
-        )
+        .get_price(&oracle_contracts, eth.asset_id)
         .await
         .unwrap()
         .value;
@@ -578,12 +540,7 @@ async fn all_assets_liquidated() {
 
     // Get new price
     let new_price = market
-        .get_price(
-            &oracle_contracts,
-            eth.asset_id,
-            &oracle_inputs,
-            oracle_total_update_fee,
-        )
+        .get_price(&oracle_contracts, eth.asset_id)
         .await
         .unwrap()
         .value;
@@ -608,12 +565,7 @@ async fn all_assets_liquidated() {
 
     assert!(
         market
-            .is_liquidatable(
-                &oracle_contracts,
-                bob_account,
-                &oracle_inputs,
-                oracle_total_update_fee,
-            )
+            .is_liquidatable(&oracle_contracts, bob_account)
             .await
             .unwrap()
             .value
@@ -668,8 +620,6 @@ async fn all_assets_liquidated() {
             &oracle_contracts,
             eth.asset_id,
             convert_i256_to_u64(&reserves),
-            &oracle_inputs,
-            oracle_total_update_fee,
         )
         .await
         .unwrap()
@@ -703,12 +653,7 @@ async fn all_assets_liquidated() {
     let buy_collateral_call = market
         .instance
         .methods()
-        .buy_collateral(
-            eth.asset_id,
-            1u64.into(),
-            alice_account,
-            oracle_inputs.clone(),
-        )
+        .buy_collateral(eth.asset_id, 1u64.into(), alice_account)
         .with_contracts(&oracle_contracts)
         .with_tx_policies(tx_policies)
         .call_params(call_params_base_asset)
@@ -727,7 +672,7 @@ async fn all_assets_liquidated() {
 
     // Check asset balance
     let balance = alice.get_asset_balance(&eth.asset_id).await.unwrap();
-    assert!(balance == 1001_000_000_011 * AMOUNT_COEFFICIENT);
+    assert!(balance == 1_000_999_999_992 * AMOUNT_COEFFICIENT);
 
     market
         .print_debug_state(&wallets, &usdc, &eth)
@@ -888,12 +833,7 @@ async fn is_liquidatable_internal_uses_correct_index() {
     // let uni_price = oracle.price(uni.price_feed_id).await.unwrap().value;
     // let uni_price = uni_price.price as f64 / 10u64.pow(uni.price_feed_decimals as u32) as f64;
     let uni_price = market
-        .get_price(
-            &oracle_contracts,
-            uni.asset_id,
-            &oracle_inputs,
-            oracle_total_update_fee,
-        )
+        .get_price(&oracle_contracts, uni.asset_id)
         .await
         .unwrap()
         .value;
@@ -943,12 +883,7 @@ async fn is_liquidatable_internal_uses_correct_index() {
     // `is_liquidatable` accrues iterest first, so this must return `true`
     assert!(
         market
-            .is_liquidatable(
-                &oracle_contracts,
-                bob_account,
-                &oracle_inputs,
-                oracle_total_update_fee,
-            )
+            .is_liquidatable(&oracle_contracts, bob_account)
             .await
             .unwrap()
             .value

@@ -372,19 +372,15 @@ impl Market {
         &self,
         contract_ids: &[&dyn ContractDependency],
         account: Identity,
-        oracle_inputs: &Vec<OracleInput>,
-        oracle_total_update_fee: u64,
     ) -> anyhow::Result<u128> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
-        let call_params = CallParameters::default().with_amount(oracle_total_update_fee);
 
         let res = self
             .instance
             .methods()
-            .available_to_borrow(account, oracle_inputs.clone())
+            .available_to_borrow(account)
             .with_tx_policies(tx_policies)
             .with_contracts(contract_ids)
-            .call_params(call_params)?
             .call()
             .await?
             .value;
@@ -418,19 +414,15 @@ impl Market {
         &self,
         contract_ids: &[&dyn ContractDependency],
         account: Identity,
-        oracle_inputs: &Vec<OracleInput>,
-        oracle_total_update_fee: u64,
     ) -> anyhow::Result<CallResponse<bool>> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
-        let call_params = CallParameters::default().with_amount(oracle_total_update_fee);
 
         Ok(self
             .instance
             .methods()
-            .is_liquidatable(account, oracle_inputs.clone())
+            .is_liquidatable(account)
             .with_tx_policies(tx_policies)
             .with_contracts(contract_ids)
-            .call_params(call_params)?
             .call()
             .await?)
     }
@@ -446,7 +438,6 @@ impl Market {
         asset_id: AssetId,
         min_amount: u64,
         recipient: Identity,
-        oracle_inputs: &Vec<OracleInput>,
     ) -> anyhow::Result<CallResponse<()>> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
 
@@ -457,12 +448,7 @@ impl Market {
         Ok(self
             .instance
             .methods()
-            .buy_collateral(
-                asset_id,
-                min_amount.into(),
-                recipient,
-                oracle_inputs.clone(),
-            )
+            .buy_collateral(asset_id, min_amount.into(), recipient)
             .with_tx_policies(tx_policies)
             .with_contracts(contract_ids)
             .call_params(call_params_base_asset)?
@@ -476,19 +462,15 @@ impl Market {
         contract_ids: &[&dyn ContractDependency],
         asset_id: AssetId,
         collateral_amount: u64,
-        oracle_inputs: &Vec<OracleInput>,
-        oracle_total_update_fee: u64,
     ) -> anyhow::Result<CallResponse<u64>> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
-        let call_params = CallParameters::default().with_amount(oracle_total_update_fee);
 
         Ok(self
             .instance
             .methods()
-            .collateral_value_to_sell(asset_id, collateral_amount, oracle_inputs.clone())
+            .collateral_value_to_sell(asset_id, collateral_amount)
             .with_tx_policies(tx_policies)
             .with_contracts(contract_ids)
-            .call_params(call_params)?
             .call()
             .await?)
     }
@@ -498,19 +480,15 @@ impl Market {
         contract_ids: &[&dyn ContractDependency],
         asset_id: AssetId,
         base_amount: u64,
-        oracle_inputs: &Vec<OracleInput>,
-        oracle_total_update_fee: u64,
     ) -> anyhow::Result<CallResponse<u64>> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
-        let call_params = CallParameters::default().with_amount(oracle_total_update_fee);
 
         Ok(self
             .instance
             .methods()
-            .quote_collateral(asset_id.into(), base_amount, oracle_inputs.clone())
+            .quote_collateral(asset_id.into(), base_amount)
             .with_tx_policies(tx_policies)
             .with_contracts(contract_ids)
-            .call_params(call_params)?
             .call()
             .await?)
     }
@@ -705,19 +683,15 @@ impl Market {
         &self,
         contract_ids: &[&dyn ContractDependency],
         asset_id: AssetId,
-        oracle_inputs: &Vec<OracleInput>,
-        oracle_total_update_fee: u64,
     ) -> anyhow::Result<CallResponse<Price>> {
         let tx_policies = TxPolicies::default().with_script_gas_limit(DEFAULT_GAS_LIMIT);
-        let call_params = CallParameters::default().with_amount(oracle_total_update_fee);
 
         Ok(self
             .instance
             .methods()
-            .get_price(asset_id, oracle_inputs.clone())
+            .get_price(asset_id)
             .with_contracts(contract_ids)
             .with_tx_policies(tx_policies)
-            .call_params(call_params)?
             .call()
             .await?)
     }

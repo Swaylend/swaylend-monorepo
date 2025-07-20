@@ -56,12 +56,7 @@ async fn collateral_configuration_test() {
         .with_account(&bob)
         .await
         .unwrap()
-        .available_to_borrow(
-            &oracle_contracts,
-            bob_account,
-            &oracle_inputs,
-            oracle_total_update_fee,
-        )
+        .available_to_borrow(&oracle_contracts, bob_account)
         .await
         .unwrap();
     println!("Bob available_to_borrow: {:?}", res);
@@ -86,12 +81,7 @@ async fn collateral_configuration_test() {
             .with_account(&bob)
             .await
             .unwrap()
-            .available_to_borrow(
-                &oracle_contracts,
-                bob_account,
-                &oracle_inputs,
-                oracle_total_update_fee,
-            )
+            .available_to_borrow(&oracle_contracts, bob_account)
             .await
             .unwrap()
     );
@@ -158,12 +148,7 @@ async fn collateral_configuration_test() {
         .with_account(&bob)
         .await
         .unwrap()
-        .available_to_borrow(
-            &oracle_contracts,
-            bob_account,
-            &oracle_inputs,
-            oracle_total_update_fee,
-        )
+        .available_to_borrow(&oracle_contracts, bob_account)
         .await
         .unwrap();
     // Res should equal 350 USDC because of the new collateral factor

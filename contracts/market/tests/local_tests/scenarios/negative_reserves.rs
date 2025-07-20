@@ -112,12 +112,7 @@ async fn negative_reserves_test() {
     print_case_title(3, "Admin", "Drop of ETH price", "-70%");
 
     let old_price = market
-        .get_price(
-            &oracle_contracts,
-            eth.asset_id,
-            &oracle_inputs,
-            oracle_total_update_fee,
-        )
+        .get_price(&oracle_contracts, eth.asset_id)
         .await
         .unwrap()
         .value;
@@ -182,12 +177,7 @@ async fn negative_reserves_test() {
 
     // Get new price
     let new_price = market
-        .get_price(
-            &oracle_contracts,
-            eth.asset_id,
-            &oracle_inputs,
-            oracle_total_update_fee,
-        )
+        .get_price(&oracle_contracts, eth.asset_id)
         .await
         .unwrap()
         .value;
@@ -211,12 +201,7 @@ async fn negative_reserves_test() {
 
     assert!(
         market
-            .is_liquidatable(
-                &oracle_contracts,
-                bob_account,
-                &oracle_inputs,
-                oracle_total_update_fee,
-            )
+            .is_liquidatable(&oracle_contracts, bob_account)
             .await
             .unwrap()
             .value

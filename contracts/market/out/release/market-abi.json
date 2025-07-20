@@ -1629,10 +1629,6 @@
         {
           "name": "account",
           "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
-        },
-        {
-          "name": "oracle_inputs",
-          "concreteTypeId": "b8c096640d00461e94891decbf44e3f86379e168323628c152ad941a7a979ff6"
         }
       ],
       "name": "available_to_borrow",
@@ -1697,10 +1693,6 @@
           "arguments": [
             " * Reads: `4 + storage.collateral_configurations_keys.len() * 5`"
           ]
-        },
-        {
-          "name": "payable",
-          "arguments": []
         },
         {
           "name": "storage",
@@ -1777,10 +1769,6 @@
         {
           "name": "recipient",
           "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
-        },
-        {
-          "name": "oracle_inputs",
-          "concreteTypeId": "b8c096640d00461e94891decbf44e3f86379e168323628c152ad941a7a979ff6"
         }
       ],
       "name": "buy_collateral",
@@ -1903,10 +1891,6 @@
         {
           "name": "collateral_amount",
           "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
-        },
-        {
-          "name": "oracle_inputs",
-          "concreteTypeId": "b8c096640d00461e94891decbf44e3f86379e168323628c152ad941a7a979ff6"
         }
       ],
       "name": "collateral_value_to_sell",
@@ -1977,10 +1961,6 @@
           "arguments": [
             " * Reads: `5`"
           ]
-        },
-        {
-          "name": "payable",
-          "arguments": []
         },
         {
           "name": "storage",
@@ -2682,10 +2662,6 @@
         {
           "name": "asset_id",
           "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
-        },
-        {
-          "name": "oracle_inputs",
-          "concreteTypeId": "b8c096640d00461e94891decbf44e3f86379e168323628c152ad941a7a979ff6"
         }
       ],
       "name": "get_price",
@@ -2786,10 +2762,6 @@
           "arguments": [
             " * Reads: `1`"
           ]
-        },
-        {
-          "name": "payable",
-          "arguments": []
         },
         {
           "name": "storage",
@@ -3351,10 +3323,6 @@
         {
           "name": "account",
           "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
-        },
-        {
-          "name": "oracle_inputs",
-          "concreteTypeId": "b8c096640d00461e94891decbf44e3f86379e168323628c152ad941a7a979ff6"
         }
       ],
       "name": "is_liquidatable",
@@ -3419,10 +3387,6 @@
           "arguments": [
             " * Reads: 1"
           ]
-        },
-        {
-          "name": "payable",
-          "arguments": []
         },
         {
           "name": "storage",
@@ -3519,10 +3483,6 @@
         {
           "name": "base_amount",
           "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
-        },
-        {
-          "name": "oracle_inputs",
-          "concreteTypeId": "b8c096640d00461e94891decbf44e3f86379e168323628c152ad941a7a979ff6"
         }
       ],
       "name": "quote_collateral",
@@ -3611,10 +3571,6 @@
           "arguments": [
             " * Reads: `2`"
           ]
-        },
-        {
-          "name": "payable",
-          "arguments": []
         },
         {
           "name": "storage",
@@ -4754,7 +4710,7 @@
     {
       "name": "DEBUG_STEP",
       "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
-      "offset": 156488
+      "offset": 155104
     }
   ]
 }

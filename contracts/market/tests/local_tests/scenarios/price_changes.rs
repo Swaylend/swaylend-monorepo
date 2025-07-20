@@ -92,12 +92,7 @@ async fn price_changes() {
     // 🤙 Call: withdraw_base
     // 💰 Amount: <MAX HE CAN BORROW>
     let max_borrow_amount_before = market
-        .available_to_borrow(
-            &oracle_contracts,
-            bob_account,
-            &oracle_inputs,
-            oracle_total_update_fee,
-        )
+        .available_to_borrow(&oracle_contracts, bob_account)
         .await
         .unwrap();
     let log_amount_before = format!("{} USDC", max_borrow_amount_before as f64 / SCALE_6);
@@ -129,12 +124,7 @@ async fn price_changes() {
     // 💰 Amount: +50%
     print_case_title(3, "Admin", "Increase of ETH price", "+50%");
     let old_price = market
-        .get_price(
-            &oracle_contracts,
-            eth.asset_id,
-            &oracle_inputs,
-            oracle_total_update_fee,
-        )
+        .get_price(&oracle_contracts, eth.asset_id)
         .await
         .unwrap()
         .value;
@@ -199,12 +189,7 @@ async fn price_changes() {
 
     // Get new price
     let new_price = market
-        .get_price(
-            &oracle_contracts,
-            eth.asset_id,
-            &oracle_inputs,
-            oracle_total_update_fee,
-        )
+        .get_price(&oracle_contracts, eth.asset_id)
         .await
         .unwrap()
         .value;
@@ -226,12 +211,7 @@ async fn price_changes() {
     // 🤙 Call: withdraw_base
     // 💰 Amount: <MAX HE CAN BORROW AFTER PRICE INCREASE>
     let max_borrow_amount_after = market
-        .available_to_borrow(
-            &oracle_contracts,
-            bob_account,
-            &oracle_inputs,
-            oracle_total_update_fee,
-        )
+        .available_to_borrow(&oracle_contracts, bob_account)
         .await
         .unwrap();
 

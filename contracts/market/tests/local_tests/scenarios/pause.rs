@@ -128,12 +128,7 @@ async fn pause_test() {
     // 💰 Amount: -30%
 
     let old_price = market
-        .get_price(
-            &oracle_contracts,
-            uni.asset_id,
-            &oracle_inputs,
-            oracle_total_update_fee,
-        )
+        .get_price(&oracle_contracts, uni.asset_id)
         .await
         .unwrap()
         .value;
@@ -199,12 +194,7 @@ async fn pause_test() {
 
     // Get new price
     let new_price = market
-        .get_price(
-            &oracle_contracts,
-            uni.asset_id,
-            &oracle_inputs,
-            oracle_total_update_fee,
-        )
+        .get_price(&oracle_contracts, uni.asset_id)
         .await
         .unwrap()
         .value;
@@ -225,12 +215,7 @@ async fn pause_test() {
 
     assert!(
         market
-            .is_liquidatable(
-                &oracle_contracts,
-                alice_account,
-                &oracle_inputs,
-                oracle_total_update_fee,
-            )
+            .is_liquidatable(&oracle_contracts, alice_account)
             .await
             .unwrap()
             .value
@@ -283,8 +268,6 @@ async fn pause_test() {
             &oracle_contracts,
             uni.asset_id,
             convert_i256_to_u64(&reserves),
-            &oracle_inputs,
-            oracle_total_update_fee,
         )
         .await
         .unwrap()
@@ -309,7 +292,6 @@ async fn pause_test() {
             uni.asset_id,
             1,
             bob_account,
-            &oracle_inputs,
         )
         .await
         .unwrap();
@@ -484,8 +466,6 @@ async fn pause_test() {
             &oracle_contracts,
             uni.asset_id,
             convert_i256_to_u64(&reserves),
-            &oracle_inputs,
-            oracle_total_update_fee,
         )
         .await
         .unwrap()
@@ -503,7 +483,6 @@ async fn pause_test() {
             uni.asset_id,
             1,
             bob_account,
-            &oracle_inputs,
         )
         .await
         .is_err();

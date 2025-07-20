@@ -116,7 +116,7 @@ impl Market for Contract {
         let pause_config = PauseConfiguration {
             supply_paused: false,
             withdraw_paused: false,
-            absorb_paused: false,
+            absorb_paused: false,   
             buy_paused: false,
         };
 
@@ -355,7 +355,7 @@ impl Market for Contract {
 
         // Note: no accrue interest, BorrowCollateralFactor < LiquidationCollateralFactor covers small changes
         // Check if the user is borrow collateralized
-        require(is_borrow_collateralized(caller, oracle_inputs), Error::NotCollateralized);
+        require(is_borrow_collateralized(caller), Error::NotCollateralized);
 
         transfer(caller, asset_id, amount);
 
@@ -600,7 +600,7 @@ impl Market for Contract {
             update_price_feeds_internal(oracle_inputs);
 
             // Check that the user is borrow collateralized
-            require(is_borrow_collateralized(caller, oracle_inputs), Error::NotCollateralized);
+            require(is_borrow_collateralized(caller), Error::NotCollateralized);
         }
 
         // Transfer base asset to the caller
@@ -642,8 +642,8 @@ impl Market for Contract {
     ///
     /// # Number of Storage Accesses
     /// * Reads: `4 + storage.collateral_configurations_keys.len() * 5`
-    #[payable,storage(read)]
-    fn available_to_borrow(account: Identity, oracle_inputs: Vec<OracleInput>) -> u256 {
+    #[storage(read)]
+    fn available_to_borrow(account: Identity) -> u256 {
         // Get user's supply and borrow
         let (_, borrow) = get_user_supply_borrow_internal(account);
 
@@ -664,7 +664,7 @@ impl Market for Contract {
                 continue;
             }
 
-            let price = get_price_internal(collateral_configuration.asset_id, PricePosition::LowerBound, oracle_inputs); // decimals: price.exponent
+            let price = get_price_internal(collateral_configuration.asset_id, PricePosition::LowerBound); // decimals: price.exponent
             let price_exponent = price.exponent;
             let price_scale = u256::from(10_u64).pow(price.exponent);
             let price = u256::from(price.price); // decimals: price.exponent
@@ -677,7 +677,7 @@ impl Market for Contract {
         };
 
         // Get the base token price 
-        let base_price = get_price_internal(market_configuration.base_token, PricePosition::Middle, oracle_inputs); // decimals: base_price.exponent
+        let base_price = get_price_internal(market_configuration.base_token, PricePosition::Middle); // decimals: base_price.exponent
         let base_price_scale = u256::from(10_u64).pow(base_price.exponent);
         let base_price = u256::from(base_price.price); // decimals: base_price.exponent
 
@@ -719,7 +719,7 @@ impl Market for Contract {
         let mut index = 0;
         // Loop and absorb each account
         while index < accounts.len() {
-            absorb_internal(accounts.get(index).unwrap(), oracle_inputs);
+            absorb_internal(accounts.get(index).unwrap());
             index += 1;
         }
     }
@@ -735,10 +735,10 @@ impl Market for Contract {
     ///
     /// # Number of Storage Accesses
     /// * Reads: 1
-    #[payable, storage(read)]
-    fn is_liquidatable(account: Identity, oracle_inputs: Vec<OracleInput>) -> bool {
+    #[storage(read)]
+    fn is_liquidatable(account: Identity) -> bool {
         let present = get_user_balance_with_interest_internal(account);
-        is_liquidatable_internal(account, present, oracle_inputs)
+        is_liquidatable_internal(account, present)
     }
 
     // # 6. Protocol collateral management
@@ -761,7 +761,7 @@ impl Market for Contract {
     /// # Number of Storage Accesses
     /// * Reads: `8`
     #[payable, storage(read)]
-    fn buy_collateral(asset_id: AssetId, min_amount: u64, recipient: Identity, oracle_inputs: Vec<OracleInput>) {
+    fn buy_collateral(asset_id: AssetId, min_amount: u64, recipient: Identity) {
         reentrancy_guard();
 
         // Only allow buying collateral if paused flag is not set
@@ -789,7 +789,7 @@ impl Market for Contract {
         let reserves = get_collateral_reserves_internal(asset_id);
 
         // Calculate the quote for a collateral asset in exchange for an amount of the base asset
-        let collateral_amount = quote_collateral_internal(asset_id, payment_amount, oracle_inputs);
+        let collateral_amount = quote_collateral_internal(asset_id, payment_amount);
 
         // Check that the quote is greater than or equal to the minimum requested amount
         require(collateral_amount >= min_amount, Error::TooMuchSlippage);
@@ -827,20 +827,20 @@ impl Market for Contract {
     ///
     /// # Number of Storage Accesses
     /// * Reads: `5`
-    #[payable, storage(read)]
-    fn collateral_value_to_sell(asset_id: AssetId, collateral_amount: u64, oracle_inputs: Vec<OracleInput>) -> u64 { // decimals: base_token_decimals
+    #[storage(read)]
+    fn collateral_value_to_sell(asset_id: AssetId, collateral_amount: u64) -> u64 { // decimals: base_token_decimals
         let collateral_configuration = storage.collateral_configurations.get(asset_id).read();
         let market_configuration = storage.market_configuration.read();
 
         // Get the collateral asset price
-        let asset_price = get_price_internal(collateral_configuration.asset_id, PricePosition::UpperBound, oracle_inputs); // decimals: asset_price.exponent
+        let asset_price = get_price_internal(collateral_configuration.asset_id, PricePosition::UpperBound); // decimals: asset_price.exponent
         let asset_price_scale = u256::from(10_u64).pow(asset_price.exponent);
         let asset_price = u256::from(asset_price.price); // decimals: asset_price.exponent
         let discount_factor: u256 = market_configuration.store_front_price_factor * (FACTOR_SCALE_18 - collateral_configuration.liquidation_penalty) / FACTOR_SCALE_18; // decimals: 18
         let asset_price_discounted: u256 = asset_price * (FACTOR_SCALE_18 - discount_factor) / FACTOR_SCALE_18; // decimals: asset_price.exponent
 
         // Get the base token price 
-        let base_price = get_price_internal(market_configuration.base_token, PricePosition::Middle, oracle_inputs); // decimals: base_price.exponent
+        let base_price = get_price_internal(market_configuration.base_token, PricePosition::Middle); // decimals: base_price.exponent
         let base_price_scale = u256::from(10_u64).pow(base_price.exponent);
         let base_price = u256::from(base_price.price); // decimals: base_price.exponent
         let collateral_scale = u256::from(10_u64).pow(collateral_configuration.decimals);
@@ -868,9 +868,9 @@ impl Market for Contract {
     ///
     /// # Number of Storage Accesses
     /// * Reads: `2`
-    #[payable, storage(read)]
-    fn quote_collateral(asset_id: AssetId, base_amount: u64, oracle_inputs: Vec<OracleInput>) -> u64 {
-        quote_collateral_internal(asset_id, base_amount, oracle_inputs)
+    #[storage(read)]
+    fn quote_collateral(asset_id: AssetId, base_amount: u64) -> u64 {
+        quote_collateral_internal(asset_id, base_amount)
     }
 
     // ## 7. Reserves management
@@ -1156,9 +1156,9 @@ impl Market for Contract {
     ///
     /// # Number of Storage Accesses
     /// * Reads: `1`
-    #[payable, storage(read)]
-    fn get_price(asset_id: AssetId, oracle_inputs: Vec<OracleInput>) -> Price {
-        get_price_internal(asset_id, PricePosition::Middle, oracle_inputs)
+    #[storage(read)]
+    fn get_price(asset_id: AssetId) -> Price {
+        get_price_internal(asset_id, PricePosition::Middle)
     }
 
     /// This function ensures that the provided price data update is valid and performs an update if the conditions are met.
@@ -1446,7 +1446,7 @@ impl SRC5 for Contract {
 /// # Number of Storage Accesses
 /// * Reads: `1`
 #[storage(read)]
-fn get_price_internal(asset_id: AssetId, price_position: PricePosition, oracle_inputs: Vec<OracleInput>) -> Price {
+fn get_price_internal(asset_id: AssetId, price_position: PricePosition) -> Price {
     let oracle_asset_configurations: StorageKey<StorageVec<OracleAssetConfiguration>> = storage.oracle_asset_configurations.get(asset_id);
 
     let mut price = Price {
@@ -1481,7 +1481,7 @@ fn get_price_internal(asset_id: AssetId, price_position: PricePosition, oracle_i
                 };
 
 
-                let (is_fetched_price_valid, fetched_price) = oracle.get_price(price_feed_id, oracle_inputs);
+                let (is_fetched_price_valid, fetched_price) = oracle.get_price(price_feed_id);
 
                 if is_fetched_price_valid {
                     price = fetched_price;
@@ -1839,7 +1839,7 @@ fn accrued_interest_indices(now: u256, last_accrual_time: u256) -> (u256, u256) 
 /// # Number of Storage Accesses
 /// * Reads: `4 + storage.collateral_configurations_keys.len() * 4`
 #[storage(read)]
-fn is_borrow_collateralized(account: Identity, oracle_inputs: Vec<OracleInput>) -> bool {
+fn is_borrow_collateralized(account: Identity) -> bool {
     let principal = storage.user_basic.get(account).try_read().unwrap_or(UserBasic::default()).principal; // decimals: base_asset_decimal
 
     if principal >= I256::zero() {
@@ -1865,7 +1865,7 @@ fn is_borrow_collateralized(account: Identity, oracle_inputs: Vec<OracleInput>) 
 
 
 
-        let price = get_price_internal(collateral_configuration.asset_id, PricePosition::LowerBound, oracle_inputs); // decimals: price.exponent decimals
+        let price = get_price_internal(collateral_configuration.asset_id, PricePosition::LowerBound); // decimals: price.exponent decimals
         let price_scale = u256::from(10_u64).pow(price.exponent);
         let price = u256::from(price.price); // decimals: price.exponent
         let collateral_scale = u256::from(10_u64).pow(collateral_configuration.decimals);
@@ -1878,7 +1878,7 @@ fn is_borrow_collateralized(account: Identity, oracle_inputs: Vec<OracleInput>) 
     }
 
 
-    let base_token_price = get_price_internal(storage.market_configuration.read().base_token, PricePosition::Middle, oracle_inputs); // decimals: base_token_price.exponent 
+    let base_token_price = get_price_internal(storage.market_configuration.read().base_token, PricePosition::Middle); // decimals: base_token_price.exponent 
     let base_token_price_scale = u256::from(10_u64).pow(base_token_price.exponent);
     let base_token_price = u256::from(base_token_price.price);
     let borrow_amount = u256::try_from(present.wrapping_neg()).unwrap() * base_token_price / base_token_price_scale; // decimals: base_token_decimals
@@ -1899,7 +1899,7 @@ fn is_borrow_collateralized(account: Identity, oracle_inputs: Vec<OracleInput>) 
 /// # Number of Storage Accesses
 /// * Reads: `4 + storage.collateral_configurations_keys.len() * 4`
 #[storage(read)]
-fn is_liquidatable_internal(account: Identity, present: I256, oracle_inputs: Vec<OracleInput>) -> bool {
+fn is_liquidatable_internal(account: Identity, present: I256) -> bool {
     if present >= I256::zero() {
         return false
     };
@@ -1921,7 +1921,7 @@ fn is_liquidatable_internal(account: Identity, present: I256, oracle_inputs: Vec
             continue;
         }
 
-        let price = get_price_internal(collateral_configuration.asset_id, PricePosition::LowerBound, oracle_inputs); // decimals: price.exponent
+        let price = get_price_internal(collateral_configuration.asset_id, PricePosition::LowerBound); // decimals: price.exponent
         let price_scale = u256::from(10.pow(price.exponent));
         let price = u256::from(price.price); // decimals: price.exponent
         let collateral_scale = u256::from(10_u64).pow(collateral_configuration.decimals);
@@ -1932,7 +1932,7 @@ fn is_liquidatable_internal(account: Identity, present: I256, oracle_inputs: Vec
         index += 1;
     }
 
-    let base_token_price = get_price_internal(storage.market_configuration.read().base_token, PricePosition::Middle, oracle_inputs); // decimals: base_token_price.exponent
+    let base_token_price = get_price_internal(storage.market_configuration.read().base_token, PricePosition::Middle); // decimals: base_token_price.exponent
     let base_token_price_scale = u256::from(10_u64).pow(base_token_price.exponent);
     let base_token_price = u256::from(base_token_price.price); // decimals: base_token_price.exponent
     let borrow_amount = present * base_token_price / base_token_price_scale; // decimals: base_token_decimals
@@ -2150,17 +2150,17 @@ fn withdraw_and_borrow_amount(old_principal: I256, new_principal: I256) -> (u256
 /// # Number of Storage Accesses
 /// * Reads: `2`
 #[storage(read)]
-fn quote_collateral_internal(asset_id: AssetId, base_amount: u64, oracle_inputs: Vec<OracleInput>) -> u64 {
+fn quote_collateral_internal(asset_id: AssetId, base_amount: u64) -> u64 {
     let collateral_configuration = storage.collateral_configurations.get(asset_id).read();
     let market_configuration = storage.market_configuration.read();
 
     // Get the asset price
-    let asset_price = get_price_internal(collateral_configuration.asset_id, PricePosition::UpperBound, oracle_inputs); // decimals: asset_price.exponent
+    let asset_price = get_price_internal(collateral_configuration.asset_id, PricePosition::UpperBound); // decimals: asset_price.exponent
     let asset_price_scale = u256::from(10_u64).pow(asset_price.exponent);
     let asset_price = u256::from(asset_price.price); // decimals: asset_price.exponent
 
     // Get the base token price
-    let base_price = get_price_internal(market_configuration.base_token, PricePosition::Middle, oracle_inputs); // decimals: base_price.exponent 
+    let base_price = get_price_internal(market_configuration.base_token, PricePosition::Middle); // decimals: base_price.exponent 
     let base_price_scale = u256::from(10_u64).pow(base_price.exponent);
     let base_price = u256::from(base_price.price); // decimals: base_price.exponent 
     let discount_factor: u256 = market_configuration.store_front_price_factor * (FACTOR_SCALE_18 - collateral_configuration.liquidation_penalty) / FACTOR_SCALE_18; // decimals: 18
@@ -2220,14 +2220,14 @@ fn get_user_balance_with_interest_internal(account: Identity) -> I256 {
 /// * Reads: `8 + storage.collateral_configurations_keys.len() * 5`
 /// * Writes: `2 + storage.collateral_configurations_keys.len() * 2`
 #[storage(write)]
-fn absorb_internal(account: Identity, oracle_inputs: Vec<OracleInput>) {
+fn absorb_internal(account: Identity) {
     // Get the user's basic information
     let user_basic = storage.user_basic.get(account).try_read().unwrap_or(UserBasic::default());
     let old_principal = user_basic.principal;
     let old_balance = present_value(old_principal); // decimals: base_token_decimals
     
     // Check that the account is liquidatable
-    require(is_liquidatable_internal(account, old_balance, oracle_inputs), Error::NotLiquidatable);
+    require(is_liquidatable_internal(account, old_balance), Error::NotLiquidatable);
 
     let mut delta_value: u256 = 0; // decimals: 18
     let market_configuration = storage.market_configuration.read();
@@ -2265,7 +2265,7 @@ fn absorb_internal(account: Identity, oracle_inputs: Vec<OracleInput>) {
             );
 
         // Get price of the collateral asset
-        let price = get_price_internal(collateral_configuration.asset_id, PricePosition::LowerBound, oracle_inputs); // decimals: price.exponent
+        let price = get_price_internal(collateral_configuration.asset_id, PricePosition::LowerBound); // decimals: price.exponent
         let price_exponent = price.exponent;
         let price_scale = u256::from(10_u64).pow(price.exponent);
         let price = u256::from(price.price); // decimals: price.exponent
@@ -2290,7 +2290,7 @@ fn absorb_internal(account: Identity, oracle_inputs: Vec<OracleInput>) {
     }
 
     // Get the base token price
-    let base_price = get_price_internal(market_configuration.base_token, PricePosition::Middle, oracle_inputs); // decimals: base_token_price.exponent
+    let base_price = get_price_internal(market_configuration.base_token, PricePosition::Middle); // decimals: base_token_price.exponent
     let base_price_exponent = base_price.exponent;
     let base_price_scale = u256::from(10_u64).pow(base_price.exponent);
     let base_price = u256::from(base_price.price); // decimals: base_token_price.exponent

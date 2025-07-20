@@ -116,12 +116,7 @@ async fn multicall_absorb_buy_collateral_test() {
     print_case_title(3, "Admin", "Drop of ETH price", "-70%");
 
     let old_price = market
-        .get_price(
-            &oracle_contracts,
-            eth.asset_id,
-            &oracle_inputs,
-            oracle_total_update_fee,
-        )
+        .get_price(&oracle_contracts, eth.asset_id)
         .await
         .unwrap()
         .value;
@@ -186,12 +181,7 @@ async fn multicall_absorb_buy_collateral_test() {
 
     // Get new price
     let new_price = market
-        .get_price(
-            &oracle_contracts,
-            eth.asset_id,
-            &oracle_inputs,
-            oracle_total_update_fee,
-        )
+        .get_price(&oracle_contracts, eth.asset_id)
         .await
         .unwrap()
         .value;
@@ -216,12 +206,7 @@ async fn multicall_absorb_buy_collateral_test() {
 
     assert!(
         market
-            .is_liquidatable(
-                &oracle_contracts,
-                bob_account,
-                &oracle_inputs,
-                oracle_total_update_fee,
-            )
+            .is_liquidatable(&oracle_contracts, bob_account)
             .await
             .unwrap()
             .value
@@ -260,7 +245,7 @@ async fn multicall_absorb_buy_collateral_test() {
     let buy_collateral_call = market
         .instance
         .methods()
-        .buy_collateral(eth.asset_id, amount, chad_account, oracle_inputs.clone())
+        .buy_collateral(eth.asset_id, amount, chad_account)
         .with_contracts(&oracle_contracts)
         .call_params(
             CallParameters::default()

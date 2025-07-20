@@ -91,7 +91,7 @@ pub const ORACLE_MAX_CONF_WIDTH: u256 = 300; // 300 / 10000 = 3.0 %
 pub const ORACLE_CONF_BASIS_POINTS: u256 = 10_000; // 1e4
 
 impl Oracle {
-    pub fn get_price(self, price_feed_id: b256, oracle_inputs: Vec<OracleInput>) -> (bool, Price) {
+    pub fn get_price(self, price_feed_id: b256) -> (bool, Price) {
         let contract_id = self.contract_id;
         let oracle_type = self.oracle_type;
 
@@ -140,34 +140,6 @@ impl Oracle {
                 }
             },
             OracleType::Redstone => {
-                // Redstone needs to use the `OracleInput` struct to get the price.
-                
-                // Find correct oracle input
-                let mut index = 0;
-                let len = oracle_inputs.len();
-                let mut found_oracle_input = false;
-
-                while index < len {
-                    let oracle_inputs: OracleInput = oracle_inputs.get(index).unwrap();
-                    match oracle_inputs {
-                        OracleInput::Redstone(input) => {
-                            // Redstone does not need to be updated.
-                            // It uses the `OracleInput` struct in the `get_price` function.
-                            found_oracle_input = true;
-
-                            // TODO: Implement (fetch price and validate)
-                            break;
-                        },
-                        _ => {
-                            index += 1;
-                        }
-                    }
-                }
-
-                if !found_oracle_input {
-                    is_price_valid = false;
-                }
-                
                 require(false, "Not implemented yet");
             },
             OracleType::Twrap => {
@@ -208,9 +180,9 @@ impl Oracle {
                 );
             },
             OracleInput::Redstone(input) => {
-               // Redstone does not need to be updated.
-               // It uses the `OracleInput` struct in the `get_price` function.
-               return;
+                let contract_id = input.contract_id;
+                // TODO: Implement
+                require(false, "Not implemented yet");
             },
             OracleInput::Twrap(input) => {
                 let contract_id = input.contract_id;

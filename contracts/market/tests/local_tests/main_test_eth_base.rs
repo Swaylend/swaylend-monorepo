@@ -225,12 +225,7 @@ async fn main_test() {
     // 🤙 Call: withdraw_base
     // 💰 Amount: ~1.57 ETH (available_to_borrow)
     let amount = market
-        .available_to_borrow(
-            &oracle_contracts,
-            alice_account,
-            &oracle_inputs,
-            oracle_total_update_fee,
-        )
+        .available_to_borrow(&oracle_contracts, alice_account)
         .await
         .unwrap();
     let log_amount = format!("{} ETH", amount as f64 / scale_9);
@@ -256,12 +251,7 @@ async fn main_test() {
 
     // available_to_borrow should be 0.00100000 ETH
     let res = market
-        .available_to_borrow(
-            &oracle_contracts,
-            alice_account,
-            &oracle_inputs,
-            oracle_total_update_fee,
-        )
+        .available_to_borrow(&oracle_contracts, alice_account)
         .await
         .unwrap();
 
@@ -306,12 +296,7 @@ async fn main_test() {
     print_case_title(6, "Admin", "Drop of collateral price", "-30%");
 
     let old_price = market
-        .get_price(
-            &oracle_contracts,
-            usdt.asset_id,
-            &oracle_inputs,
-            oracle_total_update_fee,
-        )
+        .get_price(&oracle_contracts, usdt.asset_id)
         .await
         .unwrap()
         .value;
@@ -377,12 +362,7 @@ async fn main_test() {
 
     // Get new price
     let new_price = market
-        .get_price(
-            &oracle_contracts,
-            usdt.asset_id,
-            &oracle_inputs,
-            oracle_total_update_fee,
-        )
+        .get_price(&oracle_contracts, usdt.asset_id)
         .await
         .unwrap()
         .value;
@@ -409,12 +389,7 @@ async fn main_test() {
 
     assert!(
         market
-            .is_liquidatable(
-                &oracle_contracts,
-                alice_account,
-                &oracle_inputs,
-                oracle_total_update_fee
-            )
+            .is_liquidatable(&oracle_contracts, alice_account)
             .await
             .unwrap()
             .value
@@ -478,8 +453,6 @@ async fn main_test() {
             &oracle_contracts,
             usdt.asset_id,
             convert_i256_to_u64(&reserves),
-            &oracle_inputs,
-            oracle_total_update_fee,
         )
         .await
         .unwrap()
@@ -513,12 +486,7 @@ async fn main_test() {
     let buy_collateral_call = market
         .instance
         .methods()
-        .buy_collateral(
-            usdt.asset_id,
-            1u64.into(),
-            bob_account,
-            oracle_inputs.clone(),
-        )
+        .buy_collateral(usdt.asset_id, 1u64.into(), bob_account)
         .with_contracts(&oracle_contracts)
         .with_tx_policies(tx_policies)
         .call_params(call_params_base_asset)
