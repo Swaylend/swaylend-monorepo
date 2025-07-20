@@ -969,8 +969,18 @@
           "typeId": 48
         },
         {
-          "name": "placeholder",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "name": "price_feed_ids",
+          "typeId": 50,
+          "typeArguments": [
+            {
+              "name": "",
+              "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+            }
+          ]
+        },
+        {
+          "name": "payload",
+          "typeId": 46
         }
       ]
     },
@@ -4710,7 +4720,7 @@
     {
       "name": "DEBUG_STEP",
       "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
-      "offset": 155104
+      "offset": 159296
     }
   ]
 }

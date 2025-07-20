@@ -4,5 +4,6 @@ license = "Apache-2.0"
 name = "redstone_prices"
 
 [dependencies]
+redstone_prices_abi = { path = "../../abis/redstone_prices_abi" }
 redstone = { git = "https://github.com/redstone-finance/redstone-fuel-sdk", tag = "v0.66.2-1" }
 sway_libs = { git = "https://github.com/FuelLabs/sway-libs", tag = "v0.24.0" }

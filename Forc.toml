@@ -2,6 +2,7 @@
 members = [
     # ABIs
     "abis/market_abi",
+    "abis/redstone_prices_abi",
     # Contracts
     "contracts/market",
     "contracts/src-20",

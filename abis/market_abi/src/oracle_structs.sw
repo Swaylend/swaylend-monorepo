@@ -2,11 +2,13 @@ library;
 
 use ::errors::*;
 
+use redstone_prices_abi::{RedstonePrices};
 use std::bytes::Bytes;
 use pyth_interface::{PythCore, data_structures::price::PriceFeedId};
 use std::context::msg_amount;
 use std::call_frames::msg_asset_id;
 use std::revert::require;
+use std::convert::TryFrom;
 
 pub struct Price {
     pub price: u64,
@@ -62,7 +64,8 @@ pub struct RedstoneOracleInput {
     /// Contract ID of the Redstone contract.
     pub contract_id: ContractId,
     
-    pub placeholder: (),
+    pub price_feed_ids: Vec<u256>,
+    pub payload: Bytes,
 }
 
 pub struct TwrapOracleInput {
@@ -91,6 +94,7 @@ pub const ORACLE_MAX_CONF_WIDTH: u256 = 300; // 300 / 10000 = 3.0 %
 pub const ORACLE_CONF_BASIS_POINTS: u256 = 10_000; // 1e4
 
 impl Oracle {
+    // TODO: Change price_feed_id to ENUM
     pub fn get_price(self, price_feed_id: b256) -> (bool, Price) {
         let contract_id = self.contract_id;
         let oracle_type = self.oracle_type;
@@ -140,7 +144,24 @@ impl Oracle {
                 }
             },
             OracleType::Redstone => {
-                require(false, "Not implemented yet");
+                let contract_id = self.contract_id;
+                let oracle = abi(RedstonePrices, contract_id.bits());
+
+                // FIXME: Change after using ENUM
+                let price = oracle.get_price(0);
+
+                if price.price == 0 {
+                    is_price_valid = false;
+                }
+
+                if is_price_valid {
+                    final_price = Price {
+                        price: price.price.try_into().unwrap(),
+                        exponent: price.exponent,
+                        confidence: price.confidence,
+                        publish_time: price.publish_time,
+                    };
+                }
             },
             OracleType::Twrap => {
                 require(false, "Not implemented yet");
@@ -181,8 +202,9 @@ impl Oracle {
             },
             OracleInput::Redstone(input) => {
                 let contract_id = input.contract_id;
-                // TODO: Implement
-                require(false, "Not implemented yet");
+                let oracle = abi(RedstonePrices, contract_id.bits());
+
+                oracle.update_prices(input.price_feed_ids, input.payload);
             },
             OracleInput::Twrap(input) => {
                 let contract_id = input.contract_id;

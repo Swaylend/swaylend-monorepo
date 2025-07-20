@@ -18,6 +18,7 @@ name = "market_abi"
 source = "member"
 dependencies = [
     "pyth_interface",
+    "redstone_prices_abi",
     "std",
     "sway_libs",
 ]
@@ -48,6 +49,15 @@ name = "redstone_prices"
 source = "member"
 dependencies = [
     "redstone",
+    "redstone_prices_abi",
+    "std",
+    "sway_libs",
+]
+
+[[package]]
+name = "redstone_prices_abi"
+source = "member"
+dependencies = [
     "std",
     "sway_libs",
 ]
@@ -57,6 +67,7 @@ name = "redstone_prices_mock"
 source = "member"
 dependencies = [
     "redstone",
+    "redstone_prices_abi",
     "std",
     "sway_libs",
 ]
