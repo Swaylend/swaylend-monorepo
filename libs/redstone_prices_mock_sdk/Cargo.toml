@@ -6,7 +6,7 @@ edition = "2021"
 license = "Apache-2.0"
 
 [dependencies]
-redstone_prices = { workspace = true }
+redstone_prices_mock = { workspace = true }
 fuels = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }

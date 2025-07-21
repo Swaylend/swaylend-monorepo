@@ -1253,8 +1253,8 @@ impl Market for Contract {
         let mut index = 0;
 
         while index < len {
-            let oracle_configuration = storage.oracle_global_configurations.get(storage.oracle_global_configurations_keys.get(index).unwrap().read()).read();
-            require(oracle_configuration.contract_id != oracle_configuration.contract_id, Error::GlobalOracleAlreadyExists);
+            let stored_oracle_configuration = storage.oracle_global_configurations.get(storage.oracle_global_configurations_keys.get(index).unwrap().read()).read();
+            require(oracle_configuration.contract_id != stored_oracle_configuration.contract_id, Error::GlobalOracleAlreadyExists);
             index += 1;
         }
 
