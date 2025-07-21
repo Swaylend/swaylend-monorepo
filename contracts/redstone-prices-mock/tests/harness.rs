@@ -1,8 +1,8 @@
 use fuels::{
     test_helpers::{launch_custom_provider_and_get_wallets, NodeConfig, Trigger, WalletsConfig},
-    types::{Bits256, Bytes},
+    types::U256,
 };
-
+use redstone_prices_mock_sdk::RedstonePricesMockContract;
 
 #[tokio::test]
 async fn update_and_get_price() {
@@ -20,38 +20,30 @@ async fn update_and_get_price() {
 
     let owner = wallets.get(0).unwrap();
 
-    // let pyth_mock = PythMockContract::deploy(owner).await.unwrap();
+    let redstone_mock = RedstonePricesMockContract::deploy(owner).await.unwrap();
+    redstone_mock
+        .activate(1, vec![], owner.address().into())
+        .await
+        .unwrap();
 
-    // let price_feed_id = Bits256::from_hex_str(UNI_USD_PRICE_FEED_ID).unwrap();
-    // let price: u64 = 100_000_000; // 1 USD
-    // let exponent: u32 = 8;
-    // let publish_time: u64 = 1665076400;
-    // let confidence: u64 = 100;
+    let price_feed_id = U256::from_dec_str("1431520323").unwrap();
+    let price = 100_000_000; // 1 USD
+    let publish_time = 1665076400;
+    let confidence = 0;
+    let prices = vec![(price_feed_id, (price, 8, publish_time, confidence))];
 
-    // // Update price feeds
-    // let mut update_data: Vec<u8> = Vec::new();
+    let update_data = redstone_mock.create_update_data(&prices).await.unwrap();
 
-    // let price_feed_id_bytes = price_feed_id
-    //     .0
-    //     .iter()
-    //     .map(|byte| *byte)
-    //     .collect::<Vec<u8>>();
+    redstone_mock
+        .update_prices(update_data.0, update_data.1)
+        .await
+        .unwrap();
 
-    // update_data.extend(price_feed_id_bytes);
-    // update_data.extend(price.to_be_bytes());
-    // update_data.extend(exponent.to_be_bytes());
-    // update_data.extend(publish_time.to_be_bytes());
-    // update_data.extend(confidence.to_be_bytes());
+    let price_response = redstone_mock.get_price(price_feed_id).await.unwrap();
+    println!("Price: {:?}", price_response.value);
 
-    // let update_data_bytes = Vec::from([Bytes { 0: update_data }]);
-
-    // pyth_mock
-    //     .update_price_feeds(update_data_bytes)
-    //     .await
-    //     .unwrap();
-
-    // // Get price
-    // let price = pyth_mock.price(price_feed_id).await.unwrap();
-
-    // println!("Price: {:?}", price.value);
+    assert_eq!(price_response.value.price, U256::from(price));
+    assert_eq!(price_response.value.exponent, 8);
+    assert_eq!(price_response.value.publish_time, publish_time);
+    assert_eq!(price_response.value.confidence, 0);
 }

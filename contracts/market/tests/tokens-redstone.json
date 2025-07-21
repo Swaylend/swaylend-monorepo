@@ -9,7 +9,7 @@
     "oracle_configuration": [
       {
         "oracle_id": 1,
-        "price_feed_id": "1431520323",
+        "price_feed_id": "USDC",
         "price_feed_decimals": 8,
         "oracle_type": "Redstone"
       }
@@ -29,7 +29,7 @@
     "oracle_configuration": [
       {
         "oracle_id": 1,
-        "price_feed_id": "4543560",
+        "price_feed_id": "ETH",
         "price_feed_decimals": 8,
         "oracle_type": "Redstone"
       }
@@ -49,7 +49,7 @@
     "oracle_configuration": [
       {
         "oracle_id": 1,
-        "price_feed_id": "4346947",
+        "price_feed_id": "BTC",
         "price_feed_decimals": 8,
         "oracle_type": "Redstone"
       }
@@ -69,7 +69,7 @@
     "oracle_configuration": [
       {
         "oracle_id": 1,
-        "price_feed_id": "5590601",
+        "price_feed_id": "UNI",
         "price_feed_decimals": 8,
         "oracle_type": "Redstone"
       }
@@ -89,7 +89,7 @@
     "oracle_configuration": [
       {
         "oracle_id": 1,
-        "price_feed_id": "1431520340",
+        "price_feed_id": "USDT",
         "price_feed_decimals": 8,
         "oracle_type": "Redstone"
       }

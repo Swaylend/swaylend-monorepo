@@ -136,9 +136,8 @@ impl RedstonePricesMockContract {
         let mut price_feed_ids: Vec<U256> = Vec::new();
         let mut update_data: Vec<u8> = Vec::new();
 
-        for (price_feed_id, (price, exponent, publish_time, _)) in prices {
+        for (price_feed_id, (price, _, publish_time, _)) in prices {
             update_data.extend(price.to_be_bytes());
-            update_data.extend(exponent.to_be_bytes());
             update_data.extend(publish_time.to_be_bytes());
             price_feed_ids.push(price_feed_id.clone());
         }

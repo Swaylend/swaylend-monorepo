@@ -85,9 +85,7 @@ pub fn string_to_price_feed_id(
 ) -> market::OraclePriceFeedId {
     match oracle_type.as_str() {
         "Pyth" => market::OraclePriceFeedId::Pyth(Bits256::from_hex_str(&price_feed_id).unwrap()),
-        "Redstone" => {
-            market::OraclePriceFeedId::Redstone(U256::from_dec_str(&price_feed_id).unwrap())
-        }
+        "Redstone" => market::OraclePriceFeedId::Redstone(U256::from(price_feed_id.as_bytes())),
         "Twrap" => market::OraclePriceFeedId::Twrap,
         "Stork" => market::OraclePriceFeedId::Stork,
         _ => panic!("Invalid oracle type: {}", oracle_type),
@@ -298,7 +296,7 @@ pub async fn setup(
         let price = asset.1.default_price * 10u64.pow(config.price_feed_decimals as u32);
 
         redstone_prices.push((
-            U256::from_dec_str(&config.price_feed_id).unwrap(),
+            U256::from(config.price_feed_id.as_bytes()),
             (
                 price,
                 config.price_feed_decimals,
@@ -310,7 +308,7 @@ pub async fn setup(
         redstone_asset_price_feeds.insert(
             asset.1.asset_id,
             (
-                U256::from_dec_str(&config.price_feed_id).unwrap(),
+                U256::from(config.price_feed_id.as_bytes()),
                 config.price_feed_decimals,
             ),
         );

@@ -42,20 +42,58 @@ impl RedstonePricesContract {
         })
     }
 
-    pub async fn activate(&self, signer_count_threshold: u64, allowed_signers: Vec<Bits256>, owner: Identity) -> anyhow::Result<CallResponse<()>> {
-        Ok(self.instance.methods().activate(signer_count_threshold, allowed_signers, owner).call().await?)
+    pub async fn with_account(&self, account: &WalletUnlocked) -> anyhow::Result<Self> {
+        Ok(Self {
+            instance: RedstonePrices::new(self.instance.contract_id().clone(), account.clone()),
+        })
+    }
+
+    pub async fn get_version(&self) -> anyhow::Result<CallResponse<u8>> {
+        Ok(self.instance.methods().get_version().call().await?)
+    }
+
+    pub async fn activate(
+        &self,
+        signer_count_threshold: u64,
+        allowed_signers: Vec<Bits256>,
+        owner: Identity,
+    ) -> anyhow::Result<CallResponse<()>> {
+        Ok(self
+            .instance
+            .methods()
+            .activate(signer_count_threshold, allowed_signers, owner)
+            .call()
+            .await?)
     }
 
     pub async fn get_signer_count_threshold(&self) -> anyhow::Result<CallResponse<u64>> {
-        Ok(self.instance.methods().get_signer_count_threshold().call().await?)
+        Ok(self
+            .instance
+            .methods()
+            .get_signer_count_threshold()
+            .call()
+            .await?)
     }
 
     pub async fn set_signer_count_threshold(&self, count: u64) -> anyhow::Result<CallResponse<()>> {
-        Ok(self.instance.methods().set_signer_count_threshold(count).call().await?)
+        Ok(self
+            .instance
+            .methods()
+            .set_signer_count_threshold(count)
+            .call()
+            .await?)
     }
 
-    pub async fn set_allowed_signers(&self, signers: Vec<Bits256>) -> anyhow::Result<CallResponse<()>> {
-        Ok(self.instance.methods().set_allowed_signers(signers).call().await?)
+    pub async fn set_allowed_signers(
+        &self,
+        signers: Vec<Bits256>,
+    ) -> anyhow::Result<CallResponse<()>> {
+        Ok(self
+            .instance
+            .methods()
+            .set_allowed_signers(signers)
+            .call()
+            .await?)
     }
 
     pub async fn get_allowed_signers(&self) -> anyhow::Result<CallResponse<Vec<Bits256>>> {
@@ -63,15 +101,30 @@ impl RedstonePricesContract {
     }
 
     pub async fn add_allowed_signer(&self, signer: Bits256) -> anyhow::Result<CallResponse<()>> {
-        Ok(self.instance.methods().add_allowed_signer(signer).call().await?)
+        Ok(self
+            .instance
+            .methods()
+            .add_allowed_signer(signer)
+            .call()
+            .await?)
     }
 
     pub async fn remove_allowed_signer(&self, signer: Bits256) -> anyhow::Result<CallResponse<()>> {
-        Ok(self.instance.methods().remove_allowed_signer(signer).call().await?)
+        Ok(self
+            .instance
+            .methods()
+            .remove_allowed_signer(signer)
+            .call()
+            .await?)
     }
 
     pub async fn get_price(&self, price_feed_id: U256) -> anyhow::Result<CallResponse<Price>> {
-        Ok(self.instance.methods().get_price(price_feed_id).call().await?)
+        Ok(self
+            .instance
+            .methods()
+            .get_price(price_feed_id)
+            .call()
+            .await?)
     }
 
     pub async fn update_prices(

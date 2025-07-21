@@ -10,6 +10,7 @@ use redstone::{core::{config::Config, processor::process_input}, utils::vec::*};
 use sway_libs::ownership::*;
 
 const VERSION = 1u8;
+const REDSTONE_PRICES_EXPONENT = 8u32;
 
 storage {
     prices: StorageMap<u256, Price> = StorageMap {},
@@ -92,9 +93,9 @@ impl RedstonePrices for Contract {
 
         let config = Config {
             feed_ids: feed_ids,
-            signers: Vec::new(), // TODO: Implement,
-            signer_count_threshold: 1,
-            block_timestamp: timestamp,
+            signers: storage.allowed_signers.load_vec(),
+            signer_count_threshold: storage.signer_count_threshold.read(),
+            block_timestamp: timestamp - (10 + (1 << 62)),
         };
 
         let (aggregated_values, timestamp) = process_input(payload, config);
@@ -110,7 +111,7 @@ impl RedstonePrices for Contract {
             }
 
             let price = aggregated_values.get(i).unwrap();
-            let exponent = 6; // TODO: What exponent?
+            let exponent = REDSTONE_PRICES_EXPONENT;
             let confidence = 0;
             let publish_time = timestamp;
 

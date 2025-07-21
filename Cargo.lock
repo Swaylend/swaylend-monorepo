@@ -5207,8 +5207,10 @@ dependencies = [
 name = "redstone_prices"
 version = "0.1.0"
 dependencies = [
+ "chrono",
  "dotenv",
  "fuels",
+ "redstone_prices_sdk",
  "tokio",
 ]
 
@@ -5218,6 +5220,7 @@ version = "0.1.0"
 dependencies = [
  "dotenv",
  "fuels",
+ "redstone_prices_mock_sdk",
  "tokio",
 ]
 

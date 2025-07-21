@@ -5,7 +5,7 @@ use fuels::{
         calls::{CallHandler, CallParameters, ContractDependency},
         responses::CallResponse,
     },
-    types::{transaction::TxPolicies, transaction_builders::VariableOutputPolicy, Bits256, U256},
+    types::{transaction::TxPolicies, transaction_builders::VariableOutputPolicy, U256},
 };
 use market::{OracleInput, RedstoneOracleInput};
 use market_sdk::{convert_i256_to_u64, is_i256_negative, parse_units};

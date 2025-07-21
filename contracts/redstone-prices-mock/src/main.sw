@@ -11,6 +11,7 @@ use sway_libs::ownership::*;
 use std::array_conversions::{u32::*, u64::*};
 
 const VERSION = 1u8;
+const REDSTONE_PRICES_EXPONENT = 8u32;
 
 storage {
     prices: StorageMap<u256, Price> = StorageMap {},
@@ -91,14 +92,13 @@ impl RedstonePrices for Contract {
     fn update_prices(feed_ids: Vec<u256>, payload: Bytes) {
         // Bytes structure
         // 0: price -> u64
-        // 1: exponent -> u32
-        // 2: publish_time -> u64
+        // 1: publish_time -> u64
 
         let mut index = 0;
 
         while index < feed_ids.len() {
             let price_feed_id = feed_ids.get(index).unwrap();
-            let price = decode_bytes(payload, index * 20);
+            let price = decode_bytes(payload, index * 16);
             storage.prices.insert(price_feed_id, price);
             index += 1;
         }
@@ -121,33 +121,23 @@ fn decode_bytes(bytes: Bytes, offset: u64) -> Price {
         ]
     );
 
-    // Next 4 bytes are exponent
-    let exponent = u32::from_be_bytes(
+    // Next 8 bytes are publish time
+    let publish_time = u64::from_be_bytes(
         [
             bytes.get(offset + 8).unwrap(),
             bytes.get(offset + 9).unwrap(),
             bytes.get(offset + 10).unwrap(),
             bytes.get(offset + 11).unwrap(),
-        ]
-    );
-
-    // Next 8 bytes are publish time
-    let publish_time = u64::from_be_bytes(
-        [
             bytes.get(offset + 12).unwrap(),
             bytes.get(offset + 13).unwrap(),
             bytes.get(offset + 14).unwrap(),
             bytes.get(offset + 15).unwrap(),
-            bytes.get(offset + 16).unwrap(),
-            bytes.get(offset + 17).unwrap(),
-            bytes.get(offset + 18).unwrap(),
-            bytes.get(offset + 19).unwrap(),
         ]
     );
 
     Price {
         price: price.into(),
-        exponent: exponent,
+        exponent: REDSTONE_PRICES_EXPONENT,
         publish_time: publish_time,
         confidence: 0,
     }

@@ -19,3 +19,5 @@ dotenv = { workspace = true }
 tokio = { workspace = true }
 
 [dev-dependencies]
+redstone_prices_sdk = { workspace = true }
+chrono = { workspace = true }
