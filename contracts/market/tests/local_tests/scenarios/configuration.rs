@@ -20,7 +20,7 @@ async fn collateral_configuration_test() {
         pyth_mock_oracle,
         oracle_total_update_fee,
         ..
-    } = setup(None, TestBaseAsset::USDC).await;
+    } = setup(None, TestBaseAsset::USDC, None).await;
 
     let oracle_contracts: Vec<&dyn ContractDependency> = vec![&pyth_mock_oracle.instance];
 
@@ -162,7 +162,7 @@ async fn market_configuration_test() {
         market,
         usdc,
         ..
-    } = setup(None, TestBaseAsset::USDC).await;
+    } = setup(None, TestBaseAsset::USDC, None).await;
 
     let old_market_config = market.get_market_configuration().await.unwrap().value;
     let new_market_config = MarketConfiguration {

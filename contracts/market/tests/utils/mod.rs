@@ -3,7 +3,7 @@ use fuels::accounts::wallet::WalletUnlocked;
 use fuels::test_helpers::{
     launch_custom_provider_and_get_wallets, NodeConfig, Trigger, WalletsConfig,
 };
-use fuels::types::{AssetId, Bits256, ContractId, Identity};
+use fuels::types::{AssetId, Bits256, ContractId, Identity, U256};
 use market::{
     OracleAssetConfiguration, OracleGlobalConfiguration, OracleInput, OracleType, PythOracleInput,
 };
@@ -11,6 +11,7 @@ use market_sdk::{get_market_config, Market};
 use pyth_mock_sdk::PythMockContract;
 use std::collections::HashMap;
 use std::result::Result::Ok;
+use std::str::FromStr;
 use token_sdk::{Asset, TokenAsset, TokenContract};
 
 pub fn print_case_title(num: u8, name: &str, call: &str, amount: &str) {
@@ -73,7 +74,24 @@ pub struct TestData {
     pub pyth_asset_price_feeds: HashMap<AssetId, (Bits256, u32)>, // asset_id -> (price_feed_id, price_feed_decimals)
 }
 
-pub async fn setup(debug_step: Option<u64>, base_asset: TestBaseAsset) -> TestData {
+pub fn string_to_price_feed_id(
+    price_feed_id: String,
+    oracle_type: String,
+) -> market::OraclePriceFeedId {
+    match oracle_type.as_str() {
+        "Pyth" => market::OraclePriceFeedId::Pyth(Bits256::from_hex_str(&price_feed_id).unwrap()),
+        "Redstone" => market::OraclePriceFeedId::Redstone(U256::from_str(&price_feed_id).unwrap()), // FIXME: Verify if this works correctly with hex numbers in string format
+        "Twrap" => market::OraclePriceFeedId::Twrap,
+        "Stork" => market::OraclePriceFeedId::Stork,
+        _ => panic!("Invalid oracle type: {}", oracle_type),
+    }
+}
+
+pub async fn setup(
+    debug_step: Option<u64>,
+    base_asset: TestBaseAsset,
+    config_file: Option<&str>,
+) -> TestData {
     //--------------- WALLETS ---------------
     let no_fees = base_asset == TestBaseAsset::ETH;
     let wallets = init_wallets(no_fees).await;
@@ -87,8 +105,9 @@ pub async fn setup(debug_step: Option<u64>, base_asset: TestBaseAsset) -> TestDa
 
     //--------------- TOKENS ---------------
     let token_contract = TokenContract::deploy(&admin).await.unwrap();
-    let (assets, asset_configs, oracle_configs) =
-        token_contract.deploy_tokens(&admin, Some(true)).await;
+    let (assets, asset_configs, oracle_configs) = token_contract
+        .deploy_tokens(&admin, Some(true), config_file)
+        .await;
 
     let usdc = assets.get("USDC").unwrap();
     let usdc_contract = TokenAsset::new(
@@ -152,7 +171,10 @@ pub async fn setup(debug_step: Option<u64>, base_asset: TestBaseAsset) -> TestDa
                     *asset_id,
                     &OracleAssetConfiguration {
                         oracle_id: config.oracle_id,
-                        price_feed_id: Bits256::from_hex_str(&config.price_feed_id).unwrap(),
+                        price_feed_id: string_to_price_feed_id(
+                            config.price_feed_id.clone(),
+                            config.oracle_type.clone(),
+                        ),
                         is_disabled: false,
                     },
                 )
@@ -194,7 +216,10 @@ pub async fn setup(debug_step: Option<u64>, base_asset: TestBaseAsset) -> TestDa
             (price, config.price_feed_decimals, publish_time, confidence),
         ));
 
-        price_feed_ids.push(Bits256::from_hex_str(&config.price_feed_id).unwrap());
+        price_feed_ids.push(string_to_price_feed_id(
+            config.price_feed_id.clone(),
+            config.oracle_type.clone(),
+        ));
 
         pyth_asset_price_feeds.insert(
             asset.1.asset_id,
@@ -219,7 +244,16 @@ pub async fn setup(debug_step: Option<u64>, base_asset: TestBaseAsset) -> TestDa
             contract_id: ContractId::from(pyth_mock_oracle.instance.contract_id()),
             update_fee: price_feed_count as u64,
             publish_times: vec![publish_time; price_feed_count],
-            price_feed_ids,
+            price_feed_ids: price_feed_ids
+                .iter()
+                .map(|id| {
+                    if let market::OraclePriceFeedId::Pyth(id) = id {
+                        id.clone()
+                    } else {
+                        panic!("Invalid price feed id: {:?}", id)
+                    }
+                })
+                .collect::<Vec<Bits256>>(),
             update_data: pyth_mock_oracle.create_update_data(&prices).await.unwrap(),
         }));
 

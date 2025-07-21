@@ -36,7 +36,7 @@ async fn absorb_and_liquidate() {
         oracle_total_update_fee,
         usdc_contract,
         ..
-    } = setup(None, TestBaseAsset::USDC).await;
+    } = setup(None, TestBaseAsset::USDC, None).await;
 
     let oracle_contracts: Vec<&dyn ContractDependency> = vec![&pyth_mock_oracle.instance];
 
@@ -373,7 +373,7 @@ async fn all_assets_liquidated() {
         oracle_total_update_fee,
         usdc_contract,
         ..
-    } = setup(None, TestBaseAsset::USDC).await;
+    } = setup(None, TestBaseAsset::USDC, None).await;
 
     let oracle_contracts: Vec<&dyn ContractDependency> = vec![&pyth_mock_oracle.instance];
 
@@ -699,7 +699,7 @@ async fn is_liquidatable_internal_uses_correct_index() {
         usdc_contract,
         uni_contract,
         ..
-    } = setup(Some(100_000_000), TestBaseAsset::USDC).await;
+    } = setup(Some(100_000_000), TestBaseAsset::USDC, None).await;
 
     let oracle_contracts: Vec<&dyn ContractDependency> = vec![&pyth_mock_oracle.instance];
 

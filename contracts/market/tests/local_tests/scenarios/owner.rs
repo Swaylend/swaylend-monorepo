@@ -26,7 +26,7 @@ async fn owner_test() {
         assets,
         usdc,
         ..
-    } = setup(None, TestBaseAsset::USDC).await;
+    } = setup(None, TestBaseAsset::USDC, None).await;
 
     let asset_id = assets["ETH"].asset_id;
 

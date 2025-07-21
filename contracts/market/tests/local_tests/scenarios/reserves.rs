@@ -23,7 +23,7 @@ async fn reserves_test() {
         admin,
         admin_account,
         ..
-    } = setup(None, TestBaseAsset::USDC).await;
+    } = setup(None, TestBaseAsset::USDC, None).await;
 
     let oracle_contracts: Vec<&dyn ContractDependency> = vec![&pyth_mock_oracle.instance];
 
@@ -151,7 +151,7 @@ async fn add_reserves_test() {
         usdc,
         usdc_contract,
         ..
-    } = setup(None, TestBaseAsset::USDC).await;
+    } = setup(None, TestBaseAsset::USDC, None).await;
 
     let mint_amount = parse_units(150, usdc.decimals);
     usdc_contract

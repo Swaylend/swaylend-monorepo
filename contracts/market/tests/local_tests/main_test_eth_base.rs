@@ -39,7 +39,7 @@ async fn main_test() {
         usdt,
         usdt_contract,
         ..
-    } = setup(None, TestBaseAsset::ETH).await;
+    } = setup(None, TestBaseAsset::ETH, None).await;
 
     let oracle_contracts: Vec<&dyn ContractDependency> = vec![&pyth_mock_oracle.instance];
 

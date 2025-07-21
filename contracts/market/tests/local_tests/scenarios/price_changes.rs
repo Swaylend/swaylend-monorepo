@@ -27,7 +27,7 @@ async fn price_changes() {
         oracle_total_update_fee,
         usdc_contract,
         ..
-    } = setup(None, TestBaseAsset::USDC).await;
+    } = setup(None, TestBaseAsset::USDC, None).await;
 
     let oracle_contracts: Vec<&dyn ContractDependency> = vec![&pyth_mock_oracle.instance];
 

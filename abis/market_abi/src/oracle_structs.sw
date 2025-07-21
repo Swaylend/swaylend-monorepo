@@ -17,6 +17,13 @@ pub struct Price {
     pub publish_time: u64,
 }
 
+pub enum OraclePriceFeedId {
+    Redstone: u256,
+    Pyth: b256,
+    Twrap: (),
+    Stork: (),
+}
+
 pub enum OracleType {
     Pyth: (),
     Redstone: (),
@@ -41,7 +48,7 @@ pub struct OracleGlobalConfiguration {
 /// This struct contains the configuration details for an asset-specific oracle settings.
 pub struct OracleAssetConfiguration {
     pub oracle_id: u64,
-    pub price_feed_id: b256,
+    pub price_feed_id: OraclePriceFeedId,
     pub is_disabled: bool,
 }
 
@@ -94,8 +101,7 @@ pub const ORACLE_MAX_CONF_WIDTH: u256 = 300; // 300 / 10000 = 3.0 %
 pub const ORACLE_CONF_BASIS_POINTS: u256 = 10_000; // 1e4
 
 impl Oracle {
-    // TODO: Change price_feed_id to ENUM
-    pub fn get_price(self, price_feed_id: b256) -> (bool, Price) {
+    pub fn get_price(self, price_feed_id: OraclePriceFeedId) -> (bool, Price) {
         let contract_id = self.contract_id;
         let oracle_type = self.oracle_type;
 
@@ -110,57 +116,63 @@ impl Oracle {
         match oracle_type {
             OracleType::Pyth => {
                 let oracle = abi(PythCore, contract_id.bits());
+                
+                if let OraclePriceFeedId::Pyth(id) = price_feed_id {
+                    let price = oracle.price_unsafe(id);
 
-                let price = oracle.price_unsafe(price_feed_id);
+                    // validate values
+                    if price.publish_time < std::block::timestamp() {
+                        let staleness = std::block::timestamp() - price.publish_time;
+                        if staleness > ORACLE_MAX_STALENESS {
+                            is_price_valid = false;
+                        }
+                    } else {
+                        let aheadness = price.publish_time - std::block::timestamp();
+                        if aheadness > ORACLE_MAX_AHEADNESS {
+                            is_price_valid = false;
+                        }
+                    }
 
-                // validate values
-                if price.publish_time < std::block::timestamp() {
-                    let staleness = std::block::timestamp() - price.publish_time;
-                    if staleness > ORACLE_MAX_STALENESS {
+                    if price.price == 0 {
                         is_price_valid = false;
+                    }
+
+                    if u256::from(price.confidence) > (u256::from(price.price) * ORACLE_MAX_CONF_WIDTH / ORACLE_CONF_BASIS_POINTS) {
+                        is_price_valid = false;
+                    }
+
+                    if is_price_valid {
+                        final_price = Price {
+                            price: price.price,
+                            exponent: price.exponent,
+                            confidence: price.confidence,
+                            publish_time: price.publish_time,
+                        };
                     }
                 } else {
-                    let aheadness = price.publish_time - std::block::timestamp();
-                    if aheadness > ORACLE_MAX_AHEADNESS {
-                        is_price_valid = false;
-                    }
-                }
-
-                if price.price == 0 {
-                    is_price_valid = false;
-                }
-
-                if u256::from(price.confidence) > (u256::from(price.price) * ORACLE_MAX_CONF_WIDTH / ORACLE_CONF_BASIS_POINTS) {
-                    is_price_valid = false;
-                }
-
-                if is_price_valid {
-                    final_price = Price {
-                        price: price.price,
-                        exponent: price.exponent,
-                        confidence: price.confidence,
-                        publish_time: price.publish_time,
-                    };
+                    require(false, Error::InvalidPriceFeedId);
                 }
             },
             OracleType::Redstone => {
-                let contract_id = self.contract_id;
                 let oracle = abi(RedstonePrices, contract_id.bits());
 
-                // FIXME: Change after using ENUM
-                let price = oracle.get_price(0);
+                if let OraclePriceFeedId::Redstone(id) = price_feed_id {
+                    let price = oracle.get_price(id);
 
-                if price.price == 0 {
-                    is_price_valid = false;
-                }
+                    if price.price == 0 {
+                        is_price_valid = false;
+                    }
 
-                if is_price_valid {
-                    final_price = Price {
-                        price: price.price.try_into().unwrap(),
-                        exponent: price.exponent,
-                        confidence: price.confidence,
-                        publish_time: price.publish_time,
-                    };
+                    if is_price_valid {
+                        final_price = Price {
+                            price: price.price.try_into().unwrap(),
+                            exponent: price.exponent,
+                            confidence: price.confidence,
+                            publish_time: price.publish_time,
+                        };
+                    }
+                } else {
+                    require(false, Error::InvalidPriceFeedId);
                 }
             },
             OracleType::Twrap => {
@@ -168,9 +180,6 @@ impl Oracle {
             },
             OracleType::Stork => {
                 require(false, "Not implemented yet");
-            },
-            _ => {
-                require(false, Error::InvalidOracleType);
             }
         };
 
@@ -215,9 +224,6 @@ impl Oracle {
                 let contract_id = input.contract_id;
                 // TODO: Implement
                 require(false, "Not implemented yet");
-            },
-            _ => {
-                require(false, Error::InvalidOracleInput);
             }
         }
     }

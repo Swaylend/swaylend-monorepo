@@ -34,7 +34,7 @@ async fn multicall_absorb_buy_collateral_test() {
         pyth_asset_price_feeds,
         oracle_total_update_fee,
         ..
-    } = setup(None, TestBaseAsset::USDC).await;
+    } = setup(None, TestBaseAsset::USDC, None).await;
 
     let oracle_contracts: Vec<&dyn ContractDependency> = vec![&pyth_mock_oracle.instance];
 

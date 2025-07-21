@@ -35,7 +35,7 @@ async fn main_test_no_debug() {
         pyth_prices,
         pyth_asset_price_feeds,
         ..
-    } = setup(None, TestBaseAsset::USDC).await;
+    } = setup(None, TestBaseAsset::USDC, None).await;
 
     let oracle_contracts: Vec<&dyn ContractDependency> = vec![&pyth_mock_oracle.instance];
 

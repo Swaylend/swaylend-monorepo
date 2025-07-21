@@ -33,6 +33,7 @@ pub struct OracleAssetConfiguration {
     pub oracle_id: u64,
     pub price_feed_id: String,
     pub price_feed_decimals: u32,
+    pub oracle_type: String,
 }
 
 #[derive(Deserialize)]
@@ -93,14 +94,19 @@ impl TokenContract {
         &self,
         wallet: &WalletUnlocked,
         is_local_tests: Option<bool>,
+        config_file: Option<&str>,
     ) -> (
         HashMap<String, Asset>,
         Vec<CollateralConfiguration>,
         HashMap<AssetId, Vec<OracleAssetConfiguration>>,
     ) {
         let local_tests = is_local_tests.unwrap_or(false);
-        let tokens_json_path =
-            PathBuf::from(env!("CARGO_WORKSPACE_DIR")).join("contracts/market/tests/tokens.json");
+        let tokens_json_path = if let Some(config_file) = config_file {
+            PathBuf::from(env!("CARGO_WORKSPACE_DIR"))
+                .join(format!("contracts/market/tests/{}", config_file))
+        } else {
+            PathBuf::from(env!("CARGO_WORKSPACE_DIR")).join("contracts/market/tests/tokens.json")
+        };
         let tokens_json = std::fs::read_to_string(tokens_json_path).unwrap();
         let token_configs: Vec<TokenConfig> = serde_json::from_str(&tokens_json).unwrap();
 
