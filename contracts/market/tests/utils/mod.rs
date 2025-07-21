@@ -13,7 +13,6 @@ use pyth_mock_sdk::PythMockContract;
 use redstone_prices_mock_sdk::RedstonePricesMockContract;
 use std::collections::HashMap;
 use std::result::Result::Ok;
-use std::str::FromStr;
 use token_sdk::{Asset, TokenAsset, TokenContract};
 
 pub fn print_case_title(num: u8, name: &str, call: &str, amount: &str) {
@@ -183,6 +182,10 @@ pub async fn setup(
     //--------------- SETUP ASSET ORACLES ---------------
     for (asset_id, configs) in &oracle_configs {
         for config in configs {
+            println!(
+                "Adding oracle type {} for asset {} with id {} and price feed id {}",
+                config.oracle_type, asset_id, config.oracle_id, config.price_feed_id
+            );
             market
                 .add_new_asset_oracle(
                     *asset_id,
@@ -255,6 +258,7 @@ pub async fn setup(
 
     if price_feed_ids.len() > 0 {
         let price_feed_count = price_feed_ids.len();
+
         pyth_mock_oracle.update_prices(&prices).await.unwrap();
 
         oracle_inputs.push(OracleInput::Pyth(PythOracleInput {

@@ -25,6 +25,7 @@ pub enum Error {
     AssetOracleAlreadyExists: (),
     GlobalOracleNotFound: (),
     AssetOracleNotFound: (),
+    OracleNoValidPrice: (),
     InvalidPriceFeedId: (),
     Unknown: (),
 }

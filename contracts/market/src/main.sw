@@ -1333,8 +1333,8 @@ impl Market for Contract {
         let mut index = 0;
 
         while index < len {
-            let oracle_configuration = asset_oracle_configurations.get(index).unwrap().try_read().unwrap();
-            require(oracle_configuration.oracle_id != oracle_configuration.oracle_id, Error::AssetOracleAlreadyExists);
+            let stored_oracle_configuration = asset_oracle_configurations.get(index).unwrap().try_read().unwrap();
+            require(oracle_configuration.oracle_id != stored_oracle_configuration.oracle_id, Error::AssetOracleAlreadyExists);
             index += 1;
         }
 
@@ -1370,8 +1370,8 @@ impl Market for Contract {
         let mut found = false;
 
         while index < len {
-            let oracle_configuration = asset_oracle_configurations.get(index).unwrap().try_read().unwrap();
-            if oracle_configuration.oracle_id == oracle_configuration.oracle_id {
+            let stored_oracle_configuration = asset_oracle_configurations.get(index).unwrap().try_read().unwrap();
+            if stored_oracle_configuration.oracle_id == oracle_configuration.oracle_id {
                 found = true;
                 asset_oracle_configurations.remove(index);
                 break;
@@ -1397,28 +1397,27 @@ impl Market for Contract {
     fn get_oracle_asset_configurations() -> Vec<(AssetId, Vec<OracleAssetConfiguration>)> {
         let mut result: Vec<(AssetId, Vec<OracleAssetConfiguration>)> = Vec::new();
 
-       // Add asset oracle configurations
-       let len = storage.oracle_asset_configurations_keys.len();
-       let mut index = 0;
+        // Add asset oracle configurations
+        let len = storage.oracle_asset_configurations_keys.len();
+        let mut index = 0;
 
-       while index < len {
-        let mut configurations = Vec::new();
-        let asset_id: AssetId = storage.oracle_asset_configurations_keys.get(index).unwrap().read();
-        let oracle_asset_configurations: StorageKey<StorageVec<OracleAssetConfiguration>> = storage.oracle_asset_configurations.get(asset_id);
-        let inner_len = oracle_asset_configurations.len();
-        let mut inner_index = 0;
+        while index < len {
+            let asset_id: AssetId = storage.oracle_asset_configurations_keys.get(index).unwrap().read();
+            let oracle_asset_configurations: StorageKey<StorageVec<OracleAssetConfiguration>> = storage.oracle_asset_configurations.get(asset_id);
+            let configurations = oracle_asset_configurations.load_vec();
 
-        while inner_index < inner_len {
-            let oracle_asset_configuration: OracleAssetConfiguration = oracle_asset_configurations.get(inner_index).unwrap().try_read().unwrap();
-            configurations.push(oracle_asset_configuration);
-            inner_index += 1;
+            result.push((asset_id, configurations));
+            index += 1;
         }
 
-        result.push((asset_id, configurations));
-        index += 1;
-     }
+        // Add base asset oracle configuration
+        let base_asset_id = storage.market_configuration.read().base_token;
+        let base_asset_oracle_configurations: StorageKey<StorageVec<OracleAssetConfiguration>> = storage.oracle_asset_configurations.get(base_asset_id);
+        let base_asset_configurations = base_asset_oracle_configurations.load_vec();
 
-     result
+        result.push((base_asset_id, base_asset_configurations));
+
+        result
     }
 }
 
@@ -1493,7 +1492,7 @@ fn get_price_internal(asset_id: AssetId, price_position: PricePosition) -> Price
         index += 1;
     }
 
-    require(is_price_valid, Error::OraclePriceValidationError);
+    require(is_price_valid, Error::OracleNoValidPrice);
 
     if price_position == PricePosition::LowerBound {
         price.price = price.price - price.confidence;

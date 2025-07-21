@@ -15,7 +15,7 @@ use market_sdk::{convert_i256_to_u64, is_i256_negative, parse_units};
 const AMOUNT_COEFFICIENT: u64 = 10u64.pow(0);
 
 #[tokio::test]
-async fn main_test() {
+async fn main_test_uni() {
     let scale_6 = 10u64.pow(6) as f64;
     let scale_9 = 10u64.pow(9) as f64;
 

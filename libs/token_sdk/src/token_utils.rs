@@ -103,7 +103,7 @@ impl TokenContract {
         let local_tests = is_local_tests.unwrap_or(false);
         let tokens_json_path = if let Some(config_file) = config_file {
             PathBuf::from(env!("CARGO_WORKSPACE_DIR"))
-                .join(format!("contracts/market/tests/{}", config_file))
+                .join(format!("contracts/market/tests/configs/{}", config_file))
         } else {
             PathBuf::from(env!("CARGO_WORKSPACE_DIR")).join("contracts/market/tests/tokens.json")
         };

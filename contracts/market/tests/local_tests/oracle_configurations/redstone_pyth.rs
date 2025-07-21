@@ -15,7 +15,7 @@ use market_sdk::{convert_i256_to_u64, is_i256_negative, parse_units};
 const AMOUNT_COEFFICIENT: u64 = 10u64.pow(0);
 
 #[tokio::test]
-async fn main_test() {
+async fn redstone_pyth() {
     let scale_6 = 10u64.pow(6) as f64;
     let scale_9 = 10u64.pow(9) as f64;
 
@@ -34,13 +34,15 @@ async fn main_test() {
         uni_contract,
         mut oracle_inputs,
         oracle_total_update_fee,
+        pyth_mock_oracle,
         redstone_mock_oracle,
         redstone_prices,
         redstone_asset_price_feeds,
         ..
-    } = setup(None, TestBaseAsset::USDC, Some("tokens-redstone.json")).await;
+    } = setup(None, TestBaseAsset::USDC, Some("tokens-pyth-redstone.json")).await;
 
-    let oracle_contracts: Vec<&dyn ContractDependency> = vec![&redstone_mock_oracle.instance];
+    let oracle_contracts: Vec<&dyn ContractDependency> =
+        vec![&pyth_mock_oracle.instance, &redstone_mock_oracle.instance];
 
     // =================================================
     // ==================== Step #0 ====================
@@ -307,8 +309,7 @@ async fn main_test() {
         .unwrap()
         .value;
 
-    let (uni_price_feed_id, uni_price_feed_decimals) =
-        redstone_asset_price_feeds.get(&uni.asset_id).unwrap();
+    let (redstone_uni_price_feed_id, _) = redstone_asset_price_feeds.get(&uni.asset_id).unwrap();
     let old_oracle_inputs = oracle_inputs.clone();
     let mut new_oracle_inputs = Vec::new();
 
@@ -327,7 +328,7 @@ async fn main_test() {
                             (
                                 *price_feed_id,
                                 (
-                                    if *price_feed_id == *uni_price_feed_id {
+                                    if *price_feed_id == *redstone_uni_price_feed_id {
                                         (*price as f64 * 0.7) as u64
                                     } else {
                                         *price
@@ -375,8 +376,8 @@ async fn main_test() {
 
     println!(
         "🔻 UNI price drops: ${}  -> ${}",
-        old_price.price as f64 / 10_u64.pow(*uni_price_feed_decimals) as f64,
-        new_price.price as f64 / 10_u64.pow(*uni_price_feed_decimals) as f64
+        old_price.price as f64 / 10_u64.pow(old_price.exponent) as f64,
+        new_price.price as f64 / 10_u64.pow(new_price.exponent) as f64
     );
 
     market
