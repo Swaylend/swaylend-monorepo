@@ -7,10 +7,10 @@ use fuels::{
     },
     crypto::SecretKey,
     tx::ContractIdExt,
-    types::{Address, ContractId, Identity, SubAssetId},
+    types::{Address, ContractId, Identity},
 };
 use std::str::FromStr;
-use token_sdk::{get_symbol_hash, TokenAsset, TokenContract};
+use token_sdk::{get_symbol_sub_asset_id, TokenAsset, TokenContract};
 use utils::{read_env, read_market_config, verify_connected_network, Args};
 
 #[derive(Parser, Debug)]
@@ -70,9 +70,9 @@ async fn main() -> anyhow::Result<()> {
 
     // base asset
     assets.push(TokenAsset {
-        asset_id: token_contract.contract_id().asset_id(&SubAssetId::new(
-            get_symbol_hash(&market_config.base_asset.symbol).0,
-        )),
+        asset_id: token_contract
+            .contract_id()
+            .asset_id(&get_symbol_sub_asset_id(&market_config.base_asset.symbol)),
         decimals: market_config.base_asset.decimals.into(),
         symbol: market_config.base_asset.symbol,
         instance: token_contract.instance.clone(),
@@ -86,7 +86,7 @@ async fn main() -> anyhow::Result<()> {
         assets.push(TokenAsset {
             asset_id: token_contract
                 .contract_id()
-                .asset_id(&SubAssetId::new(get_symbol_hash(&asset.symbol).0)),
+                .asset_id(&get_symbol_sub_asset_id(&asset.symbol)),
             decimals: asset.decimals.into(),
             symbol: asset.clone().symbol,
             instance: token_contract.instance.clone(),

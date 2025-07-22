@@ -27,12 +27,12 @@ pub fn print_case_title(num: u8, name: &str, call: &str, amount: &str) {
     );
 }
 
-pub async fn init_wallets(use_gas_price: bool) -> Vec<Wallet> {
+pub async fn init_wallets(no_fees: bool) -> Vec<Wallet> {
     let wallets_config = WalletsConfig::new(Some(5), Some(1000), Some(1_000_000_000));
 
     let provider_config = NodeConfig {
         block_production: Trigger::Instant,
-        starting_gas_price: if use_gas_price { 0 } else { 1 },
+        starting_gas_price: if no_fees { 0 } else { 1 },
         ..NodeConfig::default()
     };
 

@@ -4,4 +4,4 @@ mod utils;
 
 pub use token_asset_utils::TokenAsset;
 pub use token_utils::{Asset, TokenContract};
-pub use utils::get_symbol_hash;
+pub use utils::get_symbol_sub_asset_id;

@@ -114,8 +114,7 @@ impl TokenContract {
         for config in token_configs {
             let symbol = config.symbol;
 
-            let token =
-                TokenAsset::new(wallet.clone(), self.instance.contract_id().into(), &symbol);
+            let token = TokenAsset::new(wallet.clone(), self.instance.contract_id(), &symbol);
 
             let asset_id = if symbol == "ETH" && local_tests {
                 AssetId::from_str(

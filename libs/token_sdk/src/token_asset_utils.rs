@@ -1,10 +1,10 @@
-use crate::get_symbol_hash;
+use crate::utils::get_symbol_sub_asset_id;
 use fuels::accounts::wallet::Wallet;
 use fuels::prelude::TxPolicies;
 use fuels::programs::responses::CallResponse;
 use fuels::tx::ContractIdExt;
 use fuels::types::transaction_builders::VariableOutputPolicy;
-use fuels::types::{AssetId, ContractId, Identity, SubAssetId};
+use fuels::types::{AssetId, Bits256, ContractId, Identity};
 use serde::Deserialize;
 use std::path::PathBuf;
 use token::*;
@@ -43,7 +43,7 @@ impl TokenAsset {
         let instance = Token::new(token_contract_id, wallet.clone());
         let asset_id = instance
             .contract_id()
-            .asset_id(&SubAssetId::new(get_symbol_hash(&symbol).0));
+            .asset_id(&get_symbol_sub_asset_id(&symbol));
 
         TokenAsset {
             asset_id,
@@ -57,11 +57,11 @@ impl TokenAsset {
         &self,
         decimals: u8,
     ) -> Result<CallResponse<()>, fuels::types::errors::Error> {
-        let symbol_hash = get_symbol_hash(&self.symbol);
+        let symbol_sub_asset_id = get_symbol_sub_asset_id(&self.symbol);
 
         self.instance
             .methods()
-            .set_decimals(symbol_hash, decimals)
+            .set_decimals(Bits256::from(symbol_sub_asset_id), decimals)
             .with_tx_policies(TxPolicies::default().with_tip(1))
             .call()
             .await
@@ -71,11 +71,11 @@ impl TokenAsset {
         &self,
         name: String,
     ) -> Result<CallResponse<()>, fuels::types::errors::Error> {
-        let symbol_hash = get_symbol_hash(&self.symbol);
+        let symbol_sub_asset_id = get_symbol_sub_asset_id(&self.symbol);
 
         self.instance
             .methods()
-            .set_name(symbol_hash, name)
+            .set_name(Bits256::from(symbol_sub_asset_id), name)
             .with_tx_policies(TxPolicies::default().with_tip(1))
             .call()
             .await
@@ -85,11 +85,11 @@ impl TokenAsset {
         &self,
         symbol: String,
     ) -> Result<CallResponse<()>, fuels::types::errors::Error> {
-        let symbol_hash = get_symbol_hash(&self.symbol);
+        let symbol_sub_asset_id = get_symbol_sub_asset_id(&self.symbol);
 
         self.instance
             .methods()
-            .set_name(symbol_hash, symbol)
+            .set_name(Bits256::from(symbol_sub_asset_id), symbol)
             .with_tx_policies(TxPolicies::default().with_tip(1))
             .call()
             .await
@@ -100,13 +100,13 @@ impl TokenAsset {
         recipient: Identity,
         amount: u64,
     ) -> Result<CallResponse<()>, fuels::types::errors::Error> {
-        let symbol_hash = get_symbol_hash(&self.symbol);
+        let symbol_sub_asset_id = get_symbol_sub_asset_id(&self.symbol);
 
         match recipient {
             Identity::Address(_) => {
                 self.instance
                     .methods()
-                    .mint(recipient, Some(symbol_hash), amount)
+                    .mint(recipient, Some(Bits256::from(symbol_sub_asset_id)), amount)
                     .with_variable_output_policy(VariableOutputPolicy::Exactly(1))
                     .with_tx_policies(TxPolicies::default().with_tip(1))
                     .call()
@@ -115,7 +115,7 @@ impl TokenAsset {
             Identity::ContractId(id) => {
                 self.instance
                     .methods()
-                    .mint(recipient, Some(symbol_hash), amount)
+                    .mint(recipient, Some(Bits256::from(symbol_sub_asset_id)), amount)
                     .with_variable_output_policy(VariableOutputPolicy::Exactly(1))
                     .with_contract_ids(&[id.into()])
                     .with_tx_policies(TxPolicies::default().with_tip(1))
