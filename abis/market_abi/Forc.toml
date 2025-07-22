@@ -5,5 +5,5 @@ name = "market_abi"
 
 [dependencies]
 redstone_prices_abi = { path = "../redstone_prices_abi" }
-pyth_interface = { git = "https://github.com/pyth-network/pyth-crosschain", rev = "7de4ce3ec8defd97641c1d25302abe117bf5092b" }
-sway_libs = { git = "https://github.com/FuelLabs/sway-libs", tag = "v0.24.0" }
+pyth_interface = { git = "https://github.com/pyth-network/pyth-crosschain", rev = "10e5345ea2e29a5cc43311d43e681cf335e834f3" }
+signed_int = "0.26.1"

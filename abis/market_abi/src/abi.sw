@@ -7,7 +7,7 @@ pub mod errors;
 use structs::*;
 use oracle_structs::*;
 use std::bytes::Bytes;
-use sway_libs::signed_integers::i256::I256;
+use signed_int::i256::I256;
 
 abi Market {
     // Get version of the smart contract

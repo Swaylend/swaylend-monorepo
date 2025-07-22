@@ -7,7 +7,8 @@ use std::storage::storage_vec::*;
 use std::storage::storage_map::*;
 use std::hash::Hash;
 use redstone::{core::{config::Config, processor::process_input}, utils::vec::*};
-use sway_libs::ownership::*;
+
+use ownership::*;
 
 const VERSION = 1u8;
 const REDSTONE_PRICES_EXPONENT = 8u32;

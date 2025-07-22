@@ -2,7 +2,7 @@ library;
 
 use ::oracle_structs::*;
 use ::errors::*;
-use sway_libs::signed_integers::i256::I256;
+use signed_int::i256::I256;
 use std::bytes::Bytes;
 use std::storage::storage_vec::*;
 use pyth_interface::{data_structures::price::PriceFeedId};
@@ -184,7 +184,7 @@ pub enum PricePosition {
     UpperBound: (),
 }
 
-impl core::ops::Eq for PricePosition {
+impl std::ops::PartialEq for PricePosition {
     fn eq(self, other: Self) -> bool {
         match (self, other) {
             (PricePosition::LowerBound, PricePosition::LowerBound) => true,
@@ -195,3 +195,4 @@ impl core::ops::Eq for PricePosition {
     }
 }
 
+impl std::ops::Eq for PricePosition {}

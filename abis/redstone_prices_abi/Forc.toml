@@ -4,4 +4,3 @@ license = "Apache-2.0"
 name = "redstone_prices_abi"
 
 [dependencies]
-sway_libs = { git = "https://github.com/FuelLabs/sway-libs", tag = "v0.24.0" }

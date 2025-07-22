@@ -6,4 +6,4 @@ name = "redstone_prices_mock"
 [dependencies]
 redstone_prices_abi = { path = "../../abis/redstone_prices_abi" }
 redstone = { git = "https://github.com/redstone-finance/redstone-fuel-sdk", tag = "v0.66.2-1" }
-sway_libs = { git = "https://github.com/FuelLabs/sway-libs", tag = "v0.24.0" }
+ownership = "0.26.1"

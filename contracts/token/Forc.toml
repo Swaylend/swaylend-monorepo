@@ -4,4 +4,5 @@ license = "Apache-2.0"
 name = "token"
 
 [dependencies]
-standards = { git = "https://github.com/FuelLabs/sway-standards", tag = "v0.6.1" }
+src20 = "0.8.1"
+src3 = "0.8.1"
