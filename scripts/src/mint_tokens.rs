@@ -2,9 +2,12 @@ mod utils;
 
 use clap::Parser;
 use fuels::{
-    accounts::{provider::Provider, wallet::WalletUnlocked},
+    accounts::{
+        provider::Provider, signers::private_key::PrivateKeySigner, wallet::Wallet, ViewOnlyAccount,
+    },
     crypto::SecretKey,
-    types::{Address, ContractId, Identity},
+    tx::ContractIdExt,
+    types::{Address, ContractId, Identity, SubAssetId},
 };
 use std::str::FromStr;
 use token_sdk::{get_symbol_hash, TokenAsset, TokenContract};
@@ -40,7 +43,7 @@ async fn main() -> anyhow::Result<()> {
     }
 
     let secret = SecretKey::from_str(&args.args.signing_key).unwrap();
-    let wallet = WalletUnlocked::new_from_private_key(secret, Some(provider.clone()));
+    let wallet = Wallet::new(PrivateKeySigner::new(secret), provider.clone());
 
     let recipient: Identity = if let Some(recipient) = args.recipient.clone() {
         let mut parts = recipient.split(":");
@@ -67,9 +70,9 @@ async fn main() -> anyhow::Result<()> {
 
     // base asset
     assets.push(TokenAsset {
-        asset_id: token_contract
-            .contract_id()
-            .asset_id(&get_symbol_hash(&market_config.base_asset.symbol)),
+        asset_id: token_contract.contract_id().asset_id(&SubAssetId::new(
+            get_symbol_hash(&market_config.base_asset.symbol).0,
+        )),
         decimals: market_config.base_asset.decimals.into(),
         symbol: market_config.base_asset.symbol,
         instance: token_contract.instance.clone(),
@@ -83,7 +86,7 @@ async fn main() -> anyhow::Result<()> {
         assets.push(TokenAsset {
             asset_id: token_contract
                 .contract_id()
-                .asset_id(&get_symbol_hash(&asset.symbol)),
+                .asset_id(&SubAssetId::new(get_symbol_hash(&asset.symbol).0)),
             decimals: asset.decimals.into(),
             symbol: asset.clone().symbol,
             instance: token_contract.instance.clone(),
@@ -98,13 +101,14 @@ async fn main() -> anyhow::Result<()> {
             "Balance: {}",
             match recipient {
                 Identity::Address(addr) => provider
-                    .get_asset_balance(&addr.into(), asset.asset_id)
+                    .get_asset_balance(&addr.into(), &asset.asset_id)
                     .await
                     .unwrap(),
                 Identity::ContractId(id) => provider
-                    .get_contract_asset_balance(&id.into(), asset.asset_id)
+                    .get_contract_asset_balance(&id.into(), &asset.asset_id)
                     .await
-                    .unwrap(),
+                    .unwrap()
+                    .into(),
             }
         );
     }

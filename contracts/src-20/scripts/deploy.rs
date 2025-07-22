@@ -1,6 +1,8 @@
 use dotenv::dotenv;
 use fuels::{
-    accounts::{provider::Provider, wallet::WalletUnlocked},
+    accounts::{
+        provider::Provider, signers::private_key::PrivateKeySigner, wallet::Wallet, ViewOnlyAccount,
+    },
     macros::abigen,
     programs::contract::{Contract, LoadConfiguration},
     types::{transaction::TxPolicies, transaction_builders::VariableOutputPolicy, AssetId},
@@ -23,8 +25,10 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     // setup wallet
     let secret = std::env::var("SECRET").unwrap();
-    let wallet =
-        WalletUnlocked::new_from_private_key(secret.parse().unwrap(), Some(provider.clone()));
+    let wallet = Wallet::new(
+        PrivateKeySigner::new(secret.parse().unwrap()),
+        provider.clone(),
+    );
 
     // deploy token
     let configurables = TokenConfigurables::default();
@@ -38,7 +42,9 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let id = Contract::load_from(bin_path, config)?
         .with_salt(salt)
         .deploy(&wallet, TxPolicies::default())
-        .await?;
+        .await?
+        .contract_id;
+
     let instance = Token::new(id.clone(), wallet.clone());
     instance
         .methods()
@@ -46,7 +52,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
         .call()
         .await?;
 
-    println!("Token deployed at: 0x{}", instance.contract_id().hash());
+    println!("Token deployed at: 0x{}", instance.contract_id());
 
     let asset_id = instance.methods().asset_id().call().await?.value;
     println!("Asset id: 0x{}", asset_id);

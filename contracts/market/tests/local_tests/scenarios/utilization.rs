@@ -42,7 +42,12 @@ async fn utilization_above_kinks() {
         .mint(alice_account, alice_mint_amount)
         .await
         .unwrap();
-    let balance = alice.get_asset_balance(&usdc.asset_id).await.unwrap();
+    let balance: u64 = alice
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == alice_mint_amount);
 
     let alice_supply_res = market

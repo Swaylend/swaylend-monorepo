@@ -1,14 +1,14 @@
 use crate::{convert_i256_to_i128, convert_u256_to_u128, format_units, format_units_u128};
 use fuels::{
-    accounts::{wallet::WalletUnlocked, ViewOnlyAccount},
+    accounts::{wallet::Wallet, ViewOnlyAccount},
     programs::{
         calls::{CallParameters, ContractDependency},
         contract::{Contract, LoadConfiguration, StorageConfiguration},
         responses::CallResponse,
     },
     types::{
-        bech32::Bech32ContractId, transaction::TxPolicies,
-        transaction_builders::VariableOutputPolicy, AssetId, Bytes32, ContractId, Identity,
+        transaction::TxPolicies, transaction_builders::VariableOutputPolicy, AssetId, Bytes32,
+        ContractId, Identity,
     },
 };
 use market::*;
@@ -20,7 +20,7 @@ use token_sdk::Asset;
 const DEFAULT_GAS_LIMIT: u64 = 2_000_000;
 
 pub struct Market {
-    pub instance: MarketContract<WalletUnlocked>,
+    pub instance: MarketContract<Wallet>,
 }
 
 #[derive(Deserialize)]
@@ -82,7 +82,7 @@ pub fn get_market_config(
 
 impl Market {
     pub async fn deploy(
-        wallet: &WalletUnlocked,
+        wallet: &Wallet,
         debug_step: u64, // only for local test
         random_address: bool,
     ) -> anyhow::Result<Self> {
@@ -106,10 +106,12 @@ impl Market {
                 .with_salt(salt)
                 .deploy(wallet, TxPolicies::default())
                 .await?
+                .contract_id
         } else {
             Contract::load_from("./out/release/market.bin", config)?
                 .deploy(wallet, TxPolicies::default())
                 .await?
+                .contract_id
         };
 
         let market = MarketContract::new(id.clone(), wallet.clone());
@@ -117,23 +119,19 @@ impl Market {
         Ok(Self { instance: market })
     }
 
-    pub async fn new(contract_id: ContractId, wallet: WalletUnlocked) -> Self {
+    pub async fn new(contract_id: ContractId, wallet: Wallet) -> Self {
         Self {
             instance: MarketContract::new(contract_id, wallet),
         }
     }
 
-    pub async fn with_account(&self, account: &WalletUnlocked) -> anyhow::Result<Self> {
+    pub async fn with_account(&self, account: &Wallet) -> anyhow::Result<Self> {
         Ok(Self {
             instance: MarketContract::new(self.instance.contract_id().clone(), account.clone()),
         })
     }
 
-    pub fn id(&self) -> Bytes32 {
-        self.instance.contract_id().hash
-    }
-
-    pub fn contract_id(&self) -> &Bech32ContractId {
+    pub fn contract_id(&self) -> ContractId {
         self.instance.contract_id()
     }
 
@@ -854,7 +852,7 @@ impl Market {
 
     pub async fn print_debug_state(
         &self,
-        wallets: &Vec<WalletUnlocked>,
+        wallets: &Vec<Wallet>,
         base: &Asset,
         collateral: &Asset,
     ) -> anyhow::Result<()> {

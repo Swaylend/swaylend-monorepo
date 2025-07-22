@@ -54,7 +54,12 @@ async fn absorb_and_liquidate() {
         .mint(alice_account, alice_mint_amount)
         .await
         .unwrap();
-    let balance = alice.get_asset_balance(&usdc.asset_id).await.unwrap();
+    let balance: u64 = alice
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == alice_mint_amount);
 
     let alice_supply_res = market
@@ -119,7 +124,12 @@ async fn absorb_and_liquidate() {
         .await;
     assert!(bob_borrow_res.is_ok());
 
-    let balance = bob.get_asset_balance(&usdc.asset_id).await.unwrap();
+    let balance: u64 = bob
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == max_borrow_amount as u64);
     market
         .print_debug_state(&wallets, &usdc, &eth)
@@ -333,7 +343,12 @@ async fn absorb_and_liquidate() {
 
     // Wait for response
     let _: CallResponse<((), ())> = submitted_tx.response().await.unwrap();
-    let alice_balance = alice.get_asset_balance(&eth.asset_id).await.unwrap();
+    let alice_balance: u64 = alice
+        .get_asset_balance(&eth.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(alice_balance == 1_000_999_999_992 * AMOUNT_COEFFICIENT);
 
     // check reserves
@@ -391,7 +406,12 @@ async fn all_assets_liquidated() {
         .mint(alice_account, alice_mint_amount)
         .await
         .unwrap();
-    let balance = alice.get_asset_balance(&usdc.asset_id).await.unwrap();
+    let balance: u64 = alice
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == alice_mint_amount);
 
     let alice_supply_res = market
@@ -460,7 +480,12 @@ async fn all_assets_liquidated() {
         .await;
     assert!(bob_withdraw_res.is_ok());
 
-    let balance = bob.get_asset_balance(&usdc.asset_id).await.unwrap();
+    let balance: u64 = bob
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == max_borrow_amount as u64);
     market
         .print_debug_state(&wallets, &usdc, &eth)
@@ -671,7 +696,12 @@ async fn all_assets_liquidated() {
     let _: CallResponse<((), ())> = submitted_tx.response().await.unwrap();
 
     // Check asset balance
-    let balance = alice.get_asset_balance(&eth.asset_id).await.unwrap();
+    let balance: u64 = alice
+        .get_asset_balance(&eth.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == 1_000_999_999_992 * AMOUNT_COEFFICIENT);
 
     market
@@ -715,7 +745,12 @@ async fn is_liquidatable_internal_uses_correct_index() {
 
     // Transfer of 10K USDC to the Alice's wallet
     usdc_contract.mint(alice_account, amount).await.unwrap();
-    let balance = alice.get_asset_balance(&usdc.asset_id).await.unwrap();
+    let balance: u64 = alice
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == amount);
 
     // Alice calls supply_base
@@ -750,7 +785,12 @@ async fn is_liquidatable_internal_uses_correct_index() {
     // Transfer of 1K UNI to the Bob's wallet
     uni_contract.mint(bob_account, amount).await.unwrap();
 
-    let balance = bob.get_asset_balance(&uni.asset_id).await.unwrap();
+    let balance: u64 = bob
+        .get_asset_balance(&uni.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == amount);
 
     // Bob calls supply_collateral
@@ -800,7 +840,12 @@ async fn is_liquidatable_internal_uses_correct_index() {
         .unwrap();
 
     // USDC balance check
-    let balance = bob.get_asset_balance(&usdc.asset_id).await.unwrap();
+    let balance: u64 = bob
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == amount);
 
     market

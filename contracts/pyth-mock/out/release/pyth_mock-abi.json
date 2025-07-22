@@ -1,6 +1,6 @@
 {
   "programType": "contract",
-  "specVersion": "1",
+  "specVersion": "1.1",
   "encodingVersion": "1",
   "concreteTypes": [
     {
@@ -334,13 +334,13 @@
   ],
   "functions": [
     {
+      "name": "ema_price",
       "inputs": [
         {
           "name": "price_feed_id",
           "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
         }
       ],
-      "name": "ema_price",
       "output": "8aba92fff7345309d4313706ed7db3a811609f62da8f0d2859819db43d461ff8",
       "attributes": [
         {
@@ -352,6 +352,7 @@
       ]
     },
     {
+      "name": "ema_price_no_older_than",
       "inputs": [
         {
           "name": "time_period",
@@ -362,7 +363,6 @@
           "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
         }
       ],
-      "name": "ema_price_no_older_than",
       "output": "8aba92fff7345309d4313706ed7db3a811609f62da8f0d2859819db43d461ff8",
       "attributes": [
         {
@@ -374,13 +374,13 @@
       ]
     },
     {
+      "name": "ema_price_unsafe",
       "inputs": [
         {
           "name": "price_feed_id",
           "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
         }
       ],
-      "name": "ema_price_unsafe",
       "output": "8aba92fff7345309d4313706ed7db3a811609f62da8f0d2859819db43d461ff8",
       "attributes": [
         {
@@ -392,6 +392,7 @@
       ]
     },
     {
+      "name": "parse_price_feed_updates",
       "inputs": [
         {
           "name": "max_publish_time",
@@ -410,7 +411,6 @@
           "concreteTypeId": "2601885b27af3627b8910876fc176d900cec2b16ec78c538f5f312e785d915f5"
         }
       ],
-      "name": "parse_price_feed_updates",
       "output": "7445e418358e558eaf1fb04dc2ee316739df0bce65fd8359c879b0dc9ffd3487",
       "attributes": [
         {
@@ -426,13 +426,13 @@
       ]
     },
     {
+      "name": "price",
       "inputs": [
         {
           "name": "price_feed_id",
           "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
         }
       ],
-      "name": "price",
       "output": "8aba92fff7345309d4313706ed7db3a811609f62da8f0d2859819db43d461ff8",
       "attributes": [
         {
@@ -444,6 +444,7 @@
       ]
     },
     {
+      "name": "price_no_older_than",
       "inputs": [
         {
           "name": "time_period",
@@ -454,7 +455,6 @@
           "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
         }
       ],
-      "name": "price_no_older_than",
       "output": "8aba92fff7345309d4313706ed7db3a811609f62da8f0d2859819db43d461ff8",
       "attributes": [
         {
@@ -466,13 +466,13 @@
       ]
     },
     {
+      "name": "price_unsafe",
       "inputs": [
         {
           "name": "price_feed_id",
           "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
         }
       ],
-      "name": "price_unsafe",
       "output": "8aba92fff7345309d4313706ed7db3a811609f62da8f0d2859819db43d461ff8",
       "attributes": [
         {
@@ -484,13 +484,13 @@
       ]
     },
     {
+      "name": "update_fee",
       "inputs": [
         {
           "name": "update_data",
           "concreteTypeId": "2601885b27af3627b8910876fc176d900cec2b16ec78c538f5f312e785d915f5"
         }
       ],
-      "name": "update_fee",
       "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
       "attributes": [
         {
@@ -502,13 +502,13 @@
       ]
     },
     {
+      "name": "update_price_feeds",
       "inputs": [
         {
           "name": "update_data",
           "concreteTypeId": "2601885b27af3627b8910876fc176d900cec2b16ec78c538f5f312e785d915f5"
         }
       ],
-      "name": "update_price_feeds",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
@@ -525,6 +525,7 @@
       ]
     },
     {
+      "name": "update_price_feeds_if_necessary",
       "inputs": [
         {
           "name": "price_feed_ids",
@@ -539,7 +540,6 @@
           "concreteTypeId": "2601885b27af3627b8910876fc176d900cec2b16ec78c538f5f312e785d915f5"
         }
       ],
-      "name": "update_price_feeds_if_necessary",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
@@ -556,8 +556,8 @@
       ]
     },
     {
-      "inputs": [],
       "name": "valid_time_period",
+      "inputs": [],
       "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
       "attributes": [
         {
@@ -576,5 +576,6 @@
     }
   ],
   "messagesTypes": [],
-  "configurables": []
+  "configurables": [],
+  "errorCodes": {}
 }

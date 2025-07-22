@@ -2,7 +2,7 @@ mod utils;
 
 use clap::Parser;
 use fuels::{
-    accounts::{provider::Provider, wallet::WalletUnlocked},
+    accounts::{provider::Provider, signers::private_key::PrivateKeySigner, wallet::Wallet},
     crypto::SecretKey,
 };
 use pyth_mock_sdk::PythMockContract;
@@ -25,13 +25,13 @@ async fn main() -> anyhow::Result<()> {
     }
 
     let secret = SecretKey::from_str(&args.signing_key).unwrap();
-    let wallet = WalletUnlocked::new_from_private_key(secret, Some(provider));
+    let wallet = Wallet::new(PrivateKeySigner::new(secret), provider.clone());
 
     let pyth_contract = PythMockContract::deploy(&wallet).await.unwrap();
 
     println!(
         "Pyth mock contract deployed at: 0x{}",
-        pyth_contract.contract_id().hash
+        pyth_contract.contract_id()
     );
 
     Ok(())

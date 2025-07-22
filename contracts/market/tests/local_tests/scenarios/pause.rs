@@ -41,7 +41,12 @@ async fn pause_test() {
     // Transfer of 400 USDC to the Bob's wallet
     usdc_contract.mint(bob_account, amount).await.unwrap();
 
-    let balance = bob.get_asset_balance(&usdc.asset_id).await.unwrap();
+    let balance: u64 = bob
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == amount);
 
     // Bob calls supply_base
@@ -71,7 +76,12 @@ async fn pause_test() {
     // Transfer of 40 UNI to the Alice's wallet
     uni_contract.mint(alice_account, amount).await.unwrap();
 
-    let balance = alice.get_asset_balance(&uni.asset_id).await.unwrap();
+    let balance: u64 = alice
+        .get_asset_balance(&uni.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == amount);
 
     // Alice calls supply_collateral
@@ -116,7 +126,12 @@ async fn pause_test() {
         .unwrap();
 
     // USDC balance check
-    let balance = alice.get_asset_balance(&usdc.asset_id).await.unwrap();
+    let balance: u64 = alice
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == amount);
 
     market.debug_increment_timestamp().await.unwrap();
@@ -277,7 +292,12 @@ async fn pause_test() {
     usdc_contract.mint(bob_account, amount).await.unwrap();
 
     // Сheck balance
-    let balance = bob.get_asset_balance(&usdc.asset_id).await.unwrap();
+    let balance: u64 = bob
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == amount);
 
     // Bob calls buy_collateral
@@ -347,7 +367,12 @@ async fn pause_test() {
     // Transfer of 400 USDC to the Bob's wallet
     usdc_contract.mint(bob_account, amount).await.unwrap();
 
-    let balance = bob.get_asset_balance(&usdc.asset_id).await.unwrap();
+    let balance: u64 = bob
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == amount);
 
     // Bob calls supply_base
@@ -371,7 +396,12 @@ async fn pause_test() {
     // Transfer of 40 UNI to the Alice's wallet
     uni_contract.mint(alice_account, amount).await.unwrap();
 
-    let balance = alice.get_asset_balance(&uni.asset_id).await.unwrap();
+    let balance: u64 = alice
+        .get_asset_balance(&uni.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == amount);
 
     // Alice calls supply_collateral

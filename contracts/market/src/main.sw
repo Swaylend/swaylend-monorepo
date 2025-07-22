@@ -1518,7 +1518,7 @@ fn get_price_internal(asset_id: AssetId, price_position: PricePosition) -> Price
 ///
 /// # Number of Storage Accesses
 /// * Reads: `1`
-#[payable, storage(read)]
+#[storage(read)]
 fn update_price_feeds_internal(oracle_inputs: Vec<OracleInput>) {
     let mut index = 0;
     let len = oracle_inputs.len();

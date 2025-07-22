@@ -2,7 +2,9 @@ mod utils;
 
 use clap::Parser;
 use fuels::{
-    accounts::{provider::Provider, wallet::WalletUnlocked},
+    accounts::{
+        provider::Provider, signers::private_key::PrivateKeySigner, wallet::Wallet, ViewOnlyAccount,
+    },
     crypto::SecretKey,
     types::{transaction_builders::VariableOutputPolicy, Address, ContractId, Identity},
 };
@@ -38,7 +40,7 @@ async fn main() -> anyhow::Result<()> {
     }
 
     let secret = SecretKey::from_str(&args.args.signing_key).unwrap();
-    let wallet = WalletUnlocked::new_from_private_key(secret, Some(provider.clone()));
+    let wallet = Wallet::new(PrivateKeySigner::new(secret), provider.clone());
 
     let recipient: Identity = if let Some(recipient) = args.recipient.clone() {
         let mut parts = recipient.split(":");
@@ -85,11 +87,13 @@ async fn main() -> anyhow::Result<()> {
         "Balance of the recipient: {}",
         match recipient {
             Identity::Address(addr) => provider
-                .get_asset_balance(&addr.into(), market_config.base_token)
+                .get_asset_balance(&addr.into(), &market_config.base_token)
                 .await
+                .unwrap()
+                .try_into()
                 .unwrap(),
             Identity::ContractId(id) => provider
-                .get_contract_asset_balance(&id.into(), market_config.base_token)
+                .get_contract_asset_balance(&id.into(), &market_config.base_token)
                 .await
                 .unwrap(),
         }
@@ -145,11 +149,13 @@ async fn main() -> anyhow::Result<()> {
         "Balance of the recipient: {}",
         match recipient {
             Identity::Address(addr) => provider
-                .get_asset_balance(&addr.into(), market_config.base_token)
+                .get_asset_balance(&addr.into(), &market_config.base_token)
                 .await
+                .unwrap()
+                .try_into()
                 .unwrap(),
             Identity::ContractId(id) => provider
-                .get_contract_asset_balance(&id.into(), market_config.base_token)
+                .get_contract_asset_balance(&id.into(), &market_config.base_token)
                 .await
                 .unwrap(),
         }

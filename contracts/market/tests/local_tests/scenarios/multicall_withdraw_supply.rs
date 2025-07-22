@@ -47,7 +47,12 @@ async fn multicall_withdraw_supply_test() {
         .mint(alice_account, alice_mint_amount)
         .await
         .unwrap();
-    let balance = alice.get_asset_balance(&usdc.asset_id).await.unwrap();
+    let balance: u64 = alice
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == alice_mint_amount);
 
     let alice_supply_res = market
@@ -93,7 +98,12 @@ async fn multicall_withdraw_supply_test() {
         .mint(bob_account, bob_mint_amount)
         .await
         .unwrap();
-    let balance = bob.get_asset_balance(&usdc.asset_id).await.unwrap();
+    let balance: u64 = bob
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == bob_mint_amount);
     let bob_withdraw_amount = parse_units(100 * AMOUNT_COEFFICIENT, usdc.decimals);
     let bob_withdraw_log_amount = format!("{} USDC", bob_withdraw_amount as f64 / SCALE_6);
@@ -141,7 +151,12 @@ async fn multicall_withdraw_supply_test() {
     let _: CallResponse<((), ())> = submitted_tx.response().await.unwrap();
 
     // Check asset balance
-    let balance = bob.get_asset_balance(&usdc.asset_id).await.unwrap();
+    let balance: u64 = bob
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == bob_mint_amount);
 
     market

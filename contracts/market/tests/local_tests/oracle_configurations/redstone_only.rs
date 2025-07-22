@@ -56,7 +56,12 @@ async fn redstone_only() {
     // Transfer of 100 USDC to the Bob's wallet
     usdc_contract.mint(bob_account, amount).await.unwrap();
 
-    let balance = bob.get_asset_balance(&usdc.asset_id).await.unwrap();
+    let balance: u64 = bob
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == amount);
 
     // Bob calls supply_base
@@ -92,7 +97,12 @@ async fn redstone_only() {
     // Transfer of 40 UNI to the Alice's wallet
     uni_contract.mint(alice_account, amount).await.unwrap();
 
-    let balance = alice.get_asset_balance(&uni.asset_id).await.unwrap();
+    let balance: u64 = alice
+        .get_asset_balance(&uni.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == amount);
 
     // Alice calls supply_collateral
@@ -143,7 +153,12 @@ async fn redstone_only() {
         .unwrap();
 
     // USDC balance check
-    let balance = alice.get_asset_balance(&usdc.asset_id).await.unwrap();
+    let balance: u64 = alice
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == amount);
 
     market
@@ -166,7 +181,12 @@ async fn redstone_only() {
     // Transfer of 60 UNI to the Chad's wallet
     uni_contract.mint(chad_account, amount).await.unwrap();
 
-    let balance = chad.get_asset_balance(&uni.asset_id).await.unwrap();
+    let balance: u64 = chad
+        .get_asset_balance(&uni.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == amount);
 
     // Chad calls supply_collateral
@@ -206,7 +226,12 @@ async fn redstone_only() {
     // Transfer of 200 USDC to the Chad's wallet
     usdc_contract.mint(chad_account, amount).await.unwrap();
 
-    let balance = chad.get_asset_balance(&usdc.asset_id).await.unwrap();
+    let balance: u64 = chad
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == amount);
 
     // Chad calls supply_base
@@ -280,7 +305,12 @@ async fn redstone_only() {
     assert!(res);
 
     // USDC balance should be amount - 1 USDC + 50 USDC from case #2
-    let balance = alice.get_asset_balance(&usdc.asset_id).await.unwrap();
+    let balance: u64 = alice
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(
         balance
             == (amount as u64) - parse_units(1, usdc.decimals)
@@ -464,7 +494,12 @@ async fn redstone_only() {
     usdc_contract.mint(bob_account, amount).await.unwrap();
 
     // Сheck balance
-    let balance = bob.get_asset_balance(&usdc.asset_id).await.unwrap();
+    let balance: u64 = bob
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == (amount as u64));
 
     // Reset prices back to old values
@@ -522,7 +557,12 @@ async fn redstone_only() {
     let _: CallResponse<((), ())> = submitted_tx.response().await.unwrap();
 
     // Check
-    let balance = bob.get_asset_balance(&uni.asset_id).await.unwrap();
+    let balance: u64 = bob
+        .get_asset_balance(&uni.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     println!("balance: {}", balance);
     println!(
         "expected: {}",
@@ -565,7 +605,13 @@ async fn redstone_only() {
     assert!(supplied == 0);
 
     // USDC balance check
-    assert!(bob.get_asset_balance(&usdc.asset_id).await.unwrap() == amount as u64);
+    let balance: u64 = bob
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
+    assert!(balance == amount as u64);
 
     market
         .print_debug_state(&wallets, &usdc, &uni)
@@ -602,7 +648,13 @@ async fn redstone_only() {
     assert!(supplied == 0);
 
     // USDC balance check
-    assert!(chad.get_asset_balance(&usdc.asset_id).await.unwrap() == amount as u64);
+    let balance: u64 = chad
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
+    assert!(balance == amount as u64);
 
     market
         .print_debug_state(&wallets, &usdc, &uni)
@@ -674,7 +726,12 @@ async fn redstone_only() {
         .unwrap();
 
     // UNI balance check
-    let balance = chad.get_asset_balance(&uni.asset_id).await.unwrap();
+    let balance: u64 = chad
+        .get_asset_balance(&uni.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == amount);
 
     market

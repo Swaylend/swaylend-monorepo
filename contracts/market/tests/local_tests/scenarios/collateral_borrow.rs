@@ -41,7 +41,12 @@ async fn collateral_borrow_test() {
         .mint(alice_account, alice_mint_amount)
         .await
         .unwrap();
-    let balance = alice.get_asset_balance(&usdc.asset_id).await.unwrap();
+    let balance: u64 = alice
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == alice_mint_amount);
 
     let alice_supply_res = market
@@ -67,7 +72,12 @@ async fn collateral_borrow_test() {
         .mint(bob_account, bob_mint_amount)
         .await
         .unwrap();
-    let bob_balance = bob.get_asset_balance(&uni.asset_id).await.unwrap();
+    let bob_balance: u64 = bob
+        .get_asset_balance(&uni.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(bob_balance == bob_mint_amount);
     let bob_supply_res = market
         .with_account(&bob)
@@ -124,7 +134,12 @@ async fn collateral_borrow_test() {
         )
         .await;
     assert!(bob_withdraw_res.is_ok());
-    let balance = bob.get_asset_balance(&usdc.asset_id).await.unwrap();
+    let balance: u64 = bob
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == amount);
     market
         .print_debug_state(&wallets, &usdc, &uni)
@@ -277,7 +292,12 @@ async fn collateral_borrow_timeskip_test() {
         .mint(alice_account, alice_mint_amount)
         .await
         .unwrap();
-    let balance = alice.get_asset_balance(&usdc.asset_id).await.unwrap();
+    let balance: u64 = alice
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == alice_mint_amount);
 
     let alice_supply_res = market
@@ -303,7 +323,12 @@ async fn collateral_borrow_timeskip_test() {
         .mint(bob_account, bob_mint_amount)
         .await
         .unwrap();
-    let bob_balance = bob.get_asset_balance(&uni.asset_id).await.unwrap();
+    let bob_balance: u64 = bob
+        .get_asset_balance(&uni.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(bob_balance == bob_mint_amount);
     let bob_supply_res = market
         .with_account(&bob)
@@ -347,7 +372,12 @@ async fn collateral_borrow_timeskip_test() {
         .await;
     assert!(bob_withdraw_res.is_ok());
 
-    let balance = bob.get_asset_balance(&usdc.asset_id).await.unwrap();
+    let balance: u64 = bob
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == amount);
     market
         .print_debug_state(&wallets, &usdc, &uni)

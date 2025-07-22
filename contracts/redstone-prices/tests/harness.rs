@@ -1,4 +1,5 @@
 use fuels::{
+    accounts::ViewOnlyAccount,
     test_helpers::{launch_custom_provider_and_get_wallets, NodeConfig, Trigger, WalletsConfig},
     types::{Bits256, Bytes, U256},
 };

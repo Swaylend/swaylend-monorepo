@@ -2,9 +2,12 @@ mod utils;
 
 use clap::Parser;
 use fuels::{
-    accounts::{provider::Provider, wallet::WalletUnlocked, Account, ViewOnlyAccount},
+    accounts::{
+        provider::Provider, signers::private_key::PrivateKeySigner, wallet::Wallet, Account,
+        ViewOnlyAccount,
+    },
     crypto::SecretKey,
-    types::{bech32::Bech32ContractId, transaction::TxPolicies, ContractId, Identity},
+    types::{transaction::TxPolicies, ContractId, Identity},
 };
 use std::str::FromStr;
 use utils::{
@@ -36,7 +39,7 @@ async fn main() -> anyhow::Result<()> {
     }
 
     let secret = SecretKey::from_str(&args.args.signing_key).unwrap();
-    let wallet = WalletUnlocked::new_from_private_key(secret, Some(provider.clone()));
+    let wallet = Wallet::new(PrivateKeySigner::new(secret), provider.clone());
 
     let recipient: Identity = ContractId::from_str(&args.args.proxy_contract_id)
         .unwrap()
@@ -106,7 +109,7 @@ async fn main() -> anyhow::Result<()> {
 
     wallet
         .force_transfer_to_contract(
-            &Bech32ContractId::from(address),
+            ContractId::from(address),
             amount,
             market_config.base_token,
             tx_policies,

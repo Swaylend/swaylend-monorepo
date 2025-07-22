@@ -3,22 +3,22 @@ use redstone_prices::*;
 use std::path::PathBuf;
 
 use fuels::{
-    accounts::wallet::WalletUnlocked,
+    accounts::wallet::Wallet,
     programs::{
         contract::{Contract, LoadConfiguration, StorageConfiguration},
         responses::CallResponse,
     },
-    types::{bech32::Bech32ContractId, transaction::TxPolicies, Bits256, Bytes, Identity, U256},
+    types::{transaction::TxPolicies, Bits256, Bytes, ContractId, Identity, U256},
 };
 
 use rand::Rng;
 
 pub struct RedstonePricesContract {
-    pub instance: RedstonePrices<WalletUnlocked>,
+    pub instance: RedstonePrices<Wallet>,
 }
 
 impl RedstonePricesContract {
-    pub async fn deploy(wallet: &WalletUnlocked) -> anyhow::Result<Self> {
+    pub async fn deploy(wallet: &Wallet) -> anyhow::Result<Self> {
         let mut rng = rand::thread_rng();
         let salt = rng.gen::<[u8; 32]>();
 
@@ -33,7 +33,8 @@ impl RedstonePricesContract {
         let contract_id = Contract::load_from(redstone_prices_binary_path, contract_configuration)?
             .with_salt(salt)
             .deploy(wallet, TxPolicies::default())
-            .await?;
+            .await?
+            .contract_id;
 
         let redstone_prices = RedstonePrices::new(contract_id.clone(), wallet.clone());
 
@@ -42,7 +43,7 @@ impl RedstonePricesContract {
         })
     }
 
-    pub async fn with_account(&self, account: &WalletUnlocked) -> anyhow::Result<Self> {
+    pub async fn with_account(&self, account: &Wallet) -> anyhow::Result<Self> {
         Ok(Self {
             instance: RedstonePrices::new(self.instance.contract_id().clone(), account.clone()),
         })
@@ -140,7 +141,7 @@ impl RedstonePricesContract {
             .await?)
     }
 
-    pub fn contract_id(&self) -> &Bech32ContractId {
+    pub fn contract_id(&self) -> ContractId {
         self.instance.contract_id()
     }
 }

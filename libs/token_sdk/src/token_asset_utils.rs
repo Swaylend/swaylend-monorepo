@@ -1,9 +1,10 @@
 use crate::get_symbol_hash;
-use fuels::accounts::wallet::WalletUnlocked;
+use fuels::accounts::wallet::Wallet;
 use fuels::prelude::TxPolicies;
 use fuels::programs::responses::CallResponse;
+use fuels::tx::ContractIdExt;
 use fuels::types::transaction_builders::VariableOutputPolicy;
-use fuels::types::{AssetId, ContractId, Identity};
+use fuels::types::{AssetId, ContractId, Identity, SubAssetId};
 use serde::Deserialize;
 use std::path::PathBuf;
 use token::*;
@@ -22,11 +23,11 @@ pub struct TokenAsset {
     pub asset_id: AssetId,
     pub decimals: u64,
     pub symbol: String,
-    pub instance: Token<WalletUnlocked>,
+    pub instance: Token<Wallet>,
 }
 
 impl TokenAsset {
-    pub fn new(wallet: WalletUnlocked, token_contract_id: ContractId, symbol: &str) -> Self {
+    pub fn new(wallet: Wallet, token_contract_id: ContractId, symbol: &str) -> Self {
         let tokens_path =
             PathBuf::from(env!("CARGO_WORKSPACE_DIR")).join("contracts/market/tests/tokens.json");
 
@@ -40,7 +41,9 @@ impl TokenAsset {
             .unwrap();
 
         let instance = Token::new(token_contract_id, wallet.clone());
-        let asset_id = instance.contract_id().asset_id(&get_symbol_hash(&symbol));
+        let asset_id = instance
+            .contract_id()
+            .asset_id(&SubAssetId::new(get_symbol_hash(&symbol).0));
 
         TokenAsset {
             asset_id,

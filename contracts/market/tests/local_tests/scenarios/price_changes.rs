@@ -45,7 +45,12 @@ async fn price_changes() {
         .mint(alice_account, alice_mint_amount)
         .await
         .unwrap();
-    let balance = alice.get_asset_balance(&usdc.asset_id).await.unwrap();
+    let balance: u64 = alice
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == alice_mint_amount);
 
     let alice_supply_res = market
@@ -110,7 +115,12 @@ async fn price_changes() {
         .await;
     assert!(bob_withdraw_res.is_ok());
 
-    let balance = bob.get_asset_balance(&usdc.asset_id).await.unwrap();
+    let balance: u64 = bob
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == max_borrow_amount_before as u64);
     market
         .print_debug_state(&wallets, &usdc, &eth)
@@ -230,7 +240,12 @@ async fn price_changes() {
         .await;
     assert!(bob_withdraw_res.is_ok());
 
-    let balance = bob.get_asset_balance(&usdc.asset_id).await.unwrap();
+    let balance: u64 = bob
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == (max_borrow_amount_before + max_borrow_amount_after) as u64);
     market
         .print_debug_state(&wallets, &usdc, &eth)

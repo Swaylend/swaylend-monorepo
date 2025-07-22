@@ -87,7 +87,12 @@ async fn main_test_eth_base() {
     // Transfer of 10000 USDT to the Alice's wallet
     usdt_contract.mint(alice_account, amount).await.unwrap();
 
-    let balance = alice.get_asset_balance(&usdt.asset_id).await.unwrap();
+    let balance: u64 = alice
+        .get_asset_balance(&usdt.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == amount);
 
     // Alice calls supply_collateral
@@ -123,7 +128,12 @@ async fn main_test_eth_base() {
     let log_amount = format!("{} ETH", amount as f64 / scale_9);
     print_case_title(2, "Alice", "withdraw_base", log_amount.as_str());
 
-    let old_balance = alice.get_asset_balance(&eth.asset_id).await.unwrap();
+    let old_balance: u64 = alice
+        .get_asset_balance(&eth.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
 
     // Alice calls withdraw_base
     market
@@ -140,7 +150,12 @@ async fn main_test_eth_base() {
         .unwrap();
 
     // ETH balance check
-    let balance = alice.get_asset_balance(&eth.asset_id).await.unwrap();
+    let balance: u64 = alice
+        .get_asset_balance(&eth.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!((balance - old_balance) == amount - oracle_total_update_fee);
 
     market
@@ -163,7 +178,12 @@ async fn main_test_eth_base() {
     // Transfer of 15000 USDT to the Chad's wallet
     usdt_contract.mint(chad_account, amount).await.unwrap();
 
-    let balance = chad.get_asset_balance(&usdt.asset_id).await.unwrap();
+    let balance: u64 = chad
+        .get_asset_balance(&usdt.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == amount);
 
     // Chad calls supply_collateral
@@ -231,7 +251,12 @@ async fn main_test_eth_base() {
     let log_amount = format!("{} ETH", amount as f64 / scale_9);
     print_case_title(5, "Alice", "withdraw_base", log_amount.as_str());
 
-    let old_balance = alice.get_asset_balance(&eth.asset_id).await.unwrap();
+    let old_balance: u64 = alice
+        .get_asset_balance(&eth.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
 
     // Alice calls withdraw_base
     market
@@ -273,7 +298,12 @@ async fn main_test_eth_base() {
     assert!(res);
 
     // ETH balance should be amount - ~1.57 ETH + 1 ETH from case #2
-    let balance = alice.get_asset_balance(&eth.asset_id).await.unwrap();
+    let balance: u64 = alice
+        .get_asset_balance(&eth.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     let amount: u64 = amount.try_into().unwrap();
 
     assert!(
@@ -504,7 +534,12 @@ async fn main_test_eth_base() {
     let _: CallResponse<((), ())> = submitted_tx.response().await.unwrap();
 
     // Check
-    let balance = bob.get_asset_balance(&usdt.asset_id).await.unwrap();
+    let balance: u64 = bob
+        .get_asset_balance(&usdt.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     println!("balance: {}", balance);
     println!(
         "expected: {}",
@@ -528,7 +563,12 @@ async fn main_test_eth_base() {
     let log_amount = format!("{} ETH", amount as f64 / scale_9);
     print_case_title(9, "Bob", "withdraw_base", log_amount.as_str());
 
-    let old_balance = bob.get_asset_balance(&eth.asset_id).await.unwrap();
+    let old_balance: u64 = bob
+        .get_asset_balance(&eth.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
 
     // Bob calls withdraw_base
     market
@@ -549,7 +589,12 @@ async fn main_test_eth_base() {
     assert!(supplied == 0);
 
     // ETH balance check
-    let balance = bob.get_asset_balance(&eth.asset_id).await.unwrap();
+    let balance: u64 = bob
+        .get_asset_balance(&eth.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!((balance - old_balance) == amount as u64 - oracle_total_update_fee);
 
     market
@@ -568,7 +613,12 @@ async fn main_test_eth_base() {
     let log_amount = format!("{} ETH", amount as f64 / scale_9);
     print_case_title(10, "Chad", "withdraw_base", log_amount.as_str());
 
-    let old_balance = chad.get_asset_balance(&eth.asset_id).await.unwrap();
+    let old_balance: u64 = chad
+        .get_asset_balance(&eth.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
 
     // Reserves are negative and we can't withdraw more ETH than is available
     // So we need to send some ETH to the contract to make the reserves positive
@@ -601,7 +651,12 @@ async fn main_test_eth_base() {
     assert!(supplied == 0);
 
     // ETH balance check
-    let balance = chad.get_asset_balance(&eth.asset_id).await.unwrap();
+    let balance: u64 = chad
+        .get_asset_balance(&eth.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!((balance - old_balance) == amount as u64 - oracle_total_update_fee);
 
     market
@@ -640,7 +695,12 @@ async fn main_test_eth_base() {
         .unwrap();
 
     // USDT balance check
-    let balance = chad.get_asset_balance(&usdt.asset_id).await.unwrap();
+    let balance: u64 = chad
+        .get_asset_balance(&usdt.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == amount);
 
     market

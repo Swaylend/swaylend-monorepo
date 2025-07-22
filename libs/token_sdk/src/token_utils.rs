@@ -2,9 +2,8 @@ use market::*;
 use rand::Rng;
 use token::*;
 
-use fuels::accounts::wallet::WalletUnlocked;
+use fuels::accounts::wallet::Wallet;
 use fuels::programs::contract::{Contract, LoadConfiguration};
-use fuels::types::bech32::Bech32ContractId;
 use fuels::types::transaction::TxPolicies;
 use fuels::types::{AssetId, Bits256, Bytes32, ContractId};
 use serde::Deserialize;
@@ -16,7 +15,7 @@ use crate::TokenAsset;
 
 #[derive(Clone)]
 pub struct TokenContract {
-    pub instance: Token<WalletUnlocked>,
+    pub instance: Token<Wallet>,
 }
 
 #[derive(Clone)]
@@ -52,7 +51,7 @@ pub struct TokenConfig {
 }
 
 impl TokenContract {
-    pub async fn deploy(wallet: &WalletUnlocked) -> anyhow::Result<Self> {
+    pub async fn deploy(wallet: &Wallet) -> anyhow::Result<Self> {
         let configurables = TokenConfigurables::default();
         let root = PathBuf::from(env!("CARGO_WORKSPACE_DIR"));
         let bin_path = root.join("contracts/token/out/release/token.bin");
@@ -64,35 +63,33 @@ impl TokenContract {
         let id = Contract::load_from(bin_path, config)?
             .with_salt(salt)
             .deploy(wallet, TxPolicies::default())
-            .await?;
+            .await?
+            .contract_id;
+
         let instance = Token::new(id.clone(), wallet.clone());
 
         Ok(Self { instance })
     }
 
-    pub async fn new(contract_id: ContractId, wallet: WalletUnlocked) -> Self {
+    pub async fn new(contract_id: ContractId, wallet: Wallet) -> Self {
         Self {
             instance: Token::new(contract_id, wallet),
         }
     }
 
-    pub async fn with_account(&self, account: &WalletUnlocked) -> anyhow::Result<Self> {
+    pub async fn with_account(&self, account: &Wallet) -> anyhow::Result<Self> {
         Ok(Self {
             instance: Token::new(self.instance.contract_id().clone(), account.clone()),
         })
     }
 
-    pub fn id(&self) -> Bytes32 {
-        self.instance.contract_id().hash
-    }
-
-    pub fn contract_id(&self) -> &Bech32ContractId {
+    pub fn contract_id(&self) -> ContractId {
         self.instance.contract_id()
     }
 
     pub async fn deploy_tokens(
         &self,
-        wallet: &WalletUnlocked,
+        wallet: &Wallet,
         is_local_tests: Option<bool>,
         config_file: Option<&str>,
     ) -> (
@@ -164,7 +161,7 @@ impl TokenContract {
     pub async fn load_tokens(
         &self,
         tokens_json_path: &str,
-        wallet: &WalletUnlocked,
+        wallet: &Wallet,
     ) -> (
         HashMap<String, Asset>,
         Vec<CollateralConfiguration>,

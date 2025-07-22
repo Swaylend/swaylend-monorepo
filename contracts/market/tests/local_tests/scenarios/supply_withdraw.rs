@@ -34,7 +34,12 @@ async fn supply_withdraw_test() {
         .await
         .unwrap();
 
-    let balance = alice.get_asset_balance(&usdc.asset_id).await.unwrap();
+    let balance: u64 = alice
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == mint_amount);
 
     // Alice calls supply_base with more than she has, results in tx revert

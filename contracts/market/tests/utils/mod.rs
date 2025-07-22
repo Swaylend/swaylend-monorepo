@@ -1,5 +1,6 @@
 use chrono::Utc;
-use fuels::accounts::wallet::WalletUnlocked;
+use fuels::accounts::wallet::Wallet;
+use fuels::accounts::ViewOnlyAccount;
 use fuels::test_helpers::{
     launch_custom_provider_and_get_wallets, NodeConfig, Trigger, WalletsConfig,
 };
@@ -26,7 +27,7 @@ pub fn print_case_title(num: u8, name: &str, call: &str, amount: &str) {
     );
 }
 
-pub async fn init_wallets(use_gas_price: bool) -> Vec<WalletUnlocked> {
+pub async fn init_wallets(use_gas_price: bool) -> Vec<Wallet> {
     let wallets_config = WalletsConfig::new(Some(5), Some(1000), Some(1_000_000_000));
 
     let provider_config = NodeConfig {
@@ -50,13 +51,13 @@ pub enum TestBaseAsset {
 }
 
 pub struct TestData {
-    pub admin: WalletUnlocked,
+    pub admin: Wallet,
     pub admin_account: Identity,
-    pub alice: WalletUnlocked,
+    pub alice: Wallet,
     pub alice_account: Identity,
-    pub bob: WalletUnlocked,
+    pub bob: Wallet,
     pub bob_account: Identity,
-    pub chad: WalletUnlocked,
+    pub chad: Wallet,
     pub chad_account: Identity,
     pub market: Market,
     pub usdc: Asset,
@@ -66,7 +67,7 @@ pub struct TestData {
     pub uni: Asset,
     pub uni_contract: TokenAsset,
     pub eth: Asset,
-    pub wallets: Vec<WalletUnlocked>,
+    pub wallets: Vec<Wallet>,
     pub assets: HashMap<String, Asset>,
     pub oracle_inputs: Vec<OracleInput>,
     pub oracle_total_update_fee: u64,

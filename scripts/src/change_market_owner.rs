@@ -2,7 +2,7 @@ mod utils;
 
 use clap::Parser;
 use fuels::{
-    accounts::{provider::Provider, wallet::WalletUnlocked},
+    accounts::{provider::Provider, signers::private_key::PrivateKeySigner, wallet::Wallet},
     crypto::SecretKey,
     types::{Address, ContractId, Identity},
 };
@@ -33,7 +33,7 @@ async fn main() -> anyhow::Result<()> {
     }
 
     let secret = SecretKey::from_str(&args.args.signing_key).unwrap();
-    let wallet = WalletUnlocked::new_from_private_key(secret, Some(provider));
+    let wallet = Wallet::new(PrivateKeySigner::new(secret), provider.clone());
 
     let new_owner: Identity = {
         let mut parts = args.new_owner.split(":");

@@ -56,7 +56,12 @@ async fn main_test_usdt() {
     // Transfer of 100 USDC to the Bob's wallet
     usdc_contract.mint(bob_account, amount).await.unwrap();
 
-    let balance = bob.get_asset_balance(&usdc.asset_id).await.unwrap();
+    let balance: u64 = bob
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == amount);
 
     // Bob calls supply_base
@@ -92,7 +97,12 @@ async fn main_test_usdt() {
     // Transfer of 200 USDT to the Alice's wallet
     usdt_contract.mint(alice_account, amount).await.unwrap();
 
-    let balance = alice.get_asset_balance(&usdt.asset_id).await.unwrap();
+    let balance: u64 = alice
+        .get_asset_balance(&usdt.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == amount);
 
     // Alice calls supply_collateral
@@ -143,7 +153,12 @@ async fn main_test_usdt() {
         .unwrap();
 
     // USDC balance check
-    let balance = alice.get_asset_balance(&usdc.asset_id).await.unwrap();
+    let balance: u64 = alice
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == amount);
 
     market
@@ -166,7 +181,12 @@ async fn main_test_usdt() {
     // Transfer of 20 USDC to the Chad's wallet
     usdc_contract.mint(chad_account, amount).await.unwrap();
 
-    let balance = chad.get_asset_balance(&usdc.asset_id).await.unwrap();
+    let balance: u64 = chad
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == amount);
 
     // Chad calls supply_base
@@ -240,7 +260,12 @@ async fn main_test_usdt() {
     assert!(res);
 
     // USDC balance should be amount - 1 USDC + 1000 USDC from case #2
-    let balance = alice.get_asset_balance(&usdc.asset_id).await.unwrap();
+    let balance: u64 = alice
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(
         balance
             == (amount as u64) - parse_units(1, usdc.decimals)
@@ -424,7 +449,12 @@ async fn main_test_usdt() {
     usdc_contract.mint(bob_account, amount).await.unwrap();
 
     // Сheck balance
-    let balance = bob.get_asset_balance(&usdc.asset_id).await.unwrap();
+    let balance: u64 = bob
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == (amount as u64));
 
     // Reset prices back to old values
@@ -482,7 +512,12 @@ async fn main_test_usdt() {
     let _: CallResponse<((), ())> = submitted_tx.response().await.unwrap();
 
     // Check
-    let balance = bob.get_asset_balance(&usdt.asset_id).await.unwrap();
+    let balance: u64 = bob
+        .get_asset_balance(&usdt.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     println!("{}", balance);
     assert!(balance == parse_units(200, usdt.decimals) * AMOUNT_COEFFICIENT);
 
@@ -507,7 +542,12 @@ async fn main_test_usdt() {
     print_case_title(12, "Chad", "withdraw_collateral", log_amount.as_str());
 
     // USDT balance check
-    let balance = chad.get_asset_balance(&usdt.asset_id).await.unwrap();
+    let balance: u64 = chad
+        .get_asset_balance(&usdt.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == amount);
 
     market

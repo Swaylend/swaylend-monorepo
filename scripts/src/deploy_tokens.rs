@@ -2,7 +2,7 @@ mod utils;
 
 use clap::Parser;
 use fuels::{
-    accounts::{provider::Provider, wallet::WalletUnlocked},
+    accounts::{provider::Provider, signers::private_key::PrivateKeySigner, wallet::Wallet},
     crypto::SecretKey,
 };
 use std::str::FromStr;
@@ -25,13 +25,13 @@ async fn main() -> anyhow::Result<()> {
     }
 
     let secret = SecretKey::from_str(&args.signing_key).unwrap();
-    let wallet = WalletUnlocked::new_from_private_key(secret, Some(provider));
+    let wallet = Wallet::new(PrivateKeySigner::new(secret), provider.clone());
 
     let token_contract = TokenContract::deploy(&wallet).await.unwrap();
 
     println!(
         "Token contract deployed at: 0x{}",
-        token_contract.contract_id().hash
+        token_contract.contract_id()
     );
 
     Ok(())

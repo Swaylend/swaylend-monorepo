@@ -5,5 +5,5 @@ name = "redstone_prices"
 
 [dependencies]
 redstone_prices_abi = { path = "../../abis/redstone_prices_abi" }
-redstone = { git = "https://github.com/redstone-finance/redstone-fuel-sdk", tag = "v0.66.2-1" }
+redstone = { git = "https://github.com/martines3000/redstone-fuel-sdk", rev = "206a1f3d62fdc6465004d86ebe1df118bd5350d4" }
 ownership = "0.26.1"

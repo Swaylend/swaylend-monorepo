@@ -1,6 +1,6 @@
 {
   "programType": "contract",
-  "specVersion": "1",
+  "specVersion": "1.1",
   "encodingVersion": "1",
   "concreteTypes": [
     {
@@ -37,28 +37,28 @@
       "metadataTypeId": 5
     },
     {
-      "type": "enum standards::src5::AccessError",
-      "concreteTypeId": "3f702ea3351c9c1ece2b84048006c8034a24cbc2bad2e740d0412b4172951d3d",
+      "type": "enum ownership::errors::InitializationError",
+      "concreteTypeId": "b1fddf488ccb9e63d11888b2750bbd1280a1ae1c49f2d6637fd4cf1e930d1468",
       "metadataTypeId": 8
     },
     {
-      "type": "enum standards::src5::State",
-      "concreteTypeId": "192bc7098e2fe60635a9918afb563e4e5419d386da2bdbf0d716b4bc8549802c",
+      "type": "enum reentrancy::errors::ReentrancyError",
+      "concreteTypeId": "e52e660ff9a330c417b6493bb8d3d0049bafaa6c4a771b32b205d71bc2bc5ace",
       "metadataTypeId": 9
+    },
+    {
+      "type": "enum src5::AccessError",
+      "concreteTypeId": "f1247475d0d1466599267010f088190f8664dd31663a40c5d5e525d8e64b995d",
+      "metadataTypeId": 10
+    },
+    {
+      "type": "enum src5::State",
+      "concreteTypeId": "287a382c1e0b1f11d12a422e77a248d27761327cd17515cc6e6369d528cf31ca",
+      "metadataTypeId": 11
     },
     {
       "type": "enum std::identity::Identity",
       "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335",
-      "metadataTypeId": 10
-    },
-    {
-      "type": "enum sway_libs::ownership::errors::InitializationError",
-      "concreteTypeId": "1dfe7feadc1d9667a4351761230f948744068a090fe91b1bc6763a90ed5d3893",
-      "metadataTypeId": 11
-    },
-    {
-      "type": "enum sway_libs::reentrancy::errors::ReentrancyError",
-      "concreteTypeId": "4d216c57b3357523323f59401c7355785b41bdf832f6e1106272186b94797038",
       "metadataTypeId": 12
     },
     {
@@ -196,14 +196,34 @@
       "metadataTypeId": 44
     },
     {
+      "type": "struct ownership::events::OwnershipRenounced",
+      "concreteTypeId": "f407ab6707e340f081ad27d36c1d30ad14e67562f96d6267bf3082e9adb3e46d",
+      "metadataTypeId": 45
+    },
+    {
+      "type": "struct ownership::events::OwnershipSet",
+      "concreteTypeId": "8c0d2488561c35a28ef795bb8bcc4c43999cdd1e3ecbd10c226e0a68660c54d4",
+      "metadataTypeId": 46
+    },
+    {
+      "type": "struct ownership::events::OwnershipTransferred",
+      "concreteTypeId": "a2a2643e0252b510328c0323a0ea60724fb4cb3309a2322ab31b27566ff9a79d",
+      "metadataTypeId": 47
+    },
+    {
+      "type": "struct signed_int::i256::I256",
+      "concreteTypeId": "d9f8e3b5fb5bf9244761ce4e7ec85a20edb544d4d100c5a050aaf0fc4ef8a9ec",
+      "metadataTypeId": 48
+    },
+    {
       "type": "struct std::asset_id::AssetId",
       "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974",
-      "metadataTypeId": 46
+      "metadataTypeId": 50
     },
     {
       "type": "struct std::vec::Vec<(struct std::asset_id::AssetId, struct std::vec::Vec<struct market_abi::oracle_structs::OracleAssetConfiguration>)>",
       "concreteTypeId": "3b08ec702f021c63225115c90e1f8ff6584eed6c94e590a7f70b0fdd2aef6bbb",
-      "metadataTypeId": 51,
+      "metadataTypeId": 55,
       "typeArguments": [
         "b072c5015ba8b39919ce2bee5eb82df8a68a78047f142cb1cc257655454c10bb"
       ]
@@ -211,7 +231,7 @@
     {
       "type": "struct std::vec::Vec<(struct std::asset_id::AssetId, u64)>",
       "concreteTypeId": "d0540b5a00688e21ad7a3f5d7db93636c18f3ef7aed40d4e48f0cffc74683bcb",
-      "metadataTypeId": 51,
+      "metadataTypeId": 55,
       "typeArguments": [
         "229de6686c9c66098e7188f64d380a851d5ebacacaf90d991adf5b5952a70f7b"
       ]
@@ -219,7 +239,7 @@
     {
       "type": "struct std::vec::Vec<enum market_abi::oracle_structs::OracleInput>",
       "concreteTypeId": "b8c096640d00461e94891decbf44e3f86379e168323628c152ad941a7a979ff6",
-      "metadataTypeId": 51,
+      "metadataTypeId": 55,
       "typeArguments": [
         "6dd8771c6810b3450ed6e1962bbc18051a781c76db9429af83ddad47eabf61a5"
       ]
@@ -227,7 +247,7 @@
     {
       "type": "struct std::vec::Vec<enum std::identity::Identity>",
       "concreteTypeId": "2f79033d0d3729398611309f48578b56cf5162ba85e50f4d8fb79c9d9d1abc7b",
-      "metadataTypeId": 51,
+      "metadataTypeId": 55,
       "typeArguments": [
         "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
       ]
@@ -235,7 +255,7 @@
     {
       "type": "struct std::vec::Vec<struct market_abi::oracle_structs::OracleGlobalConfiguration>",
       "concreteTypeId": "1173ea0b63954052c7dc2b7551996fd1cc6becd5943a51f4d7c7c7717cfba2b5",
-      "metadataTypeId": 51,
+      "metadataTypeId": 55,
       "typeArguments": [
         "01210575f1835aeca139979da2cb6453cd17b03fa86a9e7b4b3f2b81555d94e1"
       ]
@@ -243,30 +263,10 @@
     {
       "type": "struct std::vec::Vec<struct market_abi::structs::CollateralConfiguration>",
       "concreteTypeId": "135bedc713ecdc7e568f13811c40a9df6a62b44f54789c3f87066e7ccaedcc14",
-      "metadataTypeId": 51,
+      "metadataTypeId": 55,
       "typeArguments": [
         "027212d4a883f4144f8043ef93fee6aa9d766041c7735fa37fae71d45ab6d92d"
       ]
-    },
-    {
-      "type": "struct sway_libs::ownership::events::OwnershipRenounced",
-      "concreteTypeId": "43c4fa7b3297401afbf300127e59ea913e5c8f0c7ae69abbec789ab0bb872bed",
-      "metadataTypeId": 52
-    },
-    {
-      "type": "struct sway_libs::ownership::events::OwnershipSet",
-      "concreteTypeId": "e1ef35033ea9d2956f17c3292dea4a46ce7d61fdf37bbebe03b7b965073f43b5",
-      "metadataTypeId": 53
-    },
-    {
-      "type": "struct sway_libs::ownership::events::OwnershipTransferred",
-      "concreteTypeId": "b3fffbcb3158d7c010c31b194b60fb7857adb4ad61bdcf4b8b42958951d9f308",
-      "metadataTypeId": 54
-    },
-    {
-      "type": "struct sway_libs::signed_integers::i256::I256",
-      "concreteTypeId": "1c791a2f63a6d482f33e38564a4c4f67f2351f36419d0c750ce825e233c86ae1",
-      "metadataTypeId": 55
     },
     {
       "type": "u256",
@@ -288,7 +288,7 @@
       "components": [
         {
           "name": "__tuple_element",
-          "typeId": 46
+          "typeId": 50
         },
         {
           "name": "__tuple_element",
@@ -302,11 +302,11 @@
       "components": [
         {
           "name": "__tuple_element",
-          "typeId": 46
+          "typeId": 50
         },
         {
           "name": "__tuple_element",
-          "typeId": 51,
+          "typeId": 55,
           "typeArguments": [
             {
               "name": "",
@@ -515,8 +515,28 @@
       ]
     },
     {
-      "type": "enum standards::src5::AccessError",
+      "type": "enum ownership::errors::InitializationError",
       "metadataTypeId": 8,
+      "components": [
+        {
+          "name": "CannotReinitialized",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        }
+      ]
+    },
+    {
+      "type": "enum reentrancy::errors::ReentrancyError",
+      "metadataTypeId": 9,
+      "components": [
+        {
+          "name": "NonReentrant",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        }
+      ]
+    },
+    {
+      "type": "enum src5::AccessError",
+      "metadataTypeId": 10,
       "components": [
         {
           "name": "NotOwner",
@@ -525,8 +545,8 @@
       ]
     },
     {
-      "type": "enum standards::src5::State",
-      "metadataTypeId": 9,
+      "type": "enum src5::State",
+      "metadataTypeId": 11,
       "components": [
         {
           "name": "Uninitialized",
@@ -534,7 +554,7 @@
         },
         {
           "name": "Initialized",
-          "typeId": 10
+          "typeId": 12
         },
         {
           "name": "Revoked",
@@ -544,35 +564,15 @@
     },
     {
       "type": "enum std::identity::Identity",
-      "metadataTypeId": 10,
-      "components": [
-        {
-          "name": "Address",
-          "typeId": 45
-        },
-        {
-          "name": "ContractId",
-          "typeId": 49
-        }
-      ]
-    },
-    {
-      "type": "enum sway_libs::ownership::errors::InitializationError",
-      "metadataTypeId": 11,
-      "components": [
-        {
-          "name": "CannotReinitialized",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
-        }
-      ]
-    },
-    {
-      "type": "enum sway_libs::reentrancy::errors::ReentrancyError",
       "metadataTypeId": 12,
       "components": [
         {
-          "name": "NonReentrant",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "name": "Address",
+          "typeId": 49
+        },
+        {
+          "name": "ContractId",
+          "typeId": 53
         }
       ]
     },
@@ -590,11 +590,11 @@
       "components": [
         {
           "name": "account",
-          "typeId": 10
+          "typeId": 12
         },
         {
           "name": "asset_id",
-          "typeId": 46
+          "typeId": 50
         },
         {
           "name": "amount",
@@ -616,7 +616,7 @@
       "components": [
         {
           "name": "asset_id",
-          "typeId": 46
+          "typeId": 50
         },
         {
           "name": "oracle_configuration",
@@ -630,7 +630,7 @@
       "components": [
         {
           "name": "asset_id",
-          "typeId": 46
+          "typeId": 50
         },
         {
           "name": "oracle_configuration",
@@ -644,15 +644,15 @@
       "components": [
         {
           "name": "caller",
-          "typeId": 10
+          "typeId": 12
         },
         {
           "name": "recipient",
-          "typeId": 10
+          "typeId": 12
         },
         {
           "name": "asset_id",
-          "typeId": 46
+          "typeId": 50
         },
         {
           "name": "amount",
@@ -670,7 +670,7 @@
       "components": [
         {
           "name": "asset_id",
-          "typeId": 46
+          "typeId": 50
         },
         {
           "name": "configuration",
@@ -684,7 +684,7 @@
       "components": [
         {
           "name": "asset_id",
-          "typeId": 46
+          "typeId": 50
         },
         {
           "name": "configuration",
@@ -756,11 +756,11 @@
       "components": [
         {
           "name": "caller",
-          "typeId": 10
+          "typeId": 12
         },
         {
           "name": "to",
-          "typeId": 10
+          "typeId": 12
         },
         {
           "name": "amount",
@@ -774,7 +774,7 @@
       "components": [
         {
           "name": "account",
-          "typeId": 10
+          "typeId": 12
         },
         {
           "name": "user_basic",
@@ -788,11 +788,11 @@
       "components": [
         {
           "name": "account",
-          "typeId": 10
+          "typeId": 12
         },
         {
           "name": "liquidator",
-          "typeId": 10
+          "typeId": 12
         },
         {
           "name": "base_paid_out",
@@ -822,7 +822,7 @@
       "components": [
         {
           "name": "account",
-          "typeId": 10
+          "typeId": 12
         },
         {
           "name": "supply_amount",
@@ -840,11 +840,11 @@
       "components": [
         {
           "name": "account",
-          "typeId": 10
+          "typeId": 12
         },
         {
           "name": "asset_id",
-          "typeId": 46
+          "typeId": 50
         },
         {
           "name": "amount",
@@ -858,7 +858,7 @@
       "components": [
         {
           "name": "account",
-          "typeId": 10
+          "typeId": 12
         },
         {
           "name": "withdraw_amount",
@@ -876,11 +876,11 @@
       "components": [
         {
           "name": "account",
-          "typeId": 10
+          "typeId": 12
         },
         {
           "name": "asset_id",
-          "typeId": 46
+          "typeId": 50
         },
         {
           "name": "amount",
@@ -912,7 +912,7 @@
       "components": [
         {
           "name": "contract_id",
-          "typeId": 49
+          "typeId": 53
         },
         {
           "name": "is_disabled",
@@ -952,7 +952,7 @@
       "components": [
         {
           "name": "contract_id",
-          "typeId": 49
+          "typeId": 53
         },
         {
           "name": "update_fee",
@@ -960,7 +960,7 @@
         },
         {
           "name": "publish_times",
-          "typeId": 51,
+          "typeId": 55,
           "typeArguments": [
             {
               "name": "",
@@ -970,7 +970,7 @@
         },
         {
           "name": "price_feed_ids",
-          "typeId": 51,
+          "typeId": 55,
           "typeArguments": [
             {
               "name": "",
@@ -980,11 +980,11 @@
         },
         {
           "name": "update_data",
-          "typeId": 51,
+          "typeId": 55,
           "typeArguments": [
             {
               "name": "",
-              "typeId": 47
+              "typeId": 51
             }
           ]
         }
@@ -996,11 +996,11 @@
       "components": [
         {
           "name": "contract_id",
-          "typeId": 49
+          "typeId": 53
         },
         {
           "name": "price_feed_ids",
-          "typeId": 51,
+          "typeId": 55,
           "typeArguments": [
             {
               "name": "",
@@ -1010,7 +1010,7 @@
         },
         {
           "name": "payload",
-          "typeId": 47
+          "typeId": 51
         }
       ]
     },
@@ -1020,7 +1020,7 @@
       "components": [
         {
           "name": "contract_id",
-          "typeId": 49
+          "typeId": 53
         },
         {
           "name": "placeholder",
@@ -1034,7 +1034,7 @@
       "components": [
         {
           "name": "contract_id",
-          "typeId": 49
+          "typeId": 53
         },
         {
           "name": "placeholder",
@@ -1048,7 +1048,7 @@
       "components": [
         {
           "name": "asset_id",
-          "typeId": 46
+          "typeId": 50
         },
         {
           "name": "decimals",
@@ -1116,7 +1116,7 @@
       "components": [
         {
           "name": "base_token",
-          "typeId": 46
+          "typeId": 50
         },
         {
           "name": "base_token_decimals",
@@ -1212,7 +1212,7 @@
       "components": [
         {
           "name": "principal",
-          "typeId": 55
+          "typeId": 48
         },
         {
           "name": "base_tracking_index",
@@ -1225,8 +1225,52 @@
       ]
     },
     {
-      "type": "struct std::address::Address",
+      "type": "struct ownership::events::OwnershipRenounced",
       "metadataTypeId": 45,
+      "components": [
+        {
+          "name": "previous_owner",
+          "typeId": 12
+        }
+      ]
+    },
+    {
+      "type": "struct ownership::events::OwnershipSet",
+      "metadataTypeId": 46,
+      "components": [
+        {
+          "name": "new_owner",
+          "typeId": 12
+        }
+      ]
+    },
+    {
+      "type": "struct ownership::events::OwnershipTransferred",
+      "metadataTypeId": 47,
+      "components": [
+        {
+          "name": "new_owner",
+          "typeId": 12
+        },
+        {
+          "name": "previous_owner",
+          "typeId": 12
+        }
+      ]
+    },
+    {
+      "type": "struct signed_int::i256::I256",
+      "metadataTypeId": 48,
+      "components": [
+        {
+          "name": "underlying",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        }
+      ]
+    },
+    {
+      "type": "struct std::address::Address",
+      "metadataTypeId": 49,
       "components": [
         {
           "name": "bits",
@@ -1236,7 +1280,7 @@
     },
     {
       "type": "struct std::asset_id::AssetId",
-      "metadataTypeId": 46,
+      "metadataTypeId": 50,
       "components": [
         {
           "name": "bits",
@@ -1246,11 +1290,11 @@
     },
     {
       "type": "struct std::bytes::Bytes",
-      "metadataTypeId": 47,
+      "metadataTypeId": 51,
       "components": [
         {
           "name": "buf",
-          "typeId": 48
+          "typeId": 52
         },
         {
           "name": "len",
@@ -1260,7 +1304,7 @@
     },
     {
       "type": "struct std::bytes::RawBytes",
-      "metadataTypeId": 48,
+      "metadataTypeId": 52,
       "components": [
         {
           "name": "ptr",
@@ -1274,7 +1318,7 @@
     },
     {
       "type": "struct std::contract_id::ContractId",
-      "metadataTypeId": 49,
+      "metadataTypeId": 53,
       "components": [
         {
           "name": "bits",
@@ -1284,7 +1328,7 @@
     },
     {
       "type": "struct std::vec::RawVec",
-      "metadataTypeId": 50,
+      "metadataTypeId": 54,
       "components": [
         {
           "name": "ptr",
@@ -1301,11 +1345,11 @@
     },
     {
       "type": "struct std::vec::Vec",
-      "metadataTypeId": 51,
+      "metadataTypeId": 55,
       "components": [
         {
           "name": "buf",
-          "typeId": 50,
+          "typeId": 54,
           "typeArguments": [
             {
               "name": "",
@@ -1323,56 +1367,13 @@
       ]
     },
     {
-      "type": "struct sway_libs::ownership::events::OwnershipRenounced",
-      "metadataTypeId": 52,
-      "components": [
-        {
-          "name": "previous_owner",
-          "typeId": 10
-        }
-      ]
-    },
-    {
-      "type": "struct sway_libs::ownership::events::OwnershipSet",
-      "metadataTypeId": 53,
-      "components": [
-        {
-          "name": "new_owner",
-          "typeId": 10
-        }
-      ]
-    },
-    {
-      "type": "struct sway_libs::ownership::events::OwnershipTransferred",
-      "metadataTypeId": 54,
-      "components": [
-        {
-          "name": "new_owner",
-          "typeId": 10
-        },
-        {
-          "name": "previous_owner",
-          "typeId": 10
-        }
-      ]
-    },
-    {
-      "type": "struct sway_libs::signed_integers::i256::I256",
-      "metadataTypeId": 55,
-      "components": [
-        {
-          "name": "underlying",
-          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
-        }
-      ]
-    },
-    {
       "type": "u32",
       "metadataTypeId": 56
     }
   ],
   "functions": [
     {
+      "name": "absorb",
       "inputs": [
         {
           "name": "accounts",
@@ -1383,7 +1384,6 @@
           "concreteTypeId": "b8c096640d00461e94891decbf44e3f86379e168323628c152ad941a7a979ff6"
         }
       ],
-      "name": "absorb",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
@@ -1453,6 +1453,7 @@
       ]
     },
     {
+      "name": "activate_contract",
       "inputs": [
         {
           "name": "market_configuration",
@@ -1463,7 +1464,6 @@
           "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
         }
       ],
-      "name": "activate_contract",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
@@ -1535,13 +1535,13 @@
       ]
     },
     {
+      "name": "add_collateral_asset",
       "inputs": [
         {
           "name": "configuration",
           "concreteTypeId": "027212d4a883f4144f8043ef93fee6aa9d766041c7735fa37fae71d45ab6d92d"
         }
       ],
-      "name": "add_collateral_asset",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
@@ -1613,6 +1613,7 @@
       ]
     },
     {
+      "name": "add_new_asset_oracle",
       "inputs": [
         {
           "name": "asset_id",
@@ -1623,7 +1624,6 @@
           "concreteTypeId": "1879564999642fb9173ebff7798e329d086fbc55a22e49fae9ca3ffa0b335d38"
         }
       ],
-      "name": "add_new_asset_oracle",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
@@ -1641,13 +1641,13 @@
       ]
     },
     {
+      "name": "add_new_global_oracle",
       "inputs": [
         {
           "name": "oracle_configuration",
           "concreteTypeId": "01210575f1835aeca139979da2cb6453cd17b03fa86a9e7b4b3f2b81555d94e1"
         }
       ],
-      "name": "add_new_global_oracle",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
@@ -1665,13 +1665,13 @@
       ]
     },
     {
+      "name": "available_to_borrow",
       "inputs": [
         {
           "name": "account",
           "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
         }
       ],
-      "name": "available_to_borrow",
       "output": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e",
       "attributes": [
         {
@@ -1743,13 +1743,13 @@
       ]
     },
     {
+      "name": "balance_of",
       "inputs": [
         {
           "name": "asset_id",
           "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
         }
       ],
-      "name": "balance_of",
       "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
       "attributes": [
         {
@@ -1797,6 +1797,7 @@
       ]
     },
     {
+      "name": "buy_collateral",
       "inputs": [
         {
           "name": "asset_id",
@@ -1811,7 +1812,6 @@
           "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
         }
       ],
-      "name": "buy_collateral",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
@@ -1923,6 +1923,7 @@
       ]
     },
     {
+      "name": "collateral_value_to_sell",
       "inputs": [
         {
           "name": "asset_id",
@@ -1933,7 +1934,6 @@
           "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
         }
       ],
-      "name": "collateral_value_to_sell",
       "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
       "attributes": [
         {
@@ -2011,8 +2011,8 @@
       ]
     },
     {
-      "inputs": [],
       "name": "debug_increment_timestamp",
+      "inputs": [],
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
@@ -2072,8 +2072,8 @@
       ]
     },
     {
-      "inputs": [],
       "name": "get_all_totals_collateral",
+      "inputs": [],
       "output": "d0540b5a00688e21ad7a3f5d7db93636c18f3ef7aed40d4e48f0cffc74683bcb",
       "attributes": [
         {
@@ -2127,13 +2127,13 @@
       ]
     },
     {
+      "name": "get_all_user_collateral",
       "inputs": [
         {
           "name": "account",
           "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
         }
       ],
-      "name": "get_all_user_collateral",
       "output": "d0540b5a00688e21ad7a3f5d7db93636c18f3ef7aed40d4e48f0cffc74683bcb",
       "attributes": [
         {
@@ -2205,13 +2205,13 @@
       ]
     },
     {
+      "name": "get_borrow_rate",
       "inputs": [
         {
           "name": "utilization",
           "concreteTypeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
         }
       ],
-      "name": "get_borrow_rate",
       "output": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e",
       "attributes": [
         {
@@ -2289,8 +2289,8 @@
       ]
     },
     {
-      "inputs": [],
       "name": "get_collateral_configurations",
+      "inputs": [],
       "output": "135bedc713ecdc7e568f13811c40a9df6a62b44f54789c3f87066e7ccaedcc14",
       "attributes": [
         {
@@ -2344,14 +2344,14 @@
       ]
     },
     {
+      "name": "get_collateral_reserves",
       "inputs": [
         {
           "name": "asset_id",
           "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
         }
       ],
-      "name": "get_collateral_reserves",
-      "output": "1c791a2f63a6d482f33e38564a4c4f67f2351f36419d0c750ce825e233c86ae1",
+      "output": "d9f8e3b5fb5bf9244761ce4e7ec85a20edb544d4d100c5a050aaf0fc4ef8a9ec",
       "attributes": [
         {
           "name": "doc-comment",
@@ -2422,8 +2422,8 @@
       ]
     },
     {
-      "inputs": [],
       "name": "get_market_basics",
+      "inputs": [],
       "output": "8f0ca9732dda82407f3d36328a5e4b89421c5f1c404a9568afa856df6efb5802",
       "attributes": [
         {
@@ -2477,8 +2477,8 @@
       ]
     },
     {
-      "inputs": [],
       "name": "get_market_basics_with_interest",
+      "inputs": [],
       "output": "8f0ca9732dda82407f3d36328a5e4b89421c5f1c404a9568afa856df6efb5802",
       "attributes": [
         {
@@ -2532,8 +2532,8 @@
       ]
     },
     {
-      "inputs": [],
       "name": "get_market_configuration",
+      "inputs": [],
       "output": "788c494dd193488709eb7174a5299c17819b0c2e68089b18e0474d616080cc9c",
       "attributes": [
         {
@@ -2587,8 +2587,8 @@
       ]
     },
     {
-      "inputs": [],
       "name": "get_oracle_asset_configurations",
+      "inputs": [],
       "output": "3b08ec702f021c63225115c90e1f8ff6584eed6c94e590a7f70b0fdd2aef6bbb",
       "attributes": [
         {
@@ -2606,8 +2606,8 @@
       ]
     },
     {
-      "inputs": [],
       "name": "get_oracle_global_configurations",
+      "inputs": [],
       "output": "1173ea0b63954052c7dc2b7551996fd1cc6becd5943a51f4d7c7c7717cfba2b5",
       "attributes": [
         {
@@ -2625,8 +2625,8 @@
       ]
     },
     {
-      "inputs": [],
       "name": "get_pause_configuration",
+      "inputs": [],
       "output": "8ec71ec402ef77ffda0627839b31dd1444fad8b4a95507e86bfa89f0517dbc3d",
       "attributes": [
         {
@@ -2698,13 +2698,13 @@
       ]
     },
     {
+      "name": "get_price",
       "inputs": [
         {
           "name": "asset_id",
           "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
         }
       ],
-      "name": "get_price",
       "output": "8ee135b402c6cdf4d978c3b48941502d7dc1329302dd2807f0513343419c4574",
       "attributes": [
         {
@@ -2812,9 +2812,9 @@
       ]
     },
     {
-      "inputs": [],
       "name": "get_reserves",
-      "output": "1c791a2f63a6d482f33e38564a4c4f67f2351f36419d0c750ce825e233c86ae1",
+      "inputs": [],
+      "output": "d9f8e3b5fb5bf9244761ce4e7ec85a20edb544d4d100c5a050aaf0fc4ef8a9ec",
       "attributes": [
         {
           "name": "doc-comment",
@@ -2867,13 +2867,13 @@
       ]
     },
     {
+      "name": "get_supply_rate",
       "inputs": [
         {
           "name": "utilization",
           "concreteTypeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
         }
       ],
-      "name": "get_supply_rate",
       "output": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e",
       "attributes": [
         {
@@ -2951,14 +2951,14 @@
       ]
     },
     {
+      "name": "get_user_balance_with_interest",
       "inputs": [
         {
           "name": "account",
           "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
         }
       ],
-      "name": "get_user_balance_with_interest",
-      "output": "1c791a2f63a6d482f33e38564a4c4f67f2351f36419d0c750ce825e233c86ae1",
+      "output": "d9f8e3b5fb5bf9244761ce4e7ec85a20edb544d4d100c5a050aaf0fc4ef8a9ec",
       "attributes": [
         {
           "name": "doc-comment",
@@ -3029,13 +3029,13 @@
       ]
     },
     {
+      "name": "get_user_basic",
       "inputs": [
         {
           "name": "account",
           "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
         }
       ],
-      "name": "get_user_basic",
       "output": "2878312d8fe9af45fe59b9252d6afa651128c8f755ca8f26ae4d67ede06b8ea1",
       "attributes": [
         {
@@ -3107,6 +3107,7 @@
       ]
     },
     {
+      "name": "get_user_collateral",
       "inputs": [
         {
           "name": "account",
@@ -3117,7 +3118,6 @@
           "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
         }
       ],
-      "name": "get_user_collateral",
       "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
       "attributes": [
         {
@@ -3189,13 +3189,13 @@
       ]
     },
     {
+      "name": "get_user_supply_borrow",
       "inputs": [
         {
           "name": "account",
           "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
         }
       ],
-      "name": "get_user_supply_borrow",
       "output": "2770d9f762bf8ec295d5c253193cd2897c893401f1f438769f92d212641ec779",
       "attributes": [
         {
@@ -3273,8 +3273,8 @@
       ]
     },
     {
-      "inputs": [],
       "name": "get_utilization",
+      "inputs": [],
       "output": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e",
       "attributes": [
         {
@@ -3334,8 +3334,8 @@
       ]
     },
     {
-      "inputs": [],
       "name": "get_version",
+      "inputs": [],
       "output": "c89951a24c6ca28c13fd1cfdc646b2b656d69e61a92b91023be7eb58eb914b6b",
       "attributes": [
         {
@@ -3359,13 +3359,13 @@
       ]
     },
     {
+      "name": "is_liquidatable",
       "inputs": [
         {
           "name": "account",
           "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
         }
       ],
-      "name": "is_liquidatable",
       "output": "b760f44fa5965c2474a3b471467a22c43185152129295af588b022ae50b50903",
       "attributes": [
         {
@@ -3437,13 +3437,13 @@
       ]
     },
     {
+      "name": "pause",
       "inputs": [
         {
           "name": "pause_config",
           "concreteTypeId": "8ec71ec402ef77ffda0627839b31dd1444fad8b4a95507e86bfa89f0517dbc3d"
         }
       ],
-      "name": "pause",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
@@ -3515,6 +3515,7 @@
       ]
     },
     {
+      "name": "quote_collateral",
       "inputs": [
         {
           "name": "asset_id",
@@ -3525,7 +3526,6 @@
           "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
         }
       ],
-      "name": "quote_collateral",
       "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
       "attributes": [
         {
@@ -3621,8 +3621,8 @@
       ]
     },
     {
-      "inputs": [],
       "name": "renounce_ownership",
+      "inputs": [],
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
@@ -3670,8 +3670,8 @@
       ]
     },
     {
-      "inputs": [],
       "name": "supply_base",
+      "inputs": [],
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
@@ -3765,8 +3765,8 @@
       ]
     },
     {
-      "inputs": [],
       "name": "supply_collateral",
+      "inputs": [],
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
@@ -3848,13 +3848,13 @@
       ]
     },
     {
+      "name": "totals_collateral",
       "inputs": [
         {
           "name": "asset_id",
           "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
         }
       ],
-      "name": "totals_collateral",
       "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
       "attributes": [
         {
@@ -3920,13 +3920,13 @@
       ]
     },
     {
+      "name": "transfer_ownership",
       "inputs": [
         {
           "name": "new_owner",
           "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
         }
       ],
-      "name": "transfer_ownership",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
@@ -3998,6 +3998,7 @@
       ]
     },
     {
+      "name": "update_asset_oracle",
       "inputs": [
         {
           "name": "asset_id",
@@ -4008,7 +4009,6 @@
           "concreteTypeId": "1879564999642fb9173ebff7798e329d086fbc55a22e49fae9ca3ffa0b335d38"
         }
       ],
-      "name": "update_asset_oracle",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
@@ -4026,6 +4026,7 @@
       ]
     },
     {
+      "name": "update_collateral_asset",
       "inputs": [
         {
           "name": "asset_id",
@@ -4036,7 +4037,6 @@
           "concreteTypeId": "027212d4a883f4144f8043ef93fee6aa9d766041c7735fa37fae71d45ab6d92d"
         }
       ],
-      "name": "update_collateral_asset",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
@@ -4114,6 +4114,7 @@
       ]
     },
     {
+      "name": "update_global_oracle",
       "inputs": [
         {
           "name": "oracle_id",
@@ -4124,7 +4125,6 @@
           "concreteTypeId": "01210575f1835aeca139979da2cb6453cd17b03fa86a9e7b4b3f2b81555d94e1"
         }
       ],
-      "name": "update_global_oracle",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
@@ -4142,13 +4142,13 @@
       ]
     },
     {
+      "name": "update_market_configuration",
       "inputs": [
         {
           "name": "configuration",
           "concreteTypeId": "788c494dd193488709eb7174a5299c17819b0c2e68089b18e0474d616080cc9c"
         }
       ],
-      "name": "update_market_configuration",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
@@ -4226,13 +4226,13 @@
       ]
     },
     {
+      "name": "update_price_feeds",
       "inputs": [
         {
           "name": "oracle_inputs",
           "concreteTypeId": "b8c096640d00461e94891decbf44e3f86379e168323628c152ad941a7a979ff6"
         }
       ],
-      "name": "update_price_feeds",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
@@ -4332,6 +4332,7 @@
       ]
     },
     {
+      "name": "withdraw_base",
       "inputs": [
         {
           "name": "amount",
@@ -4342,7 +4343,6 @@
           "concreteTypeId": "b8c096640d00461e94891decbf44e3f86379e168323628c152ad941a7a979ff6"
         }
       ],
-      "name": "withdraw_base",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
@@ -4430,6 +4430,7 @@
       ]
     },
     {
+      "name": "withdraw_collateral",
       "inputs": [
         {
           "name": "asset_id",
@@ -4444,7 +4445,6 @@
           "concreteTypeId": "b8c096640d00461e94891decbf44e3f86379e168323628c152ad941a7a979ff6"
         }
       ],
-      "name": "withdraw_collateral",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
@@ -4532,6 +4532,7 @@
       ]
     },
     {
+      "name": "withdraw_reserves",
       "inputs": [
         {
           "name": "to",
@@ -4542,7 +4543,6 @@
           "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
         }
       ],
-      "name": "withdraw_reserves",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
@@ -4626,9 +4626,9 @@
       ]
     },
     {
-      "inputs": [],
       "name": "owner",
-      "output": "192bc7098e2fe60635a9918afb563e4e5419d386da2bdbf0d716b4bc8549802c",
+      "inputs": [],
+      "output": "287a382c1e0b1f11d12a422e77a248d27761327cd17515cc6e6369d528cf31ca",
       "attributes": [
         {
           "name": "storage",
@@ -4641,8 +4641,8 @@
   ],
   "loggedTypes": [
     {
-      "logId": "5557842539076482339",
-      "concreteTypeId": "4d216c57b3357523323f59401c7355785b41bdf832f6e1106272186b94797038"
+      "logId": "16514249102412951748",
+      "concreteTypeId": "e52e660ff9a330c417b6493bb8d3d0049bafaa6c4a771b32b205d71bc2bc5ace"
     },
     {
       "logId": "8601935239914868100",
@@ -4669,12 +4669,12 @@
       "concreteTypeId": "92d691781932f1848ba9433a9b1c09a97f985b331d88a1a289fc54569161d639"
     },
     {
-      "logId": "2161305517876418151",
-      "concreteTypeId": "1dfe7feadc1d9667a4351761230f948744068a090fe91b1bc6763a90ed5d3893"
+      "logId": "12825652816513834595",
+      "concreteTypeId": "b1fddf488ccb9e63d11888b2750bbd1280a1ae1c49f2d6637fd4cf1e930d1468"
     },
     {
-      "logId": "16280289466020123285",
-      "concreteTypeId": "e1ef35033ea9d2956f17c3292dea4a46ce7d61fdf37bbebe03b7b965073f43b5"
+      "logId": "10091762507985991074",
+      "concreteTypeId": "8c0d2488561c35a28ef795bb8bcc4c43999cdd1e3ecbd10c226e0a68660c54d4"
     },
     {
       "logId": "17075205356227152605",
@@ -4685,8 +4685,8 @@
       "concreteTypeId": "61d1473d8ec7f29c9b7f67ec6b840b973400d6af66df556a4fb5ea9884f780b7"
     },
     {
-      "logId": "4571204900286667806",
-      "concreteTypeId": "3f702ea3351c9c1ece2b84048006c8034a24cbc2bad2e740d0412b4172951d3d"
+      "logId": "17376141311665587813",
+      "concreteTypeId": "f1247475d0d1466599267010f088190f8664dd31663a40c5d5e525d8e64b995d"
     },
     {
       "logId": "16873461032230770227",
@@ -4705,8 +4705,8 @@
       "concreteTypeId": "a95331d2168897d0f550d1c4f7fc582926a79b3e825866ecf8c11ef8dfb692c6"
     },
     {
-      "logId": "4883303303013154842",
-      "concreteTypeId": "43c4fa7b3297401afbf300127e59ea913e5c8f0c7ae69abbec789ab0bb872bed"
+      "logId": "17584211729093705968",
+      "concreteTypeId": "f407ab6707e340f081ad27d36c1d30ad14e67562f96d6267bf3082e9adb3e46d"
     },
     {
       "logId": "1940341185534100254",
@@ -4717,8 +4717,8 @@
       "concreteTypeId": "61825e22a76ff7a0ca3ce1004c7d128c7844a8dde36cf7ea9077f8a57ef1f88a"
     },
     {
-      "logId": "12970362301975156672",
-      "concreteTypeId": "b3fffbcb3158d7c010c31b194b60fb7857adb4ad61bdcf4b8b42958951d9f308"
+      "logId": "11719039397861176592",
+      "concreteTypeId": "a2a2643e0252b510328c0323a0ea60724fb4cb3309a2322ab31b27566ff9a79d"
     },
     {
       "logId": "5074319224360278246",
@@ -4750,7 +4750,9 @@
     {
       "name": "DEBUG_STEP",
       "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
-      "offset": 158880
+      "offset": 136280,
+      "indirect": false
     }
-  ]
+  ],
+  "errorCodes": {}
 }

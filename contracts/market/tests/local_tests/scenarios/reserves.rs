@@ -164,7 +164,7 @@ async fn add_reserves_test() {
     assert!(normalized_reserves == 0);
     alice
         .force_transfer_to_contract(
-            &market.contract_id(),
+            market.contract_id(),
             mint_amount,
             usdc.asset_id,
             TxPolicies::default(),

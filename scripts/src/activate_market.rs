@@ -2,7 +2,9 @@ mod utils;
 
 use clap::Parser;
 use fuels::{
-    accounts::{provider::Provider, wallet::WalletUnlocked},
+    accounts::{
+        provider::Provider, signers::private_key::PrivateKeySigner, wallet::Wallet, ViewOnlyAccount,
+    },
     crypto::SecretKey,
     types::{transaction::TxPolicies, AssetId, ContractId},
 };
@@ -36,7 +38,7 @@ async fn main() -> anyhow::Result<()> {
     }
 
     let secret = SecretKey::from_str(&args.args.signing_key).unwrap();
-    let wallet = WalletUnlocked::new_from_private_key(secret, Some(provider));
+    let wallet = Wallet::new(PrivateKeySigner::new(secret), provider.clone());
 
     let (market_instance, market_contract_id) = get_market_instance(
         &wallet,
