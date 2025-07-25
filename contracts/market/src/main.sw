@@ -167,7 +167,7 @@ impl Market for Contract {
     /// * When the asset already exists, indicated by a non-`None` value in the storage.
     ///
     /// # Number of Storage Accesses
-    /// * Writes: `2`
+    /// * Writes: `4`
     /// * Reads: `1`
     #[storage(write)]
     fn add_collateral_asset(configuration: CollateralConfiguration) {
@@ -321,9 +321,10 @@ impl Market for Contract {
     /// # Arguments
     /// * `asset_id`: [AssetId] - The asset ID of the collateral asset to be withdrawn.
     /// * `amount`: [u64] - The amount of collateral to be withdrawn.
-    /// * `price_data_update`: [PriceDataUpdate] - The price data update struct to be used for updating the price feeds.
+    /// * `oracle_inputs`: [Vec<OracleInput>] - The oracle inputs to be used for updating the price feeds.
     ///
     /// # Reverts
+    /// * When the withdraw operation is paused.
     /// * When the user is not collateralized.
     ///
     /// # Number of Storage Accesses
@@ -378,7 +379,7 @@ impl Market for Contract {
     /// * [u64] - The amount of collateral the user has supplied for the specified asset.
     ///
     /// # Number of Storage Accesses
-    /// * Writes: `1`
+    /// * Reads: `1`
     #[storage(read)]
     fn get_user_collateral(account: Identity, asset_id: AssetId) -> u64 {
         storage.user_collateral.get((account, asset_id)).try_read().unwrap_or(0)
@@ -393,7 +394,6 @@ impl Market for Contract {
     /// * [Vec<(AssetId, u64)>] - A list of tuples containing the asset ID and total collateral for each collateral asset.
     ///
     /// # Number of Storage Accesses
-    /// * Writes: `storage.collateral_configurations_keys.len()`
     /// * Reads: `1 + storage.collateral_configurations_keys.len() * 3`
     #[storage(read)]
     fn get_all_user_collateral(account: Identity) -> Vec<(AssetId, u64)> {
@@ -421,7 +421,7 @@ impl Market for Contract {
     /// * [u64] - The total collateral ammount.
 
     /// # Number of Storage Accesses
-    /// * Writes: `1`
+    /// * Reads: `1`
     #[storage(read)]
     fn totals_collateral(asset_id: AssetId) -> u64 {
         storage.totals_collateral.get(asset_id).try_read().unwrap_or(0)
@@ -533,10 +533,13 @@ impl Market for Contract {
     ///
     /// # Arguments
     /// * `amount`: [u64] - The amount of base asset to be withdrawn.
-    /// * `price_data_update`: [PriceDataUpdate] - The price data update struct to be used for updating the price feeds.
+    /// * `oracle_inputs`: [Vec<OracleInput>] - The oracle inputs to be used for updating the price feeds.
     ///
     /// # Reverts
-    /// * When the user is not collateralized.
+    /// * When the withdraw operation is paused.
+    /// * When the amount is invalid (zero or negative).
+    /// * When the borrow amount is too small (below minimum).
+    /// * When the user is not collateralized (if borrowing is required).
     ///
     /// # Number of Storage Accesses
     /// * Writes: `3`
@@ -699,7 +702,10 @@ impl Market for Contract {
     ///
     /// # Arguments
     /// * `accounts`: [Vec<Identity>] - The list of underwater accounts to be absorbed.
-    /// * `price_data_update`: [PriceDataUpdate] - The price data update struct to be used for updating the price feeds.
+    /// * `oracle_inputs`: [Vec<OracleInput>] - The oracle inputs to be used for updating the price feeds.
+    ///
+    /// # Reverts
+    /// * When the absorb operation is paused.
     ///
     /// # Number of Storage Accesses
     /// * Writes: `2 + accounts.len() * 4`
@@ -729,13 +735,13 @@ impl Market for Contract {
     /// This function checks if an account is liquidatable.
     ///
     /// # Arguments
-    /// * account: [Identity] - The account to be checked.
+    /// * `account`: [Identity] - The account to be checked.
     ///
     /// # Returns
     /// * [bool] - True if the account is liquidatable, False otherwise.
     ///
     /// # Number of Storage Accesses
-    /// * Reads: 1
+    /// * Reads: `6 + storage.collateral_configurations_keys.len() * 4`
     #[storage(read)]
     fn is_liquidatable(account: Identity) -> bool {
         let present = get_user_balance_with_interest_internal(account);
@@ -976,9 +982,6 @@ impl Market for Contract {
     ///
     /// # Number of Storage Accesses
     /// * Reads: `1`
-    ///
-    /// # Number of Storage Accesses
-    /// * Reads: `1`
     #[storage(read)]
     fn get_pause_configuration() -> PauseConfiguration {
         storage.pause_config.read()
@@ -1141,41 +1144,34 @@ impl Market for Contract {
         get_borrow_rate_internal(utilization)
     }
 
-    /// This function ensures that the price data is fresh and meets the required validation criteria.
+    /// This function retrieves the price for a specified asset from the oracle system.
     ///
     /// # Arguments
-    /// * `price_feed_id`: [PriceFeedId] - The ID of the price feed for which the price is being retrieved.
+    /// * `asset_id`: [AssetId] - The ID of the asset for which the price is being retrieved.
     ///
     /// # Returns
     /// * [Price] - The price data retrieved from the oracle.
     ///
     /// # Reverts
-    /// * When the `contract_id` is zero, indicating the oracle contract ID is not set.
-    /// * When the price is stale or ahead of the current timestamp.
-    /// * When the price is less than or equal to zero.
-    /// * When the confidence value exceeds the allowed width.
+    /// * When no valid price is found from any oracle.
     ///
     /// # Number of Storage Accesses
-    /// * Reads: `1`
+    /// * Reads: `2 + oracle_asset_configurations.len() * 2`
     #[storage(read)]
     fn get_price(asset_id: AssetId) -> Price {
         get_price_internal(asset_id, PricePosition::Middle)
     }
 
-    /// This function ensures that the provided price data update is valid and performs an update if the conditions are met.
+    /// This function updates the price feeds using the provided oracle inputs.
     ///
     /// # Arguments
-    /// * `price_data_update`: [PriceDataUpdate] - The data necessary for updating the price feeds.
+    /// * `oracle_inputs`: [Vec<OracleInput>] - The oracle inputs necessary for updating the price feeds.
     ///
     /// # Returns
     /// This function does not return a value.
     ///
-    /// # Reverts
-    /// * When the contract ID is not set (i.e., it is zero).
-    /// * When the payment amount is insufficient or the asset ID is not the base asset.
-    ///
     /// # Number of Storage Accesses
-    /// * Reads: `1`
+    /// * Reads: `0`
     #[payable, storage(read)]
     fn update_price_feeds(oracle_inputs: Vec<OracleInput>) {
         reentrancy_guard();
@@ -1230,12 +1226,16 @@ impl Market for Contract {
         transfer_ownership(new_owner);
     }
 
-    // This function allows the current owner to renounce their ownership of the contract, making it ownerless.
+    /// This function allows the current owner to renounce their ownership of the contract, making it ownerless.
     ///
     /// # Additional Information
     /// This action is irreversible and should be done with caution, as it removes all ownership privileges.
     ///
+    /// # Reverts
+    /// * When the caller is not the current owner.
+    ///
     /// # Number of Storage Accesses
+    /// * Writes: `1`
     /// * Reads: `1`
     #[storage(write)]
     fn renounce_ownership() {
@@ -1243,7 +1243,18 @@ impl Market for Contract {
     }
 
     // ## 13. Oracle management
-    /// TODO: Docs
+    /// This function adds a new global oracle configuration to the market.
+    ///
+    /// # Arguments
+    /// * `oracle_configuration`: [OracleGlobalConfiguration] - The global oracle configuration to be added.
+    ///
+    /// # Reverts
+    /// * When the caller is not the owner.
+    /// * When an oracle with the same contract ID already exists.
+    ///
+    /// # Number of Storage Accesses
+    /// * Writes: `2`
+    /// * Reads: `2 + storage.oracle_global_configurations_keys.len() * 2`
     #[storage(write)]
     fn add_new_global_oracle(oracle_configuration: OracleGlobalConfiguration) {
         // Only owner can add a new oracle
@@ -1270,7 +1281,19 @@ impl Market for Contract {
         });
     }
 
-    /// TODO: Docs
+    /// This function updates an existing global oracle configuration.
+    ///
+    /// # Arguments
+    /// * `oracle_id`: [u64] - The ID of the oracle to be updated.
+    /// * `oracle_configuration`: [OracleGlobalConfiguration] - The new oracle configuration.
+    ///
+    /// # Reverts
+    /// * When the caller is not the owner.
+    /// * When the oracle with the specified ID does not exist.
+    ///
+    /// # Number of Storage Accesses
+    /// * Writes: `1`
+    /// * Reads: `1`
     #[storage(write)]
     fn update_global_oracle(oracle_id: u64, oracle_configuration: OracleGlobalConfiguration) {
         // Only owner can update an oracle
@@ -1295,7 +1318,13 @@ impl Market for Contract {
         });
     }
 
-    /// TODO: Docs
+    /// This function retrieves all global oracle configurations in the market.
+    ///
+    /// # Returns
+    /// * [Vec<OracleGlobalConfiguration>] - A list of all global oracle configurations.
+    ///
+    /// # Number of Storage Accesses
+    /// * Reads: `1 + storage.oracle_global_configurations_keys.len() * 2`
     #[storage(read)]
     fn get_oracle_global_configurations() -> Vec<OracleGlobalConfiguration> {
         let mut result = Vec::new();
@@ -1312,7 +1341,20 @@ impl Market for Contract {
         result
     }
 
-    /// TODO: Docs
+    /// This function adds a new oracle configuration for a specific asset.
+    ///
+    /// # Arguments
+    /// * `asset_id`: [AssetId] - The asset ID for which the oracle configuration is being added.
+    /// * `oracle_configuration`: [OracleAssetConfiguration] - The oracle configuration to be added.
+    ///
+    /// # Reverts
+    /// * When the caller is not the owner.
+    /// * When the referenced global oracle configuration does not exist.
+    /// * When an oracle configuration with the same oracle ID already exists for this asset.
+    ///
+    /// # Number of Storage Accesses
+    /// * Writes: `1`
+    /// * Reads: `2 + asset_oracle_configurations.len()`
     #[storage(write)]
     fn add_new_asset_oracle(asset_id: AssetId, oracle_configuration: OracleAssetConfiguration) {
         // Only owner can add a new oracle
@@ -1348,7 +1390,20 @@ impl Market for Contract {
         });
     }
 
-    /// TODO: Docs
+    /// This function updates an existing oracle configuration for a specific asset.
+    ///
+    /// # Arguments
+    /// * `asset_id`: [AssetId] - The asset ID for which the oracle configuration is being updated.
+    /// * `oracle_configuration`: [OracleAssetConfiguration] - The new oracle configuration.
+    ///
+    /// # Reverts
+    /// * When the caller is not the owner.
+    /// * When the referenced global oracle configuration does not exist.
+    /// * When the oracle configuration with the specified oracle ID is not found for this asset.
+    ///
+    /// # Number of Storage Accesses
+    /// * Writes: `2`
+    /// * Reads: `2 + asset_oracle_configurations.len()`
     #[storage(write)]
     fn update_asset_oracle(asset_id: AssetId, oracle_configuration: OracleAssetConfiguration) {
         // Only owner can update an oracle
@@ -1393,7 +1448,13 @@ impl Market for Contract {
     }
 
 
-    /// TODO: Docs
+    /// This function retrieves all oracle asset configurations for all assets in the market.
+    ///
+    /// # Returns
+    /// * [Vec<(AssetId, Vec<OracleAssetConfiguration>)>] - A list of tuples containing asset IDs and their corresponding oracle configurations.
+    ///
+    /// # Number of Storage Accesses
+    /// * Reads: `4 + storage.oracle_asset_configurations_keys.len() * 3`
     #[storage(read)]
     fn get_oracle_asset_configurations() -> Vec<(AssetId, Vec<OracleAssetConfiguration>)> {
         let mut result: Vec<(AssetId, Vec<OracleAssetConfiguration>)> = Vec::new();
@@ -1429,22 +1490,20 @@ impl SRC5 for Contract {
     }
 }
 
-/// This function ensures that the price data is fresh and meets the required validation criteria.
+/// This function retrieves the price for a specified asset from the oracle system.
 ///
 /// # Arguments
-/// * `price_feed_id`: [PriceFeedId] - The ID of the price feed for which the price is being retrieved.
+/// * `asset_id`: [AssetId] - The ID of the asset for which the price is being retrieved.
+/// * `price_position`: [PricePosition] - The position for price calculation (LowerBound, Middle, UpperBound).
 ///
 /// # Returns
 /// * [Price] - The price data retrieved from the oracle.
 ///
 /// # Reverts
-/// * When the `contract_id` is zero, indicating the oracle contract ID is not set.
-/// * When the price is stale or ahead of the current timestamp.
-/// * When the price is less than or equal to zero.
-/// * When the confidence value exceeds the allowed width.
+/// * When no valid price is found from any oracle.
 ///
 /// # Number of Storage Accesses
-/// * Reads: `1`
+/// * Reads: `2 + oracle_asset_configurations.len() * 2`
 #[storage(read)]
 fn get_price_internal(asset_id: AssetId, price_position: PricePosition) -> Price {
     let oracle_asset_configurations: StorageKey<StorageVec<OracleAssetConfiguration>> = storage.oracle_asset_configurations.get(asset_id);
@@ -1504,20 +1563,16 @@ fn get_price_internal(asset_id: AssetId, price_position: PricePosition) -> Price
     price
 }
 
-/// This function ensures that the provided price data update is valid and performs an update if the conditions are met.
+/// This function updates the price feeds using the provided oracle inputs.
 ///
 /// # Arguments
-/// * `price_data_update`: [PriceDataUpdate] - The data necessary for updating the price feeds.
+/// * `oracle_inputs`: [Vec<OracleInput>] - The oracle inputs necessary for updating the price feeds.
 ///
 /// # Returns
 /// This function does not return a value.
 ///
-/// # Reverts
-/// * When the contract ID is not set (i.e., it is zero).
-/// * When the payment amount is insufficient or the asset ID is not the base asset.
-///
 /// # Number of Storage Accesses
-/// * Reads: `1`
+/// * Reads: `0`
 #[storage(read)]
 fn update_price_feeds_internal(oracle_inputs: Vec<OracleInput>) {
     let mut index = 0;
