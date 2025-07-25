@@ -6,7 +6,7 @@ pub struct Price {
     pub price: u256,
     pub exponent: u32,
     pub confidence: u64,
-    pub publish_time: u64,
+    pub publish_time: u64, // Timestamp of the last update in TAI64
 }
 
 pub enum Error {

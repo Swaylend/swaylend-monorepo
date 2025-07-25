@@ -1413,7 +1413,25 @@
         {
           "name": "doc-comment",
           "arguments": [
-            " * `price_data_update`: [PriceDataUpdate] - The price data update struct to be used for updating the price feeds."
+            " * `oracle_inputs`: [Vec<OracleInput>] - The oracle inputs to be used for updating the price feeds."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Reverts"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the absorb operation is paused."
           ]
         },
         {
@@ -1595,7 +1613,7 @@
         {
           "name": "doc-comment",
           "arguments": [
-            " * Writes: `2`"
+            " * Writes: `4`"
           ]
         },
         {
@@ -1629,7 +1647,85 @@
         {
           "name": "doc-comment",
           "arguments": [
-            " TODO: Docs"
+            " This function adds a new oracle configuration for a specific asset."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Arguments"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `asset_id`: [AssetId] - The asset ID for which the oracle configuration is being added."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `oracle_configuration`: [OracleAssetConfiguration] - The oracle configuration to be added."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Reverts"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the caller is not the owner."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the referenced global oracle configuration does not exist."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When an oracle configuration with the same oracle ID already exists for this asset."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Writes: `1`"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `2 + asset_oracle_configurations.len()`"
           ]
         },
         {
@@ -1653,7 +1749,73 @@
         {
           "name": "doc-comment",
           "arguments": [
-            " TODO: Docs"
+            " This function adds a new global oracle configuration to the market."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Arguments"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `oracle_configuration`: [OracleGlobalConfiguration] - The global oracle configuration to be added."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Reverts"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the caller is not the owner."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When an oracle with the same contract ID already exists."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Writes: `2`"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `2 + storage.oracle_global_configurations_keys.len() * 2`"
           ]
         },
         {
@@ -2187,12 +2349,6 @@
         {
           "name": "doc-comment",
           "arguments": [
-            " * Writes: `storage.collateral_configurations_keys.len()`"
-          ]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [
             " * Reads: `1 + storage.collateral_configurations_keys.len() * 3`"
           ]
         },
@@ -2594,7 +2750,43 @@
         {
           "name": "doc-comment",
           "arguments": [
-            " TODO: Docs"
+            " This function retrieves all oracle asset configurations for all assets in the market."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Returns"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * [Vec<(AssetId, Vec<OracleAssetConfiguration>)>] - A list of tuples containing asset IDs and their corresponding oracle configurations."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `4 + storage.oracle_asset_configurations_keys.len() * 3`"
           ]
         },
         {
@@ -2613,7 +2805,43 @@
         {
           "name": "doc-comment",
           "arguments": [
-            " TODO: Docs"
+            " This function retrieves all global oracle configurations in the market."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Returns"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * [Vec<OracleGlobalConfiguration>] - A list of all global oracle configurations."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `1 + storage.oracle_global_configurations_keys.len() * 2`"
           ]
         },
         {
@@ -2672,24 +2900,6 @@
           ]
         },
         {
-          "name": "doc-comment",
-          "arguments": [
-            ""
-          ]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [
-            " # Number of Storage Accesses"
-          ]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [
-            " * Reads: `1`"
-          ]
-        },
-        {
           "name": "storage",
           "arguments": [
             "read"
@@ -2710,7 +2920,7 @@
         {
           "name": "doc-comment",
           "arguments": [
-            " This function ensures that the price data is fresh and meets the required validation criteria."
+            " This function retrieves the price for a specified asset from the oracle system."
           ]
         },
         {
@@ -2728,7 +2938,7 @@
         {
           "name": "doc-comment",
           "arguments": [
-            " * `price_feed_id`: [PriceFeedId] - The ID of the price feed for which the price is being retrieved."
+            " * `asset_id`: [AssetId] - The ID of the asset for which the price is being retrieved."
           ]
         },
         {
@@ -2764,25 +2974,7 @@
         {
           "name": "doc-comment",
           "arguments": [
-            " * When the `contract_id` is zero, indicating the oracle contract ID is not set."
-          ]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [
-            " * When the price is stale or ahead of the current timestamp."
-          ]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [
-            " * When the price is less than or equal to zero."
-          ]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [
-            " * When the confidence value exceeds the allowed width."
+            " * When no valid price is found from any oracle."
           ]
         },
         {
@@ -2800,7 +2992,7 @@
         {
           "name": "doc-comment",
           "arguments": [
-            " * Reads: `1`"
+            " * Reads: `2 + oracle_asset_configurations.len() * 2`"
           ]
         },
         {
@@ -3177,7 +3369,7 @@
         {
           "name": "doc-comment",
           "arguments": [
-            " * Writes: `1`"
+            " * Reads: `1`"
           ]
         },
         {
@@ -3389,7 +3581,7 @@
         {
           "name": "doc-comment",
           "arguments": [
-            " * account: [Identity] - The account to be checked."
+            " * `account`: [Identity] - The account to be checked."
           ]
         },
         {
@@ -3425,7 +3617,7 @@
         {
           "name": "doc-comment",
           "arguments": [
-            " * Reads: 1"
+            " * Reads: `6 + storage.collateral_configurations_keys.len() * 4`"
           ]
         },
         {
@@ -3628,6 +3820,12 @@
         {
           "name": "doc-comment",
           "arguments": [
+            " This function allows the current owner to renounce their ownership of the contract, making it ownerless."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
             ""
           ]
         },
@@ -3652,7 +3850,31 @@
         {
           "name": "doc-comment",
           "arguments": [
+            " # Reverts"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the caller is not the current owner."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
             " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Writes: `1`"
           ]
         },
         {
@@ -3908,7 +4130,7 @@
         {
           "name": "doc-comment",
           "arguments": [
-            " * Writes: `1`"
+            " * Reads: `1`"
           ]
         },
         {
@@ -4014,7 +4236,85 @@
         {
           "name": "doc-comment",
           "arguments": [
-            " TODO: Docs"
+            " This function updates an existing oracle configuration for a specific asset."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Arguments"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `asset_id`: [AssetId] - The asset ID for which the oracle configuration is being updated."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `oracle_configuration`: [OracleAssetConfiguration] - The new oracle configuration."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Reverts"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the caller is not the owner."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the referenced global oracle configuration does not exist."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the oracle configuration with the specified oracle ID is not found for this asset."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Writes: `2`"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `2 + asset_oracle_configurations.len()`"
           ]
         },
         {
@@ -4130,7 +4430,79 @@
         {
           "name": "doc-comment",
           "arguments": [
-            " TODO: Docs"
+            " This function updates an existing global oracle configuration."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Arguments"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `oracle_id`: [u64] - The ID of the oracle to be updated."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `oracle_configuration`: [OracleGlobalConfiguration] - The new oracle configuration."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Reverts"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the caller is not the owner."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the oracle with the specified ID does not exist."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            ""
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Writes: `1`"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `1`"
           ]
         },
         {
@@ -4238,7 +4610,7 @@
         {
           "name": "doc-comment",
           "arguments": [
-            " This function ensures that the provided price data update is valid and performs an update if the conditions are met."
+            " This function updates the price feeds using the provided oracle inputs."
           ]
         },
         {
@@ -4256,7 +4628,7 @@
         {
           "name": "doc-comment",
           "arguments": [
-            " * `price_data_update`: [PriceDataUpdate] - The data necessary for updating the price feeds."
+            " * `oracle_inputs`: [Vec<OracleInput>] - The oracle inputs necessary for updating the price feeds."
           ]
         },
         {
@@ -4286,37 +4658,13 @@
         {
           "name": "doc-comment",
           "arguments": [
-            " # Reverts"
-          ]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [
-            " * When the contract ID is not set (i.e., it is zero)."
-          ]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [
-            " * When the payment amount is insufficient or the asset ID is not the base asset."
-          ]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [
-            ""
-          ]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [
             " # Number of Storage Accesses"
           ]
         },
         {
           "name": "doc-comment",
           "arguments": [
-            " * Reads: `1`"
+            " * Reads: `0`"
           ]
         },
         {
@@ -4372,7 +4720,7 @@
         {
           "name": "doc-comment",
           "arguments": [
-            " * `price_data_update`: [PriceDataUpdate] - The price data update struct to be used for updating the price feeds."
+            " * `oracle_inputs`: [Vec<OracleInput>] - The oracle inputs to be used for updating the price feeds."
           ]
         },
         {
@@ -4390,7 +4738,25 @@
         {
           "name": "doc-comment",
           "arguments": [
-            " * When the user is not collateralized."
+            " * When the withdraw operation is paused."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the amount is invalid (zero or negative)."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the borrow amount is too small (below minimum)."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the user is not collateralized (if borrowing is required)."
           ]
         },
         {
@@ -4474,7 +4840,7 @@
         {
           "name": "doc-comment",
           "arguments": [
-            " * `price_data_update`: [PriceDataUpdate] - The price data update struct to be used for updating the price feeds."
+            " * `oracle_inputs`: [Vec<OracleInput>] - The oracle inputs to be used for updating the price feeds."
           ]
         },
         {
@@ -4487,6 +4853,12 @@
           "name": "doc-comment",
           "arguments": [
             " # Reverts"
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the withdraw operation is paused."
           ]
         },
         {
@@ -4750,7 +5122,7 @@
     {
       "name": "DEBUG_STEP",
       "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
-      "offset": 136280,
+      "offset": 136376,
       "indirect": false
     }
   ],

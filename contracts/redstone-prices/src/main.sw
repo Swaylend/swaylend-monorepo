@@ -12,6 +12,7 @@ use ownership::*;
 
 const VERSION = 1u8;
 const REDSTONE_PRICES_EXPONENT = 8u32;
+const TAI64_UNIX_ADJUSTMENT = 10 + (1 << 62);
 
 storage {
     prices: StorageMap<u256, Price> = StorageMap {},
@@ -96,10 +97,14 @@ impl RedstonePrices for Contract {
             feed_ids: feed_ids,
             signers: storage.allowed_signers.load_vec(),
             signer_count_threshold: storage.signer_count_threshold.read(),
-            block_timestamp: timestamp - (10 + (1 << 62)),
+            block_timestamp: timestamp - TAI64_UNIX_ADJUSTMENT, // Unix seconds
         };
 
+        // Aggregated prices and timestamp in unix milliseconds
         let (aggregated_values, timestamp) = process_input(payload, config);
+
+        // Calculate TAI64 timestamp from unix milliseconds
+        let new_tai64_timestamp = (timestamp / 1000) + TAI64_UNIX_ADJUSTMENT;
 
         let mut i = 0;
         while i < aggregated_values.len() {
@@ -107,14 +112,15 @@ impl RedstonePrices for Contract {
 
             let mut current_price = storage.prices.get(price_feed_id).try_read();
             
-            if current_price.is_some() && current_price.unwrap().publish_time > timestamp {
+            // Skip if stored price is newer than the new price
+            if current_price.is_some() && current_price.unwrap().publish_time > new_tai64_timestamp {
                 continue;
             }
 
             let price = aggregated_values.get(i).unwrap();
             let exponent = REDSTONE_PRICES_EXPONENT;
             let confidence = 0;
-            let publish_time = timestamp;
+            let publish_time = new_tai64_timestamp; // TAI64 timestamp
 
             storage.prices.insert(price_feed_id, Price {
                 price: price,

@@ -4,6 +4,7 @@ use ::errors::*;
 
 use redstone_prices_abi::{RedstonePrices};
 use std::bytes::Bytes;
+use std::block::timestamp;
 use pyth_interface::{PythCore, data_structures::price::PriceFeedId};
 use std::context::msg_amount;
 use std::call_frames::msg_asset_id;
@@ -121,13 +122,13 @@ impl Oracle {
                     let price = oracle.price_unsafe(id);
 
                     // validate values
-                    if price.publish_time < std::block::timestamp() {
-                        let staleness = std::block::timestamp() - price.publish_time;
+                    if price.publish_time < timestamp() {
+                        let staleness = timestamp() - price.publish_time;
                         if staleness > ORACLE_MAX_STALENESS {
                             is_price_valid = false;
                         }
                     } else {
-                        let aheadness = price.publish_time - std::block::timestamp();
+                        let aheadness = price.publish_time - timestamp();
                         if aheadness > ORACLE_MAX_AHEADNESS {
                             is_price_valid = false;
                         }
@@ -161,6 +162,19 @@ impl Oracle {
 
                     if price.price == 0 {
                         is_price_valid = false;
+                    }
+
+                    // validate values
+                    if price.publish_time < timestamp() {
+                        let staleness = timestamp() - price.publish_time;
+                        if staleness > ORACLE_MAX_STALENESS {
+                            is_price_valid = false;
+                        }
+                    } else {
+                        let aheadness = price.publish_time - timestamp();
+                        if aheadness > ORACLE_MAX_AHEADNESS {
+                            is_price_valid = false;
+                        }
                     }
 
                     if is_price_valid {
