@@ -1507,6 +1507,11 @@ impl SRC5 for Contract {
 #[storage(read)]
 fn get_price_internal(asset_id: AssetId, price_position: PricePosition) -> Price {
     let oracle_asset_configurations: StorageKey<StorageVec<OracleAssetConfiguration>> = storage.oracle_asset_configurations.get(asset_id);
+    let oracle_max_confidence_width = if asset_id == storage.market_configuration.read().base_token {
+        storage.market_configuration.read().oracle_max_confidence_width
+    } else {
+       storage.collateral_configurations.get(asset_id).try_read().unwrap().oracle_max_confidence_width
+    };
 
     let mut price = Price {
         price: 0,
@@ -1539,7 +1544,7 @@ fn get_price_internal(asset_id: AssetId, price_position: PricePosition) -> Price
                 };
 
 
-                let (is_fetched_price_valid, fetched_price) = oracle.get_price(price_feed_id);
+                let (is_fetched_price_valid, fetched_price) = oracle.get_price(price_feed_id, oracle_max_confidence_width);
 
                 if is_fetched_price_valid {
                     price = fetched_price;

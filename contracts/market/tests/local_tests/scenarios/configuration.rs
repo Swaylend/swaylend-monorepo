@@ -168,6 +168,7 @@ async fn market_configuration_test() {
     let new_market_config = MarketConfiguration {
         supply_kink: 900000000000000000u64.into(),
         borrow_kink: 900000000000000000u64.into(),
+        oracle_max_confidence_width: 300u64.into(),
         supply_per_second_interest_rate_slope_low: 1141552514.into(),
         supply_per_second_interest_rate_slope_high: 50735667178u64.into(),
         supply_per_second_interest_rate_base: 1.into(),

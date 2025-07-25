@@ -73,6 +73,7 @@ pub struct CollateralAssetConfig {
     pub name: String,
     pub symbol: String,
     pub decimals: u32,
+    pub oracle_max_confidence_width: u64,
     pub borrow_collateral_factor: u128,
     pub liquidate_collateral_factor: u128,
     pub liquidation_penalty: u128,
@@ -88,6 +89,7 @@ pub struct MarketConfig {
     pub buy_paused: bool,
     pub supply_kink: u128,
     pub borrow_kink: u128,
+    pub oracle_max_confidence_width: u64,
     pub supply_per_second_interest_rate_slope_low: u128,
     pub supply_per_second_interest_rate_slope_high: u128,
     pub supply_per_second_interest_rate_base: u128,
@@ -111,6 +113,7 @@ impl From<MarketConfig> for MarketConfiguration {
         MarketConfiguration {
             supply_kink: config.supply_kink.into(),
             borrow_kink: config.borrow_kink.into(),
+            oracle_max_confidence_width: config.oracle_max_confidence_width.into(),
             supply_per_second_interest_rate_slope_low: config
                 .supply_per_second_interest_rate_slope_low
                 .into(),
@@ -158,6 +161,7 @@ impl From<CollateralAssetConfig> for CollateralConfiguration {
         CollateralConfiguration {
             asset_id: AssetId::from_str(value.asset_id.as_str()).unwrap(),
             decimals: value.decimals,
+            oracle_max_confidence_width: value.oracle_max_confidence_width.into(),
             borrow_collateral_factor: value.borrow_collateral_factor.into(),
             liquidate_collateral_factor: value.liquidate_collateral_factor.into(),
             liquidation_penalty: value.liquidation_penalty.into(),
@@ -171,6 +175,7 @@ impl PartialEq<MarketConfig> for MarketConfiguration {
     fn eq(&self, other: &MarketConfig) -> bool {
         self.supply_kink == other.supply_kink.into()
             && self.borrow_kink == other.borrow_kink.into()
+            && self.oracle_max_confidence_width == other.oracle_max_confidence_width.into()
             && self.supply_per_second_interest_rate_slope_low
                 == other.supply_per_second_interest_rate_slope_low.into()
             && self.supply_per_second_interest_rate_slope_high
@@ -199,6 +204,7 @@ impl PartialEq<MarketConfiguration> for MarketConfig {
     fn eq(&self, other: &MarketConfiguration) -> bool {
         other.supply_kink == self.supply_kink.into()
             && other.borrow_kink == self.borrow_kink.into()
+            && other.oracle_max_confidence_width == self.oracle_max_confidence_width.into()
             && other.supply_per_second_interest_rate_slope_low
                 == self.supply_per_second_interest_rate_slope_low.into()
             && other.supply_per_second_interest_rate_slope_high

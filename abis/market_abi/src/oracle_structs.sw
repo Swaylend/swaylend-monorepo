@@ -98,11 +98,11 @@ pub struct Oracle {
 // Oracle configuration params
 pub const ORACLE_MAX_STALENESS: u64 = 60; // 60 seconds
 pub const ORACLE_MAX_AHEADNESS: u64 = 60; // 60 seconds
-pub const ORACLE_MAX_CONF_WIDTH: u256 = 300; // 300 / 10000 = 3.0 % 
+// pub const ORACLE_MAX_CONF_WIDTH: u256 = 300; // 300 / 10000 = 3.0 % 
 pub const ORACLE_CONF_BASIS_POINTS: u256 = 10_000; // 1e4
 
 impl Oracle {
-    pub fn get_price(self, price_feed_id: OraclePriceFeedId) -> (bool, Price) {
+    pub fn get_price(self, price_feed_id: OraclePriceFeedId, oracle_max_confidence_width: u256) -> (bool, Price) {
         let contract_id = self.contract_id;
         let oracle_type = self.oracle_type;
 
@@ -138,7 +138,7 @@ impl Oracle {
                         is_price_valid = false;
                     }
 
-                    if u256::from(price.confidence) > (u256::from(price.price) * ORACLE_MAX_CONF_WIDTH / ORACLE_CONF_BASIS_POINTS) {
+                    if u256::from(price.confidence) > (u256::from(price.price) * oracle_max_confidence_width / ORACLE_CONF_BASIS_POINTS) {
                         is_price_valid = false;
                     }
 

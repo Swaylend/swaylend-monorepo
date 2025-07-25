@@ -5,7 +5,7 @@ use token::*;
 use fuels::accounts::wallet::Wallet;
 use fuels::programs::contract::{Contract, LoadConfiguration};
 use fuels::types::transaction::TxPolicies;
-use fuels::types::{AssetId, Bits256, Bytes32, ContractId};
+use fuels::types::{AssetId, Bits256, ContractId};
 use serde::Deserialize;
 use std::collections::HashMap;
 use std::path::PathBuf;
@@ -43,6 +43,7 @@ pub struct TokenConfig {
     pub symbol: String,
     pub default_price: u64,
     pub decimals: u32,
+    pub oracle_max_confidence_width: u64,
     pub borrow_collateral_factor: Option<u128>,
     pub liquidate_collateral_factor: Option<u128>,
     pub liquidation_penalty: Option<u128>,
@@ -132,6 +133,7 @@ impl TokenContract {
                 asset_configs.push(CollateralConfiguration {
                     asset_id: asset_id,
                     decimals: config.decimals,
+                    oracle_max_confidence_width: config.oracle_max_confidence_width.into(),
                     borrow_collateral_factor: config.borrow_collateral_factor.unwrap().into(), // decimals: 18
                     liquidate_collateral_factor: config.liquidate_collateral_factor.unwrap().into(), // decimals: 18
                     liquidation_penalty: config.liquidation_penalty.unwrap().into(), // decimals: 18
@@ -201,6 +203,7 @@ impl TokenContract {
                 asset_configs.push(CollateralConfiguration {
                     asset_id: asset_id.into(),
                     decimals: config.decimals,
+                    oracle_max_confidence_width: config.oracle_max_confidence_width.into(),
                     borrow_collateral_factor: config.borrow_collateral_factor.unwrap().into(), // decimals: 18
                     liquidate_collateral_factor: config.liquidate_collateral_factor.unwrap().into(), // decimals: 18
                     liquidation_penalty: config.liquidation_penalty.unwrap().into(), // decimals: 18

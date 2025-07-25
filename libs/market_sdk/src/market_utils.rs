@@ -7,8 +7,8 @@ use fuels::{
         responses::CallResponse,
     },
     types::{
-        transaction::TxPolicies, transaction_builders::VariableOutputPolicy, AssetId, Bytes32,
-        ContractId, Identity,
+        transaction::TxPolicies, transaction_builders::VariableOutputPolicy, AssetId, ContractId,
+        Identity,
     },
 };
 use market::*;
@@ -27,6 +27,7 @@ pub struct Market {
 struct MarketConfig {
     supply_kink: u64,
     borrow_kink: u64,
+    oracle_max_confidence_width: u64,
     supply_per_second_interest_rate_slope_low: u64, // decimals: 18
     supply_per_second_interest_rate_slope_high: u64, // decimals: 18
     supply_per_second_interest_rate_base: u64,      // decimals: 18
@@ -54,6 +55,7 @@ pub fn get_market_config(
     Ok(MarketConfiguration {
         base_token,
         base_token_decimals,
+        oracle_max_confidence_width: config.oracle_max_confidence_width.into(),
         supply_kink: config.supply_kink.into(),
         borrow_kink: config.borrow_kink.into(),
         supply_per_second_interest_rate_slope_low: config

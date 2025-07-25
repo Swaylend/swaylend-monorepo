@@ -6,7 +6,7 @@ use fuels::{
         provider::Provider, signers::private_key::PrivateKeySigner, wallet::Wallet, ViewOnlyAccount,
     },
     crypto::SecretKey,
-    types::{transaction::TxPolicies, AssetId, ContractId},
+    types::AssetId,
 };
 use std::str::FromStr;
 use utils::{

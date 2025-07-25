@@ -6,7 +6,7 @@
 // 	5.	✅ update_market_configuration(configuration: MarketConfiguration)
 // additional tests for:
 //  6.  ✅ transfer_ownership
-//  7. ✅ renounce_ownership
+//  7.  ✅ renounce_ownership
 
 use crate::utils::{setup, TestBaseAsset, TestData};
 use fuels::types::U256;
@@ -33,6 +33,7 @@ async fn owner_test() {
     let mock_collateral_config = CollateralConfiguration {
         asset_id: assets["USDC"].asset_id.into(),
         decimals: assets["USDC"].decimals.try_into().unwrap(),
+        oracle_max_confidence_width: 300u64.into(),
         borrow_collateral_factor: U256::from(18), // decimals: 18
         liquidate_collateral_factor: U256::from(18), // decimals: 18
         liquidation_penalty: U256::from(18),      // decimals: 18

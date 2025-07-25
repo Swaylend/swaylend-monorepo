@@ -17,6 +17,9 @@ pub struct CollateralConfiguration {
     pub asset_id: AssetId,
     /// This field represents the number of decimals for the asset.
     pub decimals: u32,
+    /// This field represents the max confidence width for the prices returned by the oracles that use confidence intervals. 
+    /// Example: 300 / 10000 = 3.0 %. Where 10000 is the basis points (ORACLE_CONF_BASIS_POINTS = 1e4)
+    pub oracle_max_confidence_width: u256,
     /// This field represents the collateral factor for borrowing.
     pub borrow_collateral_factor: u256, // decimals: 18
     /// This field represents the collateral factor for liquidation.
@@ -35,6 +38,9 @@ pub struct MarketConfiguration {
     pub base_token: AssetId,
     /// This field represents the number of decimals for the base token.
     pub base_token_decimals: u32,
+    /// This field represents the max confidence width for the prices returned by the oracles that use confidence intervals. 
+    /// Example: 300 / 10000 = 3.0 %. Where 10000 is the basis points (ORACLE_CONF_BASIS_POINTS = 1e4)
+    pub oracle_max_confidence_width: u256,
     /// This field represents the supply kink.
     pub supply_kink: u256, // decimals: 18
     /// This field represents the borrow kink.
@@ -72,6 +78,7 @@ impl MarketConfiguration {
         MarketConfiguration {
             base_token: AssetId::zero(),
             base_token_decimals: 0,
+            oracle_max_confidence_width: 300, // 300 / 10000 = 3.0 % 
             supply_kink: 0,
             borrow_kink: 0,
             supply_per_second_interest_rate_slope_low: 0,
