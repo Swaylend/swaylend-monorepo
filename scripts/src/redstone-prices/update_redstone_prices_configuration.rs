@@ -101,12 +101,12 @@ async fn main() -> anyhow::Result<()> {
     );
 
     // Check if the configuration is already up-to-date
-    // if curr_allowed_signers == new_allowed_signers
-    //     && curr_signer_count_threshold == redstone_prices_config.signer_count_threshold
-    // {
-    //     println!("Redstone prices configuration is already up-to-date");
-    //     return Ok(());
-    // }
+    if curr_allowed_signers == new_allowed_signers
+        && curr_signer_count_threshold == redstone_prices_config.signer_count_threshold
+    {
+        println!("Redstone prices configuration is already up-to-date");
+        return Ok(());
+    }
 
     if !get_yes_no_input(
         "Do you want to update redstone prices configuration with the config above? (yes/no): ",
@@ -125,5 +125,6 @@ async fn main() -> anyhow::Result<()> {
         .call()
         .await?;
 
+    println!("Redstone prices configuration updated successfully!");
     Ok(())
 }

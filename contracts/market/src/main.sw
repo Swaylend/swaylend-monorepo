@@ -34,7 +34,7 @@ use ownership::*;
 use signed_int::i256::I256;
 
 // version of the smart contract
-const VERSION: u8 = 5_u8;
+const VERSION: u8 = 1_u8;
 
 // This is set during deployment of the contract
 configurable {
