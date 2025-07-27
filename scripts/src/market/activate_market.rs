@@ -1,5 +1,3 @@
-mod utils;
-
 use clap::Parser;
 use fuels::{
     accounts::{
@@ -9,10 +7,8 @@ use fuels::{
     types::AssetId,
 };
 use std::str::FromStr;
-use utils::{
-    get_market_instance, get_yes_no_input, read_env, read_market_config, verify_connected_network,
-    Args,
-};
+use swaylend_scripts::utils::market::{get_market_instance, read_market_config, Args};
+use swaylend_scripts::utils::shared::{get_yes_no_input, read_env, verify_connected_network};
 
 #[derive(Parser, Debug)]
 pub struct ArgsExtended {
@@ -42,8 +38,8 @@ async fn main() -> anyhow::Result<()> {
 
     let (market_instance, market_contract_id) = get_market_instance(
         &wallet,
-        args.args.proxy_contract_id,
-        args.args.target_contract_id,
+        args.args.market_proxy_contract_id,
+        args.args.market_target_contract_id,
     )
     .await?;
 

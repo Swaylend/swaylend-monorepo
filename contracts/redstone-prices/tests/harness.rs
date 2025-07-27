@@ -125,131 +125,6 @@ async fn activate() {
 }
 
 #[tokio::test]
-async fn set_signer_count_threshold() {
-    let wallets_config = WalletsConfig::new(Some(1), Some(1), Some(1_000_000_000));
-
-    let provider_config = NodeConfig {
-        block_production: Trigger::Instant,
-        ..NodeConfig::default()
-    };
-
-    let wallets =
-        launch_custom_provider_and_get_wallets(wallets_config, Some(provider_config), None)
-            .await
-            .unwrap();
-
-    let owner = wallets.get(0).unwrap();
-
-    let redstone = RedstonePricesContract::deploy(owner).await.unwrap();
-    redstone
-        .activate(1, vec![], owner.address().into())
-        .await
-        .unwrap();
-
-    let signer_count_threshold_response = redstone.get_signer_count_threshold().await.unwrap();
-    assert_eq!(signer_count_threshold_response.value, 1);
-
-    redstone.set_signer_count_threshold(2).await.unwrap();
-
-    let signer_count_threshold_response = redstone.get_signer_count_threshold().await.unwrap();
-    assert_eq!(signer_count_threshold_response.value, 2);
-}
-
-#[tokio::test]
-async fn set_allowed_signers() {
-    let wallets_config = WalletsConfig::new(Some(1), Some(1), Some(1_000_000_000));
-
-    let provider_config = NodeConfig {
-        block_production: Trigger::Instant,
-        ..NodeConfig::default()
-    };
-
-    let wallets =
-        launch_custom_provider_and_get_wallets(wallets_config, Some(provider_config), None)
-            .await
-            .unwrap();
-
-    let owner = wallets.get(0).unwrap();
-
-    let redstone = RedstonePricesContract::deploy(owner).await.unwrap();
-    redstone
-        .activate(1, vec![], owner.address().into())
-        .await
-        .unwrap();
-
-    let allowed_signers_response = redstone.get_allowed_signers().await.unwrap();
-    assert_eq!(allowed_signers_response.value, vec![]);
-
-    let signer =
-        Bits256::from_hex_str("0x00000000000000000000000012470f7aba85c8b81d63137dd5925d6ee114952b")
-            .unwrap();
-
-    redstone.set_allowed_signers(vec![signer]).await.unwrap();
-
-    let allowed_signers_response = redstone.get_allowed_signers().await.unwrap();
-    assert_eq!(allowed_signers_response.value, vec![signer]);
-}
-
-#[tokio::test]
-async fn add_and_remove_allowed_signer() {
-    let wallets_config = WalletsConfig::new(Some(1), Some(1), Some(1_000_000_000));
-
-    let provider_config = NodeConfig {
-        block_production: Trigger::Instant,
-        ..NodeConfig::default()
-    };
-
-    let wallets =
-        launch_custom_provider_and_get_wallets(wallets_config, Some(provider_config), None)
-            .await
-            .unwrap();
-
-    let owner = wallets.get(0).unwrap();
-
-    let redstone = RedstonePricesContract::deploy(owner).await.unwrap();
-    redstone
-        .activate(1, vec![], owner.address().into())
-        .await
-        .unwrap();
-
-    let allowed_signers_response = redstone.get_allowed_signers().await.unwrap();
-    assert_eq!(allowed_signers_response.value, vec![]);
-
-    // Add signer
-    let signer =
-        Bits256::from_hex_str("0x00000000000000000000000012470f7aba85c8b81d63137dd5925d6ee114952b")
-            .unwrap();
-
-    redstone.add_allowed_signer(signer).await.unwrap();
-
-    let allowed_signers_response = redstone.get_allowed_signers().await.unwrap();
-    assert_eq!(allowed_signers_response.value, vec![signer]);
-
-    // Add signer that already exists
-    let result = redstone.add_allowed_signer(signer).await.unwrap_err();
-    assert!(result.to_string().contains("SignerAlreadyInList"));
-
-    // Add another signer
-    let signer2 =
-        Bits256::from_hex_str("0x000000000000000000000000109B4a318A4F5ddcbCA6349B45f881B4137deaFB")
-            .unwrap();
-    redstone.add_allowed_signer(signer2).await.unwrap();
-
-    let allowed_signers_response = redstone.get_allowed_signers().await.unwrap();
-    assert_eq!(allowed_signers_response.value, vec![signer, signer2]);
-
-    // Remove signer
-    redstone.remove_allowed_signer(signer).await.unwrap();
-
-    let allowed_signers_response = redstone.get_allowed_signers().await.unwrap();
-    assert_eq!(allowed_signers_response.value, vec![signer2]);
-
-    // Remove signer that doesn't exist
-    let result = redstone.remove_allowed_signer(signer).await.unwrap_err();
-    assert!(result.to_string().contains("SignerNotInList"));
-}
-
-#[tokio::test]
 async fn check_only_owner_methods_revert() {
     let wallets_config = WalletsConfig::new(Some(2), Some(1), Some(1_000_000_000));
 
@@ -274,31 +149,9 @@ async fn check_only_owner_methods_revert() {
 
     let redstone_bob = redstone.with_account(bob).await.unwrap();
 
-    // Set signer count threshold
+    // Update configuration
     let result = redstone_bob
-        .set_signer_count_threshold(2)
-        .await
-        .unwrap_err();
-    assert!(result.to_string().contains("NotOwner"));
-
-    let signer =
-        Bits256::from_hex_str("0x00000000000000000000000012470f7aba85c8b81d63137dd5925d6ee114952b")
-            .unwrap();
-
-    // Add allowed signer
-    let result = redstone_bob.add_allowed_signer(signer).await.unwrap_err();
-    assert!(result.to_string().contains("NotOwner"));
-
-    // Remove allowed signer
-    let result = redstone_bob
-        .remove_allowed_signer(signer)
-        .await
-        .unwrap_err();
-    assert!(result.to_string().contains("NotOwner"));
-
-    // Set allowed signers
-    let result = redstone_bob
-        .set_allowed_signers(vec![signer])
+        .update_configuration(2, vec![])
         .await
         .unwrap_err();
     assert!(result.to_string().contains("NotOwner"));

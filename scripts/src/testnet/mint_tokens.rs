@@ -1,5 +1,3 @@
-mod utils;
-
 use clap::Parser;
 use fuels::{
     accounts::{
@@ -10,8 +8,11 @@ use fuels::{
     types::{Address, ContractId, Identity},
 };
 use std::str::FromStr;
+use swaylend_scripts::utils::{
+    market::{read_market_config, Args},
+    shared::{read_env, verify_connected_network},
+};
 use token_sdk::{get_symbol_sub_asset_id, TokenAsset, TokenContract};
-use utils::{read_env, read_market_config, verify_connected_network, Args};
 
 #[derive(Parser, Debug)]
 pub struct ArgsExtended {

@@ -1438,7 +1438,6 @@ impl Market for Contract {
         require(found, Error::AssetOracleNotFound);
 
         asset_oracle_configurations.push(oracle_configuration);
-
        
         // Emit asset oracle updated event
         log(AssetOracleUpdatedEvent {

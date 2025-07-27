@@ -65,45 +65,15 @@ impl RedstonePricesMockContract {
             .await?)
     }
 
-    pub async fn set_signer_count_threshold(&self, count: u64) -> anyhow::Result<CallResponse<()>> {
-        Ok(self
-            .instance
-            .methods()
-            .set_signer_count_threshold(count)
-            .call()
-            .await?)
-    }
-
-    pub async fn set_allowed_signers(
+    pub async fn update_configuration(
         &self,
-        signers: Vec<Bits256>,
+        signer_count_threshold: u64,
+        allowed_signers: Vec<Bits256>,
     ) -> anyhow::Result<CallResponse<()>> {
         Ok(self
             .instance
             .methods()
-            .set_allowed_signers(signers)
-            .call()
-            .await?)
-    }
-
-    pub async fn get_allowed_signers(&self) -> anyhow::Result<CallResponse<Vec<Bits256>>> {
-        Ok(self.instance.methods().get_allowed_signers().call().await?)
-    }
-
-    pub async fn add_allowed_signer(&self, signer: Bits256) -> anyhow::Result<CallResponse<()>> {
-        Ok(self
-            .instance
-            .methods()
-            .add_allowed_signer(signer)
-            .call()
-            .await?)
-    }
-
-    pub async fn remove_allowed_signer(&self, signer: Bits256) -> anyhow::Result<CallResponse<()>> {
-        Ok(self
-            .instance
-            .methods()
-            .remove_allowed_signer(signer)
+            .update_configuration(signer_count_threshold, allowed_signers)
             .call()
             .await?)
     }

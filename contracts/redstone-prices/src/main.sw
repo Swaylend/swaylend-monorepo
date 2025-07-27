@@ -38,46 +38,17 @@ impl RedstonePrices for Contract {
         storage.signer_count_threshold.read()
     }
 
-    #[storage(write)]
-    fn set_signer_count_threshold(count: u64) {
-        only_owner();
-        storage.signer_count_threshold.write(count);
-    }
-
     #[storage(read)]
     fn get_allowed_signers() -> Vec<b256> {
-       storage.allowed_signers.load_vec()
+        storage.allowed_signers.load_vec()
     }
 
     #[storage(write)]
-    fn set_allowed_signers(signers: Vec<b256>) {
+    fn update_configuration(signer_count_threshold: u64, allowed_signers: Vec<b256>) {
         only_owner();
 
-        storage.allowed_signers.store_vec(signers);
-    }
-
-    #[storage(write)]
-    fn add_allowed_signer(signer: b256) {
-        only_owner();
-
-        let signers = storage.allowed_signers.load_vec();
-
-        // Check if the signer is already in the list
-        require(signers.index_of(signer).is_none(), Error::SignerAlreadyInList);
-
-        storage.allowed_signers.push(signer);
-    }
-
-    #[storage(write)]
-    fn remove_allowed_signer(signer: b256) {
-        only_owner();
-    
-        let signers = storage.allowed_signers.load_vec();
-        let index = signers.index_of(signer);
-
-        require(index.is_some(), Error::SignerNotInList);
-
-        storage.allowed_signers.remove(index.unwrap());
+        storage.signer_count_threshold.write(signer_count_threshold);
+        storage.allowed_signers.store_vec(allowed_signers);
     }
 
     #[storage(read)]

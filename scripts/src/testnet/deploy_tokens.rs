@@ -1,17 +1,18 @@
-mod utils;
-
 use clap::Parser;
 use fuels::{
     accounts::{provider::Provider, signers::private_key::PrivateKeySigner, wallet::Wallet},
     crypto::SecretKey,
 };
-use pyth_mock_sdk::PythMockContract;
 use std::str::FromStr;
-use utils::{read_env, verify_connected_network, Args};
+use swaylend_scripts::utils::{
+    market::Args,
+    shared::{read_env, verify_connected_network},
+};
+use token_sdk::TokenContract;
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    println!("DEPLOYING PYTH MOCK CONTRACT");
+    println!("DEPLOYING TOKENS CONTRACT");
 
     read_env();
 
@@ -27,11 +28,11 @@ async fn main() -> anyhow::Result<()> {
     let secret = SecretKey::from_str(&args.signing_key).unwrap();
     let wallet = Wallet::new(PrivateKeySigner::new(secret), provider.clone());
 
-    let pyth_contract = PythMockContract::deploy(&wallet).await.unwrap();
+    let token_contract = TokenContract::deploy(&wallet).await.unwrap();
 
     println!(
-        "Pyth mock contract deployed at: 0x{}",
-        pyth_contract.contract_id()
+        "Token contract deployed at: 0x{}",
+        token_contract.contract_id()
     );
 
     Ok(())

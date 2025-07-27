@@ -8682,6 +8682,7 @@ dependencies = [
  "market",
  "pyth_mock_sdk",
  "rand",
+ "redstone_prices",
  "serde",
  "serde_json",
  "tai64",

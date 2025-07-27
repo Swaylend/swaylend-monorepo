@@ -1,5 +1,3 @@
-mod utils;
-
 use clap::Parser;
 use fuels::{
     accounts::{provider::Provider, signers::private_key::PrivateKeySigner, wallet::Wallet},
@@ -7,7 +5,10 @@ use fuels::{
     types::{Address, ContractId, Identity},
 };
 use std::str::FromStr;
-use utils::{get_proxy_instance, get_yes_no_input, read_env, verify_connected_network, Args};
+use swaylend_scripts::utils::shared::{
+    get_proxy_instance, get_yes_no_input, read_env, verify_connected_network,
+};
+use swaylend_scripts::utils::{market::Args, shared::State};
 
 #[derive(Parser, Debug)]
 pub struct ArgsExtended {
@@ -47,7 +48,7 @@ async fn main() -> anyhow::Result<()> {
     };
 
     let (proxy_instance, _proxy_contract_id) =
-        get_proxy_instance(&wallet, args.args.proxy_contract_id).await?;
+        get_proxy_instance(&wallet, args.args.market_proxy_contract_id).await?;
 
     let curr_owner = proxy_instance
         .methods()
@@ -71,7 +72,7 @@ async fn main() -> anyhow::Result<()> {
 
     proxy_instance
         .methods()
-        .set_proxy_owner(utils::State::Initialized(new_owner))
+        .set_proxy_owner(State::Initialized(new_owner))
         .call()
         .await
         .unwrap();

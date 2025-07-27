@@ -17,6 +17,34 @@ Below, we have all the necessary scripts for operations on the mainnet. If you'r
 
 **Note:** In some scripts you need to enter blockchain address or contract id. Please, double check you use correct prefix (i.e., address or contract). If you select wrong prefix, funds can be lost! It is suggested that you try with smaller amounts first.
 
+### Deploy redstone prices contract with proxy
+
+```bash
+cd ../contracts/redstone-prices && forc deploy                                  && cd ../../scripts # mainnet
+cd ../contracts/redstone-prices && forc deploy --testnet                        && cd ../../scripts # testnet
+cd ../contracts/redstone-prices && forc deploy --node-url http://127.0.0.1:4000 && cd ../../scripts # devnet
+```
+
+In the output you can see proxy contract id (proxy contract) and target contract id (loader contract). Add them to the `.env` .
+
+**Note:** This command will add proxy address in the `Forc.toml` in the `../contracts/redstone-prices` folder. Make sure the address is not wrriten in `Forc.toml` when deploying the contracts again.
+
+### Activate redstone prices contract
+
+This script will activate the contract - setup the redstone prices configuration.
+
+```bash
+cargo run --bin activate_redstone_prices -- --config-path ./configs/redstone_prices_mainnet_config.json
+```
+
+### Update redstone prices configuration
+
+This script will update the redstone prices configuration.
+
+```bash
+cargo run --bin update_redstone_prices_configuration -- --config-path ./configs/redstone_prices_mainnet_config.json
+```
+
 ### Deploy market contract with proxy
 
 Market contract is deploy with the proxy (proxy contract + loader contract with 2 blobs because market contract is bigger than 100 KB). The owner of the proxy contract is the deployer. You have to run this command in the CLI.
@@ -24,12 +52,12 @@ Market contract is deploy with the proxy (proxy contract + loader contract with 
 ```bash
 cd ../contracts/market && forc deploy                                  && cd ../../scripts # mainnet
 cd ../contracts/market && forc deploy --testnet                        && cd ../../scripts # testnet
-cd ../contracts/market && /home/vid/Documents/Company/fuel/sway/target/debug/forc-deploy --node-url http://127.0.0.1:4000 && cd ../../scripts # devnet
+cd ../contracts/market && forc deploy --node-url http://127.0.0.1:4000 && cd ../../scripts # devnet
 ```
 
 In the output you can see proxy contract id (proxy contract) and target contract id (loader contract). Add them to the `.env` .
 
-**Note:** This command will add proxy address in the `Forc.toml` in the `../contracts/market` folder. Make sure the address is not wrriten in ` ` Forc.toml ` ` when deploying the contracts again.
+**Note:** This command will add proxy address in the `Forc.toml` in the `../contracts/market` folder. Make sure the address is not wrriten in  `Forc.toml` when deploying the contracts again.
 
 ### Activate market contract
 
@@ -54,7 +82,7 @@ When you want to upgrade the market contract, make the changes to the contract, 
 ```bash
 cd ../contracts/market && forc deploy                                  && cd ../../scripts # mainnet
 cd ../contracts/market && forc deploy --testnet                        && cd ../../scripts # testnet
-cd ../contracts/market && /home/vid/Documents/Company/fuel/sway/target/debug/forc-deploy --node-url http://127.0.0.1:4000 && cd ../../scripts # devnet
+cd ../contracts/market && forc deploy --node-url http://127.0.0.1:4000 && cd ../../scripts # devnet
 ```
 
 ### Change proxy owner

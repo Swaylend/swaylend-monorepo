@@ -1,5 +1,3 @@
-mod utils;
-
 use clap::Parser;
 use fuels::{
     accounts::{
@@ -9,9 +7,9 @@ use fuels::{
     types::{transaction_builders::VariableOutputPolicy, Address, ContractId, Identity},
 };
 use std::str::FromStr;
-use utils::{
-    convert_i256_to_u64, get_market_instance, get_yes_no_input, read_env, verify_connected_network,
-    Args,
+use swaylend_scripts::utils::market::{get_market_instance, Args};
+use swaylend_scripts::utils::shared::{
+    convert_i256_to_u64, get_yes_no_input, read_env, verify_connected_network,
 };
 
 #[derive(Parser, Debug)]
@@ -59,8 +57,8 @@ async fn main() -> anyhow::Result<()> {
 
     let (market_instance, market_contract_id) = get_market_instance(
         &wallet,
-        args.args.proxy_contract_id,
-        args.args.target_contract_id,
+        args.args.market_proxy_contract_id,
+        args.args.market_target_contract_id,
     )
     .await?;
 
