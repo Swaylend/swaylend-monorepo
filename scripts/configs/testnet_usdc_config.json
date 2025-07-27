@@ -26,7 +26,7 @@
       "oracle_type": "Pyth"
     },
     {
-      "contract_id": "",
+      "contract_id": "0x1e6b0d58808c69b9b3f683cc432e6643123719db6a72b7712565475e2d3f95e2",
       "is_active": true,
       "oracle_type": "Redstone"
     }

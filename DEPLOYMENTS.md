@@ -16,18 +16,18 @@
 * Redstone Prices Implementation: `0xcbf981762eca5e2da43061022f5b0ae04551b396bdd3d14eb26428151bfb9d80`
 * Redstone Prices Proxy: `0x1e6b0d58808c69b9b3f683cc432e6643123719db6a72b7712565475e2d3f95e2`
 
-* Pyth Oracle contract: `0xe31e04946c67fb41923f93d50ee7fc1c6c99d6e07c02860c6bea5f4a13919277`
+* Pyth Oracle contract: `0x25146735b29d4216639f7f8b1d7b921ff87a1d3051de62d6cceaacabeb33b8e7`
 * ETH: `0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07`
 
 ## USDC Market
 
 ### Contracts
 
-* Token factory contract: ``
+* Token factory contract: `0xb095873ffa6237aa209dd7fa9d6fd7d9e932453f8db62b9e436766a47b17d308`
 
-* Market implementation contract: ``
+* Market implementation contract: `0x9a739f2b32825d2b043725330ae8ad9399ce4e345db0004c46e520b7cfa79eb2`
 
-* Market proxy contract: ``
+* Market proxy contract: `0x9c76b620e2c778e15af8b6839454c49278101192c22441462e57fd192eb4aa69`
 
 ### Assets
 
