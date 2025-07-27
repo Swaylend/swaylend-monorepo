@@ -252,22 +252,6 @@ impl PartialEq<OracleGlobalConfiguration> for market::OracleGlobalConfiguration 
     }
 }
 
-impl PartialEq<AssetOracleConfiguration> for market::OracleAssetConfiguration {
-    fn eq(&self, other: &AssetOracleConfiguration) -> bool {
-        self.oracle_id == other.oracle_id
-            && self.price_feed_id == get_price_feed_id(other.price_feed_id.as_str())
-            && self.is_disabled == !other.is_active
-    }
-}
-
-impl PartialEq<market::OracleAssetConfiguration> for AssetOracleConfiguration {
-    fn eq(&self, other: &market::OracleAssetConfiguration) -> bool {
-        self.oracle_id == other.oracle_id
-            && get_price_feed_id(self.price_feed_id.as_str()) == other.price_feed_id
-            && other.is_disabled == !self.is_active
-    }
-}
-
 pub fn read_market_config(path: &str) -> anyhow::Result<MarketConfig> {
     let config_path = PathBuf::from(path);
     let config_str = std::fs::read_to_string(config_path)?;
@@ -297,12 +281,13 @@ pub fn get_oracle_type(oracle_type: &str) -> OracleType {
     }
 }
 
-pub fn get_price_feed_id(price_feed_id: &str) -> OraclePriceFeedId {
-    match price_feed_id {
-        "Pyth" => OraclePriceFeedId::Pyth(Bits256::from_hex_str(price_feed_id).unwrap()),
-        "Redstone" => OraclePriceFeedId::Redstone(U256::from_dec_str(price_feed_id).unwrap()),
-        "Twrap" => OraclePriceFeedId::Twrap,
-        "Stork" => OraclePriceFeedId::Stork,
-        _ => panic!("Invalid price feed id: {}", price_feed_id),
+pub fn get_price_feed_id(oracle_type: &OracleType, price_feed_id: &str) -> OraclePriceFeedId {
+    match oracle_type {
+        OracleType::Pyth => OraclePriceFeedId::Pyth(Bits256::from_hex_str(price_feed_id).unwrap()),
+        OracleType::Redstone => {
+            OraclePriceFeedId::Redstone(U256::from_dec_str(price_feed_id).unwrap())
+        }
+        OracleType::Twrap => OraclePriceFeedId::Twrap,
+        OracleType::Stork => OraclePriceFeedId::Stork,
     }
 }

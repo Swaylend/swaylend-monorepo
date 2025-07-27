@@ -166,6 +166,14 @@ async fn main() -> anyhow::Result<()> {
         .await?
         .value;
 
+    let global_oracle_configurations = market_instance
+        .methods()
+        .get_oracle_global_configurations()
+        .with_contract_ids(&[market_contract_id.clone()])
+        .call()
+        .await?
+        .value;
+
     // Iterate over asset oracle configurations in the market config file
     // Add new asset oracle configuration if it is not already added
     // Update existing asset oracle configuration if it is already added
@@ -194,7 +202,28 @@ async fn main() -> anyhow::Result<()> {
 
             match oracle_configuration {
                 Some(oracle_configuration) => {
-                    if oracle_configuration != &collateral_asset_config_oracle_configuration {
+                    let oracle_type = global_oracle_configurations
+                        .iter()
+                        .enumerate()
+                        .find(|(id, _)| *id as u64 == oracle_configuration.oracle_id)
+                        .unwrap()
+                        .1
+                        .oracle_type
+                        .clone();
+
+                    // Check if the asset oracle configuration is already up-to-date
+                    if !(oracle_configuration.oracle_id
+                        == collateral_asset_config_oracle_configuration.oracle_id
+                        && oracle_configuration.is_disabled
+                            == !collateral_asset_config_oracle_configuration.is_active
+                        && oracle_configuration.price_feed_id
+                            == get_price_feed_id(
+                                &oracle_type,
+                                collateral_asset_config_oracle_configuration
+                                    .price_feed_id
+                                    .as_str(),
+                            ))
+                    {
                         println!(
                             "Updating asset oracle configuration for asset_id: {} and oracle_id: {}",
                             asset_id,
@@ -224,6 +253,7 @@ async fn main() -> anyhow::Result<()> {
                                     oracle_id: collateral_asset_config_oracle_configuration
                                         .oracle_id,
                                     price_feed_id: get_price_feed_id(
+                                        &oracle_type,
                                         collateral_asset_config_oracle_configuration
                                             .price_feed_id
                                             .as_str(),
@@ -249,6 +279,17 @@ async fn main() -> anyhow::Result<()> {
                         asset_id, collateral_asset_config_oracle_configuration.oracle_id
                     );
 
+                    let oracle_type = global_oracle_configurations
+                        .iter()
+                        .enumerate()
+                        .find(|(id, _)| {
+                            *id as u64 == collateral_asset_config_oracle_configuration.oracle_id
+                        })
+                        .unwrap()
+                        .1
+                        .oracle_type
+                        .clone();
+
                     if !get_yes_no_input("Do you really want to add this asset oracle? (yes/no): ")
                     {
                         continue;
@@ -261,6 +302,7 @@ async fn main() -> anyhow::Result<()> {
                             OracleAssetConfiguration {
                                 oracle_id: collateral_asset_config_oracle_configuration.oracle_id,
                                 price_feed_id: get_price_feed_id(
+                                    &oracle_type,
                                     collateral_asset_config_oracle_configuration
                                         .price_feed_id
                                         .as_str(),
