@@ -3,6 +3,11 @@ entry = "main.sw"
 license = "Apache-2.0"
 name = "redstone_prices"
 
+# address will be the addres of the proxy contract
+[proxy]
+enabled = true
+address = "0x1e6b0d58808c69b9b3f683cc432e6643123719db6a72b7712565475e2d3f95e2"
+
 [dependencies]
 redstone_prices_abi = { path = "../../abis/redstone_prices_abi" }
 redstone = { git = "https://github.com/martines3000/redstone-fuel-sdk", rev = "206a1f3d62fdc6465004d86ebe1df118bd5350d4" }

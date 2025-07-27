@@ -58,7 +58,7 @@ async fn main() -> anyhow::Result<()> {
 
     let redstone_prices_config = read_redstone_prices_config(&args.config_path)?;
 
-    let allowed_signers = redstone_prices_config
+    let allowed_signers: Vec<Bits256> = redstone_prices_config
         .allowed_signers
         .iter()
         .map(|signer| Bits256::from_hex_str(signer).unwrap())
@@ -66,7 +66,12 @@ async fn main() -> anyhow::Result<()> {
 
     println!(
         "Redstone prices configuration: signer count threshold: {:?}\nallowed signers: {:#?}",
-        redstone_prices_config.signer_count_threshold, allowed_signers
+        redstone_prices_config.signer_count_threshold,
+        allowed_signers
+            .iter()
+            .map(|signer| hex::encode(signer.0))
+            .collect::<Vec<String>>()
+            .join(", ")
     );
 
     if !get_yes_no_input(

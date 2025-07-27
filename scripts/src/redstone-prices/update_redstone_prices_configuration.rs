@@ -20,7 +20,7 @@ pub struct ArgsExtended {
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    println!("ACTIVATING REDSTONE PRICES");
+    println!("UPDATING REDSTONE PRICES CONFIGURATION");
 
     read_env();
 
@@ -56,7 +56,7 @@ async fn main() -> anyhow::Result<()> {
 
     let redstone_prices_config = read_redstone_prices_config(&args.config_path)?;
 
-    let curr_allowed_signers = redstone_prices_instance
+    let curr_allowed_signers: Vec<Bits256> = redstone_prices_instance
         .methods()
         .get_allowed_signers()
         .with_contract_ids(&[redstone_prices_contract_id.clone()])
@@ -72,7 +72,7 @@ async fn main() -> anyhow::Result<()> {
         .await?
         .value;
 
-    let new_allowed_signers = redstone_prices_config
+    let new_allowed_signers: Vec<Bits256> = redstone_prices_config
         .allowed_signers
         .iter()
         .map(|signer| Bits256::from_hex_str(signer).unwrap())
@@ -80,13 +80,33 @@ async fn main() -> anyhow::Result<()> {
 
     println!(
         "Current allowed signers: {:#?}\nCurrent signer count threshold: {:?}",
-        curr_allowed_signers, curr_signer_count_threshold
+        curr_allowed_signers
+            .clone()
+            .iter()
+            .map(|signer| hex::encode(signer.0))
+            .collect::<Vec<String>>()
+            .join(", "),
+        curr_signer_count_threshold
     );
 
     println!(
         "New allowed signers: {:#?}\nNew signer count threshold: {:?}",
-        new_allowed_signers, redstone_prices_config.signer_count_threshold
+        new_allowed_signers
+            .clone()
+            .iter()
+            .map(|signer| hex::encode(signer.0))
+            .collect::<Vec<String>>()
+            .join(", "),
+        redstone_prices_config.signer_count_threshold
     );
+
+    // Check if the configuration is already up-to-date
+    // if curr_allowed_signers == new_allowed_signers
+    //     && curr_signer_count_threshold == redstone_prices_config.signer_count_threshold
+    // {
+    //     println!("Redstone prices configuration is already up-to-date");
+    //     return Ok(());
+    // }
 
     if !get_yes_no_input(
         "Do you want to update redstone prices configuration with the config above? (yes/no): ",

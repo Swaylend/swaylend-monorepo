@@ -12,40 +12,43 @@
 ---
 
 # FUEL TESTNET
-* Pyth Oracle contract: `0xe31e04946c67fb41923f93d50ee7fc1c6c99d6e07c02860c6bea5f4a13919277`
 
+* Redstone Prices Implementation: `0xcbf981762eca5e2da43061022f5b0ae04551b396bdd3d14eb26428151bfb9d80`
+* Redstone Prices Proxy: `0x1e6b0d58808c69b9b3f683cc432e6643123719db6a72b7712565475e2d3f95e2`
+
+* Pyth Oracle contract: `0xe31e04946c67fb41923f93d50ee7fc1c6c99d6e07c02860c6bea5f4a13919277`
 * ETH: `0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07`
 
 ## USDC Market
 
 ### Contracts
 
-* Token factory contract: `0x3e4f1948aece07d3f30c8c5c425f914ac74653827de48394466f2a887eebe9c7`
+* Token factory contract: ``
 
-* Market implementation contract: `0x499874255bbb90ed6848c5555f8bf5a24bf162e7202900efe6c24b9df2232005`
+* Market implementation contract: ``
 
-* Market proxy contract: `0x6030cf103746576706d7dcc2ae6f6b32ba0db66907a8f9901a0170de5f06acc0`
+* Market proxy contract: ``
 
 ### Assets
 
-* USDC: `0x3aced3c270121c9d85e00fb14f079ecc666b733b12a0d15df1c2ecae26c1167a`
-* BTC: `0x506442d6926065fe53dd09870b7392dd46bfe39b761ab347b11cc2e1f8874250`
-* UNI: `0xa95097d8fe21970639e543db9b7f590aa678f325bce3dbc12a682cdcbbfae378`
-* ezETH: `0x24dd639420a98a5d9d3015280e82cafefb3b88d75f996107d1a3b12da831f733`
-* USDT: `0xf30eade9911f75e819deff8fa76f7cf54c477180c756f5a9c3db6fe1986fe485`
+* USDC: ``
+* BTC: ``
+* UNI: ``
+* ezETH: ``
+* USDT: ``
 
 ## USDT Market
 
 ### Contracts
 
-* Token factory contract: `0x1ea9a306a5f280cfe7bd1fdc96815a6438069668e495a2f5a727c7b9b90691cb`
+* Token factory contract: ``
 
-* Market implementation contract: `0x88116ee7519e73b0b3af3eb939acc0bcdc38937a41855c63d5aa78020eea8013`
+* Market implementation contract: ``
 
-* Market proxy contract: `0x51b9bea7822988e03520018f4a1bb39b9f5ba15c9b4b9c9340a6bc1e5958abd4`
+* Market proxy contract: ``
 
 ### Assets
 
-* USDT: `0xc264acd28eaf6f33e0e13360a37741dc91221aaa8817e1b4e462d61bb08c5835`
-* BTC: `0xf3e2b3960e0930402a5d6047883f5c178a30aa5db2f0d7302d582cefb59a1575`
-* BNB: `0x790d2c0eb869e72cf42540d928ce728c253142d5ef07ed22b75009e40660e4ea`
+* USDT: ``
+* BTC: ``
+* BNB: ``
