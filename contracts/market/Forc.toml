@@ -6,7 +6,7 @@ name = "market"
 # address will be the addres of the proxy contract
 [proxy]
 enabled = true
-address = "0x9c76b620e2c778e15af8b6839454c49278101192c22441462e57fd192eb4aa69"
+address = "0x7aeb2aa32330ea3fa896cca65c06446395442b38d540a92288fd3417ea6c9cf5"
 
 [dependencies]
 market_abi = { path = "../../abis/market_abi" }
