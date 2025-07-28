@@ -1,7 +1,7 @@
 'use client';
 
 import { appConfig } from '@/configs';
-import type { Market } from '@/contract-types';
+import type { Market } from '@/contract-types/v1';
 import type { PythContract } from '@pythnetwork/pyth-fuel-js';
 import { create } from 'zustand';
 

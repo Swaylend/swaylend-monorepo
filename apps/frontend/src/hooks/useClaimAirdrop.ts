@@ -2,9 +2,9 @@ import {
   ErrorToast,
   PendingToast,
   TransactionSuccessToast,
-} from '@/components/Toasts';
+} from '@/components/v1/Toasts';
 import { appConfig } from '@/configs';
-import { Airdrop } from '@/contract-types/Airdrop';
+import { Airdrop } from '@/contract-types/v1/Airdrop';
 import { useWallet } from '@fuels/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';

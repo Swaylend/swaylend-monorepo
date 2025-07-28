@@ -10,7 +10,7 @@ import {
   usePrice,
   useTotalCollateral,
   useTotalReserves,
-} from '@/hooks';
+} from '@/hooks/v1';
 
 import type { ChartData } from '@/lib/charts';
 import { cn } from '@/lib/utils';
@@ -25,10 +25,10 @@ import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 import type React from 'react';
 import { useMemo } from 'react';
-import { IconPair } from '../IconPair';
-import { Line } from '../Line';
-import { NetBorrowTooltip } from '../NetBorrowTooltip';
-import { NetEarnTooltip } from '../NetEarnTooltip';
+import { IconPair } from '../v1/IconPair';
+import { Line } from '../v1/Line';
+import { NetBorrowTooltip } from '../v1/NetBorrowTooltip';
+import { NetEarnTooltip } from '../v1/NetEarnTooltip';
 import {
   Tooltip,
   TooltipContent,

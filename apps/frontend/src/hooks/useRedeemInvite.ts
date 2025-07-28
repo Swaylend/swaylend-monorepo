@@ -1,4 +1,4 @@
-import { ErrorToast, InfoToast } from '@/components/Toasts';
+import { ErrorToast, InfoToast } from '@/components/v1/Toasts';
 import { appConfig } from '@/configs';
 import {
   selectReferralModalSetOpen,

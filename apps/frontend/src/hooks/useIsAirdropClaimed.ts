@@ -1,4 +1,4 @@
-import { Airdrop } from '@/contract-types/Airdrop';
+import { Airdrop } from '@/contract-types/v1/Airdrop';
 import { useWallet } from '@fuels/react';
 import { useQuery } from '@tanstack/react-query';
 

@@ -35,7 +35,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Logo from '/public/icons/dark-logo.svg?url';
-import { Line } from '../Line';
+import { Line } from '../v1/Line';
 import { Button } from '../ui/button';
 import { ConnectButton } from './ConnectButton';
 import { Points } from './Points';

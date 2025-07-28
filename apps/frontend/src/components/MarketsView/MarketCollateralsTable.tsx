@@ -1,4 +1,4 @@
-import { AssetName } from '@/components/AssetName';
+import { AssetName } from '@/components/v1/AssetName';
 import {
   Table,
   TableBody,
@@ -14,7 +14,7 @@ import {
   useMarketConfiguration,
   usePrice,
   useTotalCollateral,
-} from '@/hooks';
+} from '@/hooks/v1';
 import {
   SYMBOL_TO_ICON,
   SYMBOL_TO_NAME,
@@ -24,7 +24,7 @@ import {
 } from '@/utils';
 import BigNumber from 'bignumber.js';
 import { useMemo } from 'react';
-import { InfoIcon } from '../InfoIcon';
+import { InfoIcon } from '../v1/InfoIcon';
 
 type TableRowProps = {
   assetId: string;

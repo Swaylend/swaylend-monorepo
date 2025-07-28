@@ -1,4 +1,4 @@
-import { PortfolioView } from '@/components/PortfolioView';
+import { PortfolioView } from '@/components/v1/PortfolioView';
 import { isMobile } from '@/utils/isMobile';
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';

@@ -14,7 +14,7 @@ import {
   useIsConnected,
 } from '@fuels/react';
 import { ChevronDown } from 'lucide-react';
-import { CopyIcon } from '../CopyIcon';
+import { CopyIcon } from '../v1/CopyIcon';
 
 export const ConnectButton = () => {
   const { connect, isConnecting } = useConnectUI();

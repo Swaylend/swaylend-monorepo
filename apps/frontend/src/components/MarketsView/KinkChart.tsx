@@ -16,8 +16,11 @@ import {
   ChartContainer,
   ChartTooltip,
 } from '@/components/ui/chart';
-import { useMarketConfiguration, useUtilization } from '@/hooks';
-import { useCreateChartData } from '@/hooks/useCreateChartData';
+import {
+  useCreateChartData,
+  useMarketConfiguration,
+  useUtilization,
+} from '@/hooks/v1';
 import { formatUnits, getFormattedNumber } from '@/utils';
 import BigNumber from 'bignumber.js';
 import { Skeleton } from '../ui/skeleton';

@@ -1,7 +1,7 @@
 'use client';
 
 import { appConfig } from '@/configs';
-import { Market } from '@/contract-types';
+import { Market } from '@/contract-types/v1';
 import { useProvider } from '@/hooks';
 import {
   selectUpdateContracts,

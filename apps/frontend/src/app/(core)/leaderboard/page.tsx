@@ -1,4 +1,4 @@
-import { LeaderboardView } from '@/components/LeaderboardView';
+import { LeaderboardView } from '@/components/v1/LeaderboardView';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

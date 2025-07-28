@@ -9,7 +9,7 @@ import {
   usePrice,
   useTotalCollateral,
   useUtilization,
-} from '@/hooks';
+} from '@/hooks/v1';
 import {
   SYMBOL_TO_ICON,
   SYMBOL_TO_NAME,
@@ -25,11 +25,11 @@ import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 import SWAY from '/public/tokens/sway.svg?url';
-import { CircularProgressBar } from '../CircularProgressBar';
-import { type Collateral, CollateralIcons } from '../CollateralIcons';
-import { Line } from '../Line';
-import { NetBorrowTooltip } from '../NetBorrowTooltip';
-import { NetEarnTooltip } from '../NetEarnTooltip';
+import { CircularProgressBar } from '../v1/CircularProgressBar';
+import { type Collateral, CollateralIcons } from '../v1/CollateralIcons';
+import { Line } from '../v1/Line';
+import { NetBorrowTooltip } from '../v1/NetBorrowTooltip';
+import { NetEarnTooltip } from '../v1/NetEarnTooltip';
 import { Skeleton } from '../ui/skeleton';
 import {
   Tooltip,

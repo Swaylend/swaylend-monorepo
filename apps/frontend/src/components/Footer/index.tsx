@@ -9,7 +9,7 @@ import DISCORD from '/public/icons/discord-mark-white.svg?url';
 import HalbornLogo from '/public/icons/halborn-logo.svg?url';
 import OttersecLogo from '/public/icons/ottersec-logo.svg?url';
 import X from '/public/icons/x-logo-white.png';
-import { Line } from '../Line';
+import { Line } from '../v1/Line';
 
 export const Footer = () => {
   return (

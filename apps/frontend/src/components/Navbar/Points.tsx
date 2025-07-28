@@ -3,7 +3,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { useLMRewards, useUser } from '@/hooks';
+import { useLMRewards, useUser } from '@/hooks/v1';
 import { cn } from '@/lib/utils';
 import { useIsConnected } from '@fuels/react';
 import { Trophy } from 'lucide-react';
