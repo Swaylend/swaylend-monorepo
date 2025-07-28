@@ -22,15 +22,15 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { Line } from '@/components/v1/line';
-import { Title } from '@/components/v1/title';
 import { InfoIcon } from '@/components/v1/info-icon';
+import { Line } from '@/components/v1/line';
 import { NetBorrowTooltip } from '@/components/v1/net-borrow-tooltip';
 import { PointIcons } from '@/components/v1/point-icons';
 import {
   POINTS_BORROW,
   POINTS_LM,
 } from '@/components/v1/point-icons/points-tooltip';
+import { Title } from '@/components/v1/title';
 import { appConfig } from '@/configs';
 import {
   USER_ROLE,

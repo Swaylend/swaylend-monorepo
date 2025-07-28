@@ -2,7 +2,7 @@ import {
   ErrorToast,
   PendingToast,
   TransactionSuccessToast,
-} from '@/components/v1/Toasts';
+} from '@/components/v1/toasts';
 import { useMarketContract } from '@/contracts/use-market-contract';
 import { useMarketStore } from '@/stores/market-store';
 import { useAccount, useWallet } from '@fuels/react';

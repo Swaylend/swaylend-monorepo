@@ -23,14 +23,14 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { Title } from '@/components/v1/Title';
 import { AssetName } from '@/components/v1/asset-name';
 import { CircularProgressBar } from '@/components/v1/circular-progress-bar';
 import { InfoIcon } from '@/components/v1/info-icon';
 import { PointIcons } from '@/components/v1/point-icons';
 import { POINTS_COLLATERAL } from '@/components/v1/point-icons/points-tooltip';
+import { Title } from '@/components/v1/title';
 import { appConfig } from '@/configs';
-import type { CollateralConfigurationOutput } from '@/contract-types/v1/Market';
+import type { CollateralConfigurationOutput } from '@/contract-types/v1/market';
 import {
   useBalance,
   useCollateralConfigurations,

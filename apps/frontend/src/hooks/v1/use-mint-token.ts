@@ -2,7 +2,7 @@ import {
   ErrorToast,
   PendingToast,
   TransactionSuccessToast,
-} from '@/components/v1/Toasts';
+} from '@/components/v1/toasts';
 import { appConfig } from '@/configs';
 import { Token } from '@/contract-types/v1';
 import { useMarketStore } from '@/stores/market-store';

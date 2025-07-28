@@ -1,4 +1,4 @@
-import type { PriceDataUpdateInput } from '@/contract-types/v1/Market';
+import type { PriceDataUpdateInput } from '@/contract-types/v1/market';
 import { useMarketStore } from '@/stores/market-store';
 
 import { useMarketContract } from '@/contracts/use-market-contract';

@@ -1,5 +1,5 @@
 import type BigNumber from 'bignumber.js';
-import { Line } from '../Line';
+import { Line } from '../line';
 
 type NetBorrowTooltipProps = {
   aprData:

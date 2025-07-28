@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { Borrow } from './Borrow';
-import { Collateral } from './Collateral';
-import { Liquidity } from './Liquidity';
+import { Borrow } from './borrow';
+import { Collateral } from './collateral';
+import { Liquidity } from './liquidity';
 
 export const Overview = () => {
   return (

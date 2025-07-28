@@ -34,7 +34,7 @@ import {
   TableHeader,
   TableRow,
 } from '../../../ui/table';
-import { InfoIcon } from '../../InfoIcon';
+import { InfoIcon } from '../../info-icon';
 
 type TableRowProps = {
   market: string;

@@ -2,9 +2,9 @@ import {
   ErrorToast,
   PendingToast,
   TransactionSuccessToast,
-} from '@/components/v1/Toasts';
+} from '@/components/v1/toasts';
 import { appConfig } from '@/configs';
-import type { PriceDataUpdateInput } from '@/contract-types/v1/Market';
+import type { PriceDataUpdateInput } from '@/contract-types/v1/market';
 import { useMarketContract } from '@/contracts/use-market-contract';
 import { usePythContract } from '@/contracts/use-pyth-contract';
 import { useMarketStore } from '@/stores/market-store';

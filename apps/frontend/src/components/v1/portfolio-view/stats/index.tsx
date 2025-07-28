@@ -10,7 +10,7 @@ import {
 import { formatUnits, getFormattedPrice } from '@/utils';
 import BigNumber from 'bignumber.js';
 import React, { useMemo } from 'react';
-import { Chart } from './Chart';
+import { Chart } from './chart';
 
 export const Stats = () => {
   const {
