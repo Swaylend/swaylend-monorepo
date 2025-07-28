@@ -1,11 +1,11 @@
 import { MarketSwitcher } from '@/components/v1/MarketSwitcher';
-import { selectMarketMode, useMarketStore } from '@/stores';
+import { useMarketStore } from '@/stores/market-store';
 import { BorrowTable } from './BorrowTable';
 import { CollateralTable } from './CollateralTable';
 import { LendTable } from './LendTable';
 
 export const AssetsTable = () => {
-  const marketMode = useMarketStore(selectMarketMode);
+  const marketMode = useMarketStore.use.marketMode();
 
   return (
     <div className="w-full mt-[15px] sm:mt-[20px]">

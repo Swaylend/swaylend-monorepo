@@ -1,7 +1,7 @@
-import { InfoIcon } from '@/components/v1/InfoIcon';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { InfoIcon } from '@/components/v1/InfoIcon';
 import {
   useApr,
   useBorrowCapacity,
@@ -17,14 +17,8 @@ import { cn } from '@/lib/utils';
 import {
   ACTION_TYPE,
   MARKET_MODE,
-  selectChangeAction,
-  selectChangeActionTokenAssetId,
-  selectChangeInputDialogOpen,
-  selectChangeMarket,
-  selectChangeMarketMode,
-  selectChangeTokenAmount,
   useMarketStore,
-} from '@/stores';
+} from '@/stores/market-store';
 import { SYMBOL_TO_ICON, formatUnits, getFormattedPrice } from '@/utils';
 import BigNumber from 'bignumber.js';
 import Image from 'next/image';
@@ -32,14 +26,13 @@ import Link from 'next/link';
 import React, { useMemo } from 'react';
 
 export const Markets = () => {
-  const changeAction = useMarketStore(selectChangeAction);
-  const changeTokenAmount = useMarketStore(selectChangeTokenAmount);
-  const changeActionTokenAssetId = useMarketStore(
-    selectChangeActionTokenAssetId
-  );
-  const changeInputDialogOpen = useMarketStore(selectChangeInputDialogOpen);
-  const changeMarketMode = useMarketStore(selectChangeMarketMode);
-  const changeMarket = useMarketStore(selectChangeMarket);
+  const changeAction = useMarketStore.use.changeAction();
+  const changeTokenAmount = useMarketStore.use.changeTokenAmount();
+  const changeActionTokenAssetId =
+    useMarketStore.use.changeActionTokenAssetId();
+  const changeInputDialogOpen = useMarketStore.use.changeInputDialogOpen();
+  const changeMarketMode = useMarketStore.use.changeMarketMode();
+  const changeMarket = useMarketStore.use.changeMarket();
 
   const handleBaseTokenClick = (
     action: ACTION_TYPE,

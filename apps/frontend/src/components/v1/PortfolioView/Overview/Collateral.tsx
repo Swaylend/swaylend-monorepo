@@ -1,6 +1,6 @@
-import { AssetName } from '@/components/v1/AssetName';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { AssetName } from '@/components/v1/AssetName';
 import { appConfig } from '@/configs';
 import {
   useApr,
@@ -13,14 +13,8 @@ import {
 import {
   ACTION_TYPE,
   MARKET_MODE,
-  selectChangeAction,
-  selectChangeActionTokenAssetId,
-  selectChangeInputDialogOpen,
-  selectChangeMarket,
-  selectChangeMarketMode,
-  selectChangeTokenAmount,
   useMarketStore,
-} from '@/stores';
+} from '@/stores/market-store';
 import {
   SYMBOL_TO_ICON,
   SYMBOL_TO_NAME,
@@ -32,7 +26,6 @@ import { MoveUpRightIcon } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useMemo } from 'react';
-import { InfoIcon } from '../../InfoIcon';
 import {
   Table,
   TableBody,
@@ -41,6 +34,7 @@ import {
   TableHeader,
   TableRow,
 } from '../../../ui/table';
+import { InfoIcon } from '../../InfoIcon';
 
 type TableRowProps = {
   market: string;
@@ -63,14 +57,13 @@ const CollateralTableRow = ({
 }: TableRowProps) => {
   const symbol = appConfig.assets[assetId];
 
-  const changeAction = useMarketStore(selectChangeAction);
-  const changeTokenAmount = useMarketStore(selectChangeTokenAmount);
-  const changeActionTokenAssetId = useMarketStore(
-    selectChangeActionTokenAssetId
-  );
-  const changeInputDialogOpen = useMarketStore(selectChangeInputDialogOpen);
-  const changeMarketMode = useMarketStore(selectChangeMarketMode);
-  const changeMarket = useMarketStore(selectChangeMarket);
+  const changeAction = useMarketStore.use.changeAction();
+  const changeTokenAmount = useMarketStore.use.changeTokenAmount();
+  const changeActionTokenAssetId =
+    useMarketStore.use.changeActionTokenAssetId();
+  const changeInputDialogOpen = useMarketStore.use.changeInputDialogOpen();
+  const changeMarketMode = useMarketStore.use.changeMarketMode();
+  const changeMarket = useMarketStore.use.changeMarket();
 
   const handleCollateralTokenClick = (
     action: ACTION_TYPE,

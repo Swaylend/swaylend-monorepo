@@ -1,9 +1,3 @@
-import { AssetName } from '@/components/v1/AssetName';
-import { CircularProgressBar } from '@/components/v1/CircularProgressBar';
-import { InfoIcon } from '@/components/v1/InfoIcon';
-import { PointIcons } from '@/components/v1/PointIcons';
-import { POINTS_COLLATERAL } from '@/components/v1/PointIcons/PointsTooltip';
-import { Title } from '@/components/v1/Title';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -29,6 +23,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { AssetName } from '@/components/v1/AssetName';
+import { CircularProgressBar } from '@/components/v1/CircularProgressBar';
+import { InfoIcon } from '@/components/v1/InfoIcon';
+import { PointIcons } from '@/components/v1/PointIcons';
+import { POINTS_COLLATERAL } from '@/components/v1/PointIcons/PointsTooltip';
+import { Title } from '@/components/v1/Title';
 import { appConfig } from '@/configs';
 import type { CollateralConfigurationOutput } from '@/contract-types/v1/Market';
 import {
@@ -39,14 +39,10 @@ import {
   useUserCollateralAssets,
 } from '@/hooks/v1';
 import {
+  ACTION_MODE,
   ACTION_TYPE,
-  selectChangeAction,
-  selectChangeActionTokenAssetId,
-  selectChangeInputDialogOpen,
-  selectChangeMode,
-  selectChangeTokenAmount,
   useMarketStore,
-} from '@/stores';
+} from '@/stores/market-store';
 import {
   SYMBOL_TO_ICON,
   SYMBOL_TO_NAME,
@@ -457,13 +453,12 @@ const SkeletonRow = (
 
 export const CollateralTable = () => {
   const { account } = useAccount();
-  const changeAction = useMarketStore(selectChangeAction);
-  const changeTokenAmount = useMarketStore(selectChangeTokenAmount);
-  const changeMode = useMarketStore(selectChangeMode);
-  const changeActionTokenAssetId = useMarketStore(
-    selectChangeActionTokenAssetId
-  );
-  const changeInputDialogOpen = useMarketStore(selectChangeInputDialogOpen);
+  const changeAction = useMarketStore.use.changeAction();
+  const changeTokenAmount = useMarketStore.use.changeTokenAmount();
+  const changeMode = useMarketStore.use.changeMode();
+  const changeActionTokenAssetId =
+    useMarketStore.use.changeActionTokenAssetId();
+  const changeInputDialogOpen = useMarketStore.use.changeInputDialogOpen();
 
   const {
     data: userCollateralAssets,

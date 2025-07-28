@@ -15,12 +15,7 @@ import {
 import { appConfig } from '@/configs';
 import { useTrackExternalPageView } from '@/lib/posthog';
 import { cn } from '@/lib/utils';
-import {
-  MARKET_MODE,
-  selectChangeMarketMode,
-  selectMarketMode,
-  useMarketStore,
-} from '@/stores';
+import { MARKET_MODE, useMarketStore } from '@/stores/market-store';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import {
   ChartLine,
@@ -35,8 +30,8 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Logo from '/public/icons/dark-logo.svg?url';
-import { Line } from '../v1/Line';
 import { Button } from '../ui/button';
+import { Line } from '../v1/Line';
 import { ConnectButton } from './ConnectButton';
 import { Points } from './Points';
 
@@ -54,8 +49,8 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
   const [open, setOpen] = useState(false);
   const [openDex, setOpenDex] = useState(false);
   const [openBridge, setOpenBridge] = useState(false);
-  const marketMode = useMarketStore(selectMarketMode);
-  const changeMarketMode = useMarketStore(selectChangeMarketMode);
+  const marketMode = useMarketStore.use.marketMode();
+  const changeMarketMode = useMarketStore.use.changeMarketMode();
   const { mutate: trackExternalPageView } = useTrackExternalPageView();
 
   return (

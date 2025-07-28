@@ -3,19 +3,15 @@
 import { appConfig } from '@/configs';
 import { Market } from '@/contract-types/v1';
 import { useProvider } from '@/hooks';
-import {
-  selectUpdateContracts,
-  useMarketAddressBasedContractsStore,
-} from '@/stores/marketAddressBasedContractsStore';
+import { useMarketAddressBasedContractsStore } from '@/stores/market-address-based-contract-store';
 import { useWallet } from '@fuels/react';
 import { PythContract } from '@pythnetwork/pyth-fuel-js';
 import { useEffect } from 'react';
 
 export default function MarketContractStoreWatcher(): null {
   const { wallet } = useWallet();
-  const updateContracts = useMarketAddressBasedContractsStore(
-    selectUpdateContracts
-  );
+  const updateContracts =
+    useMarketAddressBasedContractsStore.use.updateContracts();
   const { provider } = useProvider();
   const walletOrProvider = wallet || provider;
 

@@ -1,12 +1,12 @@
 import { appConfig } from '@/configs';
+import { Airdrop, useAirdrops } from '@/hooks/useAirdrops';
+import { useClaimAirdrop } from '@/hooks/useClaimAirdrop';
+import { useIsAirdropClaimed } from '@/hooks/useIsAirdropClaimed';
 import {
   useCollateralConfigurations,
   useLMRewards,
   useMarketConfiguration,
 } from '@/hooks/v1';
-import { Airdrop, useAirdrops } from '@/hooks/useAirdrops';
-import { useClaimAirdrop } from '@/hooks/useClaimAirdrop';
-import { useIsAirdropClaimed } from '@/hooks/useIsAirdropClaimed';
 import { cn } from '@/lib/utils';
 import { SYMBOL_TO_ICON } from '@/utils';
 import { useWallet } from '@fuels/react';

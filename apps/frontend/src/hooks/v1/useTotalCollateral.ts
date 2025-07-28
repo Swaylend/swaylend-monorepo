@@ -1,4 +1,4 @@
-import { selectMarket, useMarketStore } from '@/stores';
+import { useMarketStore } from '@/stores/market-store';
 
 import { useMarketContract } from '@/contracts/useMarketContract';
 import { useQuery } from '@tanstack/react-query';
@@ -6,7 +6,7 @@ import BigNumber from 'bignumber.js';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
 
 export const useTotalCollateral = (marketParam?: string) => {
-  const storeMarket = useMarketStore(selectMarket);
+  const storeMarket = useMarketStore.use.market();
   const market = marketParam ?? storeMarket;
   const { data: collateralConfigurations } =
     useCollateralConfigurations(market);

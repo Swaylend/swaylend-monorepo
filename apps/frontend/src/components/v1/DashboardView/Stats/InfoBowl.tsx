@@ -1,5 +1,3 @@
-import { NetBorrowTooltip } from '@/components/v1/NetBorrowTooltip';
-import { NetEarnTooltip } from '@/components/v1/NetEarnTooltip';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
   Tooltip,
@@ -7,6 +5,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { NetBorrowTooltip } from '@/components/v1/NetBorrowTooltip';
+import { NetEarnTooltip } from '@/components/v1/NetEarnTooltip';
 import {
   useApr,
   useUserCollateralAssets,
@@ -14,7 +14,7 @@ import {
   useUserSupplyBorrow,
 } from '@/hooks/v1';
 import { cn } from '@/lib/utils';
-import { selectMarketMode, useMarketStore } from '@/stores';
+import { useMarketStore } from '@/stores/market-store';
 import { useIsConnected } from '@fuels/react';
 import { useMemo } from 'react';
 import Wave from 'react-wavify';
@@ -36,7 +36,7 @@ const WAVE_COLORS = {
 };
 
 export const InfoBowl = () => {
-  const marketMode = useMarketStore(selectMarketMode);
+  const marketMode = useMarketStore.use.marketMode();
   const { isConnected } = useIsConnected();
 
   const { data: userSupplyBorrow, isPending: isPendingUserSupplyBorrow } =

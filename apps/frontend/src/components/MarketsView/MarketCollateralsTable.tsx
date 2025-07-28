@@ -1,4 +1,3 @@
-import { AssetName } from '@/components/v1/AssetName';
 import {
   Table,
   TableBody,
@@ -7,6 +6,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import { AssetName } from '@/components/v1/AssetName';
 import { appConfig } from '@/configs';
 import {
   useCollateralConfigurations,

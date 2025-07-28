@@ -1,4 +1,4 @@
-import { selectMarket, useMarketStore } from '@/stores';
+import { useMarketStore } from '@/stores/market-store';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { useBorrowRate } from './useBorrowRate';
@@ -8,7 +8,7 @@ import { useSupplyRate } from './useSupplyRate';
 const COEFFICIENT = BigNumber(365).times(24).times(60).times(60);
 
 export const useApr = (marketParam?: string) => {
-  const storeMarket = useMarketStore(selectMarket);
+  const storeMarket = useMarketStore.use.market();
   const market = marketParam ?? storeMarket;
   const { data: rewardsData } = useRewards(market);
   const { data: supplyRate } = useSupplyRate(market);

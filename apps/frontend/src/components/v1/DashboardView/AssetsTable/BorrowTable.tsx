@@ -1,12 +1,3 @@
-import { InfoIcon } from '@/components/v1/InfoIcon';
-import { Line } from '@/components/v1/Line';
-import { NetBorrowTooltip } from '@/components/v1/NetBorrowTooltip';
-import { PointIcons } from '@/components/v1/PointIcons';
-import {
-  POINTS_BORROW,
-  POINTS_LM,
-} from '@/components/v1/PointIcons/PointsTooltip';
-import { Title } from '@/components/v1/Title';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -31,6 +22,15 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
+import { InfoIcon } from '@/components/v1/InfoIcon';
+import { Line } from '@/components/v1/Line';
+import { NetBorrowTooltip } from '@/components/v1/NetBorrowTooltip';
+import { PointIcons } from '@/components/v1/PointIcons';
+import {
+  POINTS_BORROW,
+  POINTS_LM,
+} from '@/components/v1/PointIcons/PointsTooltip';
+import { Title } from '@/components/v1/Title';
 import { appConfig } from '@/configs';
 import {
   USER_ROLE,
@@ -43,14 +43,7 @@ import {
   useUserSupplyBorrow,
 } from '@/hooks/v1';
 import { cn } from '@/lib/utils';
-import {
-  ACTION_TYPE,
-  selectChangeAction,
-  selectChangeActionTokenAssetId,
-  selectChangeInputDialogOpen,
-  selectChangeTokenAmount,
-  useMarketStore,
-} from '@/stores';
+import { ACTION_TYPE, useMarketStore } from '@/stores/market-store';
 import { SYMBOL_TO_ICON, formatUnits, getFormattedNumber } from '@/utils';
 import { useAccount, useIsConnected } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
@@ -124,12 +117,11 @@ const SkeletonCardContent = (
 
 export const BorrowTable = () => {
   const { account } = useAccount();
-  const changeAction = useMarketStore(selectChangeAction);
-  const changeTokenAmount = useMarketStore(selectChangeTokenAmount);
-  const changeActionTokenAssetId = useMarketStore(
-    selectChangeActionTokenAssetId
-  );
-  const changeInputDialogOpen = useMarketStore(selectChangeInputDialogOpen);
+  const changeAction = useMarketStore.use.changeAction();
+  const changeTokenAmount = useMarketStore.use.changeTokenAmount();
+  const changeActionTokenAssetId =
+    useMarketStore.use.changeActionTokenAssetId();
+  const changeInputDialogOpen = useMarketStore.use.changeInputDialogOpen();
 
   const { data: userSupplyBorrow } = useUserSupplyBorrow();
   const { data: priceData } = usePrice();

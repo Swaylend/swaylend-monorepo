@@ -14,8 +14,8 @@ import { formatUnits, getFormattedNumber, getFormattedPrice } from '@/utils';
 import BigNumber from 'bignumber.js';
 import { ArrowDown, ArrowUp } from 'lucide-react';
 import { useMemo } from 'react';
-import { InfoIcon } from '../InfoIcon';
 import { Progress } from '../../ui/progress';
+import { InfoIcon } from '../InfoIcon';
 
 export const PositionSummary = () => {
   const { data: marketConfiguration } = useMarketConfiguration();

@@ -4,14 +4,7 @@ import {
   TransactionSuccessToast,
 } from '@/components/v1/Toasts';
 import { useMarketContract } from '@/contracts/useMarketContract';
-import {
-  selectChangeInputDialogOpen,
-  selectChangeSuccessDialogOpen,
-  selectChangeSuccessDialogTransactionId,
-  selectChangeTokenAmount,
-  selectMarket,
-  useMarketStore,
-} from '@/stores';
+import { useMarketStore } from '@/stores/market-store';
 import { useAccount, useWallet } from '@fuels/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
@@ -27,13 +20,12 @@ export const useSupplyCollateral = ({
 }: useSupplyCollateralProps) => {
   const { wallet } = useWallet();
   const { account } = useAccount();
-  const market = useMarketStore(selectMarket);
-  const changeTokenAmount = useMarketStore(selectChangeTokenAmount);
-  const changeInputDialogOpen = useMarketStore(selectChangeInputDialogOpen);
-  const changeSuccessDialogOpen = useMarketStore(selectChangeSuccessDialogOpen);
-  const changeSuccessDialogTransactionId = useMarketStore(
-    selectChangeSuccessDialogTransactionId
-  );
+  const market = useMarketStore.use.market();
+  const changeTokenAmount = useMarketStore.use.changeTokenAmount();
+  const changeInputDialogOpen = useMarketStore.use.changeInputDialogOpen();
+  const changeSuccessDialogOpen = useMarketStore.use.changeSuccessDialogOpen();
+  const changeSuccessDialogTransactionId =
+    useMarketStore.use.changeSuccessDialogTransactionId();
   const { data: collateralConfigurations } = useCollateralConfigurations();
 
   const queryClient = useQueryClient();

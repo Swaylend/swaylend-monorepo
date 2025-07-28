@@ -1,5 +1,5 @@
 import type { PriceDataUpdateInput } from '@/contract-types/v1/Market';
-import { selectMarket, useMarketStore } from '@/stores';
+import { useMarketStore } from '@/stores/market-store';
 
 import { useMarketContract } from '@/contracts/useMarketContract';
 import { usePythContract } from '@/contracts/usePythContract';
@@ -9,9 +9,9 @@ import BigNumber from 'bignumber.js';
 import { arrayify } from 'fuels';
 import { DateTime } from 'fuels';
 import { useMemo, useState } from 'react';
+import { useProvider } from '../useProvider';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
 import { useMarketConfiguration } from './useMarketConfiguration';
-import { useProvider } from '../useProvider';
 
 export const usePrice = (marketParam?: string) => {
   const [hermesClient, _] = useState(
@@ -27,7 +27,7 @@ export const usePrice = (marketParam?: string) => {
 
   const { provider } = useProvider();
 
-  const storeMarket = useMarketStore(selectMarket);
+  const storeMarket = useMarketStore.use.market();
   const market = marketParam ?? storeMarket;
 
   const { data: marketConfiguration } = useMarketConfiguration(market);

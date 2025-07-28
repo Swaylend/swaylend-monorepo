@@ -1,6 +1,6 @@
-import { CollateralIcons } from '@/components/v1/CollateralIcons';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
+import { CollateralIcons } from '@/components/v1/CollateralIcons';
 import { appConfig } from '@/configs';
 import {
   useApr,
@@ -15,14 +15,8 @@ import { cn } from '@/lib/utils';
 import {
   ACTION_TYPE,
   MARKET_MODE,
-  selectChangeAction,
-  selectChangeActionTokenAssetId,
-  selectChangeInputDialogOpen,
-  selectChangeMarket,
-  selectChangeMarketMode,
-  selectChangeTokenAmount,
   useMarketStore,
-} from '@/stores';
+} from '@/stores/market-store';
 import {
   SYMBOL_TO_ICON,
   SYMBOL_TO_NAME,
@@ -241,14 +235,13 @@ export const Borrow = () => {
       });
   }, [userCollateralAssetsUSDC]);
 
-  const changeAction = useMarketStore(selectChangeAction);
-  const changeTokenAmount = useMarketStore(selectChangeTokenAmount);
-  const changeActionTokenAssetId = useMarketStore(
-    selectChangeActionTokenAssetId
-  );
-  const changeInputDialogOpen = useMarketStore(selectChangeInputDialogOpen);
-  const changeMarketMode = useMarketStore(selectChangeMarketMode);
-  const changeMarket = useMarketStore(selectChangeMarket);
+  const changeAction = useMarketStore.use.changeAction();
+  const changeTokenAmount = useMarketStore.use.changeTokenAmount();
+  const changeActionTokenAssetId =
+    useMarketStore.use.changeActionTokenAssetId();
+  const changeInputDialogOpen = useMarketStore.use.changeInputDialogOpen();
+  const changeMarketMode = useMarketStore.use.changeMarketMode();
+  const changeMarket = useMarketStore.use.changeMarket();
 
   const handleBaseTokenClick = (
     action: ACTION_TYPE,

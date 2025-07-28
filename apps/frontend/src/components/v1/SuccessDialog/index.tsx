@@ -1,25 +1,17 @@
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { appConfig } from '@/configs';
 import { cn } from '@/lib/utils';
-import {
-  ACTION_TYPE,
-  selectAction,
-  selectChangeSuccessDialogOpen,
-  selectSuccessDialogOpen,
-  selectSuccessDialogTransactionId,
-  useMarketStore,
-} from '@/stores';
+import { ACTION_TYPE, useMarketStore } from '@/stores/market-store';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import { ArrowUpRightIcon, CheckCircleIcon } from 'lucide-react';
 import { useMemo } from 'react';
 
 export const SuccessDialog = () => {
-  const action = useMarketStore(selectAction);
-  const open = useMarketStore(selectSuccessDialogOpen);
-  const setOpen = useMarketStore(selectChangeSuccessDialogOpen);
-  const successDialogTransactionId = useMarketStore(
-    selectSuccessDialogTransactionId
-  );
+  const action = useMarketStore.use.action();
+  const open = useMarketStore.use.successDialogOpen();
+  const setOpen = useMarketStore.use.changeSuccessDialogOpen();
+  const successDialogTransactionId =
+    useMarketStore.use.successDialogTransactionId();
 
   const actionText = useMemo(() => {
     if (action === ACTION_TYPE.SUPPLY) {

@@ -7,14 +7,7 @@ import { appConfig } from '@/configs';
 import type { PriceDataUpdateInput } from '@/contract-types/v1/Market';
 import { useMarketContract } from '@/contracts/useMarketContract';
 import { usePythContract } from '@/contracts/usePythContract';
-import {
-  selectChangeInputDialogOpen,
-  selectChangeSuccessDialogOpen,
-  selectChangeSuccessDialogTransactionId,
-  selectChangeTokenAmount,
-  selectMarket,
-  useMarketStore,
-} from '@/stores';
+import { useMarketStore } from '@/stores/market-store';
 import { useAccount } from '@fuels/react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
@@ -23,13 +16,12 @@ import { useMarketConfiguration } from './useMarketConfiguration';
 
 export const useWithdrawBase = () => {
   const { account } = useAccount();
-  const market = useMarketStore(selectMarket);
-  const changeTokenAmount = useMarketStore(selectChangeTokenAmount);
-  const changeInputDialogOpen = useMarketStore(selectChangeInputDialogOpen);
-  const changeSuccessDialogOpen = useMarketStore(selectChangeSuccessDialogOpen);
-  const changeSuccessDialogTransactionId = useMarketStore(
-    selectChangeSuccessDialogTransactionId
-  );
+  const market = useMarketStore.use.market();
+  const changeTokenAmount = useMarketStore.use.changeTokenAmount();
+  const changeInputDialogOpen = useMarketStore.use.changeInputDialogOpen();
+  const changeSuccessDialogOpen = useMarketStore.use.changeSuccessDialogOpen();
+  const changeSuccessDialogTransactionId =
+    useMarketStore.use.changeSuccessDialogTransactionId();
   const { data: marketConfiguration } = useMarketConfiguration();
 
   const queryClient = useQueryClient();

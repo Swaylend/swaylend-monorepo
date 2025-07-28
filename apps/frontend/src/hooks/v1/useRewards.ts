@@ -1,5 +1,5 @@
 import { appConfig } from '@/configs';
-import { selectMarket, useMarketStore } from '@/stores';
+import { useMarketStore } from '@/stores/market-store';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import dayjs from 'dayjs';
@@ -24,7 +24,7 @@ const calculateRewardsAprForPool = (
 };
 
 export const useRewards = (marketParam?: string) => {
-  const storeMarket = useMarketStore(selectMarket);
+  const storeMarket = useMarketStore.use.market();
   const market = marketParam ?? storeMarket;
 
   const { data: marketBasics } = useMarketBasicsWithInterest(market);

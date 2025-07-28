@@ -1,8 +1,8 @@
-import { AnnouncementPopover } from '@/components/v1/AnnouncementPopover';
 import { Footer } from '@/components/Footer';
-import { IntroductionDialog } from '@/components/v1/IntroductionDialog';
 import { Navbar } from '@/components/Navbar';
 import { Providers } from '@/components/Providers';
+import { AnnouncementPopover } from '@/components/v1/AnnouncementPopover';
+import { IntroductionDialog } from '@/components/v1/IntroductionDialog';
 import { appConfig } from '@/configs';
 import { isMobile } from '@/utils/isMobile';
 import { headers } from 'next/headers';

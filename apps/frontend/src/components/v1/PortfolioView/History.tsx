@@ -8,8 +8,6 @@ import {
 import { SYMBOL_TO_ICON, SYMBOL_TO_NAME } from '@/utils';
 import Image from 'next/image';
 import React, { useMemo, useState } from 'react';
-import { AssetName } from '../AssetName';
-import { InfoIcon } from '../InfoIcon';
 import { Skeleton } from '../../ui/skeleton';
 import {
   Table,
@@ -19,6 +17,8 @@ import {
   TableHeader,
   TableRow,
 } from '../../ui/table';
+import { AssetName } from '../AssetName';
+import { InfoIcon } from '../InfoIcon';
 
 const SkeletonRow = (
   <TableRow>

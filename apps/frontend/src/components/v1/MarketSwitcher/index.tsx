@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/select';
 import { appConfig } from '@/configs';
 import { cn } from '@/lib/utils';
-import { selectChangeMarket, selectMarket, useMarketStore } from '@/stores';
+import { useMarketStore } from '@/stores/market-store';
 import { SYMBOL_TO_ICON } from '@/utils';
 import { SelectGroup } from '@radix-ui/react-select';
 import Image from 'next/image';
@@ -53,8 +53,8 @@ const MarketItem = ({
 };
 
 export const MarketSwitcher = () => {
-  const market = useMarketStore(selectMarket);
-  const changeMarket = useMarketStore(selectChangeMarket);
+  const market = useMarketStore.use.market();
+  const changeMarket = useMarketStore.use.changeMarket();
 
   const handleChange = (value: string) => {
     changeMarket(value);

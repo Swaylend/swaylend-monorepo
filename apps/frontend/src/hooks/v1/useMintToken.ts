@@ -5,7 +5,7 @@ import {
 } from '@/components/v1/Toasts';
 import { appConfig } from '@/configs';
 import { Token } from '@/contract-types/v1';
-import { selectMarket, useMarketStore } from '@/stores';
+import { useMarketStore } from '@/stores/market-store';
 import { FAUCET_AMOUNTS } from '@/utils';
 import { useAccount, useWallet } from '@fuels/react';
 import { useMutation } from '@tanstack/react-query';
@@ -16,7 +16,7 @@ import { toast } from 'react-toastify';
 export const useMintToken = (symbol: string, decimals: number) => {
   const { wallet } = useWallet();
   const { account } = useAccount();
-  const market = useMarketStore(selectMarket);
+  const market = useMarketStore.use.market();
 
   return useMutation({
     mutationKey: ['mintToken', symbol, account, market],

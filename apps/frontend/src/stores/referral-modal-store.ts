@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { createSelectors } from './create-selectors';
 
 interface ReferralModalStore {
   open: boolean;
@@ -9,13 +10,9 @@ export const referralModalStoreInitialState = {
   open: false,
 };
 
-export const useReferralModalStore = create<ReferralModalStore>()((set) => ({
+const useReferralModalStoreBase = create<ReferralModalStore>()((set) => ({
   ...referralModalStoreInitialState,
   setOpen: (open: boolean) => set({ open }),
 }));
 
-export const selectReferralModalOpen = (state: ReferralModalStore) =>
-  state.open;
-
-export const selectReferralModalSetOpen = (state: ReferralModalStore) =>
-  state.setOpen;
+export const useReferralModalStore = createSelectors(useReferralModalStoreBase);

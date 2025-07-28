@@ -25,16 +25,16 @@ import { ChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 import type React from 'react';
 import { useMemo } from 'react';
-import { IconPair } from '../v1/IconPair';
-import { Line } from '../v1/Line';
-import { NetBorrowTooltip } from '../v1/NetBorrowTooltip';
-import { NetEarnTooltip } from '../v1/NetEarnTooltip';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from '../ui/tooltip';
+import { IconPair } from '../v1/IconPair';
+import { Line } from '../v1/Line';
+import { NetBorrowTooltip } from '../v1/NetBorrowTooltip';
+import { NetEarnTooltip } from '../v1/NetEarnTooltip';
 import { KinkChart } from './KinkChart';
 import { MarketChart } from './MarketChart';
 import { MarketCollateralsTable } from './MarketCollateralsTable';

@@ -1,6 +1,7 @@
 import { appConfig } from '@/configs';
 import BigNumber from 'bignumber.js';
 import { create } from 'zustand';
+import { createSelectors } from './create-selectors';
 
 export enum ACTION_TYPE {
   SUPPLY = 'SUPPLY',
@@ -55,7 +56,7 @@ export const marketStoreInitialState = {
 };
 
 BigNumber.config({ EXPONENTIAL_AT: 20 });
-export const useMarketStore = create<MarketStore>()((set) => ({
+const useMarketStoreBase = create<MarketStore>()((set) => ({
   ...marketStoreInitialState,
 
   changeMarket: (market: string) => set({ market }),
@@ -71,33 +72,4 @@ export const useMarketStore = create<MarketStore>()((set) => ({
     set({ successDialogTransactionId: transactionId }),
 }));
 
-// Always only select individual fields when using `shallow`, or it will always trigger a new render since technically it's a new object.
-// In general, best practice is to always use selectors and for individual fields only.
-export const selectMarket = (state: MarketStore) => state.market;
-export const selectMode = (state: MarketStore) => state.mode;
-export const selectMarketMode = (state: MarketStore) => state.marketMode;
-export const selectAction = (state: MarketStore) => state.action;
-export const selectTokenAmount = (state: MarketStore) => state.tokenAmount;
-export const selectActionTokenAssetId = (state: MarketStore) =>
-  state.actionTokenAssetId;
-export const selectChangeMarketMode = (state: MarketStore) =>
-  state.changeMarketMode;
-export const selectChangeInputDialogOpen = (state: MarketStore) =>
-  state.changeInputDialogOpen;
-export const selectChangeSuccessDialogOpen = (state: MarketStore) =>
-  state.changeSuccessDialogOpen;
-export const selectChangeSuccessDialogTransactionId = (state: MarketStore) =>
-  state.changeSuccessDialogTransactionId;
-export const selectChangeAction = (state: MarketStore) => state.changeAction;
-export const selectChangeTokenAmount = (state: MarketStore) =>
-  state.changeTokenAmount;
-export const selectChangeActionTokenAssetId = (state: MarketStore) =>
-  state.changeActionTokenAssetId;
-export const selectChangeMode = (state: MarketStore) => state.changeMode;
-export const selectInputDialogOpen = (state: MarketStore) =>
-  state.inputDialogOpen;
-export const selectChangeMarket = (state: MarketStore) => state.changeMarket;
-export const selectSuccessDialogOpen = (state: MarketStore) =>
-  state.successDialogOpen;
-export const selectSuccessDialogTransactionId = (state: MarketStore) =>
-  state.successDialogTransactionId;
+export const useMarketStore = createSelectors(useMarketStoreBase);

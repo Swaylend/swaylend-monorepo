@@ -23,17 +23,7 @@ import {
   useWithdrawCollateral,
 } from '@/hooks/v1';
 import { cn } from '@/lib/utils';
-import {
-  ACTION_TYPE,
-  selectAction,
-  selectActionTokenAssetId,
-  selectChangeAction,
-  selectChangeInputDialogOpen,
-  selectChangeTokenAmount,
-  selectInputDialogOpen,
-  selectTokenAmount,
-  useMarketStore,
-} from '@/stores';
+import { ACTION_TYPE, useMarketStore } from '@/stores/market-store';
 import { SYMBOL_TO_NAME, formatUnits, getFormattedNumber } from '@/utils';
 import { useAccount, useIsConnected } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
@@ -73,13 +63,13 @@ export const InputDialog = () => {
   const { data: collateralBalances } = useTotalCollateral();
   const { data: borrowCapacity } = useBorrowCapacity();
   const { data: userSupplyBorrow } = useUserSupplyBorrow();
-  const actionTokenAssetId = useMarketStore(selectActionTokenAssetId);
-  const tokenAmount = useMarketStore(selectTokenAmount);
-  const action = useMarketStore(selectAction);
-  const open = useMarketStore(selectInputDialogOpen);
-  const changeAction = useMarketStore(selectChangeAction);
-  const changeTokenAmount = useMarketStore(selectChangeTokenAmount);
-  const setOpen = useMarketStore(selectChangeInputDialogOpen);
+  const actionTokenAssetId = useMarketStore.use.actionTokenAssetId();
+  const tokenAmount = useMarketStore.use.tokenAmount();
+  const action = useMarketStore.use.action();
+  const open = useMarketStore.use.inputDialogOpen();
+  const changeAction = useMarketStore.use.changeAction();
+  const changeTokenAmount = useMarketStore.use.changeTokenAmount();
+  const setOpen = useMarketStore.use.changeInputDialogOpen();
 
   const { data: priceData } = usePrice();
   const { data: marketBalanceOfBase } = useMarketBalanceOfBase();

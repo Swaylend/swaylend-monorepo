@@ -25,11 +25,6 @@ import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 import SWAY from '/public/tokens/sway.svg?url';
-import { CircularProgressBar } from '../v1/CircularProgressBar';
-import { type Collateral, CollateralIcons } from '../v1/CollateralIcons';
-import { Line } from '../v1/Line';
-import { NetBorrowTooltip } from '../v1/NetBorrowTooltip';
-import { NetEarnTooltip } from '../v1/NetEarnTooltip';
 import { Skeleton } from '../ui/skeleton';
 import {
   Tooltip,
@@ -37,6 +32,11 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '../ui/tooltip';
+import { CircularProgressBar } from '../v1/CircularProgressBar';
+import { type Collateral, CollateralIcons } from '../v1/CollateralIcons';
+import { Line } from '../v1/Line';
+import { NetBorrowTooltip } from '../v1/NetBorrowTooltip';
+import { NetEarnTooltip } from '../v1/NetEarnTooltip';
 
 const SkeletonRow = (
   <TableRow>

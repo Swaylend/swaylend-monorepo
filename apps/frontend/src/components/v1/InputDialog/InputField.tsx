@@ -4,7 +4,7 @@ import {
   useMarketConfiguration,
 } from '@/hooks/v1';
 import { cn } from '@/lib/utils';
-import { useMarketStore } from '@/stores';
+import { useMarketStore } from '@/stores/market-store';
 import { SYMBOL_TO_ICON } from '@/utils';
 import BigNumber from 'bignumber.js';
 import Image from 'next/image';

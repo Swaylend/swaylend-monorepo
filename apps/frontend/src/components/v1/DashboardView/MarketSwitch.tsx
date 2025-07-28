@@ -1,13 +1,9 @@
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import {
-  selectChangeMarketMode,
-  selectMarketMode,
-  useMarketStore,
-} from '@/stores';
+import { MARKET_MODE, useMarketStore } from '@/stores/market-store';
 
 export const MarketSwitch = () => {
-  const marketMode = useMarketStore(selectMarketMode);
-  const changeMarketMode = useMarketStore(selectChangeMarketMode);
+  const marketMode = useMarketStore.use.marketMode();
+  const changeMarketMode = useMarketStore.use.changeMarketMode();
 
   const handleChange = (value: any) => {
     changeMarketMode(value);

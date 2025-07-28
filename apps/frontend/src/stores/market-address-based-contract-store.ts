@@ -4,6 +4,7 @@ import { appConfig } from '@/configs';
 import type { Market } from '@/contract-types/v1';
 import type { PythContract } from '@pythnetwork/pyth-fuel-js';
 import { create } from 'zustand';
+import { createSelectors } from './create-selectors';
 
 interface Store {
   contracts: Map<
@@ -32,7 +33,7 @@ export const marketStoreInitialState = {
   ),
 };
 
-export const useMarketAddressBasedContractsStore = create<Store>()((set) => ({
+const useMarketAddressBasedContractsStoreBase = create<Store>()((set) => ({
   ...marketStoreInitialState,
   updateContracts: (
     market: string,
@@ -50,8 +51,11 @@ export const useMarketAddressBasedContractsStore = create<Store>()((set) => ({
   },
 }));
 
+export const useMarketAddressBasedContractsStore = createSelectors(
+  useMarketAddressBasedContractsStoreBase
+);
+
 export const selectPythContract = (state: Store, market: string) =>
   state.contracts.get(market)?.pythContract;
 export const selectMarketContract = (state: Store, market: string) =>
   state.contracts.get(market)?.marketContract;
-export const selectUpdateContracts = (state: Store) => state.updateContracts;
