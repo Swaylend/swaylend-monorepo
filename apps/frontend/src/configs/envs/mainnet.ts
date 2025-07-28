@@ -1,4 +1,4 @@
-import { defineConfig } from '../defineConfig';
+import { defineConfig } from '../define-config';
 import type { DeployedMarkets, Rewards } from '../types';
 
 export function createMainnetConfig() {

@@ -10,12 +10,12 @@ import {
 import { ThemeProvider } from 'next-themes';
 import { type ReactNode, useEffect } from 'react';
 import { ToastContainer } from 'react-toastify';
-import { FuelProviderWrapper } from './FuelProviderWrapper';
+import { FuelProviderWrapper } from './fuel-provider-wrapper';
 
-import MarketContractStoreWatcher from '@/components/Providers/MarketContractStoreWatcher';
+import MarketContractStoreWatcher from '@/components/providers/market-contract-store-watcher';
 import posthog from 'posthog-js';
 import { PostHogProvider } from 'posthog-js/react';
-import PostHogIdentify from './PostHogIdentify';
+import PostHogIdentify from './post-hog-identify';
 
 function makeQueryClient() {
   return new QueryClient({

@@ -1,5 +1,5 @@
-import { PortfolioView } from '@/components/v1/PortfolioView';
-import { isMobile } from '@/utils/isMobile';
+import { PortfolioView } from '@/components/v1/portfolio-view';
+import { isMobile } from '@/utils/is-mobile';
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 

@@ -1,6 +1,6 @@
 import { appConfig } from '@/configs';
-import { getMarketsCombinedQuery } from './getMarketsCombinedQuery';
-import { getSingleMarketQuery } from './getSingleMarketQuery';
+import { getMarketsCombinedQuery } from './get-markets-combined-query';
+import { getSingleMarketQuery } from './get-single-market-query';
 
 export type ChartData = {
   timestamp: number;

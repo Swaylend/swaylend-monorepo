@@ -1,10 +1,10 @@
-import { Footer } from '@/components/Footer';
-import { Navbar } from '@/components/Navbar';
-import { Providers } from '@/components/Providers';
-import { AnnouncementPopover } from '@/components/v1/AnnouncementPopover';
-import { IntroductionDialog } from '@/components/v1/IntroductionDialog';
+import { Footer } from '@/components/footer';
+import { Navbar } from '@/components/navbar';
+import { Providers } from '@/components/providers';
+import { AnnouncementPopover } from '@/components/v1/announcement-popover';
+import { IntroductionDialog } from '@/components/v1/introduction-dialog';
 import { appConfig } from '@/configs';
-import { isMobile } from '@/utils/isMobile';
+import { isMobile } from '@/utils/is-mobile';
 import { headers } from 'next/headers';
 
 export default function AppLayout({

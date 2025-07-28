@@ -1,4 +1,4 @@
-import { FaucetView } from '@/components/v1/FaucetView';
+import { FaucetView } from '@/components/v1/faucet-view';
 import { appConfig } from '@/configs';
 
 import type { Metadata } from 'next';

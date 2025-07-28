@@ -1,8 +1,8 @@
-import { MarketStats } from '@/components/MarketsView/MarketStats';
-import { MarketsTable } from '@/components/MarketsView/MarketsTable';
-import { MultiMarketChart } from '@/components/MarketsView/MultiMarketChart';
+import { MarketStats } from '@/components/markets-view/market-stats';
+import { MarketsTable } from '@/components/markets-view/markets-table';
+import { MultiMarketChart } from '@/components/markets-view/multi-market-chart';
 import { getChartData } from '@/lib/charts';
-import { isMobile } from '@/utils/isMobile';
+import { isMobile } from '@/utils/is-mobile';
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 

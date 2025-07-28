@@ -1,4 +1,4 @@
-import { DashboardView } from '@/components/v1/DashboardView';
+import { DashboardView } from '@/components/v1/dashboard-view';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

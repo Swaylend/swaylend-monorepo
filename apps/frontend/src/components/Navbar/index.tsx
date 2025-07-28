@@ -31,9 +31,9 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Logo from '/public/icons/dark-logo.svg?url';
 import { Button } from '../ui/button';
-import { Line } from '../v1/Line';
-import { ConnectButton } from './ConnectButton';
-import { Points } from './Points';
+import { Line } from '../v1/line';
+import { ConnectButton } from './connect-button';
+import { Points } from './points';
 
 const NAVBAR_LINKS = [
   { href: '/markets', label: 'Markets', icon: <ChartLine /> },

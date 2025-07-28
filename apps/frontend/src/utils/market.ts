@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import { formatUnits } from './BigNumber';
+import { formatUnits } from './big-number';
 
 export function getBorrowApr(borrowRate: BigNumber | null | undefined) {
   if (borrowRate == null) return `${BigNumber(0).toFormat(2)}%`;

@@ -1,7 +1,7 @@
-import MarketOverview from '@/components/MarketsView/MarketOverview';
+import MarketOverview from '@/components/markets-view/market-overview';
 import { appConfig } from '@/configs';
 import { getChartData } from '@/lib/charts';
-import { isMobile } from '@/utils/isMobile';
+import { isMobile } from '@/utils/is-mobile';
 import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 
