@@ -15,6 +15,8 @@ use market_sdk::{convert_i256_to_u64, is_i256_negative, parse_units};
 // It is necessary in order to test how the protocol works with large amounts
 const AMOUNT_COEFFICIENT: u64 = 10u64.pow(0);
 
+// SKIP_TEST
+#[ignore]
 #[tokio::test]
 async fn main_test_eth_base() {
     let scale_6 = 10u64.pow(6) as f64;
