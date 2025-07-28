@@ -19,18 +19,34 @@
   "base_min_for_rewards": 1000000000,
   "base_borrow_min": 10000000,
   "target_reserves": 1000000000000,
-  "pyth_contract_id": "0x1c86fdd9e0e7bc0d2ae1bf6817ef4834ffa7247655701ee1b031b52a24c523da",
+  "global_oracle_configurations": [
+    {
+      "contract_id": "",
+      "is_active": true,
+      "oracle_type": "Pyth"
+    },
+    {
+      "contract_id": "",
+      "is_active": true,
+      "oracle_type": "Redstone"
+    }
+  ],
   "base_asset": {
     "asset_id": "0x286c479da40dc953bddc3bb4c453b608bba2e0ac483b077bd475174115395e6b",
-    "price_feed_id": "0xeaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a",
     "name": "USDC",
     "symbol": "USDC",
-    "decimals": 6
+    "decimals": 6,
+    "asset_oracle_configurations": [
+      {
+        "oracle_id": 0,
+        "price_feed_id": "0xeaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a",
+        "is_active": true
+      }
+    ]
   },
   "collateral_assets": [
     {
       "asset_id": "0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07",
-      "price_feed_id": "0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace",
       "name": "Ethereum",
       "symbol": "ETH",
       "decimals": 9,
@@ -39,11 +55,17 @@
       "liquidate_collateral_factor": 800000000000000000,
       "liquidation_penalty": 800000000000000000,
       "supply_cap": 12000000000000,
-      "is_active": true
+      "is_active": true,
+      "asset_oracle_configurations": [
+        {
+          "oracle_id": 0,
+          "price_feed_id": "0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace",
+          "is_active": true
+        }
+      ]
     },
     {
       "asset_id": "0x91b3559edb2619cde8ffb2aa7b3c3be97efd794ea46700db7092abeee62281b0",
-      "price_feed_id": "0x06c217a791f5c4f988b36629af4cb88fad827b2485400a358f3b02886b54de92",
       "name": "ezETH",
       "symbol": "ezETH",
       "decimals": 9,
@@ -52,11 +74,17 @@
       "liquidate_collateral_factor": 750000000000000000,
       "liquidation_penalty": 750000000000000000,
       "supply_cap": 1300000000000,
-      "is_active": true
+      "is_active": true,
+      "asset_oracle_configurations": [
+        {
+          "oracle_id": 0,
+          "price_feed_id": "0x06c217a791f5c4f988b36629af4cb88fad827b2485400a358f3b02886b54de92",
+          "is_active": true
+        }
+      ]
     },
     {
       "asset_id": "0xa0265fb5c32f6e8db3197af3c7eb05c48ae373605b8165b6f4a51c5b0ba4812e",
-      "price_feed_id": "0x2b89b9dc8fdf9f34709a5b106b472f0f39bb6ca9ce04b0fd7f2e971688e2e53b",
       "name": "USDT",
       "symbol": "USDT",
       "decimals": 6,
@@ -65,11 +93,17 @@
       "liquidate_collateral_factor": 950000000000000000,
       "liquidation_penalty": 950000000000000000,
       "supply_cap": 10000000000000,
-      "is_active": true
+      "is_active": true,
+      "asset_oracle_configurations": [
+        {
+          "oracle_id": 0,
+          "price_feed_id": "0x2b89b9dc8fdf9f34709a5b106b472f0f39bb6ca9ce04b0fd7f2e971688e2e53b",
+          "is_active": true
+        }
+      ]
     },
     {
       "asset_id": "0x9e46f919fbf978f3cad7cd34cca982d5613af63ff8aab6c379e4faa179552958",
-      "price_feed_id": "0x710659c5a68e2416ce4264ca8d50d34acc20041d91289110eea152c52ff3dc39",
       "name": "sDAI",
       "symbol": "sDAI",
       "decimals": 9,
@@ -78,11 +112,17 @@
       "liquidate_collateral_factor": 950000000000000000,
       "liquidation_penalty": 950000000000000000,
       "supply_cap": 100000000000000,
-      "is_active": true
+      "is_active": true,
+      "asset_oracle_configurations": [
+        {
+          "oracle_id": 0,
+          "price_feed_id": "0x710659c5a68e2416ce4264ca8d50d34acc20041d91289110eea152c52ff3dc39",
+          "is_active": true
+        }
+      ]
     },
     {
       "asset_id": "0x239ed6e12b7ce4089ee245244e3bf906999a6429c2a9a445a1e1faf56914a4ab",
-      "price_feed_id": "0x9ee4e7c60b940440a261eb54b6d8149c23b580ed7da3139f7f08f4ea29dad395",
       "name": "weETH",
       "symbol": "weETH",
       "decimals": 9,
@@ -91,11 +131,17 @@
       "liquidate_collateral_factor": 750000000000000000,
       "liquidation_penalty": 750000000000000000,
       "supply_cap": 250000000000,
-      "is_active": true
+      "is_active": true,
+      "asset_oracle_configurations": [
+        {
+          "oracle_id": 0,
+          "price_feed_id": "0x9ee4e7c60b940440a261eb54b6d8149c23b580ed7da3139f7f08f4ea29dad395",
+          "is_active": true
+        }
+      ]
     },
     {
       "asset_id": "0x1a7815cc9f75db5c24a5b0814bfb706bb9fe485333e98254015de8f48f84c67b",
-      "price_feed_id": "0x6df640f3b8963d8f8358f791f352b8364513f6ab1cca5ed3f1f7b5448980e784",
       "name": "wstETH",
       "symbol": "wstETH",
       "decimals": 9,
@@ -104,11 +150,17 @@
       "liquidate_collateral_factor": 750000000000000000,
       "liquidation_penalty": 750000000000000000,
       "supply_cap": 50000000000,
-      "is_active": true
+      "is_active": true,
+      "asset_oracle_configurations": [
+        {
+          "oracle_id": 0,
+          "price_feed_id": "0x6df640f3b8963d8f8358f791f352b8364513f6ab1cca5ed3f1f7b5448980e784",
+          "is_active": true
+        }
+      ]
     },
     {
       "asset_id": "0x1d5d97005e41cae2187a895fd8eab0506111e0e2f3331cd3912c15c24e3c1d82",
-      "price_feed_id": "0x8a757d54e5d34c7ff1aea8502a2d968686027a304d00418092aaf7e60ed98d95",
       "name": "FUEL",
       "symbol": "FUEL",
       "decimals": 9,
@@ -117,7 +169,14 @@
       "liquidate_collateral_factor": 750000000000000000,
       "liquidation_penalty": 750000000000000000,
       "supply_cap": 40000000000000000,
-      "is_active": true
+      "is_active": true,
+      "asset_oracle_configurations": [
+        {
+          "oracle_id": 0,
+          "price_feed_id": "0x8a757d54e5d34c7ff1aea8502a2d968686027a304d00418092aaf7e60ed98d95",
+          "is_active": true
+        }
+      ]
     }
   ]
 }
