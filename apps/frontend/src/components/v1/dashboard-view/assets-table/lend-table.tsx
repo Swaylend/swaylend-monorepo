@@ -22,7 +22,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { Line } from '@/components/v1/Line';
+import { Line } from '@/components/v1/line';
 import { Title } from '@/components/v1/Title';
 import { InfoIcon } from '@/components/v1/info-icon';
 import { NetEarnTooltip } from '@/components/v1/net-earn-tooltip';
