@@ -192,9 +192,8 @@ async fn multicall_absorb_buy_collateral_test() {
         .value;
 
     println!(
-        "🔻 ETH price drops: ${}  -> ${}",
-        old_price.price as f64 / 10_u64.pow(*eth_price_feed_decimals) as f64,
-        new_price.price as f64 / 10_u64.pow(*eth_price_feed_decimals) as f64
+        "🔻 ETH price drops: ${}  -> ${}. Decimals: {}",
+        old_price.price, new_price.price, eth_price_feed_decimals
     );
 
     market

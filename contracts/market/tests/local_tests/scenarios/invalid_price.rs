@@ -1,5 +1,5 @@
 use crate::utils::{setup, TestBaseAsset, TestData};
-use fuels::programs::calls::ContractDependency;
+use fuels::{programs::calls::ContractDependency, types::U256};
 use market::{OracleAssetConfiguration, OracleGlobalConfiguration};
 
 #[tokio::test]
@@ -30,7 +30,7 @@ async fn reverts_when_all_oracles_are_disabled_globaly() {
         .unwrap()
         .value;
 
-    assert!(usdc_price.price == 1 * 10_u64.pow(usdc_price.exponent) as u64);
+    assert!(U256::from(usdc_price.price) == U256::from(1 * 10_u64.pow(usdc_price.exponent)));
 
     // Get global oracle configurations
     let global_oracle_configurations = market
@@ -93,7 +93,7 @@ async fn reverts_when_all_oracles_are_disabled_for_asset() {
         .unwrap()
         .value;
 
-    assert!(usdc_price.price == 1 * 10_u64.pow(usdc_price.exponent) as u64);
+    assert!(U256::from(usdc_price.price) == U256::from(1 * 10_u64.pow(usdc_price.exponent)));
 
     // Get global oracle configurations
     let oracle_asset_configurations = market

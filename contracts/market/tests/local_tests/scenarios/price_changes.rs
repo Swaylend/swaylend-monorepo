@@ -205,9 +205,8 @@ async fn price_changes() {
         .value;
 
     println!(
-        "🔺 ETH price increases: ${}  -> ${}",
-        old_price.price as f64 / 10_u64.pow(*eth_price_feed_decimals) as f64,
-        new_price.price as f64 / 10_u64.pow(*eth_price_feed_decimals) as f64
+        "🔺 ETH price increases: ${}  -> ${}. Decimals: {}",
+        old_price.price, new_price.price, eth_price_feed_decimals
     );
 
     market

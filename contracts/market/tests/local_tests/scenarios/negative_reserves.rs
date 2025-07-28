@@ -44,7 +44,12 @@ async fn negative_reserves_test() {
         .mint(alice_account, alice_mint_amount)
         .await
         .unwrap();
-    let balance: u64 = alice.get_asset_balance(&usdc.asset_id).await.unwrap().try_into().unwrap();
+    let balance: u64 = alice
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == alice_mint_amount);
 
     let alice_supply_res = market
@@ -183,9 +188,8 @@ async fn negative_reserves_test() {
         .value;
 
     println!(
-        "🔻 ETH price drops: ${}  -> ${}",
-        old_price.price as f64 / 10_u64.pow(*eth_price_feed_decimals) as f64,
-        new_price.price as f64 / 10_u64.pow(*eth_price_feed_decimals) as f64
+        "🔻 ETH price drops: ${}  -> ${}. Decimals: {}",
+        old_price.price, new_price.price, eth_price_feed_decimals
     );
 
     market

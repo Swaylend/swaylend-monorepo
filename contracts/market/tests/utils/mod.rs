@@ -87,7 +87,7 @@ pub fn string_to_price_feed_id(
         "Pyth" => market::OraclePriceFeedId::Pyth(Bits256::from_hex_str(&price_feed_id).unwrap()),
         "Redstone" => market::OraclePriceFeedId::Redstone(U256::from(price_feed_id.as_bytes())),
         "Twrap" => market::OraclePriceFeedId::Twrap,
-        "Stork" => market::OraclePriceFeedId::Stork,
+        "Stork" => market::OraclePriceFeedId::Stork(Bits256::from_hex_str(&price_feed_id).unwrap()),
         _ => panic!("Invalid oracle type: {}", oracle_type),
     }
 }

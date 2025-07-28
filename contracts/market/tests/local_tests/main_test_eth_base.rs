@@ -400,9 +400,8 @@ async fn main_test_eth_base() {
         .value;
 
     println!(
-        "🔻 USDT price drops: ${}  -> ${}",
-        old_price.price as f64 / 10_u64.pow(*usdt_price_feed_decimals) as f64,
-        new_price.price as f64 / 10_u64.pow(*usdt_price_feed_decimals) as f64
+        "🔻 USDT price drops: ${}  -> ${}. Decimals: {}",
+        old_price.price, new_price.price, usdt_price_feed_decimals
     );
 
     market

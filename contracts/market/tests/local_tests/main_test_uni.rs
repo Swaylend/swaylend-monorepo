@@ -404,9 +404,8 @@ async fn main_test_uni() {
         .value;
 
     println!(
-        "🔻 UNI price drops: ${}  -> ${}",
-        old_price.price as f64 / 10_u64.pow(*uni_price_feed_decimals) as f64,
-        new_price.price as f64 / 10_u64.pow(*uni_price_feed_decimals) as f64
+        "🔻 UNI price drops: ${}  -> ${}. Decimals: {}",
+        old_price.price, new_price.price, uni_price_feed_decimals
     );
 
     market

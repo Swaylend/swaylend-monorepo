@@ -405,9 +405,8 @@ async fn redstone_pyth() {
         .value;
 
     println!(
-        "🔻 UNI price drops: ${}  -> ${}",
-        old_price.price as f64 / 10_u64.pow(old_price.exponent) as f64,
-        new_price.price as f64 / 10_u64.pow(new_price.exponent) as f64
+        "🔻 UNI price drops: ${}  -> ${}. Decimals: {}",
+        old_price.price, new_price.price, old_price.exponent
     );
 
     market

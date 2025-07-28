@@ -215,9 +215,8 @@ async fn absorb_and_liquidate() {
         .value;
 
     println!(
-        "🔻 ETH price drops: ${}  -> ${}",
-        old_price.price as f64 / 10_u64.pow(*eth_price_feed_decimals) as f64,
-        new_price.price as f64 / 10_u64.pow(*eth_price_feed_decimals) as f64
+        "🔻 ETH price drops: ${}  -> ${}. Decimals: {}",
+        old_price.price, new_price.price, eth_price_feed_decimals
     );
 
     market
@@ -571,9 +570,8 @@ async fn all_assets_liquidated() {
         .value;
 
     println!(
-        "🔻 ETH price drops: ${}  -> ${}",
-        old_price.price as f64 / 10_u64.pow(*eth_price_feed_decimals) as f64,
-        new_price.price as f64 / 10_u64.pow(*eth_price_feed_decimals) as f64
+        "🔻 ETH price drops: ${}  -> ${}. Decimals: {}",
+        old_price.price, new_price.price, eth_price_feed_decimals
     );
 
     market
@@ -875,8 +873,6 @@ async fn is_liquidatable_internal_uses_correct_index() {
         18,
     );
 
-    // let uni_price = oracle.price(uni.price_feed_id).await.unwrap().value;
-    // let uni_price = uni_price.price as f64 / 10u64.pow(uni.price_feed_decimals as u32) as f64;
     let uni_price = market
         .get_price(&oracle_contracts, uni.asset_id)
         .await
@@ -884,7 +880,8 @@ async fn is_liquidatable_internal_uses_correct_index() {
         .value;
 
     let (_, uni_price_feed_decimals) = pyth_asset_price_feeds.get(&uni.asset_id).unwrap();
-    let uni_price = uni_price.price as f64 / 10u64.pow(*uni_price_feed_decimals) as f64;
+    let uni_price =
+        u64::try_from(uni_price.price).unwrap() as f64 / 10u64.pow(*uni_price_feed_decimals) as f64;
 
     let borrow_limit = borrow_factor * uni_price * 1000_f64;
     let liquidation_point = liquidation_factor * uni_price * 1000_f64;
