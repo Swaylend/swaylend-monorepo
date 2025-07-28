@@ -10,33 +10,38 @@ use std::context::msg_amount;
 use std::call_frames::msg_asset_id;
 use std::revert::require;
 use std::convert::TryFrom;
+use stork_sway_sdk::interface::Stork;
+use signed_int::i128::I128;
+use std::u128::*;
+
+const TAI64_UNIX_ADJUSTMENT = 10 + (1 << 62);
 
 pub struct Price {
-    pub price: u64,
+    pub price: u256,
     pub exponent: u32,
-    pub confidence: u64,
+    pub confidence: u256,
     pub publish_time: u64,
 }
 
 pub enum OraclePriceFeedId {
     Redstone: u256,
     Pyth: b256,
+    Stork: b256,
     Twrap: (),
-    Stork: (),
 }
 
 pub enum OracleType {
     Pyth: (),
     Redstone: (),
-    Twrap: (),
     Stork: (),
+    Twrap: (),
 }
 
 pub enum OracleInput {
     Pyth: PythOracleInput,
     Redstone: RedstoneOracleInput,
-    Twrap: TwrapOracleInput,
     Stork: StorkOracleInput,
+    Twrap: TwrapOracleInput,
 }
 
 /// This struct contains the configuration details for contract-wide oracle settings.
@@ -144,9 +149,9 @@ impl Oracle {
 
                     if is_price_valid {
                         final_price = Price {
-                            price: price.price,
+                            price: price.price.into(),
                             exponent: price.exponent,
-                            confidence: price.confidence,
+                            confidence: price.confidence.into(),
                             publish_time: price.publish_time,
                         };
                     }
@@ -179,9 +184,9 @@ impl Oracle {
 
                     if is_price_valid {
                         final_price = Price {
-                            price: price.price.try_into().unwrap(),
+                            price: price.price,
                             exponent: price.exponent,
-                            confidence: price.confidence,
+                            confidence: price.confidence.into(),
                             publish_time: price.publish_time,
                         };
                     }
@@ -189,12 +194,49 @@ impl Oracle {
                     require(false, Error::InvalidPriceFeedId);
                 }
             },
+            OracleType::Stork => {
+                let oracle = abi(Stork, contract_id.bits());
+                if let OraclePriceFeedId::Stork(id) = price_feed_id {
+                    let price = oracle.get_temporal_numeric_value_unchecked_v1(id);
+
+
+                    // Check if the price is negative or zero
+                    if price.quantized_value.underlying() <= I128::indent(){
+                        is_price_valid = false;
+                    }
+
+                    let price_u256 = u256::from(price.quantized_value.underlying() - I128::indent());
+
+                    let timestamp_tai64 = price.timestamp_ns / 1_000_000_000 + TAI64_UNIX_ADJUSTMENT;
+
+                    // validate values
+                    if timestamp_tai64 < timestamp() {
+                        let staleness = timestamp() - timestamp_tai64;
+                        if staleness > ORACLE_MAX_STALENESS {
+                            is_price_valid = false;
+                        }
+                    } else {
+                        let aheadness = timestamp_tai64 - timestamp();
+                        if aheadness > ORACLE_MAX_AHEADNESS {
+                            is_price_valid = false;
+                        }
+                    }
+
+                    if is_price_valid {
+                        final_price = Price {
+                            price: price_u256,
+                            exponent: 18,
+                            confidence: 0,
+                            publish_time: timestamp_tai64,
+                        };
+                    }
+                } else {
+                    require(false, Error::InvalidPriceFeedId);
+                }
+            }
             OracleType::Twrap => {
                 require(false, "Not implemented yet");
             },
-            OracleType::Stork => {
-                require(false, "Not implemented yet");
-            }
         };
 
         return (is_price_valid, final_price);

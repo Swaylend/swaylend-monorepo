@@ -19,6 +19,7 @@ dependencies = [
     "redstone_prices_abi",
     "signed_int",
     "std",
+    "stork_sway_sdk",
 ]
 
 [[package]]
@@ -123,6 +124,14 @@ dependencies = ["std"]
 name = "std"
 version = "0.69.1"
 source = "registry+std?0.69.1#QmbPunScay4xpfHKpxQ71dFKXSiyJuPP8P8YhgX5Dkmzm9!"
+
+[[package]]
+name = "stork_sway_sdk"
+source = "git+https://github.com/martines3000/stork-external?rev#37417bbcad1838c632050655c02c7d8f9d62343f"
+dependencies = [
+    "signed_int",
+    "std",
+]
 
 [[package]]
 name = "token"

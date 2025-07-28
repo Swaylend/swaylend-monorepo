@@ -7,3 +7,4 @@ name = "market_abi"
 redstone_prices_abi = { path = "../redstone_prices_abi" }
 pyth_interface = { git = "https://github.com/pyth-network/pyth-crosschain", rev = "10e5345ea2e29a5cc43311d43e681cf335e834f3" }
 signed_int = "0.26.1"
+stork_sway_sdk = { git = "https://github.com/martines3000/stork-external", rev = "37417bbcad1838c632050655c02c7d8f9d62343f" }
