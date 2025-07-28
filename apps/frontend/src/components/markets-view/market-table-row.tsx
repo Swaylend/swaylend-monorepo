@@ -32,7 +32,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '../ui/tooltip';
-import { Line } from '../v1/Line';
+import { Line } from '../v1/line';
 import { CircularProgressBar } from '../v1/circular-progress-bar';
 import { type Collateral, CollateralIcons } from '../v1/collateral-icons';
 import { NetBorrowTooltip } from '../v1/net-borrow-tooltip';
