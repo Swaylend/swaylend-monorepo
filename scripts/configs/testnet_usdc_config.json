@@ -33,7 +33,7 @@
   ],
   "base_asset": {
     "asset_id": "0x899dbd3cf8955d7b64a02f8bde800e74c10cdd92b92330c42d7c75b0ddb3dbc4",
-    "name": "USD Coin",
+    "name": "USDC",
     "symbol": "USDC",
     "decimals": 6,
     "asset_oracle_configurations": [

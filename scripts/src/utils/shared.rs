@@ -48,7 +48,7 @@ pub async fn verify_connected_network(
     match chain_name.as_str() {
         "Ignition" => Ok(network == Network::Mainnet),
         "Fuel Sepolia Testnet" => Ok(network == Network::Testnet),
-        "Local network" => Ok(network == Network::Devnet),
+        "Local testnet" => Ok(network == Network::Devnet),
         _ => Ok(false),
     }
 }
