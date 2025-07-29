@@ -44,6 +44,8 @@ jobs:
       - name: Run linter
         run: pnpm lint
       - name: Run Envio codegen
-        run: pnpm -r codegen
+        working-directory: ./apps/indexer
+        run: pnpm codegen --config config.mainnet.usdc.yaml
       - name: Run Indexer tests
-        run: pnpm -r test
+        working-directory: ./apps/indexer
+        run: pnpm test
