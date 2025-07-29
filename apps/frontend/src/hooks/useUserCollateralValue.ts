@@ -6,10 +6,10 @@ import { usePrice } from './usePrice';
 import { useUserCollateralAssets } from './useUserCollateralAssets';
 
 // Value of collateral in USD
-export const useUserCollateralValue = () => {
-  const { data: collateralBalances } = useUserCollateralAssets();
-  const { data: collateralConfig } = useCollateralConfigurations();
-  const { data: priceData } = usePrice();
+export const useUserCollateralValue = (marketParam?: string) => {
+  const { data: collateralBalances } = useUserCollateralAssets(marketParam);
+  const { data: collateralConfig } = useCollateralConfigurations(marketParam);
+  const { data: priceData } = usePrice(marketParam);
 
   return useQuery({
     queryKey: [
