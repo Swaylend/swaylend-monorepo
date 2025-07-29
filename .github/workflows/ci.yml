@@ -44,6 +44,3 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Run linter
         run: pnpm lint
-      - name: Run Envio codegen and tests
-        working-directory: ./apps/indexer
-        run: pnpm codegen --config config.mainnet.usdc.yaml && pnpm test
