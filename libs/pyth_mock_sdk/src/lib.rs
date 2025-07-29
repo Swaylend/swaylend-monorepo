@@ -5,6 +5,7 @@ use std::path::PathBuf;
 use fuels::{
     accounts::wallet::Wallet,
     programs::{
+        calls::CallParameters,
         contract::{Contract, LoadConfiguration, StorageConfiguration},
         responses::CallResponse,
     },
@@ -50,10 +51,12 @@ impl PythMockContract {
         &self,
         update_data: Vec<Bytes>,
     ) -> anyhow::Result<CallResponse<()>> {
+        let call_params = CallParameters::default().with_amount(update_data.len() as u64);
         Ok(self
             .instance
             .methods()
             .update_price_feeds(update_data)
+            .call_params(call_params)?
             .call()
             .await?)
     }
@@ -96,11 +99,13 @@ impl PythMockContract {
         prices: &Vec<(Bits256, (u64, u32, u64, u64))>,
     ) -> anyhow::Result<CallResponse<()>> {
         let update_data: Vec<Bytes> = self.create_update_data(prices).await?;
+        let call_params = CallParameters::default().with_amount(update_data.len() as u64);
 
         Ok(self
             .instance
             .methods()
             .update_price_feeds(update_data)
+            .call_params(call_params)?
             .call()
             .await?)
     }

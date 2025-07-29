@@ -1,0 +1,12 @@
+[project]
+entry = "main.sw"
+license = "Apache-2.0"
+name = "stork_mock"
+
+# address will be the addres of the proxy contract
+[proxy]
+enabled = true
+
+[dependencies]
+stork_sway_sdk = { git = "https://github.com/martines3000/stork-external", rev = "37417bbcad1838c632050655c02c7d8f9d62343f" }
+signed_int = "0.26.1"

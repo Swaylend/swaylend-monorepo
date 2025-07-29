@@ -11,6 +11,7 @@ members = [
     "libs/pyth_mock_sdk",
     "libs/redstone_prices_sdk",
     "libs/redstone_prices_mock_sdk",
+    "libs/stork_mock_sdk",
     # Scripts
     "scripts",
 ]
@@ -26,6 +27,7 @@ token_sdk = { path = "libs/token_sdk" }
 pyth_mock_sdk = { path = "libs/pyth_mock_sdk" }
 redstone_prices_sdk = { path = "libs/redstone_prices_sdk" }
 redstone_prices_mock_sdk = { path = "libs/redstone_prices_mock_sdk" }
+stork_mock_sdk = { path = "libs/stork_mock_sdk" }
 
 # Local contracts (types)
 pyth_mock = { path = "contracts/pyth-mock" }
@@ -33,6 +35,7 @@ market = { path = "contracts/market" }
 token = { path = "contracts/token" }
 redstone_prices = { path = "contracts/redstone-prices" }
 redstone_prices_mock = { path = "contracts/redstone-prices-mock" }
+stork_mock = { path = "contracts/stork-mock" }
 
 # External
 pyth_sdk = { git = "https://github.com/pyth-network/pyth-crosschain", rev = "10e5345ea2e29a5cc43311d43e681cf335e834f3" }

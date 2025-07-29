@@ -8558,6 +8558,28 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d7beae5182595e9a8b683fa98c4317f956c9a2dec3b9716990d20023cc60c766"
 
 [[package]]
+name = "stork_mock"
+version = "0.1.0"
+dependencies = [
+ "dotenv",
+ "fuels 0.74.0",
+ "stork_mock_sdk",
+ "tokio",
+]
+
+[[package]]
+name = "stork_mock_sdk"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "fuels 0.74.0",
+ "rand",
+ "serde",
+ "serde_json",
+ "stork_mock",
+]
+
+[[package]]
 name = "strsim"
 version = "0.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
