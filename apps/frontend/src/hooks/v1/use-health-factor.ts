@@ -5,11 +5,11 @@ import { usePrice } from './use-price';
 import { useUserSupplyBorrow } from './use-user-supply-borrow';
 import { useUserTrueCollateralValue } from './use-user-true-collateral-value';
 
-export const useHealthFactor = () => {
-  const { data: trueCollateralValue } = useUserTrueCollateralValue();
-  const { data: supplyBorrow } = useUserSupplyBorrow();
-  const { data: marketConfiguration } = useMarketConfiguration();
-  const { data: priceData } = usePrice();
+export const useHealthFactor = (marketParam?: string) => {
+  const { data: trueCollateralValue } = useUserTrueCollateralValue(marketParam);
+  const { data: supplyBorrow } = useUserSupplyBorrow(marketParam);
+  const { data: marketConfiguration } = useMarketConfiguration(marketParam);
+  const { data: priceData } = usePrice(marketParam);
 
   return useQuery({
     queryKey: [

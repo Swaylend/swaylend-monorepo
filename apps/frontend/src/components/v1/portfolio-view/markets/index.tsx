@@ -6,11 +6,13 @@ import {
   useApr,
   useBorrowCapacity,
   useCollateralConfigurations,
+  useLTV,
   useMarketConfiguration,
   usePrice,
   useUserCollateralAssets,
   useUserCollateralUtilization,
   useUserLiquidationPoint,
+  useHealthFactor,
   useUserSupplyBorrow,
 } from '@/hooks/v1';
 import { cn } from '@/lib/utils';
@@ -72,6 +74,9 @@ export const Markets = () => {
   const { data: collateralUtilizationUSDC, isPending: isPendingColUtilUSDC } =
     useUserCollateralUtilization('USDC');
   const { data: aprDataUSDC, isPending: isAprPendingUSDC } = useApr('USDC');
+  const { data: healthFactorUSDC, isPending: isPendingHealthFactorUSDC } =
+    useHealthFactor('USDC');
+  const { data: ltvUSDC, isPending: isPendingLTVUSDC } = useLTV('USDC');
 
   const currentCollateralUtilizationUSDC = useMemo(() => {
     return Number(collateralUtilizationUSDC?.times(100).toFixed(2));
@@ -101,6 +106,8 @@ export const Markets = () => {
     isAprPendingUSDC,
     isPendingLP,
     isPendingBC,
+    isPendingHealthFactorUSDC,
+    isPendingLTVUSDC,
   ]);
 
   const riskMeter = useMemo(() => {
@@ -180,30 +187,6 @@ export const Markets = () => {
     }
     return aprDataUSDC?.netSupplyApr.times(100).toFixed(2);
   }, [marketType, aprDataUSDC]);
-
-  const LTV = useMemo(() => {
-    if (marketType === 'Borrow') {
-      if (totalSuppliedCollateral.eq(0)) {
-        return '0';
-      }
-
-      return totalBorrowedBaseAssets
-        .div(totalSuppliedCollateral)
-        .times(100)
-        .toFixed(2);
-    }
-    return '0';
-  }, [marketType, collateralUtilizationUSDC]);
-
-  const healthFactor = useMemo(() => {
-    if (marketType === 'Borrow') {
-      if (totalSuppliedCollateral.eq(0)) {
-        return '0';
-      }
-      return BigNumber(100).minus(LTV).toFixed(2);
-    }
-    return '0';
-  }, [marketType, collateralUtilizationUSDC]);
 
   const updatedBorrowCapacity = useMemo(() => {
     if (!marketConfigurationUSDC || !priceDataUSDC || !borrowCapacity) {
@@ -380,7 +363,9 @@ export const Markets = () => {
                   {isLoading ? (
                     <Skeleton className="h-6 w-16 bg-white/5" />
                   ) : (
-                    <div className="text-white font-medium">{LTV}%</div>
+                    <div className="text-white font-medium">
+                      {ltvUSDC?.times(100).toFixed(2)}%
+                    </div>
                   )}
                 </div>
                 <div className="flex justify-between items-center">
@@ -391,10 +376,8 @@ export const Markets = () => {
                   {isLoading ? (
                     <Skeleton className="h-6 w-16 bg-white/5" />
                   ) : (
-                    <div
-                      className={`${Number(healthFactor) > 80 && 'text-red-500'} ${Number(healthFactor) <= 50 && 'text-primary'} ${Number(healthFactor) > 50 && Number(healthFactor) <= 80 && 'text-yellow-500'} font-medium`}
-                    >
-                      {healthFactor}
+                    <div className={'text-primary font-medium'}>
+                      {healthFactorUSDC?.toFixed(2)}
                     </div>
                   )}
                 </div>

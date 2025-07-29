@@ -5,11 +5,11 @@ import { usePrice } from './use-price';
 import { useUserCollateralValue } from './use-user-collateral-value';
 import { useUserSupplyBorrow } from './use-user-supply-borrow';
 
-export const useLTV = () => {
-  const { data: collateralValue } = useUserCollateralValue();
-  const { data: supplyBorrow } = useUserSupplyBorrow();
-  const { data: marketConfiguration } = useMarketConfiguration();
-  const { data: priceData } = usePrice();
+export const useLTV = (marketParam?: string) => {
+  const { data: collateralValue } = useUserCollateralValue(marketParam);
+  const { data: supplyBorrow } = useUserSupplyBorrow(marketParam);
+  const { data: marketConfiguration } = useMarketConfiguration(marketParam);
+  const { data: priceData } = usePrice(marketParam);
 
   return useQuery({
     queryKey: [
