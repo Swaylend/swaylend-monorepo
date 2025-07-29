@@ -213,17 +213,17 @@
     {
       "type": "struct signed_int::i256::I256",
       "concreteTypeId": "d9f8e3b5fb5bf9244761ce4e7ec85a20edb544d4d100c5a050aaf0fc4ef8a9ec",
-      "metadataTypeId": 48
+      "metadataTypeId": 49
     },
     {
       "type": "struct std::asset_id::AssetId",
       "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974",
-      "metadataTypeId": 50
+      "metadataTypeId": 51
     },
     {
       "type": "struct std::vec::Vec<(struct std::asset_id::AssetId, struct std::vec::Vec<struct market_abi::oracle_structs::OracleAssetConfiguration>)>",
       "concreteTypeId": "3b08ec702f021c63225115c90e1f8ff6584eed6c94e590a7f70b0fdd2aef6bbb",
-      "metadataTypeId": 55,
+      "metadataTypeId": 57,
       "typeArguments": [
         "b072c5015ba8b39919ce2bee5eb82df8a68a78047f142cb1cc257655454c10bb"
       ]
@@ -231,7 +231,7 @@
     {
       "type": "struct std::vec::Vec<(struct std::asset_id::AssetId, u64)>",
       "concreteTypeId": "d0540b5a00688e21ad7a3f5d7db93636c18f3ef7aed40d4e48f0cffc74683bcb",
-      "metadataTypeId": 55,
+      "metadataTypeId": 57,
       "typeArguments": [
         "229de6686c9c66098e7188f64d380a851d5ebacacaf90d991adf5b5952a70f7b"
       ]
@@ -239,7 +239,7 @@
     {
       "type": "struct std::vec::Vec<enum market_abi::oracle_structs::OracleInput>",
       "concreteTypeId": "b8c096640d00461e94891decbf44e3f86379e168323628c152ad941a7a979ff6",
-      "metadataTypeId": 55,
+      "metadataTypeId": 57,
       "typeArguments": [
         "6dd8771c6810b3450ed6e1962bbc18051a781c76db9429af83ddad47eabf61a5"
       ]
@@ -247,7 +247,7 @@
     {
       "type": "struct std::vec::Vec<enum std::identity::Identity>",
       "concreteTypeId": "2f79033d0d3729398611309f48578b56cf5162ba85e50f4d8fb79c9d9d1abc7b",
-      "metadataTypeId": 55,
+      "metadataTypeId": 57,
       "typeArguments": [
         "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
       ]
@@ -255,7 +255,7 @@
     {
       "type": "struct std::vec::Vec<struct market_abi::oracle_structs::OracleGlobalConfiguration>",
       "concreteTypeId": "1173ea0b63954052c7dc2b7551996fd1cc6becd5943a51f4d7c7c7717cfba2b5",
-      "metadataTypeId": 55,
+      "metadataTypeId": 57,
       "typeArguments": [
         "01210575f1835aeca139979da2cb6453cd17b03fa86a9e7b4b3f2b81555d94e1"
       ]
@@ -263,7 +263,7 @@
     {
       "type": "struct std::vec::Vec<struct market_abi::structs::CollateralConfiguration>",
       "concreteTypeId": "135bedc713ecdc7e568f13811c40a9df6a62b44f54789c3f87066e7ccaedcc14",
-      "metadataTypeId": 55,
+      "metadataTypeId": 57,
       "typeArguments": [
         "027212d4a883f4144f8043ef93fee6aa9d766041c7735fa37fae71d45ab6d92d"
       ]
@@ -288,7 +288,7 @@
       "components": [
         {
           "name": "__tuple_element",
-          "typeId": 50
+          "typeId": 51
         },
         {
           "name": "__tuple_element",
@@ -302,11 +302,11 @@
       "components": [
         {
           "name": "__tuple_element",
-          "typeId": 50
+          "typeId": 51
         },
         {
           "name": "__tuple_element",
-          "typeId": 55,
+          "typeId": 57,
           "typeArguments": [
             {
               "name": "",
@@ -568,11 +568,11 @@
       "components": [
         {
           "name": "Address",
-          "typeId": 49
+          "typeId": 50
         },
         {
           "name": "ContractId",
-          "typeId": 53
+          "typeId": 54
         }
       ]
     },
@@ -594,7 +594,7 @@
         },
         {
           "name": "asset_id",
-          "typeId": 50
+          "typeId": 51
         },
         {
           "name": "amount",
@@ -606,7 +606,7 @@
         },
         {
           "name": "decimals",
-          "typeId": 56
+          "typeId": 60
         }
       ]
     },
@@ -616,7 +616,7 @@
       "components": [
         {
           "name": "asset_id",
-          "typeId": 50
+          "typeId": 51
         },
         {
           "name": "oracle_configuration",
@@ -630,7 +630,7 @@
       "components": [
         {
           "name": "asset_id",
-          "typeId": 50
+          "typeId": 51
         },
         {
           "name": "oracle_configuration",
@@ -652,7 +652,7 @@
         },
         {
           "name": "asset_id",
-          "typeId": 50
+          "typeId": 51
         },
         {
           "name": "amount",
@@ -670,7 +670,7 @@
       "components": [
         {
           "name": "asset_id",
-          "typeId": 50
+          "typeId": 51
         },
         {
           "name": "configuration",
@@ -684,7 +684,7 @@
       "components": [
         {
           "name": "asset_id",
-          "typeId": 50
+          "typeId": 51
         },
         {
           "name": "configuration",
@@ -812,7 +812,7 @@
         },
         {
           "name": "decimals",
-          "typeId": 56
+          "typeId": 60
         }
       ]
     },
@@ -844,7 +844,7 @@
         },
         {
           "name": "asset_id",
-          "typeId": 50
+          "typeId": 51
         },
         {
           "name": "amount",
@@ -880,7 +880,7 @@
         },
         {
           "name": "asset_id",
-          "typeId": 50
+          "typeId": 51
         },
         {
           "name": "amount",
@@ -912,7 +912,7 @@
       "components": [
         {
           "name": "contract_id",
-          "typeId": 53
+          "typeId": 54
         },
         {
           "name": "is_disabled",
@@ -934,7 +934,7 @@
         },
         {
           "name": "exponent",
-          "typeId": 56
+          "typeId": 60
         },
         {
           "name": "confidence",
@@ -952,7 +952,7 @@
       "components": [
         {
           "name": "contract_id",
-          "typeId": 53
+          "typeId": 54
         },
         {
           "name": "update_fee",
@@ -960,7 +960,7 @@
         },
         {
           "name": "publish_times",
-          "typeId": 55,
+          "typeId": 57,
           "typeArguments": [
             {
               "name": "",
@@ -970,7 +970,7 @@
         },
         {
           "name": "price_feed_ids",
-          "typeId": 55,
+          "typeId": 57,
           "typeArguments": [
             {
               "name": "",
@@ -980,11 +980,11 @@
         },
         {
           "name": "update_data",
-          "typeId": 55,
+          "typeId": 57,
           "typeArguments": [
             {
               "name": "",
-              "typeId": 51
+              "typeId": 52
             }
           ]
         }
@@ -996,11 +996,11 @@
       "components": [
         {
           "name": "contract_id",
-          "typeId": 53
+          "typeId": 54
         },
         {
           "name": "price_feed_ids",
-          "typeId": 55,
+          "typeId": 57,
           "typeArguments": [
             {
               "name": "",
@@ -1010,7 +1010,7 @@
         },
         {
           "name": "payload",
-          "typeId": 51
+          "typeId": 52
         }
       ]
     },
@@ -1020,11 +1020,17 @@
       "components": [
         {
           "name": "contract_id",
-          "typeId": 53
+          "typeId": 54
         },
         {
-          "name": "placeholder",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "name": "update_data",
+          "typeId": 57,
+          "typeArguments": [
+            {
+              "name": "",
+              "typeId": 58
+            }
+          ]
         }
       ]
     },
@@ -1034,7 +1040,7 @@
       "components": [
         {
           "name": "contract_id",
-          "typeId": 53
+          "typeId": 54
         },
         {
           "name": "placeholder",
@@ -1048,11 +1054,11 @@
       "components": [
         {
           "name": "asset_id",
-          "typeId": 50
+          "typeId": 51
         },
         {
           "name": "decimals",
-          "typeId": 56
+          "typeId": 60
         },
         {
           "name": "oracle_max_confidence_width",
@@ -1120,11 +1126,11 @@
       "components": [
         {
           "name": "base_token",
-          "typeId": 50
+          "typeId": 51
         },
         {
           "name": "base_token_decimals",
-          "typeId": 56
+          "typeId": 60
         },
         {
           "name": "oracle_max_confidence_width",
@@ -1220,7 +1226,7 @@
       "components": [
         {
           "name": "principal",
-          "typeId": 48
+          "typeId": 49
         },
         {
           "name": "base_tracking_index",
@@ -1267,8 +1273,18 @@
       ]
     },
     {
-      "type": "struct signed_int::i256::I256",
+      "type": "struct signed_int::i128::I128",
       "metadataTypeId": 48,
+      "components": [
+        {
+          "name": "underlying",
+          "typeId": 55
+        }
+      ]
+    },
+    {
+      "type": "struct signed_int::i256::I256",
+      "metadataTypeId": 49,
       "components": [
         {
           "name": "underlying",
@@ -1278,16 +1294,6 @@
     },
     {
       "type": "struct std::address::Address",
-      "metadataTypeId": 49,
-      "components": [
-        {
-          "name": "bits",
-          "typeId": 3
-        }
-      ]
-    },
-    {
-      "type": "struct std::asset_id::AssetId",
       "metadataTypeId": 50,
       "components": [
         {
@@ -1297,12 +1303,22 @@
       ]
     },
     {
-      "type": "struct std::bytes::Bytes",
+      "type": "struct std::asset_id::AssetId",
       "metadataTypeId": 51,
       "components": [
         {
+          "name": "bits",
+          "typeId": 3
+        }
+      ]
+    },
+    {
+      "type": "struct std::bytes::Bytes",
+      "metadataTypeId": 52,
+      "components": [
+        {
           "name": "buf",
-          "typeId": 52
+          "typeId": 53
         },
         {
           "name": "len",
@@ -1312,7 +1328,7 @@
     },
     {
       "type": "struct std::bytes::RawBytes",
-      "metadataTypeId": 52,
+      "metadataTypeId": 53,
       "components": [
         {
           "name": "ptr",
@@ -1326,7 +1342,7 @@
     },
     {
       "type": "struct std::contract_id::ContractId",
-      "metadataTypeId": 53,
+      "metadataTypeId": 54,
       "components": [
         {
           "name": "bits",
@@ -1335,8 +1351,22 @@
       ]
     },
     {
+      "type": "struct std::u128::U128",
+      "metadataTypeId": 55,
+      "components": [
+        {
+          "name": "upper",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        },
+        {
+          "name": "lower",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        }
+      ]
+    },
+    {
       "type": "struct std::vec::RawVec",
-      "metadataTypeId": 54,
+      "metadataTypeId": 56,
       "components": [
         {
           "name": "ptr",
@@ -1353,11 +1383,11 @@
     },
     {
       "type": "struct std::vec::Vec",
-      "metadataTypeId": 55,
+      "metadataTypeId": 57,
       "components": [
         {
           "name": "buf",
-          "typeId": 54,
+          "typeId": 56,
           "typeArguments": [
             {
               "name": "",
@@ -1375,8 +1405,56 @@
       ]
     },
     {
+      "type": "struct stork_sway_sdk::interface::TemporalNumericValueInput",
+      "metadataTypeId": 58,
+      "components": [
+        {
+          "name": "temporal_numeric_value",
+          "typeId": 59
+        },
+        {
+          "name": "id",
+          "typeId": 3
+        },
+        {
+          "name": "publisher_merkle_root",
+          "typeId": 3
+        },
+        {
+          "name": "value_compute_alg_hash",
+          "typeId": 3
+        },
+        {
+          "name": "r",
+          "typeId": 3
+        },
+        {
+          "name": "s",
+          "typeId": 3
+        },
+        {
+          "name": "v",
+          "typeId": "c89951a24c6ca28c13fd1cfdc646b2b656d69e61a92b91023be7eb58eb914b6b"
+        }
+      ]
+    },
+    {
+      "type": "struct stork_sway_sdk::temporal_numeric_value::TemporalNumericValue",
+      "metadataTypeId": 59,
+      "components": [
+        {
+          "name": "timestamp_ns",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        },
+        {
+          "name": "quantized_value",
+          "typeId": 48
+        }
+      ]
+    },
+    {
       "type": "u32",
-      "metadataTypeId": 56
+      "metadataTypeId": 60
     }
   ],
   "functions": [
@@ -5130,7 +5208,7 @@
     {
       "name": "DEBUG_STEP",
       "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
-      "offset": 139160,
+      "offset": 132600,
       "indirect": false
     }
   ],

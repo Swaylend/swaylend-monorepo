@@ -60,18 +60,7 @@ impl Stork for Contract {
         let len = update_data.len();
         while i < len {
             let update = update_data.get(i).unwrap();
-            let new_temporal_numeric_value = update.temporal_numeric_value;
-            let old_temporal_numeric_value = storage.price_data.get(update.id).try_read();
-
-            if old_temporal_numeric_value.is_none() {
-                storage.price_data.insert(update.id, new_temporal_numeric_value);
-            } else {
-                let old_temporal_numeric_value = old_temporal_numeric_value.unwrap();
-                if old_temporal_numeric_value.timestamp_ns < new_temporal_numeric_value.timestamp_ns {
-                    storage.price_data.insert(update.id, new_temporal_numeric_value);
-                }
-            }
-
+            storage.price_data.insert(update.id, update.temporal_numeric_value);
             i += 1;
         }
 

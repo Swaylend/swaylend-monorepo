@@ -26,8 +26,10 @@ market_sdk = { workspace = true }
 token_sdk = { workspace = true }
 pyth_mock_sdk = { workspace = true }
 redstone_prices_mock_sdk = { workspace = true }
+stork_mock_sdk = { workspace = true }
 pyth_sdk = { workspace = true }
 dotenv = { workspace = true }
 rand = { workspace = true }
 chrono = { workspace = true }
 tai64 = { workspace = true }
+hex = { workspace = true }

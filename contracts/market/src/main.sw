@@ -13,7 +13,12 @@ mod events;
 use events::*;
 
 use pyth_interface::{data_structures::price::PriceFeedId, PythCore};
-use market_abi::{Market, structs::*, oracle_structs::*, errors::*};
+use market_abi::{
+    Market, 
+    structs::*, 
+    oracle_structs::{OracleAssetConfiguration, OracleGlobalConfiguration, OracleInput, Price, Oracle}, 
+    errors::*
+};
 use std::asset::{mint_to, transfer};
 use std::auth::{AuthError, msg_sender};
 use std::call_frames::msg_asset_id;

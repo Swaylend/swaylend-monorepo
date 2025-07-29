@@ -27,7 +27,7 @@ async fn update_and_get_price() {
     let price_feed_id =
         Bits256::from_hex_str("0x9e6266a76df39a05a79ea6566fb4780787a70d8bd92ac5e8d5227ee526d20554")
             .unwrap();
-    let price: u64 = 1; // 1 USD
+    let price: f64 = 4.0; // 1 USD
     let exponent: u32 = 18;
     let publish_time: u64 = 1665076400;
     let confidence: u64 = 0;

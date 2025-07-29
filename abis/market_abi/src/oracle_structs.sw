@@ -10,7 +10,7 @@ use std::context::msg_amount;
 use std::call_frames::msg_asset_id;
 use std::revert::require;
 use std::convert::TryFrom;
-use stork_sway_sdk::interface::Stork;
+use stork_sway_sdk::interface::*;
 use signed_int::i128::I128;
 use std::u128::*;
 
@@ -81,18 +81,19 @@ pub struct RedstoneOracleInput {
     pub payload: Bytes,
 }
 
+pub struct StorkOracleInput {
+    /// Contract ID of the Stork contract.
+    pub contract_id: ContractId,
+
+    /// This field incldues the update data for updating the price feeds.
+    pub update_data: Vec<TemporalNumericValueInput>,
+}
+
 pub struct TwrapOracleInput {
     /// Contract ID of the Twrap contract.
     pub contract_id: ContractId,
 
     pub placeholder: (),    
-}
-
-pub struct StorkOracleInput {
-    /// Contract ID of the Stork contract.
-    pub contract_id: ContractId,
-
-    pub placeholder: (),
 }
 
 pub struct Oracle {
@@ -246,18 +247,19 @@ impl Oracle {
          match oracle_input {
             OracleInput::Pyth(input) => {
                 let contract_id = input.contract_id;
+                let oracle = abi(PythCore, contract_id.bits());
+
+                let update_fee = oracle.update_fee(input.update_data);
 
                 // Check if the payment is sufficient
                 require(
-                    msg_amount() >= input.update_fee && msg_asset_id() == AssetId::base(),
+                    msg_amount() >= update_fee && msg_asset_id() == AssetId::base(),
                     Error::InvalidPayment,
                 );
 
-                let oracle = abi(PythCore, contract_id.bits());
-
                 oracle.update_price_feeds_if_necessary {
                     asset_id: AssetId::base().bits(),
-                    coins: input.update_fee,
+                    coins: update_fee,
                 }(
                     input.price_feed_ids,
                     input.publish_times,
@@ -271,16 +273,28 @@ impl Oracle {
 
                 oracle.update_prices(input.price_feed_ids, input.payload);
             },
+            OracleInput::Stork(input) => {
+                let contract_id = input.contract_id;
+                let oracle = abi(Stork, contract_id.bits());
+
+                let update_fee = oracle.get_update_fee_v1(input.update_data);
+
+                // Check if the payment is sufficient
+                require(
+                    msg_amount() >= update_fee && msg_asset_id() == AssetId::base(),
+                    Error::InvalidPayment,
+                );
+
+                oracle.update_temporal_numeric_values_v1 {
+                    asset_id: AssetId::base().bits(),
+                    coins: update_fee,
+                }(input.update_data);
+            },
             OracleInput::Twrap(input) => {
                 let contract_id = input.contract_id;
                 // TODO: Implement
                 require(false, "Not implemented yet");
             },
-            OracleInput::Stork(input) => {
-                let contract_id = input.contract_id;
-                // TODO: Implement
-                require(false, "Not implemented yet");
-            }
         }
     }
 }

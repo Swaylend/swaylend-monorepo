@@ -1,4 +1,4 @@
-use stork_mock::*;
+use stork_mock::{StorkMock, TemporalNumericValue, TemporalNumericValueInput, I128};
 
 use std::path::PathBuf;
 
@@ -85,15 +85,20 @@ impl StorkMockContract {
 
     pub async fn create_update_data(
         &self,
-        prices: &Vec<(Bits256, (u64, u32, u64, u64))>,
+        prices: &Vec<(Bits256, (f64, u32, u64, u64))>,
     ) -> anyhow::Result<Vec<TemporalNumericValueInput>> {
         let mut update_data: Vec<TemporalNumericValueInput> = Vec::new();
 
         for (price_feed_id, (price, exponent, publish_time, _)) in prices {
-            // This differst from Redstone and Pyth mocks as we already provide
-            // the scaled price. Here we need to scale it as it can overflow u64 (exponent is 18)
+            // NOTE: We don't want to overflow f64 so we are doing some weird hacks here
+            // This differs from Redstone and Pyth mocks as we already provide
+            // the scaled price. Here we need to scale it as it can overflow f64 (exponent is 18)
+            let half = exponent / 2;
+            let remainder = half + (exponent % 2);
+
             let indent = 2u128.pow(127);
-            let price = I128::new((*price as u128) * 10u128.pow(*exponent) + indent);
+            let price_u128 = (*price * 10u64.pow(half) as f64) as u128 * 10u128.pow(remainder);
+            let price = I128::new(price_u128 + indent);
 
             let temporal_numeric_value = TemporalNumericValue {
                 timestamp_ns: *publish_time,
@@ -101,6 +106,42 @@ impl StorkMockContract {
             };
 
             update_data.push(TemporalNumericValueInput {
+                id: price_feed_id.clone(),
+                temporal_numeric_value: temporal_numeric_value,
+                publisher_merkle_root: Bits256::zeroed(),
+                value_compute_alg_hash: Bits256::zeroed(),
+                r: Bits256::zeroed(),
+                s: Bits256::zeroed(),
+                v: 0, // TODO: Add signature
+            });
+        }
+
+        Ok(update_data)
+    }
+
+    pub async fn create_update_data_market_types(
+        &self,
+        prices: &Vec<(Bits256, (f64, u32, u64, u64))>,
+    ) -> anyhow::Result<Vec<market::TemporalNumericValueInput>> {
+        let mut update_data: Vec<market::TemporalNumericValueInput> = Vec::new();
+
+        for (price_feed_id, (price, exponent, publish_time, _)) in prices {
+            // NOTE: We don't want to overflow f64 so we are doing some weird hacks here
+            // This differs from Redstone and Pyth mocks as we already provide
+            // the scaled price. Here we need to scale it as it can overflow f64 (exponent is 18)
+            let half = exponent / 2;
+            let remainder = half + (exponent % 2);
+
+            let indent = 2u128.pow(127);
+            let price_u128 = (*price * 10u64.pow(half) as f64) as u128 * 10u128.pow(remainder);
+            let price = market::I128::new(price_u128 + indent);
+
+            let temporal_numeric_value = market::TemporalNumericValue {
+                timestamp_ns: *publish_time,
+                quantized_value: price,
+            };
+
+            update_data.push(market::TemporalNumericValueInput {
                 id: price_feed_id.clone(),
                 temporal_numeric_value: temporal_numeric_value,
                 publisher_merkle_root: Bits256::zeroed(),
