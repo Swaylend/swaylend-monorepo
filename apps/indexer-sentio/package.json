@@ -10,12 +10,12 @@
     "upload:testnet": "sentio upload --name swaylend-testnet"
   },
   "dependencies": {
-    "@sentio/sdk": "2.59.4",
-    "@sentio/runtime": "^2.59.4",
     "@sentio/bigdecimal": "9.1.1-patch.3",
+    "@sentio/runtime": "^2.59.4",
+    "@sentio/sdk": "2.59.4",
     "dayjs": "^1.11.13",
-    "fuels": "0.100.2",
-    "zod": "^3.23.8"
+    "fuels": "0.101.3",
+    "zod": "^4.0.14"
   },
   "devDependencies": {
     "@sentio/cli": "2.27.2",

@@ -89,18 +89,18 @@ const customDefaultConnectors = (): FuelConnector[] => {
           : CHAIN_IDS.fuel.mainnet,
       fuelProvider: provider,
     }),
-    new SolanaConnector({
-      projectId: appConfig.client.shared.walletConnectProjectId,
-      chainId:
-        appConfig.env === 'testnet'
-          ? CHAIN_IDS.fuel.testnet
-          : CHAIN_IDS.fuel.mainnet,
-      fuelProvider: provider,
-    }),
+    // new SolanaConnector({
+    //   projectId: appConfig.client.shared.walletConnectProjectId,
+    //   chainId:
+    //     appConfig.env === 'testnet'
+    //       ? CHAIN_IDS.fuel.testnet
+    //       : CHAIN_IDS.fuel.mainnet,
+    //   fuelProvider: provider,
+    // }),
     // Add desktop only connectors
-    ...(isMobile(navigator.userAgent)
-      ? []
-      : [new FuelWalletConnector(), new BakoSafeConnector()]),
+    // ...(isMobile(navigator.userAgent)
+    //   ? []
+    //   : [new FuelWalletConnector(), new BakoSafeConnector()]),
   ];
 
   if (appConfig.env === 'testnet') {
