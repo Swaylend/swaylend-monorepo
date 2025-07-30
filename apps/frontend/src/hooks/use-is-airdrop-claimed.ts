@@ -1,6 +1,6 @@
 import { useWallet } from '@fuels/react';
 import { useQuery } from '@tanstack/react-query';
-import { Airdrop } from '@/contract-types/v1/airdrop';
+import { Airdrop } from '@/contract-types/v1/Airdrop';
 
 export const useIsAirdropClaimed = (
   contractAddress: string,

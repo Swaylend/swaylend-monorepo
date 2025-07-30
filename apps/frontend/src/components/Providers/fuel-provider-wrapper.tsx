@@ -3,13 +3,11 @@
 import 'react-toastify/dist/ReactToastify.css';
 
 import {
-  BakoSafeConnector,
   BurnerWalletConnector,
   createConfig,
   FueletWalletConnector,
   FuelWalletConnector,
   FuelWalletDevelopmentConnector,
-  SolanaConnector,
   WalletConnectConnector,
 } from '@fuels/connectors';
 import { FuelProvider } from '@fuels/react';
@@ -20,7 +18,6 @@ import { createConfig as createConfigWagmiConfig, http } from 'wagmi';
 import { mainnet, sepolia } from 'wagmi/chains';
 import { coinbaseWallet, injected, walletConnect } from 'wagmi/connectors';
 import { appConfig } from '@/configs';
-import { isMobile } from '@/utils/is-mobile';
 
 const METADATA = {
   name: 'Swaylend',

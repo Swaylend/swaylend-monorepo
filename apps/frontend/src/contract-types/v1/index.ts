@@ -8,11 +8,11 @@
   Fuels version: 0.100.1
 */
 
-export { Token } from './token';
-export { TokenFactory } from './token-factory';
-export { Src20 } from './src20';
-export { Src20Factory } from './src20-factory';
-export { PythMock } from './pyth-mock';
-export { PythMockFactory } from './pyth-mock-factory';
-export { Market } from './market';
-export { MarketFactory } from './market-factory';
+export { Token } from './Token';
+export { TokenFactory } from './TokenFactory';
+export { Src20 } from './Src20';
+export { Src20Factory } from './Src20Factory';
+export { PythMock } from './PythMock';
+export { PythMockFactory } from './PythMockFactory';
+export { Market } from './Market';
+export { MarketFactory } from './MarketFactory';

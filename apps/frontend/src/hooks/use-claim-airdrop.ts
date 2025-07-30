@@ -7,7 +7,7 @@ import {
   TransactionSuccessToast,
 } from '@/components/v1/toasts';
 import { appConfig } from '@/configs';
-import { Airdrop } from '@/contract-types/v1/airdrop';
+import { Airdrop } from '@/contract-types/v1/Airdrop';
 
 type ProofResponse = {
   amount: string;

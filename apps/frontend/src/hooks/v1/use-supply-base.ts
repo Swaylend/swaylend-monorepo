@@ -7,7 +7,7 @@ import {
   PendingToast,
   TransactionSuccessToast,
 } from '@/components/v1/toasts';
-import { useMarketContract } from '@/contracts/use-market-contract';
+import { useMarketContract } from '@/contracts/v1/use-market-contract';
 import { useMarketStore } from '@/stores/market-store';
 import { useMarketConfiguration } from './use-market-configuration';
 

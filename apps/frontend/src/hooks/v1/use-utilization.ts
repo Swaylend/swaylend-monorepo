@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { useMarketContract } from '@/contracts/use-market-contract';
+import { useMarketContract } from '@/contracts/v1/use-market-contract';
 import { useMarketStore } from '@/stores/market-store';
 
 export const useUtilization = (marketParam?: string) => {

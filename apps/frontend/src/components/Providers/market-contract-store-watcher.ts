@@ -4,14 +4,18 @@ import { useWallet } from '@fuels/react';
 import { PythContract } from '@pythnetwork/pyth-fuel-js';
 import { useEffect } from 'react';
 import { appConfig } from '@/configs';
-import { Market } from '@/contract-types/v1';
+import { Market as MarketV1 } from '@/contract-types/v1';
+import { Market as MarketV2 } from '@/contract-types/v2';
 import { useProvider } from '@/hooks';
-import { useMarketAddressBasedContractsStore } from '@/stores/market-address-based-contract-store';
+import { useMarketAddressBasedContractsStore as useMarketAddressBasedContractsStoreV1 } from '@/stores/v1/market-address-based-contract-store';
+import { useMarketAddressBasedContractsStore as useMarketAddressBasedContractsStoreV2 } from '@/stores/v2/market-address-based-contract-store';
 
 export default function MarketContractStoreWatcher(): null {
   const { wallet } = useWallet();
-  const updateContracts =
-    useMarketAddressBasedContractsStore.use.updateContracts();
+  const updateContractsV1 =
+    useMarketAddressBasedContractsStoreV1.use.updateContracts();
+  const updateContractsV2 =
+    useMarketAddressBasedContractsStoreV2.use.updateContracts();
   const { provider } = useProvider();
   const walletOrProvider = wallet || provider;
 
@@ -19,17 +23,28 @@ export default function MarketContractStoreWatcher(): null {
     if (!walletOrProvider) return;
 
     for (const market of Object.keys(appConfig.client.v1.markets)) {
-      const pythContract = new PythContract(
+      const pythContractV1 = new PythContract(
         appConfig.client.v1.markets[market].oracleAddress,
         walletOrProvider
       );
 
-      const marketContract = new Market(
+      const marketContractV1 = new MarketV1(
         appConfig.client.v1.markets[market].marketAddress,
         walletOrProvider
       );
 
-      updateContracts(market, pythContract, marketContract);
+      const pythContractV2 = new PythContract(
+        appConfig.client.v2.markets[market].oracleAddress,
+        walletOrProvider
+      );
+
+      const marketContractV2 = new MarketV2(
+        appConfig.client.v2.markets[market].marketAddress,
+        walletOrProvider
+      );
+
+      updateContractsV1(market, pythContractV1, marketContractV1);
+      updateContractsV2(market, pythContractV2, marketContractV2);
     }
   }, [walletOrProvider]);
 
