@@ -6,7 +6,6 @@ import {
   AreaChart,
   CartesianGrid,
   Rectangle,
-  ResponsiveContainer,
   XAxis,
   YAxis,
 } from 'recharts';
@@ -156,106 +155,104 @@ export const UserHistoryChart = ({
 
   return (
     <div className="h-[240px] w-full">
-      <ResponsiveContainer height="100%" width="100%">
-        <ChartContainer config={chartConfig}>
-          <AreaChart
-            accessibilityLayer
-            className="max-lg:hidden"
-            data={updatedChartData}
-            margin={{
-              left: 16,
-              right: 16,
-              top: 10,
-              bottom: 10,
+      <ChartContainer
+        className="h-[240px] min-h-[240px] w-full"
+        config={chartConfig}
+      >
+        <AreaChart
+          accessibilityLayer
+          className="max-lg:hidden"
+          data={updatedChartData}
+          margin={{
+            left: 16,
+            right: 16,
+            top: 10,
+            bottom: 10,
+          }}
+        >
+          <CartesianGrid opacity={0.2} stroke="#ffffff" vertical={false} />
+          <XAxis
+            axisLine={true}
+            dataKey="timestamp"
+            minTickGap={30}
+            padding={{ left: 10, right: 10 }}
+            stroke="#FFFFFF"
+            style={{
+              fill: '#FFFFFF',
+              opacity: 0.6,
+              fontSize: '12px',
+              fontFamily: 'Inter',
+              fontWeight: '400',
             }}
-          >
-            <CartesianGrid opacity={0.2} stroke="#ffffff" vertical={false} />
-            <XAxis
-              axisLine={true}
-              dataKey="timestamp"
-              minTickGap={30}
-              padding={{ left: 10, right: 10 }}
-              stroke="#FFFFFF"
-              style={{
-                fill: '#FFFFFF',
-                opacity: 0.6,
-                fontSize: '12px',
-                fontFamily: 'Inter',
-                fontWeight: '400',
-              }}
-              tickFormatter={(value: number) => {
-                return dateFormatter.format(new Date(value * 1000));
-              }}
-              tickLine={true}
-              tickMargin={10}
-            />
-            <YAxis
-              axisLine={false}
-              style={{
-                fill: '#FFFFFF',
-                opacity: 0.6,
-                fontSize: '12px',
-                fontFamily: 'Inter',
-                fontWeight: '400',
-              }}
-              tickFormatter={(value: number) => {
-                return `${getFormattedPrice(BigNumber(value))}`;
-              }}
-              tickLine={false}
-            />
-            <ChartTooltip
-              content={<CustomTooltip />}
-              cursor={<CustomCursor />}
-            />
-            <defs>
-              <linearGradient id="color2" x1="0" x2="0" y1="0" y2="1">
-                <stop offset="0%" stopColor="#8b5cf6" stopOpacity={0.9} />
-                <stop offset="100%" stopColor="#8b5cf6" stopOpacity={0.2} />
-              </linearGradient>
-              <linearGradient id="color1" x1="0" x2="0" y1="0" y2="1">
-                <stop offset="0%" stopColor="#3FE8BD" stopOpacity={0.9} />
-                <stop offset="100%" stopColor="#3FE8BD" stopOpacity={0.2} />
-              </linearGradient>
-              <linearGradient id="color3" x1="0" x2="0" y1="0" y2="1">
-                <stop offset="0%" stopColor="#918E8E" stopOpacity={0.9} />
-                <stop offset="100%" stopColor="#918E8E" stopOpacity={0.2} />
-              </linearGradient>
-              <linearGradient id="color4" x1="0" x2="0" y1="0" y2="1">
-                <stop offset="0%" stopColor="#FFFFFF" stopOpacity={0} />
-                <stop offset="50%" stopColor="#FFFFFF" stopOpacity={0.1} />
-                <stop offset="100%" stopColor="#FFFFFF" stopOpacity={0.35} />
-              </linearGradient>
-            </defs>
-            <Area
-              dataKey="suppliedValueUsd"
-              fill="url(#color1)"
-              fillOpacity={0.4}
-              stackId="1"
-              stroke="#3FE8BD"
-              strokeWidth={2}
-              type="monotone"
-            />
-            <Area
-              dataKey="borrowedValueUsd"
-              fill="url(#color2)"
-              fillOpacity={0.4}
-              stackId="2"
-              stroke="#8B5CF6"
-              strokeWidth={2}
-              type="monotone"
-            />
-            <Area
-              dataKey="collateralValueUsd"
-              fill="url(#color3)"
-              fillOpacity={0.4}
-              stackId="3"
-              stroke="#918E8E"
-              strokeWidth={2}
-              type="monotone"
-            />
-          </AreaChart>
-        </ChartContainer>
-      </ResponsiveContainer>
+            tickFormatter={(value: number) => {
+              return dateFormatter.format(new Date(value * 1000));
+            }}
+            tickLine={true}
+            tickMargin={10}
+          />
+          <YAxis
+            axisLine={false}
+            style={{
+              fill: '#FFFFFF',
+              opacity: 0.6,
+              fontSize: '12px',
+              fontFamily: 'Inter',
+              fontWeight: '400',
+            }}
+            tickFormatter={(value: number) => {
+              return `${getFormattedPrice(BigNumber(value))}`;
+            }}
+            tickLine={false}
+          />
+          <ChartTooltip content={<CustomTooltip />} cursor={<CustomCursor />} />
+          <defs>
+            <linearGradient id="color2" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stopColor="#8b5cf6" stopOpacity={0.9} />
+              <stop offset="100%" stopColor="#8b5cf6" stopOpacity={0.2} />
+            </linearGradient>
+            <linearGradient id="color1" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stopColor="#3FE8BD" stopOpacity={0.9} />
+              <stop offset="100%" stopColor="#3FE8BD" stopOpacity={0.2} />
+            </linearGradient>
+            <linearGradient id="color3" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stopColor="#918E8E" stopOpacity={0.9} />
+              <stop offset="100%" stopColor="#918E8E" stopOpacity={0.2} />
+            </linearGradient>
+            <linearGradient id="color4" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0%" stopColor="#FFFFFF" stopOpacity={0} />
+              <stop offset="50%" stopColor="#FFFFFF" stopOpacity={0.1} />
+              <stop offset="100%" stopColor="#FFFFFF" stopOpacity={0.35} />
+            </linearGradient>
+          </defs>
+          <Area
+            dataKey="suppliedValueUsd"
+            fill="url(#color1)"
+            fillOpacity={0.4}
+            stackId="1"
+            stroke="#3FE8BD"
+            strokeWidth={2}
+            type="monotone"
+          />
+          <Area
+            dataKey="borrowedValueUsd"
+            fill="url(#color2)"
+            fillOpacity={0.4}
+            stackId="2"
+            stroke="#8B5CF6"
+            strokeWidth={2}
+            type="monotone"
+          />
+          <Area
+            dataKey="collateralValueUsd"
+            fill="url(#color3)"
+            fillOpacity={0.4}
+            stackId="3"
+            stroke="#918E8E"
+            strokeWidth={2}
+            type="monotone"
+          />
+        </AreaChart>
+      </ChartContainer>
     </div>
   );
 };

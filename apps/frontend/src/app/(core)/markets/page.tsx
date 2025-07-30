@@ -28,7 +28,7 @@ export default async function Page() {
     <div className="max-h-full overflow-auto">
       <div className="flex w-full flex-col items-center justify-center px-[88px] pt-[60px] pb-[55px] max-lg:hidden">
         <MarketStats chartData={chartsData?.marketsCombinedData} />
-        <div className="mt-[80px] mb-[55px] h-[320px] w-full">
+        <div className="mt-[80px] mb-[55px] w-full">
           <MultiMarketChart chartData={chartsData?.marketsCombinedData} />
         </div>
         <div className="h-full w-full">

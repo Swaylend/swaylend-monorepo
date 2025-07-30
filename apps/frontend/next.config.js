@@ -17,6 +17,7 @@ const CONNECT_DOMAINS = [
   'wss://api.bako.global',
   // PostHog
   'https://eu.i.posthog.com',
+  'https://eu-assets.i.posthog.com',
   // Sentio
   'https://app.sentio.xyz',
   // Hermes
