@@ -34,17 +34,23 @@ export const PortfolioView = () => {
           defaultValue={portfolioView}
           className="mt-[40px] sm:mt-[55px]"
         >
-          <TabsList className="max-sm:h-[40px]">
-            <TabsTrigger value="markets" className="max-sm:py-1.5 max-sm:px-6">
+          <TabsList className="h-[50px] rounded-full w-[600px]">
+            <TabsTrigger
+              value="markets"
+              className="max-sm:py-1.5 max-sm:px-6 cursor-pointer font-bold dark:data-[state=active]:text-primary-foreground dark:data-[state=active]:bg-primary rounded-full text-white text-md dark:text-white"
+            >
               My Markets
             </TabsTrigger>
             <TabsTrigger
               value="positions"
-              className="max-sm:py-1.5 max-sm:px-6"
+              className="max-sm:py-1.5 max-sm:px-6 cursor-pointer font-bold dark:data-[state=active]:text-primary-foreground dark:data-[state=active]:bg-primary rounded-full text-white text-md dark:text-white"
             >
               My Positions
             </TabsTrigger>
-            <TabsTrigger className="max-sm:py-1.5 max-sm:px-6" value="history">
+            <TabsTrigger
+              className="max-sm:py-1.5 max-sm:px-6 cursor-pointer font-bold dark:data-[state=active]:text-primary-foreground dark:data-[state=active]:bg-primary rounded-full text-white text-md dark:text-white"
+              value="history"
+            >
               My Transactions
             </TabsTrigger>
             {/* <TabsTrigger value="rewards" className="max-sm:py-1.5 max-sm:px-6">

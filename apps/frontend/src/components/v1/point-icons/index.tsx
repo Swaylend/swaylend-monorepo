@@ -40,7 +40,7 @@ export const PointIcons = ({ points, mobile = false }: PointIconsProps) => {
                       point.displayMultiplier
                         ? 'bg-primary/10 pl-2 w-[74px]'
                         : 'px-1',
-                      'w-[40px] h-[40px]'
+                      'w-[40px] h-[40px] cursor-pointer'
                     )}
                   >
                     {point.displayMultiplier && (

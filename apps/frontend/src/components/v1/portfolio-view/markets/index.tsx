@@ -6,13 +6,13 @@ import {
   useApr,
   useBorrowCapacity,
   useCollateralConfigurations,
+  useHealthFactor,
   useLTV,
   useMarketConfiguration,
   usePrice,
   useUserCollateralAssets,
   useUserCollateralUtilization,
   useUserLiquidationPoint,
-  useHealthFactor,
   useUserSupplyBorrow,
 } from '@/hooks/v1';
 import { cn } from '@/lib/utils';
@@ -208,19 +208,19 @@ export const Markets = () => {
 
   return (
     <Card className="mt-8 w-full">
-      <CardHeader className="bg-white/5 h-[20px] flex justify-center items-center text-md font-medium">
+      <CardHeader className="bg-white/5 h-[48px] flex justify-center items-center text-md font-medium">
         <div className="flex gap-x-2 items-center">
           <Image
             src={SYMBOL_TO_ICON.USDC}
             alt={'USDC'}
             width={24}
             height={24}
-            className={'rounded-full'}
+            className="rounded-full min-w-[24px] min-h-[24px]"
           />{' '}
           USDC Market
         </div>
       </CardHeader>
-      <CardContent className="flex justify-between gap-x-16 pt-4">
+      <CardContent className="flex justify-between gap-x-16">
         <div>
           <div className="flex justify-start gap-x-7">
             <div>

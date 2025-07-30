@@ -13,7 +13,7 @@ export const InfoIcon = ({ text }: { text: ReactNode }) => {
     <TooltipProvider delayDuration={100}>
       <Tooltip>
         <TooltipTrigger onClick={(e) => e.preventDefault()}>
-          <Info className="w-4 h-4" />
+          <Info className="w-4 h-4 cursor-pointer" />
         </TooltipTrigger>
         <TooltipContent onPointerDownOutside={(e) => e.preventDefault()}>
           <div className="font-normal max-w-[300px]">{text}</div>

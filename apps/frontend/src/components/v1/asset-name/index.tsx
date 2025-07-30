@@ -16,7 +16,7 @@ export const AssetName = ({ src, symbol, name }: AssetNameProps) => {
           alt={symbol}
           width={32}
           height={32}
-          className={'rounded-full'}
+          className="rounded-full min-w-[32px] min-h-[32px]"
         />
       </div>
       <div className="font-medium text-white">{name}</div>

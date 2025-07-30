@@ -15,14 +15,17 @@ export const MarketSwitch = () => {
       defaultValue={marketMode}
       className="mt-[40px] sm:mt-[55px] block lg:hidden"
     >
-      <TabsList className="max-sm:h-[40px]">
+      <TabsList className="h-[50px] rounded-full w-[280px]">
         <TabsTrigger
           value="borrow"
-          className="max-sm:py-1.5 max-sm:px-6 data-[state=active]:bg-purple data-[state=active]:text-white"
+          className="cursor-pointer rounded-full max-sm:py-1.5 max-sm:px-6 dark:data-[state=active]:bg-purple text-white dark:text-white text-md font-bold"
         >
           Borrow
         </TabsTrigger>
-        <TabsTrigger className="max-sm:py-1.5 max-sm:px-6" value="lend">
+        <TabsTrigger
+          className="cursor-pointer rounded-full max-sm:py-1.5 max-sm:px-6 text-md dark:data-[state=active]:bg-primary text-white dark:text-white dark:data-[state=active]:text-primary-foreground font-bold"
+          value="lend"
+        >
           Earn
         </TabsTrigger>
       </TabsList>

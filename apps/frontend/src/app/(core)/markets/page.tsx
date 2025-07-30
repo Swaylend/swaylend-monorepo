@@ -31,7 +31,9 @@ export default async function Page() {
         <div className="w-full h-[320px] mt-[80px] mb-[55px]">
           <MultiMarketChart chartData={chartsData?.marketsCombinedData} />
         </div>
-        <MarketsTable />
+        <div className="w-full h-full">
+          <MarketsTable />
+        </div>
       </div>
       <div className="lg:hidden w-full h-[60dvh] flex items-center justify-center">
         This page is not supported on this screen size.

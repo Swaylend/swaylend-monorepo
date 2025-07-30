@@ -567,11 +567,14 @@ export const InputDialog = () => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="p-0 max-sm:w-[90%] max-sm:rounded-xl max-w-[400px]">
+      <DialogContent
+        showCloseButton={false}
+        className="p-0 max-sm:w-[90%] max-sm:rounded-xl max-w-[400px] bg-popover"
+      >
         <VisuallyHidden.Root asChild>
           <DialogTitle>Input Dialog</DialogTitle>
         </VisuallyHidden.Root>
-        <div className="h-full w-full">
+        <div className="h-full w-full rounded-xl">
           <div className="w-full flex justify-between">
             <div className="w-1/2 relative h-[64px] flex justify-center items-center">
               <button
@@ -588,7 +591,7 @@ export const InputDialog = () => {
                 className={cn(
                   !(action === 'SUPPLY' || action === 'BORROW') &&
                     'text-lavender',
-                  'w-full font-semibold text-lg h-full',
+                  'w-full font-semibold text-lg h-full cursor-pointer',
                   disabledLeftTab && 'text-gray-500'
                 )}
               >
@@ -606,7 +609,7 @@ export const InputDialog = () => {
               >
                 <div
                   className={cn(
-                    '-z-10 w-[60%] top-[62px] h-2 bg-linear-to-r from-popover  via-primary to-popover absolute left-[calc(20%)]'
+                    '-z-10 w-[60%] top-[62px] h-2 bg-linear-to-r from-popover via-primary to-popover absolute left-[calc(20%)]'
                   )}
                 />
                 <div
@@ -631,7 +634,7 @@ export const InputDialog = () => {
                 className={cn(
                   !(action === 'WITHDRAW' || action === 'REPAY') &&
                     'text-lavender',
-                  'w-full font-semibold text-lg h-full',
+                  'w-full font-semibold text-lg h-full cursor-pointer',
                   disabledRightTab && 'text-gray-500'
                 )}
               >
@@ -656,7 +659,7 @@ export const InputDialog = () => {
               </div>
             </div>
           </div>
-          <div className="w-full flex flex-col gap-y-[30px] pt-[30px] h-[calc(100%-68px)] bg-popover p-[16px] z-10">
+          <div className="w-full flex flex-col gap-y-[30px] pt-[30px] h-[calc(100%-68px)] bg-popover p-[16px] z-10 rounded-b-xl">
             <div>
               <div>
                 <InputField error={error !== null} />

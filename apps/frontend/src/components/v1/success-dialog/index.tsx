@@ -30,7 +30,10 @@ export const SuccessDialog = () => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="p-0 max-sm:w-[90%] max-sm:rounded-xl max-w-[400px]">
+      <DialogContent
+        showCloseButton={false}
+        className="p-0 max-sm:w-[90%] max-sm:rounded-xl max-w-[400px] bg-popover"
+      >
         <VisuallyHidden.Root asChild>
           <DialogTitle>Transaction Successful</DialogTitle>
         </VisuallyHidden.Root>
@@ -48,7 +51,7 @@ export const SuccessDialog = () => {
               )}
             />
           </div>
-          <div className="bg-card p-4 w-full pt-12 flex flex-col items-center">
+          <div className="bg-card p-4 w-full pt-12 flex flex-col items-center rounded-b-xl">
             <div>
               <CheckCircleIcon className="w-10 h-10 text-primary" />
             </div>

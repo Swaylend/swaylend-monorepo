@@ -109,7 +109,10 @@ const CollateralTableRow = ({
       <TableCell>
         <TooltipProvider delayDuration={100}>
           <Tooltip>
-            <TooltipTrigger onClick={(e) => e.preventDefault()}>
+            <TooltipTrigger
+              onClick={(e) => e.preventDefault()}
+              className="cursor-pointer"
+            >
               <AssetName
                 symbol={symbol}
                 name={SYMBOL_TO_NAME[symbol]}
@@ -117,7 +120,7 @@ const CollateralTableRow = ({
               />
             </TooltipTrigger>
             <TooltipContent onPointerDownOutside={(e) => e.preventDefault()}>
-              <div className="p-2 w-[250px]">
+              <div className="p-2 w-[300px]">
                 <div className="font-bold text-lg">Collateral Details</div>
                 <div className="flex flex-col gap-y-2 mt-2">
                   <div className="text-md flex justify-between">
@@ -207,12 +210,12 @@ const CollateralTableRow = ({
         <TooltipProvider delayDuration={100}>
           <Tooltip>
             <TooltipTrigger onClick={(e) => e.preventDefault()}>
-              <div className="w-[48px] h-[48px]">
+              <div className="w-[48px] h-[48px] cursor-pointer">
                 <CircularProgressBar percent={supplyUsed.div(100)} />
               </div>
             </TooltipTrigger>
             <TooltipContent onPointerDownOutside={(e) => e.preventDefault()}>
-              <div className="p-2 w-[250px]">
+              <div className="p-2 w-[300px]">
                 <div className="font-bold text-lg">
                   Collateral Supply Details
                 </div>
@@ -439,6 +442,9 @@ const SkeletonRow = (
       <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
     </TableCell>
     <TableCell>
+      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+    </TableCell>
+    <TableCell>
       <div className="flex gap-x-2 w-full">
         <Button className="w-1/2" disabled={true}>
           Supply
@@ -487,36 +493,6 @@ export const CollateralTable = () => {
     changeActionTokenAssetId(assetId);
     changeInputDialogOpen(true);
   };
-
-  const SkeletonRow = (
-    <TableRow>
-      <TableCell>
-        <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
-      </TableCell>
-      <TableCell>
-        <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
-      </TableCell>
-      <TableCell>
-        <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
-      </TableCell>
-      <TableCell>
-        <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
-      </TableCell>
-      <TableCell>
-        <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
-      </TableCell>
-      <TableCell>
-        <div className="flex gap-x-2 w-full">
-          <Button className="w-1/2" disabled={true}>
-            Supply
-          </Button>
-          <Button className="w-1/2" disabled={true}>
-            Withdraw
-          </Button>
-        </div>
-      </TableCell>
-    </TableRow>
-  );
 
   return (
     <>

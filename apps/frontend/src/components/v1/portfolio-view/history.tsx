@@ -66,7 +66,7 @@ export const History = () => {
 
   return (
     <div>
-      <Table className="max-lg:hidden mt-12">
+      <Table className="max-lg:hidden">
         <TableHeader>
           <TableRow>
             <TableHead colSpan={8}>

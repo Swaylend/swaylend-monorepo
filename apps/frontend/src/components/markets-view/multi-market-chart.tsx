@@ -125,7 +125,7 @@ export const MultiMarketChart = ({
   }
 
   return (
-    <ResponsiveContainer width="100%">
+    <ResponsiveContainer width="100%" height="100%">
       {chartData ? (
         <ChartContainer config={chartConfig}>
           <AreaChart

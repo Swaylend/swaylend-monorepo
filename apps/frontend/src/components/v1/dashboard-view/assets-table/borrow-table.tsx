@@ -269,7 +269,7 @@ export const BorrowTable = () => {
                         }
                         width={32}
                         height={32}
-                        className="rounded-full"
+                        className="rounded-full min-w-[32px] min-h-[32px]"
                       />
                     )}
                   </div>
@@ -433,7 +433,7 @@ export const BorrowTable = () => {
                           }
                           width={32}
                           height={32}
-                          className="rounded-full"
+                          className="rounded-full min-w-[32px] min-h-[32px]"
                         />
                       )}
                     </div>

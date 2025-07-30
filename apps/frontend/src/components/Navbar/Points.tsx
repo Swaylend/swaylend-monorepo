@@ -32,7 +32,13 @@ export const Points = () => {
         ref={hoverRef}
         onClick={() => setIsManualOpen(true)}
       >
-        <Image alt="points-icon" width={40} height={40} src={POINTS} />
+        <Image
+          alt="points-icon"
+          width={40}
+          height={40}
+          src={POINTS}
+          className="cursor-pointer"
+        />
       </PopoverTrigger>
       <PopoverContent
         onInteractOutside={() => setIsManualOpen(false)}
