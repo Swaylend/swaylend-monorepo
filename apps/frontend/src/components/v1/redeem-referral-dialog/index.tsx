@@ -27,7 +27,7 @@ export const RedeemReferralDialog = () => {
           <div className="w-full overflow-hidden relative">
             <div
               className={cn(
-                '-z-10 w-[90%] top-[62px] h-2 bg-gradient-to-r from-popover via-primary to-popover absolute left-[calc(5%)]'
+                '-z-10 w-[90%] top-[62px] h-2 bg-linear-to-r from-popover via-primary to-popover absolute left-[calc(5%)]'
               )}
             />
             <div

@@ -24,7 +24,7 @@ export const IconPair = ({ icons }: IconPairProps) => {
         return (
           <div
             key={icon.id}
-            className="flex items-center rounded-full bg-card p-1 [&:nth-child(n+2)]:ml-[-12px]"
+            className="flex items-center rounded-full bg-card p-1 nth-[n+2]:ml-[-12px]"
           >
             <TooltipProvider delayDuration={100}>
               <Tooltip>

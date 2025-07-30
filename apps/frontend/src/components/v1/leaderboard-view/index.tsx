@@ -17,7 +17,7 @@ export const LeaderboardView = () => {
           <div className="text-xl font-semibold text-white">
             Swaylend Leaderboard
           </div>
-          <div className="mt-[20px] font-medium text-md text-white border-yellow-400 border px-4 py-2 rounded-lg bg-gradient-to-t from-yellow-400/20 to-yellow-400/10">
+          <div className="mt-[20px] font-medium text-md text-white border-yellow-400 border px-4 py-2 rounded-lg bg-linear-to-t from-yellow-400/20 to-yellow-400/10">
             Season 1
           </div>
           {isConnected &&

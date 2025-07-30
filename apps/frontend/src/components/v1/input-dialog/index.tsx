@@ -606,7 +606,7 @@ export const InputDialog = () => {
               >
                 <div
                   className={cn(
-                    '-z-10 w-[60%] top-[62px] h-2 bg-gradient-to-r from-popover  via-primary to-popover absolute left-[calc(20%)]'
+                    '-z-10 w-[60%] top-[62px] h-2 bg-linear-to-r from-popover  via-primary to-popover absolute left-[calc(20%)]'
                   )}
                 />
                 <div
@@ -645,7 +645,7 @@ export const InputDialog = () => {
               >
                 <div
                   className={cn(
-                    '-z-10 w-[60%] top-[62px] h-2 bg-gradient-to-r from-popover  via-primary to-popover absolute left-[calc(20%)]'
+                    '-z-10 w-[60%] top-[62px] h-2 bg-linear-to-r from-popover  via-primary to-popover absolute left-[calc(20%)]'
                   )}
                 />
                 <div

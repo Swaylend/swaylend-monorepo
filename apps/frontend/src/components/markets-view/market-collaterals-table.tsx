@@ -109,15 +109,15 @@ export const MarketCollateralsTable = ({
   const { data: priceData } = usePrice(marketName);
 
   return (
-    <div className="w-full border bg-gradient-to-b from-white/10 to-card rounded-lg ">
+    <div className="w-full border bg-linear-to-b from-white/10 to-card rounded-lg ">
       <Table className="max-sm:hidden">
         <TableHeader>
           <TableRow>
             <TableHead className="h-[75px] rounded-t-md" colSpan={7}>
               <div className="w-full items-center justify-center gap-x-2 font-semibold text-lg flex">
-                <div className="w-[260px] rounded-full h-[1px] bg-gradient-to-r from-white/0 to-primary" />
+                <div className="w-[260px] rounded-full h-px bg-linear-to-r from-white/0 to-primary" />
                 <div className="text-center text-white">Collateral Assets</div>
-                <div className="w-[260px] rounded-full h-[1px] bg-gradient-to-l from-white/0 to-primary" />
+                <div className="w-[260px] rounded-full h-px bg-linear-to-l from-white/0 to-primary" />
               </div>
             </TableHead>
           </TableRow>

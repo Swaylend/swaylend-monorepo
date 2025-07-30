@@ -1,28 +1,148 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
-* {
-  box-sizing: border-box;
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --text-*: initial;
+  --text-2xl: 48px;
+  --text-2xl--line-height: 58px;
+  --text-xl: 30px;
+  --text-xl--line-height: 36px;
+  --text-lg: 18px;
+  --text-lg--line-height: 27px;
+  --text-md: 16px;
+  --text-md--line-height: 24px;
+  --text-sm: 14px;
+  --text-sm--line-height: 21px;
+  --text-xs: 12px;
+  --text-xs--line-height: 12px;
+
+  --font-sans:
+    Inter var, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
+  --color-neutral0: #8d021f;
+  --color-neutral1: #8d021f;
+  --color-neutral2: #8d021f;
+  --color-neutral3: #8d021f;
+  --color-neutral4: #8d021f;
+  --color-neutral5: #8d021f;
+  --color-neutral6: #8d021f;
+  --color-neutral7: #8d021f;
+  --color-neutral8: #8d021f;
+  --color-primary01: #8d021f;
+  --color-primary02: #8d021f;
+  --color-primary03: #8d021f;
+  --color-secondary1: #8d021f;
+  --color-secondary2: #8d021f;
+  --color-secondary3: #8d021f;
+  --color-lavender: #dfe5fa;
+  --color-moon: #8d98af;
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-purple: #8b5cf6;
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }
 }
 
-/* Used for correct mobile height */
-:root {
-  --doc-height: 100%;
-  --toastify-color-dark: #262F33;
+@utility container {
+  margin-inline: auto;
+  padding-inline: 2rem;
+  @media (width >= --theme(--breakpoint-sm)) {
+    max-width: none;
+  }
+  @media (width >= 1400px) {
+    max-width: 1400px;
+  }
 }
 
-html,
-body {
-  padding: 0;
-  margin: 0;
-  height: 100vh; /* fallback for Js load */
-  height: var(--doc-height);
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
 }
 
-body > div > div[role="dialog"] {
-  bottom: unset !important;
-  top: 40% !important;
+@layer utilities {
+  * {
+    box-sizing: border-box;
+  }
+
+  /* Used for correct mobile height */
+  :root {
+    --doc-height: 100%;
+    --toastify-color-dark: #262f33;
+  }
+
+  html,
+  body {
+    padding: 0;
+    margin: 0;
+    height: 100vh; /* fallback for Js load */
+    height: var(--doc-height);
+  }
+
+  body > div > div[role='dialog'] {
+    bottom: unset !important;
+    top: 40% !important;
+  }
 }
 
 @layer base {

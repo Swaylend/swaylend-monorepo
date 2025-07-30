@@ -178,9 +178,9 @@ export default function MarketOverview({
         <Card className="mt-8 w-full">
           <CardHeader className="bg-white/5">
             <div className="w-full items-center justify-center gap-x-2 font-semibold text-lg flex">
-              <div className="w-[260px] rounded-full h-[1px] bg-gradient-to-r from-white/0 to-primary" />
+              <div className="w-[260px] rounded-full h-px bg-linear-to-r from-white/0 to-primary" />
               <div className="text-center text-white">Market Stats</div>
-              <div className="w-[260px] rounded-full h-[1px] bg-gradient-to-l from-white/0 to-primary" />
+              <div className="w-[260px] rounded-full h-px bg-linear-to-l from-white/0 to-primary" />
             </div>
           </CardHeader>
           <CardContent className="flex justify-evenly pt-[55px]">
@@ -254,9 +254,9 @@ export default function MarketOverview({
         <Card className="w-full">
           <CardHeader className="bg-white/5">
             <div className="w-full items-center justify-center gap-x-2 font-semibold text-lg flex">
-              <div className="w-[260px] rounded-full h-[1px] bg-gradient-to-r from-white/0 to-primary" />
+              <div className="w-[260px] rounded-full h-px bg-linear-to-r from-white/0 to-primary" />
               <div className="text-center text-white">Interest Rate Model</div>
-              <div className="w-[260px] rounded-full h-[1px] bg-gradient-to-l from-white/0 to-primary" />
+              <div className="w-[260px] rounded-full h-px bg-linear-to-l from-white/0 to-primary" />
             </div>
           </CardHeader>
           <CardContent>

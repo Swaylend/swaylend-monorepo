@@ -39,7 +39,7 @@ export const SuccessDialog = () => {
             Transaction Successful
             <div
               className={cn(
-                '-z-10 w-[80%] top-[62px] h-[2px] rounded-full bg-gradient-to-r from-popover via-primary to-popover absolute left-[calc(10%)]'
+                '-z-10 w-[80%] top-[62px] h-[2px] rounded-full bg-linear-to-r from-popover via-primary to-popover absolute left-[calc(10%)]'
               )}
             />
             <div

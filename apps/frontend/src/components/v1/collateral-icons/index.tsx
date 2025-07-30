@@ -28,7 +28,7 @@ export const CollateralIcons = ({ collaterals }: CollateralIconsProps) => {
           return (
             <div
               key={collateral.id}
-              className="flex items-center rounded-full bg-card p-1 [&:nth-child(n+2)]:ml-[-12px]"
+              className="flex items-center rounded-full bg-card p-1 nth-[n+2]:ml-[-12px]"
             >
               <TooltipProvider delayDuration={100}>
                 <Tooltip>
@@ -56,7 +56,7 @@ export const CollateralIcons = ({ collaterals }: CollateralIconsProps) => {
         {collaterals.length > 3 && (
           <div
             key="others"
-            className="flex items-center rounded-full bg-card p-1 [&:nth-child(n+2)]:ml-[-12px]"
+            className="flex items-center rounded-full bg-card p-1 nth-[n+2]:ml-[-12px]"
           >
             <div className="w-[28px] h-[28px] text-lavender font-semibold bg-white/20 rounded-full flex items-center pl-1">
               +{collaterals.length - 3}

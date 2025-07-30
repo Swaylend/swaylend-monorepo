@@ -120,7 +120,7 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
               ))}
               <DropdownMenu open={openBridge} onOpenChange={setOpenBridge}>
                 <DropdownMenuTrigger>
-                  <div className="text-lavender outline-none border-none focus:outline-none focus:border-none hover:text-lavender/80 text-md font-semibold flex items-center gap-x-1">
+                  <div className="text-lavender outline-hidden border-none focus:outline-hidden focus:border-none hover:text-lavender/80 text-md font-semibold flex items-center gap-x-1">
                     Bridges
                     <ChevronDown className="w-4 h-4" />
                   </div>
@@ -181,7 +181,7 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
               </DropdownMenu>
               <DropdownMenu open={openDex} onOpenChange={setOpenDex}>
                 <DropdownMenuTrigger>
-                  <div className="text-lavender outline-none border-none focus:outline-none focus:border-none hover:text-lavender/80 text-md font-semibold flex items-center gap-x-1">
+                  <div className="text-lavender outline-hidden border-none focus:outline-hidden focus:border-none hover:text-lavender/80 text-md font-semibold flex items-center gap-x-1">
                     Swap
                     <ChevronDown className="w-4 h-4" />
                   </div>

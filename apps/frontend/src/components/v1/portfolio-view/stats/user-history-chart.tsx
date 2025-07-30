@@ -81,7 +81,7 @@ export const UserHistoryChart = ({
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-card/80 p-4 rounded-md border-[1px] border-white/20 shadow-md">
+        <div className="bg-card/80 p-4 rounded-md border border-white/20 shadow-md">
           <div className="flex justify-between text-sm gap-x-4 font-semibold">
             <div>Total Supply</div>
             <div>

@@ -29,7 +29,7 @@ export const PointIcons = ({ points, mobile = false }: PointIconsProps) => {
         return (
           <div
             key={point.id}
-            className="flex items-center rounded-full bg-card p-1 [&:nth-child(n+2)]:ml-[-12px]"
+            className="flex items-center rounded-full bg-card p-1 nth-[n+2]:ml-[-12px]"
           >
             <TooltipProvider delayDuration={100}>
               <Tooltip>
@@ -59,7 +59,7 @@ export const PointIcons = ({ points, mobile = false }: PointIconsProps) => {
                 </TooltipTrigger>
                 <TooltipContent
                   onPointerDownOutside={(e) => e.preventDefault()}
-                  className={mobile ? 'w-64' : 'w-128'}
+                  className={mobile ? 'w-64' : 'w-lg'}
                   align="center"
                 >
                   <div className="p-1">

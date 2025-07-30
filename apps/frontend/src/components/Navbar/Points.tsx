@@ -28,7 +28,7 @@ export const Points = () => {
   return (
     <Popover open={isHover || isManualOpen}>
       <PopoverTrigger
-        className="focus-visible:outline-none"
+        className="focus-visible:outline-hidden"
         ref={hoverRef}
         onClick={() => setIsManualOpen(true)}
       >
