@@ -89,6 +89,7 @@ const customDefaultConnectors = (): FuelConnector[] => {
           : CHAIN_IDS.fuel.mainnet,
       fuelProvider: provider,
     }),
+    new FuelWalletConnector(),
     // new SolanaConnector({
     //   projectId: appConfig.client.shared.walletConnectProjectId,
     //   chainId:
