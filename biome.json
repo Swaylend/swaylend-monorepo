@@ -8,7 +8,8 @@
   },
   "files": {
     "includes": [
-      "**/*.{js,ts,jsx,tsx,mdx,md,json}",
+      "**",
+      "!**/*.css",
       "!**/node_modules/**",
       "!**/dist/**",
       "!**/build/**",

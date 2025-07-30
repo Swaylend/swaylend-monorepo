@@ -14,15 +14,15 @@ export const MarketStats = ({
 
   const borrowed =
     chartData.length > 0
-      ? BigNumber(chartData.at(-1).borrowedValueUsd)
+      ? BigNumber(chartData.at(-1)?.borrowedValueUsd ?? 0)
       : BigNumber(0);
   const supplied =
     chartData.length > 0
-      ? BigNumber(chartData.at(-1).suppliedValueUsd)
+      ? BigNumber(chartData.at(-1)?.suppliedValueUsd ?? 0)
       : BigNumber(0);
   const collateral =
     chartData.length > 0
-      ? BigNumber(chartData.at(-1).collateralValueUsd)
+      ? BigNumber(chartData.at(-1)?.collateralValueUsd ?? 0)
       : BigNumber(0);
 
   return (

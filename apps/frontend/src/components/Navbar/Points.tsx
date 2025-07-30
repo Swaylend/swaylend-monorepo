@@ -1,9 +1,9 @@
 import { useIsConnected } from '@fuels/react';
+import { useHover } from '@mantine/hooks';
 import { Trophy } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRef, useState } from 'react';
-import { useHover } from 'usehooks-ts';
+import { useState } from 'react';
 import {
   Popover,
   PopoverContent,
@@ -15,8 +15,7 @@ import POINTS from '/public/icons/points-icon.svg?url';
 import { Button } from '../ui/button';
 
 export const Points = () => {
-  const hoverRef = useRef<HTMLButtonElement | null>(null);
-  const isHover = useHover(hoverRef);
+  const { hovered, ref } = useHover();
 
   const [isManualOpen, setIsManualOpen] = useState(false);
 
@@ -26,11 +25,11 @@ export const Points = () => {
   const { isConnected } = useIsConnected();
 
   return (
-    <Popover open={isHover || isManualOpen}>
+    <Popover open={hovered || isManualOpen}>
       <PopoverTrigger
         className="focus-visible:outline-hidden"
         onClick={() => setIsManualOpen(true)}
-        ref={hoverRef}
+        ref={ref}
       >
         <Image
           alt="points-icon"

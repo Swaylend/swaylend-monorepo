@@ -1,8 +1,8 @@
+import { useDebouncedCallback } from '@mantine/hooks';
 import BigNumber from 'bignumber.js';
 import Image from 'next/image';
 import type React from 'react';
 import { useEffect, useRef, useState } from 'react';
-import { useDebounceCallback } from 'usehooks-ts';
 import { appConfig } from '@/configs';
 import {
   useCollateralConfigurations,
@@ -25,7 +25,7 @@ export const InputField = ({ error }: { error: boolean }) => {
 
   const amountInput = useRef<HTMLInputElement>(null);
 
-  const debounceFocus = useDebounceCallback(() => {
+  const debounceFocus = useDebouncedCallback(() => {
     if (amountInput.current) {
       amountInput.current.focus();
     }
@@ -58,7 +58,7 @@ export const InputField = ({ error }: { error: boolean }) => {
     }
   }, [tokenAmount]);
 
-  const debounce = useDebounceCallback(changeTokenAmount, 333);
+  const debounce = useDebouncedCallback(changeTokenAmount, 333);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (

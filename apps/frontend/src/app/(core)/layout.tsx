@@ -7,12 +7,12 @@ import { IntroductionDialog } from '@/components/v1/introduction-dialog';
 import { appConfig } from '@/configs';
 import { isMobile } from '@/utils/is-mobile';
 
-export default function AppLayout({
+export default async function AppLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const userAgent = headers().get('user-agent') || '';
+  const userAgent = (await headers()).get('user-agent') || '';
   const mobile = isMobile(userAgent);
   return (
     <Providers>

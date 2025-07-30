@@ -76,12 +76,6 @@ export const PositionSummary = () => {
     return currentCollateralUtilization.toFixed(2);
   }, [possibleCollateralUtilization, currentCollateralUtilization]);
 
-  const meterColor = useMemo(() => {
-    if (Number(possibleCollateralUtilizationValue) < 60) return 'bg-primary';
-    if (Number(possibleCollateralUtilizationValue) < 80) return 'bg-yellow-500';
-    return 'bg-red-500';
-  }, [possibleCollateralUtilizationValue]);
-
   const stats = useMemo(() => {
     let updatedBorrowCapacity = borrowCapacity?.minus(
       BigNumber(1).div(
@@ -225,7 +219,6 @@ export const PositionSummary = () => {
           </div>
           <Progress
             className={'mt-2 h-[6px]'}
-            indicatorColor={meterColor}
             value={
               possibleCollateralUtilization
                 ? possibleCollateralUtilization

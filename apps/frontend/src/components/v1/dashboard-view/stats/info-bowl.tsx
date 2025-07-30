@@ -1,7 +1,7 @@
 import { useIsConnected } from '@fuels/react';
+import { useMediaQuery } from '@mantine/hooks';
 import { useMemo } from 'react';
 import Wave from 'react-wavify';
-import { useMediaQuery } from 'usehooks-ts';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
   Tooltip,

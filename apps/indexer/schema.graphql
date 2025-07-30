@@ -29,8 +29,10 @@ type User {
   collateralAssets: [UserCollateral!]! @derivedFrom(field: "user")
   collateralEvents: [UserCollateralEvent!]! @derivedFrom(field: "user")
   baseEvents: [UserBaseEvent!]! @derivedFrom(field: "user")
-  liquidationEventsLiquidator: [LiquidationEvent!]! @derivedFrom(field: "liquidator")
-  liquidationEventsLiquidated: [LiquidationEvent!]! @derivedFrom(field: "liquidated")
+  liquidationEventsLiquidator: [LiquidationEvent!]!
+    @derivedFrom(field: "liquidator")
+  liquidationEventsLiquidated: [LiquidationEvent!]!
+    @derivedFrom(field: "liquidated")
   absorbCollateralEvents: [AbsorbCollateralEvent!]! @derivedFrom(field: "user")
   buyCollateralEvents: [BuyCollateralEvent!]! @derivedFrom(field: "user")
 }
@@ -77,7 +79,7 @@ type MarketConfiguartion {
   baseMinForRewards: BigInt!
   baseBorrowMin: BigInt!
   targetReserves: BigInt!
-} 
+}
 
 # User - Collateral Schema
 type UserCollateral {
@@ -92,13 +94,13 @@ type UserCollateral {
 ###############################
 
 enum CollateralActionType {
-  Supply,
-  Withdraw,
+  Supply
+  Withdraw
 }
 
 # User Collateral Actions
 type UserCollateralEvent {
-  id: ID! # random ? 
+  id: ID! # random ?
   user: User!
   collateralAsset: CollateralAsset!
   amount: BigInt!
@@ -107,10 +109,10 @@ type UserCollateralEvent {
 }
 
 enum BaseActionType {
-  Supply,
-  Withdraw,
-  Borrow,
-  Repay,
+  Supply
+  Withdraw
+  Borrow
+  Repay
 }
 
 # User Base Actions
