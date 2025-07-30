@@ -11,6 +11,7 @@ export const useCollateralConfigurations = (marketParam?: string) => {
   return useQuery({
     queryKey: [
       'collateralConfigurations',
+      'v1',
       marketContract?.account?.address,
       marketContract?.id,
     ],

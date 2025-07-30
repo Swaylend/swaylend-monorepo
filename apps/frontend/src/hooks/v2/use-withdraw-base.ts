@@ -8,7 +8,6 @@ import {
   TransactionSuccessToast,
 } from '@/components/v1/toasts';
 import { appConfig } from '@/configs';
-import type { PriceDataUpdateInput } from '@/contract-types/v1/Market';
 import { useMarketContract } from '@/contracts/v2/use-market-contract';
 import { usePythContract } from '@/contracts/v2/use-pyth-contract';
 import { useMarketStore } from '@/stores/market-store';
@@ -38,13 +37,7 @@ export const useWithdrawBase = () => {
       pythContract?.account?.address,
       pythContract?.id,
     ],
-    mutationFn: async ({
-      tokenAmount,
-      priceUpdateData,
-    }: {
-      tokenAmount: BigNumber;
-      priceUpdateData: PriceDataUpdateInput;
-    }) => {
+    mutationFn: async ({ tokenAmount }: { tokenAmount: BigNumber }) => {
       if (!(account && marketConfiguration && marketContract && pythContract)) {
         return null;
       }
@@ -53,11 +46,12 @@ export const useWithdrawBase = () => {
         10 ** marketConfiguration.baseTokenDecimals
       );
 
+      // TODO [ORACLE INPUT]
       const { waitForResult } = await marketContract.functions
-        .withdraw_base(amount.toFixed(0), priceUpdateData)
+        .withdraw_base(amount.toFixed(0), [])
         .callParams({
           forward: {
-            amount: priceUpdateData.update_fee,
+            amount: 0,
             assetId: appConfig.client.shared.baseAssetId,
           },
         })
@@ -89,6 +83,7 @@ export const useWithdrawBase = () => {
       queryClient.invalidateQueries({
         queryKey: [
           'userSupplyBorrow',
+          'v2',
           account,
           marketContract?.account?.address,
           marketContract?.id,
@@ -98,7 +93,12 @@ export const useWithdrawBase = () => {
       // Invalidate Fuel balance query
       queryClient.invalidateQueries({
         exact: true,
-        queryKey: ['balance', account, marketConfiguration?.baseToken.bits],
+        queryKey: [
+          'balance',
+          'v2',
+          account,
+          marketConfiguration?.baseToken.bits,
+        ],
       });
     },
   });

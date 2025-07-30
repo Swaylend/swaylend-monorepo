@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import type { CollateralConfigurationOutput } from '@/contract-types/v1/Market';
+import type { CollateralConfigurationOutput } from '@/contract-types/v2/Market';
 import { useMarketContract } from '@/contracts/v2/use-market-contract';
 import { useMarketStore } from '@/stores/market-store';
 
@@ -11,6 +11,7 @@ export const useCollateralConfigurations = (marketParam?: string) => {
   return useQuery({
     queryKey: [
       'collateralConfigurations',
+      'v2',
       marketContract?.account?.address,
       marketContract?.id,
     ],
@@ -30,12 +31,12 @@ export const useCollateralConfigurations = (marketParam?: string) => {
         formattedConfigurations[config.asset_id.bits] = {
           asset_id: config.asset_id,
           paused: config.paused,
-          price_feed_id: config.price_feed_id,
           decimals: config.decimals,
           borrow_collateral_factor: config.borrow_collateral_factor,
           liquidate_collateral_factor: config.liquidate_collateral_factor,
           supply_cap: config.supply_cap,
           liquidation_penalty: config.liquidation_penalty,
+          oracle_max_confidence_width: config.oracle_max_confidence_width,
         };
       }
 

@@ -12,6 +12,7 @@ export const useSupplyRate = (marketParam?: string) => {
   return useQuery({
     queryKey: [
       'supplyRate',
+      'v1',
       utilization?.toString(),
       marketContract?.account?.address,
       marketContract?.id,

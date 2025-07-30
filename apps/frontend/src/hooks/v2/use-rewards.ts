@@ -4,9 +4,9 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { appConfig } from '@/configs';
 import { useMarketStore } from '@/stores/market-store';
+import { usePrice } from './oracles/use-pyth-oracle';
 import { useMarketBasicsWithInterest } from './use-market-basics-with-interest';
 import { useMarketConfiguration } from './use-market-configuration';
-import { usePrice } from './use-price';
 
 dayjs.extend(utc);
 
@@ -34,6 +34,7 @@ export const useRewards = (marketParam?: string) => {
   return useQuery({
     queryKey: [
       'rewards',
+      'v2',
       market,
       marketBasics,
       priceData?.prices,

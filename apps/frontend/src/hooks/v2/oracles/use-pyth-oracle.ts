@@ -3,15 +3,14 @@ import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { arrayify, DateTime } from 'fuels';
 import { useMemo, useState } from 'react';
-import type { PriceDataUpdateInput } from '@/contract-types/v1/Market';
 import { useMarketContract } from '@/contracts/v2/use-market-contract';
 import { usePythContract } from '@/contracts/v2/use-pyth-contract';
 import { useMarketStore } from '@/stores/market-store';
-import { useProvider } from '../use-provider';
-import { useCollateralConfigurations } from './use-collateral-configurations';
-import { useMarketConfiguration } from './use-market-configuration';
+import { useProvider } from '../../use-provider';
+import { useCollateralConfigurations } from '../use-collateral-configurations';
+import { useMarketConfiguration } from '../use-market-configuration';
 
-export const usePrice = (marketParam?: string) => {
+export const usePythOracle = (marketParam?: string) => {
   const [hermesClient, _] = useState(
     () =>
       new HermesClient(
@@ -63,6 +62,7 @@ export const usePrice = (marketParam?: string) => {
   return useQuery({
     queryKey: [
       'pythPrices',
+      'v2',
       priceFeedIdToAssetIdKey,
       marketContract?.account?.address,
       marketContract?.id,

@@ -10,7 +10,7 @@ type User = {
 export const useUser = () => {
   const { account } = useAccount();
   return useQuery({
-    queryKey: ['user', account],
+    queryKey: ['user', 'v2', account],
     queryFn: async () => {
       const response = await fetch(
         `${appConfig.client.shared.swaylendApi}/api/users/${account}`

@@ -76,6 +76,7 @@ export const useSupplyBase = () => {
       queryClient.invalidateQueries({
         queryKey: [
           'userSupplyBorrow',
+          'v1',
           account,
           marketContract?.account?.address,
           marketContract?.id,
@@ -85,7 +86,12 @@ export const useSupplyBase = () => {
       // Invalidate Fuel balance query
       queryClient.invalidateQueries({
         exact: true,
-        queryKey: ['balance', account, marketConfiguration?.baseToken.bits],
+        queryKey: [
+          'balance',
+          'v1',
+          account,
+          marketConfiguration?.baseToken.bits,
+        ],
       });
     },
   });

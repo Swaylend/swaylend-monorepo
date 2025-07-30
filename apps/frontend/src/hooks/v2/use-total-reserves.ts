@@ -11,6 +11,7 @@ export const useTotalReserves = (marketParam?: string) => {
   return useQuery({
     queryKey: [
       'totalReserves',
+      'v2',
       marketContract?.account?.address,
       marketContract?.id,
     ],

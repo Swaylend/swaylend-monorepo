@@ -93,6 +93,7 @@ export const useSupplyCollateral = ({
         exact: false,
         queryKey: [
           'collateralAssets',
+          'v1',
           account,
           marketContract?.account?.address,
           marketContract?.id,
@@ -102,7 +103,7 @@ export const useSupplyCollateral = ({
       // Invalidate Fuel balance query
       queryClient.invalidateQueries({
         exact: true,
-        queryKey: ['balance', account, actionTokenAssetId],
+        queryKey: ['balance', 'v1', account, actionTokenAssetId],
       });
     },
   });

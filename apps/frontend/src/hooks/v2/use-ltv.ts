@@ -1,7 +1,7 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
+import { usePrice } from './oracles/use-pyth-oracle';
 import { useMarketConfiguration } from './use-market-configuration';
-import { usePrice } from './use-price';
 import { useUserCollateralValue } from './use-user-collateral-value';
 import { useUserSupplyBorrow } from './use-user-supply-borrow';
 
@@ -14,6 +14,7 @@ export const useLTV = (marketParam?: string) => {
   return useQuery({
     queryKey: [
       'ltv',
+      'v2',
       collateralValue,
       supplyBorrow,
       priceData?.prices,

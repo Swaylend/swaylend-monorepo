@@ -14,6 +14,7 @@ export const useUserTrueCollateralValue = (marketParam?: string) => {
   return useQuery({
     queryKey: [
       'userTrueCollateralValue',
+      'v1',
       marketParam,
       collateralBalances,
       collateralConfig,

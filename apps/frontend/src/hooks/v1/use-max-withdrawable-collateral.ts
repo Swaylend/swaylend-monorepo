@@ -20,6 +20,7 @@ export const useMaxWithdrawableCollateral = (
   return useQuery({
     queryKey: [
       'userMaxWithdrawableCollateral',
+      'v1',
       assetId,
       collateralBalances,
       collateralConfig,

@@ -13,6 +13,7 @@ export const useUserSupplyBorrow = (marketParam?: string) => {
   return useQuery({
     queryKey: [
       'userSupplyBorrow',
+      'v1',
       account,
       marketContract?.account?.address,
       marketContract?.id,

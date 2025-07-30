@@ -108,6 +108,7 @@ export const useWithdrawCollateral = ({
       queryClient.invalidateQueries({
         queryKey: [
           'collateralAssets',
+          'v1',
           account,
           marketContract?.account?.address,
           marketContract?.id,
@@ -117,7 +118,7 @@ export const useWithdrawCollateral = ({
       // Invalidate Fuel balance query
       queryClient.invalidateQueries({
         exact: true,
-        queryKey: ['balance', account, actionTokenAssetId],
+        queryKey: ['balance', 'v1', account, actionTokenAssetId],
       });
     },
   });

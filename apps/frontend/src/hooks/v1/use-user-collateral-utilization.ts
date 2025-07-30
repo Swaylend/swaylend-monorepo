@@ -15,6 +15,7 @@ export const useUserCollateralUtilization = (marketParam?: string) => {
   return useQuery({
     queryKey: [
       'userCollateralUtilization',
+      'v1',
       userSupplyBorrow,
       marketConfiguration,
       trueCollateralValue,

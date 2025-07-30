@@ -1,8 +1,8 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { formatUnits } from '@/utils';
+import { usePrice } from './oracles/use-pyth-oracle';
 import { useCollateralConfigurations } from './use-collateral-configurations';
-import { usePrice } from './use-price';
 import { useUserCollateralAssets } from './use-user-collateral-assets';
 
 // Value of collateral in USD
@@ -14,6 +14,7 @@ export const useUserCollateralValue = (marketParam?: string) => {
   return useQuery({
     queryKey: [
       'userCollateralValue',
+      'v2',
       collateralBalances,
       priceData?.prices,
       collateralConfig,

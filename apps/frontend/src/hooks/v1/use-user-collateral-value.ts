@@ -14,6 +14,7 @@ export const useUserCollateralValue = (marketParam?: string) => {
   return useQuery({
     queryKey: [
       'userCollateralValue',
+      'v1',
       collateralBalances,
       priceData?.prices,
       collateralConfig,

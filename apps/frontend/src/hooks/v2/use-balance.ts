@@ -11,7 +11,7 @@ export const useBalance = ({ address, assetId }: UseBalanceParams) => {
   const { provider } = useProvider();
 
   return useQuery({
-    queryKey: ['balance', address, assetId],
+    queryKey: ['balance', 'v2', address, assetId],
     queryFn: async () => {
       if (!(provider && address)) return null;
 

@@ -14,6 +14,7 @@ export const useHealthFactor = (marketParam?: string) => {
   return useQuery({
     queryKey: [
       'healthFactor',
+      'v1',
       trueCollateralValue,
       supplyBorrow,
       priceData?.prices,

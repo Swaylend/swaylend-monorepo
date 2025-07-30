@@ -12,7 +12,7 @@ export const useLMRewards = () => {
   const { account } = useAccount();
 
   return useQuery({
-    queryKey: ['lm-rewards', account],
+    queryKey: ['lm-rewards', 'v2', account],
     queryFn: async () => {
       const response = await fetch(
         `${appConfig.client.shared.swaylendApi}/api/rewards/lm-fuel/${account?.toLowerCase()}`

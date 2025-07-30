@@ -1,9 +1,9 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { formatUnits } from '@/utils';
+import { usePrice } from './oracles/use-pyth-oracle';
 import { useCollateralConfigurations } from './use-collateral-configurations';
 import { useMarketConfiguration } from './use-market-configuration';
-import { usePrice } from './use-price';
 import { useUserCollateralAssets } from './use-user-collateral-assets';
 import { useUserSupplyBorrow } from './use-user-supply-borrow';
 
@@ -20,6 +20,7 @@ export const useMaxWithdrawableCollateral = (
   return useQuery({
     queryKey: [
       'userMaxWithdrawableCollateral',
+      'v2',
       assetId,
       collateralBalances,
       collateralConfig,

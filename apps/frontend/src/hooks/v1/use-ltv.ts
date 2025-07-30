@@ -14,6 +14,7 @@ export const useLTV = (marketParam?: string) => {
   return useQuery({
     queryKey: [
       'ltv',
+      'v1',
       collateralValue,
       supplyBorrow,
       priceData?.prices,

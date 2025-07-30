@@ -1,4 +1,6 @@
 // Re-export v1 hooks here
+
+export * from './oracles/use-pyth-oracle';
 export * from './use-apr';
 export * from './use-balance';
 export * from './use-borrow-base';
@@ -18,7 +20,6 @@ export * from './use-market-configuration';
 export * from './use-max-withdrawable-collateral';
 export * from './use-mint-token';
 export * from './use-possible-position-summary';
-export * from './use-price';
 export * from './use-rewards';
 export * from './use-supply-base';
 export * from './use-supply-collateral';

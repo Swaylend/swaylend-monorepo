@@ -30,7 +30,7 @@ export const useLiquidationHistory = () => {
   const { account } = useAccount();
 
   return useQuery({
-    queryKey: ['transactionHistory', account],
+    queryKey: ['transactionHistory', 'v2', account],
     queryFn: async () => {
       if (!account) return null;
 

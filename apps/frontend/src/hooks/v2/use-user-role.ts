@@ -1,8 +1,8 @@
 import { useIsConnected } from '@fuels/react';
 import BigNumber from 'bignumber.js';
 import { useMemo } from 'react';
+import { usePrice } from './oracles/use-pyth-oracle';
 import { useMarketConfiguration } from './use-market-configuration';
-import { usePrice } from './use-price';
 import { useUserSupplyBorrow } from './use-user-supply-borrow';
 
 export enum USER_ROLE {

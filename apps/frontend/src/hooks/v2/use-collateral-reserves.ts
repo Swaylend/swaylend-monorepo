@@ -14,6 +14,7 @@ export const useCollateralReserves = (
   return useQuery({
     queryKey: [
       'collateralReserves',
+      'v2',
       marketContract?.account?.address,
       marketContract?.id,
       assetId,

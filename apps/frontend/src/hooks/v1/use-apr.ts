@@ -15,7 +15,7 @@ export const useApr = (marketParam?: string) => {
   const { data: borrowRate } = useBorrowRate(market);
 
   return useQuery({
-    queryKey: ['apr', supplyRate, borrowRate, rewardsData],
+    queryKey: ['apr', 'v1', supplyRate, borrowRate, rewardsData],
     queryFn: () => {
       if (!(supplyRate && borrowRate && rewardsData)) {
         return {

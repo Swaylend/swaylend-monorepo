@@ -19,6 +19,7 @@ export const useBorrowCapacity = () => {
   return useQuery({
     queryKey: [
       'borrowCapacity',
+      'v1',
       account,
       supplyBorrow,
       collateralConfigurations,

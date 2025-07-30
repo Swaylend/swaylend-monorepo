@@ -63,6 +63,7 @@ export const usePrice = (marketParam?: string) => {
   return useQuery({
     queryKey: [
       'pythPrices',
+      'v1',
       priceFeedIdToAssetIdKey,
       marketContract?.account?.address,
       marketContract?.id,

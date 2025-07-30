@@ -10,6 +10,7 @@ export const useUtilization = (marketParam?: string) => {
   return useQuery({
     queryKey: [
       'utilization',
+      'v2',
       marketContract?.account?.address,
       marketContract?.id,
     ],

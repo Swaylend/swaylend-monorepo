@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-
 import { useMarketContract } from '@/contracts/v2/use-market-contract';
 import { useMarketStore } from '@/stores/market-store';
 
@@ -11,6 +10,7 @@ export const useMarketConfiguration = (marketParam?: string) => {
   return useQuery({
     queryKey: [
       'marketConfiguration',
+      'v2',
       marketContract?.account?.address,
       marketContract?.id,
     ],
@@ -24,7 +24,6 @@ export const useMarketConfiguration = (marketParam?: string) => {
       return {
         baseToken: marketConfiguration.base_token,
         baseTokenDecimals: marketConfiguration.base_token_decimals,
-        baseTokenPriceFeedId: marketConfiguration.base_token_price_feed_id,
         supplyKink: marketConfiguration.supply_kink,
         borrowKink: marketConfiguration.borrow_kink,
         supplyPerSecondInterestRateSlopeLow:
@@ -46,6 +45,8 @@ export const useMarketConfiguration = (marketParam?: string) => {
         baseMinForRewards: marketConfiguration.base_min_for_rewards,
         baseBorrowMin: marketConfiguration.base_borrow_min,
         targetReserves: marketConfiguration.target_reserves,
+        oracleMaxConfidenceWidth:
+          marketConfiguration.oracle_max_confidence_width,
       };
     },
     refetchOnWindowFocus: false,

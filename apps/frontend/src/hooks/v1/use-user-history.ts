@@ -51,7 +51,7 @@ export const useUserHistory = () => {
   const { account } = useAccount();
 
   return useQuery({
-    queryKey: ['userHistory', account],
+    queryKey: ['userHistory', 'v1', account],
     queryFn: async () => {
       if (!account) return null;
 

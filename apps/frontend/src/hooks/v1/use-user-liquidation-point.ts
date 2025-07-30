@@ -10,6 +10,7 @@ export const useUserLiquidationPoint = () => {
   return useQuery({
     queryKey: [
       'userLiquidationPoint',
+      'v1',
       collateralValue,
       userCollateralUtilization,
     ],

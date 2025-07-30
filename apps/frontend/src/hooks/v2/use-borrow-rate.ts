@@ -13,6 +13,7 @@ export const useBorrowRate = (marketParam?: string) => {
   return useQuery({
     queryKey: [
       'borrowRate',
+      'v2',
       utilization?.toString(),
       marketContract?.account?.address,
       marketContract?.id,

@@ -34,6 +34,7 @@ export const useRewards = (marketParam?: string) => {
   return useQuery({
     queryKey: [
       'rewards',
+      'v1',
       market,
       marketBasics,
       priceData?.prices,

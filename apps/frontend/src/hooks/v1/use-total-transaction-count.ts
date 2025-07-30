@@ -16,7 +16,7 @@ export const useTotalTransactionCount = () => {
   const { account } = useAccount();
 
   return useQuery({
-    queryKey: ['totalTransactionCount', account],
+    queryKey: ['totalTransactionCount', 'v1', account],
     queryFn: async () => {
       if (!account) return null;
 

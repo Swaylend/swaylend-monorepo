@@ -8,7 +8,6 @@ import {
   TransactionSuccessToast,
 } from '@/components/v1/toasts';
 import { appConfig } from '@/configs';
-import type { PriceDataUpdateInput } from '@/contract-types/v1/Market';
 import { useMarketContract } from '@/contracts/v2/use-market-contract';
 import { usePythContract } from '@/contracts/v2/use-pyth-contract';
 import { useMarketStore } from '@/stores/market-store';
@@ -44,13 +43,7 @@ export const useWithdrawCollateral = ({
       pythContract?.account?.address,
       pythContract?.id,
     ],
-    mutationFn: async ({
-      tokenAmount,
-      priceUpdateData,
-    }: {
-      tokenAmount: BigNumber;
-      priceUpdateData: PriceDataUpdateInput;
-    }) => {
+    mutationFn: async ({ tokenAmount }: { tokenAmount: BigNumber }) => {
       if (
         !(
           account &&
@@ -67,15 +60,16 @@ export const useWithdrawCollateral = ({
         10 ** collateralConfigurations[actionTokenAssetId].decimals
       );
 
+      // TODO [ORACLE INPUT]
       const { waitForResult } = await marketContract.functions
         .withdraw_collateral(
           { bits: actionTokenAssetId },
           amount.toFixed(0),
-          priceUpdateData
+          []
         )
         .callParams({
           forward: {
-            amount: priceUpdateData.update_fee,
+            amount: 0,
             assetId: appConfig.client.shared.baseAssetId,
           },
         })
@@ -108,6 +102,7 @@ export const useWithdrawCollateral = ({
       queryClient.invalidateQueries({
         queryKey: [
           'collateralAssets',
+          'v2',
           account,
           marketContract?.account?.address,
           marketContract?.id,
@@ -117,7 +112,7 @@ export const useWithdrawCollateral = ({
       // Invalidate Fuel balance query
       queryClient.invalidateQueries({
         exact: true,
-        queryKey: ['balance', account, actionTokenAssetId],
+        queryKey: ['balance', 'v2', account, actionTokenAssetId],
       });
     },
   });

@@ -17,6 +17,7 @@ export const useMarketBalanceOfBase = (marketParam?: string) => {
   return useQuery({
     queryKey: [
       'marketBalanceOfBase',
+      'v2',
       market,
       marketBasics,
       marketConfiguration,

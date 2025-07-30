@@ -49,7 +49,7 @@ export const useTransactionHistory = (page: number) => {
   const { account } = useAccount();
 
   return useQuery({
-    queryKey: ['transactionHistory', account, page],
+    queryKey: ['transactionHistory', 'v1', account, page],
     queryFn: async () => {
       if (!account) return null;
 

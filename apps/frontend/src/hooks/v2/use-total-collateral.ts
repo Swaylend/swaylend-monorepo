@@ -14,6 +14,7 @@ export const useTotalCollateral = (marketParam?: string) => {
   return useQuery({
     queryKey: [
       'totalCollateral',
+      'v2',
       collateralConfigurations,
       marketContract?.account?.address,
       marketContract?.id,

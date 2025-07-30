@@ -1,7 +1,7 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
+import { usePrice } from './oracles/use-pyth-oracle';
 import { useMarketConfiguration } from './use-market-configuration';
-import { usePrice } from './use-price';
 import { useUserSupplyBorrow } from './use-user-supply-borrow';
 import { useUserTrueCollateralValue } from './use-user-true-collateral-value';
 
@@ -14,6 +14,7 @@ export const useHealthFactor = (marketParam?: string) => {
   return useQuery({
     queryKey: [
       'healthFactor',
+      'v2',
       trueCollateralValue,
       supplyBorrow,
       priceData?.prices,
