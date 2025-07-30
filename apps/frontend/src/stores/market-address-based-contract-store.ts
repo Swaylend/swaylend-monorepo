@@ -23,7 +23,7 @@ interface Store {
 
 export const marketStoreInitialState = {
   contracts: new Map(
-    Object.keys(appConfig.markets).map((market) => [
+    Object.keys(appConfig.client.v1.markets).map((market) => [
       market,
       {
         pythContract: undefined,

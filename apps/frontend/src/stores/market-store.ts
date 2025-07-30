@@ -44,7 +44,7 @@ interface MarketStore {
 }
 
 export const marketStoreInitialState = {
-  market: Object.keys(appConfig.markets)[0],
+  market: Object.keys(appConfig.client.v1.markets)[0],
   mode: 0,
   marketMode: MARKET_MODE.BORROW,
   action: null,

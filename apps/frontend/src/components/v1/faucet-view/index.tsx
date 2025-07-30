@@ -93,7 +93,7 @@ export const FaucetView = () => {
 
   const { data: ethBalance } = useBalance({
     address: account ?? undefined,
-    assetId: appConfig.baseAssetId,
+    assetId: appConfig.client.shared.baseAssetId,
   });
 
   const assets = useMemo(() => {
@@ -104,7 +104,10 @@ export const FaucetView = () => {
         (collateralConfiguration) => {
           return {
             assetId: collateralConfiguration.asset_id.bits,
-            symbol: appConfig.assets[collateralConfiguration.asset_id.bits],
+            symbol:
+              appConfig.client.shared.assets[
+                collateralConfiguration.asset_id.bits
+              ],
             decimals:
               collateralConfigurations[collateralConfiguration.asset_id.bits]
                 .decimals,
@@ -113,7 +116,8 @@ export const FaucetView = () => {
       ),
       {
         assetId: marketConfiguration.baseToken.bits,
-        symbol: appConfig.assets[marketConfiguration.baseToken.bits],
+        symbol:
+          appConfig.client.shared.assets[marketConfiguration.baseToken.bits],
         decimals: marketConfiguration.baseTokenDecimals,
       },
     ];

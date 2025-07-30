@@ -132,10 +132,10 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
                     <div
                       onMouseDown={() => {
                         trackExternalPageView(
-                          `${appConfig.client.fuelExplorerUrl}/bridge`
+                          `${appConfig.client.shared.fuelExplorerUrl}/bridge`
                         );
                         window.open(
-                          `${appConfig.client.fuelExplorerUrl}/bridge`,
+                          `${appConfig.client.shared.fuelExplorerUrl}/bridge`,
                           '_blank'
                         );
                         setOpenBridge(false);

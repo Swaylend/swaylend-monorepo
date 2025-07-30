@@ -30,7 +30,7 @@ export const useClaimAirdrop = () => {
     }) => {
       if (!wallet) return;
       const result = await fetch(
-        `${appConfig.client.swaylendApi}/api/airdrops/proof?contractAddress=${contractAddress}&address=${address}`,
+        `${appConfig.client.shared.swaylendApi}/api/airdrops/proof?contractAddress=${contractAddress}&address=${address}`,
         {
           method: 'GET',
         }

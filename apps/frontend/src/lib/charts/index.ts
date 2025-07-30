@@ -14,15 +14,15 @@ export type MarketData = {
 };
 
 export const getChartData = async () => {
-  const url = appConfig.client.sentioApi;
-  const apiKey = appConfig.client.sentioApiKey;
+  const url = appConfig.client.v1.sentioApi;
+  const apiKey = appConfig.client.v1.sentioApiKey;
 
   if (!apiKey || !url) {
     return;
   }
 
   const singleMarketData = await Promise.all(
-    Object.entries(appConfig.markets).map(async ([key, value]) => {
+    Object.entries(appConfig.client.v1.markets).map(async ([key, value]) => {
       const poolAddress = value.marketAddress;
 
       const response = await fetch(url, {
@@ -36,7 +36,7 @@ export const getChartData = async () => {
             sql: getSingleMarketQuery(poolAddress),
             size: 10000,
           },
-          version: appConfig.client.sentioProcessorVersion,
+          version: appConfig.client.v1.sentioProcessorVersion,
         }),
         next: {
           revalidate: 3600, // Cache for 1h
@@ -70,7 +70,7 @@ export const getChartData = async () => {
         sql: getMarketsCombinedQuery(),
         size: 10000,
       },
-      version: appConfig.client.sentioProcessorVersion,
+      version: appConfig.client.v1.sentioProcessorVersion,
     }),
     next: {
       revalidate: 3600, // Cache for 1h

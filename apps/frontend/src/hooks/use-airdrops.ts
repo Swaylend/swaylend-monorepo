@@ -23,7 +23,7 @@ export const useAirdrops = () => {
     queryKey: ['airdrops', wallet?.address],
     queryFn: async () => {
       const result = await fetch(
-        `${appConfig.client.swaylendApi}/api/airdrops${wallet?.address ? `?address=${wallet?.address}` : ''}`
+        `${appConfig.client.shared.swaylendApi}/api/airdrops${wallet?.address ? `?address=${wallet?.address}` : ''}`
       );
 
       if (!result.ok) {

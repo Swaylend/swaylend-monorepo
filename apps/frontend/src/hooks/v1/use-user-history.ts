@@ -55,17 +55,17 @@ export const useUserHistory = () => {
     queryFn: async () => {
       if (!account) return null;
 
-      const response = await fetch(appConfig.client.sentioApi, {
+      const response = await fetch(appConfig.client.v1.sentioApi, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'api-key': appConfig.client.sentioApiKey,
+          'api-key': appConfig.client.v1.sentioApiKey,
         },
         body: JSON.stringify({
           sqlQuery: {
             sql: userHistoryQuery(account),
           },
-          version: appConfig.client.sentioProcessorVersion,
+          version: appConfig.client.v1.sentioProcessorVersion,
         }),
       });
 

@@ -8,7 +8,7 @@ export const useProvider = () => {
   const { provider } = useFuelProvider();
 
   useEffect(() => {
-    setCustomProvider(new Provider(appConfig.client.fuelNodeUrl));
+    setCustomProvider(new Provider(appConfig.client.shared.fuelNodeUrl));
   }, []);
 
   return { provider: provider ?? customProvider };

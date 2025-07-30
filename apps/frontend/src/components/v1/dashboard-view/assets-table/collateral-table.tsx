@@ -138,14 +138,14 @@ const CollateralTableRow = ({
                         ),
                         2
                       )}{' '}
-                      {appConfig.assets[assetId]}
+                      {appConfig.client.shared.assets[assetId]}
                     </div>
                   </div>
                   <div className="text-md flex justify-between">
                     <div className="text-lavender">Total Supplied</div>
                     <div className="font-semibold text-moon">
                       {getFormattedNumber(collateralAmount, 2)}{' '}
-                      {appConfig.assets[assetId]}
+                      {appConfig.client.shared.assets[assetId]}
                     </div>
                   </div>
                   <div className="text-md flex justify-between">
@@ -229,7 +229,7 @@ const CollateralTableRow = ({
                         ),
                         2
                       )}{' '}
-                      {appConfig.assets[assetId]}
+                      {appConfig.client.shared.assets[assetId]}
                     </div>
                   </div>
                   <div className="text-md flex justify-between">
@@ -250,7 +250,7 @@ const CollateralTableRow = ({
                     <div className="text-lavender">Total Supplied</div>
                     <div className="font-semibold text-moon">
                       {getFormattedNumber(collateralAmount, 2)}{' '}
-                      {appConfig.assets[assetId]}
+                      {appConfig.client.shared.assets[assetId]}
                     </div>
                   </div>
                   <div className="text-md flex justify-between">
@@ -579,7 +579,9 @@ export const CollateralTable = () => {
                       key={collateral.asset_id.bits}
                       account={account ?? undefined}
                       assetId={collateral.asset_id.bits}
-                      symbol={appConfig.assets[collateral.asset_id.bits]}
+                      symbol={
+                        appConfig.client.shared.assets[collateral.asset_id.bits]
+                      }
                       decimals={collateral.decimals}
                       protocolBalance={
                         userCollateralAssets?.[collateral.asset_id.bits] ??
@@ -622,7 +624,9 @@ export const CollateralTable = () => {
                   key={collateral.asset_id.bits}
                   account={account ?? undefined}
                   assetId={collateral.asset_id.bits}
-                  symbol={appConfig.assets[collateral.asset_id.bits]}
+                  symbol={
+                    appConfig.client.shared.assets[collateral.asset_id.bits]
+                  }
                   decimals={collateral.decimals}
                   protocolBalance={
                     userCollateralAssets?.[collateral.asset_id.bits] ??

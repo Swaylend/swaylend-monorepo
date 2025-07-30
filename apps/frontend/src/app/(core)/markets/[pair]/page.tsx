@@ -13,7 +13,7 @@ export async function generateMetadata({
   if (
     !network ||
     !baseAsset ||
-    !Object.keys(appConfig.markets).includes(baseAsset.toUpperCase())
+    !Object.keys(appConfig.client.v1.markets).includes(baseAsset.toUpperCase())
   ) {
     return {
       title: 'Markets',
@@ -41,7 +41,7 @@ export default async function Page({ params }: { params: { pair: string } }) {
   if (
     !network ||
     !baseAsset ||
-    !Object.keys(appConfig.markets).includes(baseAsset.toUpperCase())
+    !Object.keys(appConfig.client.v1.markets).includes(baseAsset.toUpperCase())
   ) {
     notFound();
   }

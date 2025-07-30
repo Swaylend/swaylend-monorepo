@@ -156,7 +156,7 @@ export const History = () => {
                             target="_blank"
                             rel="noreferrer"
                             className="cursor-pointer font-normal text-primary underline hover:opacity-80"
-                            href={`${appConfig.client.fuelExplorerUrl}/tx/${tx.transactionHash}`}
+                            href={`${appConfig.client.shared.fuelExplorerUrl}/tx/${tx.transactionHash}`}
                           >
                             {`${tx.transactionHash.slice(0, 8)}...${tx.transactionHash.slice(-4)}`}
                           </a>
@@ -279,7 +279,7 @@ export const History = () => {
                             target="_blank"
                             rel="noreferrer"
                             className="cursor-pointer font-normal text-primary underline hover:opacity-80"
-                            href={`${appConfig.client.fuelExplorerUrl}/tx/${tx.transactionHash}`}
+                            href={`${appConfig.client.shared.fuelExplorerUrl}/tx/${tx.transactionHash}`}
                           >
                             {`${tx.transactionHash.slice(0, 8)}...${tx.transactionHash.slice(-4)}`}
                           </a>

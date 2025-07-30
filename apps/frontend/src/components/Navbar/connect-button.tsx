@@ -56,7 +56,7 @@ export const ConnectButton = () => {
           </div>
           <div className="mt-10">
             <a
-              href={`${appConfig.client.fuelExplorerUrl}/account/${account}`}
+              href={`${appConfig.client.shared.fuelExplorerUrl}/account/${account}`}
               target="_blank"
               rel="noreferrer"
             >

@@ -68,7 +68,7 @@ export const MarketsTable = () => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {Object.keys(appConfig.markets).map((marketName) => {
+        {Object.keys(appConfig.client.v1.markets).map((marketName) => {
           return <MarketTableRow key={marketName} marketName={marketName} />;
         })}
       </TableBody>

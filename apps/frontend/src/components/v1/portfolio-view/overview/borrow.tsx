@@ -204,7 +204,7 @@ export const Borrow = () => {
   //       return true;
   //     })
   //     .map((assetId) => {
-  //       const symbol = appConfig.assets[assetId];
+  //       const symbol = appConfig.client.shared.assets[assetId];
   //       return {
   //         id: symbol,
   //         name: symbol,
@@ -225,7 +225,7 @@ export const Borrow = () => {
         return true;
       })
       .map((assetId) => {
-        const symbol = appConfig.assets[assetId];
+        const symbol = appConfig.client.shared.assets[assetId];
         return {
           id: symbol,
           name: symbol,

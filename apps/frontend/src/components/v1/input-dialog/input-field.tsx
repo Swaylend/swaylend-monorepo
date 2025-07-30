@@ -143,7 +143,11 @@ export const InputField = ({ error }: { error: boolean }) => {
             <Image
               alt="token"
               className="rounded-full"
-              src={SYMBOL_TO_ICON[appConfig.assets[actionTokenAssetId]]}
+              src={
+                SYMBOL_TO_ICON[
+                  appConfig.client.shared.assets[actionTokenAssetId]
+                ]
+              }
               width={32}
               height={32}
             />
@@ -151,7 +155,7 @@ export const InputField = ({ error }: { error: boolean }) => {
         </div>
         {actionTokenAssetId && (
           <div className="text-sm text-moon font-semibold">
-            {appConfig.assets[actionTokenAssetId]}
+            {appConfig.client.shared.assets[actionTokenAssetId]}
           </div>
         )}
       </div>

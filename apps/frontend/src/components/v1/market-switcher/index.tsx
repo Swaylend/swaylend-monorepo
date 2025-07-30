@@ -73,7 +73,7 @@ export const MarketSwitcher = () => {
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
-          {Object.keys(appConfig.markets).map((market) => {
+          {Object.keys(appConfig.client.v1.markets).map((market) => {
             return (
               <SelectItem key={market} value={market}>
                 <MarketItem market={market} logo={SYMBOL_TO_ICON[market]} />

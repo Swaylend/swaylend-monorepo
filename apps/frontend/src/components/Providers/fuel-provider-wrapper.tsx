@@ -35,13 +35,13 @@ const UI_CONFIG = {
 const NETWORKS = [
   appConfig.env === 'testnet'
     ? {
-        bridgeURL: `${appConfig.client.fuelExplorerUrl}/bridge`,
-        url: appConfig.client.fuelNodeUrl,
+        bridgeURL: `${appConfig.client.shared.fuelExplorerUrl}/bridge`,
+        url: appConfig.client.shared.fuelNodeUrl,
         chainId: CHAIN_IDS.fuel.testnet,
       }
     : {
-        bridgeURL: `${appConfig.client.fuelExplorerUrl}/bridge`,
-        url: appConfig.client.fuelNodeUrl,
+        bridgeURL: `${appConfig.client.shared.fuelExplorerUrl}/bridge`,
+        url: appConfig.client.shared.fuelNodeUrl,
         chainId: CHAIN_IDS.fuel.mainnet,
       },
 ];
@@ -51,7 +51,7 @@ const wagmiConfig = createConfigWagmiConfig({
   connectors: [
     injected({ shimDisconnect: false }),
     walletConnect({
-      projectId: appConfig.client.walletConnectProjectId,
+      projectId: appConfig.client.shared.walletConnectProjectId,
       metadata: METADATA,
       showQrModal: false,
     }),
@@ -65,23 +65,23 @@ const wagmiConfig = createConfigWagmiConfig({
   transports: {
     [mainnet.id]: fallback([
       http(
-        `https://eth-mainnet.g.alchemy.com/v2/${appConfig.client.alchemyId}`
+        `https://eth-mainnet.g.alchemy.com/v2/${appConfig.client.shared.alchemyId}`
       ),
     ]),
     [sepolia.id]: fallback([
       http(
-        `https://eth-sepolia.g.alchemy.com/v2/${appConfig.client.alchemyId}`
+        `https://eth-sepolia.g.alchemy.com/v2/${appConfig.client.shared.alchemyId}`
       ),
     ]),
   },
 });
 
 const customDefaultConnectors = (): Array<FuelConnector> => {
-  const provider = new Provider(appConfig.client.fuelNodeUrl);
+  const provider = new Provider(appConfig.client.shared.fuelNodeUrl);
   const connectors: Array<FuelConnector> = [
     new FueletWalletConnector(),
     new WalletConnectConnector({
-      projectId: appConfig.client.walletConnectProjectId,
+      projectId: appConfig.client.shared.walletConnectProjectId,
       wagmiConfig: wagmiConfig,
       chainId:
         appConfig.env === 'testnet'
@@ -90,7 +90,7 @@ const customDefaultConnectors = (): Array<FuelConnector> => {
       fuelProvider: provider,
     }),
     new SolanaConnector({
-      projectId: appConfig.client.walletConnectProjectId,
+      projectId: appConfig.client.shared.walletConnectProjectId,
       chainId:
         appConfig.env === 'testnet'
           ? CHAIN_IDS.fuel.testnet

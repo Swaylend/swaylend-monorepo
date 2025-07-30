@@ -87,10 +87,13 @@ export const MarketTableRow = ({
     if (!collateralConfigurations) return [];
 
     return Object.values(collateralConfigurations).map((collateral) => ({
-      id: appConfig.assets[collateral.asset_id.bits],
-      name: appConfig.assets[collateral.asset_id.bits],
+      id: appConfig.client.shared.assets[collateral.asset_id.bits],
+      name: appConfig.client.shared.assets[collateral.asset_id.bits],
       description: '',
-      icon: SYMBOL_TO_ICON[appConfig.assets[collateral.asset_id.bits]] || SWAY,
+      icon:
+        SYMBOL_TO_ICON[
+          appConfig.client.shared.assets[collateral.asset_id.bits]
+        ] || SWAY,
     }));
   }, [collateralConfigurations]);
 

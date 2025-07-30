@@ -5,7 +5,7 @@ import {
 import { appConfig } from '@/configs';
 
 export const getCollateralConfigurations = async (market: string) => {
-  const url = appConfig.markets[market].graphqlUrl;
+  const url = appConfig.client.v1.markets[market].graphqlUrl;
 
   const response = await fetch(url, {
     method: 'POST',

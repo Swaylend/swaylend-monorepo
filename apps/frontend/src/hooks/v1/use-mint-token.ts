@@ -24,7 +24,7 @@ export const useMintToken = (symbol: string, decimals: number) => {
       if (!wallet || !account) return null;
 
       const tokenFactoryContract = new Token(
-        appConfig.markets[market].tokenFactoryAddress,
+        appConfig.client.v1.markets[market].tokenFactoryAddress,
         wallet
       );
 

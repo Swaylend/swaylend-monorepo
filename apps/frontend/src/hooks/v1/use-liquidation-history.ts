@@ -34,17 +34,17 @@ export const useLiquidationHistory = () => {
     queryFn: async () => {
       if (!account) return null;
 
-      const response = await fetch(appConfig.client.sentioApi, {
+      const response = await fetch(appConfig.client.v1.sentioApi, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'api-key': appConfig.client.sentioApiKey,
+          'api-key': appConfig.client.v1.sentioApiKey,
         },
         body: JSON.stringify({
           sqlQuery: {
             sql: liquidationHistoryQuery(account),
           },
-          version: appConfig.client.sentioProcessorVersion,
+          version: appConfig.client.v1.sentioProcessorVersion,
         }),
       });
 
@@ -60,7 +60,8 @@ export const useLiquidationHistory = () => {
 
       const liquidationHistory = data.result.rows.map((row: Row) => ({
         id: row.id,
-        market: appConfig.marketAddressToBaseAssetName[row.poolAddress],
+        market:
+          appConfig.client.shared.marketAddressToBaseAssetName[row.poolAddress],
         date: dayjs.unix(row.timestamp).utc().format('DD/MM/YYYY HH:mm:ss'),
         transactionHash: row.transactionHash,
       }));

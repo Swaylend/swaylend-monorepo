@@ -27,7 +27,7 @@ const OldRewrdCard = ({
   userAmount: string;
   distributionDate: string;
 }) => {
-  const tokenSymbol = appConfig.assets[token];
+  const tokenSymbol = appConfig.client.shared.assets[token];
 
   return (
     <Card className="bg-card text-card-foreground border border-purple/20">
@@ -142,7 +142,7 @@ const RewardCard = ({ data }: { data: Airdrop }) => {
     .div(10 ** tokenDecimals)
     .toFixed();
 
-  const tokenSymbol = appConfig.assets[data.token];
+  const tokenSymbol = appConfig.client.shared.assets[data.token];
 
   return (
     <Card
@@ -169,7 +169,9 @@ const RewardCard = ({ data }: { data: Airdrop }) => {
               />
             </div>
           </div>
-          <span className="text-base">{appConfig.assets[data.token]}</span>
+          <span className="text-base">
+            {appConfig.client.shared.assets[data.token]}
+          </span>
         </div>
       </CardHeader>
       <CardContent className="p-4 pt-0">

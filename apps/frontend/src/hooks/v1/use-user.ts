@@ -13,7 +13,7 @@ export const useUser = () => {
     queryKey: ['user', account],
     queryFn: async () => {
       const response = await fetch(
-        `${appConfig.client.swaylendApi}/api/users/${account}`
+        `${appConfig.client.shared.swaylendApi}/api/users/${account}`
       );
 
       const data = await response.json();

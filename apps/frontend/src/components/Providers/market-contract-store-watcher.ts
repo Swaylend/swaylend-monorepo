@@ -18,14 +18,14 @@ export default function MarketContractStoreWatcher(): null {
   useEffect(() => {
     if (!walletOrProvider) return;
 
-    Object.keys(appConfig.markets).forEach((market) => {
+    Object.keys(appConfig.client.v1.markets).forEach((market) => {
       const pythContract = new PythContract(
-        appConfig.markets[market].oracleAddress,
+        appConfig.client.v1.markets[market].oracleAddress,
         walletOrProvider
       );
 
       const marketContract = new Market(
-        appConfig.markets[market].marketAddress,
+        appConfig.client.v1.markets[market].marketAddress,
         walletOrProvider
       );
 

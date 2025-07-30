@@ -164,7 +164,7 @@ export const MarketCollateralsTable = ({
             <MarketCollateralsTableRow
               key={collateral.asset_id.bits}
               assetId={collateral.asset_id.bits}
-              symbol={appConfig.assets[collateral.asset_id.bits]}
+              symbol={appConfig.client.shared.assets[collateral.asset_id.bits]}
               decimals={collateral.decimals}
               totalSupply={totalCollateral?.get(collateral.asset_id.bits)}
               price={

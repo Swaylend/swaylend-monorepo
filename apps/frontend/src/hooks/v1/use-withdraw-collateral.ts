@@ -74,7 +74,7 @@ export const useWithdrawCollateral = ({
         .callParams({
           forward: {
             amount: priceUpdateData.update_fee,
-            assetId: appConfig.baseAssetId,
+            assetId: appConfig.client.shared.baseAssetId,
           },
         })
         .addContracts([pythContract])

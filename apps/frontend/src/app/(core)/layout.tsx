@@ -20,7 +20,7 @@ export default function AppLayout({
         <Navbar mobile={mobile} />
         <div className="bg-background flex-1">{children}</div>
         <Footer />
-        {!mobile && appConfig.client.announcementEnabled && (
+        {!mobile && appConfig.client.v1.announcementEnabled && (
           <AnnouncementPopover />
         )}
         <IntroductionDialog />

@@ -4,35 +4,49 @@ import type { DeployedMarkets, Rewards } from '../types';
 export function createMainnetConfig() {
   return defineConfig({
     env: 'mainnet',
+
     client: {
-      swaylendApi: process.env.NEXT_PUBLIC_SWAYLEND_API ?? '',
-      posthogKey: process.env.NEXT_PUBLIC_POSTHOG_KEY ?? '',
-      posthogHost: process.env.NEXT_PUBLIC_POSTHOG_HOST ?? '',
-      hermesApi: process.env.NEXT_PUBLIC_HERMES_API ?? '',
-      walletConnectProjectId:
-        process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID ?? '',
-      fuelExplorerUrl: process.env.NEXT_PUBLIC_FUEL_EXPLORER_URL ?? '',
-      fuelNodeUrl: process.env.NEXT_PUBLIC_FUEL_NODE_URL ?? '',
-      alchemyId: process.env.NEXT_PUBLIC_ALCHEMY_ID ?? '',
-      fuelOblApi: process.env.NEXT_PUBLIC_FUEL_OBL_API ?? '',
-      announcementEnabled:
-        process.env.NEXT_PUBLIC_ANNOUNCEMENT_ENABLED === 'true',
-      sentioApi: process.env.NEXT_PUBLIC_SENTIO_API_URL ?? '',
-      sentioApiKey: process.env.NEXT_PUBLIC_SENTIO_API_KEY ?? '',
-      sentioProcessorVersion:
-        process.env.NEXT_PUBLIC_SENTIO_PROCESSOR_VERSION ?? '',
+      shared: {
+        swaylendApi: process.env.NEXT_PUBLIC_SWAYLEND_API ?? '',
+        posthogKey: process.env.NEXT_PUBLIC_POSTHOG_KEY ?? '',
+        posthogHost: process.env.NEXT_PUBLIC_POSTHOG_HOST ?? '',
+        hermesApi: process.env.NEXT_PUBLIC_HERMES_API ?? '',
+        walletConnectProjectId:
+          process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID ?? '',
+        fuelExplorerUrl: process.env.NEXT_PUBLIC_FUEL_EXPLORER_URL ?? '',
+        fuelNodeUrl: process.env.NEXT_PUBLIC_FUEL_NODE_URL ?? '',
+        alchemyId: process.env.NEXT_PUBLIC_ALCHEMY_ID ?? '',
+        baseAssetId:
+          '0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07',
+        assets: assets,
+        useBurnerWallet: false,
+        marketAddressToBaseAssetName: marketAddressToBaseAssetName,
+      },
+      v1: {
+        announcementEnabled:
+          process.env.NEXT_PUBLIC_V1_ANNOUNCEMENT_ENABLED === 'true',
+        sentioApi: process.env.NEXT_PUBLIC_V1_SENTIO_API_URL ?? '',
+        sentioApiKey: process.env.NEXT_PUBLIC_V1_SENTIO_API_KEY ?? '',
+        sentioProcessorVersion:
+          process.env.NEXT_PUBLIC_V1_SENTIO_PROCESSOR_VERSION ?? '',
+        markets: markets_v1,
+        rewards: rewards_v1,
+      },
+      v2: {
+        announcementEnabled:
+          process.env.NEXT_PUBLIC_V2_ANNOUNCEMENT_ENABLED === 'true',
+        sentioApi: process.env.NEXT_PUBLIC_V2_SENTIO_API_URL ?? '',
+        sentioApiKey: process.env.NEXT_PUBLIC_V2_SENTIO_API_KEY ?? '',
+        sentioProcessorVersion:
+          process.env.NEXT_PUBLIC_V2_SENTIO_PROCESSOR_VERSION ?? '',
+        markets: markets_v2,
+        rewards: rewards_v2,
+      },
     },
-    baseAssetId:
-      '0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07',
-    markets: markets,
-    marketAddressToBaseAssetName: marketAddressToBaseAssetName,
-    assets: assets,
-    useBurnerWallet: false,
-    rewards: rewards,
   });
 }
 
-const markets: DeployedMarkets = {
+const markets_v1: DeployedMarkets = {
   USDC: {
     oracleAddress:
       '0x1c86fdd9e0e7bc0d2ae1bf6817ef4834ffa7247655701ee1b031b52a24c523da',
@@ -43,11 +57,20 @@ const markets: DeployedMarkets = {
   },
 };
 
+const markets_v2: DeployedMarkets = {
+  USDC: {
+    oracleAddress: '',
+    marketAddress: '',
+    tokenFactoryAddress: '',
+    graphqlUrl: '',
+  },
+};
+
 const marketAddressToBaseAssetName: Record<string, string> = {
   '0x657ab45a6eb98a4893a99fd104347179151e8b3828fd8f2a108cc09770d1ebae': 'USDC',
 };
 
-const rewards: Rewards = {
+const rewards_v1: Rewards = {
   USDC: [
     {
       poolSize: 2000000,
@@ -110,6 +133,10 @@ const rewards: Rewards = {
       durationInDays: 8,
     },
   ],
+};
+
+const rewards_v2: Rewards = {
+  USDC: [],
 };
 
 const assets: Record<string, string> = {

@@ -55,7 +55,7 @@ const CollateralTableRow = ({
   liquidationRisk,
   liquidationPoint,
 }: TableRowProps) => {
-  const symbol = appConfig.assets[assetId];
+  const symbol = appConfig.client.shared.assets[assetId];
 
   const changeAction = useMarketStore.use.changeAction();
   const changeTokenAmount = useMarketStore.use.changeTokenAmount();

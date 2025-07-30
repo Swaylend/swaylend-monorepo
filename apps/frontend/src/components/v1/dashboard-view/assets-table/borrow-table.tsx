@@ -147,7 +147,7 @@ export const BorrowTable = () => {
 
   const borrowedBalance = useMemo(() => {
     if (!marketConfiguration || !userSupplyBorrow || !isConnected) {
-      return `${getFormattedNumber(BigNumber(0))} ${appConfig.assets[marketConfiguration?.baseToken.bits ?? '']}`;
+      return `${getFormattedNumber(BigNumber(0))} ${appConfig.client.shared.assets[marketConfiguration?.baseToken.bits ?? '']}`;
     }
 
     let val = formatUnits(
@@ -163,9 +163,9 @@ export const BorrowTable = () => {
     }
 
     if (val.lt(1) && val.gt(0)) {
-      return `< 1 ${appConfig.assets[marketConfiguration?.baseToken.bits ?? '']}`;
+      return `< 1 ${appConfig.client.shared.assets[marketConfiguration?.baseToken.bits ?? '']}`;
     }
-    return `${getFormattedNumber(val)} ${appConfig.assets[marketConfiguration?.baseToken.bits ?? '']}`;
+    return `${getFormattedNumber(val)} ${appConfig.client.shared.assets[marketConfiguration?.baseToken.bits ?? '']}`;
   }, [marketConfiguration, userSupplyBorrow, isConnected]);
 
   return (
@@ -257,11 +257,15 @@ export const BorrowTable = () => {
                       <Image
                         src={
                           SYMBOL_TO_ICON[
-                            appConfig.assets[marketConfiguration.baseToken.bits]
+                            appConfig.client.shared.assets[
+                              marketConfiguration.baseToken.bits
+                            ]
                           ]
                         }
                         alt={
-                          appConfig.assets[marketConfiguration.baseToken.bits]
+                          appConfig.client.shared.assets[
+                            marketConfiguration.baseToken.bits
+                          ]
                         }
                         width={32}
                         height={32}
@@ -272,7 +276,7 @@ export const BorrowTable = () => {
                   <div>
                     <div className="text-white font-medium">
                       {
-                        appConfig.assets[
+                        appConfig.client.shared.assets[
                           marketConfiguration?.baseToken.bits ?? ''
                         ]
                       }
@@ -287,7 +291,7 @@ export const BorrowTable = () => {
                         )
                       )}{' '}
                       {
-                        appConfig.assets[
+                        appConfig.client.shared.assets[
                           marketConfiguration?.baseToken.bits ?? ''
                         ]
                       }
@@ -417,13 +421,15 @@ export const BorrowTable = () => {
                         <Image
                           src={
                             SYMBOL_TO_ICON[
-                              appConfig.assets[
+                              appConfig.client.shared.assets[
                                 marketConfiguration.baseToken.bits
                               ]
                             ]
                           }
                           alt={
-                            appConfig.assets[marketConfiguration.baseToken.bits]
+                            appConfig.client.shared.assets[
+                              marketConfiguration.baseToken.bits
+                            ]
                           }
                           width={32}
                           height={32}
@@ -434,7 +440,7 @@ export const BorrowTable = () => {
                     <div>
                       <div className="text-white font-medium">
                         {
-                          appConfig.assets[
+                          appConfig.client.shared.assets[
                             marketConfiguration?.baseToken.bits ?? ''
                           ]
                         }

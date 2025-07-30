@@ -384,11 +384,11 @@ export const InputDialog = () => {
 
     if (action === ACTION_TYPE.BORROW) {
       if (marketBalanceOfBase?.formatted.eq(0)) {
-        return `There is no ${appConfig.assets[marketConfiguration?.baseToken.bits]} to borrow`;
+        return `There is no ${appConfig.client.shared.assets[marketConfiguration?.baseToken.bits]} to borrow`;
       }
 
       if (marketBalanceOfBase?.formatted.lt(tokenAmount)) {
-        return `There is not enough ${appConfig.assets[marketConfiguration?.baseToken.bits]} to borrow`;
+        return `There is not enough ${appConfig.client.shared.assets[marketConfiguration?.baseToken.bits]} to borrow`;
       }
 
       const minMarketBorrowPosition = BigNumber(
@@ -413,7 +413,7 @@ export const InputDialog = () => {
           )
           .toFixed();
 
-        return `Minimum borrow position is ${minMarketBorrowPosition.toFixed(0)} ${appConfig.assets[marketConfiguration.baseToken.bits]}. You need to borrow at least ${amountToAchieveMinMarketBorrowPosition} ${appConfig.assets[marketConfiguration.baseToken.bits]}.`;
+        return `Minimum borrow position is ${minMarketBorrowPosition.toFixed(0)} ${appConfig.client.shared.assets[marketConfiguration.baseToken.bits]}. You need to borrow at least ${amountToAchieveMinMarketBorrowPosition} ${appConfig.client.shared.assets[marketConfiguration.baseToken.bits]}.`;
       }
 
       if (
@@ -460,7 +460,7 @@ export const InputDialog = () => {
         userBorrowed.minus(tokenAmount).lt(minOpenPositionValue) &&
         userBorrowed.minus(tokenAmount).gt(0)
       ) {
-        return `Your position must be at least ${minOpenPositionValue.toFixed()} ${SYMBOL_TO_NAME[appConfig.assets[marketConfiguration.baseToken.bits]]}. Please repay the entire amount or keep at least ${minOpenPositionValue.toFixed()} ${SYMBOL_TO_NAME[appConfig.assets[marketConfiguration.baseToken.bits]]} in your position.`;
+        return `Your position must be at least ${minOpenPositionValue.toFixed()} ${SYMBOL_TO_NAME[appConfig.client.shared.assets[marketConfiguration.baseToken.bits]]}. Please repay the entire amount or keep at least ${minOpenPositionValue.toFixed()} ${SYMBOL_TO_NAME[appConfig.client.shared.assets[marketConfiguration.baseToken.bits]]} in your position.`;
       }
 
       // if (tokenAmount.gt(userBorrowedModified)) {

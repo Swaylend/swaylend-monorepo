@@ -47,7 +47,7 @@ export const useRewards = (marketParam?: string) => {
         };
       }
 
-      const rewardsConfig = appConfig.rewards[market];
+      const rewardsConfig = appConfig.client.v1.rewards[market];
 
       const today = dayjs().utc().startOf('day');
       const activeRewards = rewardsConfig.filter((reward) => {

@@ -15,7 +15,7 @@ export const useLeaderboardPoints = () => {
     queryKey: ['leaderboardPoints'],
     queryFn: async () => {
       const response = await fetch(
-        `${appConfig.client.swaylendApi}/api/points`
+        `${appConfig.client.shared.swaylendApi}/api/points`
       );
 
       const data = await response.json();

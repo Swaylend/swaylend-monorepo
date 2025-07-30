@@ -16,7 +16,7 @@ export const FundWallet = ({
 
   const { data: ethBalance } = useBalance({
     address: account ?? undefined,
-    assetId: appConfig.baseAssetId,
+    assetId: appConfig.client.shared.baseAssetId,
   });
 
   useEffect(() => {
@@ -42,7 +42,7 @@ export const FundWallet = ({
           </Button> */}
 
           <a
-            href={`${appConfig.client.fuelExplorerUrl}/bridge`}
+            href={`${appConfig.client.shared.fuelExplorerUrl}/bridge`}
             rel="noreferrer"
             target="_blank"
           >

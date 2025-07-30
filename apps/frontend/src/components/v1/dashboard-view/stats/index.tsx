@@ -172,7 +172,7 @@ export const Stats = () => {
               <div className="text-primary text-xs sm:text-md lg:text-lg font-semibold">
                 {marketMode === MARKET_MODE.BORROW
                   ? 'Your Supplied Collateral'
-                  : `Your Supplied ${appConfig.assets[marketConfiguration?.baseToken.bits ?? '']}`}
+                  : `Your Supplied ${appConfig.client.shared.assets[marketConfiguration?.baseToken.bits ?? '']}`}
               </div>
               {isLoading ? (
                 <Skeleton className="w-[60%] h-[25px] mt-2 sm:h-[40px] bg-primary/20" />

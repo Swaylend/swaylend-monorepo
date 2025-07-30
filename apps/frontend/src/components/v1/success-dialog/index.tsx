@@ -58,7 +58,7 @@ export const SuccessDialog = () => {
               target="_blank"
               rel="noreferrer"
               className="cursor-pointer font-normal text-moon mt-12 flex items-center gap-x-2"
-              href={`${appConfig.client.fuelExplorerUrl}/tx/${successDialogTransactionId}`}
+              href={`${appConfig.client.shared.fuelExplorerUrl}/tx/${successDialogTransactionId}`}
             >
               Explorer <ArrowUpRightIcon className="w-4 h-4" />
             </a>

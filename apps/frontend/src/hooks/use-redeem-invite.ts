@@ -22,7 +22,7 @@ export const useRedeemInvite = () => {
       const signature = await wallet.signMessage(getMessage(inviteCode));
 
       const response = await fetch(
-        `${appConfig.client.swaylendApi}/api/referrals`,
+        `${appConfig.client.shared.swaylendApi}/api/referrals`,
         {
           method: 'POST',
           headers: {

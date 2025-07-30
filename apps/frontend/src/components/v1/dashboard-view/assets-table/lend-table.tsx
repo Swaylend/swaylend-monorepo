@@ -210,11 +210,15 @@ export const LendTable = () => {
                       <Image
                         src={
                           SYMBOL_TO_ICON[
-                            appConfig.assets[marketConfiguration.baseToken.bits]
+                            appConfig.client.shared.assets[
+                              marketConfiguration.baseToken.bits
+                            ]
                           ]
                         }
                         alt={
-                          appConfig.assets[marketConfiguration.baseToken.bits]
+                          appConfig.client.shared.assets[
+                            marketConfiguration.baseToken.bits
+                          ]
                         }
                         width={32}
                         height={32}
@@ -225,7 +229,11 @@ export const LendTable = () => {
                   <div>
                     {marketConfiguration && (
                       <div className="text-white font-medium">
-                        {appConfig.assets[marketConfiguration.baseToken.bits]}
+                        {
+                          appConfig.client.shared.assets[
+                            marketConfiguration.baseToken.bits
+                          ]
+                        }
                       </div>
                     )}
                     <div>
@@ -238,7 +246,7 @@ export const LendTable = () => {
                         )
                       )}{' '}
                       {
-                        appConfig.assets[
+                        appConfig.client.shared.assets[
                           marketConfiguration?.baseToken.bits ?? ''
                         ]
                       }
@@ -262,7 +270,11 @@ export const LendTable = () => {
                     marketConfiguration?.baseTokenDecimals ?? 9
                   )
                 )}{' '}
-                {appConfig.assets[marketConfiguration?.baseToken.bits ?? '']}
+                {
+                  appConfig.client.shared.assets[
+                    marketConfiguration?.baseToken.bits ?? ''
+                  ]
+                }
               </TableCell>
               <TableCell
                 className={cn(
@@ -372,13 +384,15 @@ export const LendTable = () => {
                         <Image
                           src={
                             SYMBOL_TO_ICON[
-                              appConfig.assets[
+                              appConfig.client.shared.assets[
                                 marketConfiguration.baseToken.bits
                               ]
                             ]
                           }
                           alt={
-                            appConfig.assets[marketConfiguration.baseToken.bits]
+                            appConfig.client.shared.assets[
+                              marketConfiguration.baseToken.bits
+                            ]
                           }
                           width={32}
                           height={32}
@@ -389,7 +403,11 @@ export const LendTable = () => {
                     <div>
                       {marketConfiguration && (
                         <div className="text-white font-medium">
-                          {appConfig.assets[marketConfiguration.baseToken.bits]}
+                          {
+                            appConfig.client.shared.assets[
+                              marketConfiguration.baseToken.bits
+                            ]
+                          }
                         </div>
                       )}
                       <div className="text-moon text-sm">
@@ -429,7 +447,7 @@ export const LendTable = () => {
                       )
                     )}{' '}
                     {
-                      appConfig.assets[
+                      appConfig.client.shared.assets[
                         marketConfiguration?.baseToken.bits ?? ''
                       ]
                     }
