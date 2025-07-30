@@ -13,7 +13,7 @@ export const useBalance = ({ address, assetId }: UseBalanceParams) => {
   return useQuery({
     queryKey: ['balance', address, assetId],
     queryFn: async () => {
-      if (!provider || !address) return null;
+      if (!(provider && address)) return null;
 
       const currentFuelBalance = await provider.getBalance(
         new Address(address),

@@ -1,4 +1,4 @@
-import assert from 'node:assert';
+import assert from 'node:assert/strict';
 import {
   type AbsorbCollateralEvent,
   type BuyCollateralEvent,
@@ -14,6 +14,7 @@ import {
   type UserCollateral,
   type UserCollateralEvent,
 } from 'generated';
+
 const { MockDb, Market, Addresses } = TestHelpers;
 
 const MARKET_ID = 'MARKET_ID';
@@ -31,7 +32,7 @@ const BOB_ADDRESS = Addresses.mockAddresses[2];
 const I256_INDENT = 2n ** 255n;
 
 describe('Market contract event tests', () => {
-  describe('CollateralAsset events', async () => {
+  describe('CollateralAsset events', () => {
     it('CollateralAssetAdded -> CollateralAssetUpdated -> CollateralAssetPaused -> CollateralAssetResumed', async () => {
       // Initializing the mock database
       const mockDbInitial = MockDb.createMockDb();
@@ -184,7 +185,7 @@ describe('Market contract event tests', () => {
     });
   });
 
-  describe('User basic event', async () => {
+  describe('User basic event', () => {
     it('Creates a User entity with possitive principal', async () => {
       // Initializing the mock database
       const mockDbInitial = MockDb.createMockDb();
@@ -215,7 +216,7 @@ describe('Market contract event tests', () => {
       // Expected entity that should be created
       const expectedUser: User = {
         id: address,
-        address: address,
+        address,
         principal: BigInt(100),
         baseTrackingIndex: BigInt(0),
         baseTrackingAccrued: BigInt(0),
@@ -260,7 +261,7 @@ describe('Market contract event tests', () => {
       // Expected entity that should be created
       const expectedUser: User = {
         id: address,
-        address: address,
+        address,
         principal: -BigInt(100),
         baseTrackingIndex: BigInt(0),
         baseTrackingAccrued: BigInt(0),
@@ -305,7 +306,7 @@ describe('Market contract event tests', () => {
       // Expected entity that should be created
       let expectedUser: User = {
         id: address,
-        address: address,
+        address,
         principal: BigInt(100),
         baseTrackingIndex: BigInt(0),
         baseTrackingAccrued: BigInt(0),
@@ -344,7 +345,7 @@ describe('Market contract event tests', () => {
       // Expected entity that should be created
       expectedUser = {
         id: address,
-        address: address,
+        address,
         principal: BigInt(333),
         baseTrackingIndex: BigInt(0),
         baseTrackingAccrued: BigInt(0),
@@ -361,7 +362,7 @@ describe('Market contract event tests', () => {
     });
   });
 
-  describe('Market basic event', async () => {
+  describe('Market basic event', () => {
     it('Creates a Market basic entity', async () => {
       // Initializing the mock database
       const mockDbInitial = MockDb.createMockDb();
@@ -405,7 +406,7 @@ describe('Market contract event tests', () => {
     });
   });
 
-  describe('User collateral events', async () => {
+  describe('User collateral events', () => {
     it('UserSupplyCollateralEvent -> UserWithdrawCollateralEvent', async () => {
       // Initializing the mock database
       const mockDbInitial = MockDb.createMockDb();
@@ -518,7 +519,7 @@ describe('Market contract event tests', () => {
     });
   });
 
-  describe('User base events', async () => {
+  describe('User base events', () => {
     it('UserSupplyBaseEvent (supply, repay) -> UserWithdrawBaseEvent (withdraw, borrow)', async () => {
       // Initializing the mock database
       const mockDbInitial = MockDb.createMockDb();
@@ -647,7 +648,7 @@ describe('Market contract event tests', () => {
     });
   });
 
-  describe('Liquidation event', async () => {
+  describe('Liquidation event', () => {
     it('Create a LiquidationEvent entity and updates user entity', async () => {
       // Initializing the mock database
       const mockDbInitial = MockDb.createMockDb();
@@ -758,7 +759,7 @@ describe('Market contract event tests', () => {
     });
   });
 
-  describe('Absorb collateral event', async () => {
+  describe('Absorb collateral event', () => {
     it('Create an AbsorbCollateralEvent entity and updates UserCollateral entity', async () => {
       // Initializing the mock database
       const mockDbInitial = MockDb.createMockDb();
@@ -864,7 +865,7 @@ describe('Market contract event tests', () => {
     });
   });
 
-  describe('Buy collateral event', async () => {
+  describe('Buy collateral event', () => {
     it('Create a BuyCollateralEvent entity and a user entity', async () => {
       // Initializing the mock database
       const mockDbInitial = MockDb.createMockDb();
@@ -915,7 +916,7 @@ describe('Market contract event tests', () => {
       // Should also update the corresponding User entity
       const expectedUserEntity: User = {
         id: address,
-        address: address,
+        address,
         principal: BigInt(0),
         baseTrackingIndex: BigInt(0),
         baseTrackingAccrued: BigInt(0),
@@ -1000,7 +1001,7 @@ describe('Market contract event tests', () => {
       // Should also update the corresponding User entity
       let expectedUserEntity: User = {
         id: address,
-        address: address,
+        address,
         principal: BigInt(0),
         baseTrackingIndex: BigInt(0),
         baseTrackingAccrued: BigInt(0),
@@ -1057,7 +1058,7 @@ describe('Market contract event tests', () => {
       // Should also update the corresponding User entity
       expectedUserEntity = {
         id: address,
-        address: address,
+        address,
         principal: BigInt(0),
         baseTrackingIndex: BigInt(0),
         baseTrackingAccrued: BigInt(0),
@@ -1074,7 +1075,7 @@ describe('Market contract event tests', () => {
     });
   });
 
-  describe('Reserves withdrawn event', async () => {
+  describe('Reserves withdrawn event', () => {
     it('Create a ReservesWithdrawnEvent entity', async () => {
       // Initializing the mock database
       const mockDbInitial = MockDb.createMockDb();
@@ -1125,7 +1126,7 @@ describe('Market contract event tests', () => {
     });
   });
 
-  describe('Pause configuration event', async () => {
+  describe('Pause configuration event', () => {
     it('Create a PauseConfigurationEvent entity', async () => {
       // Initializing the mock database
       const mockDbInitial = MockDb.createMockDb();
@@ -1168,7 +1169,7 @@ describe('Market contract event tests', () => {
     });
   });
 
-  describe('Market configuration event', async () => {
+  describe('Market configuration event', () => {
     it('Create a MarketConfigurationEvent entity', async () => {
       // Initializing the mock database
       const mockDbInitial = MockDb.createMockDb();
@@ -1182,19 +1183,19 @@ describe('Market contract event tests', () => {
             base_token_price_feed_id: TEST_PRICE_FEED_ID,
             supply_kink: BigInt('850000000000000000'),
             borrow_kink: BigInt('850000000000000000'),
-            supply_per_second_interest_rate_slope_low: BigInt(1141552511),
-            supply_per_second_interest_rate_slope_high: BigInt(50735667174),
+            supply_per_second_interest_rate_slope_low: BigInt(1_141_552_511),
+            supply_per_second_interest_rate_slope_high: BigInt(50_735_667_174),
             supply_per_second_interest_rate_base: BigInt(0),
-            borrow_per_second_interest_rate_slope_low: BigInt(1585489599),
-            borrow_per_second_interest_rate_slope_high: BigInt(57077625570),
-            borrow_per_second_interest_rate_base: BigInt(475646879),
+            borrow_per_second_interest_rate_slope_low: BigInt(1_585_489_599),
+            borrow_per_second_interest_rate_slope_high: BigInt(57_077_625_570),
+            borrow_per_second_interest_rate_base: BigInt(475_646_879),
             store_front_price_factor: BigInt('600000000000000000'),
-            base_tracking_index_scale: BigInt(1000000000000000),
+            base_tracking_index_scale: BigInt(1_000_000_000_000_000),
             base_tracking_supply_speed: BigInt(0),
             base_tracking_borrow_speed: BigInt(0),
-            base_min_for_rewards: BigInt(1000000000),
+            base_min_for_rewards: BigInt(1_000_000_000),
             base_borrow_min: BigInt(1000),
-            target_reserves: BigInt(1000000000000),
+            target_reserves: BigInt(1_000_000_000_000),
           },
         });
 
@@ -1212,19 +1213,19 @@ describe('Market contract event tests', () => {
         baseTokenPriceFeedId: TEST_PRICE_FEED_ID,
         supplyKink: BigInt('850000000000000000'),
         borrowKink: BigInt('850000000000000000'),
-        supplyPerSecondInterestRateSlopeLow: BigInt(1141552511),
-        supplyPerSecondInterestRateSlopeHigh: BigInt(50735667174),
+        supplyPerSecondInterestRateSlopeLow: BigInt(1_141_552_511),
+        supplyPerSecondInterestRateSlopeHigh: BigInt(50_735_667_174),
         supplyPerSecondInterestRateBase: BigInt(0),
-        borrowPerSecondInterestRateSlopeLow: BigInt(1585489599),
-        borrowPerSecondInterestRateSlopeHigh: BigInt(57077625570),
-        borrowPerSecondInterestRateBase: BigInt(475646879),
+        borrowPerSecondInterestRateSlopeLow: BigInt(1_585_489_599),
+        borrowPerSecondInterestRateSlopeHigh: BigInt(57_077_625_570),
+        borrowPerSecondInterestRateBase: BigInt(475_646_879),
         storeFrontPriceFactor: BigInt('600000000000000000'),
-        baseTrackingIndexScale: BigInt(1000000000000000),
+        baseTrackingIndexScale: BigInt(1_000_000_000_000_000),
         baseTrackingSupplySpeed: BigInt(0),
         baseTrackingBorrowSpeed: BigInt(0),
-        baseMinForRewards: BigInt(1000000000),
+        baseMinForRewards: BigInt(1_000_000_000),
         baseBorrowMin: BigInt(1000),
-        targetReserves: BigInt(1000000000000),
+        targetReserves: BigInt(1_000_000_000_000),
       };
 
       // Getting the entity from the mock database

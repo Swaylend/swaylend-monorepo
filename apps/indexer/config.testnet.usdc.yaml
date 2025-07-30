@@ -7,7 +7,7 @@ networks:
       - name: Market
         address: 0x6030cf103746576706d7dcc2ae6f6b32ba0db66907a8f9901a0170de5f06acc0
         abi_file_path: ./abi/market-abi.json
-        handler: ./src/EventHandlers.ts
+        handler: ./src/event-handlers.ts
         events:
           - name: CollateralAssetAdded
           - name: CollateralAssetUpdated

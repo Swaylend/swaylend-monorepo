@@ -8,8 +8,8 @@ export const AssetsTable = () => {
   const marketMode = useMarketStore.use.marketMode();
 
   return (
-    <div className="w-full mt-[15px] sm:mt-[20px]">
-      <div className="py-2 max-w-[200px]">
+    <div className="mt-[15px] w-full sm:mt-[20px]">
+      <div className="max-w-[200px] py-2">
         <MarketSwitcher />
       </div>
       {marketMode === 'lend' && (

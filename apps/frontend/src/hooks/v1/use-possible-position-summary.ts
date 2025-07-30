@@ -1,7 +1,7 @@
-import { ACTION_TYPE, useMarketStore } from '@/stores/market-store';
-import { formatUnits } from '@/utils';
 import BigNumber from 'bignumber.js';
 import { useMemo, useState } from 'react';
+import { ACTION_TYPE, useMarketStore } from '@/stores/market-store';
+import { formatUnits } from '@/utils';
 import { useBorrowCapacity } from './use-borrow-capacity';
 import { useCollateralConfigurations } from './use-collateral-configurations';
 import { useMarketConfiguration } from './use-market-configuration';
@@ -36,7 +36,7 @@ export const usePossiblePositionSummary = () => {
   const [possibleCollateralUtilization, setPossibleCollateralUtilization] =
     useState<number | null>(null);
 
-  const calcPositionSummary = async () => {
+  const calcPositionSummary = () => {
     if (
       action == null ||
       actionTokenAssetId == null ||
@@ -62,7 +62,7 @@ export const usePossiblePositionSummary = () => {
     );
 
     if (action === ACTION_TYPE.REPAY || action === ACTION_TYPE.BORROW) {
-      if (!trueCollateralValue || !collateralValue) {
+      if (!(trueCollateralValue && collateralValue)) {
         setPossibleBorrowCapacity(null);
         setPossibleCollateralValue(null);
         setPossibleLiquidationPoint(null);

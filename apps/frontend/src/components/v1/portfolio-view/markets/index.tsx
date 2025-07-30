@@ -1,3 +1,7 @@
+import BigNumber from 'bignumber.js';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -21,11 +25,7 @@ import {
   MARKET_MODE,
   useMarketStore,
 } from '@/stores/market-store';
-import { SYMBOL_TO_ICON, formatUnits, getFormattedPrice } from '@/utils';
-import BigNumber from 'bignumber.js';
-import Image from 'next/image';
-import Link from 'next/link';
-import React, { useMemo } from 'react';
+import { formatUnits, getFormattedPrice, SYMBOL_TO_ICON } from '@/utils';
 
 export const Markets = () => {
   const changeAction = useMarketStore.use.changeAction();
@@ -116,9 +116,11 @@ export const Markets = () => {
 
   const totalSuppliedCollateral = useMemo(() => {
     if (
-      !priceDataUSDC ||
-      !userCollateralAssetsUSDC ||
-      !colateralConfigurationsUSDC
+      !(
+        priceDataUSDC &&
+        userCollateralAssetsUSDC &&
+        colateralConfigurationsUSDC
+      )
     )
       return BigNumber(0);
 
@@ -137,7 +139,7 @@ export const Markets = () => {
   }, [priceDataUSDC, userCollateralAssetsUSDC, colateralConfigurationsUSDC]);
 
   const totalSuppliedBaseAssets = useMemo(() => {
-    if (!marketConfigurationUSDC || !priceDataUSDC || !userSupplyBorrowUSDC)
+    if (!(marketConfigurationUSDC && priceDataUSDC && userSupplyBorrowUSDC))
       return BigNumber(0);
 
     const suppliedUSDC = formatUnits(
@@ -149,7 +151,7 @@ export const Markets = () => {
   }, [marketConfigurationUSDC, priceDataUSDC, userSupplyBorrowUSDC]);
 
   const totalBorrowedBaseAssets = useMemo(() => {
-    if (!marketConfigurationUSDC || !priceDataUSDC || !userSupplyBorrowUSDC)
+    if (!(marketConfigurationUSDC && priceDataUSDC && userSupplyBorrowUSDC))
       return BigNumber(0);
 
     const borrowedUSDC = formatUnits(
@@ -189,7 +191,7 @@ export const Markets = () => {
   }, [marketType, aprDataUSDC]);
 
   const updatedBorrowCapacity = useMemo(() => {
-    if (!marketConfigurationUSDC || !priceDataUSDC || !borrowCapacity) {
+    if (!(marketConfigurationUSDC && priceDataUSDC && borrowCapacity)) {
       return BigNumber(0);
     }
     let updatedBorrowCapacity = borrowCapacity?.minus(
@@ -208,14 +210,14 @@ export const Markets = () => {
 
   return (
     <Card className="mt-8 w-full">
-      <CardHeader className="bg-white/5 h-[48px] flex justify-center items-center text-md font-medium">
-        <div className="flex gap-x-2 items-center">
+      <CardHeader className="flex h-[48px] items-center justify-center bg-white/5 font-medium text-md">
+        <div className="flex items-center gap-x-2">
           <Image
-            src={SYMBOL_TO_ICON.USDC}
             alt={'USDC'}
-            width={24}
+            className="min-h-[24px] min-w-[24px] rounded-full"
             height={24}
-            className="rounded-full min-w-[24px] min-h-[24px]"
+            src={SYMBOL_TO_ICON.USDC}
+            width={24}
           />{' '}
           USDC Market
         </div>
@@ -224,7 +226,7 @@ export const Markets = () => {
         <div>
           <div className="flex justify-start gap-x-7">
             <div>
-              <div className="text-md text-gray-400">Market Position</div>
+              <div className="text-gray-400 text-md">Market Position</div>
               {isLoading ? (
                 <Skeleton className="h-6 w-16 bg-white/5" />
               ) : (
@@ -236,7 +238,7 @@ export const Markets = () => {
               )}
             </div>
             <div>
-              <div className="text-md text-gray-400">APY</div>
+              <div className="text-gray-400 text-md">APY</div>
               {isLoading ? (
                 <Skeleton className="h-6 w-16 bg-white/5" />
               ) : (
@@ -248,60 +250,60 @@ export const Markets = () => {
               )}
             </div>
             <div>
-              <div className="text-md text-gray-400">Rewards APY</div>
+              <div className="text-gray-400 text-md">Rewards APY</div>
               {isLoading ? (
                 <Skeleton className="h-6 w-16 bg-white/5" />
               ) : (
-                <div className="text-lg text-primary font-medium">
+                <div className="font-medium text-lg text-primary">
                   {rewardApy}%
                 </div>
               )}
             </div>
             <div>
-              <div className="text-md text-gray-400">Points</div>
-              <div className="text-lg flex justify-center font-medium">
+              <div className="text-gray-400 text-md">Points</div>
+              <div className="flex justify-center font-medium text-lg">
                 <Image
-                  src={SYMBOL_TO_ICON.SWAY}
                   alt={'USDC'}
-                  width={24}
-                  height={24}
                   className={'rounded-full'}
+                  height={24}
+                  src={SYMBOL_TO_ICON.SWAY}
+                  width={24}
                 />
               </div>
             </div>
           </div>
 
-          <div className="flex justify-start gap-x-12 mt-8">
+          <div className="mt-8 flex justify-start gap-x-12">
             <div>
-              <div className="text-md font-medium text-purple">
+              <div className="font-medium text-md text-purple">
                 My Borrowing
               </div>
               {isLoading ? (
                 <Skeleton className="h-7 w-24 bg-white/5" />
               ) : (
-                <div className="text-[24px] font-medium">
+                <div className="font-medium text-[24px]">
                   {getFormattedPrice(totalBorrowedBaseAssets)}
                 </div>
               )}
             </div>
             <div>
-              <div className="text-md font-medium text-gray-400">
+              <div className="font-medium text-gray-400 text-md">
                 My Collateral
               </div>
               {isLoading ? (
                 <Skeleton className="h-7 w-24 bg-white/5" />
               ) : (
-                <div className="text-[24px] font-medium">
+                <div className="font-medium text-[24px]">
                   {getFormattedPrice(totalSuppliedCollateral)}
                 </div>
               )}
             </div>
             <div>
-              <div className="text-md font-medium text-primary">My Earning</div>
+              <div className="font-medium text-md text-primary">My Earning</div>
               {isLoading ? (
                 <Skeleton className="h-7 w-24 bg-white/5" />
               ) : (
-                <div className="text-[24px] font-medium">
+                <div className="font-medium text-[24px]">
                   {getFormattedPrice(totalSuppliedBaseAssets)}
                 </div>
               )}
@@ -309,23 +311,23 @@ export const Markets = () => {
           </div>
           {marketType === 'Borrow' && (
             <div className="mt-8">
-              <div className="flex justify-between items-end px-4 p-2 text-lg font-medium text-lavender">
+              <div className="flex items-end justify-between p-2 px-4 font-medium text-lavender text-lg">
                 <div>Risk Meter</div>
                 {!isLoading && (
                   <div
-                    className={`text-lg font-semibold ${riskMeter > 80 && 'text-red-500'} ${riskMeter > 60 && riskMeter <= 80 && 'text-yellow-500'} ${riskMeter <= 60 && 'text-primary'}`}
+                    className={`font-semibold text-lg ${riskMeter > 80 && 'text-red-500'} ${riskMeter > 60 && riskMeter <= 80 && 'text-yellow-500'} ${riskMeter <= 60 && 'text-primary'}`}
                   >
                     {riskMeter}%
                   </div>
                 )}
               </div>
               {isLoading ? (
-                <Skeleton className="w-full h-[45px] rounded-full bg-white/5" />
+                <Skeleton className="h-[45px] w-full rounded-full bg-white/5" />
               ) : (
-                <div className="w-full h-[45px] rounded-full bg-white/5 overflow-hidden">
+                <div className="h-[45px] w-full overflow-hidden rounded-full bg-white/5">
                   <div
                     className={cn(
-                      'h-full w-full flex-1 transition-all rounded-full',
+                      'h-full w-full flex-1 rounded-full transition-all',
                       `${riskMeter > 80 && 'bg-red-500'} ${riskMeter > 60 && riskMeter <= 80 && 'bg-yellow-500'} ${riskMeter <= 60 && 'bg-primary'}`
                     )}
                     style={{
@@ -340,62 +342,62 @@ export const Markets = () => {
 
         <div className="w-full max-w-[320px]">
           {marketType === 'Borrow' && (
-            <div className="flex flex-col justify-between h-full">
+            <div className="flex h-full flex-col justify-between">
               <div className="flex flex-col gap-y-[5px]">
-                <div className="flex justify-between items-center">
-                  <div className="text-white flex items-center gap-x-1">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-x-1 text-white">
                     Available to Borrow{' '}
                     <InfoIcon text="Amount available to borrow based on your deposited collateral represented in USD." />
                   </div>
                   {isLoading ? (
                     <Skeleton className="h-6 w-24 bg-white/5" />
                   ) : (
-                    <div className="text-white font-medium">
+                    <div className="font-medium text-white">
                       {getFormattedPrice(updatedBorrowCapacity)}
                     </div>
                   )}
                 </div>
-                <div className="flex justify-between items-center">
-                  <div className="text-white flex items-center gap-x-1">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-x-1 text-white">
                     Loan to Value (LTV){' '}
                     <InfoIcon text="Show the amount of loan you can secure using your crypto as collateral. LTV is calculated by dividing the amount of credit you have borrowed by the value of your collateral, expressed as a percentage." />
                   </div>
                   {isLoading ? (
                     <Skeleton className="h-6 w-16 bg-white/5" />
                   ) : (
-                    <div className="text-white font-medium">
+                    <div className="font-medium text-white">
                       {ltvUSDC?.times(100).toFixed(2)}%
                     </div>
                   )}
                 </div>
-                <div className="flex justify-between items-center">
-                  <div className="text-white flex items-center gap-x-1">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-x-1 text-white">
                     Health Factor{' '}
                     <InfoIcon text="Collateralization status of a position, defined as the ratio of the borrowing capacity over the outstanding debts. The higher the value is, the safer the state of your funds. If the health factor reaches 1, the liquidation of your collateral will be triggered." />
                   </div>
                   {isLoading ? (
                     <Skeleton className="h-6 w-16 bg-white/5" />
                   ) : (
-                    <div className={'text-primary font-medium'}>
+                    <div className={'font-medium text-primary'}>
                       {healthFactorUSDC?.toFixed(2)}
                     </div>
                   )}
                 </div>
-                <div className="flex justify-between items-center">
-                  <div className="text-white flex items-center gap-x-1">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-x-1 text-white">
                     Liquidation Point
                     <InfoIcon text="Total value of supplied collateral at which your position will be liquidated represented in USD." />
                   </div>
                   {isLoading ? (
                     <Skeleton className="h-6 w-24 bg-white/5" />
                   ) : (
-                    <div className="text-white font-medium">
+                    <div className="font-medium text-white">
                       {getFormattedPrice(userLiquidationPoint ?? BigNumber(0))}
                     </div>
                   )}
                 </div>
-                <div className="flex justify-between items-center">
-                  <div className="text-white flex gap-x-1 items-center">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-x-1 text-white">
                     Net APY
                     <InfoIcon
                       text="Net APY represents the total of Borrow APY and Reward APY, calculated as follows: Net APY = Borrow APY - Reward APY.
@@ -405,14 +407,14 @@ export const Markets = () => {
                   {isLoading ? (
                     <Skeleton className="h-6 w-16 bg-white/5" />
                   ) : (
-                    <div className="text-primary font-medium">{netApy}%</div>
+                    <div className="font-medium text-primary">{netApy}%</div>
                   )}
                 </div>
               </div>
               <div className="flex w-full justify-end">
-                <Link href="/" className="mt-4">
+                <Link className="mt-4" href="/">
                   <Button
-                    size={'sm'}
+                    disabled={isLoading}
                     onMouseDown={() => {
                       handleBaseTokenClick(
                         ACTION_TYPE.BORROW,
@@ -420,7 +422,7 @@ export const Markets = () => {
                         'USDC'
                       );
                     }}
-                    disabled={isLoading}
+                    size={'sm'}
                   >
                     Open Market
                   </Button>
@@ -430,9 +432,9 @@ export const Markets = () => {
           )}
 
           {marketType === 'Earn' && (
-            <div className="flex flex-col justify-between h-full">
-              <div className="flex justify-between items-center">
-                <div className="text-white flex gap-x-1 items-center">
+            <div className="flex h-full flex-col justify-between">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-x-1 text-white">
                   Net APY
                   <InfoIcon
                     text="Net APY represents the total of Earn APY and Reward APY, calculated as follows: Net APY = Earn APY + Reward APY.
@@ -442,13 +444,13 @@ export const Markets = () => {
                 {isLoading ? (
                   <Skeleton className="h-6 w-16 bg-white/5" />
                 ) : (
-                  <div className="text-primary font-medium">{netApy}%</div>
+                  <div className="font-medium text-primary">{netApy}%</div>
                 )}
               </div>
               <div className="flex w-full justify-end">
-                <Link href="/" className="mt-4">
+                <Link className="mt-4" href="/">
                   <Button
-                    size={'sm'}
+                    disabled={isLoading}
                     onMouseDown={() => {
                       handleBaseTokenClick(
                         ACTION_TYPE.SUPPLY,
@@ -456,7 +458,7 @@ export const Markets = () => {
                         'USDC'
                       );
                     }}
-                    disabled={isLoading}
+                    size={'sm'}
                   >
                     Open Market
                   </Button>

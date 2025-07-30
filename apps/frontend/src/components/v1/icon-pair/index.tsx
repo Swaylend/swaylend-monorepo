@@ -23,18 +23,18 @@ export const IconPair = ({ icons }: IconPairProps) => {
       {icons.map((icon: Icon) => {
         return (
           <div
+            className="nth-[n+2]:ml-[-12px] flex items-center rounded-full bg-card p-1"
             key={icon.id}
-            className="flex items-center rounded-full bg-card p-1 nth-[n+2]:ml-[-12px]"
           >
             <TooltipProvider delayDuration={100}>
               <Tooltip>
                 <TooltipTrigger onClick={(e) => e.preventDefault()}>
                   <Image
-                    src={icon.path}
                     alt={icon.name}
-                    width={64}
-                    height={64}
                     className="rounded-full"
+                    height={64}
+                    src={icon.path}
+                    width={64}
                   />
                 </TooltipTrigger>
                 <TooltipContent

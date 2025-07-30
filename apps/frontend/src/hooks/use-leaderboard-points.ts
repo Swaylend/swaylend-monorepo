@@ -1,5 +1,5 @@
-import { appConfig } from '@/configs';
 import { useQuery } from '@tanstack/react-query';
+import { appConfig } from '@/configs';
 
 type User = {
   rank: number;

@@ -1,8 +1,8 @@
 'use client';
 
-import { cn } from '@/lib/utils';
 import { Check, Copy } from 'lucide-react';
 import { useState } from 'react';
+import { cn } from '@/lib/utils';
 import {
   Tooltip,
   TooltipContent,
@@ -23,32 +23,28 @@ export const CopyIcon = ({ value }: { value: string }) => {
   };
 
   return (
-    <>
-      <TooltipProvider delayDuration={100} skipDelayDuration={0}>
-        <Tooltip open={isHover}>
-          <TooltipTrigger
-            onMouseDown={handleCopy}
-            onMouseEnter={() => setIsHover(true)}
-            onMouseLeave={() => setIsHover(false)}
-          >
-            <Copy
-              className={cn(
-                'w-4 h-4 cursor-pointer hover:text-primary-400',
-                isCopied && 'hidden'
-              )}
-            />
-            <Check
-              className={cn(
-                'w-4 h-4 cursor-pointer hover:text-primary-400',
-                !isCopied && 'hidden'
-              )}
-            />
-          </TooltipTrigger>
-          <TooltipContent>
-            {isCopied ? 'Copied!' : 'Copy Address'}
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-    </>
+    <TooltipProvider delayDuration={100} skipDelayDuration={0}>
+      <Tooltip open={isHover}>
+        <TooltipTrigger
+          onMouseDown={handleCopy}
+          onMouseEnter={() => setIsHover(true)}
+          onMouseLeave={() => setIsHover(false)}
+        >
+          <Copy
+            className={cn(
+              'h-4 w-4 cursor-pointer hover:text-primary-400',
+              isCopied && 'hidden'
+            )}
+          />
+          <Check
+            className={cn(
+              'h-4 w-4 cursor-pointer hover:text-primary-400',
+              !isCopied && 'hidden'
+            )}
+          />
+        </TooltipTrigger>
+        <TooltipContent>{isCopied ? 'Copied!' : 'Copy Address'}</TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 };

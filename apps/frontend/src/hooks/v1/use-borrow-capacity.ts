@@ -1,7 +1,7 @@
-import { formatUnits } from '@/utils';
 import { useAccount } from '@fuels/react';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
+import { formatUnits } from '@/utils';
 import { useCollateralConfigurations } from './use-collateral-configurations';
 import { useMarketConfiguration } from './use-market-configuration';
 import { usePrice } from './use-price';
@@ -26,14 +26,16 @@ export const useBorrowCapacity = () => {
       priceData?.prices,
       marketConfiguration,
     ],
-    queryFn: async () => {
+    queryFn: () => {
       if (
-        !account ||
-        !supplyBorrow ||
-        !collateralConfigurations ||
-        !userCollateralAssets ||
-        !priceData ||
-        !marketConfiguration
+        !(
+          account &&
+          supplyBorrow &&
+          collateralConfigurations &&
+          userCollateralAssets &&
+          priceData &&
+          marketConfiguration
+        )
       ) {
         return null;
       }

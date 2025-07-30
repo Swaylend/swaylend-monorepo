@@ -1,7 +1,7 @@
+import { useQuery } from '@tanstack/react-query';
 import type { CollateralConfigurationOutput } from '@/contract-types/v1/market';
 import { useMarketContract } from '@/contracts/use-market-contract';
 import { useMarketStore } from '@/stores/market-store';
-import { useQuery } from '@tanstack/react-query';
 
 export const useCollateralConfigurations = (marketParam?: string) => {
   const storeMarket = useMarketStore.use.market();

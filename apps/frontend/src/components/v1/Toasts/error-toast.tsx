@@ -35,10 +35,10 @@ export const ErrorToast = ({ error }: ErrorToastProps) => {
         <>
           A{' '}
           <a
+            className="cursor-pointer text-blue-500 underline hover:text-blue-700"
             href="https://docs.fuel.network/guides/intro-to-predicates/"
-            className="text-blue-500 underline hover:text-blue-700 cursor-pointer"
-            target="_blank"
             rel="noreferrer"
+            target="_blank"
           >
             predicate
           </a>{' '}
@@ -55,11 +55,11 @@ export const ErrorToast = ({ error }: ErrorToastProps) => {
   };
 
   return toast.error(
-    <div className="flex w-full gap-x-4 h-full items-center">
+    <div className="flex h-full w-full items-center gap-x-4">
       <div>
-        <XCircleIcon className="w-8 h-8 text-red-500" />
+        <XCircleIcon className="h-8 w-8 text-red-500" />
       </div>
-      <div className="text-sm font-semibold flex flex-col gap-y-1">
+      <div className="flex flex-col gap-y-1 font-semibold text-sm">
         <span>Error!</span>
         <span className="font-normal">{extractErrorReason(error)}</span>
       </div>

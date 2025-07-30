@@ -1,3 +1,8 @@
+import { useAccount, useIsConnected } from '@fuels/react';
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
+import BigNumber from 'bignumber.js';
+import Image from 'next/image';
+import { useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -23,7 +28,6 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { InfoIcon } from '@/components/v1/info-icon';
-import { Line } from '@/components/v1/line';
 import { NetBorrowTooltip } from '@/components/v1/net-borrow-tooltip';
 import { PointIcons } from '@/components/v1/point-icons';
 import {
@@ -44,35 +48,30 @@ import {
 } from '@/hooks/v1';
 import { cn } from '@/lib/utils';
 import { ACTION_TYPE, useMarketStore } from '@/stores/market-store';
-import { SYMBOL_TO_ICON, formatUnits, getFormattedNumber } from '@/utils';
-import { useAccount, useIsConnected } from '@fuels/react';
-import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
-import BigNumber from 'bignumber.js';
-import Image from 'next/image';
-import { useMemo } from 'react';
+import { formatUnits, getFormattedNumber, SYMBOL_TO_ICON } from '@/utils';
 
 const SkeletonRow = (
   <TableRow>
     <TableCell>
-      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+      <Skeleton className="h-[40px] w-full rounded-md bg-primary/20" />
     </TableCell>
     <TableCell>
-      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+      <Skeleton className="h-[40px] w-full rounded-md bg-primary/20" />
     </TableCell>
     <TableCell>
-      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+      <Skeleton className="h-[40px] w-full rounded-md bg-primary/20" />
     </TableCell>
     <TableCell>
-      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+      <Skeleton className="h-[40px] w-full rounded-md bg-primary/20" />
     </TableCell>
     <TableCell>
-      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+      <Skeleton className="h-[40px] w-full rounded-md bg-primary/20" />
     </TableCell>
     <TableCell>
-      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+      <Skeleton className="h-[40px] w-full rounded-md bg-primary/20" />
     </TableCell>
     <TableCell>
-      <div className="flex gap-x-2 w-full">
+      <div className="flex w-full gap-x-2">
         <Button className="w-1/2" disabled={true}>
           Borrow
         </Button>
@@ -86,30 +85,30 @@ const SkeletonRow = (
 
 const SkeletonCardContent = (
   <CardContent>
-    <div className="flex flex-col gap-y-4 pt-8 px-4">
-      <div className="w-full flex items-center">
-        <div className="w-1/2 text-moon font-medium">Borrow Asset</div>
-        <Skeleton className="w-1/2 h-[24px] bg-primary/20 rounded-md" />
+    <div className="flex flex-col gap-y-4 px-4 pt-8">
+      <div className="flex w-full items-center">
+        <div className="w-1/2 font-medium text-moon">Borrow Asset</div>
+        <Skeleton className="h-[24px] w-1/2 rounded-md bg-primary/20" />
       </div>
-      <div className="w-full flex items-center">
-        <div className="w-1/2 text-moon font-medium">Borrow APY</div>
-        <Skeleton className="w-1/2 h-[24px] bg-primary/20 rounded-md" />
+      <div className="flex w-full items-center">
+        <div className="w-1/2 font-medium text-moon">Borrow APY</div>
+        <Skeleton className="h-[24px] w-1/2 rounded-md bg-primary/20" />
       </div>
-      <div className="w-full flex items-center">
-        <div className="w-1/2 text-moon font-medium">Your Supplied Assets</div>
-        <Skeleton className="w-1/2 h-[24px] bg-primary/20 rounded-md" />
+      <div className="flex w-full items-center">
+        <div className="w-1/2 font-medium text-moon">Your Supplied Assets</div>
+        <Skeleton className="h-[24px] w-1/2 rounded-md bg-primary/20" />
       </div>
-      <div className="w-full flex items-center">
-        <div className="w-1/2 text-moon font-medium">Borrow APY</div>
-        <Skeleton className="w-1/2 h-[24px] bg-primary/20 rounded-md" />
+      <div className="flex w-full items-center">
+        <div className="w-1/2 font-medium text-moon">Borrow APY</div>
+        <Skeleton className="h-[24px] w-1/2 rounded-md bg-primary/20" />
       </div>
-      <div className="w-full flex items-center">
-        <div className="w-1/2 text-moon font-medium">Borrow APY</div>
-        <Skeleton className="w-1/2 h-[24px] bg-primary/20 rounded-md" />
+      <div className="flex w-full items-center">
+        <div className="w-1/2 font-medium text-moon">Borrow APY</div>
+        <Skeleton className="h-[24px] w-1/2 rounded-md bg-primary/20" />
       </div>
-      <div className="w-full flex items-center">
-        <div className="w-1/2 text-moon font-medium">Supply Points</div>
-        <Skeleton className="w-1/2 h-[24px] bg-primary/20 rounded-md" />
+      <div className="flex w-full items-center">
+        <div className="w-1/2 font-medium text-moon">Supply Points</div>
+        <Skeleton className="h-[24px] w-1/2 rounded-md bg-primary/20" />
       </div>
     </div>
   </CardContent>
@@ -146,7 +145,7 @@ export const BorrowTable = () => {
   });
 
   const borrowedBalance = useMemo(() => {
-    if (!marketConfiguration || !userSupplyBorrow || !isConnected) {
+    if (!(marketConfiguration && userSupplyBorrow && isConnected)) {
       return `${getFormattedNumber(BigNumber(0))} ${appConfig.client.shared.assets[marketConfiguration?.baseToken.bits ?? '']}`;
     }
 
@@ -251,10 +250,17 @@ export const BorrowTable = () => {
           ) : (
             <TableRow>
               <TableCell>
-                <div className="flex gap-x-2 items-center">
+                <div className="flex items-center gap-x-2">
                   <div>
                     {marketConfiguration && (
                       <Image
+                        alt={
+                          appConfig.client.shared.assets[
+                            marketConfiguration.baseToken.bits
+                          ]
+                        }
+                        className="min-h-[32px] min-w-[32px] rounded-full"
+                        height={32}
                         src={
                           SYMBOL_TO_ICON[
                             appConfig.client.shared.assets[
@@ -262,19 +268,12 @@ export const BorrowTable = () => {
                             ]
                           ]
                         }
-                        alt={
-                          appConfig.client.shared.assets[
-                            marketConfiguration.baseToken.bits
-                          ]
-                        }
                         width={32}
-                        height={32}
-                        className="rounded-full min-w-[32px] min-h-[32px]"
                       />
                     )}
                   </div>
                   <div>
-                    <div className="text-white font-medium">
+                    <div className="font-medium text-white">
                       {
                         appConfig.client.shared.assets[
                           marketConfiguration?.baseToken.bits ?? ''
@@ -303,7 +302,7 @@ export const BorrowTable = () => {
               <TableCell
                 className={cn(
                   isAprPending && 'animate-pulse',
-                  'text-white text-md font-medium'
+                  'font-medium text-md text-white'
                 )}
               >
                 {aprData?.borrowBaseApr.times(100).toFixed(2)}%
@@ -312,10 +311,10 @@ export const BorrowTable = () => {
               <TableCell
                 className={cn(
                   isAprPending && 'animate-pulse',
-                  'text-white text-md font-medium'
+                  'font-medium text-md text-white'
                 )}
               >
-                <div className="flex gap-x-2 items-center">
+                <div className="flex items-center gap-x-2">
                   {aprData?.borrowRewardApr.times(100).toFixed(2)}%
                   <PointIcons points={POINTS_LM} />
                 </div>
@@ -323,7 +322,7 @@ export const BorrowTable = () => {
               <TableCell
                 className={cn(
                   isAprPending && 'animate-pulse',
-                  'text-white text-md font-medium'
+                  'font-medium text-md text-white'
                 )}
               >
                 <TooltipProvider delayDuration={100}>
@@ -350,25 +349,25 @@ export const BorrowTable = () => {
               </TableCell>
               <TableCell>
                 {userRole === USER_ROLE.LENDER ? (
-                  <div className="text-lavender bg-primary/20 rounded-lg px-4 py-2 text-sm font-medium text-center w-full">
+                  <div className="w-full rounded-lg bg-primary/20 px-4 py-2 text-center font-medium text-lavender text-sm">
                     You cannot Borrow assets while you have an active Earn
                     position. Learn more about how{' '}
                     <a
+                      className="text-white underline hover:opacity-90"
                       href="https://swaylend.gitbook.io/swaylend-docs/get-started/navigate-swaylend"
-                      target="_blank"
                       rel="noreferrer"
-                      className="underline hover:opacity-90 text-white"
+                      target="_blank"
                     >
                       Swaylend works.
                     </a>
                   </div>
                 ) : (
-                  <div className="flex gap-x-2 w-full">
+                  <div className="flex w-full gap-x-2">
                     <Button
-                      disabled={
-                        !account || !maxBorrowAmount || maxBorrowAmount.eq(0)
-                      }
                       className="w-1/2"
+                      disabled={
+                        !(account && maxBorrowAmount) || maxBorrowAmount.eq(0)
+                      }
                       onMouseDown={() => {
                         handleBaseTokenClick(ACTION_TYPE.BORROW);
                       }}
@@ -376,16 +375,15 @@ export const BorrowTable = () => {
                       Borrow
                     </Button>
                     <Button
+                      className="w-1/2"
                       disabled={
-                        !account ||
-                        !userSupplyBorrow ||
+                        !(account && userSupplyBorrow) ||
                         userSupplyBorrow.borrowed.eq(0)
                       }
-                      className="w-1/2"
-                      variant="secondary"
                       onMouseDown={() => {
                         handleBaseTokenClick(ACTION_TYPE.REPAY);
                       }}
+                      variant="secondary"
                     >
                       Repay
                     </Button>
@@ -410,15 +408,22 @@ export const BorrowTable = () => {
             SkeletonCardContent
           ) : (
             <CardContent>
-              <div className="flex flex-col gap-y-4 pt-8 px-4">
-                <div className="w-full flex items-center">
-                  <div className="w-1/2 text-moon font-medium">
+              <div className="flex flex-col gap-y-4 px-4 pt-8">
+                <div className="flex w-full items-center">
+                  <div className="w-1/2 font-medium text-moon">
                     Borrow Asset
                   </div>
-                  <div className="flex gap-x-2 items-center">
+                  <div className="flex items-center gap-x-2">
                     <div>
                       {marketConfiguration && (
                         <Image
+                          alt={
+                            appConfig.client.shared.assets[
+                              marketConfiguration.baseToken.bits
+                            ]
+                          }
+                          className="min-h-[32px] min-w-[32px] rounded-full"
+                          height={32}
                           src={
                             SYMBOL_TO_ICON[
                               appConfig.client.shared.assets[
@@ -426,19 +431,12 @@ export const BorrowTable = () => {
                               ]
                             ]
                           }
-                          alt={
-                            appConfig.client.shared.assets[
-                              marketConfiguration.baseToken.bits
-                            ]
-                          }
                           width={32}
-                          height={32}
-                          className="rounded-full min-w-[32px] min-h-[32px]"
                         />
                       )}
                     </div>
                     <div>
-                      <div className="text-white font-medium">
+                      <div className="font-medium text-white">
                         {
                           appConfig.client.shared.assets[
                             marketConfiguration?.baseToken.bits ?? ''
@@ -459,84 +457,84 @@ export const BorrowTable = () => {
                     </div>
                   </div>
                 </div>
-                <div className="w-full flex items-center">
-                  <div className="w-1/2 text-moon text-md font-medium">
+                <div className="flex w-full items-center">
+                  <div className="w-1/2 font-medium text-md text-moon">
                     Borrow APY
                   </div>
                   <div
                     className={cn(
-                      'text-white text-md font-medium',
+                      'font-medium text-md text-white',
                       isAprPending && 'animate-pulse'
                     )}
                   >
                     {aprData?.borrowBaseApr.times(100).toFixed(2)}%
                   </div>
                 </div>
-                <div className="w-full flex items-center">
-                  <div className="w-1/2 text-moon font-medium">
+                <div className="flex w-full items-center">
+                  <div className="w-1/2 font-medium text-moon">
                     Your Borrow Position
                   </div>
                   <div className="text-moon">{borrowedBalance}</div>
                 </div>
-                <div className="w-full flex items-center">
-                  <div className="w-1/2 text-moon text-md font-medium">
+                <div className="flex w-full items-center">
+                  <div className="w-1/2 font-medium text-md text-moon">
                     Reward APY
                   </div>
                   <div
                     className={cn(
-                      'text-white text-md font-medium',
+                      'font-medium text-md text-white',
                       isAprPending && 'animate-pulse'
                     )}
                   >
-                    <div className="flex gap-x-2 items-center">
+                    <div className="flex items-center gap-x-2">
                       {aprData?.borrowRewardApr.times(100).toFixed(2)}%
                       <PointIcons points={POINTS_LM} />
                     </div>
                   </div>
                 </div>
-                <div className="w-full flex items-center">
-                  <div className="w-1/2 text-moon text-md font-medium">
+                <div className="flex w-full items-center">
+                  <div className="w-1/2 font-medium text-md text-moon">
                     Net APY
                   </div>
                   <div
                     className={cn(
-                      'text-white text-md font-medium',
+                      'font-medium text-md text-white',
                       isAprPending && 'animate-pulse'
                     )}
                   >
                     {aprData?.netBorrowApr.times(100).toFixed(2)}%
                   </div>
                 </div>
-                <div className="w-full flex items-center">
-                  <div className="w-1/2 text-moon font-medium">
+                <div className="flex w-full items-center">
+                  <div className="w-1/2 font-medium text-moon">
                     Borrow Points
                   </div>
-                  <PointIcons points={POINTS_BORROW} mobile />
+                  <PointIcons mobile points={POINTS_BORROW} />
                 </div>
               </div>
             </CardContent>
           )}
           <CardFooter>
             {userRole === USER_ROLE.LENDER ? (
-              <div className=" text-lavender bg-primary/20 rounded-lg px-4 py-2 text-sm font-medium text-center w-full">
+              <div className="w-full rounded-lg bg-primary/20 px-4 py-2 text-center font-medium text-lavender text-sm">
                 You cannot Borrow assets while you have an active Earn position.
                 Learn more about how{' '}
                 <a
+                  className="text-white underline hover:opacity-90"
                   href="https://swaylend.gitbook.io/swaylend-docs/get-started/navigate-swaylend"
-                  target="_blank"
                   rel="noreferrer"
-                  className="underline hover:opacity-90 text-white"
+                  target="_blank"
                 >
                   Swaylend works.
                 </a>
               </div>
             ) : (
-              <div className="flex gap-x-2 w-full">
+              <div className="flex w-full gap-x-2">
                 <Button
-                  disabled={
-                    !account || !maxBorrowAmount || maxBorrowAmount.eq(0)
-                  }
                   className="w-1/2"
+                  disabled={
+                    !(account && maxBorrowAmount) || maxBorrowAmount.eq(0)
+                  }
                   onMouseDown={() => {
                     handleBaseTokenClick(ACTION_TYPE.BORROW);
                   }}
@@ -544,16 +542,15 @@ export const BorrowTable = () => {
                   Borrow
                 </Button>
                 <Button
+                  className="w-1/2"
                   disabled={
-                    !account ||
-                    !userSupplyBorrow ||
+                    !(account && userSupplyBorrow) ||
                     userSupplyBorrow.borrowed.eq(0)
                   }
-                  className="w-1/2"
-                  variant={'secondary'}
                   onMouseDown={() => {
                     handleBaseTokenClick(ACTION_TYPE.REPAY);
                   }}
+                  variant={'secondary'}
                 >
                   Repay
                 </Button>

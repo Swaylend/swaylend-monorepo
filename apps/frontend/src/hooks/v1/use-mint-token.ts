@@ -1,3 +1,8 @@
+import { useAccount, useWallet } from '@fuels/react';
+import { useMutation } from '@tanstack/react-query';
+import BigNumber from 'bignumber.js';
+import { hashMessage } from 'fuels';
+import { toast } from 'react-toastify';
 import {
   ErrorToast,
   PendingToast,
@@ -7,11 +12,6 @@ import { appConfig } from '@/configs';
 import { Token } from '@/contract-types/v1';
 import { useMarketStore } from '@/stores/market-store';
 import { FAUCET_AMOUNTS } from '@/utils';
-import { useAccount, useWallet } from '@fuels/react';
-import { useMutation } from '@tanstack/react-query';
-import BigNumber from 'bignumber.js';
-import { hashMessage } from 'fuels';
-import { toast } from 'react-toastify';
 
 export const useMintToken = (symbol: string, decimals: number) => {
   const { wallet } = useWallet();
@@ -21,7 +21,7 @@ export const useMintToken = (symbol: string, decimals: number) => {
   return useMutation({
     mutationKey: ['mintToken', symbol, account, market],
     mutationFn: async () => {
-      if (!wallet || !account) return null;
+      if (!(wallet && account)) return null;
 
       const tokenFactoryContract = new Token(
         appConfig.client.v1.markets[market].tokenFactoryAddress,

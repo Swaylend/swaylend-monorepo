@@ -1,4 +1,9 @@
 'use client';
+import { useAccount } from '@fuels/react';
+import { useIsMutating } from '@tanstack/react-query';
+import BigNumber from 'bignumber.js';
+import { BN, toFixed } from 'fuels';
+import { useMemo } from 'react';
 import { appConfig } from '@/configs';
 import {
   useBalance,
@@ -7,11 +12,6 @@ import {
   useMintToken,
 } from '@/hooks/v1';
 import { FAUCET_URL, formatUnits } from '@/utils';
-import { useAccount } from '@fuels/react';
-import { useIsMutating } from '@tanstack/react-query';
-import BigNumber from 'bignumber.js';
-import { BN, toFixed } from 'fuels';
-import { useMemo } from 'react';
 import { Button } from '../../ui/button';
 import {
   Table,
@@ -41,7 +41,7 @@ const FaucetRow = ({
 }: FaucetRowProps) => {
   const { data: balance } = useBalance({
     address: account,
-    assetId: assetId,
+    assetId,
   });
 
   const { mutate: mint } = useMintToken(symbol, decimals);
@@ -97,7 +97,7 @@ export const FaucetView = () => {
   });
 
   const assets = useMemo(() => {
-    if (!marketConfiguration || !collateralConfigurations) return [];
+    if (!(marketConfiguration && collateralConfigurations)) return [];
 
     return [
       ...Object.values(collateralConfigurations).map(
@@ -130,8 +130,8 @@ export const FaucetView = () => {
   }
 
   return (
-    <div className="h-full w-full flex flex-1 items-center justify-center flex-col gap-y-4 px-2 sm:px-16">
-      <div className="max-w-[480px] w-full">
+    <div className="flex h-full w-full flex-1 flex-col items-center justify-center gap-y-4 px-2 sm:px-16">
+      <div className="w-full max-w-[480px]">
         <Table>
           <TableHeader>
             <TableRow>
@@ -142,13 +142,13 @@ export const FaucetView = () => {
           <TableBody>
             {assets.map((asset) => (
               <FaucetRow
-                key={asset.assetId}
-                assetId={asset.assetId}
-                symbol={asset.symbol}
-                decimals={asset.decimals}
                 account={account ?? undefined}
-                mintPending={numberOfMintsPending > 0}
+                assetId={asset.assetId}
+                decimals={asset.decimals}
                 ethBalance={ethBalance ?? new BN(0)}
+                key={asset.assetId}
+                mintPending={numberOfMintsPending > 0}
+                symbol={asset.symbol}
               />
             ))}
           </TableBody>

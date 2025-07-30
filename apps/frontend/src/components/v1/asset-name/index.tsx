@@ -9,14 +9,14 @@ type AssetNameProps = {
 
 export const AssetName = ({ src, symbol, name }: AssetNameProps) => {
   return (
-    <div className="flex gap-x-2 items-center">
+    <div className="flex items-center gap-x-2">
       <div>
         <Image
-          src={src}
           alt={symbol}
-          width={32}
+          className="min-h-[32px] min-w-[32px] rounded-full"
           height={32}
-          className="rounded-full min-w-[32px] min-h-[32px]"
+          src={src}
+          width={32}
         />
       </div>
       <div className="font-medium text-white">{name}</div>

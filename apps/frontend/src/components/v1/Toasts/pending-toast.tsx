@@ -1,11 +1,11 @@
 import { LoaderCircleIcon } from 'lucide-react';
 
 export const PendingToast = () => (
-  <div className="flex w-full gap-x-4 h-full items-center">
+  <div className="flex h-full w-full items-center gap-x-4">
     <div>
-      <LoaderCircleIcon className="w-8 h-8 text-blue-500 animate-spin" />
+      <LoaderCircleIcon className="h-8 w-8 animate-spin text-blue-500" />
     </div>
-    <div className=" text-sm font-semibold flex flex-col gap-y-1">
+    <div className="flex flex-col gap-y-1 font-semibold text-sm">
       Transaction is pending...
     </div>
   </div>

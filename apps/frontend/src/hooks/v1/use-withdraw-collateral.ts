@@ -1,3 +1,7 @@
+import { useAccount } from '@fuels/react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import BigNumber from 'bignumber.js';
+import { toast } from 'react-toastify';
 import {
   ErrorToast,
   PendingToast,
@@ -8,10 +12,6 @@ import type { PriceDataUpdateInput } from '@/contract-types/v1/market';
 import { useMarketContract } from '@/contracts/use-market-contract';
 import { usePythContract } from '@/contracts/use-pyth-contract';
 import { useMarketStore } from '@/stores/market-store';
-import { useAccount } from '@fuels/react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import BigNumber from 'bignumber.js';
-import { toast } from 'react-toastify';
 import { useCollateralConfigurations } from './use-collateral-configurations';
 
 type useWithdrawCollateralProps = {
@@ -52,11 +52,13 @@ export const useWithdrawCollateral = ({
       priceUpdateData: PriceDataUpdateInput;
     }) => {
       if (
-        !account ||
-        !actionTokenAssetId ||
-        !collateralConfigurations ||
-        !marketContract ||
-        !pythContract
+        !(
+          account &&
+          actionTokenAssetId &&
+          collateralConfigurations &&
+          marketContract &&
+          pythContract
+        )
       ) {
         return null;
       }

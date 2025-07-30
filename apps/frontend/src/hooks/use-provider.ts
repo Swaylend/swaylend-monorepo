@@ -1,7 +1,7 @@
-import { appConfig } from '@/configs';
 import { useProvider as useFuelProvider } from '@fuels/react';
 import { Provider } from 'fuels';
 import { useEffect, useState } from 'react';
+import { appConfig } from '@/configs';
 
 export const useProvider = () => {
   const [customProvider, setCustomProvider] = useState<Provider | null>(null);

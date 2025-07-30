@@ -1,3 +1,5 @@
+import BigNumber from 'bignumber.js';
+import { useMemo } from 'react';
 import {
   Table,
   TableBody,
@@ -11,19 +13,16 @@ import { appConfig } from '@/configs';
 import {
   useCollateralConfigurations,
   useCollateralReserves,
-  useMarketConfiguration,
   usePrice,
   useTotalCollateral,
 } from '@/hooks/v1';
 import {
-  SYMBOL_TO_ICON,
-  SYMBOL_TO_NAME,
   formatUnits,
   getFormattedNumber,
   getFormattedPrice,
+  SYMBOL_TO_ICON,
+  SYMBOL_TO_NAME,
 } from '@/utils';
-import BigNumber from 'bignumber.js';
-import { useMemo } from 'react';
 import { InfoIcon } from '../v1/info-icon';
 
 type TableRowProps = {
@@ -54,14 +53,14 @@ const MarketCollateralsTableRow = ({
     <TableRow>
       <TableCell>
         <AssetName
-          symbol={symbol}
           name={SYMBOL_TO_NAME[symbol]}
           src={SYMBOL_TO_ICON[symbol]}
+          symbol={symbol}
         />
       </TableCell>
-      <TableCell className="text-lavender font-medium">
-        <div className=" text-moon flex items-center gap-x-2">
-          <span className="text-lavender font-medium">
+      <TableCell className="font-medium text-lavender">
+        <div className="flex items-center gap-x-2 text-moon">
+          <span className="font-medium text-lavender">
             {getFormattedPrice(
               formatUnits(totalSupply ?? BigNumber(0), decimals).times(price)
             )}
@@ -72,21 +71,21 @@ const MarketCollateralsTableRow = ({
           {symbol}
         </div>
       </TableCell>
-      <TableCell className="text-lavender font-medium">
+      <TableCell className="font-medium text-lavender">
         {getFormattedPrice(
           formatUnits(reserves ?? BigNumber(0), decimals).times(price)
         )}
       </TableCell>
-      <TableCell className="text-lavender font-medium">
+      <TableCell className="font-medium text-lavender">
         {price.toFixed(2).toString()} $
       </TableCell>
-      <TableCell className="text-lavender font-medium">
+      <TableCell className="font-medium text-lavender">
         {formatUnits(collateralFactor, 16).toString()}%
       </TableCell>
-      <TableCell className="text-lavender font-medium">
+      <TableCell className="font-medium text-lavender">
         {formatUnits(liquidationFactor, 16).toString()}%
       </TableCell>
-      <TableCell className="text-lavender font-medium">
+      <TableCell className="font-medium text-lavender">
         {BigNumber(100).minus(formatUnits(liquidationPenalty, 16)).toString()}%
       </TableCell>
     </TableRow>
@@ -95,7 +94,9 @@ const MarketCollateralsTableRow = ({
 
 export const MarketCollateralsTable = ({
   marketName,
-}: { marketName: string }) => {
+}: {
+  marketName: string;
+}) => {
   const { data: collateralConfigurations } =
     useCollateralConfigurations(marketName);
 
@@ -109,50 +110,50 @@ export const MarketCollateralsTable = ({
   const { data: priceData } = usePrice(marketName);
 
   return (
-    <div className="w-full border bg-linear-to-b from-white/10 to-card rounded-lg ">
+    <div className="w-full rounded-lg border bg-linear-to-b from-white/10 to-card">
       <Table className="max-sm:hidden">
         <TableHeader>
           <TableRow>
             <TableHead className="h-[75px] rounded-t-md" colSpan={7}>
-              <div className="w-full items-center justify-center gap-x-2 font-semibold text-lg flex">
-                <div className="w-[260px] rounded-full h-px bg-linear-to-r from-white/0 to-primary" />
+              <div className="flex w-full items-center justify-center gap-x-2 font-semibold text-lg">
+                <div className="h-px w-[260px] rounded-full bg-linear-to-r from-white/0 to-primary" />
                 <div className="text-center text-white">Collateral Assets</div>
-                <div className="w-[260px] rounded-full h-px bg-linear-to-l from-white/0 to-primary" />
+                <div className="h-px w-[260px] rounded-full bg-linear-to-l from-white/0 to-primary" />
               </div>
             </TableHead>
           </TableRow>
           <TableRow>
-            <TableHead className="w-1/4 bg-card h-[60px] font-bold">
+            <TableHead className="h-[60px] w-1/4 bg-card font-bold">
               Collateral Asset
             </TableHead>
-            <TableHead className="w-1/8 bg-card h-[60px] font-bold ">
-              <div className="flex gap-x-1 items-center">
+            <TableHead className="h-[60px] w-1/8 bg-card font-bold">
+              <div className="flex items-center gap-x-1">
                 Total Supply <InfoIcon text="Total value of supplied asset." />
               </div>
             </TableHead>
-            <TableHead className="w-1/8 bg-card h-[60px] font-bold">
-              <div className="flex gap-x-1 items-center">
+            <TableHead className="h-[60px] w-1/8 bg-card font-bold">
+              <div className="flex items-center gap-x-1">
                 Reserves{' '}
                 <InfoIcon text="Total value of this asset in reserves." />
               </div>
             </TableHead>
-            <TableHead className="w-1/8 bg-card h-[60px] font-bold">
+            <TableHead className="h-[60px] w-1/8 bg-card font-bold">
               Oracle Price
             </TableHead>
-            <TableHead className="w-1/8 bg-card h-[60px] font-bold">
-              <div className="flex gap-x-1 items-center">
+            <TableHead className="h-[60px] w-1/8 bg-card font-bold">
+              <div className="flex items-center gap-x-1">
                 Collateral Factor{' '}
                 <InfoIcon text="The portion of the Collateral that can be borrowed against. Collateral factor of 80% means that for every $100 of Collateral, user can borrow $80." />
               </div>
             </TableHead>
-            <TableHead className="w-1/8 bg-card h-[60px] font-bold">
-              <div className="flex gap-x-1 items-center">
+            <TableHead className="h-[60px] w-1/8 bg-card font-bold">
+              <div className="flex items-center gap-x-1">
                 Liquidation Factor{' '}
                 <InfoIcon text="The level at which a borrower can have their collateral liquidated." />
               </div>
             </TableHead>
-            <TableHead className="w-1/8 bg-card h-[60px] font-bold">
-              <div className="flex gap-x-1 items-center">
+            <TableHead className="h-[60px] w-1/8 bg-card font-bold">
+              <div className="flex items-center gap-x-1">
                 Liquidation Penalty{' '}
                 <InfoIcon text="The fee a user pays to the protocol for being liquidated." />
               </div>
@@ -162,23 +163,23 @@ export const MarketCollateralsTable = ({
         <TableBody>
           {collaterals.map((collateral) => (
             <MarketCollateralsTableRow
-              key={collateral.asset_id.bits}
               assetId={collateral.asset_id.bits}
-              symbol={appConfig.client.shared.assets[collateral.asset_id.bits]}
-              decimals={collateral.decimals}
-              totalSupply={totalCollateral?.get(collateral.asset_id.bits)}
-              price={
-                priceData?.prices[collateral.asset_id.bits] ?? BigNumber(0)
-              }
               collateralFactor={BigNumber(
                 collateral.borrow_collateral_factor.toString()
               )}
+              decimals={collateral.decimals}
+              key={collateral.asset_id.bits}
               liquidationFactor={BigNumber(
                 collateral.liquidate_collateral_factor.toString()
               )}
               liquidationPenalty={BigNumber(
                 collateral.liquidation_penalty.toString()
               )}
+              price={
+                priceData?.prices[collateral.asset_id.bits] ?? BigNumber(0)
+              }
+              symbol={appConfig.client.shared.assets[collateral.asset_id.bits]}
+              totalSupply={totalCollateral?.get(collateral.asset_id.bits)}
             />
           ))}
         </TableBody>

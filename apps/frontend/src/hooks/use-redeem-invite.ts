@@ -1,8 +1,8 @@
+import { useAccount, useWallet } from '@fuels/react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { ErrorToast, InfoToast } from '@/components/v1/toasts';
 import { appConfig } from '@/configs';
 import { useReferralModalStore } from '@/stores/referral-modal-store';
-import { useAccount, useWallet } from '@fuels/react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 const getMessage = (inviteCode: string) => {
   return `I want to redeem invite code ${inviteCode}.`;
@@ -17,7 +17,7 @@ export const useRedeemInvite = () => {
   return useMutation({
     mutationKey: ['redeemInvite', account],
     mutationFn: async (inviteCode: string) => {
-      if (!account || !wallet) return null;
+      if (!(account && wallet)) return null;
 
       const signature = await wallet.signMessage(getMessage(inviteCode));
 

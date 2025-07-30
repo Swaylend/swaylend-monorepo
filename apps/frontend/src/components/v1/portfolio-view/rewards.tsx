@@ -1,5 +1,9 @@
+import { useWallet } from '@fuels/react';
+import BigNumber from 'bignumber.js';
+import dayjs from 'dayjs';
+import Image from 'next/image';
 import { appConfig } from '@/configs';
-import { Airdrop, useAirdrops } from '@/hooks/use-airdrops';
+import type { Airdrop } from '@/hooks/use-airdrops';
 import { useClaimAirdrop } from '@/hooks/use-claim-airdrop';
 import { useIsAirdropClaimed } from '@/hooks/use-is-airdrop-claimed';
 import {
@@ -9,10 +13,6 @@ import {
 } from '@/hooks/v1';
 import { cn } from '@/lib/utils';
 import { SYMBOL_TO_ICON } from '@/utils';
-import { useWallet } from '@fuels/react';
-import BigNumber from 'bignumber.js';
-import dayjs from 'dayjs';
-import Image from 'next/image';
 import { Card, CardContent, CardHeader } from '../../ui/card';
 import { Skeleton } from '../../ui/skeleton';
 
@@ -30,17 +30,17 @@ const OldRewrdCard = ({
   const tokenSymbol = appConfig.client.shared.assets[token];
 
   return (
-    <Card className="bg-card text-card-foreground border border-purple/20">
+    <Card className="border border-purple/20 bg-card text-card-foreground">
       <CardHeader className="p-4">
-        <div className="text-lg font-semibold mb-2">Reward</div>
+        <div className="mb-2 font-semibold text-lg">Reward</div>
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-full flex items-center justify-center bg-purple/20">
-            <div className="w-5 h-5 relative">
+          <div className="flex h-7 w-7 items-center justify-center rounded-full bg-purple/20">
+            <div className="relative h-5 w-5">
               <Image
-                src={SYMBOL_TO_ICON[tokenSymbol]}
                 alt={`${tokenSymbol} logo`}
-                layout="fill"
                 className="rounded-full"
+                layout="fill"
+                src={SYMBOL_TO_ICON[tokenSymbol]}
               />
             </div>
           </div>
@@ -66,7 +66,7 @@ const OldRewrdCard = ({
             <span>{dayjs(distributionDate).format('DD/MM/YYYY')}</span>
           </div>
           <div className="pt-2">
-            <div className="flex justify-between items-center mb-2">
+            <div className="mb-2 flex items-center justify-between">
               <span>Campaign status:</span>
               <span className="text-purple">Completed</span>
             </div>
@@ -91,7 +91,7 @@ const OldRewrdCard = ({
   );
 };
 
-const RewardCard = ({ data }: { data: Airdrop }) => {
+const _RewardCard = ({ data }: { data: Airdrop }) => {
   const status =
     new Date(data.endDate) < new Date()
       ? 'Completed'
@@ -120,10 +120,10 @@ const RewardCard = ({ data }: { data: Airdrop }) => {
     isCollateralConfigurationsPending ||
     isAirdropClaimedPending
   ) {
-    return <Skeleton className="w-full h-[200px]" />;
+    return <Skeleton className="h-[200px] w-full" />;
   }
 
-  if (!marketConfiguration || !collateralConfigurations) {
+  if (!(marketConfiguration && collateralConfigurations)) {
     return null;
   }
 
@@ -135,37 +135,37 @@ const RewardCard = ({ data }: { data: Airdrop }) => {
 
   const amount = BigNumber(data.isEligible.amount)
     .div(10 ** tokenDecimals)
-    .toFixed();
+    .toFixed(0);
 
   const totalAmount = BigNumber(data.totalAmount)
     .minus(1)
     .div(10 ** tokenDecimals)
-    .toFixed();
+    .toFixed(0);
 
   const tokenSymbol = appConfig.client.shared.assets[data.token];
 
   return (
     <Card
       className={cn(
-        'bg-card text-card-foreground border',
+        'border bg-card text-card-foreground',
         status === 'Active' ? 'border-primary/20' : 'border-purple/20'
       )}
     >
       <CardHeader className="p-4">
-        <div className="text-lg font-semibold mb-2">Reward</div>
+        <div className="mb-2 font-semibold text-lg">Reward</div>
         <div className="flex items-center gap-2">
           <div
             className={cn(
-              'w-7 h-7 rounded-full flex items-center justify-center',
+              'flex h-7 w-7 items-center justify-center rounded-full',
               status === 'Active' ? 'bg-primary/20' : 'bg-purple/20'
             )}
           >
-            <div className="w-5 h-5 relative">
+            <div className="relative h-5 w-5">
               <Image
-                src={SYMBOL_TO_ICON[tokenSymbol]}
                 alt={`${tokenSymbol} logo`}
-                layout="fill"
                 className="rounded-full"
+                layout="fill"
+                src={SYMBOL_TO_ICON[tokenSymbol]}
               />
             </div>
           </div>
@@ -197,7 +197,7 @@ const RewardCard = ({ data }: { data: Airdrop }) => {
             <span>{dayjs(data.endDate).format('DD/MM/YYYY HH:mm')}</span>
           </div>
           <div className="pt-2">
-            <div className="flex justify-between items-center mb-2">
+            <div className="mb-2 flex items-center justify-between">
               <span>Campaign status:</span>
               <span
                 className={status === 'Active' ? 'text-primary' : 'text-purple'}
@@ -206,7 +206,15 @@ const RewardCard = ({ data }: { data: Airdrop }) => {
               </span>
             </div>
             <button
-              type="button"
+              className={cn(
+                'w-full rounded-md py-1.5 text-sm transition-colors',
+                status !== 'Active' && 'cursor-not-allowed opacity-50',
+                status === 'Active'
+                  ? isAirdropClaimed
+                    ? 'bg-muted text-muted-foreground'
+                    : 'bg-primary/10 text-primary hover:bg-primary/20'
+                  : 'bg-purple/10 text-purple hover:bg-purple/20'
+              )}
               disabled={
                 status !== 'Active' || isAirdropClaimed || isClaimingAirdrop
               }
@@ -218,32 +226,28 @@ const RewardCard = ({ data }: { data: Airdrop }) => {
                   });
                 }
               }}
-              className={cn(
-                'w-full py-1.5 rounded-md transition-colors text-sm',
-                status !== 'Active' && 'opacity-50 cursor-not-allowed',
-                status === 'Active'
-                  ? isAirdropClaimed
-                    ? 'bg-muted text-muted-foreground'
-                    : 'bg-primary/10 text-primary hover:bg-primary/20'
-                  : 'bg-purple/10 text-purple hover:bg-purple/20'
-              )}
+              type="button"
             >
               {isClaimingAirdrop ? (
                 <div className="flex items-center justify-center gap-2">
-                  <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                  <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
                   <span>Claiming...</span>
                 </div>
               ) : status === 'Active' || status === 'Completed' ? (
-                !wallet?.address ? (
-                  'Connect wallet'
-                ) : !data.isEligible.isEligible ? (
-                  'Not eligible'
-                ) : isAirdropClaimed ? (
-                  'Already claimed'
-                ) : status === 'Active' ? (
-                  'Claim'
+                wallet?.address ? (
+                  data.isEligible.isEligible ? (
+                    isAirdropClaimed ? (
+                      'Already claimed'
+                    ) : status === 'Active' ? (
+                      'Claim'
+                    ) : (
+                      'Not claimed'
+                    )
+                  ) : (
+                    'Not eligible'
+                  )
                 ) : (
-                  'Not claimed'
+                  'Connect wallet'
                 )
               ) : (
                 'Coming soon'
@@ -278,26 +282,26 @@ export const Rewards = () => {
   if (isLMRewardsPending) {
     return (
       <div className="w-full p-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          <Skeleton className="w-full h-[200px]" />
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <Skeleton className="h-[200px] w-full" />
         </div>
       </div>
     );
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       <OldRewrdCard
-        totalAmount="7400000"
-        token="0x1d5d97005e41cae2187a895fd8eab0506111e0e2f3331cd3912c15c24e3c1d82"
-        userAmount={lmRewards?.part_1 ?? '0'}
         distributionDate="2025-02-17"
+        token="0x1d5d97005e41cae2187a895fd8eab0506111e0e2f3331cd3912c15c24e3c1d82"
+        totalAmount="7400000"
+        userAmount={lmRewards?.part_1 ?? '0'}
       />
       <OldRewrdCard
-        totalAmount="65000000"
-        token="0x1d5d97005e41cae2187a895fd8eab0506111e0e2f3331cd3912c15c24e3c1d82"
-        userAmount={lmRewards?.part_2 ?? '0'}
         distributionDate="2025-03-01"
+        token="0x1d5d97005e41cae2187a895fd8eab0506111e0e2f3331cd3912c15c24e3c1d82"
+        totalAmount="65000000"
+        userAmount={lmRewards?.part_2 ?? '0'}
       />
       {/* {airdrops?.map((data) => (
         <RewardCard key={data.id} data={data} />

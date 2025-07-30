@@ -1,9 +1,9 @@
-import { appConfig } from '@/configs';
-import { useMarketStore } from '@/stores/market-store';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import { appConfig } from '@/configs';
+import { useMarketStore } from '@/stores/market-store';
 import { useMarketBasicsWithInterest } from './use-market-basics-with-interest';
 import { useMarketConfiguration } from './use-market-configuration';
 import { usePrice } from './use-price';
@@ -39,8 +39,8 @@ export const useRewards = (marketParam?: string) => {
       priceData?.prices,
       marketConfiguration,
     ],
-    queryFn: async () => {
-      if (!marketBasics || !priceData || !marketConfiguration) {
+    queryFn: () => {
+      if (!(marketBasics && priceData && marketConfiguration)) {
         return {
           supplyRewardApr: BigNumber(0),
           borrowRewardApr: BigNumber(0),

@@ -1,3 +1,7 @@
+import BigNumber from 'bignumber.js';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { CollateralIcons } from '@/components/v1/collateral-icons';
@@ -18,16 +22,11 @@ import {
   useMarketStore,
 } from '@/stores/market-store';
 import {
-  SYMBOL_TO_ICON,
-  SYMBOL_TO_NAME,
   formatUnits,
   getFormattedPrice,
+  SYMBOL_TO_ICON,
+  SYMBOL_TO_NAME,
 } from '@/utils';
-import BigNumber from 'bignumber.js';
-import { MoveUpRightIcon } from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
-import React, { useMemo } from 'react';
 import {
   Table,
   TableBody,
@@ -40,25 +39,25 @@ import {
 const SkeletonRow = (
   <TableRow>
     <TableCell>
-      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+      <Skeleton className="h-[40px] w-full rounded-md bg-primary/20" />
     </TableCell>
     <TableCell>
-      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+      <Skeleton className="h-[40px] w-full rounded-md bg-primary/20" />
     </TableCell>
     <TableCell>
-      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+      <Skeleton className="h-[40px] w-full rounded-md bg-primary/20" />
     </TableCell>
     <TableCell>
-      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+      <Skeleton className="h-[40px] w-full rounded-md bg-primary/20" />
     </TableCell>
     <TableCell>
-      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+      <Skeleton className="h-[40px] w-full rounded-md bg-primary/20" />
     </TableCell>
     <TableCell>
-      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+      <Skeleton className="h-[40px] w-full rounded-md bg-primary/20" />
     </TableCell>
     <TableCell>
-      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+      <Skeleton className="h-[40px] w-full rounded-md bg-primary/20" />
     </TableCell>
   </TableRow>
 );
@@ -147,7 +146,7 @@ export const Borrow = () => {
   ]);
 
   const borrowedUSDC = useMemo(() => {
-    if (!userSupplyBorrowUSDC || !marketConfigurationUSDC) {
+    if (!(userSupplyBorrowUSDC && marketConfigurationUSDC)) {
       return null;
     }
     const res = formatUnits(
@@ -185,7 +184,7 @@ export const Borrow = () => {
   // }, [priceDataUSDT, borrowedUSDT, marketConfigurationUSDT]);
 
   const borrowedUSDCPrice = useMemo(() => {
-    if (!priceDataUSDC || !borrowedUSDC || !marketConfigurationUSDC) {
+    if (!(priceDataUSDC && borrowedUSDC && marketConfigurationUSDC)) {
       return BigNumber(0);
     }
     return priceDataUSDC.prices[marketConfigurationUSDC?.baseToken.bits].times(
@@ -257,157 +256,147 @@ export const Borrow = () => {
   };
 
   return (
-    <Table className="max-lg:hidden mt-12">
+    <Table className="mt-12 max-lg:hidden">
       <TableHeader>
         <TableRow>
           <TableHead colSpan={8}>
-            <div className="w-full flex items-center justify-center gap-x-2 text-white font-semibold">
+            <div className="flex w-full items-center justify-center gap-x-2 font-semibold text-white">
               Borrow Positions
             </div>
           </TableHead>
         </TableRow>
         <TableRow>
-          <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
+          <TableHead className="h-[64px] bg-card pt-4 font-semibold text-moon">
             Market
           </TableHead>
-          <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
+          <TableHead className="h-[64px] bg-card pt-4 font-semibold text-moon">
             Collateral
           </TableHead>
-          <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
+          <TableHead className="h-[64px] bg-card pt-4 font-semibold text-moon">
             Borrowed Assets
           </TableHead>
-          <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
+          <TableHead className="h-[64px] bg-card pt-4 font-semibold text-moon">
             Net APY
           </TableHead>
-          <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
+          <TableHead className="h-[64px] bg-card pt-4 font-semibold text-moon">
             Liquidation Risk
           </TableHead>
-          <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
+          <TableHead className="h-[64px] bg-card pt-4 font-semibold text-moon">
             Liquidation Point
           </TableHead>
-          <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
+          <TableHead className="h-[64px] bg-card pt-4 font-semibold text-moon">
             Points
           </TableHead>
-          <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
+          <TableHead className="h-[64px] bg-card pt-4 font-semibold text-moon">
             Action
           </TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {isLoading ? (
-          <>{SkeletonRow}</>
-        ) : (
+          SkeletonRow
+        ) : borrowedUSDC || borrowedUSDC ? (
           <>
-            {!borrowedUSDC && !borrowedUSDC ? (
+            {borrowedUSDC && (
               <TableRow>
-                <TableCell colSpan={8}>
-                  <div className="w-full text-md font-semibold text-moon flex justify-center items-center">
-                    No Borrow Positions Open.
+                <TableCell>
+                  <div className="flex items-center gap-x-2">
+                    <div>
+                      <Image
+                        alt={'USDC'}
+                        className={'rounded-full'}
+                        height={32}
+                        src={SYMBOL_TO_ICON.USDC}
+                        width={32}
+                      />
+                    </div>
+                    <div>
+                      <div className="flex items-baseline gap-x-2">
+                        <div className="font-semibold text-md text-white">
+                          {SYMBOL_TO_NAME.USDC}
+                        </div>
+                        <div className="font-semibold text-moon text-sm">
+                          {'USDC'}
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </TableCell>
-              </TableRow>
-            ) : (
-              <>
-                {borrowedUSDC && (
-                  <TableRow>
-                    <TableCell>
-                      <div className="flex gap-x-2 items-center">
-                        <div>
-                          <Image
-                            src={SYMBOL_TO_ICON.USDC}
-                            alt={'USDC'}
-                            width={32}
-                            height={32}
-                            className={'rounded-full'}
-                          />
-                        </div>
-                        <div>
-                          <div className="flex gap-x-2 items-baseline">
-                            <div className="text-white text-md font-semibold">
-                              {SYMBOL_TO_NAME.USDC}
-                            </div>
-                            <div className="text-sm font-semibold text-moon">
-                              {'USDC'}
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <CollateralIcons collaterals={collateralIconsUSDC} />
-                    </TableCell>
+                <TableCell>
+                  <CollateralIcons collaterals={collateralIconsUSDC} />
+                </TableCell>
 
-                    <TableCell>
-                      <span className="text-lavender font-medium">
-                        {getFormattedPrice(borrowedUSDCPrice)}
-                      </span>{' '}
-                      {borrowedUSDC.toFixed(2)} USDC
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex gap-x-2 items-center text-md font-medium text-purple underline">
-                        <div>
-                          {aprDataUSDC?.borrowBaseApr.times(100).toFixed(2)}%
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell
-                      className={cn(
-                        'font-semibold bg-card',
-                        currentCollateralUtilizationUSDC > 80 && 'text-red-500',
-                        currentCollateralUtilizationUSDC > 60 &&
-                          currentCollateralUtilizationUSDC <= 80 &&
-                          'text-yellow-500',
-                        currentCollateralUtilizationUSDC <= 60 && 'text-primary'
-                      )}
+                <TableCell>
+                  <span className="font-medium text-lavender">
+                    {getFormattedPrice(borrowedUSDCPrice)}
+                  </span>{' '}
+                  {borrowedUSDC.toFixed(2)} USDC
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-x-2 font-medium text-md text-purple underline">
+                    <div>
+                      {aprDataUSDC?.borrowBaseApr.times(100).toFixed(2)}%
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell
+                  className={cn(
+                    'bg-card font-semibold',
+                    currentCollateralUtilizationUSDC > 80 && 'text-red-500',
+                    currentCollateralUtilizationUSDC > 60 &&
+                      currentCollateralUtilizationUSDC <= 80 &&
+                      'text-yellow-500',
+                    currentCollateralUtilizationUSDC <= 60 && 'text-primary'
+                  )}
+                >
+                  {currentCollateralUtilizationUSDC}%
+                </TableCell>
+                <TableCell className="font-medium text-white">
+                  {getFormattedPrice(userLiquidationPoint ?? BigNumber(0))}
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-x-1 text-primary">
+                    <Image
+                      alt={'USDC'}
+                      className={'rounded-full'}
+                      height={24}
+                      src={SYMBOL_TO_ICON.SWAY}
+                      width={24}
+                    />
+                  </div>
+                </TableCell>
+                <TableCell className="flex gap-x-2">
+                  <Link href="/">
+                    <Button
+                      onMouseDown={() => {
+                        handleBaseTokenClick(
+                          ACTION_TYPE.BORROW,
+                          marketConfigurationUSDC?.baseToken.bits ?? '',
+                          'USDC'
+                        );
+                      }}
                     >
-                      {currentCollateralUtilizationUSDC}%
-                    </TableCell>
-                    <TableCell className="text-white font-medium">
-                      {getFormattedPrice(userLiquidationPoint ?? BigNumber(0))}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex gap-x-1 items-center text-primary">
-                        <Image
-                          src={SYMBOL_TO_ICON.SWAY}
-                          alt={'USDC'}
-                          width={24}
-                          height={24}
-                          className={'rounded-full'}
-                        />
-                      </div>
-                    </TableCell>
-                    <TableCell className="flex gap-x-2">
-                      <Link href="/">
-                        <Button
-                          onMouseDown={() => {
-                            handleBaseTokenClick(
-                              ACTION_TYPE.BORROW,
-                              marketConfigurationUSDC?.baseToken.bits ?? '',
-                              'USDC'
-                            );
-                          }}
-                        >
-                          +
-                        </Button>
-                      </Link>
-                      <Link href="/">
-                        <Button
-                          variant={'secondary'}
-                          onMouseDown={() => {
-                            handleBaseTokenClick(
-                              ACTION_TYPE.REPAY,
-                              marketConfigurationUSDC?.baseToken.bits ?? '',
-                              'USDC'
-                            );
-                          }}
-                        >
-                          -
-                        </Button>
-                      </Link>
-                    </TableCell>
-                  </TableRow>
-                )}
-                {/* {borrowedUSDT && (
+                      +
+                    </Button>
+                  </Link>
+                  <Link href="/">
+                    <Button
+                      onMouseDown={() => {
+                        handleBaseTokenClick(
+                          ACTION_TYPE.REPAY,
+                          marketConfigurationUSDC?.baseToken.bits ?? '',
+                          'USDC'
+                        );
+                      }}
+                      variant={'secondary'}
+                    >
+                      -
+                    </Button>
+                  </Link>
+                </TableCell>
+              </TableRow>
+            )}
+            {/* {borrowedUSDT && (
                   <TableRow>
                     <TableCell>
                       <div className="flex gap-x-2 items-center">
@@ -486,9 +475,15 @@ export const Borrow = () => {
                     </TableCell>
                   </TableRow>
                 )} */}
-              </>
-            )}
           </>
+        ) : (
+          <TableRow>
+            <TableCell colSpan={8}>
+              <div className="flex w-full items-center justify-center font-semibold text-md text-moon">
+                No Borrow Positions Open.
+              </div>
+            </TableCell>
+          </TableRow>
         )}
       </TableBody>
     </Table>

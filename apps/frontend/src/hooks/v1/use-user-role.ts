@@ -19,10 +19,7 @@ export const useUserRole = () => {
 
   return useMemo(() => {
     if (
-      !isConnected ||
-      !userSupplyBorrow ||
-      !marketConfiguration ||
-      !priceData
+      !(isConnected && userSupplyBorrow && marketConfiguration && priceData)
     ) {
       return USER_ROLE.NONE;
     }

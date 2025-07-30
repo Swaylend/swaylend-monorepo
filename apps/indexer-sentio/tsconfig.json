@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "importHelpers": true,
+    "importHelpers": false,
     "alwaysStrict": true,
     "sourceMap": true,
     "target": "esnext",

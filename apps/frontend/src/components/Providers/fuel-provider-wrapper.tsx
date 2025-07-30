@@ -2,25 +2,25 @@
 
 import 'react-toastify/dist/ReactToastify.css';
 
-import { appConfig } from '@/configs';
-import { isMobile } from '@/utils/is-mobile';
 import {
   BakoSafeConnector,
   BurnerWalletConnector,
+  createConfig,
+  FueletWalletConnector,
   FuelWalletConnector,
   FuelWalletDevelopmentConnector,
-  FueletWalletConnector,
   SolanaConnector,
   WalletConnectConnector,
-  createConfig,
 } from '@fuels/connectors';
 import { FuelProvider } from '@fuels/react';
 import { CHAIN_IDS, type FuelConnector, Provider } from 'fuels';
 import type { ReactNode } from 'react';
 import { fallback } from 'viem';
-import { http, createConfig as createConfigWagmiConfig } from 'wagmi';
+import { createConfig as createConfigWagmiConfig, http } from 'wagmi';
 import { mainnet, sepolia } from 'wagmi/chains';
 import { coinbaseWallet, injected, walletConnect } from 'wagmi/connectors';
+import { appConfig } from '@/configs';
+import { isMobile } from '@/utils/is-mobile';
 
 const METADATA = {
   name: 'Swaylend',
@@ -76,13 +76,13 @@ const wagmiConfig = createConfigWagmiConfig({
   },
 });
 
-const customDefaultConnectors = (): Array<FuelConnector> => {
+const customDefaultConnectors = (): FuelConnector[] => {
   const provider = new Provider(appConfig.client.shared.fuelNodeUrl);
-  const connectors: Array<FuelConnector> = [
+  const connectors: FuelConnector[] = [
     new FueletWalletConnector(),
     new WalletConnectConnector({
       projectId: appConfig.client.shared.walletConnectProjectId,
-      wagmiConfig: wagmiConfig,
+      wagmiConfig,
       chainId:
         appConfig.env === 'testnet'
           ? CHAIN_IDS.fuel.testnet
@@ -98,9 +98,9 @@ const customDefaultConnectors = (): Array<FuelConnector> => {
       fuelProvider: provider,
     }),
     // Add desktop only connectors
-    ...(!isMobile(navigator.userAgent)
-      ? [new FuelWalletConnector(), new BakoSafeConnector()]
-      : []),
+    ...(isMobile(navigator.userAgent)
+      ? []
+      : [new FuelWalletConnector(), new BakoSafeConnector()]),
   ];
 
   if (appConfig.env === 'testnet') {
@@ -123,10 +123,10 @@ const FUEL_CONFIG = createConfig(() => ({
 export const FuelProviderWrapper = ({ children }: { children: ReactNode }) => {
   return (
     <FuelProvider
+      fuelConfig={FUEL_CONFIG}
+      networks={NETWORKS}
       theme="dark"
       uiConfig={UI_CONFIG}
-      networks={NETWORKS}
-      fuelConfig={FUEL_CONFIG}
     >
       {children}
     </FuelProvider>

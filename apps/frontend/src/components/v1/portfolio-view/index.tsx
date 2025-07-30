@@ -1,7 +1,7 @@
 'use client';
 
 import { useIsConnected } from '@fuels/react';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Tabs, TabsList, TabsTrigger } from '../../ui/tabs';
 import { History } from './history';
 import { Markets } from './markets';
@@ -19,7 +19,7 @@ export const PortfolioView = () => {
 
   if (!isConnected) {
     return (
-      <div className="w-full text-lg flex items-center justify-center h-[300px]">
+      <div className="flex h-[300px] w-full items-center justify-center text-lg">
         Connect Wallet to view your portfolio.
       </div>
     );
@@ -30,25 +30,25 @@ export const PortfolioView = () => {
       <Stats />
       <div className="mt-12">
         <Tabs
-          onValueChange={handleChange}
-          defaultValue={portfolioView}
           className="mt-[40px] sm:mt-[55px]"
+          defaultValue={portfolioView}
+          onValueChange={handleChange}
         >
-          <TabsList className="h-[50px] rounded-full w-[600px]">
+          <TabsList className="h-[50px] w-[600px] rounded-full">
             <TabsTrigger
+              className="cursor-pointer rounded-full font-bold text-md text-white max-sm:px-6 max-sm:py-1.5 dark:text-white dark:data-[state=active]:bg-primary dark:data-[state=active]:text-primary-foreground"
               value="markets"
-              className="max-sm:py-1.5 max-sm:px-6 cursor-pointer font-bold dark:data-[state=active]:text-primary-foreground dark:data-[state=active]:bg-primary rounded-full text-white text-md dark:text-white"
             >
               My Markets
             </TabsTrigger>
             <TabsTrigger
+              className="cursor-pointer rounded-full font-bold text-md text-white max-sm:px-6 max-sm:py-1.5 dark:text-white dark:data-[state=active]:bg-primary dark:data-[state=active]:text-primary-foreground"
               value="positions"
-              className="max-sm:py-1.5 max-sm:px-6 cursor-pointer font-bold dark:data-[state=active]:text-primary-foreground dark:data-[state=active]:bg-primary rounded-full text-white text-md dark:text-white"
             >
               My Positions
             </TabsTrigger>
             <TabsTrigger
-              className="max-sm:py-1.5 max-sm:px-6 cursor-pointer font-bold dark:data-[state=active]:text-primary-foreground dark:data-[state=active]:bg-primary rounded-full text-white text-md dark:text-white"
+              className="cursor-pointer rounded-full font-bold text-md text-white max-sm:px-6 max-sm:py-1.5 dark:text-white dark:data-[state=active]:bg-primary dark:data-[state=active]:text-primary-foreground"
               value="history"
             >
               My Transactions

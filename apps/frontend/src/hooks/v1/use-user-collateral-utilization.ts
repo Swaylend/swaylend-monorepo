@@ -1,6 +1,6 @@
-import { formatUnits } from '@/utils';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
+import { formatUnits } from '@/utils';
 import { useMarketConfiguration } from './use-market-configuration';
 import { usePrice } from './use-price';
 import { useUserSupplyBorrow } from './use-user-supply-borrow';
@@ -21,12 +21,14 @@ export const useUserCollateralUtilization = (marketParam?: string) => {
       marketParam,
       priceData?.prices,
     ],
-    queryFn: async () => {
+    queryFn: () => {
       if (
-        !userSupplyBorrow ||
-        !marketConfiguration ||
-        !trueCollateralValue ||
-        !priceData
+        !(
+          userSupplyBorrow &&
+          marketConfiguration &&
+          trueCollateralValue &&
+          priceData
+        )
       ) {
         return null;
       }

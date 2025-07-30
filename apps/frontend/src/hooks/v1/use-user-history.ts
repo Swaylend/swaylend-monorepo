@@ -1,8 +1,8 @@
-import { appConfig } from '@/configs';
 import { useAccount } from '@fuels/react';
 import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import { appConfig } from '@/configs';
 
 dayjs.extend(utc);
 

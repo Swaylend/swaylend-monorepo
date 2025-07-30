@@ -1,6 +1,13 @@
 'use client';
 
+import BigNumber from 'bignumber.js';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import type React from 'react';
+import { useMemo } from 'react';
 import { TableCell, TableRow } from '@/components/ui/table';
+
+import { appConfig } from '@/configs';
 import {
   useApr,
   useCollateralConfigurations,
@@ -10,20 +17,13 @@ import {
   useTotalCollateral,
   useUtilization,
 } from '@/hooks/v1';
+import { cn } from '@/lib/utils';
 import {
-  SYMBOL_TO_ICON,
-  SYMBOL_TO_NAME,
   formatUnits,
   getFormattedPrice,
+  SYMBOL_TO_ICON,
+  SYMBOL_TO_NAME,
 } from '@/utils';
-import BigNumber from 'bignumber.js';
-import Image from 'next/image';
-import type React from 'react';
-
-import { appConfig } from '@/configs';
-import { cn } from '@/lib/utils';
-import { useRouter } from 'next/navigation';
-import { useMemo } from 'react';
 import SWAY from '/public/tokens/sway.svg?url';
 import { Skeleton } from '../ui/skeleton';
 import {
@@ -34,35 +34,34 @@ import {
 } from '../ui/tooltip';
 import { CircularProgressBar } from '../v1/circular-progress-bar';
 import { type Collateral, CollateralIcons } from '../v1/collateral-icons';
-import { Line } from '../v1/line';
 import { NetBorrowTooltip } from '../v1/net-borrow-tooltip';
 import { NetEarnTooltip } from '../v1/net-earn-tooltip';
 
 const SkeletonRow = (
   <TableRow>
     <TableCell>
-      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+      <Skeleton className="h-[40px] w-full rounded-md bg-primary/20" />
     </TableCell>
     <TableCell>
-      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+      <Skeleton className="h-[40px] w-full rounded-md bg-primary/20" />
     </TableCell>
     <TableCell>
-      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+      <Skeleton className="h-[40px] w-full rounded-md bg-primary/20" />
     </TableCell>
     <TableCell>
-      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+      <Skeleton className="h-[40px] w-full rounded-md bg-primary/20" />
     </TableCell>
     <TableCell>
-      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+      <Skeleton className="h-[40px] w-full rounded-md bg-primary/20" />
     </TableCell>
     <TableCell>
-      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+      <Skeleton className="h-[40px] w-full rounded-md bg-primary/20" />
     </TableCell>
     <TableCell>
-      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+      <Skeleton className="h-[40px] w-full rounded-md bg-primary/20" />
     </TableCell>
     <TableCell>
-      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+      <Skeleton className="h-[40px] w-full rounded-md bg-primary/20" />
     </TableCell>
   </TableRow>
 );
@@ -104,7 +103,7 @@ export const MarketTableRow = ({
   const { data: priceData } = usePrice(marketName);
 
   const totalCollateralValue = useMemo(() => {
-    if (!priceData || !totalCollateral || !collateralConfigurations) {
+    if (!(priceData && totalCollateral && collateralConfigurations)) {
       return BigNumber(0);
     }
 
@@ -128,26 +127,26 @@ export const MarketTableRow = ({
     SkeletonRow
   ) : (
     <TableRow
+      className="cursor-pointer transition-colors duration-200 hover:bg-white/5"
       onClick={() => router.push(`/markets/fuel-${marketName}`)}
-      className="cursor-pointer hover:bg-white/5 transition-colors duration-200"
     >
       <TableCell>
-        <div className="flex gap-x-2 items-center">
+        <div className="flex items-center gap-x-2">
           <div>
             <Image
-              src={SYMBOL_TO_ICON[marketName]}
               alt={marketName}
-              width={32}
-              height={32}
               className={'rounded-full'}
+              height={32}
+              src={SYMBOL_TO_ICON[marketName]}
+              width={32}
             />
           </div>
           <div>
-            <div className="flex gap-x-2 items-baseline">
-              <div className="text-white text-md font-semibold">
+            <div className="flex items-baseline gap-x-2">
+              <div className="font-semibold text-md text-white">
                 {SYMBOL_TO_NAME[marketName]}
               </div>
-              <div className="text-sm font-semibold text-moon">
+              <div className="font-semibold text-moon text-sm">
                 {marketName}
               </div>
             </div>
@@ -158,7 +157,7 @@ export const MarketTableRow = ({
         <CollateralIcons collaterals={collateralIcons} />
       </TableCell>
       <TableCell>
-        <div className="w-[48px] h-[48px]">
+        <div className="h-[48px] w-[48px]">
           {
             <CircularProgressBar
               percent={formatUnits(BigNumber(utilization?.toString() ?? 0), 18)}
@@ -169,7 +168,7 @@ export const MarketTableRow = ({
       <TableCell
         className={cn(
           isAprPending && 'animate-pulse',
-          'text-lavender font-medium'
+          'font-medium text-lavender'
         )}
       >
         <TooltipProvider delayDuration={100}>
@@ -180,9 +179,9 @@ export const MarketTableRow = ({
               <div>{aprData?.netSupplyApr.times(100).toFixed(2)}%</div>
             </TooltipTrigger>
             <TooltipContent
-              onPointerDownOutside={(e: {
-                preventDefault: () => any;
-              }) => e.preventDefault()}
+              onPointerDownOutside={(e: { preventDefault: () => any }) =>
+                e.preventDefault()
+              }
             >
               <NetEarnTooltip aprData={aprData} />
             </TooltipContent>
@@ -192,7 +191,7 @@ export const MarketTableRow = ({
       <TableCell
         className={cn(
           isAprPending && 'animate-pulse',
-          'text-lavender font-medium'
+          'font-medium text-lavender'
         )}
       >
         <TooltipProvider delayDuration={100}>
@@ -203,16 +202,16 @@ export const MarketTableRow = ({
               <div>{aprData?.netBorrowApr.times(100).toFixed(2)}%</div>
             </TooltipTrigger>
             <TooltipContent
-              onPointerDownOutside={(e: {
-                preventDefault: () => any;
-              }) => e.preventDefault()}
+              onPointerDownOutside={(e: { preventDefault: () => any }) =>
+                e.preventDefault()
+              }
             >
               <NetBorrowTooltip aprData={aprData} />
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
       </TableCell>
-      <TableCell className="text-lavender font-medium">
+      <TableCell className="font-medium text-lavender">
         {getFormattedPrice(
           formatUnits(
             BigNumber(marketBasics?.total_supply_base.toString() ?? 0),
@@ -220,7 +219,7 @@ export const MarketTableRow = ({
           )
         )}
       </TableCell>
-      <TableCell className="text-lavender font-medium">
+      <TableCell className="font-medium text-lavender">
         {getFormattedPrice(
           formatUnits(
             BigNumber(marketBasics?.total_borrow_base.toString() ?? 0),
@@ -228,7 +227,7 @@ export const MarketTableRow = ({
           )
         )}
       </TableCell>
-      <TableCell className="text-lavender font-medium">
+      <TableCell className="font-medium text-lavender">
         {getFormattedPrice(totalCollateralValue)}
       </TableCell>
     </TableRow>

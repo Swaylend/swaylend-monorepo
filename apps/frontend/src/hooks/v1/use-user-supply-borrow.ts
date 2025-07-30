@@ -1,8 +1,8 @@
-import { useMarketContract } from '@/contracts/use-market-contract';
-import { useMarketStore } from '@/stores/market-store';
 import { useAccount } from '@fuels/react';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
+import { useMarketContract } from '@/contracts/use-market-contract';
+import { useMarketStore } from '@/stores/market-store';
 
 export const useUserSupplyBorrow = (marketParam?: string) => {
   const { account } = useAccount();

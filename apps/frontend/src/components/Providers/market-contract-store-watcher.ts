@@ -1,12 +1,12 @@
 'use client';
 
+import { useWallet } from '@fuels/react';
+import { PythContract } from '@pythnetwork/pyth-fuel-js';
+import { useEffect } from 'react';
 import { appConfig } from '@/configs';
 import { Market } from '@/contract-types/v1';
 import { useProvider } from '@/hooks';
 import { useMarketAddressBasedContractsStore } from '@/stores/market-address-based-contract-store';
-import { useWallet } from '@fuels/react';
-import { PythContract } from '@pythnetwork/pyth-fuel-js';
-import { useEffect } from 'react';
 
 export default function MarketContractStoreWatcher(): null {
   const { wallet } = useWallet();
@@ -18,7 +18,7 @@ export default function MarketContractStoreWatcher(): null {
   useEffect(() => {
     if (!walletOrProvider) return;
 
-    Object.keys(appConfig.client.v1.markets).forEach((market) => {
+    for (const market of Object.keys(appConfig.client.v1.markets)) {
       const pythContract = new PythContract(
         appConfig.client.v1.markets[market].oracleAddress,
         walletOrProvider
@@ -30,7 +30,7 @@ export default function MarketContractStoreWatcher(): null {
       );
 
       updateContracts(market, pythContract, marketContract);
-    });
+    }
   }, [walletOrProvider]);
 
   return null;

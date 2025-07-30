@@ -1,5 +1,9 @@
 'use client';
 
+import BigNumber from 'bignumber.js';
+import { ChevronLeft } from 'lucide-react';
+import Link from 'next/link';
+import { useMemo } from 'react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
   useApr,
@@ -11,20 +15,14 @@ import {
   useTotalCollateral,
   useTotalReserves,
 } from '@/hooks/v1';
-
 import type { ChartData } from '@/lib/charts';
 import { cn } from '@/lib/utils';
 import {
-  SYMBOL_TO_ICON,
   formatUnits,
   getFormattedNumber,
   getFormattedPrice,
+  SYMBOL_TO_ICON,
 } from '@/utils';
-import BigNumber from 'bignumber.js';
-import { ChevronLeft } from 'lucide-react';
-import Link from 'next/link';
-import type React from 'react';
-import { useMemo } from 'react';
 import {
   Tooltip,
   TooltipContent,
@@ -32,7 +30,6 @@ import {
   TooltipTrigger,
 } from '../ui/tooltip';
 import { IconPair } from '../v1/icon-pair';
-import { Line } from '../v1/line';
 import { NetBorrowTooltip } from '../v1/net-borrow-tooltip';
 import { NetEarnTooltip } from '../v1/net-earn-tooltip';
 import { KinkChart } from './kink-chart';
@@ -65,7 +62,7 @@ export default function MarketOverview({
   const { data: priceData } = usePrice(baseAsset);
 
   const totalCollateralValue = useMemo(() => {
-    if (!priceData || !totalCollateral || !collateralConfigurations) {
+    if (!(priceData && totalCollateral && collateralConfigurations)) {
       return BigNumber(0);
     }
 
@@ -84,7 +81,7 @@ export default function MarketOverview({
   }, [totalCollateral, priceData, collateralConfigurations]);
 
   const collateralization = useMemo(() => {
-    if (!marketBasics || !marketConfiguration) {
+    if (!(marketBasics && marketConfiguration)) {
       return BigNumber(0);
     }
 
@@ -97,18 +94,18 @@ export default function MarketOverview({
   }, [marketConfiguration, marketBasics, totalCollateralValue]);
 
   return (
-    <div className="max-lg:hidden pt-[60px] pb-[55px] px-[88px] flex flex-col gap-y-8 w-full items-center justify-center">
-      <div className=" flex items-start justify-between w-full">
-        <div className="flex items-center space-x-4 text-white/60 w-1/3">
+    <div className="flex w-full flex-col items-center justify-center gap-y-8 px-[88px] pt-[60px] pb-[55px] max-lg:hidden">
+      <div className="flex w-full items-start justify-between">
+        <div className="flex w-1/3 items-center space-x-4 text-white/60">
           <Link href="/markets">
-            <div className="flex gap-x-2 items-center">
+            <div className="flex items-center gap-x-2">
               <ChevronLeft className="h-6 w-6" />
-              <div className="text-[20px] font-semibold">Markets</div>
+              <div className="font-semibold text-[20px]">Markets</div>
             </div>
           </Link>
         </div>
 
-        <div className="w-1/3 flex flex-col items-center justify-center">
+        <div className="flex w-1/3 flex-col items-center justify-center">
           <IconPair
             icons={[
               {
@@ -124,10 +121,10 @@ export default function MarketOverview({
             ]}
           />
           <div className="mt-[24px]">
-            <span className="text-moon text-xl font-semibold ml-2">
+            <span className="ml-2 font-semibold text-moon text-xl">
               {network.toUpperCase()} Network
             </span>
-            <span className="text-xl text-white font-semibold">
+            <span className="font-semibold text-white text-xl">
               {` · ${baseAsset}`}
             </span>
           </div>
@@ -135,29 +132,29 @@ export default function MarketOverview({
         <div className="w-1/3" />
       </div>
 
-      <div className="w-full mt-12 flex justify-between">
+      <div className="mt-12 flex w-full justify-between">
         <div className="w-[47%]">
           <div className="max-lg:hidden">
-            <div className="text-primary text-md font-semibold">
+            <div className="font-semibold text-md text-primary">
               Total Collateral
             </div>
-            <div className="text-white font-bold text-[20px]">
+            <div className="font-bold text-[20px] text-white">
               {getFormattedPrice(totalCollateralValue)}
             </div>
           </div>
           <MarketChart
             chartData={chartData}
-            dataKey="collateralValueUsd"
             color="#3FE8BD"
+            dataKey="collateralValueUsd"
           />
         </div>
 
         <div className="w-[47%]">
           <div className="max-lg:hidden">
-            <div className="text-purple text-md font-semibold">
+            <div className="font-semibold text-md text-purple">
               Total Borrowing
             </div>
-            <div className="text-white font-bold text-[20px]">
+            <div className="font-bold text-[20px] text-white">
               {getFormattedPrice(
                 formatUnits(
                   BigNumber(marketBasics?.total_borrow_base.toString() ?? 0),
@@ -168,27 +165,27 @@ export default function MarketOverview({
           </div>
           <MarketChart
             chartData={chartData}
-            dataKey="borrowedValueUsd"
             color="#8B5CF6"
+            dataKey="borrowedValueUsd"
           />
         </div>
       </div>
 
-      <div className="max-lg:hidden flex flex-col gap-y-8 w-full items-center justify-center">
+      <div className="flex w-full flex-col items-center justify-center gap-y-8 max-lg:hidden">
         <Card className="mt-8 w-full">
           <CardHeader className="bg-white/5">
-            <div className="w-full items-center justify-center gap-x-2 font-semibold text-lg flex">
-              <div className="w-[260px] rounded-full h-px bg-linear-to-r from-white/0 to-primary" />
+            <div className="flex w-full items-center justify-center gap-x-2 font-semibold text-lg">
+              <div className="h-px w-[260px] rounded-full bg-linear-to-r from-white/0 to-primary" />
               <div className="text-center text-white">Market Stats</div>
-              <div className="w-[260px] rounded-full h-px bg-linear-to-l from-white/0 to-primary" />
+              <div className="h-px w-[260px] rounded-full bg-linear-to-l from-white/0 to-primary" />
             </div>
           </CardHeader>
           <CardContent className="flex justify-evenly pt-[55px]">
             <div>
-              <div className="text-sm text-primary font-semibold">
+              <div className="font-semibold text-primary text-sm">
                 Total Earning
               </div>
-              <div className="text-xl font-semibold text-white mt-2">
+              <div className="mt-2 font-semibold text-white text-xl">
                 {getFormattedPrice(
                   formatUnits(
                     BigNumber(marketBasics?.total_supply_base.toString() ?? 0),
@@ -198,20 +195,20 @@ export default function MarketOverview({
               </div>
             </div>
             <div>
-              <div className="text-sm text-primary font-semibold">
+              <div className="font-semibold text-primary text-sm">
                 Available Liquidity
               </div>
-              <div className="text-xl font-semibold text-white mt-2">
+              <div className="mt-2 font-semibold text-white text-xl">
                 {getFormattedPrice(
                   availableLiquidity?.formatted ?? BigNumber(0)
                 )}
               </div>
             </div>
             <div>
-              <div className="text-sm text-primary font-semibold">
+              <div className="font-semibold text-primary text-sm">
                 Total Reserves
               </div>
-              <div className="text-xl font-semibold text-white mt-2">
+              <div className="mt-2 font-semibold text-white text-xl">
                 {getFormattedPrice(
                   formatUnits(
                     totalReserves ?? BigNumber(0),
@@ -221,25 +218,25 @@ export default function MarketOverview({
               </div>
             </div>
             <div>
-              <div className="text-sm text-primary font-semibold">
+              <div className="font-semibold text-primary text-sm">
                 Collateralization
               </div>
               <div
                 className={cn(
-                  'text-xl font-semibold text-white mt-2',
+                  'mt-2 font-semibold text-white text-xl',
                   !collateralization.isFinite() && 'text-center'
                 )}
               >
-                {!collateralization.isFinite()
-                  ? '-'
-                  : `${collateralization.toFixed(2, 1)}%`}
+                {collateralization.isFinite()
+                  ? `${collateralization.toFixed(2, 1)}%`
+                  : '-'}
               </div>
             </div>
             <div>
-              <div className="text-sm text-primary font-semibold">
+              <div className="font-semibold text-primary text-sm">
                 Oracle Price
               </div>
-              <div className="text-xl font-semibold text-white mt-2">
+              <div className="mt-2 font-semibold text-white text-xl">
                 $
                 {getFormattedNumber(
                   BigNumber(
@@ -253,22 +250,22 @@ export default function MarketOverview({
 
         <Card className="w-full">
           <CardHeader className="bg-white/5">
-            <div className="w-full items-center justify-center gap-x-2 font-semibold text-lg flex">
-              <div className="w-[260px] rounded-full h-px bg-linear-to-r from-white/0 to-primary" />
+            <div className="flex w-full items-center justify-center gap-x-2 font-semibold text-lg">
+              <div className="h-px w-[260px] rounded-full bg-linear-to-r from-white/0 to-primary" />
               <div className="text-center text-white">Interest Rate Model</div>
-              <div className="w-[260px] rounded-full h-px bg-linear-to-l from-white/0 to-primary" />
+              <div className="h-px w-[260px] rounded-full bg-linear-to-l from-white/0 to-primary" />
             </div>
           </CardHeader>
           <CardContent>
-            <div className="w-full flex justify-between pt-16 px-8">
-              <div className="w-1/4 ">
-                <div className="text-purple text-lg font-semibold">
+            <div className="flex w-full justify-between px-8 pt-16">
+              <div className="w-1/4">
+                <div className="font-semibold text-lg text-purple">
                   Net Borrow APR
                 </div>
                 <div
                   className={cn(
                     isAprPending && 'animate-pulse',
-                    'text-xl text-white font-semibold'
+                    'font-semibold text-white text-xl'
                   )}
                 >
                   <TooltipProvider delayDuration={100}>
@@ -293,13 +290,13 @@ export default function MarketOverview({
                   </TooltipProvider>
                 </div>
 
-                <div className="text-primary text-lg font-semibold mt-8">
+                <div className="mt-8 font-semibold text-lg text-primary">
                   Net Earn APR
                 </div>
                 <div
                   className={cn(
                     isAprPending && 'animate-pulse',
-                    'text-xl text-white font-semibold'
+                    'font-semibold text-white text-xl'
                   )}
                 >
                   <TooltipProvider delayDuration={100}>

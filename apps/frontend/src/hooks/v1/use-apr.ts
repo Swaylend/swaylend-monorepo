@@ -1,6 +1,6 @@
-import { useMarketStore } from '@/stores/market-store';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
+import { useMarketStore } from '@/stores/market-store';
 import { useBorrowRate } from './use-borrow-rate';
 import { useRewards } from './use-rewards';
 import { useSupplyRate } from './use-supply-rate';
@@ -16,8 +16,8 @@ export const useApr = (marketParam?: string) => {
 
   return useQuery({
     queryKey: ['apr', supplyRate, borrowRate, rewardsData],
-    queryFn: async () => {
-      if (!supplyRate || !borrowRate || !rewardsData) {
+    queryFn: () => {
+      if (!(supplyRate && borrowRate && rewardsData)) {
         return {
           supplyBaseApr: BigNumber(0),
           borrowBaseApr: BigNumber(0),
@@ -43,8 +43,8 @@ export const useApr = (marketParam?: string) => {
       return {
         supplyBaseApr,
         borrowBaseApr,
-        supplyRewardApr: supplyRewardApr,
-        borrowRewardApr: borrowRewardApr,
+        supplyRewardApr,
+        borrowRewardApr,
         netSupplyApr,
         netBorrowApr,
       };

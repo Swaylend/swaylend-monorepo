@@ -1,12 +1,14 @@
-import { Checkbox } from '@/components/ui/checkbox';
 import { useAccount } from '@fuels/react';
 import Link from 'next/link';
 import { useState } from 'react';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '../../ui/button';
 
 export const TermsAndConditions = ({
   setActiveStep,
-}: { setActiveStep: (step: number) => void }) => {
+}: {
+  setActiveStep: (step: number) => void;
+}) => {
   const [isChecked, setIsChecked] = useState(false);
   const { account } = useAccount();
 
@@ -22,8 +24,8 @@ export const TermsAndConditions = ({
 
   return (
     <>
-      <div className="flex flex-col w-full h-full px-6 py-4 gap-y-2.5 border border-[#666E79] rounded-md text-lavender overflow-auto scrollbar scrollbar-thumb-primary scrollbar-track-card">
-        <div className="text-center text-white font-semibold text-lg">
+      <div className="scrollbar scrollbar-thumb-primary scrollbar-track-card flex h-full w-full flex-col gap-y-2.5 overflow-auto rounded-md border border-[#666E79] px-6 py-4 text-lavender">
+        <div className="text-center font-semibold text-lg text-white">
           Terms & Conditions
         </div>
         <div className="text-center text-moon">Last Updated: 01.09.2024</div>
@@ -50,20 +52,20 @@ export const TermsAndConditions = ({
               that you are not located in, incorporated or otherwise established
               in, or resident of, a Prohibited Jurisdiction.
             </p>
-            <div className="flex max-md:flex-col max-md:gap-y-2 max-md:text-center md:gap-x-2 items-center mt-4">
+            <div className="mt-4 flex items-center max-md:flex-col max-md:gap-y-2 max-md:text-center md:gap-x-2">
               <div
-                className="max-md:w-full flex md:gap-x-2 items-center justify-center"
+                className="flex items-center justify-center max-md:w-full md:gap-x-2"
                 onMouseDown={() => setIsChecked(!isChecked)}
               >
-                <Checkbox id="terms" checked={isChecked} />
+                <Checkbox checked={isChecked} id="terms" />
                 <p
-                  onMouseDown={() => setIsChecked(!isChecked)}
                   className="cursor-pointer"
+                  onMouseDown={() => setIsChecked(!isChecked)}
                 >
                   I confirm that I have read, understand and accept the{' '}
                   <Link
+                    className="text-primary underline"
                     href="https://swaylend.gitbook.io/swaylend-docs/legal/terms-and-condition"
-                    className="underline text-primary"
                     target="_blank"
                   >
                     Terms and Conditions.
@@ -74,19 +76,19 @@ export const TermsAndConditions = ({
           </div>
         </div>
       </div>
-      <div className="flex justify-center items-center gap-x-2.5 w-full pt-[30px] pb-4 px-3">
+      <div className="flex w-full items-center justify-center gap-x-2.5 px-3 pt-[30px] pb-4">
         <Button
-          className="w-1/2 max-w-[173px] h-10"
-          variant="secondary"
+          className="h-10 w-1/2 max-w-[173px]"
           onMouseDown={handleDecline}
+          variant="secondary"
         >
           Reject
         </Button>
         <Button
-          className="w-1/2 max-w-[173px] h-10"
-          variant="default"
+          className="h-10 w-1/2 max-w-[173px]"
           disabled={!isChecked}
           onMouseDown={handleAccept}
+          variant="default"
         >
           Next
         </Button>

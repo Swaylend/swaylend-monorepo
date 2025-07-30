@@ -1,111 +1,92 @@
 {
-  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.1.3/schema.json",
+  "extends": ["ultracite"],
+  "vcs": {
+    "enabled": false,
+    "clientKind": "git",
+    "useIgnoreFile": false
+  },
   "files": {
-    "include": [
-      "**/*.js",
-      "**/*.ts",
-      "**/*.jsx",
-      "**/*.tsx",
-      "**/*.cjs",
-      "**/*.cts",
-      "**/*.mjs",
-      "**/*.mts",
-      "**/*.json"
-    ],
-    "ignore": [
-      "**/node_modules/**",
-      "**/dist/**",
-      "**/build/**",
-      "**/coverage/**",
-      "**/contract-types/**",
-      "**/.next/**",
-      "**/files/**",
-      "**/out/**",
-      "patches/**",
-      "assets/**",
-      ".nx/**",
-      "**/target/**",
-      "**/data/**",
-      "**/generated/**",
-      "**/typechain-types/**",
-      "**/cache/**",
-      "**/cache_forge/**",
-      "**/artifacts/**",
-      "**/contracts/lib/**",
-      "**/__generated__/**",
-      "**/ignition/deployments/**",
-      "**/subgraphs/tests/.latest.json",
-      "apps/indexer-sentio/src/types/**",
-      "apps/indexer-sentio/src/schema/**",
-      "apps/indexer-sentio/store.graphql"
+    "includes": [
+      "**/*.{js,ts,jsx,tsx,mdx,md,json}",
+      "!**/node_modules/**",
+      "!**/dist/**",
+      "!**/build/**",
+      "!**/coverage/**",
+      "!**/.next/**",
+      "!**/files/**",
+      "!**/out/**",
+      "!**/patches/**",
+      "!**/assets/**",
+      "!**/.nx/**",
+      "!**/data/**",
+      "!**/__generated__/**",
+      "!**/generated/**",
+      "!**/contract-types/**",
+      "!apps/indexer-sentio/src/schema/**",
+      "!apps/indexer-sentio/src/types/**"
     ]
   },
-  "organizeImports": {
-    "enabled": true
+  "json": {
+    "parser": {
+      "allowComments": true
+    }
+  },
+  "formatter": {
+    "enabled": true,
+    "useEditorconfig": true
+  },
+  "css": {
+    "formatter": {
+      "enabled": false
+    },
+    "linter": {
+      "enabled": false
+    }
   },
   "linter": {
     "enabled": true,
     "rules": {
       "recommended": true,
-      "complexity": {
-        "noStaticOnlyClass": "off",
-        "noForEach": "off"
+      "nursery": {
+        "noUnknownAtRule": "off",
+        "noShadow": "off",
+        "noNoninteractiveElementInteractions": "off"
       },
       "style": {
-        "noNonNullAssertion": "off"
+        "useBlockStatements": "off",
+        "noNonNullAssertion": "off",
+        "noNestedTernary": "off",
+        "noEnum": "off"
+      },
+      "complexity": {
+        "noExcessiveCognitiveComplexity": "off",
+        "noVoid": "off"
       },
       "suspicious": {
-        "noExplicitAny": "off",
-        "noImplicitAnyLet": "off",
-        "noArrayIndexKey": "off"
-      },
-      "security": {
-        "noDangerouslySetInnerHtml": "off"
+        "noConsole": "off",
+        "noExplicitAny": "off"
       },
       "correctness": {
         "useExhaustiveDependencies": "off"
       },
+      "performance": {
+        "noNamespaceImport": "off"
+      },
+      "security": {
+        "noDangerouslySetInnerHtml": "off"
+      },
       "a11y": {
-        "useKeyWithClickEvents": "off"
+        "noStaticElementInteractions": "off"
       }
     }
   },
-  "formatter": {
+  "assist": {
     "enabled": true,
-    "indentStyle": "tab"
-  },
-  "javascript": {
-    "formatter": {
-      "indentStyle": "space",
-      "quoteStyle": "single",
-      "trailingCommas": "es5",
-      "indentWidth": 2,
-      "lineEnding": "lf",
-      "semicolons": "always"
-    }
-  },
-  "json": {
-    "formatter": {
-      "enabled": true,
-      "indentWidth": 2,
-      "indentStyle": "space",
-      "lineEnding": "lf"
-    }
-  },
-  "overrides": [
-    {
-      "include": ["**/apps/frontend/**"],
-      "linter": {
-        "rules": {
-          "correctness": { "useExhaustiveDependencies": "off" },
-          "style": {
-            "useImportType": "off"
-          },
-          "suspicious": {
-            "noShadowRestrictedNames": "off"
-          }
-        }
+    "actions": {
+      "source": {
+        "organizeImports": "on"
       }
     }
-  ]
+  }
 }

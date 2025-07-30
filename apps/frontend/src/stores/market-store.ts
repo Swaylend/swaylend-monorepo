@@ -1,6 +1,6 @@
-import { appConfig } from '@/configs';
 import BigNumber from 'bignumber.js';
 import { create } from 'zustand';
+import { appConfig } from '@/configs';
 import { createSelectors } from './create-selectors';
 
 export enum ACTION_TYPE {

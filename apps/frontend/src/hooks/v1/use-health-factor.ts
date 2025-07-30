@@ -19,12 +19,14 @@ export const useHealthFactor = (marketParam?: string) => {
       priceData?.prices,
       marketConfiguration,
     ],
-    queryFn: async () => {
+    queryFn: () => {
       if (
-        !trueCollateralValue ||
-        !supplyBorrow ||
-        !marketConfiguration ||
-        !priceData
+        !(
+          trueCollateralValue &&
+          supplyBorrow &&
+          marketConfiguration &&
+          priceData
+        )
       ) {
         return null;
       }

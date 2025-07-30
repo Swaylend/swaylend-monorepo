@@ -1,5 +1,5 @@
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { MARKET_MODE, useMarketStore } from '@/stores/market-store';
+import { useMarketStore } from '@/stores/market-store';
 
 export const MarketSwitch = () => {
   const marketMode = useMarketStore.use.marketMode();
@@ -11,19 +11,19 @@ export const MarketSwitch = () => {
 
   return (
     <Tabs
-      onValueChange={handleChange}
+      className="mt-[40px] block sm:mt-[55px] lg:hidden"
       defaultValue={marketMode}
-      className="mt-[40px] sm:mt-[55px] block lg:hidden"
+      onValueChange={handleChange}
     >
-      <TabsList className="h-[50px] rounded-full w-[280px]">
+      <TabsList className="h-[50px] w-[280px] rounded-full">
         <TabsTrigger
+          className="cursor-pointer rounded-full font-bold text-md text-white max-sm:px-6 max-sm:py-1.5 dark:text-white dark:data-[state=active]:bg-purple"
           value="borrow"
-          className="cursor-pointer rounded-full max-sm:py-1.5 max-sm:px-6 dark:data-[state=active]:bg-purple text-white dark:text-white text-md font-bold"
         >
           Borrow
         </TabsTrigger>
         <TabsTrigger
-          className="cursor-pointer rounded-full max-sm:py-1.5 max-sm:px-6 text-md dark:data-[state=active]:bg-primary text-white dark:text-white dark:data-[state=active]:text-primary-foreground font-bold"
+          className="cursor-pointer rounded-full font-bold text-md text-white max-sm:px-6 max-sm:py-1.5 dark:text-white dark:data-[state=active]:bg-primary dark:data-[state=active]:text-primary-foreground"
           value="lend"
         >
           Earn

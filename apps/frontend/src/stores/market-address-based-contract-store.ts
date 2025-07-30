@@ -1,9 +1,9 @@
 'use client';
 
-import { appConfig } from '@/configs';
-import type { Market } from '@/contract-types/v1';
 import type { PythContract } from '@pythnetwork/pyth-fuel-js';
 import { create } from 'zustand';
+import { appConfig } from '@/configs';
+import type { Market } from '@/contract-types/v1';
 import { createSelectors } from './create-selectors';
 
 interface Store {
@@ -40,7 +40,7 @@ const useMarketAddressBasedContractsStoreBase = create<Store>()((set) => ({
     pythContract: PythContract | undefined,
     marketContract: Market | undefined
   ) => {
-    if (!pythContract || !marketContract) return;
+    if (!(pythContract && marketContract)) return;
 
     set((store) => ({
       contracts: new Map(store.contracts).set(market, {

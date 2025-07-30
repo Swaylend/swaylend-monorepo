@@ -1,7 +1,7 @@
-import { useMarketStore } from '@/stores/market-store';
-import { formatUnits } from '@/utils';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
+import { useMarketStore } from '@/stores/market-store';
+import { formatUnits } from '@/utils';
 import { useMarketBasics } from './use-market-basics';
 import { useMarketConfiguration } from './use-market-configuration';
 import { useTotalReserves } from './use-total-reserves';
@@ -22,8 +22,8 @@ export const useMarketBalanceOfBase = (marketParam?: string) => {
       marketConfiguration,
       totalReserves,
     ],
-    queryFn: async () => {
-      if (!marketBasics || !marketConfiguration || !totalReserves) {
+    queryFn: () => {
+      if (!(marketBasics && marketConfiguration && totalReserves)) {
         return {
           raw: BigNumber(0),
           formatted: BigNumber(0),

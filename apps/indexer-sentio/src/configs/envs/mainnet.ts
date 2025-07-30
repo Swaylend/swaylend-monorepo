@@ -1,11 +1,11 @@
-import { defineConfig } from '../defineConfig.js';
+import { defineConfig } from '../define-config.js';
 import type { DeployedMarkets } from '../types.js';
 
 export function createMainnetConfig() {
   return defineConfig({
     env: 'mainnet',
-    markets: markets,
-    assets: assets,
+    markets,
+    assets,
   });
 }
 
@@ -13,7 +13,7 @@ const markets: DeployedMarkets = {
   USDC: {
     marketAddress:
       '0x657ab45a6eb98a4893a99fd104347179151e8b3828fd8f2a108cc09770d1ebae',
-    startBlock: BigInt(3000000),
+    startBlock: BigInt(3_000_000),
   },
 };
 

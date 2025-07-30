@@ -1,7 +1,5 @@
+/** biome-ignore-all lint/suspicious/useAwait: <Handlers must be async> */
 import { Market } from 'generated';
-const MARKET_ID = 'MARKET_ID';
-const PUASE_CONFIGURATION_ID = 'PUASE_CONFIGURATION_ID';
-const MARKET_CONFIGURATION_ID = 'MARKET_CONFIGURATION_ID';
 
 const I256_INDENT = 2n ** 255n;
 
@@ -45,7 +43,7 @@ Market.CollateralAssetPaused.handlerWithLoader({
     const assetId = event.params.asset_id.bits;
     return { collateralAsset: await context.CollateralAsset.get(assetId) };
   },
-  handler: async ({ event, context, loaderReturn }) => {
+  handler: async ({ event: _, context, loaderReturn }) => {
     const { collateralAsset } = loaderReturn;
 
     if (collateralAsset) {
@@ -63,7 +61,7 @@ Market.CollateralAssetResumed.handlerWithLoader({
     const assetId = event.params.asset_id.bits;
     return { collateralAsset: await context.CollateralAsset.get(assetId) };
   },
-  handler: async ({ event, context, loaderReturn }) => {
+  handler: async ({ event: _, context, loaderReturn }) => {
     const { collateralAsset } = loaderReturn;
 
     if (collateralAsset) {
@@ -94,7 +92,7 @@ Market.UserBasicEvent.handlerWithLoader({
 
       context.User.set({
         id: address,
-        address: address,
+        address,
         principal: principalValue,
         baseTrackingIndex: event.params.user_basic.base_tracking_index,
         baseTrackingAccrued: event.params.user_basic.base_tracking_accrued,
@@ -117,7 +115,7 @@ Market.UserBasicEvent.handlerWithLoader({
 // Market Basic Event
 Market.MarketBasicEvent.handler(async ({ event, context }) => {
   context.MarketState.set({
-    id: MARKET_ID,
+    id: 'MARKET_ID',
     baseBorrowIndex: event.params.market_basic.base_borrow_index,
     baseSupplyIndex: event.params.market_basic.base_supply_index,
     lastAccrualTime: event.params.market_basic.last_accrual_time,
@@ -154,7 +152,7 @@ Market.UserSupplyCollateralEvent.handlerWithLoader({
     if (!user) {
       context.User.set({
         id: address,
-        address: address,
+        address,
         principal: BigInt(0),
         baseTrackingIndex: BigInt(0),
         baseTrackingAccrued: BigInt(0),
@@ -176,18 +174,18 @@ Market.UserSupplyCollateralEvent.handlerWithLoader({
     const userCollateralId = `${address}-${event.params.asset_id.bits}`;
 
     // Create user collateral if it doesn't exist
-    if (!userCollateral) {
+    if (userCollateral) {
+      // Update user collateral
+      context.UserCollateral.set({
+        ...userCollateral,
+        amount: userCollateral.amount + event.params.amount,
+      });
+    } else {
       context.UserCollateral.set({
         id: userCollateralId,
         user_id: address,
         collateralAsset_id: event.params.asset_id.bits,
         amount: event.params.amount,
-      });
-    } else {
-      // Update user collateral
-      context.UserCollateral.set({
-        ...userCollateral,
-        amount: userCollateral.amount + event.params.amount,
       });
     }
   },
@@ -221,18 +219,18 @@ Market.UserWithdrawCollateralEvent.handlerWithLoader({
     const userCollateralId = `${address}-${event.params.asset_id.bits}`;
 
     // Create user collateral if it doesn't exist
-    if (!userCollateral) {
+    if (userCollateral) {
+      // Update user collateral
+      context.UserCollateral.set({
+        ...userCollateral,
+        amount: userCollateral.amount - event.params.amount,
+      });
+    } else {
       context.UserCollateral.set({
         id: userCollateralId,
         user_id: address,
         collateralAsset_id: event.params.asset_id.bits,
         amount: event.params.amount,
-      });
-    } else {
-      // Update user collateral
-      context.UserCollateral.set({
-        ...userCollateral,
-        amount: userCollateral.amount - event.params.amount,
       });
     }
   },
@@ -303,22 +301,22 @@ Market.UserLiquidatedEvent.handlerWithLoader({
     const { liquidator } = loaderReturn;
 
     // Create liquidator if it doesn't exist
-    if (!liquidator) {
-      context.User.set({
-        id: address,
-        address: address,
-        principal: BigInt(0),
-        baseTrackingIndex: BigInt(0),
-        baseTrackingAccrued: BigInt(0),
-        totalCollateralBought: BigInt(0),
-        totalValueLiquidated: BigInt(event.params.total_base_value),
-      });
-    } else {
+    if (liquidator) {
       // Update liquidator
       context.User.set({
         ...liquidator,
         totalValueLiquidated:
           liquidator.totalValueLiquidated + event.params.total_base_value,
+      });
+    } else {
+      context.User.set({
+        id: address,
+        address,
+        principal: BigInt(0),
+        baseTrackingIndex: BigInt(0),
+        baseTrackingAccrued: BigInt(0),
+        totalCollateralBought: BigInt(0),
+        totalValueLiquidated: BigInt(event.params.total_base_value),
       });
     }
 
@@ -373,21 +371,21 @@ Market.BuyCollateralEvent.handlerWithLoader({
     const address = event.params.caller.payload.bits;
 
     // Create user if it doesn't exist
-    if (!user) {
+    if (user) {
+      // Update user
+      context.User.set({
+        ...user,
+        totalCollateralBought: user.totalCollateralBought + event.params.price,
+      });
+    } else {
       context.User.set({
         id: address,
-        address: address,
+        address,
         principal: BigInt(0),
         baseTrackingIndex: BigInt(0),
         baseTrackingAccrued: BigInt(0),
         totalCollateralBought: event.params.price,
         totalValueLiquidated: BigInt(0),
-      });
-    } else {
-      // Update user
-      context.User.set({
-        ...user,
-        totalCollateralBought: user.totalCollateralBought + event.params.price,
       });
     }
 
@@ -421,7 +419,7 @@ Market.PauseConfigurationEvent.handler(async ({ event, context }) => {
   const pauseConfiguration = event.params.pause_config;
 
   context.PauseConfiguration.set({
-    id: PUASE_CONFIGURATION_ID,
+    id: 'PUASE_CONFIGURATION_ID',
     supplyPaused: pauseConfiguration.supply_paused,
     withdrawPaused: pauseConfiguration.withdraw_paused,
     absorbPaused: pauseConfiguration.absorb_paused,
@@ -434,7 +432,7 @@ Market.MarketConfigurationEvent.handler(async ({ event, context }) => {
   const marketConfiguration = event.params.market_config;
 
   context.MarketConfiguartion.set({
-    id: MARKET_CONFIGURATION_ID,
+    id: 'MARKET_CONFIGURATION_ID',
     baseToken: marketConfiguration.base_token.bits,
     baseTokenDecimals: marketConfiguration.base_token_decimals,
     baseTokenPriceFeedId: marketConfiguration.base_token_price_feed_id,

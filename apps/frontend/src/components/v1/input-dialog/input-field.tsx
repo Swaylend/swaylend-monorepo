@@ -1,3 +1,8 @@
+import BigNumber from 'bignumber.js';
+import Image from 'next/image';
+import type React from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useDebounceCallback } from 'usehooks-ts';
 import { appConfig } from '@/configs';
 import {
   useCollateralConfigurations,
@@ -6,12 +11,9 @@ import {
 import { cn } from '@/lib/utils';
 import { useMarketStore } from '@/stores/market-store';
 import { SYMBOL_TO_ICON } from '@/utils';
-import BigNumber from 'bignumber.js';
-import Image from 'next/image';
-import type React from 'react';
-import { useEffect, useRef, useState } from 'react';
-import { useDebounceCallback } from 'usehooks-ts';
 import { Input } from '../../ui/input';
+
+const LEADING_ZERO_REGEX = /^0+/;
 
 export const InputField = ({ error }: { error: boolean }) => {
   const { changeTokenAmount, tokenAmount, actionTokenAssetId, action } =
@@ -60,9 +62,7 @@ export const InputField = ({ error }: { error: boolean }) => {
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (
-      !marketConfiguration ||
-      !collateralConfigurations ||
-      !actionTokenAssetId
+      !(marketConfiguration && collateralConfigurations && actionTokenAssetId)
     ) {
       return;
     }
@@ -95,7 +95,7 @@ export const InputField = ({ error }: { error: boolean }) => {
 
     // Remove leading zeros if there's no decimal point
     if (!value.includes('.')) {
-      value = value.replace(/^0+/, '') || '0';
+      value = value.replace(LEADING_ZERO_REGEX, '') || '0';
     }
 
     const maxDecimalLength =
@@ -122,39 +122,41 @@ export const InputField = ({ error }: { error: boolean }) => {
     <div className="relative flex w-full">
       <Input
         autoFocus={true}
-        type="string"
         className={cn(
-          'h-[56px] bg-card border-2',
+          'h-[56px] border-2 bg-card',
           error && 'border-red-500 focus-visible:ring-red-500'
         )}
-        value={inputValue}
+        disabled={
+          !(
+            marketConfiguration &&
+            collateralConfigurations &&
+            actionTokenAssetId
+          )
+        }
         onChange={handleChange}
         placeholder="Enter amount"
         ref={amountInput}
-        disabled={
-          !marketConfiguration ||
-          !collateralConfigurations ||
-          !actionTokenAssetId
-        }
+        type="string"
+        value={inputValue}
       />
-      <div className="absolute flex items-center gap-x-2 h-[24px] top-[calc(50%-12px)] left-[calc(100%-80px)]">
-        <div className="w-[24px] h-[24px]">
+      <div className="absolute top-[calc(50%-12px)] left-[calc(100%-80px)] flex h-[24px] items-center gap-x-2">
+        <div className="h-[24px] w-[24px]">
           {actionTokenAssetId && (
             <Image
               alt="token"
               className="rounded-full"
+              height={32}
               src={
                 SYMBOL_TO_ICON[
                   appConfig.client.shared.assets[actionTokenAssetId]
                 ]
               }
               width={32}
-              height={32}
             />
           )}
         </div>
         {actionTokenAssetId && (
-          <div className="text-sm text-moon font-semibold">
+          <div className="font-semibold text-moon text-sm">
             {appConfig.client.shared.assets[actionTokenAssetId]}
           </div>
         )}

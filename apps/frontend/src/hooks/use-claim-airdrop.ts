@@ -1,3 +1,6 @@
+import { useWallet } from '@fuels/react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
 import {
   ErrorToast,
   PendingToast,
@@ -5,9 +8,6 @@ import {
 } from '@/components/v1/toasts';
 import { appConfig } from '@/configs';
 import { Airdrop } from '@/contract-types/v1/airdrop';
-import { useWallet } from '@fuels/react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'react-toastify';
 
 type ProofResponse = {
   amount: string;

@@ -13,14 +13,14 @@ export const GeneralInfo = ({
 
   return (
     <>
-      <div className="overflow-auto flex flex-col justify-between w-full h-full px-6 py-4 gap-y-2.5 rounded-md text-lavender scrollbar scrollbar-thumb-primary scrollbar-track-card">
+      <div className="scrollbar scrollbar-thumb-primary scrollbar-track-card flex h-full w-full flex-col justify-between gap-y-2.5 overflow-auto rounded-md px-6 py-4 text-lavender">
         <div>
-          <div className="text-center text-white font-semibold text-xl">
+          <div className="text-center font-semibold text-white text-xl">
             Before you Enter
           </div>
 
-          <div className="w-full mt-4">
-            <Image src={Banner} alt="a" width={1500} height={500} />
+          <div className="mt-4 w-full">
+            <Image alt="a" height={500} src={Banner} width={1500} />
           </div>
           <div className="mt-8 text-lg">
             <div className="mt-4">
@@ -38,20 +38,20 @@ export const GeneralInfo = ({
               <br />
               Swaylend engaged with one audit firm,{' '}
               <a
-                href="https://www.halborn.com/"
                 className="text-primary underline"
-                target="_blank"
+                href="https://www.halborn.com/"
                 rel="noreferrer"
+                target="_blank"
               >
                 Halborn
               </a>
               , for smart contract review. To learn more about the audit reports
               and risks involved with using Swaylend, please visit the{' '}
               <a
-                href="https://swaylend.gitbook.io/swaylend-docs/"
                 className="text-primary underline"
-                target="_blank"
+                href="https://swaylend.gitbook.io/swaylend-docs/"
                 rel="noreferrer"
+                target="_blank"
               >
                 official documentation
               </a>
@@ -60,7 +60,7 @@ export const GeneralInfo = ({
           </div>
         </div>
       </div>
-      <div className="px-6 py-4 flex w-full justify-end">
+      <div className="flex w-full justify-end px-6 py-4">
         <Button onClick={handleClose}>Explore Swaylend</Button>
       </div>
     </>

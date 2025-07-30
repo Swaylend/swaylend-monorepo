@@ -1,3 +1,5 @@
+import BigNumber from 'bignumber.js';
+import { useMemo } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
   useCollateralConfigurations,
@@ -8,8 +10,6 @@ import {
   useUserSupplyBorrow,
 } from '@/hooks/v1';
 import { formatUnits, getFormattedPrice } from '@/utils';
-import BigNumber from 'bignumber.js';
-import React, { useMemo } from 'react';
 import { Chart } from './chart';
 
 export const Stats = () => {
@@ -95,7 +95,7 @@ export const Stats = () => {
     // isPendingColUtilUSDT,
   ]);
 
-  const riskMeter = useMemo(() => {
+  const _riskMeter = useMemo(() => {
     return Math.max(
       currentCollateralUtilizationUSDC
       // currentCollateralUtilizationUSDT
@@ -104,11 +104,11 @@ export const Stats = () => {
 
   const totalSuppliedCollateral = useMemo(() => {
     if (
-      !priceDataUSDC ||
-      // !priceDataUSDT ||
-      !userCollateralAssetsUSDC ||
-      // !userCollateralAssetsUSDT ||
-      !colateralConfigurationsUSDC
+      !(
+        priceDataUSDC &&
+        userCollateralAssetsUSDC &&
+        colateralConfigurationsUSDC
+      )
       // || !colateralConfigurationsUSDT
     )
       return BigNumber(0);
@@ -149,11 +149,7 @@ export const Stats = () => {
 
   const totalSuppliedBaseAssets = useMemo(() => {
     if (
-      !marketConfigurationUSDC ||
-      // !marketConfigurationUSDT ||
-      !priceDataUSDC ||
-      // !priceDataUSDT ||
-      !userSupplyBorrowUSDC
+      !(marketConfigurationUSDC && priceDataUSDC && userSupplyBorrowUSDC)
       // || !userSupplyBorrowUSDT
     )
       return BigNumber(0);
@@ -181,11 +177,7 @@ export const Stats = () => {
 
   const totalBorrowedBaseAssets = useMemo(() => {
     if (
-      !marketConfigurationUSDC ||
-      // !marketConfigurationUSDT ||
-      !priceDataUSDC ||
-      // !priceDataUSDT ||
-      !userSupplyBorrowUSDC
+      !(marketConfigurationUSDC && priceDataUSDC && userSupplyBorrowUSDC)
       // || !userSupplyBorrowUSDT
     )
       return BigNumber(0);
@@ -223,70 +215,62 @@ export const Stats = () => {
 
   return (
     <div>
-      <div className="flex justify-between items-start gap-x-10">
-        <div className="h-[240px] w-3/5 xl:w-1/2 flex flex-col ">
-          <div className="flex flex-1 flex-col justify-start items-start">
-            <div className="text-moon text-sm font-semibold">Total Assets</div>
+      <div className="flex items-start justify-between gap-x-10">
+        <div className="flex h-[240px] w-3/5 flex-col xl:w-1/2">
+          <div className="flex flex-1 flex-col items-start justify-start">
+            <div className="font-semibold text-moon text-sm">Total Assets</div>
             {isLoading ? (
-              <>
-                <Skeleton className="w-[240px] h-[60px] bg-primary/20 rounded-md" />
-              </>
+              <Skeleton className="h-[60px] w-[240px] rounded-md bg-primary/20" />
             ) : (
-              <div className="text-white font-bold text-2xl">
+              <div className="font-bold text-2xl text-white">
                 {getFormattedPrice(totalSuppliedBalance ?? BigNumber(0))}
               </div>
             )}
           </div>
           <div className="flex w-full justify-between pb-9">
-            <div className="w-full flex items-end gap-x-8">
+            <div className="flex w-full items-end gap-x-8">
               <div>
-                <div className="flex gap-x-2 items-center">
-                  <div className="w-2 h-2 rounded-full bg-primary" />
-                  <div className="text-sm font-semibold text-primary">
+                <div className="flex items-center gap-x-2">
+                  <div className="h-2 w-2 rounded-full bg-primary" />
+                  <div className="font-semibold text-primary text-sm">
                     Earning
                   </div>
                 </div>
                 {isLoading ? (
-                  <>
-                    <Skeleton className="w-[100px] h-[40px] rounded-md bg-primary/20" />
-                  </>
+                  <Skeleton className="h-[40px] w-[100px] rounded-md bg-primary/20" />
                 ) : (
-                  <div className="text-white font-bold text-[22px] 2xl:text-xl">
+                  <div className="font-bold text-[22px] text-white 2xl:text-xl">
                     {getFormattedPrice(totalSuppliedBaseAssets ?? BigNumber(0))}
                   </div>
                 )}
               </div>
               <div>
-                <div className="flex gap-x-2 items-center">
-                  <div className="w-2 h-2 rounded-full bg-purple" />
-                  <div className="text-sm font-semibold text-purple">
+                <div className="flex items-center gap-x-2">
+                  <div className="h-2 w-2 rounded-full bg-purple" />
+                  <div className="font-semibold text-purple text-sm">
                     Borrowing{' '}
                   </div>
                 </div>
                 {isLoading ? (
-                  <>
-                    <Skeleton className="w-[100px] h-[40px] rounded-md bg-primary/20" />
-                  </>
+                  <Skeleton className="h-[40px] w-[100px] rounded-md bg-primary/20" />
                 ) : (
-                  <div className="text-white font-bold text-[22px] 2xl:text-xl">
+                  <div className="font-bold text-[22px] text-white 2xl:text-xl">
                     {getFormattedPrice(totalBorrowedBaseAssets ?? BigNumber(0))}
                   </div>
                 )}
               </div>
               <div>
-                <div className="flex gap-x-2 items-center">
-                  <div className="w-2 h-2 rounded-full bg-[#918E8E]" />
-                  <div className="text-moon text-sm font-semibold">
+                <div className="flex items-center gap-x-2">
+                  <div className="h-2 w-2 rounded-full bg-[#918E8E]" />
+                  <div className="font-semibold text-moon text-sm">
                     Collateral
                   </div>
                 </div>
 
                 {isLoading ? (
-                  <>
-                    <Skeleton className="w-[100px] h-[40px] rounded-md bg-primary/20" />
-                  </>
+                  <Skeleton className="h-[40px] w-[100px] rounded-md bg-primary/20" />
                 ) : (
-                  <div className="text-white font-bold text-[22px] 2xl:text-xl">
+                  <div className="font-bold text-[22px] text-white 2xl:text-xl">
                     {getFormattedPrice(totalSuppliedCollateral ?? BigNumber(0))}
                   </div>
                 )}

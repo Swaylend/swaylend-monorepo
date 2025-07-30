@@ -1,3 +1,7 @@
+import { useAccount, useWallet } from '@fuels/react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import BigNumber from 'bignumber.js';
+import { toast } from 'react-toastify';
 import {
   ErrorToast,
   PendingToast,
@@ -5,10 +9,6 @@ import {
 } from '@/components/v1/toasts';
 import { useMarketContract } from '@/contracts/use-market-contract';
 import { useMarketStore } from '@/stores/market-store';
-import { useAccount, useWallet } from '@fuels/react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import BigNumber from 'bignumber.js';
-import { toast } from 'react-toastify';
 import { useCollateralConfigurations } from './use-collateral-configurations';
 
 type useSupplyCollateralProps = {
@@ -42,11 +42,13 @@ export const useSupplyCollateral = ({
     ],
     mutationFn: async (tokenAmount: BigNumber) => {
       if (
-        !wallet ||
-        !account ||
-        !actionTokenAssetId ||
-        !collateralConfigurations ||
-        !marketContract
+        !(
+          wallet &&
+          account &&
+          actionTokenAssetId &&
+          collateralConfigurations &&
+          marketContract
+        )
       ) {
         return null;
       }

@@ -26,23 +26,23 @@ export const AnnouncementPopover = () => {
   };
 
   return (
-    <Dialog open={open} modal={false}>
+    <Dialog modal={false} open={open}>
       <DialogContent
-        className="w-full sm:w-auto flex bg-muted top-[15%]"
+        className="top-[15%] flex w-full bg-muted sm:w-auto"
         onOpenAutoFocus={(e) => e.preventDefault()}
       >
         <DialogClose asChild>
           <Button
+            className="absolute top-[9px] right-[9px] h-[30px] w-[30px] p-0"
             onMouseDown={() => handleClose()}
-            className="absolute w-[30px] h-[30px] p-0 right-[9px] top-[9px]"
             variant="ghost"
           >
-            <X className="w-5 h-5" />
+            <X className="h-5 w-5" />
           </Button>
         </DialogClose>
         <div className="flex">
-          <Image src={Logo} height={50} alt="logo" className="pr-2" />
-          <div className="w-auto mr-4 px-4 text-center">
+          <Image alt="logo" className="pr-2" height={50} src={Logo} />
+          <div className="mr-4 w-auto px-4 text-center">
             We've made minor adjustments to the interest rate curves to better
             align with the current market conditions.
           </div>

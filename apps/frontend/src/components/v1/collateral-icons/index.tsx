@@ -20,25 +20,25 @@ type CollateralIconsProps = {
 export const CollateralIcons = ({ collaterals }: CollateralIconsProps) => {
   return (
     <div className="flex items-center gap-x-1">
-      <div className="text-md text-white font-medium">
+      <div className="font-medium text-md text-white">
         {collaterals.length ?? 0}
       </div>
       <div className="flex items-center">
         {collaterals.slice(0, 3).map((collateral: Collateral) => {
           return (
             <div
+              className="nth-[n+2]:ml-[-12px] flex items-center rounded-full bg-card p-1"
               key={collateral.id}
-              className="flex items-center rounded-full bg-card p-1 nth-[n+2]:ml-[-12px]"
             >
               <TooltipProvider delayDuration={100}>
                 <Tooltip>
                   <TooltipTrigger onClick={(e) => e.preventDefault()}>
                     <Image
-                      src={collateral.icon}
                       alt={collateral.name}
-                      width={28}
-                      height={28}
                       className="rounded-full"
+                      height={28}
+                      src={collateral.icon}
+                      width={28}
                     />
                   </TooltipTrigger>
                   <TooltipContent
@@ -55,10 +55,10 @@ export const CollateralIcons = ({ collaterals }: CollateralIconsProps) => {
         })}
         {collaterals.length > 3 && (
           <div
+            className="nth-[n+2]:ml-[-12px] flex items-center rounded-full bg-card p-1"
             key="others"
-            className="flex items-center rounded-full bg-card p-1 nth-[n+2]:ml-[-12px]"
           >
-            <div className="w-[28px] h-[28px] text-lavender font-semibold bg-white/20 rounded-full flex items-center pl-1">
+            <div className="flex h-[28px] w-[28px] items-center rounded-full bg-white/20 pl-1 font-semibold text-lavender">
               +{collaterals.length - 3}
             </div>
           </div>

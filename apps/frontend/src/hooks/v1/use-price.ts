@@ -1,14 +1,12 @@
-import type { PriceDataUpdateInput } from '@/contract-types/v1/market';
-import { useMarketStore } from '@/stores/market-store';
-
-import { useMarketContract } from '@/contracts/use-market-contract';
-import { usePythContract } from '@/contracts/use-pyth-contract';
-import { HermesClient } from '@pythnetwork/hermes-client';
+import { HermesClient, type PriceUpdate } from '@pythnetwork/hermes-client';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
-import { arrayify } from 'fuels';
-import { DateTime } from 'fuels';
+import { arrayify, DateTime } from 'fuels';
 import { useMemo, useState } from 'react';
+import type { PriceDataUpdateInput } from '@/contract-types/v1/market';
+import { useMarketContract } from '@/contracts/use-market-contract';
+import { usePythContract } from '@/contracts/use-pyth-contract';
+import { useMarketStore } from '@/stores/market-store';
 import { useProvider } from '../use-provider';
 import { useCollateralConfigurations } from './use-collateral-configurations';
 import { useMarketConfiguration } from './use-market-configuration';
@@ -39,7 +37,7 @@ export const usePrice = (marketParam?: string) => {
 
   // Create a map of priceFeedId to assetId
   const priceFeedIdToAssetId = useMemo(() => {
-    if (!marketConfiguration || !collateralConfigurations) return null;
+    if (!(marketConfiguration && collateralConfigurations)) return null;
 
     const assets: Map<string, string> = new Map();
 
@@ -72,27 +70,23 @@ export const usePrice = (marketParam?: string) => {
       pythContract?.id,
     ],
     queryFn: async () => {
-      if (!priceFeedIdToAssetId || !marketContract || !pythContract) {
+      if (!(priceFeedIdToAssetId && marketContract && pythContract)) {
         return null;
       }
 
       const priceFeedIds = Array.from(priceFeedIdToAssetId.keys());
 
       // Fetch price updates from Hermes client
-      let priceUpdates;
+      let priceUpdates: PriceUpdate | null = null;
       try {
         priceUpdates = await hermesClient.getLatestPriceUpdates(priceFeedIds);
-      } catch (error) {
+      } catch (_error) {
         const client = new HermesClient('https://hermes.pyth.network');
 
         priceUpdates = await client.getLatestPriceUpdates(priceFeedIds);
       }
 
-      if (
-        !priceUpdates ||
-        !priceUpdates.parsed ||
-        priceUpdates.parsed.length === 0
-      ) {
+      if (!priceUpdates?.parsed || priceUpdates.parsed.length === 0) {
         throw new Error('Failed to fetch price');
       }
 

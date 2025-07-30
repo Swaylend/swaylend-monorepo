@@ -1,5 +1,5 @@
-import { DashboardView } from '@/components/v1/dashboard-view';
 import type { Metadata } from 'next';
+import { DashboardView } from '@/components/v1/dashboard-view';
 
 export const metadata: Metadata = {
   title: { absolute: 'Swaylend | Lending reimagined' },

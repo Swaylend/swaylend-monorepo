@@ -1,3 +1,7 @@
+import { useAccount } from '@fuels/react';
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
+import BigNumber from 'bignumber.js';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -23,7 +27,6 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { InfoIcon } from '@/components/v1/info-icon';
-import { Line } from '@/components/v1/line';
 import { NetEarnTooltip } from '@/components/v1/net-earn-tooltip';
 import { PointIcons } from '@/components/v1/point-icons';
 import {
@@ -42,34 +45,30 @@ import {
 } from '@/hooks/v1';
 import { cn } from '@/lib/utils';
 import { ACTION_TYPE, useMarketStore } from '@/stores/market-store';
-import { SYMBOL_TO_ICON, formatUnits, getFormattedNumber } from '@/utils';
-import { useAccount } from '@fuels/react';
-import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
-import BigNumber from 'bignumber.js';
-import Image from 'next/image';
+import { formatUnits, getFormattedNumber, SYMBOL_TO_ICON } from '@/utils';
 
 const SkeletonRow = (
   <TableRow>
     <TableCell>
-      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+      <Skeleton className="h-[40px] w-full rounded-md bg-primary/20" />
     </TableCell>
     <TableCell>
-      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+      <Skeleton className="h-[40px] w-full rounded-md bg-primary/20" />
     </TableCell>
     <TableCell>
-      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+      <Skeleton className="h-[40px] w-full rounded-md bg-primary/20" />
     </TableCell>
     <TableCell>
-      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+      <Skeleton className="h-[40px] w-full rounded-md bg-primary/20" />
     </TableCell>
     <TableCell>
-      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+      <Skeleton className="h-[40px] w-full rounded-md bg-primary/20" />
     </TableCell>
     <TableCell>
-      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+      <Skeleton className="h-[40px] w-full rounded-md bg-primary/20" />
     </TableCell>
     <TableCell>
-      <div className="flex gap-x-2 w-full">
+      <div className="flex w-full gap-x-2">
         <Button className="w-1/2" disabled={true}>
           Supply
         </Button>
@@ -83,30 +82,30 @@ const SkeletonRow = (
 
 const SkeletonCardContent = (
   <CardContent>
-    <div className="flex flex-col gap-y-4 pt-8 px-4">
-      <div className="w-full flex items-center">
-        <div className="w-1/2 text-moon font-medium">Asset</div>
-        <Skeleton className="w-1/2 h-[24px] bg-primary/20 rounded-md" />
+    <div className="flex flex-col gap-y-4 px-4 pt-8">
+      <div className="flex w-full items-center">
+        <div className="w-1/2 font-medium text-moon">Asset</div>
+        <Skeleton className="h-[24px] w-1/2 rounded-md bg-primary/20" />
       </div>
-      <div className="w-full flex items-center">
-        <div className="w-1/2 text-moon font-medium">Earn APY</div>
-        <Skeleton className="w-1/2 h-[24px] bg-primary/20 rounded-md" />
+      <div className="flex w-full items-center">
+        <div className="w-1/2 font-medium text-moon">Earn APY</div>
+        <Skeleton className="h-[24px] w-1/2 rounded-md bg-primary/20" />
       </div>
-      <div className="w-full flex items-center">
-        <div className="w-1/2 text-moon font-medium">Your Supplied Assets</div>
-        <Skeleton className="w-1/2 h-[24px] bg-primary/20 rounded-md" />
+      <div className="flex w-full items-center">
+        <div className="w-1/2 font-medium text-moon">Your Supplied Assets</div>
+        <Skeleton className="h-[24px] w-1/2 rounded-md bg-primary/20" />
       </div>
-      <div className="w-full flex items-center">
-        <div className="w-1/2 text-moon font-medium">Reward APY</div>
-        <Skeleton className="w-1/2 h-[24px] bg-primary/20 rounded-md" />
+      <div className="flex w-full items-center">
+        <div className="w-1/2 font-medium text-moon">Reward APY</div>
+        <Skeleton className="h-[24px] w-1/2 rounded-md bg-primary/20" />
       </div>
-      <div className="w-full flex items-center">
-        <div className="w-1/2 text-moon font-medium">Net APY</div>
-        <Skeleton className="w-1/2 h-[24px] bg-primary/20 rounded-md" />
+      <div className="flex w-full items-center">
+        <div className="w-1/2 font-medium text-moon">Net APY</div>
+        <Skeleton className="h-[24px] w-1/2 rounded-md bg-primary/20" />
       </div>
-      <div className="w-full flex items-center">
-        <div className="w-1/2 text-moon font-medium">Supply Points</div>
-        <Skeleton className="w-1/2 h-[24px] bg-primary/20 rounded-md" />
+      <div className="flex w-full items-center">
+        <div className="w-1/2 font-medium text-moon">Supply Points</div>
+        <Skeleton className="h-[24px] w-1/2 rounded-md bg-primary/20" />
       </div>
     </div>
   </CardContent>
@@ -204,10 +203,17 @@ export const LendTable = () => {
           ) : (
             <TableRow>
               <TableCell>
-                <div className="flex gap-x-2 items-center">
+                <div className="flex items-center gap-x-2">
                   <div>
                     {marketConfiguration && (
                       <Image
+                        alt={
+                          appConfig.client.shared.assets[
+                            marketConfiguration.baseToken.bits
+                          ]
+                        }
+                        className="rounded-full"
+                        height={32}
                         src={
                           SYMBOL_TO_ICON[
                             appConfig.client.shared.assets[
@@ -215,20 +221,13 @@ export const LendTable = () => {
                             ]
                           ]
                         }
-                        alt={
-                          appConfig.client.shared.assets[
-                            marketConfiguration.baseToken.bits
-                          ]
-                        }
                         width={32}
-                        height={32}
-                        className="rounded-full"
                       />
                     )}
                   </div>
                   <div>
                     {marketConfiguration && (
-                      <div className="text-white font-medium">
+                      <div className="font-medium text-white">
                         {
                           appConfig.client.shared.assets[
                             marketConfiguration.baseToken.bits
@@ -258,7 +257,7 @@ export const LendTable = () => {
               <TableCell
                 className={cn(
                   isAprPending && 'animate-pulse',
-                  'text-white text-md font-medium'
+                  'font-medium text-md text-white'
                 )}
               >
                 {aprData?.supplyBaseApr.times(100).toFixed(2)}%
@@ -279,10 +278,10 @@ export const LendTable = () => {
               <TableCell
                 className={cn(
                   isAprPending && 'animate-pulse',
-                  'text-white text-md font-medium'
+                  'font-medium text-md text-white'
                 )}
               >
-                <div className="flex gap-x-2 items-center">
+                <div className="flex items-center gap-x-2">
                   {aprData?.supplyRewardApr.times(100).toFixed(2)}%
                   <PointIcons points={POINTS_LM} />
                 </div>
@@ -290,7 +289,7 @@ export const LendTable = () => {
               <TableCell
                 className={cn(
                   isAprPending && 'animate-pulse',
-                  'text-white text-md font-medium'
+                  'font-medium text-md text-white'
                 )}
               >
                 <TooltipProvider delayDuration={100}>
@@ -317,23 +316,23 @@ export const LendTable = () => {
               </TableCell>
               <TableCell>
                 {userRole === USER_ROLE.BORROWER ? (
-                  <div className=" text-lavender bg-primary/20 rounded-lg px-4 py-2 text-sm font-medium text-center w-full">
+                  <div className="w-full rounded-lg bg-primary/20 px-4 py-2 text-center font-medium text-lavender text-sm">
                     You cannot Lend assets while you have an active borrowing
                     position. Learn more about how{' '}
                     <a
+                      className="text-white underline hover:opacity-90"
                       href="https://swaylend.gitbook.io/swaylend-docs/get-started/navigate-swaylend"
-                      target="_blank"
                       rel="noreferrer"
-                      className="underline hover:opacity-90 text-white"
+                      target="_blank"
                     >
                       Swaylend works.
                     </a>
                   </div>
                 ) : (
-                  <div className="flex gap-x-2 w-full">
+                  <div className="flex w-full gap-x-2">
                     <Button
                       className="w-1/2"
-                      disabled={!account || !balance?.gt(0)}
+                      disabled={!(account && balance?.gt(0))}
                       onMouseDown={() => {
                         handleBaseTokenClick(ACTION_TYPE.SUPPLY);
                       }}
@@ -343,14 +342,13 @@ export const LendTable = () => {
                     <Button
                       className="w-1/2"
                       disabled={
-                        !account ||
-                        !userSupplyBorrow ||
+                        !(account && userSupplyBorrow) ||
                         userSupplyBorrow.supplied.eq(0)
                       }
-                      variant="secondary"
                       onMouseDown={() => {
                         handleBaseTokenClick(ACTION_TYPE.WITHDRAW);
                       }}
+                      variant="secondary"
                     >
                       Withdraw
                     </Button>
@@ -375,13 +373,20 @@ export const LendTable = () => {
             SkeletonCardContent
           ) : (
             <CardContent>
-              <div className="flex flex-col gap-y-4 pt-8 px-4">
-                <div className="w-full flex items-center">
-                  <div className="w-1/2 text-moon font-medium">Asset</div>
-                  <div className="flex gap-x-2 items-center">
+              <div className="flex flex-col gap-y-4 px-4 pt-8">
+                <div className="flex w-full items-center">
+                  <div className="w-1/2 font-medium text-moon">Asset</div>
+                  <div className="flex items-center gap-x-2">
                     <div>
                       {marketConfiguration && (
                         <Image
+                          alt={
+                            appConfig.client.shared.assets[
+                              marketConfiguration.baseToken.bits
+                            ]
+                          }
+                          className={'rounded-full'}
+                          height={32}
                           src={
                             SYMBOL_TO_ICON[
                               appConfig.client.shared.assets[
@@ -389,20 +394,13 @@ export const LendTable = () => {
                               ]
                             ]
                           }
-                          alt={
-                            appConfig.client.shared.assets[
-                              marketConfiguration.baseToken.bits
-                            ]
-                          }
                           width={32}
-                          height={32}
-                          className={'rounded-full'}
                         />
                       )}
                     </div>
                     <div>
                       {marketConfiguration && (
-                        <div className="text-white font-medium">
+                        <div className="font-medium text-white">
                           {
                             appConfig.client.shared.assets[
                               marketConfiguration.baseToken.bits
@@ -424,8 +422,8 @@ export const LendTable = () => {
                     </div>
                   </div>
                 </div>
-                <div className="w-full flex items-center">
-                  <div className="w-1/2 text-moon font-medium">Earn APY</div>
+                <div className="flex w-full items-center">
+                  <div className="w-1/2 font-medium text-moon">Earn APY</div>
                   <div
                     className={cn(
                       'text-white',
@@ -435,8 +433,8 @@ export const LendTable = () => {
                     {aprData?.supplyBaseApr.times(100).toFixed(2)}%
                   </div>
                 </div>
-                <div className="w-full flex items-center">
-                  <div className="w-1/2 text-moon font-medium">
+                <div className="flex w-full items-center">
+                  <div className="w-1/2 font-medium text-moon">
                     Your Supplied Assets
                   </div>
                   <div className="text-moon">
@@ -453,22 +451,22 @@ export const LendTable = () => {
                     }
                   </div>
                 </div>
-                <div className="w-full flex items-center">
-                  <div className="w-1/2 text-moon font-medium">Reward APY</div>
+                <div className="flex w-full items-center">
+                  <div className="w-1/2 font-medium text-moon">Reward APY</div>
                   <div
                     className={cn(
                       'text-white',
                       isAprPending && 'animate-pulse'
                     )}
                   >
-                    <div className="flex gap-x-2 items-center">
+                    <div className="flex items-center gap-x-2">
                       {aprData?.supplyRewardApr.times(100).toFixed(2)}%
                       <PointIcons points={POINTS_LM} />
                     </div>
                   </div>
                 </div>
-                <div className="w-full flex items-center">
-                  <div className="w-1/2 text-moon font-medium">Net APY</div>
+                <div className="flex w-full items-center">
+                  <div className="w-1/2 font-medium text-moon">Net APY</div>
                   <div
                     className={cn(
                       'text-white',
@@ -478,34 +476,34 @@ export const LendTable = () => {
                     {aprData?.netSupplyApr.times(100).toFixed(2)}%
                   </div>
                 </div>
-                <div className="w-full flex items-center">
-                  <div className="w-1/2 text-moon font-medium">
+                <div className="flex w-full items-center">
+                  <div className="w-1/2 font-medium text-moon">
                     Supply Points
                   </div>
-                  <PointIcons points={POINTS_LEND} mobile />
+                  <PointIcons mobile points={POINTS_LEND} />
                 </div>
               </div>
             </CardContent>
           )}
           <CardFooter>
             {userRole === USER_ROLE.BORROWER ? (
-              <div className=" text-lavender bg-primary/20 rounded-lg px-4 py-2 text-sm font-medium text-center w-full">
+              <div className="w-full rounded-lg bg-primary/20 px-4 py-2 text-center font-medium text-lavender text-sm">
                 You cannot Lend assets while you have an active borrowing
                 position. Learn more about how{' '}
                 <a
+                  className="text-white underline hover:opacity-90"
                   href="https://swaylend.gitbook.io/swaylend-docs/get-started/navigate-swaylend"
-                  target="_blank"
                   rel="noreferrer"
-                  className="underline hover:opacity-90 text-white"
+                  target="_blank"
                 >
                   Swaylend works.
                 </a>
               </div>
             ) : (
-              <div className="flex gap-x-2 w-full">
+              <div className="flex w-full gap-x-2">
                 <Button
                   className="w-1/2"
-                  disabled={!account || !balance?.gt(0)}
+                  disabled={!(account && balance?.gt(0))}
                   onMouseDown={() => {
                     handleBaseTokenClick(ACTION_TYPE.SUPPLY);
                   }}
@@ -515,14 +513,13 @@ export const LendTable = () => {
                 <Button
                   className="w-1/2"
                   disabled={
-                    !account ||
-                    !userSupplyBorrow ||
+                    !(account && userSupplyBorrow) ||
                     userSupplyBorrow.supplied.eq(0)
                   }
-                  variant={'secondary'}
                   onMouseDown={() => {
                     handleBaseTokenClick(ACTION_TYPE.WITHDRAW);
                   }}
+                  variant={'secondary'}
                 >
                   Withdraw
                 </Button>

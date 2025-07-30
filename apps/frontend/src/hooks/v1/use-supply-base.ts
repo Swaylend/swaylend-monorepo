@@ -1,3 +1,7 @@
+import { useAccount } from '@fuels/react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import BigNumber from 'bignumber.js';
+import { toast } from 'react-toastify';
 import {
   ErrorToast,
   PendingToast,
@@ -5,10 +9,6 @@ import {
 } from '@/components/v1/toasts';
 import { useMarketContract } from '@/contracts/use-market-contract';
 import { useMarketStore } from '@/stores/market-store';
-import { useAccount } from '@fuels/react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import BigNumber from 'bignumber.js';
-import { toast } from 'react-toastify';
 import { useMarketConfiguration } from './use-market-configuration';
 
 export const useSupplyBase = () => {
@@ -33,7 +33,7 @@ export const useSupplyBase = () => {
       marketContract?.id,
     ],
     mutationFn: async (tokenAmount: BigNumber) => {
-      if (!account || !marketConfiguration || !marketContract) {
+      if (!(account && marketConfiguration && marketContract)) {
         return null;
       }
 

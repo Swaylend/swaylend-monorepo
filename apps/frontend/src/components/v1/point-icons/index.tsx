@@ -28,44 +28,44 @@ export const PointIcons = ({ points, mobile = false }: PointIconsProps) => {
       {points.map((point: Point) => {
         return (
           <div
+            className="nth-[n+2]:ml-[-12px] flex items-center rounded-full bg-card p-1"
             key={point.id}
-            className="flex items-center rounded-full bg-card p-1 nth-[n+2]:ml-[-12px]"
           >
             <TooltipProvider delayDuration={100}>
               <Tooltip>
                 <TooltipTrigger onClick={(e) => e.preventDefault()}>
                   <div
                     className={clsx(
-                      'border-2 border-primary py-1 rounded-full flex items-center gap-x-2',
+                      'flex items-center gap-x-2 rounded-full border-2 border-primary py-1',
                       point.displayMultiplier
-                        ? 'bg-primary/10 pl-2 w-[74px]'
+                        ? 'w-[74px] bg-primary/10 pl-2'
                         : 'px-1',
-                      'w-[40px] h-[40px] cursor-pointer'
+                      'h-[40px] w-[40px] cursor-pointer'
                     )}
                   >
                     {point.displayMultiplier && (
-                      <div className="text-lg text-primary font-semibold">
+                      <div className="font-semibold text-lg text-primary">
                         {point.displayMultiplier}
                       </div>
                     )}
                     <Image
-                      src={point.icon}
                       alt={point.name}
-                      width={28}
-                      height={28}
                       className="rounded-full"
+                      height={28}
+                      src={point.icon}
+                      width={28}
                     />
                   </div>
                 </TooltipTrigger>
                 <TooltipContent
-                  onPointerDownOutside={(e) => e.preventDefault()}
-                  className={mobile ? 'w-64' : 'w-lg'}
                   align="center"
+                  className={mobile ? 'w-64' : 'w-lg'}
+                  onPointerDownOutside={(e) => e.preventDefault()}
                 >
                   <div className="p-1">
                     <div className="font-bold">{point.name}</div>
                     {point.description && (
-                      <div className="text-sm mt-2 text-gray-400">
+                      <div className="mt-2 text-gray-400 text-sm">
                         {point.description}
                       </div>
                     )}

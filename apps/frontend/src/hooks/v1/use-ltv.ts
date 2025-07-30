@@ -19,12 +19,9 @@ export const useLTV = (marketParam?: string) => {
       priceData?.prices,
       marketConfiguration,
     ],
-    queryFn: async () => {
+    queryFn: () => {
       if (
-        !collateralValue ||
-        !supplyBorrow ||
-        !marketConfiguration ||
-        !priceData
+        !(collateralValue && supplyBorrow && marketConfiguration && priceData)
       ) {
         return null;
       }

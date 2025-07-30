@@ -8,13 +8,13 @@ type InfoToastProps = {
 
 export const InfoToast = ({ title, description }: InfoToastProps) => {
   return toast(
-    <div className="flex w-full gap-x-4 h-full items-center">
+    <div className="flex h-full w-full items-center gap-x-4">
       <div>
-        <InfoIcon className="w-8 h-8 text-blue-500" />
+        <InfoIcon className="h-8 w-8 text-blue-500" />
       </div>
-      <div className=" text-sm font-semibold flex flex-col gap-y-1">
+      <div className="flex flex-col gap-y-1 font-semibold text-sm">
         <span>{title}</span>
-        <span className="font-normal ">{description}</span>
+        <span className="font-normal">{description}</span>
       </div>
     </div>,
     {

@@ -1,5 +1,6 @@
 'use client';
 
+import BigNumber from 'bignumber.js';
 import { useMemo } from 'react';
 import {
   CartesianGrid,
@@ -10,7 +11,6 @@ import {
   ResponsiveContainer,
   XAxis,
 } from 'recharts';
-
 import {
   type ChartConfig,
   ChartContainer,
@@ -22,14 +22,56 @@ import {
   useUtilization,
 } from '@/hooks/v1';
 import { formatUnits, getFormattedNumber } from '@/utils';
-import BigNumber from 'bignumber.js';
 import { Skeleton } from '../ui/skeleton';
 
-export const KinkChart = ({
-  marketName,
-}: {
-  marketName: string;
-}) => {
+const CustomTooltip = ({ active, payload, label }: any) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="flex flex-col items-start gap-y-2 p-2">
+        <div className="flex items-center gap-x-2">
+          <div className="font-semibold text-md text-moon">Utilization</div>
+          <div className="font-semibold text-md text-white">{label}%</div>
+        </div>
+        <div className="flex items-center gap-x-2">
+          <div className="font-semibold text-md text-moon">Borrow APR</div>
+          <div className="font-semibold text-md text-white">
+            {payload[0].value}%
+          </div>
+        </div>
+        <div className="flex items-center gap-x-2">
+          <div className="font-semibold text-md text-moon">Earn APR</div>
+          <div className="font-semibold text-md text-white">
+            {payload[1].value}%
+          </div>
+        </div>
+      </div>
+    );
+  }
+  return null;
+};
+
+function CustomCursor(props: any) {
+  const { pointerEvents, height, points, className } = props;
+
+  const { x, y } = points[0];
+  return (
+    <Rectangle
+      className={className}
+      fillOpacity={0}
+      height={height}
+      pointerEvents={pointerEvents}
+      points={points}
+      stroke="#FFFFFF"
+      strokeOpacity={0.4}
+      type="linear"
+      width={0.5}
+      x={x - 0.5}
+      y={y}
+    />
+  );
+}
+
+export const KinkChart = ({ marketName }: { marketName: string }) => {
   const chartConfig = {
     desktop: {
       label: 'Desktop',
@@ -55,70 +97,21 @@ export const KinkChart = ({
   const utilizationPosition =
     currentUtilization < 1 ? 1 : Number(currentUtilization.toFixed(0));
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="flex flex-col gap-y-2 items-start p-2">
-          <div className="flex items-center gap-x-2">
-            <div className="text-moon text-md font-semibold">Utilization</div>
-            <div className="text-white text-md font-semibold">{label}%</div>
-          </div>
-          <div className="flex items-center gap-x-2">
-            <div className="text-moon text-md font-semibold">Borrow APR</div>
-            <div className="text-white text-md font-semibold">
-              {payload[0].value}%
-            </div>
-          </div>
-          <div className="flex items-center gap-x-2">
-            <div className="text-moon text-md font-semibold">Earn APR</div>
-            <div className="text-white text-md font-semibold">
-              {payload[1].value}%
-            </div>
-          </div>
-        </div>
-      );
-    }
-    return null;
-  };
-
-  function CustomCursor(props: any) {
-    const { pointerEvents, height, points, className } = props;
-
-    const { x, y } = points[0];
-    return (
-      <>
-        <Rectangle
-          x={x - 0.5}
-          y={y}
-          fillOpacity={0}
-          stroke="#FFFFFF"
-          strokeOpacity={0.4}
-          pointerEvents={pointerEvents}
-          width={0.5}
-          height={height}
-          points={points}
-          className={className}
-          type="linear"
-        />
-      </>
-    );
-  }
-
   return (
     <div className="w-full">
       {rateData ? (
-        <ResponsiveContainer width="100%" height={200}>
+        <ResponsiveContainer height={200} width="100%">
           <ChartContainer config={chartConfig}>
             <LineChart
-              width={500}
-              height={300}
               data={rateData}
+              height={300}
               margin={{
                 top: 5,
                 right: 30,
                 left: 20,
                 bottom: 5,
               }}
+              width={500}
             >
               <CartesianGrid strokeDasharray="3 3" vertical={false} />
               <XAxis dataKey="percent" tick={false} />
@@ -128,10 +121,6 @@ export const KinkChart = ({
                 position={{ y: 16 }}
               />
               <ReferenceLine
-                x={utilizationPosition}
-                isFront
-                stroke="#3FE8BD"
-                strokeWidth={2}
                 label={{
                   value: 'Current Utilization',
                   position: 'insideTopLeft',
@@ -140,39 +129,42 @@ export const KinkChart = ({
                   fontFamily: 'Inter',
                   fontWeight: '500',
                 }}
-              />
-              <Line
-                type="monotone"
-                dataKey="borrowValue"
                 stroke="#3FE8BD"
                 strokeWidth={2}
-                dot={false}
+                x={utilizationPosition}
               />
               <Line
+                dataKey="borrowValue"
+                dot={false}
+                stroke="#3FE8BD"
+                strokeWidth={2}
                 type="monotone"
+              />
+              <Line
                 dataKey="earn"
+                dot={false}
                 stroke="#8b5cf6"
                 strokeWidth={2}
-                dot={false}
+                type="monotone"
               />
             </LineChart>
           </ChartContainer>
         </ResponsiveContainer>
       ) : (
-        <ResponsiveContainer width="100%" height={200}>
-          <Skeleton className="w-full h-5/6 bg-primary/20 rounded-md mb-4" />
+        <ResponsiveContainer height={200} width="100%">
+          <Skeleton className="mb-4 h-5/6 w-full rounded-md bg-primary/20" />
         </ResponsiveContainer>
       )}
-      <div className="w-full relative flex justify-between px-6 -mt-4 text-white/60">
+      <div className="-mt-4 relative flex w-full justify-between px-6 text-white/60">
         <div>0%</div>
         <div>100%</div>
         <div
           className={
-            'w-[120px] flex gap-x-2 absolute left-[calc(50%-60px)] top-0'
+            'absolute top-0 left-[calc(50%-60px)] flex w-[120px] gap-x-2'
           }
         >
-          <span className="text-moon font-medium">Utilization</span>
-          <span className="text-white font-semibold">
+          <span className="font-medium text-moon">Utilization</span>
+          <span className="font-semibold text-white">
             {getFormattedNumber(BigNumber(currentUtilization))}%
           </span>
         </div>

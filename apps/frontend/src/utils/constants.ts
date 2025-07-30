@@ -25,11 +25,11 @@ export const FAUCET_URL = 'https://faucet-testnet.fuel.network/';
 
 export const FAUCET_AMOUNTS: Record<string, number> = {
   BTC: 1,
-  USDC: 1000000,
-  USDT: 100000000,
+  USDC: 1_000_000,
+  USDT: 100_000_000,
   BNB: 300,
   ezETH: 1,
-  sDAI: 100000,
+  sDAI: 100_000,
   weETH: 1,
   wstETH: 1,
   // Testnet only

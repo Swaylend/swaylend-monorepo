@@ -1,9 +1,9 @@
-import { appConfig } from '@/configs';
 import { useAccount } from '@fuels/react';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import { appConfig } from '@/configs';
 
 dayjs.extend(utc);
 
@@ -84,7 +84,7 @@ export const useTransactionHistory = (page: number) => {
         date: dayjs.unix(row.timestamp).utc().format('DD/MM/YYYY HH:mm:ss'),
         transactionHash: row.transactionHash,
         token: appConfig.client.shared.assets[row.tokenAddress],
-        amount: BigNumber(row.amount).toFixed(),
+        amount: BigNumber(row.amount).toFixed(0),
         amountUsd: BigNumber(row.amountUsd).toFixed(2),
         eventType: row.eventType,
       }));

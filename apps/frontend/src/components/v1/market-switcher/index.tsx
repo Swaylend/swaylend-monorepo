@@ -1,4 +1,6 @@
 'use client';
+import { SelectGroup } from '@radix-ui/react-select';
+import Image from 'next/image';
 import {
   Select,
   SelectContent,
@@ -10,32 +12,34 @@ import { appConfig } from '@/configs';
 import { cn } from '@/lib/utils';
 import { useMarketStore } from '@/stores/market-store';
 import { SYMBOL_TO_ICON } from '@/utils';
-import { SelectGroup } from '@radix-ui/react-select';
-import Image from 'next/image';
 
 const MarketItem = ({
   market,
   logo,
   selected,
-}: { market: string; logo: any; selected?: boolean }) => {
+}: {
+  market: string;
+  logo: any;
+  selected?: boolean;
+}) => {
   return (
-    <div className="flex gap-x-2 w-full items-center justify-center px-2 cursor-pointer">
+    <div className="flex w-full cursor-pointer items-center justify-center gap-x-2 px-2">
       <div className="flex items-center">
-        <div className="bg-white/10 min-w-[32px] h-[32px] rounded-full flex items-center justify-center">
+        <div className="flex h-[32px] min-w-[32px] items-center justify-center rounded-full bg-white/10">
           <Image
-            src={SYMBOL_TO_ICON.FUEL}
             alt="FUEL"
-            width={24}
-            height={24}
             className="rounded-full"
+            height={24}
+            src={SYMBOL_TO_ICON.FUEL}
+            width={24}
           />
         </div>
         <Image
-          src={logo}
           alt={market}
-          width={32}
+          className="-ml-2 rounded-full ring-4 ring-background"
           height={32}
-          className="rounded-full -ml-2 ring-background ring-4"
+          src={logo}
+          width={32}
         />
       </div>
 
@@ -61,13 +65,13 @@ export const MarketSwitcher = () => {
   };
 
   return (
-    <Select value={market} onValueChange={handleChange}>
+    <Select onValueChange={handleChange} value={market}>
       <SelectTrigger>
         <SelectValue>
           <MarketItem
-            selected={true}
-            market={market}
             logo={SYMBOL_TO_ICON[market]}
+            market={market}
+            selected={true}
           />
         </SelectValue>
       </SelectTrigger>
@@ -76,7 +80,7 @@ export const MarketSwitcher = () => {
           {Object.keys(appConfig.client.v1.markets).map((market) => {
             return (
               <SelectItem key={market} value={market}>
-                <MarketItem market={market} logo={SYMBOL_TO_ICON[market]} />
+                <MarketItem logo={SYMBOL_TO_ICON[market]} market={market} />
               </SelectItem>
             );
           })}

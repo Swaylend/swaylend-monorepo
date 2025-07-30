@@ -4,14 +4,14 @@ export const metadata: Metadata = {
   title: 'Swap',
 };
 
-export default async function Page() {
+export default function Page() {
   return (
-    <div className="w-full h-full p-4">
+    <div className="h-full w-full p-4">
       <iframe
-        title="mira.ly"
         allowTransparency={true}
-        className="w-full h-[75vh] md:h-[85vh] rounded-2xl border-0 scrollbar-none"
+        className="scrollbar-none h-[75vh] w-full rounded-2xl border-0 md:h-[85vh]"
         src="https://mira.ly/widget/"
+        title="mira.ly"
       />
     </div>
   );

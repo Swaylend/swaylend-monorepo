@@ -1,6 +1,6 @@
+import BigNumber from 'bignumber.js';
 import type { ChartData } from '@/lib/charts';
 import { getFormattedPrice } from '@/utils';
-import BigNumber from 'bignumber.js';
 import { Skeleton } from '../ui/skeleton';
 
 export const MarketStats = ({
@@ -9,55 +9,55 @@ export const MarketStats = ({
   chartData: ChartData[] | undefined;
 }) => {
   if (!chartData) {
-    return <Skeleton className="w-full h-[30px]" />;
+    return <Skeleton className="h-[30px] w-full" />;
   }
 
   const borrowed =
     chartData.length > 0
-      ? BigNumber(chartData[chartData.length - 1].borrowedValueUsd)
+      ? BigNumber(chartData.at(-1).borrowedValueUsd)
       : BigNumber(0);
   const supplied =
     chartData.length > 0
-      ? BigNumber(chartData[chartData.length - 1].suppliedValueUsd)
+      ? BigNumber(chartData.at(-1).suppliedValueUsd)
       : BigNumber(0);
   const collateral =
     chartData.length > 0
-      ? BigNumber(chartData[chartData.length - 1].collateralValueUsd)
+      ? BigNumber(chartData.at(-1).collateralValueUsd)
       : BigNumber(0);
 
   return (
     <div className="flex w-full justify-between">
       <div className="flex flex-col justify-end">
-        <div className="text-moon text-sm font-semibold">Total Supply</div>
-        <div className="text-white font-bold text-2xl">
+        <div className="font-semibold text-moon text-sm">Total Supply</div>
+        <div className="font-bold text-2xl text-white">
           {getFormattedPrice(collateral.plus(supplied))}
         </div>
       </div>
       <div className="flex items-end gap-x-16">
         <div>
-          <div className="flex gap-x-2 items-center">
-            <div className="w-2 h-2 rounded-full bg-primary" />
-            <div className="text-sm font-semibold text-primary">Earning</div>
+          <div className="flex items-center gap-x-2">
+            <div className="h-2 w-2 rounded-full bg-primary" />
+            <div className="font-semibold text-primary text-sm">Earning</div>
           </div>
-          <div className="text-white font-bold text-xl">
+          <div className="font-bold text-white text-xl">
             {getFormattedPrice(supplied)}
           </div>
         </div>
         <div>
-          <div className="flex gap-x-2 items-center">
-            <div className="w-2 h-2 rounded-full bg-purple" />
-            <div className="text-sm font-semibold text-purple">Borrowing </div>
+          <div className="flex items-center gap-x-2">
+            <div className="h-2 w-2 rounded-full bg-purple" />
+            <div className="font-semibold text-purple text-sm">Borrowing </div>
           </div>
-          <div className="text-white font-bold text-xl">
+          <div className="font-bold text-white text-xl">
             {getFormattedPrice(borrowed)}
           </div>
         </div>
         <div>
-          <div className="flex gap-x-2 items-center">
-            <div className="w-2 h-2 rounded-full bg-[#918E8E]" />
-            <div className="text-moon text-sm font-semibold">Collateral</div>
+          <div className="flex items-center gap-x-2">
+            <div className="h-2 w-2 rounded-full bg-[#918E8E]" />
+            <div className="font-semibold text-moon text-sm">Collateral</div>
           </div>
-          <div className="text-white font-bold text-xl">
+          <div className="font-bold text-white text-xl">
             {getFormattedPrice(collateral)}
           </div>
         </div>

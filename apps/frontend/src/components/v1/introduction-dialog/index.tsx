@@ -50,9 +50,9 @@ export const IntroductionDialog = () => {
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog onOpenChange={setOpen} open={open}>
       <DialogContent
-        className="p-0 h-full max-h-full sm:h-[80%] sm:max-h-[80%] w-full max-w-[800px] overflow-hidden"
+        className="h-full max-h-full w-full max-w-[800px] overflow-hidden p-0 sm:h-[80%] sm:max-h-[80%]"
         onInteractOutside={(e) => {
           e.preventDefault();
         }}
@@ -60,20 +60,20 @@ export const IntroductionDialog = () => {
         <VisuallyHidden.Root asChild>
           <DialogTitle>Introduction</DialogTitle>
         </VisuallyHidden.Root>
-        <div className="h-full w-full flex flex-col overflow-hidden">
-          <div className="w-full overflow-hidden relative">
+        <div className="flex h-full w-full flex-col overflow-hidden">
+          <div className="relative w-full overflow-hidden">
             <div
               className={
-                '-z-10 w-[90%] top-[62px] h-2 bg-linear-to-r from-popover via-primary to-popover absolute left-[calc(5%)]'
+                '-z-10 absolute top-[62px] left-[calc(5%)] h-2 w-[90%] bg-linear-to-r from-popover via-primary to-popover'
               }
             />
             <div
               className={
-                '-z-10 absolute blur-2xl top-[61px] left-[calc(33%)] rounded-full w-[33%] h-8 bg-primary'
+                '-z-10 absolute top-[61px] left-[calc(33%)] h-8 w-[33%] rounded-full bg-primary blur-2xl'
               }
             />
-            <div className="w-full text-lg h-16 flex items-center justify-center">
-              <h1 className="text-lavender font-semibold text-lg">
+            <div className="flex h-16 w-full items-center justify-center text-lg">
+              <h1 className="font-semibold text-lavender text-lg">
                 Introduction
               </h1>
             </div>
@@ -95,7 +95,7 @@ export const IntroductionDialog = () => {
               <Step label="Finish" styleConfig={STEP_CONFIG} />
             </Stepper>
           </div>
-          <div className="max-sm:px-2 px-4 overflow-hidden h-full flex-1 flex flex-col">
+          <div className="flex h-full flex-1 flex-col overflow-hidden px-4 max-sm:px-2">
             {activeStep === 0 && (
               <TermsAndConditions setActiveStep={handleNextStep} />
             )}

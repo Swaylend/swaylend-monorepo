@@ -1,5 +1,5 @@
-@import 'tailwindcss';
-@import 'tw-animate-css';
+@import "tailwindcss";
+@import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -140,9 +140,9 @@
     height: var(--doc-height);
   }
 
-  body > div > div[role='dialog'] {
-    bottom: unset !important;
-    top: 40% !important;
+  body > div > div[role="dialog"] {
+    bottom: unset;
+    top: 40%;
   }
 }
 
@@ -175,24 +175,24 @@
 
   .dark {
     --background: 205 16% 15%;
-    --foreground: 227 73% 93%; 
-    --card: 198 15% 17%; 
-    --card-foreground: 227 73% 93%; 
-    --popover: 198 15% 17%; 
+    --foreground: 227 73% 93%;
+    --card: 198 15% 17%;
+    --card-foreground: 227 73% 93%;
+    --popover: 198 15% 17%;
     --popover-foreground: 227 73% 93%;
-    --primary: 165 79% 58%; 
-    --primary-foreground: 205 16% 15%; 
-    --secondary: 213 17% 23%; 
-    --secondary-foreground: 227 73% 93%;  
-    --muted: 213 17% 23%; 
-    --muted-foreground: 0 0% 35%; 
+    --primary: 165 79% 58%;
+    --primary-foreground: 205 16% 15%;
+    --secondary: 213 17% 23%;
+    --secondary-foreground: 227 73% 93%;
+    --muted: 213 17% 23%;
+    --muted-foreground: 0 0% 35%;
     --primary: 165 79% 58%;
     --primary-foreground: 205 16% 15%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
-    --border: 213 17% 23%; 
+    --border: 213 17% 23%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 213 17% 23%; 
+    --ring: 213 17% 23%;
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;

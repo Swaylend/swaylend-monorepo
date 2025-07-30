@@ -1,3 +1,8 @@
+import { useAccount, useIsConnected } from '@fuels/react';
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
+import BigNumber from 'bignumber.js';
+import { LoaderCircleIcon } from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   Dialog,
   DialogClose,
@@ -24,12 +29,7 @@ import {
 } from '@/hooks/v1';
 import { cn } from '@/lib/utils';
 import { ACTION_TYPE, useMarketStore } from '@/stores/market-store';
-import { SYMBOL_TO_NAME, formatUnits, getFormattedNumber } from '@/utils';
-import { useAccount, useIsConnected } from '@fuels/react';
-import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
-import BigNumber from 'bignumber.js';
-import { LoaderCircleIcon } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
+import { formatUnits, getFormattedNumber, SYMBOL_TO_NAME } from '@/utils';
 import { Button } from '../../ui/button';
 import { InputField } from './input-field';
 import { PositionSummary } from './position-summary';
@@ -40,7 +40,7 @@ const getOverPayAmount = (
 ): BigNumber => {
   const assetPriceInUsd = amount.times(assetPrice);
 
-  let overPayAmount;
+  let overPayAmount: BigNumber;
 
   // Overpay 0.01 USD
   if (assetPriceInUsd.lte(10)) {
@@ -153,7 +153,7 @@ export const InputDialog = () => {
         break;
       }
       case ACTION_TYPE.BORROW:
-        if (!priceData || !tokenAmount.gt(0)) return;
+        if (!(priceData && tokenAmount.gt(0))) return;
 
         borrowBase({
           tokenAmount,
@@ -179,12 +179,14 @@ export const InputDialog = () => {
 
   const finalBalance = useMemo(() => {
     if (
-      !collateralConfigurations ||
-      !balance ||
-      !marketConfiguration ||
-      !actionTokenAssetId ||
-      !userSupplyBorrow ||
-      !priceData
+      !(
+        collateralConfigurations &&
+        balance &&
+        marketConfiguration &&
+        actionTokenAssetId &&
+        userSupplyBorrow &&
+        priceData
+      )
     ) {
       return BigNumber(0);
     }
@@ -305,6 +307,8 @@ export const InputDialog = () => {
         }
         break;
       }
+      default:
+        break;
     }
   };
 
@@ -411,7 +415,7 @@ export const InputDialog = () => {
               BigNumber(10).pow(marketConfiguration.baseTokenDecimals)
             )
           )
-          .toFixed();
+          .toFixed(0);
 
         return `Minimum borrow position is ${minMarketBorrowPosition.toFixed(0)} ${appConfig.client.shared.assets[marketConfiguration.baseToken.bits]}. You need to borrow at least ${amountToAchieveMinMarketBorrowPosition} ${appConfig.client.shared.assets[marketConfiguration.baseToken.bits]}.`;
       }
@@ -445,7 +449,7 @@ export const InputDialog = () => {
         marketConfiguration?.baseTokenDecimals
       );
 
-      const overPayAmount = getOverPayAmount(
+      const _overPayAmount = getOverPayAmount(
         userBorrowed,
         priceData.prices[marketConfiguration.baseToken.bits] ?? 1
       );
@@ -460,7 +464,7 @@ export const InputDialog = () => {
         userBorrowed.minus(tokenAmount).lt(minOpenPositionValue) &&
         userBorrowed.minus(tokenAmount).gt(0)
       ) {
-        return `Your position must be at least ${minOpenPositionValue.toFixed()} ${SYMBOL_TO_NAME[appConfig.client.shared.assets[marketConfiguration.baseToken.bits]]}. Please repay the entire amount or keep at least ${minOpenPositionValue.toFixed()} ${SYMBOL_TO_NAME[appConfig.client.shared.assets[marketConfiguration.baseToken.bits]]} in your position.`;
+        return `Your position must be at least ${minOpenPositionValue.toFixed(0)} ${SYMBOL_TO_NAME[appConfig.client.shared.assets[marketConfiguration.baseToken.bits]]}. Please repay the entire amount or keep at least ${minOpenPositionValue.toFixed(0)} ${SYMBOL_TO_NAME[appConfig.client.shared.assets[marketConfiguration.baseToken.bits]]} in your position.`;
       }
 
       // if (tokenAmount.gt(userBorrowedModified)) {
@@ -473,9 +477,7 @@ export const InputDialog = () => {
 
   const availableBalance = useMemo(() => {
     if (
-      !collateralConfigurations ||
-      !marketConfiguration ||
-      !actionTokenAssetId
+      !(collateralConfigurations && marketConfiguration && actionTokenAssetId)
     ) {
       return '0.00';
     }
@@ -514,7 +516,7 @@ export const InputDialog = () => {
     }
 
     // Borrow/Repay
-    if (!account || !borrowCapacity || borrowCapacity.eq(0)) {
+    if (!(account && borrowCapacity) || borrowCapacity.eq(0)) {
       return true;
     }
 
@@ -532,14 +534,16 @@ export const InputDialog = () => {
     if (action === ACTION_TYPE.SUPPLY || action === ACTION_TYPE.WITHDRAW) {
       // Lend/Withdraw
       if (actionTokenAssetId === marketConfiguration?.baseToken.bits) {
-        if (!account || !userSupplyBorrow || userSupplyBorrow?.supplied.eq(0)) {
+        if (
+          !(account && userSupplyBorrow) ||
+          userSupplyBorrow?.supplied.eq(0)
+        ) {
           return true;
         }
       }
       // Supply collateral/withdraw
       else if (
-        !account ||
-        !actionTokenAssetId ||
+        !(account && actionTokenAssetId) ||
         (userCollateralAssets?.[actionTokenAssetId] ?? BigNumber(0)).eq(0)
       ) {
         return true;
@@ -549,7 +553,7 @@ export const InputDialog = () => {
     }
 
     // Borrow/Repay
-    if (!account || !userSupplyBorrow || userSupplyBorrow.borrowed.eq(0)) {
+    if (!(account && userSupplyBorrow) || userSupplyBorrow.borrowed.eq(0)) {
       return true;
     }
 
@@ -566,18 +570,24 @@ export const InputDialog = () => {
   if (!marketConfiguration) return null;
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog onOpenChange={setOpen} open={open}>
       <DialogContent
+        className="max-w-[400px] bg-popover p-0 max-sm:w-[90%] max-sm:rounded-xl"
         showCloseButton={false}
-        className="p-0 max-sm:w-[90%] max-sm:rounded-xl max-w-[400px] bg-popover"
       >
         <VisuallyHidden.Root asChild>
           <DialogTitle>Input Dialog</DialogTitle>
         </VisuallyHidden.Root>
         <div className="h-full w-full rounded-xl">
-          <div className="w-full flex justify-between">
-            <div className="w-1/2 relative h-[64px] flex justify-center items-center">
+          <div className="flex w-full justify-between">
+            <div className="relative flex h-[64px] w-1/2 items-center justify-center">
               <button
+                className={cn(
+                  !(action === 'SUPPLY' || action === 'BORROW') &&
+                    'text-lavender',
+                  'h-full w-full cursor-pointer font-semibold text-lg',
+                  disabledLeftTab && 'text-gray-500'
+                )}
                 disabled={disabledLeftTab}
                 onMouseDown={() =>
                   handleModeChange(
@@ -588,12 +598,6 @@ export const InputDialog = () => {
                   )
                 }
                 type="button"
-                className={cn(
-                  !(action === 'SUPPLY' || action === 'BORROW') &&
-                    'text-lavender',
-                  'w-full font-semibold text-lg h-full cursor-pointer',
-                  disabledLeftTab && 'text-gray-500'
-                )}
               >
                 {action === ACTION_TYPE.SUPPLY ||
                 action === ACTION_TYPE.WITHDRAW
@@ -609,18 +613,24 @@ export const InputDialog = () => {
               >
                 <div
                   className={cn(
-                    '-z-10 w-[60%] top-[62px] h-2 bg-linear-to-r from-popover via-primary to-popover absolute left-[calc(20%)]'
+                    '-z-10 absolute top-[62px] left-[calc(20%)] h-2 w-[60%] bg-linear-to-r from-popover via-primary to-popover'
                   )}
                 />
                 <div
                   className={cn(
-                    '-z-10 absolute blur-xl top-[50px] left-[calc(20%)] rounded-full w-[60%] h-8 bg-primary'
+                    '-z-10 absolute top-[50px] left-[calc(20%)] h-8 w-[60%] rounded-full bg-primary blur-xl'
                   )}
                 />
               </div>
             </div>
-            <div className="w-1/2 relative h-[64px] flex justify-center items-center">
+            <div className="relative flex h-[64px] w-1/2 items-center justify-center">
               <button
+                className={cn(
+                  !(action === 'WITHDRAW' || action === 'REPAY') &&
+                    'text-lavender',
+                  'h-full w-full cursor-pointer font-semibold text-lg',
+                  disabledRightTab && 'text-gray-500'
+                )}
                 disabled={disabledRightTab}
                 onMouseDown={() =>
                   handleModeChange(
@@ -631,12 +641,6 @@ export const InputDialog = () => {
                   )
                 }
                 type="button"
-                className={cn(
-                  !(action === 'WITHDRAW' || action === 'REPAY') &&
-                    'text-lavender',
-                  'w-full font-semibold text-lg h-full cursor-pointer',
-                  disabledRightTab && 'text-gray-500'
-                )}
               >
                 {action === ACTION_TYPE.SUPPLY ||
                 action === ACTION_TYPE.WITHDRAW
@@ -648,26 +652,26 @@ export const InputDialog = () => {
               >
                 <div
                   className={cn(
-                    '-z-10 w-[60%] top-[62px] h-2 bg-linear-to-r from-popover  via-primary to-popover absolute left-[calc(20%)]'
+                    '-z-10 absolute top-[62px] left-[calc(20%)] h-2 w-[60%] bg-linear-to-r from-popover via-primary to-popover'
                   )}
                 />
                 <div
                   className={cn(
-                    '-z-10 absolute blur-xl top-[50px] left-[calc(20%)] rounded-full w-[60%] h-8 bg-primary'
+                    '-z-10 absolute top-[50px] left-[calc(20%)] h-8 w-[60%] rounded-full bg-primary blur-xl'
                   )}
                 />
               </div>
             </div>
           </div>
-          <div className="w-full flex flex-col gap-y-[30px] pt-[30px] h-[calc(100%-68px)] bg-popover p-[16px] z-10 rounded-b-xl">
+          <div className="z-10 flex h-[calc(100%-68px)] w-full flex-col gap-y-[30px] rounded-b-xl bg-popover p-[16px] pt-[30px]">
             <div>
               <div>
                 <InputField error={error !== null} />
                 {error && (
-                  <div className="text-red-500 mt-2 text-sm">{error}</div>
+                  <div className="mt-2 text-red-500 text-sm">{error}</div>
                 )}
               </div>
-              <div className="flex mt-2 justify-between items-center w-full">
+              <div className="mt-2 flex w-full items-center justify-between">
                 <div
                   className={`text-sm ${action === ACTION_TYPE.REPAY ? 'text-lavender' : 'text-moon'}`}
                 >
@@ -693,28 +697,28 @@ export const InputDialog = () => {
                 </Button>
               </div>
             </div>
-            <div className="flex gap-x-2 w-full">
+            <div className="flex w-full gap-x-2">
               <DialogClose asChild>
                 <Button className="w-1/2" variant={'secondary'}>
                   Cancel
                 </Button>
               </DialogClose>
               <Button
+                className="flex w-1/2 items-center gap-x-2"
                 disabled={
                   error !== null || tokenAmount.eq(0) || isAnyActionPending
                 }
                 onMouseDown={handleSubmit}
-                className="w-1/2 flex items-center gap-x-2"
               >
                 {action &&
                   `${action.slice(0, 1)}${action.slice(1).toLowerCase()}`}
                 {isAnyActionPending && (
-                  <LoaderCircleIcon className="animate-spin w-4 h-4" />
+                  <LoaderCircleIcon className="h-4 w-4 animate-spin" />
                 )}
               </Button>
             </div>
             {!isLending && (
-              <div className="w-full flex justify-center">
+              <div className="flex w-full justify-center">
                 <PositionSummary />
               </div>
             )}

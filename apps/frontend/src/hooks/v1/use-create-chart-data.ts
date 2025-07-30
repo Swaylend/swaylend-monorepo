@@ -1,11 +1,11 @@
+import BigNumber from 'bignumber.js';
+import { useMemo } from 'react';
 import {
   calculateBorrowRate,
   calculateSupplyRate,
   getBorrowApr,
   getSupplyApr,
 } from '@/utils';
-import BigNumber from 'bignumber.js';
-import { useMemo } from 'react';
 
 export const useCreateChartData = (
   marketName: string,
@@ -17,7 +17,11 @@ export const useCreateChartData = (
         return null;
       }
 
-      const rateData = [];
+      const rateData: {
+        percent: number;
+        borrowValue: number;
+        earn: number;
+      }[] = [];
       for (let i = 1; i <= 100; i++) {
         const borrowRateForIteration = BigNumber(
           calculateBorrowRate(

@@ -18,9 +18,9 @@ export function createMainnetConfig() {
         alchemyId: process.env.NEXT_PUBLIC_ALCHEMY_ID ?? '',
         baseAssetId:
           '0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07',
-        assets: assets,
+        assets,
         useBurnerWallet: false,
-        marketAddressToBaseAssetName: marketAddressToBaseAssetName,
+        marketAddressToBaseAssetName,
       },
       v1: {
         announcementEnabled:
@@ -73,7 +73,7 @@ const marketAddressToBaseAssetName: Record<string, string> = {
 const rewards_v1: Rewards = {
   USDC: [
     {
-      poolSize: 2000000,
+      poolSize: 2_000_000,
       assetId:
         '0x1d5d97005e41cae2187a895fd8eab0506111e0e2f3331cd3912c15c24e3c1d82',
       supplyRewardPercentage: 0.5,
@@ -83,7 +83,7 @@ const rewards_v1: Rewards = {
       durationInDays: 7,
     },
     {
-      poolSize: 2600000,
+      poolSize: 2_600_000,
       assetId:
         '0x1d5d97005e41cae2187a895fd8eab0506111e0e2f3331cd3912c15c24e3c1d82',
       supplyRewardPercentage: 0.5,
@@ -93,7 +93,7 @@ const rewards_v1: Rewards = {
       durationInDays: 7,
     },
     {
-      poolSize: 2800000,
+      poolSize: 2_800_000,
       assetId:
         '0x1d5d97005e41cae2187a895fd8eab0506111e0e2f3331cd3912c15c24e3c1d82',
       supplyRewardPercentage: 0.5,
@@ -103,7 +103,7 @@ const rewards_v1: Rewards = {
       durationInDays: 7,
     },
     {
-      poolSize: 2160666,
+      poolSize: 2_160_666,
       assetId:
         '0x1d5d97005e41cae2187a895fd8eab0506111e0e2f3331cd3912c15c24e3c1d82',
       supplyRewardPercentage: 0.35,
@@ -113,7 +113,7 @@ const rewards_v1: Rewards = {
       durationInDays: 9,
     },
     {
-      poolSize: 2160666,
+      poolSize: 2_160_666,
       assetId:
         '0x1d5d97005e41cae2187a895fd8eab0506111e0e2f3331cd3912c15c24e3c1d82',
       supplyRewardPercentage: 0.35,
@@ -123,7 +123,7 @@ const rewards_v1: Rewards = {
       durationInDays: 7,
     },
     {
-      poolSize: 2160666,
+      poolSize: 2_160_666,
       assetId:
         '0x1d5d97005e41cae2187a895fd8eab0506111e0e2f3331cd3912c15c24e3c1d82',
       supplyRewardPercentage: 0.35,

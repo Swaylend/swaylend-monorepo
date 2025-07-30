@@ -1,12 +1,5 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
-import { appConfig } from '@/configs';
 import {
   useAccount,
   useConnectUI,
@@ -14,6 +7,13 @@ import {
   useIsConnected,
 } from '@fuels/react';
 import { ChevronDown } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { appConfig } from '@/configs';
 import { CopyIcon } from '../v1/copy-icon';
 
 export const ConnectButton = () => {
@@ -26,12 +26,12 @@ export const ConnectButton = () => {
     return (
       <Popover>
         <PopoverTrigger>
-          <div className="px-4 py-2 rounded-full max-xl:hidden flex gap-x-2 items-center bg-secondary text-moon font-semibold cursor-pointer">
+          <div className="flex cursor-pointer items-center gap-x-2 rounded-full bg-secondary px-4 py-2 font-semibold text-moon max-xl:hidden">
             {`${account?.slice(0, 6)}...${account?.slice(-4)}`}
 
             <ChevronDown className="h-4 w-4" />
           </div>
-          <div className="px-4 py-2 rounded-full xl:hidden flex gap-x-2 items-center bg-secondary text-moon font-semibold cursor-pointer">
+          <div className="flex cursor-pointer items-center gap-x-2 rounded-full bg-secondary px-4 py-2 font-semibold text-moon xl:hidden">
             {`${account?.slice(0, 4)}...${account?.slice(-2)}`}
 
             <ChevronDown className="h-4 w-4" />
@@ -45,9 +45,9 @@ export const ConnectButton = () => {
           <div className="w-full">
             <div>
               <div className="text-moon text-sm">Connected Wallet</div>
-              <div className="text-lg font-medium flex items-center justify-between w-full">
-                <div className="flex gap-x-2 items-center">
-                  <div className="w-2 h-2 rounded-full bg-primary" />
+              <div className="flex w-full items-center justify-between font-medium text-lg">
+                <div className="flex items-center gap-x-2">
+                  <div className="h-2 w-2 rounded-full bg-primary" />
                   {`${account?.slice(0, 6)}...${account?.slice(-4)}`}
                 </div>
                 <CopyIcon value={account} />
@@ -57,17 +57,17 @@ export const ConnectButton = () => {
           <div className="mt-10">
             <a
               href={`${appConfig.client.shared.fuelExplorerUrl}/account/${account}`}
-              target="_blank"
               rel="noreferrer"
+              target="_blank"
             >
               <Button className="w-full" variant="secondary">
                 View on Fuel Explorer
               </Button>
             </a>
             <Button
-              className="w-full mt-2"
-              variant="destructive"
+              className="mt-2 w-full"
               onMouseDown={() => disconnect()}
+              variant="destructive"
             >
               Disconnect
             </Button>

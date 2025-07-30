@@ -13,8 +13,8 @@ export const useUserLiquidationPoint = () => {
       collateralValue,
       userCollateralUtilization,
     ],
-    queryFn: async () => {
-      if (!collateralValue || !userCollateralUtilization) return BigNumber(0);
+    queryFn: () => {
+      if (!(collateralValue && userCollateralUtilization)) return BigNumber(0);
       return collateralValue.times(userCollateralUtilization);
     },
     enabled: !!collateralValue && !!userCollateralUtilization,

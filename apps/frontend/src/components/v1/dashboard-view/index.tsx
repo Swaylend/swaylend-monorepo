@@ -9,7 +9,7 @@ import { Stats } from './stats';
 
 export const DashboardView = () => {
   return (
-    <div className="pt-[33px] sm:pt-[55px] pb-[55px] sm:px-[40px] xl:px-[88px] flex flex-col w-full min-h-[80vh] items-center justify-start">
+    <div className="flex min-h-[80vh] w-full flex-col items-center justify-start pt-[33px] pb-[55px] sm:px-[40px] sm:pt-[55px] xl:px-[88px]">
       <Stats />
       <BorrowPositionSummary />
       <MarketSwitch />

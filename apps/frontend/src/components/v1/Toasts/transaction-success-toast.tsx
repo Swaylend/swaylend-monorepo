@@ -7,11 +7,11 @@ type TransactionSuccessToastProps = {
 
 export const TransactionSuccessToast = (_: TransactionSuccessToastProps) => {
   return toast(
-    <div className="flex w-full gap-x-4 h-full items-center">
+    <div className="flex h-full w-full items-center gap-x-4">
       <div>
-        <CheckCircleIcon className="w-8 h-8 text-primary" />
+        <CheckCircleIcon className="h-8 w-8 text-primary" />
       </div>
-      <div className="text-sm font-semibold flex items-center">
+      <div className="flex items-center font-semibold text-sm">
         <span>Transaction Successful!</span>
       </div>
     </div>,

@@ -1,3 +1,5 @@
+import Image from 'next/image';
+import { useMemo, useState } from 'react';
 import { appConfig } from '@/configs';
 import {
   TX_HISTORY_PAGE_SIZE,
@@ -6,8 +8,6 @@ import {
   useTransactionHistory,
 } from '@/hooks/v1';
 import { SYMBOL_TO_ICON, SYMBOL_TO_NAME } from '@/utils';
-import Image from 'next/image';
-import React, { useMemo, useState } from 'react';
 import { Skeleton } from '../../ui/skeleton';
 import {
   Table,
@@ -18,27 +18,26 @@ import {
   TableRow,
 } from '../../ui/table';
 import { AssetName } from '../asset-name';
-import { InfoIcon } from '../info-icon';
 
 const SkeletonRow = (
   <TableRow>
     <TableCell>
-      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+      <Skeleton className="h-[40px] w-full rounded-md bg-primary/20" />
     </TableCell>
     <TableCell>
-      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+      <Skeleton className="h-[40px] w-full rounded-md bg-primary/20" />
     </TableCell>
     <TableCell>
-      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+      <Skeleton className="h-[40px] w-full rounded-md bg-primary/20" />
     </TableCell>
     <TableCell>
-      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+      <Skeleton className="h-[40px] w-full rounded-md bg-primary/20" />
     </TableCell>
     <TableCell>
-      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+      <Skeleton className="h-[40px] w-full rounded-md bg-primary/20" />
     </TableCell>
     <TableCell>
-      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+      <Skeleton className="h-[40px] w-full rounded-md bg-primary/20" />
     </TableCell>
   </TableRow>
 );
@@ -70,157 +69,151 @@ export const History = () => {
         <TableHeader>
           <TableRow>
             <TableHead colSpan={8}>
-              <div className="w-full flex items-center justify-center gap-x-2 text-white font-semibold">
+              <div className="flex w-full items-center justify-center gap-x-2 font-semibold text-white">
                 My Transactions
               </div>
             </TableHead>
           </TableRow>
           <TableRow>
-            <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
+            <TableHead className="h-[64px] bg-card pt-4 font-semibold text-moon">
               Market
             </TableHead>
-            <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
+            <TableHead className="h-[64px] bg-card pt-4 font-semibold text-moon">
               Type
             </TableHead>
-            <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
+            <TableHead className="h-[64px] bg-card pt-4 font-semibold text-moon">
               Asset
             </TableHead>
-            <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
+            <TableHead className="h-[64px] bg-card pt-4 font-semibold text-moon">
               Amount
             </TableHead>
-            <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
+            <TableHead className="h-[64px] bg-card pt-4 font-semibold text-moon">
               TX ID
             </TableHead>
-            <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
+            <TableHead className="h-[64px] bg-card pt-4 font-semibold text-moon">
               Time
             </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {isLoading ? (
-            <>{SkeletonRow}</>
-          ) : (
+            SkeletonRow
+          ) : totalTransactionCount > 0 ? (
             <>
-              {totalTransactionCount > 0 ? (
-                <>
-                  {transactionHistory?.map((tx: any) => (
-                    <TableRow key={tx.id}>
-                      <TableCell className="text-moon">
-                        <div className="flex gap-x-2 items-center">
-                          <div>
-                            <Image
-                              src={SYMBOL_TO_ICON[tx.market]}
-                              alt={tx.market}
-                              width={32}
-                              height={32}
-                              className={'rounded-full'}
-                            />
-                          </div>
-                          <div>
-                            <div className="flex gap-x-2 items-baseline">
-                              <div className="text-white text-md font-semibold">
-                                {SYMBOL_TO_NAME[tx.market]}
-                              </div>
-                              <div className="text-sm font-semibold text-moon">
-                                {tx.market}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-lavender font-semibold text-md">
-                        {tx.eventType === 'Withdrawal'
-                          ? 'Withdraw'
-                          : tx.eventType}
-                      </TableCell>
-                      <TableCell className="text-moon">
-                        <AssetName
-                          symbol={tx.token}
-                          name={SYMBOL_TO_NAME[tx.token]}
-                          src={SYMBOL_TO_ICON[tx.token]}
+              {transactionHistory?.map((tx: any) => (
+                <TableRow key={tx.id}>
+                  <TableCell className="text-moon">
+                    <div className="flex items-center gap-x-2">
+                      <div>
+                        <Image
+                          alt={tx.market}
+                          className={'rounded-full'}
+                          height={32}
+                          src={SYMBOL_TO_ICON[tx.market]}
+                          width={32}
                         />
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex gap-x-2 items-center">
-                          <span className="text-lavender font-medium">
-                            $ {tx.amountUsd}
-                          </span>
-                          <span>
-                            {Number.parseFloat(tx.amount).toFixed(2)} {tx.token}
-                          </span>
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-moon">
-                        <div>
-                          <a
-                            target="_blank"
-                            rel="noreferrer"
-                            className="cursor-pointer font-normal text-primary underline hover:opacity-80"
-                            href={`${appConfig.client.shared.fuelExplorerUrl}/tx/${tx.transactionHash}`}
-                          >
-                            {`${tx.transactionHash.slice(0, 8)}...${tx.transactionHash.slice(-4)}`}
-                          </a>
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-lavender">{tx.date}</TableCell>
-                    </TableRow>
-                  ))}
-                  <TableRow>
-                    <TableCell colSpan={8}>
-                      <div className="w-full gap-x-2 text-md font-semibold text-moon flex justify-center items-center">
-                        <button
-                          type="button"
-                          onClick={() => setPage(page > 1 ? page - 1 : 1)}
-                        >
-                          {'<'}
-                        </button>
-                        Page {page} of {totalPages}
-                        <button
-                          type="button"
-                          onClick={() =>
-                            setPage(page < totalPages ? page + 1 : totalPages)
-                          }
-                        >
-                          {'>'}
-                        </button>
                       </div>
-                    </TableCell>
-                  </TableRow>
-                </>
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={8}>
-                    <div className="w-full text-md font-semibold text-moon flex justify-center items-center">
-                      No Transactions
+                      <div>
+                        <div className="flex items-baseline gap-x-2">
+                          <div className="font-semibold text-md text-white">
+                            {SYMBOL_TO_NAME[tx.market]}
+                          </div>
+                          <div className="font-semibold text-moon text-sm">
+                            {tx.market}
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </TableCell>
+                  <TableCell className="font-semibold text-lavender text-md">
+                    {tx.eventType === 'Withdrawal' ? 'Withdraw' : tx.eventType}
+                  </TableCell>
+                  <TableCell className="text-moon">
+                    <AssetName
+                      name={SYMBOL_TO_NAME[tx.token]}
+                      src={SYMBOL_TO_ICON[tx.token]}
+                      symbol={tx.token}
+                    />
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-x-2">
+                      <span className="font-medium text-lavender">
+                        $ {tx.amountUsd}
+                      </span>
+                      <span>
+                        {Number.parseFloat(tx.amount).toFixed(2)} {tx.token}
+                      </span>
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-moon">
+                    <div>
+                      <a
+                        className="cursor-pointer font-normal text-primary underline hover:opacity-80"
+                        href={`${appConfig.client.shared.fuelExplorerUrl}/tx/${tx.transactionHash}`}
+                        rel="noreferrer"
+                        target="_blank"
+                      >
+                        {`${tx.transactionHash.slice(0, 8)}...${tx.transactionHash.slice(-4)}`}
+                      </a>
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-lavender">{tx.date}</TableCell>
                 </TableRow>
-              )}
+              ))}
+              <TableRow>
+                <TableCell colSpan={8}>
+                  <div className="flex w-full items-center justify-center gap-x-2 font-semibold text-md text-moon">
+                    <button
+                      onClick={() => setPage(page > 1 ? page - 1 : 1)}
+                      type="button"
+                    >
+                      {'<'}
+                    </button>
+                    Page {page} of {totalPages}
+                    <button
+                      onClick={() =>
+                        setPage(page < totalPages ? page + 1 : totalPages)
+                      }
+                      type="button"
+                    >
+                      {'>'}
+                    </button>
+                  </div>
+                </TableCell>
+              </TableRow>
             </>
+          ) : (
+            <TableRow>
+              <TableCell colSpan={8}>
+                <div className="flex w-full items-center justify-center font-semibold text-md text-moon">
+                  No Transactions
+                </div>
+              </TableCell>
+            </TableRow>
           )}
         </TableBody>
       </Table>
 
-      <Table className="max-lg:hidden mt-12">
+      <Table className="mt-12 max-lg:hidden">
         <TableHeader>
           <TableRow>
             <TableHead colSpan={8}>
-              <div className="w-full flex items-center justify-center gap-x-2 text-white font-semibold">
+              <div className="flex w-full items-center justify-center gap-x-2 font-semibold text-white">
                 Liquidated Positions
               </div>
             </TableHead>
           </TableRow>
           <TableRow>
-            <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
+            <TableHead className="h-[64px] bg-card pt-4 font-semibold text-moon">
               Market
             </TableHead>
-            <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
+            <TableHead className="h-[64px] bg-card pt-4 font-semibold text-moon">
               Event Type
             </TableHead>
-            <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
+            <TableHead className="h-[64px] bg-card pt-4 font-semibold text-moon">
               TX ID
             </TableHead>
-            <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
+            <TableHead className="h-[64px] bg-card pt-4 font-semibold text-moon">
               Time
             </TableHead>
           </TableRow>
@@ -229,76 +222,70 @@ export const History = () => {
           {isPendingLqHistory ? (
             <TableRow>
               <TableCell>
-                <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+                <Skeleton className="h-[40px] w-full rounded-md bg-primary/20" />
               </TableCell>
               <TableCell>
-                <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+                <Skeleton className="h-[40px] w-full rounded-md bg-primary/20" />
               </TableCell>
               <TableCell>
-                <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+                <Skeleton className="h-[40px] w-full rounded-md bg-primary/20" />
               </TableCell>
               <TableCell>
-                <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+                <Skeleton className="h-[40px] w-full rounded-md bg-primary/20" />
               </TableCell>
             </TableRow>
-          ) : (
-            <>
-              {liquidationHistory && liquidationHistory.length > 0 ? (
-                <>
-                  {liquidationHistory?.map((tx: any) => (
-                    <TableRow key={tx.id}>
-                      <TableCell className="text-moon">
-                        <div className="flex gap-x-2 items-center">
-                          <div>
-                            <Image
-                              src={SYMBOL_TO_ICON[tx.market]}
-                              alt={tx.market}
-                              width={32}
-                              height={32}
-                              className={'rounded-full'}
-                            />
-                          </div>
-                          <div>
-                            <div className="flex gap-x-2 items-baseline">
-                              <div className="text-white text-md font-semibold">
-                                {SYMBOL_TO_NAME[tx.market]}
-                              </div>
-                              <div className="text-sm font-semibold text-moon">
-                                {tx.market}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-red-500 font-semibold text-md">
-                        Liquidation
-                      </TableCell>
-                      <TableCell className="text-moon">
-                        <div>
-                          <a
-                            target="_blank"
-                            rel="noreferrer"
-                            className="cursor-pointer font-normal text-primary underline hover:opacity-80"
-                            href={`${appConfig.client.shared.fuelExplorerUrl}/tx/${tx.transactionHash}`}
-                          >
-                            {`${tx.transactionHash.slice(0, 8)}...${tx.transactionHash.slice(-4)}`}
-                          </a>
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-lavender">{tx.date}</TableCell>
-                    </TableRow>
-                  ))}
-                </>
-              ) : (
-                <TableRow>
-                  <TableCell colSpan={8}>
-                    <div className="w-full text-md font-semibold text-moon flex justify-center items-center">
-                      No Liquidations
+          ) : liquidationHistory && liquidationHistory.length > 0 ? (
+            liquidationHistory?.map((tx: any) => (
+              <TableRow key={tx.id}>
+                <TableCell className="text-moon">
+                  <div className="flex items-center gap-x-2">
+                    <div>
+                      <Image
+                        alt={tx.market}
+                        className={'rounded-full'}
+                        height={32}
+                        src={SYMBOL_TO_ICON[tx.market]}
+                        width={32}
+                      />
                     </div>
-                  </TableCell>
-                </TableRow>
-              )}
-            </>
+                    <div>
+                      <div className="flex items-baseline gap-x-2">
+                        <div className="font-semibold text-md text-white">
+                          {SYMBOL_TO_NAME[tx.market]}
+                        </div>
+                        <div className="font-semibold text-moon text-sm">
+                          {tx.market}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell className="font-semibold text-md text-red-500">
+                  Liquidation
+                </TableCell>
+                <TableCell className="text-moon">
+                  <div>
+                    <a
+                      className="cursor-pointer font-normal text-primary underline hover:opacity-80"
+                      href={`${appConfig.client.shared.fuelExplorerUrl}/tx/${tx.transactionHash}`}
+                      rel="noreferrer"
+                      target="_blank"
+                    >
+                      {`${tx.transactionHash.slice(0, 8)}...${tx.transactionHash.slice(-4)}`}
+                    </a>
+                  </div>
+                </TableCell>
+                <TableCell className="text-lavender">{tx.date}</TableCell>
+              </TableRow>
+            ))
+          ) : (
+            <TableRow>
+              <TableCell colSpan={8}>
+                <div className="flex w-full items-center justify-center font-semibold text-md text-moon">
+                  No Liquidations
+                </div>
+              </TableCell>
+            </TableRow>
           )}
         </TableBody>
       </Table>

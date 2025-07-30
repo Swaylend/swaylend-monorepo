@@ -1,3 +1,7 @@
+import { useAccount } from '@fuels/react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import BigNumber from 'bignumber.js';
+import { toast } from 'react-toastify';
 import {
   ErrorToast,
   PendingToast,
@@ -8,10 +12,6 @@ import type { PriceDataUpdateInput } from '@/contract-types/v1/market';
 import { useMarketContract } from '@/contracts/use-market-contract';
 import { usePythContract } from '@/contracts/use-pyth-contract';
 import { useMarketStore } from '@/stores/market-store';
-import { useAccount } from '@fuels/react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import BigNumber from 'bignumber.js';
-import { toast } from 'react-toastify';
 import { useMarketConfiguration } from './use-market-configuration';
 
 export const useWithdrawBase = () => {
@@ -45,12 +45,7 @@ export const useWithdrawBase = () => {
       tokenAmount: BigNumber;
       priceUpdateData: PriceDataUpdateInput;
     }) => {
-      if (
-        !account ||
-        !marketConfiguration ||
-        !marketContract ||
-        !pythContract
-      ) {
+      if (!(account && marketConfiguration && marketContract && pythContract)) {
         return null;
       }
 

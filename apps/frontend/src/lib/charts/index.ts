@@ -17,7 +17,7 @@ export const getChartData = async () => {
   const url = appConfig.client.v1.sentioApi;
   const apiKey = appConfig.client.v1.sentioApiKey;
 
-  if (!apiKey || !url) {
+  if (!(apiKey && url)) {
     return;
   }
 
@@ -34,7 +34,7 @@ export const getChartData = async () => {
         body: JSON.stringify({
           sqlQuery: {
             sql: getSingleMarketQuery(poolAddress),
-            size: 10000,
+            size: 10_000,
           },
           version: appConfig.client.v1.sentioProcessorVersion,
         }),
@@ -68,7 +68,7 @@ export const getChartData = async () => {
     body: JSON.stringify({
       sqlQuery: {
         sql: getMarketsCombinedQuery(),
-        size: 10000,
+        size: 10_000,
       },
       version: appConfig.client.v1.sentioProcessorVersion,
     }),

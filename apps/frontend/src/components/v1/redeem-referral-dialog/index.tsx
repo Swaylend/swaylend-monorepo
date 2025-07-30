@@ -1,8 +1,8 @@
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
+import { useMemo, useState } from 'react';
 import { useRedeemInvite } from '@/hooks';
 import { cn } from '@/lib/utils';
 import { useReferralModalStore } from '@/stores/referral-modal-store';
-import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
-import { useMemo, useState } from 'react';
 import { Button } from '../../ui/button';
 import { Dialog, DialogContent, DialogTitle } from '../../ui/dialog';
 import { Input } from '../../ui/input';
@@ -18,57 +18,57 @@ export const RedeemReferralDialog = () => {
   }, [error]);
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="p-0 max-sm:w-[90%] max-sm:rounded-xl max-w-[400px]">
+    <Dialog onOpenChange={setOpen} open={open}>
+      <DialogContent className="max-w-[400px] p-0 max-sm:w-[90%] max-sm:rounded-xl">
         <VisuallyHidden.Root asChild>
           <DialogTitle>Redeem Referral Code</DialogTitle>
         </VisuallyHidden.Root>
         <div className="h-full w-full">
-          <div className="w-full overflow-hidden relative">
+          <div className="relative w-full overflow-hidden">
             <div
               className={cn(
-                '-z-10 w-[90%] top-[62px] h-2 bg-linear-to-r from-popover via-primary to-popover absolute left-[calc(5%)]'
+                '-z-10 absolute top-[62px] left-[calc(5%)] h-2 w-[90%] bg-linear-to-r from-popover via-primary to-popover'
               )}
             />
             <div
               className={cn(
-                '-z-10 absolute blur-2xl top-[61px] left-[calc(33%)] rounded-full w-[33%] h-8 bg-primary'
+                '-z-10 absolute top-[61px] left-[calc(33%)] h-8 w-[33%] rounded-full bg-primary blur-2xl'
               )}
             />
-            <div className="w-full text-lg h-16 flex items-center justify-center">
-              <div className="text-lavender font-semibold text-lg">
+            <div className="flex h-16 w-full items-center justify-center text-lg">
+              <div className="font-semibold text-lavender text-lg">
                 Redeem Referral Code
               </div>
             </div>
           </div>
-          <div className="w-full flex flex-col gap-y-[30px] pt-[30px] h-[calc(100%-68px)] bg-popover p-[16px] z-10">
-            <div className="w-full flex flex-col gap-y-2.5">
+          <div className="z-10 flex h-[calc(100%-68px)] w-full flex-col gap-y-[30px] bg-popover p-[16px] pt-[30px]">
+            <div className="flex w-full flex-col gap-y-2.5">
               <Input
                 className={cn(
                   'h-[56px] bg-card',
                   isError && !isPredicateError && 'border-[#FF0606]'
                 )}
-                value={inviteCode}
                 onChange={(e) => setInviteCode(e.target.value)}
                 placeholder="Enter referral code"
+                value={inviteCode}
               />
               {isError && !isPredicateError && (
                 <p className="text-[#FF0606]">Incorrect referral code</p>
               )}
             </div>
-            <div className="flex gap-x-[10px] w-full">
+            <div className="flex w-full gap-x-[10px]">
               <Button
-                className="w-1/2 h-10"
-                variant="secondary"
+                className="h-10 w-1/2"
                 onMouseDown={() => setOpen(false)}
+                variant="secondary"
               >
                 Cancel
               </Button>
               <Button
-                className="w-1/2 h-10"
-                variant="default"
+                className="h-10 w-1/2"
                 disabled={isPending || inviteCode.length !== 8}
                 onMouseDown={() => redeemInvite(inviteCode)}
+                variant="default"
               >
                 {isPending ? 'Redeeming...' : isError ? 'Try again' : 'Redeem'}
               </Button>

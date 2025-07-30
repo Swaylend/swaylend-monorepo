@@ -42,8 +42,11 @@ const CSP_HEADER = `
     upgrade-insecure-requests;
 `;
 
+const SVG_REGEX = /\.svg$/i;
+const URL_REGEX = /url/;
+
 /** @type {import('next').NextConfig} */
-module.exports = (phase, { defaultConfig }) => {
+module.exports = (_phase, { _ }) => {
   /**
    * @type {import('next').NextConfig}
    */
@@ -60,20 +63,23 @@ module.exports = (phase, { defaultConfig }) => {
         // Reapply the existing rule, but only for svg imports ending in ?url
         {
           ...fileLoaderRule,
-          test: /\.svg$/i,
-          resourceQuery: /url/, // *.svg?url
+          test: SVG_REGEX,
+          resourceQuery: URL_REGEX, // *.svg?url
         },
         // Convert all other *.svg imports to React components
         {
-          test: /\.svg$/i,
+          test: SVG_REGEX,
           issuer: fileLoaderRule.issuer,
-          resourceQuery: { not: [...fileLoaderRule.resourceQuery.not, /url/] }, // exclude if *.svg?url
+          resourceQuery: {
+            not: [...fileLoaderRule.resourceQuery.not, URL_REGEX],
+          }, // exclude if *.svg?url
           use: ['@svgr/webpack'],
         }
       );
 
       // Modify the file loader rule to ignore *.svg, since we have it handled now.
-      fileLoaderRule.exclude = /\.svg$/i;
+
+      fileLoaderRule.exclude = SVG_REGEX;
 
       config.resolve.fallback = {
         crypto: false,
@@ -85,7 +91,7 @@ module.exports = (phase, { defaultConfig }) => {
       return config;
     },
     async headers() {
-      return [
+      return await Promise.resolve([
         {
           // Apply security headers to all routes
           source: '/(.*)',
@@ -100,7 +106,7 @@ module.exports = (phase, { defaultConfig }) => {
             },
           ],
         },
-      ];
+      ]);
     },
   };
 

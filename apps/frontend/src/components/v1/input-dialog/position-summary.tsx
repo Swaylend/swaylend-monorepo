@@ -1,3 +1,6 @@
+import BigNumber from 'bignumber.js';
+import { ArrowDown, ArrowUp } from 'lucide-react';
+import { useMemo } from 'react';
 import {
   useBorrowCapacity,
   useMarketBalanceOfBase,
@@ -11,9 +14,6 @@ import {
 } from '@/hooks/v1';
 import { cn } from '@/lib/utils';
 import { formatUnits, getFormattedNumber, getFormattedPrice } from '@/utils';
-import BigNumber from 'bignumber.js';
-import { ArrowDown, ArrowUp } from 'lucide-react';
-import { useMemo } from 'react';
 import { Progress } from '../../ui/progress';
 import { InfoIcon } from '../info-icon';
 
@@ -30,10 +30,12 @@ export const PositionSummary = () => {
 
   const totalBorrowCapacity = useMemo(() => {
     if (
-      !userSupplyBorrow ||
-      !borrowCapacity ||
-      !marketConfiguration ||
-      !marketBalanceOfBase
+      !(
+        userSupplyBorrow &&
+        borrowCapacity &&
+        marketConfiguration &&
+        marketBalanceOfBase
+      )
     ) {
       return BigNumber(0);
     }
@@ -202,14 +204,14 @@ export const PositionSummary = () => {
   ]);
 
   return (
-    <div className="w-full flex-col flex justify-center items-center">
-      <div className="text-moon flex items-center gap-x-2">
+    <div className="flex w-full flex-col items-center justify-center">
+      <div className="flex items-center gap-x-2 text-moon">
         Position Summary
       </div>
-      <div className="w-full mt-4 flex flex-col gap-y-2">
+      <div className="mt-4 flex w-full flex-col gap-y-2">
         <div>
-          <div className="w-full flex justify-between">
-            <div className="text-moon flex gap-x-1">
+          <div className="flex w-full justify-between">
+            <div className="flex gap-x-1 text-moon">
               Risk Meter{' '}
               <InfoIcon
                 text={
@@ -217,28 +219,28 @@ export const PositionSummary = () => {
                 }
               />
             </div>
-            <div className="text-lavender font-semibold">
+            <div className="font-semibold text-lavender">
               {possibleCollateralUtilizationValue}%
             </div>
           </div>
           <Progress
+            className={'mt-2 h-[6px]'}
+            indicatorColor={meterColor}
             value={
               possibleCollateralUtilization
                 ? possibleCollateralUtilization
                 : currentCollateralUtilization
             }
-            className={'h-[6px] mt-2'}
-            indicatorColor={meterColor}
           />
         </div>
         {stats.map((stat) => {
           return (
-            <div key={stat.title} className="flex w-full justify-between">
-              <div className="text-moon flex gap-x-1">
+            <div className="flex w-full justify-between" key={stat.title}>
+              <div className="flex gap-x-1 text-moon">
                 {stat.title} <InfoIcon text={stat.tooltip} />
               </div>
               {stat.changeValue === null ? (
-                <div className="text-lavender font-semibold">{stat.value}</div>
+                <div className="font-semibold text-lavender">{stat.value}</div>
               ) : (
                 <div
                   className={cn(
@@ -248,9 +250,9 @@ export const PositionSummary = () => {
                   )}
                 >
                   {stat.direction ? (
-                    <ArrowUp className="w-4 h-4" />
+                    <ArrowUp className="h-4 w-4" />
                   ) : (
-                    <ArrowDown className="w-4 h-4" />
+                    <ArrowDown className="h-4 w-4" />
                   )}
 
                   {stat.changeValue}

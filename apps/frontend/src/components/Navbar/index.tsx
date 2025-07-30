@@ -1,5 +1,18 @@
 'use client';
 
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
+import {
+  ChartLine,
+  ChevronDown,
+  Coins,
+  ExternalLink,
+  Menu,
+  X,
+} from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { usePathname, useRouter } from 'next/navigation';
+import { useState } from 'react';
 import {
   Drawer,
   DrawerContent,
@@ -16,19 +29,6 @@ import { appConfig } from '@/configs';
 import { useTrackExternalPageView } from '@/lib/posthog';
 import { cn } from '@/lib/utils';
 import { MARKET_MODE, useMarketStore } from '@/stores/market-store';
-import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
-import {
-  ChartLine,
-  ChevronDown,
-  Coins,
-  ExternalLink,
-  Menu,
-  X,
-} from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
-import { useState } from 'react';
 import Logo from '/public/icons/dark-logo.svg?url';
 import { Button } from '../ui/button';
 import { Line } from '../v1/line';
@@ -55,74 +55,74 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
 
   return (
     <>
-      <div className="w-full text-center bg-purple font-medium text-md text-lavender py-1 px-4">
+      <div className="w-full bg-purple px-4 py-1 text-center font-medium text-lavender text-md">
         New Functionality live! 🚀 Discover <b>Portfolio</b>: Track your
         markets, positions, and transactions now.
       </div>
       {/* DESKTOP */}
       <div className="max-lg:hidden">
-        <div className="flex justify-between items-center px-16 min-h-[93px]">
+        <div className="flex min-h-[93px] items-center justify-between px-16">
           <div className="flex items-center gap-x-[70px]">
             <Link href="/" prefetch={false}>
-              <Image src={Logo} alt="logo" />
+              <Image alt="logo" src={Logo} />
             </Link>
-            <div className="flex items-center gap-x-[25px] h-full">
+            <div className="flex h-full items-center gap-x-[25px]">
               <div>
                 <button
-                  type="button"
-                  onClick={() => {
-                    changeMarketMode(MARKET_MODE.BORROW);
-                    router.push('/');
-                  }}
                   className={cn(
                     pathname === '/' && marketMode === MARKET_MODE.BORROW
                       ? 'text-primary'
                       : 'text-lavender',
                     (pathname !== '/' || marketMode !== MARKET_MODE.BORROW) &&
                       'hover:text-lavender/80',
-                    'flex items-center cursor-pointer justify-center text-md font-semibold min-h-[93px]'
+                    'flex min-h-[93px] cursor-pointer items-center justify-center font-semibold text-md'
                   )}
+                  onClick={() => {
+                    changeMarketMode(MARKET_MODE.BORROW);
+                    router.push('/');
+                  }}
+                  type="button"
                 >
                   Borrow
                 </button>
               </div>
               <div>
                 <button
-                  type="button"
-                  onClick={() => {
-                    changeMarketMode(MARKET_MODE.LEND);
-                    router.push('/');
-                  }}
                   className={cn(
                     pathname === '/' && marketMode === MARKET_MODE.LEND
                       ? 'text-primary'
                       : 'text-lavender',
                     (pathname !== '/' || marketMode !== MARKET_MODE.LEND) &&
                       'hover:text-lavender/80',
-                    'flex items-center cursor-pointer justify-center text-md font-semibold  min-h-[93px]'
+                    'flex min-h-[93px] cursor-pointer items-center justify-center font-semibold text-md'
                   )}
+                  onClick={() => {
+                    changeMarketMode(MARKET_MODE.LEND);
+                    router.push('/');
+                  }}
+                  type="button"
                 >
                   Earn
                 </button>
               </div>
               {NAVBAR_LINKS.map(({ href, label }) => (
-                <Link key={href} href={href} prefetch={false}>
+                <Link href={href} key={href} prefetch={false}>
                   <div
                     className={cn(
                       pathname === href ? 'text-primary' : 'text-lavender',
                       pathname !== href && 'hover:text-lavender/80',
-                      'flex items-center justify-center text-md font-semibold  min-h-[93px]'
+                      'flex min-h-[93px] items-center justify-center font-semibold text-md'
                     )}
                   >
                     {label}
                   </div>
                 </Link>
               ))}
-              <DropdownMenu open={openBridge} onOpenChange={setOpenBridge}>
+              <DropdownMenu onOpenChange={setOpenBridge} open={openBridge}>
                 <DropdownMenuTrigger>
-                  <div className="text-lavender outline-hidden border-none focus:outline-hidden focus:border-none hover:text-lavender/80 text-md font-semibold flex items-center gap-x-1">
+                  <div className="flex items-center gap-x-1 border-none font-semibold text-lavender text-md outline-hidden hover:text-lavender/80 focus:border-none focus:outline-hidden">
                     Bridges
-                    <ChevronDown className="w-4 h-4" />
+                    <ChevronDown className="h-4 w-4" />
                   </div>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
@@ -130,6 +130,7 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
                 >
                   <DropdownMenuItem>
                     <div
+                      className="w-full"
                       onMouseDown={() => {
                         trackExternalPageView(
                           `${appConfig.client.shared.fuelExplorerUrl}/bridge`
@@ -141,16 +142,16 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
                         setOpenBridge(false);
                       }}
                       rel="noreferrer"
-                      className="w-full"
                     >
-                      <div className="w-full flex items-center justify-between text-md font-medium text-lavender py-1 px-0.5 gap-x-2 cursor-pointer hover:underline">
+                      <div className="flex w-full cursor-pointer items-center justify-between gap-x-2 px-0.5 py-1 font-medium text-lavender text-md hover:underline">
                         Official Fuel Bridge
-                        <ExternalLink className="w-4 h-4" />
+                        <ExternalLink className="h-4 w-4" />
                       </div>
                     </div>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <div
+                      className="w-full"
                       onMouseDown={() => {
                         trackExternalPageView(
                           'https://www.orbiter.finance/?source=Ethereum&dest=Fuel&token=ETH'
@@ -162,11 +163,10 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
                         setOpenBridge(false);
                       }}
                       rel="noreferrer"
-                      className="w-full"
                     >
-                      <div className="w-full flex items-center justify-between text-md font-medium text-lavender py-1 px-0.5 gap-x-2 cursor-pointer hover:underline">
+                      <div className="flex w-full cursor-pointer items-center justify-between gap-x-2 px-0.5 py-1 font-medium text-lavender text-md hover:underline">
                         Orbiter Bridge
-                        <ExternalLink className="w-4 h-4" />
+                        <ExternalLink className="h-4 w-4" />
                       </div>
                     </div>
                   </DropdownMenuItem>
@@ -179,11 +179,11 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
                   </DropdownMenuItem> */}
                 </DropdownMenuContent>
               </DropdownMenu>
-              <DropdownMenu open={openDex} onOpenChange={setOpenDex}>
+              <DropdownMenu onOpenChange={setOpenDex} open={openDex}>
                 <DropdownMenuTrigger>
-                  <div className="text-lavender outline-hidden border-none focus:outline-hidden focus:border-none hover:text-lavender/80 text-md font-semibold flex items-center gap-x-1">
+                  <div className="flex items-center gap-x-1 border-none font-semibold text-lavender text-md outline-hidden hover:text-lavender/80 focus:border-none focus:outline-hidden">
                     Swap
-                    <ChevronDown className="w-4 h-4" />
+                    <ChevronDown className="h-4 w-4" />
                   </div>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
@@ -191,17 +191,17 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
                 >
                   <DropdownMenuItem>
                     <div
+                      className="w-full"
                       onMouseDown={() => {
                         trackExternalPageView('https://mira.ly/');
                         window.open('https://mira.ly/', '_blank');
                         setOpenDex(false);
                       }}
                       rel="noreferrer"
-                      className="w-full"
                     >
-                      <div className="w-full flex items-center justify-between text-md font-medium text-lavender py-1 px-0.5 gap-x-2 cursor-pointer hover:underline">
+                      <div className="flex w-full cursor-pointer items-center justify-between gap-x-2 px-0.5 py-1 font-medium text-lavender text-md hover:underline">
                         MIRA
-                        <ExternalLink className="w-4 h-4" />
+                        <ExternalLink className="h-4 w-4" />
                       </div>
                     </div>
                   </DropdownMenuItem>
@@ -226,46 +226,46 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
 
       {/* MOBILE */}
       <div className="hidden max-lg:block">
-        <div className="flex justify-between items-center px-4 h-[80px]">
+        <div className="flex h-[80px] items-center justify-between px-4">
           <Link href="/" prefetch={false}>
-            <Image src={Logo} alt="logo" />
+            <Image alt="logo" src={Logo} />
           </Link>
           <div className="flex items-center gap-x-2">
             <Points />
             <ConnectButton />
             <Button
+              className="h-[40px] w-[40px] rounded-full p-0"
               onMouseDown={() => setOpen(true)}
-              className="rounded-full w-[40px] h-[40px] p-0"
               variant="secondary"
             >
-              <Menu className="w-5 h-5" />
+              <Menu className="h-5 w-5" />
             </Button>
           </div>
         </div>
         <Line />
-        <Drawer open={open} onOpenChange={setOpen}>
+        <Drawer onOpenChange={setOpen} open={open}>
           <DrawerContent className="h-dvh">
             <VisuallyHidden.Root>
               <DrawerHeader>
                 <DrawerTitle>Hamburger Menu</DrawerTitle>
               </DrawerHeader>
             </VisuallyHidden.Root>
-            <div className="flex flex-col items-center w-full h-full justify-center">
-              <div className="flex justify-between w-full items-center px-8 h-[80px]">
-                <a href="https://swaylend.com" target="_blank" rel="noreferrer">
-                  <Image src={Logo} alt="logo" />
+            <div className="flex h-full w-full flex-col items-center justify-center">
+              <div className="flex h-[80px] w-full items-center justify-between px-8">
+                <a href="https://swaylend.com" rel="noreferrer" target="_blank">
+                  <Image alt="logo" src={Logo} />
                 </a>
                 <Button
+                  className="h-[40px] w-[40px] rounded-full p-0"
                   onMouseDown={() => setOpen(false)}
-                  className="rounded-full w-[40px] h-[40px] p-0"
                   variant="secondary"
                 >
-                  <X className="w-5 h-5" />
+                  <X className="h-5 w-5" />
                 </Button>
               </div>
 
-              <div className="h-full flex flex-col justify-between items-start px-8 w-full py-16 mt-8">
-                <div className="flex flex-col w-full h-full items-start gap-y-8  pt-16">
+              <div className="mt-8 flex h-full w-full flex-col items-start justify-between px-8 py-16">
+                <div className="flex h-full w-full flex-col items-start gap-y-8 pt-16">
                   <Link
                     href="/"
                     onMouseDown={() => setOpen(false)}
@@ -275,7 +275,7 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
                       className={cn(
                         pathname === '/' ? 'text-primary' : 'text-lavender',
                         pathname !== '/' && 'hover:text-lavender/80',
-                        'flex font-bold text-xl items-center gap-x-2 h-full'
+                        'flex h-full items-center gap-x-2 font-bold text-xl'
                       )}
                     >
                       Dashboard
@@ -290,7 +290,7 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
                       className={cn(
                         pathname === '/swap' ? 'text-primary' : 'text-lavender',
                         pathname !== '/swap' && 'hover:text-lavender/80',
-                        'flex font-bold text-xl items-center gap-x-2 h-full'
+                        'flex h-full items-center gap-x-2 font-bold text-xl'
                       )}
                     >
                       Swap
@@ -300,8 +300,8 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
                     if (mobile && href === '/markets') return null;
                     return (
                       <Link
-                        key={href}
                         href={href}
+                        key={href}
                         onMouseDown={() => setOpen(false)}
                         prefetch={false}
                       >
@@ -311,7 +311,7 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
                               ? 'text-primary'
                               : 'text-lavender',
                             pathname !== href && 'hover:text-lavender/80',
-                            'flex font-bold text-xl items-center gap-x-2 h-full'
+                            'flex h-full items-center gap-x-2 font-bold text-xl'
                           )}
                         >
                           {label}

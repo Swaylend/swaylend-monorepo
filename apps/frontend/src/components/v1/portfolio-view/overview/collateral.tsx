@@ -1,3 +1,7 @@
+import BigNumber from 'bignumber.js';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AssetName } from '@/components/v1/asset-name';
@@ -16,16 +20,11 @@ import {
   useMarketStore,
 } from '@/stores/market-store';
 import {
-  SYMBOL_TO_ICON,
-  SYMBOL_TO_NAME,
   formatUnits,
   getFormattedPrice,
+  SYMBOL_TO_ICON,
+  SYMBOL_TO_NAME,
 } from '@/utils';
-import BigNumber from 'bignumber.js';
-import { MoveUpRightIcon } from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
-import React, { useMemo } from 'react';
 import {
   Table,
   TableBody,
@@ -34,7 +33,6 @@ import {
   TableHeader,
   TableRow,
 } from '../../../ui/table';
-import { InfoIcon } from '../../info-icon';
 
 type TableRowProps = {
   market: string;
@@ -51,7 +49,6 @@ const CollateralTableRow = ({
   assetId,
   value,
   amount,
-  apy,
   liquidationRisk,
   liquidationPoint,
 }: TableRowProps) => {
@@ -80,62 +77,62 @@ const CollateralTableRow = ({
 
   return (
     <TableRow>
-      <TableCell className="text-white font-semibold bg-card">
-        <div className="flex gap-x-2 items-center">
+      <TableCell className="bg-card font-semibold text-white">
+        <div className="flex items-center gap-x-2">
           <div>
             <Image
-              src={SYMBOL_TO_ICON[market]}
               alt={market}
-              width={32}
-              height={32}
               className={'rounded-full'}
+              height={32}
+              src={SYMBOL_TO_ICON[market]}
+              width={32}
             />
           </div>
           <div>
-            <div className="flex gap-x-2 items-baseline">
-              <div className="text-white text-md font-semibold">
+            <div className="flex items-baseline gap-x-2">
+              <div className="font-semibold text-md text-white">
                 {SYMBOL_TO_NAME[market]}
               </div>
-              <div className="text-sm font-semibold text-moon">{market}</div>
+              <div className="font-semibold text-moon text-sm">{market}</div>
             </div>
           </div>
         </div>
       </TableCell>
       <TableCell>
         <AssetName
-          symbol={symbol}
           name={SYMBOL_TO_NAME[symbol]}
           src={SYMBOL_TO_ICON[symbol]}
+          symbol={symbol}
         />
       </TableCell>
       <TableCell>
-        <div className="flex gap-x-2 items-center">
-          <span className="text-lavender font-medium">{value}</span>
+        <div className="flex items-center gap-x-2">
+          <span className="font-medium text-lavender">{value}</span>
           <span>
             {amount.toFixed(2)} {symbol}
           </span>
         </div>
       </TableCell>
       <TableCell
-        className={`font-semibold bg-card ${liquidationRisk > 80 && 'text-red-500'} ${liquidationRisk > 60 && liquidationRisk <= 80 && 'text-yellow-500'} ${liquidationRisk <= 60 && 'text-primary'}`}
+        className={`bg-card font-semibold ${liquidationRisk > 80 && 'text-red-500'} ${liquidationRisk > 60 && liquidationRisk <= 80 && 'text-yellow-500'} ${liquidationRisk <= 60 && 'text-primary'}`}
       >
         {liquidationRisk}%
       </TableCell>
-      <TableCell className="text-white font-medium">
+      <TableCell className="font-medium text-white">
         {getFormattedPrice(liquidationPoint ?? BigNumber(0))}
       </TableCell>
-      <TableCell className="text-white font-semibold bg-card">
-        <div className="flex gap-x-1 items-center text-primary">
+      <TableCell className="bg-card font-semibold text-white">
+        <div className="flex items-center gap-x-1 text-primary">
           <Image
-            src={SYMBOL_TO_ICON.SWAY}
             alt={'SWAY'}
-            width={24}
-            height={24}
             className={'rounded-full'}
+            height={24}
+            src={SYMBOL_TO_ICON.SWAY}
+            width={24}
           />
         </div>
       </TableCell>
-      <TableCell className="text-white font-semibold flex gap-x-2 bg-card">
+      <TableCell className="flex gap-x-2 bg-card font-semibold text-white">
         <Link href="/">
           <Button
             onMouseDown={() => {
@@ -147,10 +144,10 @@ const CollateralTableRow = ({
         </Link>
         <Link href="/">
           <Button
-            variant={'secondary'}
             onMouseDown={() => {
               handleCollateralTokenClick(ACTION_TYPE.WITHDRAW, assetId, market);
             }}
+            variant={'secondary'}
           >
             -
           </Button>
@@ -163,22 +160,22 @@ const CollateralTableRow = ({
 const SkeletonRow = (
   <TableRow>
     <TableCell>
-      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+      <Skeleton className="h-[40px] w-full rounded-md bg-primary/20" />
     </TableCell>
     <TableCell>
-      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+      <Skeleton className="h-[40px] w-full rounded-md bg-primary/20" />
     </TableCell>
     <TableCell>
-      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+      <Skeleton className="h-[40px] w-full rounded-md bg-primary/20" />
     </TableCell>
     <TableCell>
-      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+      <Skeleton className="h-[40px] w-full rounded-md bg-primary/20" />
     </TableCell>
     <TableCell>
-      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+      <Skeleton className="h-[40px] w-full rounded-md bg-primary/20" />
     </TableCell>
     <TableCell>
-      <Skeleton className="w-full h-[40px] bg-primary/20 rounded-md" />
+      <Skeleton className="h-[40px] w-full rounded-md bg-primary/20" />
     </TableCell>
   </TableRow>
 );
@@ -282,9 +279,11 @@ export const Collateral = () => {
 
   const suppliedCollateralsUSDC = useMemo(() => {
     if (
-      !priceDataUSDC ||
-      !userCollateralAssetsUSDC ||
-      !colateralConfigurationsUSDC
+      !(
+        priceDataUSDC &&
+        userCollateralAssetsUSDC &&
+        colateralConfigurationsUSDC
+      )
     )
       return [];
 
@@ -309,56 +308,54 @@ export const Collateral = () => {
   }, [priceDataUSDC, userCollateralAssetsUSDC, colateralConfigurationsUSDC]);
 
   return (
-    <Table className="max-lg:hidden mt-12">
+    <Table className="mt-12 max-lg:hidden">
       <TableHeader>
         <TableRow>
           <TableHead colSpan={8}>
-            <div className="w-full flex items-center justify-center gap-x-2 text-white font-semibold">
+            <div className="flex w-full items-center justify-center gap-x-2 font-semibold text-white">
               Collateral
             </div>
           </TableHead>
         </TableRow>
         <TableRow>
-          <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
+          <TableHead className="h-[64px] bg-card pt-4 font-semibold text-moon">
             Market
           </TableHead>
-          <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
+          <TableHead className="h-[64px] bg-card pt-4 font-semibold text-moon">
             Collateral Asset
           </TableHead>
-          <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
+          <TableHead className="h-[64px] bg-card pt-4 font-semibold text-moon">
             Assets
           </TableHead>
-          <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
+          <TableHead className="h-[64px] bg-card pt-4 font-semibold text-moon">
             Liquidation Risk
           </TableHead>
-          <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
+          <TableHead className="h-[64px] bg-card pt-4 font-semibold text-moon">
             Liquidation Point
           </TableHead>
-          <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
+          <TableHead className="h-[64px] bg-card pt-4 font-semibold text-moon">
             Points
           </TableHead>
-          <TableHead className="h-[64px] pt-4 text-moon font-semibold bg-card">
+          <TableHead className="h-[64px] bg-card pt-4 font-semibold text-moon">
             Action
           </TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {isLoading ? (
-          <>{SkeletonRow}</>
+          SkeletonRow
+        ) : suppliedCollateralsUSDC.length ===
+          0 /* && suppliedCollateralsUSDT.length === 0 */ ? (
+          <TableRow>
+            <TableCell colSpan={8}>
+              <div className="flex w-full items-center justify-center font-semibold text-md text-moon">
+                No Collateral Supplied.
+              </div>
+            </TableCell>
+          </TableRow>
         ) : (
           <>
-            {suppliedCollateralsUSDC.length ===
-            0 /* && suppliedCollateralsUSDT.length === 0 */ ? (
-              <TableRow>
-                <TableCell colSpan={8}>
-                  <div className="w-full text-md font-semibold text-moon flex justify-center items-center">
-                    No Collateral Supplied.
-                  </div>
-                </TableCell>
-              </TableRow>
-            ) : (
-              <>
-                {/* {suppliedCollateralsUSDT.length === 0 &&
+            {/* {suppliedCollateralsUSDT.length === 0 &&
                         suppliedCollateralsUSDC.length === 0 && (
                           <TableRow>
                           <TableCell colSpan={8}>
@@ -379,20 +376,18 @@ export const Collateral = () => {
                             liquidationRisk={currentCollateralUtilizationUSDT}
                             />
                             ))} */}
-                {suppliedCollateralsUSDC.map((collateral) => (
-                  <CollateralTableRow
-                    key={collateral.assetId}
-                    market={collateral.market}
-                    assetId={collateral.assetId}
-                    amount={collateral.amount}
-                    value={collateral.value}
-                    apy={aprDataUSDC}
-                    liquidationRisk={currentCollateralUtilizationUSDC}
-                    liquidationPoint={userLiquidationPoint ?? BigNumber(0)}
-                  />
-                ))}
-              </>
-            )}
+            {suppliedCollateralsUSDC.map((collateral) => (
+              <CollateralTableRow
+                amount={collateral.amount}
+                apy={aprDataUSDC}
+                assetId={collateral.assetId}
+                key={collateral.assetId}
+                liquidationPoint={userLiquidationPoint ?? BigNumber(0)}
+                liquidationRisk={currentCollateralUtilizationUSDC}
+                market={collateral.market}
+                value={collateral.value}
+              />
+            ))}
           </>
         )}
       </TableBody>

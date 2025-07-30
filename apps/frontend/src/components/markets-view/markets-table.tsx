@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import {
   Table,
   TableBody,
@@ -6,7 +7,6 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { appConfig } from '@/configs';
-import Image from 'next/image';
 import FUEL from '/public/icons/fuel-logo.svg?url';
 import { InfoIcon } from '../v1/info-icon';
 import { MarketTableRow } from './market-table-row';
@@ -17,50 +17,50 @@ export const MarketsTable = () => {
       <TableHeader>
         <TableRow>
           <TableHead colSpan={8}>
-            <div className="w-full flex items-center justify-center gap-x-2 text-white font-semibold">
+            <div className="flex w-full items-center justify-center gap-x-2 font-semibold text-white">
               <div>
-                <Image src={FUEL} height={24} alt={'fuel logo'} />
+                <Image alt={'fuel logo'} height={24} src={FUEL} />
               </div>
               Fuel Network
             </div>
           </TableHead>
         </TableRow>
         <TableRow>
-          <TableHead className="h-[64px] pt-4 text-primary font-bold bg-card">
+          <TableHead className="h-[64px] bg-card pt-4 font-bold text-primary">
             Market
           </TableHead>
-          <TableHead className="h-[64px] pt-4 text-primary font-bold bg-card">
-            <div className="flex gap-x-1 items-center">
+          <TableHead className="h-[64px] bg-card pt-4 font-bold text-primary">
+            <div className="flex items-center gap-x-1">
               Collateral Assets{' '}
               <InfoIcon text="Assets that can be used as Collateral in this market." />
             </div>
           </TableHead>
-          <TableHead className="h-[64px] pt-4 text-primary font-bold bg-card">
-            <div className="flex gap-x-1 items-center">
+          <TableHead className="h-[64px] bg-card pt-4 font-bold text-primary">
+            <div className="flex items-center gap-x-1">
               Utilization{' '}
               <InfoIcon text="Percentage of Supplied Base Assets that is being borrowed." />
             </div>
           </TableHead>
-          <TableHead className="h-[64px] pt-4 text-primary font-bold bg-card">
+          <TableHead className="h-[64px] bg-card pt-4 font-bold text-primary">
             Net Earn APR
           </TableHead>
-          <TableHead className="h-[64px] pt-4 text-primary font-bold bg-card">
+          <TableHead className="h-[64px] bg-card pt-4 font-bold text-primary">
             Net Borrow APR
           </TableHead>
-          <TableHead className="h-[64px] pt-4 text-primary font-bold bg-card">
-            <div className="flex gap-x-1 items-center">
+          <TableHead className="h-[64px] bg-card pt-4 font-bold text-primary">
+            <div className="flex items-center gap-x-1">
               Total Earning{' '}
               <InfoIcon text="Total value of Supplied Base Assets." />
             </div>
           </TableHead>
-          <TableHead className="h-[64px] pt-4 text-primary font-bold bg-card">
-            <div className="flex gap-x-1 items-center">
+          <TableHead className="h-[64px] bg-card pt-4 font-bold text-primary">
+            <div className="flex items-center gap-x-1">
               Total Borrowing{' '}
               <InfoIcon text="Total value of Base Assets that are Borrowed." />
             </div>
           </TableHead>
-          <TableHead className="h-[64px] pt-4 text-primary font-bold bg-card">
-            <div className="flex gap-x-1 items-center">
+          <TableHead className="h-[64px] bg-card pt-4 font-bold text-primary">
+            <div className="flex items-center gap-x-1">
               Total Collateral{' '}
               <InfoIcon text="Total value of Supplied Collateral Assets." />
             </div>

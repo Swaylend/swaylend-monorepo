@@ -1,6 +1,6 @@
-import { appConfig } from '@/configs';
 import { useAccount } from '@fuels/react';
 import { useQuery } from '@tanstack/react-query';
+import { appConfig } from '@/configs';
 
 const totalTransactionCountQuery = (account: string) => {
   return `

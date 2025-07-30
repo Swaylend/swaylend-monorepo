@@ -1,8 +1,7 @@
-import { useMarketStore } from '@/stores/market-store';
-
-import { useMarketContract } from '@/contracts/use-market-contract';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
+import { useMarketContract } from '@/contracts/use-market-contract';
+import { useMarketStore } from '@/stores/market-store';
 import { useUtilization } from './use-utilization';
 
 export const useBorrowRate = (marketParam?: string) => {
@@ -19,7 +18,7 @@ export const useBorrowRate = (marketParam?: string) => {
       marketContract?.id,
     ],
     queryFn: async () => {
-      if (!utilization || !marketContract) return null;
+      if (!(utilization && marketContract)) return null;
 
       const { value } = await marketContract.functions
         .get_borrow_rate(utilization)

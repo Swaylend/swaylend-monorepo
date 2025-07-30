@@ -3,18 +3,17 @@
 import 'react-toastify/dist/ReactToastify.css';
 
 import {
+  isServer,
   QueryClient,
   QueryClientProvider,
-  isServer,
 } from '@tanstack/react-query';
 import { ThemeProvider } from 'next-themes';
-import { type ReactNode, useEffect } from 'react';
-import { ToastContainer } from 'react-toastify';
-import { FuelProviderWrapper } from './fuel-provider-wrapper';
-
-import MarketContractStoreWatcher from '@/components/providers/market-contract-store-watcher';
 import posthog from 'posthog-js';
 import { PostHogProvider } from 'posthog-js/react';
+import { type ReactNode, useEffect } from 'react';
+import { ToastContainer } from 'react-toastify';
+import MarketContractStoreWatcher from '@/components/providers/market-contract-store-watcher';
+import { FuelProviderWrapper } from './fuel-provider-wrapper';
 import PostHogIdentify from './post-hog-identify';
 
 function makeQueryClient() {
@@ -30,7 +29,7 @@ function makeQueryClient() {
   });
 }
 
-let browserQueryClient: QueryClient | undefined = undefined;
+let browserQueryClient: QueryClient | undefined;
 
 function getQueryClient() {
   if (isServer) {
@@ -68,33 +67,31 @@ export const Providers = ({ children }: { children: ReactNode }) => {
     <ThemeProvider
       attribute="class"
       defaultTheme="dark"
-      forcedTheme="dark"
-      enableSystem={false}
       disableTransitionOnChange
+      enableSystem={false}
+      forcedTheme="dark"
     >
       <PostHogProvider client={posthog}>
         <QueryClientProvider client={queryClient}>
           <FuelProviderWrapper>
-            <>
-              {children}
-              <MarketContractStoreWatcher />
-              <PostHogIdentify />
-              <ToastContainer
-                icon={false}
-                position="bottom-right"
-                style={{ zIndex: 1000 }}
-                autoClose={5000}
-                progressStyle={{ background: 'hsl(var(--primary))' }}
-                hideProgressBar={false}
-                newestOnTop={true}
-                closeOnClick={false}
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                theme="dark"
-              />
-            </>
+            {children}
+            <MarketContractStoreWatcher />
+            <PostHogIdentify />
+            <ToastContainer
+              autoClose={5000}
+              closeOnClick={false}
+              draggable
+              hideProgressBar={false}
+              icon={false}
+              newestOnTop={true}
+              pauseOnFocusLoss
+              pauseOnHover
+              position="bottom-right"
+              progressStyle={{ background: 'hsl(var(--primary))' }}
+              rtl={false}
+              style={{ zIndex: 1000 }}
+              theme="dark"
+            />
           </FuelProviderWrapper>
           {/* <ReactQueryDevtools initialIsOpen={false} /> */}
         </QueryClientProvider>

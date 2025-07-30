@@ -1,7 +1,5 @@
 'use client';
 
-import type { ChartData } from '@/lib/charts';
-import { getFormattedPrice } from '@/utils';
 import BigNumber from 'bignumber.js';
 import {
   Area,
@@ -11,6 +9,8 @@ import {
   XAxis,
 } from 'recharts';
 import type { DataKey } from 'recharts/types/util/types';
+import type { ChartData } from '@/lib/charts';
+import { getFormattedPrice } from '@/utils';
 import { type ChartConfig, ChartContainer, ChartTooltip } from '../ui/chart';
 
 const chartConfig = {
@@ -23,8 +23,8 @@ const chartConfig = {
 const CustomTooltip = ({ active, payload }: any) => {
   if (active && payload && payload.length) {
     return (
-      <div className="flex flex-col gap-y-2 items-start p-2 bg-card/40 shadow-md rounded-lg">
-        <div className="text-white text-md font-semibold">
+      <div className="flex flex-col items-start gap-y-2 rounded-lg bg-card/40 p-2 shadow-md">
+        <div className="font-semibold text-md text-white">
           {getFormattedPrice(BigNumber(payload[0].value))}
         </div>
       </div>
@@ -41,31 +41,31 @@ function CustomCursor(props: any) {
   return (
     <>
       <Rectangle
-        x={x - 0.5}
-        y={y}
+        className={className}
         fillOpacity={0}
+        height={height}
+        pointerEvents={pointerEvents}
+        points={points}
         stroke="#FFFFFF"
         strokeOpacity={0.4}
-        pointerEvents={pointerEvents}
-        width={0.5}
-        height={height}
-        points={points}
-        className={className}
         type="linear"
+        width={0.5}
+        x={x - 0.5}
+        y={y}
       />
       <Rectangle
-        x={x - 10}
-        y={y}
+        className={className}
         fillOpacity={0.4}
+        height={height}
+        pointerEvents={pointerEvents}
+        points={points}
         style={{
           fill: 'url(#color4)',
         }}
-        pointerEvents={pointerEvents}
-        width={20}
-        height={height}
-        points={points}
-        className={className}
         type="linear"
+        width={20}
+        x={x - 10}
+        y={y}
       />
     </>
   );
@@ -80,7 +80,7 @@ export const MarketChart = ({
   dataKey: string | undefined;
   color: string | undefined;
 }) => {
-  if (!chartData || !color) return null;
+  if (!(chartData && color)) return null;
 
   const dateFormatter = new Intl.DateTimeFormat('en-US', {
     day: 'numeric',
@@ -88,11 +88,11 @@ export const MarketChart = ({
   });
 
   return (
-    <ResponsiveContainer width="100%" height={200}>
+    <ResponsiveContainer height={200} width="100%">
       <ChartContainer config={chartConfig}>
         <AreaChart
-          className="max-lg:hidden"
           accessibilityLayer
+          className="max-lg:hidden"
           data={chartData}
           margin={{
             left: 16,
@@ -100,16 +100,12 @@ export const MarketChart = ({
           }}
         >
           <XAxis
-            dataKey="timestamp"
-            tickLine={true}
             axisLine={true}
-            tickMargin={12}
-            padding={{ left: 10, right: 10 }}
-            minTickGap={30}
+            dataKey="timestamp"
             interval="preserveStartEnd"
-            tickFormatter={(value: number) =>
-              dateFormatter.format(new Date(value * 1000))
-            }
+            minTickGap={30}
+            padding={{ left: 10, right: 10 }}
+            stroke="#FFFFFF"
             style={{
               fill: '#FFFFFF',
               opacity: 0.6,
@@ -117,23 +113,27 @@ export const MarketChart = ({
               fontFamily: 'Inter',
               fontWeight: '400',
             }}
-            stroke="#FFFFFF"
+            tickFormatter={(value: number) =>
+              dateFormatter.format(new Date(value * 1000))
+            }
+            tickLine={true}
+            tickMargin={12}
           />
           <ChartTooltip content={<CustomTooltip />} cursor={<CustomCursor />} />
           <defs>
-            <linearGradient id="color1" x1="0" y1="0" x2="0" y2="1">
+            <linearGradient id="color1" x1="0" x2="0" y1="0" y2="1">
               <stop offset="0%" stopColor={'#3FE8BD'} stopOpacity={0.2} />
               <stop offset="50%" stopColor={'#3FE8BD'} stopOpacity={0.1} />
               <stop offset="70%" stopColor={'#3FE8BD'} stopOpacity={0.03} />
               <stop offset="90%" stopColor={'#3FE8BD'} stopOpacity={0.0} />
             </linearGradient>
-            <linearGradient id="color2" x1="0" y1="0" x2="0" y2="1">
+            <linearGradient id="color2" x1="0" x2="0" y1="0" y2="1">
               <stop offset="0%" stopColor={'#8B5CF6'} stopOpacity={0.2} />
               <stop offset="50%" stopColor={'#8B5CF6'} stopOpacity={0.1} />
               <stop offset="70%" stopColor={'#8B5CF6'} stopOpacity={0.03} />
               <stop offset="90%" stopColor={'#8B5CF6'} stopOpacity={0.0} />
             </linearGradient>
-            <linearGradient id="color4" x1="0" y1="0" x2="0" y2="1">
+            <linearGradient id="color4" x1="0" x2="0" y1="0" y2="1">
               <stop offset="0%" stopColor="#FFFFFF" stopOpacity={0} />
               <stop offset="50%" stopColor="#FFFFFF" stopOpacity={0.1} />
               <stop offset="100%" stopColor="#FFFFFF" stopOpacity={0.35} />
@@ -141,12 +141,12 @@ export const MarketChart = ({
           </defs>
           <Area
             dataKey={dataKey as DataKey<string>}
-            type="monotone"
             fill={`url(#${color === '#3FE8BD' ? 'color1' : 'color2'})`}
             fillOpacity={1}
-            strokeWidth={3}
-            stroke={color}
             stackId="a"
+            stroke={color}
+            strokeWidth={3}
+            type="monotone"
           />
         </AreaChart>
       </ChartContainer>

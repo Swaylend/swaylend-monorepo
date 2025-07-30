@@ -1,3 +1,7 @@
+import { useIsConnected } from '@fuels/react';
+import { useMemo } from 'react';
+import Wave from 'react-wavify';
+import { useMediaQuery } from 'usehooks-ts';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
   Tooltip,
@@ -15,10 +19,6 @@ import {
 } from '@/hooks/v1';
 import { cn } from '@/lib/utils';
 import { useMarketStore } from '@/stores/market-store';
-import { useIsConnected } from '@fuels/react';
-import { useMemo } from 'react';
-import Wave from 'react-wavify';
-import { useMediaQuery } from 'usehooks-ts';
 
 const WAVE_COLORS = {
   normal: {
@@ -83,86 +83,86 @@ export const InfoBowl = () => {
           className="cursor-default"
           onClick={(e) => e.preventDefault()}
         >
-          <div className="sm:w-[174px] sm:h-[174px] w-[124px] h-[124px] bg-background rounded-full flex items-center p-2 justify-center">
+          <div className="flex h-[124px] w-[124px] items-center justify-center rounded-full bg-background p-2 sm:h-[174px] sm:w-[174px]">
             {isLoading ? (
-              <Skeleton className="w-full h-full bg-primary/20 rounded-full ring-2 ring-white/20" />
+              <Skeleton className="h-full w-full rounded-full bg-primary/20 ring-2 ring-white/20" />
             ) : (
               <div
-                className={`w-full h-full relative z-10 ${bowlMode === 2 && 'cursor-pointer'}`}
+                className={`relative z-10 h-full w-full ${bowlMode === 2 && 'cursor-pointer'}`}
               >
                 {bowlMode === 2 && (
                   <>
                     <Wave
+                      className="absolute top-0 left-0 z-0 flex h-full w-full"
                       fill={waveColor.colorUpper}
-                      paused={false}
                       mask="url(#mask)"
-                      className=" z-0 flex w-full h-full absolute top-0 left-0"
                       options={{
                         height: waveHeight,
                         amplitude: 10,
                         speed: 0.17,
                         points: 3,
                       }}
+                      paused={false}
                     >
                       <mask id="mask">
                         <rect
+                          fill="white"
+                          height="100%"
+                          rx={100}
+                          width="100%"
                           x="0"
                           y="0"
-                          width="100%"
-                          height="100%"
-                          fill="white"
-                          rx={100}
                         />
                       </mask>
                     </Wave>
                     <Wave
+                      className="absolute top-0 left-0 z-0 flex h-full w-full"
                       fill={waveColor.colorLower}
-                      paused={false}
                       mask="url(#mask)"
-                      className=" z-0 flex w-full h-full absolute top-0 left-0"
                       options={{
                         height: waveHeight + 5,
                         amplitude: 15,
                         speed: 0.17,
                         points: 2,
                       }}
+                      paused={false}
                     >
                       <mask id="mask">
                         <rect
+                          fill="white"
+                          height="100%"
+                          rx={100}
+                          width="100%"
                           x="0"
                           y="0"
-                          width="100%"
-                          height="100%"
-                          fill="white"
-                          rx={100}
                         />
                       </mask>
                     </Wave>
                   </>
                 )}
                 <div
-                  className={`w-full h-full ${bowlMode === 2 && 'bg-white/5 ring-2 ring-white/20'} flex-col ${bowlMode === 0 && 'bg-primary text-secondary cursor-default'} ${bowlMode === 1 && 'bg-purple text-white cursor-default'} ring-2 ring-white/20 rounded-full flex justify-center items-center sm:text-xl text-md text-center font-semibold`}
+                  className={`h-full w-full ${bowlMode === 2 && 'bg-white/5 ring-2 ring-white/20'} flex-col ${bowlMode === 0 && 'cursor-default bg-primary text-secondary'} ${bowlMode === 1 && 'cursor-default bg-purple text-white'} flex items-center justify-center rounded-full text-center font-semibold text-md ring-2 ring-white/20 sm:text-xl`}
                 >
                   {bowlMode === 2 && (
-                    <div className="z-10 text-xs sm:text-lg text-white font-bold">
+                    <div className="z-10 font-bold text-white text-xs sm:text-lg">
                       Liquidation Risk
-                      <div className="sm:text-xl text-lg font-semibold">
+                      <div className="font-semibold text-lg sm:text-xl">
                         {collateralUtilization?.times(100).toFixed(2)}%
                       </div>
                     </div>
                   )}
                   {bowlMode === 1 && (
-                    <div className="text-sm sm:text-lg text-white font-bold">
+                    <div className="font-bold text-sm text-white sm:text-lg">
                       Net Borrow APY
-                      <div className="sm:text-xl text-lg font-semibold">
+                      <div className="font-semibold text-lg sm:text-xl">
                         {aprData?.netBorrowApr.times(100).toFixed(2)}%
                       </div>
                     </div>
                   )}
                   {bowlMode === 0 && (
-                    <div className="text-sm sm:text-lg text-primary-foreground font-bold">
+                    <div className="font-bold text-primary-foreground text-sm sm:text-lg">
                       Net Earn APY
-                      <div className="sm:text-xl text-lg  font-semibold">
+                      <div className="font-semibold text-lg sm:text-xl">
                         {aprData?.netSupplyApr.times(100).toFixed(2)}%
                       </div>
                     </div>
@@ -178,8 +178,8 @@ export const InfoBowl = () => {
             'w-[300px]',
             'max-lg:hidden'
           )}
-          side="bottom"
           onPointerDownOutside={(e) => e.preventDefault()}
+          side="bottom"
         >
           {bowlMode === 2 && (
             <div className="p-1">
@@ -200,7 +200,7 @@ export const InfoBowl = () => {
             </div>
           )}
           {bowlMode === 0 && (
-            <div className="p-1 w-full">
+            <div className="w-full p-1">
               <NetEarnTooltip aprData={aprData} />
             </div>
           )}

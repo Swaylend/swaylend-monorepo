@@ -1,11 +1,11 @@
-import { defineConfig } from '../defineConfig.js';
+import { defineConfig } from '../define-config.js';
 import type { DeployedMarkets } from '../types.js';
 
 export function createTestnetConfig() {
   return defineConfig({
     env: 'testnet',
-    markets: markets,
-    assets: assets,
+    markets,
+    assets,
   });
 }
 
@@ -13,12 +13,12 @@ const markets: DeployedMarkets = {
   USDC: {
     marketAddress:
       '0x6030cf103746576706d7dcc2ae6f6b32ba0db66907a8f9901a0170de5f06acc0',
-    startBlock: BigInt(14646058),
+    startBlock: BigInt(14_646_058),
   },
   USDT: {
     marketAddress:
       '0x51b9bea7822988e03520018f4a1bb39b9f5ba15c9b4b9c9340a6bc1e5958abd4',
-    startBlock: BigInt(11380000),
+    startBlock: BigInt(11_380_000),
   },
 };
 

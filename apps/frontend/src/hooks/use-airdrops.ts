@@ -1,6 +1,6 @@
-import { appConfig } from '@/configs';
 import { useWallet } from '@fuels/react';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { appConfig } from '@/configs';
 
 export type Airdrop = {
   id: number;

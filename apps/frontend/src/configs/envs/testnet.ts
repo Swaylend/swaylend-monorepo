@@ -17,9 +17,9 @@ export function createTestnetConfig() {
         alchemyId: process.env.NEXT_PUBLIC_ALCHEMY_ID ?? '',
         baseAssetId:
           '0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07',
-        assets: assets,
+        assets,
         useBurnerWallet: true,
-        marketAddressToBaseAssetName: marketAddressToBaseAssetName,
+        marketAddressToBaseAssetName,
       },
       v1: {
         announcementEnabled:

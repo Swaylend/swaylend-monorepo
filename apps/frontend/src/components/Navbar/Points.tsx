@@ -1,16 +1,16 @@
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
-import { useLMRewards, useUser } from '@/hooks/v1';
-import { cn } from '@/lib/utils';
 import { useIsConnected } from '@fuels/react';
 import { Trophy } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRef, useState } from 'react';
 import { useHover } from 'usehooks-ts';
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover';
+import { useUser } from '@/hooks/v1';
+import { cn } from '@/lib/utils';
 import POINTS from '/public/icons/points-icon.svg?url';
 import { Button } from '../ui/button';
 
@@ -29,33 +29,33 @@ export const Points = () => {
     <Popover open={isHover || isManualOpen}>
       <PopoverTrigger
         className="focus-visible:outline-hidden"
-        ref={hoverRef}
         onClick={() => setIsManualOpen(true)}
+        ref={hoverRef}
       >
         <Image
           alt="points-icon"
-          width={40}
+          className="cursor-pointer"
           height={40}
           src={POINTS}
-          className="cursor-pointer"
+          width={40}
         />
       </PopoverTrigger>
       <PopoverContent
+        align="center"
+        className="flex w-[258px] flex-col items-center gap-y-2 px-[24px]"
         onInteractOutside={() => setIsManualOpen(false)}
         onOpenAutoFocus={(e) => e.preventDefault()}
         sideOffset={8}
-        align="center"
-        className="flex flex-col gap-y-2 items-center w-[258px] px-[24px]"
       >
-        <div className="flex flex-col gap-y-2 items-center border border-white/10 w-full p-2 rounded-xl">
+        <div className="flex w-full flex-col items-center gap-y-2 rounded-xl border border-white/10 p-2">
           <div className="text-primary">SwayPoints</div>
-          <div className={cn('text-lavender font-semibold')}>
+          <div className={cn('font-semibold text-lavender')}>
             {isConnected ? (user ? user.points : '0') : 'Connect Wallet'}
           </div>
         </div>
-        <Link href="/leaderboard" className="w-full mt-4" prefetch={false}>
-          <Button className="w-full flex gap-x-2" variant="tertiary-card">
-            <Trophy className="w-5 h-5" />
+        <Link className="mt-4 w-full" href="/leaderboard" prefetch={false}>
+          <Button className="flex w-full gap-x-2" variant="tertiary-card">
+            <Trophy className="h-5 w-5" />
             Points Leaderboard
           </Button>
         </Link>

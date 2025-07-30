@@ -1,8 +1,7 @@
-import { useMarketStore } from '@/stores/market-store';
-
-import { useMarketContract } from '@/contracts/use-market-contract';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
+import { useMarketContract } from '@/contracts/use-market-contract';
+import { useMarketStore } from '@/stores/market-store';
 
 export const useCollateralReserves = (
   assetId: string,
@@ -20,7 +19,7 @@ export const useCollateralReserves = (
       assetId,
     ],
     queryFn: async () => {
-      if (!assetId || !marketContract) return null;
+      if (!(assetId && marketContract)) return null;
 
       const { value } = await marketContract.functions
         .get_collateral_reserves({ bits: assetId })
