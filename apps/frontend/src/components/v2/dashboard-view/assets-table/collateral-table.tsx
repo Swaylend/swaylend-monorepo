@@ -38,7 +38,7 @@ import type { CollateralConfigurationOutput } from '@/contract-types/v2/Market';
 import {
   useBalance,
   useCollateralConfigurations,
-  usePrice,
+  usePriceData,
   useTotalCollateral,
   useUserCollateralAssets,
 } from '@/hooks/v2';
@@ -469,7 +469,7 @@ export const CollateralTable = () => {
 
   const { data: collateralBalances } = useTotalCollateral();
 
-  const { data: priceData } = usePrice();
+  const { data: priceData } = usePriceData();
 
   const {
     data: collateralConfigurations,
@@ -559,8 +559,8 @@ export const CollateralTable = () => {
                   handleAssetClick={handleAssetClick}
                   key={collateral.asset_id.bits}
                   price={
-                    priceData?.prices[collateral.asset_id.bits] ??
-                    new BigNumber(0)
+                    priceData?.prices.get(collateral.asset_id.bits)?.[0]
+                      ?.price ?? new BigNumber(0)
                   }
                   protocolBalance={
                     userCollateralAssets?.[collateral.asset_id.bits] ??
@@ -602,8 +602,8 @@ export const CollateralTable = () => {
                   handleAssetClick={handleAssetClick}
                   key={collateral.asset_id.bits}
                   price={
-                    priceData?.prices[collateral.asset_id.bits] ??
-                    new BigNumber(0)
+                    priceData?.prices.get(collateral.asset_id.bits)?.[0]
+                      ?.price ?? new BigNumber(0)
                   }
                   protocolBalance={
                     userCollateralAssets?.[collateral.asset_id.bits] ??

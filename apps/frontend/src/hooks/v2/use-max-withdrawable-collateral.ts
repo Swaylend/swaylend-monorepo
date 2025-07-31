@@ -1,7 +1,7 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { formatUnits } from '@/utils';
-import { usePrice } from './oracles/use-pyth-oracle';
+import { usePriceData } from './oracles';
 import { useCollateralConfigurations } from './use-collateral-configurations';
 import { useMarketConfiguration } from './use-market-configuration';
 import { useUserCollateralAssets } from './use-user-collateral-assets';
@@ -13,7 +13,7 @@ export const useMaxWithdrawableCollateral = (
 ) => {
   const { data: collateralBalances } = useUserCollateralAssets();
   const { data: collateralConfig } = useCollateralConfigurations();
-  const { data: priceData } = usePrice();
+  const { data: priceData } = usePriceData();
   const { data: supplyBorrow } = useUserSupplyBorrow();
   const { data: marketConfiguration } = useMarketConfiguration();
 
@@ -25,7 +25,7 @@ export const useMaxWithdrawableCollateral = (
       collateralBalances,
       collateralConfig,
       supplyBorrow,
-      priceData?.prices,
+      priceData?.timestamp,
       marketConfiguration,
     ],
     queryFn: () => {
@@ -47,6 +47,10 @@ export const useMaxWithdrawableCollateral = (
         );
       }
 
+      const baseTokenPrice =
+        priceData.prices.get(marketConfiguration.baseToken.bits)?.[0]?.price ??
+        BigNumber(0);
+
       // Borrowed amount
       // Borrow Collateral value of other assets
       const borrowCollateralValueOthers = Object.entries(
@@ -61,7 +65,8 @@ export const useMaxWithdrawableCollateral = (
           18
         );
         const balance = formatUnits(v, token.decimals);
-        const dollBalance = priceData.prices[id].times(balance);
+        const assetPrice = priceData.prices.get(id)?.[0]?.price ?? BigNumber(0);
+        const dollBalance = assetPrice.times(balance);
         const trueDollBalance = dollBalance.times(collateralFactor);
         return acc.plus(trueDollBalance);
       }, BigNumber(0));
@@ -77,14 +82,18 @@ export const useMaxWithdrawableCollateral = (
         ),
         18
       );
-      const borrowCollateralValueCurrent = priceData.prices[assetId]
+
+      const assetPrice =
+        priceData.prices.get(assetId)?.[0]?.price ?? BigNumber(0);
+
+      const borrowCollateralValueCurrent = assetPrice
         .times(currentBalance)
         .times(borrowCollateralFactor);
 
       const currentBorrowValue = formatUnits(
         supplyBorrow.borrowed,
         marketConfiguration.baseTokenDecimals
-      ).times(priceData.prices[marketConfiguration.baseToken.bits]);
+      ).times(baseTokenPrice);
 
       // Collateral value needed to be covered by the current asset
       const collateralValueNeeded = currentBorrowValue;
@@ -106,7 +115,7 @@ export const useMaxWithdrawableCollateral = (
       // Convert allowedCollateralValueToWithdraw to the corresponding token amount
       const allowedCollateralAmountToWithdraw = allowedCollateralValueToWithdraw
         .div(borrowCollateralFactor)
-        .div(priceData.prices[assetId]);
+        .div(assetPrice);
 
       if (
         allowedCollateralAmountToWithdraw.isNaN() ||

@@ -18,7 +18,7 @@ import {
   useMarketBalanceOfBase,
   useMarketConfiguration,
   useMaxWithdrawableCollateral,
-  usePrice,
+  usePriceData,
   useSupplyBase,
   useSupplyCollateral,
   useTotalCollateral,
@@ -71,7 +71,7 @@ export const InputDialog = () => {
   const changeTokenAmount = useMarketStore.use.changeTokenAmount();
   const setOpen = useMarketStore.use.changeInputDialogOpen();
 
-  const { data: priceData } = usePrice();
+  const { data: priceData } = usePriceData();
   const { data: marketBalanceOfBase } = useMarketBalanceOfBase();
 
   const { mutate: supplyCollateral, isPending: isSupplyCollateralPending } =
@@ -142,12 +142,10 @@ export const InputDialog = () => {
         if (actionTokenAssetId === marketConfiguration.baseToken.bits) {
           withdrawBase({
             tokenAmount,
-            priceUpdateData: priceData.priceUpdateData,
           });
         } else {
           withdrawCollateral({
             tokenAmount,
-            priceUpdateData: priceData.priceUpdateData,
           });
         }
         break;
@@ -157,7 +155,6 @@ export const InputDialog = () => {
 
         borrowBase({
           tokenAmount,
-          priceUpdateData: priceData.priceUpdateData,
         });
         break;
       case ACTION_TYPE.REPAY:
@@ -191,17 +188,19 @@ export const InputDialog = () => {
       return BigNumber(0);
     }
 
+    const baseTokenPrice = priceData?.prices.get(
+      marketConfiguration.baseToken.bits
+    )?.[0];
+
     if (action === 'REPAY') {
       const owed = formatUnits(
         userSupplyBorrow.borrowed,
         marketConfiguration.baseTokenDecimals
       );
 
-      const overPayAmount = getOverPayAmount(
-        owed,
-        priceData.prices[marketConfiguration.baseToken.bits] ?? 1
-      );
+      if (!baseTokenPrice) return owed;
 
+      const overPayAmount = getOverPayAmount(owed, baseTokenPrice.price);
       return owed.plus(overPayAmount);
     }
     if (action === 'SUPPLY') {
@@ -231,13 +230,14 @@ export const InputDialog = () => {
     }
 
     if (action === 'BORROW') {
+      if (!baseTokenPrice || baseTokenPrice.price.eq(0)) {
+        return borrowCapacity ?? BigNumber(0);
+      }
+
       // Borrow $1 less than max borrowable amount to avoid "Trying to borrow more than the max borrowable amount" errors when prices change.
       return (
-        borrowCapacity?.minus(
-          BigNumber(1).div(
-            priceData?.prices[marketConfiguration.baseToken.bits] ?? 1
-          )
-        ) ?? BigNumber(0)
+        borrowCapacity?.minus(BigNumber(1).div(baseTokenPrice.price)) ??
+        BigNumber(0)
       );
     }
 
@@ -251,7 +251,7 @@ export const InputDialog = () => {
     maxWithdrawableCollateral,
     borrowCapacity,
     userSupplyBorrow,
-    priceData,
+    priceData?.timestamp,
   ]);
 
   const onMaxBtnClick = () => {
@@ -336,7 +336,18 @@ export const InputDialog = () => {
       return null;
     }
 
-    if (tokenAmount == null || tokenAmount.eq(0)) return null;
+    const baseTokenPrice = priceData.prices.get(
+      marketConfiguration.baseToken.bits
+    )?.[0];
+
+    if (
+      !tokenAmount ||
+      tokenAmount.eq(0) ||
+      !baseTokenPrice ||
+      baseTokenPrice.price.eq(0)
+    ) {
+      return null;
+    }
 
     if (action === ACTION_TYPE.SUPPLY) {
       let balance = BigNumber(0);
@@ -422,11 +433,8 @@ export const InputDialog = () => {
 
       if (
         tokenAmount.gt(
-          borrowCapacity?.minus(
-            BigNumber(0.99).div(
-              priceData?.prices[marketConfiguration.baseToken.bits] ?? 1
-            )
-          ) ?? BigNumber(0)
+          borrowCapacity?.minus(BigNumber(0.99).div(baseTokenPrice.price)) ??
+            BigNumber(0)
         )
       ) {
         return 'You do not have enough collateral to borrow this amount. Deposit more collateral to proceed!';
@@ -449,10 +457,7 @@ export const InputDialog = () => {
         marketConfiguration?.baseTokenDecimals
       );
 
-      const _overPayAmount = getOverPayAmount(
-        userBorrowed,
-        priceData.prices[marketConfiguration.baseToken.bits] ?? 1
-      );
+      // const _overPayAmount = getOverPayAmount(userBorrowed, baseTokenPrice);
 
       // const userBorrowedModified = userBorrowed.plus(overPayAmount);
 

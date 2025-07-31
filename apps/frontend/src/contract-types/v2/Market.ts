@@ -95,20 +95,20 @@ export type PauseConfigurationEventInput = { pause_config: PauseConfigurationInp
 export type PauseConfigurationEventOutput = { pause_config: PauseConfigurationOutput };
 export type PriceInput = { price: BigNumberish, exponent: BigNumberish, confidence: BigNumberish, publish_time: BigNumberish };
 export type PriceOutput = { price: BN, exponent: number, confidence: BN, publish_time: BN };
-export type PythOracleInputInput = { contract_id: ContractIdInput, update_fee: BigNumberish, publish_times: Vec<BigNumberish>, price_feed_ids: Vec<string>, update_data: Vec<Bytes> };
-export type PythOracleInputOutput = { contract_id: ContractIdOutput, update_fee: BN, publish_times: Vec<BN>, price_feed_ids: Vec<string>, update_data: Vec<Bytes> };
-export type RedstoneOracleInputInput = { contract_id: ContractIdInput, price_feed_ids: Vec<BigNumberish>, payload: Bytes };
-export type RedstoneOracleInputOutput = { contract_id: ContractIdOutput, price_feed_ids: Vec<BN>, payload: Bytes };
+export type PythOracleInputInput = { oracle_id: BigNumberish, publish_times: Vec<BigNumberish>, price_feed_ids: Vec<string>, update_data: Vec<Bytes> };
+export type PythOracleInputOutput = { oracle_id: BN, publish_times: Vec<BN>, price_feed_ids: Vec<string>, update_data: Vec<Bytes> };
+export type RedstoneOracleInputInput = { oracle_id: BigNumberish, price_feed_ids: Vec<BigNumberish>, payload: Bytes };
+export type RedstoneOracleInputOutput = { oracle_id: BN, price_feed_ids: Vec<BN>, payload: Bytes };
 export type ReservesWithdrawnEventInput = { caller: IdentityInput, to: IdentityInput, amount: BigNumberish };
 export type ReservesWithdrawnEventOutput = { caller: IdentityOutput, to: IdentityOutput, amount: BN };
-export type StorkOracleInputInput = { contract_id: ContractIdInput, update_data: Vec<TemporalNumericValueInputInput> };
-export type StorkOracleInputOutput = { contract_id: ContractIdOutput, update_data: Vec<TemporalNumericValueInputOutput> };
+export type StorkOracleInputInput = { oracle_id: BigNumberish, update_data: Vec<TemporalNumericValueInputInput> };
+export type StorkOracleInputOutput = { oracle_id: BN, update_data: Vec<TemporalNumericValueInputOutput> };
 export type TemporalNumericValueInput = { timestamp_ns: BigNumberish, quantized_value: I128Input };
 export type TemporalNumericValueOutput = { timestamp_ns: BN, quantized_value: I128Output };
 export type TemporalNumericValueInputInput = { temporal_numeric_value: TemporalNumericValueInput, id: string, publisher_merkle_root: string, value_compute_alg_hash: string, r: string, s: string, v: BigNumberish };
 export type TemporalNumericValueInputOutput = { temporal_numeric_value: TemporalNumericValueOutput, id: string, publisher_merkle_root: string, value_compute_alg_hash: string, r: string, s: string, v: number };
-export type TwrapOracleInputInput = { contract_id: ContractIdInput, placeholder: undefined };
-export type TwrapOracleInputOutput = { contract_id: ContractIdOutput, placeholder: void };
+export type TwrapOracleInputInput = { oracle_id: BigNumberish, placeholder: undefined };
+export type TwrapOracleInputOutput = { oracle_id: BN, placeholder: void };
 export type U128Input = { upper: BigNumberish, lower: BigNumberish };
 export type U128Output = { upper: BN, lower: BN };
 export type UserBasicInput = { principal: I256Input, base_tracking_index: BigNumberish, base_tracking_accrued: BigNumberish };
@@ -1083,11 +1083,7 @@ const abi = {
       "metadataTypeId": 36,
       "components": [
         {
-          "name": "contract_id",
-          "typeId": 54
-        },
-        {
-          "name": "update_fee",
+          "name": "oracle_id",
           "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
         },
         {
@@ -1127,8 +1123,8 @@ const abi = {
       "metadataTypeId": 37,
       "components": [
         {
-          "name": "contract_id",
-          "typeId": 54
+          "name": "oracle_id",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
         },
         {
           "name": "price_feed_ids",
@@ -1151,8 +1147,8 @@ const abi = {
       "metadataTypeId": 38,
       "components": [
         {
-          "name": "contract_id",
-          "typeId": 54
+          "name": "oracle_id",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
         },
         {
           "name": "update_data",
@@ -1171,8 +1167,8 @@ const abi = {
       "metadataTypeId": 39,
       "components": [
         {
-          "name": "contract_id",
-          "typeId": 54
+          "name": "oracle_id",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
         },
         {
           "name": "placeholder",
@@ -5340,7 +5336,7 @@ const abi = {
     {
       "name": "DEBUG_STEP",
       "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
-      "offset": 132600,
+      "offset": 134016,
       "indirect": false
     }
   ],

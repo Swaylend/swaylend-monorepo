@@ -11,6 +11,7 @@ import { appConfig } from '@/configs';
 import { useMarketContract } from '@/contracts/v2/use-market-contract';
 import { usePythContract } from '@/contracts/v2/use-pyth-contract';
 import { useMarketStore } from '@/stores/market-store';
+import { usePriceData } from './oracles';
 import { useCollateralConfigurations } from './use-collateral-configurations';
 
 type useWithdrawCollateralProps = {
@@ -28,6 +29,7 @@ export const useWithdrawCollateral = ({
   const changeSuccessDialogOpen = useMarketStore.use.changeSuccessDialogOpen();
   const changeSuccessDialogTransactionId =
     useMarketStore.use.changeSuccessDialogTransactionId();
+  const { data: priceData } = usePriceData(market);
 
   const queryClient = useQueryClient();
   const marketContract = useMarketContract(market);
@@ -42,6 +44,7 @@ export const useWithdrawCollateral = ({
       marketContract?.id,
       pythContract?.account?.address,
       pythContract?.id,
+      priceData?.timestamp,
     ],
     mutationFn: async ({ tokenAmount }: { tokenAmount: BigNumber }) => {
       if (
@@ -50,7 +53,8 @@ export const useWithdrawCollateral = ({
           actionTokenAssetId &&
           collateralConfigurations &&
           marketContract &&
-          pythContract
+          pythContract &&
+          priceData
         )
       ) {
         return null;
@@ -60,16 +64,15 @@ export const useWithdrawCollateral = ({
         10 ** collateralConfigurations[actionTokenAssetId].decimals
       );
 
-      // TODO [ORACLE INPUT]
       const { waitForResult } = await marketContract.functions
         .withdraw_collateral(
           { bits: actionTokenAssetId },
           amount.toFixed(0),
-          []
+          priceData.oracleInputs
         )
         .callParams({
           forward: {
-            amount: 0,
+            amount: priceData.totalUpdateFee.toFixed(0),
             assetId: appConfig.client.shared.baseAssetId,
           },
         })

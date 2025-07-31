@@ -1,7 +1,7 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { formatUnits } from '@/utils';
-import { usePrice } from './oracles/use-pyth-oracle';
+import { usePriceData } from './oracles';
 import { useCollateralConfigurations } from './use-collateral-configurations';
 import { useUserCollateralAssets } from './use-user-collateral-assets';
 
@@ -9,14 +9,14 @@ import { useUserCollateralAssets } from './use-user-collateral-assets';
 export const useUserCollateralValue = (marketParam?: string) => {
   const { data: collateralBalances } = useUserCollateralAssets(marketParam);
   const { data: collateralConfig } = useCollateralConfigurations(marketParam);
-  const { data: priceData } = usePrice(marketParam);
+  const { data: priceData } = usePriceData(marketParam);
 
   return useQuery({
     queryKey: [
       'userCollateralValue',
       'v2',
       collateralBalances,
-      priceData?.prices,
+      priceData?.timestamp,
       collateralConfig,
     ],
     queryFn: () => {
@@ -31,7 +31,9 @@ export const useUserCollateralValue = (marketParam?: string) => {
       return Object.entries(collateralBalances).reduce((acc, [assetId, v]) => {
         const token = collateralConfig[assetId];
         const balance = formatUnits(v, token.decimals);
-        const dollBalance = priceData.prices[assetId].times(balance);
+        const assetPrice =
+          priceData.prices.get(assetId)?.[0]?.price ?? BigNumber(0);
+        const dollBalance = assetPrice.times(balance);
         return acc.plus(dollBalance);
       }, BigNumber(0));
     },

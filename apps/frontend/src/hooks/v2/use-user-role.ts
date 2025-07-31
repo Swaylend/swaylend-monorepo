@@ -1,7 +1,7 @@
 import { useIsConnected } from '@fuels/react';
 import BigNumber from 'bignumber.js';
 import { useMemo } from 'react';
-import { usePrice } from './oracles/use-pyth-oracle';
+import { usePriceData } from './oracles';
 import { useMarketConfiguration } from './use-market-configuration';
 import { useUserSupplyBorrow } from './use-user-supply-borrow';
 
@@ -15,7 +15,7 @@ export const useUserRole = () => {
   const { isConnected } = useIsConnected();
   const { data: userSupplyBorrow } = useUserSupplyBorrow();
   const { data: marketConfiguration } = useMarketConfiguration();
-  const { data: priceData } = usePrice();
+  const { data: priceData } = usePriceData();
 
   return useMemo(() => {
     if (
@@ -24,22 +24,27 @@ export const useUserRole = () => {
       return USER_ROLE.NONE;
     }
 
+    const baseTokenPrice = priceData?.prices.get(
+      marketConfiguration.baseToken.bits
+    )?.[0]?.price;
+
+    if (!baseTokenPrice) {
+      // TODO[v2]: Verify this doesn't cause any issues.
+      return USER_ROLE.NONE;
+    }
+
     // Supply treshold is $0.1
-    const supplyTreshold = BigNumber(0.1).dividedBy(
-      priceData.prices[marketConfiguration.baseToken.bits] ?? 1
-    );
+    const supplyTreshold = BigNumber(0.1).dividedBy(baseTokenPrice);
 
     // Borrow treshold is $10
-    const borrowTreshold = BigNumber(0.1).dividedBy(
-      priceData.prices[marketConfiguration.baseToken.bits] ?? 1
-    );
+    const borrowTreshold = BigNumber(0.1).dividedBy(baseTokenPrice);
 
     const userSuppliedUsd = userSupplyBorrow.supplied
-      .times(priceData.prices[marketConfiguration.baseToken.bits] ?? 1)
+      .times(baseTokenPrice)
       .dividedBy(BigNumber(10).pow(marketConfiguration.baseTokenDecimals));
 
     const userBorrowedUsd = userSupplyBorrow.borrowed
-      .times(priceData.prices[marketConfiguration.baseToken.bits] ?? 1)
+      .times(baseTokenPrice)
       .dividedBy(BigNumber(10).pow(marketConfiguration.baseTokenDecimals));
 
     if (userSuppliedUsd.gte(supplyTreshold)) {
@@ -51,5 +56,10 @@ export const useUserRole = () => {
     }
 
     return USER_ROLE.NONE;
-  }, [isConnected, userSupplyBorrow, marketConfiguration, priceData]);
+  }, [
+    isConnected,
+    userSupplyBorrow,
+    marketConfiguration,
+    priceData?.timestamp,
+  ]);
 };

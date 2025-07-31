@@ -7,7 +7,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import {
   useApr,
   useMarketConfiguration,
-  usePrice,
+  usePriceData,
   useUserSupplyBorrow,
 } from '@/hooks/v2';
 import {
@@ -56,7 +56,7 @@ export const Liquidity = () => {
     isPending: isPendingUserSupplyBorrowUSDC,
   } = useUserSupplyBorrow('USDC');
   const { data: priceDataUSDC, isPending: isPendingPriceDataUSDC } =
-    usePrice('USDC');
+    usePriceData('USDC');
   const { data: aprDataUSDC, isPending: isAprPendingUSDC } = useApr('USDC');
   const {
     data: marketConfigurationUSDC,
@@ -139,10 +139,13 @@ export const Liquidity = () => {
     if (!(priceDataUSDC && suppliedUSDC && marketConfigurationUSDC)) {
       return BigNumber(0);
     }
-    return priceDataUSDC.prices[marketConfigurationUSDC?.baseToken.bits].times(
-      suppliedUSDC
-    );
-  }, [priceDataUSDC, suppliedUSDC, marketConfigurationUSDC]);
+
+    const baseTokenPrice = priceDataUSDC.prices.get(
+      marketConfigurationUSDC?.baseToken.bits ?? ''
+    )?.[0];
+
+    return baseTokenPrice?.price.times(suppliedUSDC) ?? BigNumber(0);
+  }, [priceDataUSDC?.timestamp, suppliedUSDC, marketConfigurationUSDC]);
 
   const changeAction = useMarketStore.use.changeAction();
   const changeTokenAmount = useMarketStore.use.changeTokenAmount();

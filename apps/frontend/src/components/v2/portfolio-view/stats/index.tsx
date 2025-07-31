@@ -4,7 +4,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import {
   useCollateralConfigurations,
   useMarketConfiguration,
-  usePrice,
+  usePriceData,
   useUserCollateralAssets,
   useUserCollateralUtilization,
   useUserSupplyBorrow,
@@ -18,7 +18,7 @@ export const Stats = () => {
     isPending: isPendingUserSupplyBorrowUSDC,
   } = useUserSupplyBorrow('USDC');
   const { data: priceDataUSDC, isPending: isPendingPriceDataUSDC } =
-    usePrice('USDC');
+    usePriceData('USDC');
 
   const {
     data: userCollateralAssetsUSDC,
@@ -119,7 +119,9 @@ export const Stats = () => {
     ).reduce((acc, [key, value]) => {
       return acc.plus(
         formatUnits(
-          value.times(priceDataUSDC.prices[key]),
+          value.times(
+            priceDataUSDC.prices.get(key)?.[0]?.price ?? BigNumber(0)
+          ), // TODO[v2]: Check if this is correct. Also check other places with same logic applied.
           colateralConfigurationsUSDC[key].decimals
         )
       );

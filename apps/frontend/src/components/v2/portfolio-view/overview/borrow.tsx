@@ -9,7 +9,7 @@ import { appConfig } from '@/configs';
 import {
   useApr,
   useMarketConfiguration,
-  usePrice,
+  usePriceData,
   useUserCollateralAssets,
   useUserCollateralUtilization,
   useUserLiquidationPoint,
@@ -68,7 +68,7 @@ export const Borrow = () => {
     isPending: isPendingUserSupplyBorrowUSDC,
   } = useUserSupplyBorrow('USDC');
   const { data: priceDataUSDC, isPending: isPendingPriceDataUSDC } =
-    usePrice('USDC');
+    usePriceData('USDC');
   const { data: aprDataUSDC, isPending: isAprPendingUSDC } = useApr('USDC');
 
   const {
@@ -187,10 +187,12 @@ export const Borrow = () => {
     if (!(priceDataUSDC && borrowedUSDC && marketConfigurationUSDC)) {
       return BigNumber(0);
     }
-    return priceDataUSDC.prices[marketConfigurationUSDC?.baseToken.bits].times(
-      borrowedUSDC
-    );
-  }, [priceDataUSDC, borrowedUSDC, marketConfigurationUSDC]);
+    const baseTokenPrice = priceDataUSDC.prices.get(
+      marketConfigurationUSDC?.baseToken.bits ?? ''
+    )?.[0];
+
+    return baseTokenPrice?.price.times(borrowedUSDC) ?? BigNumber(0);
+  }, [priceDataUSDC?.timestamp, borrowedUSDC, marketConfigurationUSDC]);
 
   // const collateralIconsUSDT = useMemo(() => {
   //   if (!userCollateralAssetsUSDT) return [];

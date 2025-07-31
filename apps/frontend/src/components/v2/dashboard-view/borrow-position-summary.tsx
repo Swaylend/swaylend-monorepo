@@ -7,7 +7,7 @@ import {
   useHealthFactor,
   useLTV,
   useMarketConfiguration,
-  usePrice,
+  usePriceData,
   useUserLiquidationPoint,
   useUserSupplyBorrow,
 } from '@/hooks/v2';
@@ -22,7 +22,7 @@ export const BorrowPositionSummary = () => {
   const { data: borrowCapacity } = useBorrowCapacity();
   const { data: userLiquidationPoint } = useUserLiquidationPoint();
   const { data: userSupplyBorrow } = useUserSupplyBorrow();
-  const { data: priceData } = usePrice();
+  const { data: priceData } = usePriceData();
   const { data: marketConfiguration } = useMarketConfiguration();
   const [open, setOpen] = useState(false);
   const { data: ltv } = useLTV();
@@ -32,18 +32,25 @@ export const BorrowPositionSummary = () => {
     if (!(marketConfiguration && priceData && borrowCapacity)) {
       return BigNumber(0);
     }
-    let updatedBorrowCapacity = borrowCapacity?.minus(
-      BigNumber(1).div(
-        priceData?.prices[marketConfiguration?.baseToken.bits ?? ''] ?? 1
-      )
-    );
+
+    const baseTokenPrice = priceData?.prices.get(
+      marketConfiguration.baseToken.bits
+    )?.[0];
+
+    let updatedBorrowCapacity = borrowCapacity;
+
+    if (baseTokenPrice?.price.gt(0)) {
+      updatedBorrowCapacity = updatedBorrowCapacity.minus(
+        BigNumber(1).div(baseTokenPrice.price)
+      );
+    }
 
     updatedBorrowCapacity = updatedBorrowCapacity?.lt(0)
       ? BigNumber(0)
       : updatedBorrowCapacity;
 
     return updatedBorrowCapacity;
-  }, [marketConfiguration, borrowCapacity, priceData]);
+  }, [marketConfiguration, borrowCapacity, priceData?.timestamp]);
 
   if (!(isConnected && userSupplyBorrow) || userSupplyBorrow.borrowed.eq(0)) {
     return null;

@@ -13,7 +13,7 @@ import {
   useHealthFactor,
   useLTV,
   useMarketConfiguration,
-  usePrice,
+  usePriceData,
   useUserCollateralAssets,
   useUserCollateralUtilization,
   useUserLiquidationPoint,
@@ -54,7 +54,7 @@ export const Markets = () => {
     isPending: isPendingUserSupplyBorrowUSDC,
   } = useUserSupplyBorrow('USDC');
   const { data: priceDataUSDC, isPending: isPendingPriceDataUSDC } =
-    usePrice('USDC');
+    usePriceData('USDC');
 
   const { data: userLiquidationPoint, isPending: isPendingLP } =
     useUserLiquidationPoint();
@@ -129,7 +129,9 @@ export const Markets = () => {
     ).reduce((acc, [key, value]) => {
       return acc.plus(
         formatUnits(
-          value.times(priceDataUSDC.prices[key]),
+          value.times(
+            priceDataUSDC.prices.get(key)?.[0]?.price ?? BigNumber(0)
+          ), // TODO[v2]: Check if this is correct. Also check other places with same logic applied.
           colateralConfigurationsUSDC[key].decimals
         )
       );
@@ -194,19 +196,25 @@ export const Markets = () => {
     if (!(marketConfigurationUSDC && priceDataUSDC && borrowCapacity)) {
       return BigNumber(0);
     }
-    let updatedBorrowCapacity = borrowCapacity?.minus(
-      BigNumber(1).div(
-        priceDataUSDC?.prices[marketConfigurationUSDC?.baseToken.bits ?? ''] ??
-          1
-      )
-    );
+
+    const baseTokenPrice = priceDataUSDC?.prices.get(
+      marketConfigurationUSDC?.baseToken.bits ?? ''
+    )?.[0];
+
+    let updatedBorrowCapacity = borrowCapacity;
+
+    if (baseTokenPrice?.price.gt(0)) {
+      updatedBorrowCapacity = updatedBorrowCapacity.minus(
+        BigNumber(1).div(baseTokenPrice.price)
+      );
+    }
 
     updatedBorrowCapacity = updatedBorrowCapacity?.lt(0)
       ? BigNumber(0)
       : updatedBorrowCapacity;
 
     return updatedBorrowCapacity;
-  }, [marketConfigurationUSDC, borrowCapacity, priceDataUSDC]);
+  }, [marketConfigurationUSDC, borrowCapacity, priceDataUSDC?.timestamp]);
 
   return (
     <Card className="mt-8 w-full">

@@ -9,7 +9,7 @@ import { appConfig } from '@/configs';
 import {
   useApr,
   useCollateralConfigurations,
-  usePrice,
+  usePriceData,
   useUserCollateralAssets,
   useUserCollateralUtilization,
   useUserLiquidationPoint,
@@ -182,7 +182,7 @@ const SkeletonRow = (
 
 export const Collateral = () => {
   const { data: priceDataUSDC, isPending: isPendingPriceDataUSDC } =
-    usePrice('USDC');
+    usePriceData('USDC');
   const {
     data: userCollateralAssetsUSDC,
     isPending: isPendingUserCollateralAssetsUSDC,
@@ -300,9 +300,9 @@ export const Collateral = () => {
           colateralConfigurationsUSDC[assetId].decimals
         );
         const market = 'USDC';
-        const value = getFormattedPrice(
-          priceDataUSDC.prices[assetId].times(amount)
-        );
+        const assetPrice =
+          priceDataUSDC.prices.get(assetId)?.[0]?.price ?? BigNumber(0); // TODO[v2]: Check if this is correct. Also check other places with same logic applied.
+        const value = getFormattedPrice(assetPrice.times(amount));
         return { market, assetId, value, amount };
       });
   }, [priceDataUSDC, userCollateralAssetsUSDC, colateralConfigurationsUSDC]);

@@ -1,6 +1,6 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
-import { usePrice } from './oracles/use-pyth-oracle';
+import { usePriceData } from './oracles';
 import { useMarketConfiguration } from './use-market-configuration';
 import { useUserCollateralValue } from './use-user-collateral-value';
 import { useUserSupplyBorrow } from './use-user-supply-borrow';
@@ -9,7 +9,7 @@ export const useLTV = (marketParam?: string) => {
   const { data: collateralValue } = useUserCollateralValue(marketParam);
   const { data: supplyBorrow } = useUserSupplyBorrow(marketParam);
   const { data: marketConfiguration } = useMarketConfiguration(marketParam);
-  const { data: priceData } = usePrice(marketParam);
+  const { data: priceData } = usePriceData(marketParam);
 
   return useQuery({
     queryKey: [
@@ -17,7 +17,7 @@ export const useLTV = (marketParam?: string) => {
       'v2',
       collateralValue,
       supplyBorrow,
-      priceData?.prices,
+      priceData?.timestamp,
       marketConfiguration,
     ],
     queryFn: () => {
@@ -32,7 +32,10 @@ export const useLTV = (marketParam?: string) => {
       }
 
       const borrowValue = supplyBorrow.borrowed
-        .times(priceData.prices[marketConfiguration.baseToken.bits])
+        .times(
+          priceData.prices.get(marketConfiguration.baseToken.bits)?.[0]
+            ?.price ?? BigNumber(0)
+        )
         .div(BigNumber(10).pow(marketConfiguration.baseTokenDecimals));
 
       return borrowValue.div(collateralValue);

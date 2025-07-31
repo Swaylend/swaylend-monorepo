@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { appConfig } from '@/configs';
 import { useMarketStore } from '@/stores/market-store';
-import { usePrice } from './oracles/use-pyth-oracle';
+import { usePriceData } from './oracles';
 import { useMarketBasicsWithInterest } from './use-market-basics-with-interest';
 import { useMarketConfiguration } from './use-market-configuration';
 
@@ -28,7 +28,7 @@ export const useRewards = (marketParam?: string) => {
   const market = marketParam ?? storeMarket;
 
   const { data: marketBasics } = useMarketBasicsWithInterest(market);
-  const { data: priceData } = usePrice(market);
+  const { data: priceData } = usePriceData(market);
   const { data: marketConfiguration } = useMarketConfiguration(market);
 
   return useQuery({
@@ -37,7 +37,7 @@ export const useRewards = (marketParam?: string) => {
       'v2',
       market,
       marketBasics,
-      priceData?.prices,
+      priceData?.timestamp,
       marketConfiguration,
     ],
     queryFn: () => {
@@ -61,17 +61,22 @@ export const useRewards = (marketParam?: string) => {
 
       const { total_borrow_base, total_supply_base } = marketBasics;
 
+      const baseTokenPrice =
+        priceData.prices.get(marketConfiguration.baseToken.bits)?.[0]?.price ??
+        BigNumber(0);
+
       const totalBorrowValue = BigNumber(total_borrow_base.toString())
-        .times(priceData.prices[marketConfiguration.baseToken.bits])
+        .times(baseTokenPrice)
         .dividedBy(BigNumber(10).pow(marketConfiguration.baseTokenDecimals));
 
       const totalSupplyValue = BigNumber(total_supply_base.toString())
-        .times(priceData.prices[marketConfiguration.baseToken.bits])
+        .times(baseTokenPrice)
         .dividedBy(BigNumber(10).pow(marketConfiguration.baseTokenDecimals));
 
       return activeRewards
         .map((reward) => {
-          const tokenPrice = priceData.prices[reward.assetId];
+          const tokenPrice =
+            priceData.prices.get(reward.assetId)?.[0]?.price ?? BigNumber(0);
           const durationInDays = reward.durationInDays;
           const supplyRewardPool = BigNumber(reward.poolSize).times(
             reward.supplyRewardPercentage

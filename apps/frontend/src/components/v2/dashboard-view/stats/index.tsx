@@ -8,7 +8,7 @@ import {
   useBorrowCapacity,
   useCollateralConfigurations,
   useMarketConfiguration,
-  usePrice,
+  usePriceData,
   useUserCollateralAssets,
   useUserSupplyBorrow,
 } from '@/hooks/v2';
@@ -26,7 +26,7 @@ export const Stats = () => {
     data: userCollateralAssets,
     isPending: isPendingUserCollateralAssets,
   } = useUserCollateralAssets();
-  const { data: priceData, isPending: isPendingPriceData } = usePrice();
+  const { data: priceData, isPending: isPendingPriceData } = usePriceData();
   const { data: marketConfiguration, isPending: isPendingMarketConfiguration } =
     useMarketConfiguration();
   const {
@@ -74,7 +74,9 @@ export const Stats = () => {
         (acc, [key, value]) => {
           return acc.plus(
             formatUnits(
-              value.times(priceData.prices[key]),
+              value.times(
+                priceData.prices.get(key)?.[0]?.price ?? BigNumber(0)
+              ),
               colateralConfigurations[key].decimals
             )
           );
@@ -85,7 +87,7 @@ export const Stats = () => {
   }, [
     userSupplyBorrow,
     userCollateralAssets,
-    priceData,
+    priceData?.timestamp,
     marketConfiguration,
     colateralConfigurations,
     marketMode,
@@ -106,12 +108,16 @@ export const Stats = () => {
       return { title: '', value: 0 };
     }
 
-    let updatedBorrowCapacity =
-      borrowCapacity?.minus(
-        BigNumber(1).div(
-          priceData?.prices[marketConfiguration.baseToken.bits] ?? 1
-        )
-      ) ?? BigNumber(0);
+    let updatedBorrowCapacity = borrowCapacity;
+    const baseTokenPrice = priceData?.prices.get(
+      marketConfiguration.baseToken.bits
+    )?.[0];
+
+    if (baseTokenPrice?.price.gt(0)) {
+      updatedBorrowCapacity = borrowCapacity.minus(
+        BigNumber(1).div(baseTokenPrice.price)
+      );
+    }
 
     updatedBorrowCapacity = updatedBorrowCapacity.lt(0)
       ? BigNumber(0)
@@ -130,14 +136,15 @@ export const Stats = () => {
         };
       }
       // Borrowed
-      const val = formatUnits(
+      let val = formatUnits(
         userSupplyBorrow.borrowed,
         marketConfiguration.baseTokenDecimals
-      ).plus(
-        BigNumber(0.001).div(
-          priceData?.prices[marketConfiguration.baseToken.bits] ?? 1
-        )
       );
+
+      if (baseTokenPrice?.price.gt(0)) {
+        val = val.plus(BigNumber(0.001).div(baseTokenPrice.price));
+      }
+
       if (val.lt(1) && val.gt(0)) {
         return {
           title: 'Your Borrow Position',

@@ -42,7 +42,7 @@ import {
   useBalance,
   useBorrowCapacity,
   useMarketConfiguration,
-  usePrice,
+  usePriceData,
   useUserRole,
   useUserSupplyBorrow,
 } from '@/hooks/v2';
@@ -123,7 +123,7 @@ export const BorrowTable = () => {
   const changeInputDialogOpen = useMarketStore.use.changeInputDialogOpen();
 
   const { data: userSupplyBorrow } = useUserSupplyBorrow();
-  const { data: priceData } = usePrice();
+  const { data: priceData } = usePriceData();
   const { data: marketConfiguration, isPending: isPendingMarketConfiguration } =
     useMarketConfiguration();
   const { data: maxBorrowAmount } = useBorrowCapacity();
@@ -153,12 +153,13 @@ export const BorrowTable = () => {
       userSupplyBorrow.borrowed,
       marketConfiguration.baseTokenDecimals
     );
-    if (val.gt(0)) {
-      val = val.plus(
-        BigNumber(0.001).div(
-          priceData?.prices[marketConfiguration.baseToken.bits] ?? 1
-        )
-      );
+
+    const baseTokenPrice = priceData?.prices.get(
+      marketConfiguration.baseToken.bits
+    )?.[0];
+
+    if (val.gt(0) && baseTokenPrice && baseTokenPrice.price.gt(0)) {
+      val = val.plus(BigNumber(0.001).div(baseTokenPrice.price));
     }
 
     if (val.lt(1) && val.gt(0)) {

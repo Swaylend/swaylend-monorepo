@@ -11,6 +11,7 @@ import { appConfig } from '@/configs';
 import { useMarketContract } from '@/contracts/v2/use-market-contract';
 import { usePythContract } from '@/contracts/v2/use-pyth-contract';
 import { useMarketStore } from '@/stores/market-store';
+import { usePriceData } from './oracles';
 import { useMarketConfiguration } from './use-market-configuration';
 
 export const useWithdrawBase = () => {
@@ -22,6 +23,7 @@ export const useWithdrawBase = () => {
   const changeSuccessDialogTransactionId =
     useMarketStore.use.changeSuccessDialogTransactionId();
   const { data: marketConfiguration } = useMarketConfiguration();
+  const { data: priceData } = usePriceData(market);
 
   const queryClient = useQueryClient();
   const marketContract = useMarketContract(market);
@@ -36,9 +38,18 @@ export const useWithdrawBase = () => {
       marketContract?.id,
       pythContract?.account?.address,
       pythContract?.id,
+      priceData?.timestamp,
     ],
     mutationFn: async ({ tokenAmount }: { tokenAmount: BigNumber }) => {
-      if (!(account && marketConfiguration && marketContract && pythContract)) {
+      if (
+        !(
+          account &&
+          marketConfiguration &&
+          marketContract &&
+          pythContract &&
+          priceData
+        )
+      ) {
         return null;
       }
 
@@ -46,12 +57,11 @@ export const useWithdrawBase = () => {
         10 ** marketConfiguration.baseTokenDecimals
       );
 
-      // TODO [ORACLE INPUT]
       const { waitForResult } = await marketContract.functions
-        .withdraw_base(amount.toFixed(0), [])
+        .withdraw_base(amount.toFixed(0), priceData.oracleInputs)
         .callParams({
           forward: {
-            amount: 0,
+            amount: priceData.totalUpdateFee.toFixed(0),
             assetId: appConfig.client.shared.baseAssetId,
           },
         })

@@ -2,7 +2,7 @@ import BigNumber from 'bignumber.js';
 import { useMemo, useState } from 'react';
 import { ACTION_TYPE, useMarketStore } from '@/stores/market-store';
 import { formatUnits } from '@/utils';
-import { usePrice } from './oracles/use-pyth-oracle';
+import { usePriceData } from './oracles';
 import { useBorrowCapacity } from './use-borrow-capacity';
 import { useCollateralConfigurations } from './use-collateral-configurations';
 import { useMarketConfiguration } from './use-market-configuration';
@@ -15,7 +15,7 @@ export const usePossiblePositionSummary = () => {
   const actionTokenAssetId = useMarketStore.use.actionTokenAssetId();
   const tokenAmount = useMarketStore.use.tokenAmount();
   const action = useMarketStore.use.action();
-  const { data: priceData } = usePrice();
+  const { data: priceData } = usePriceData();
   const { data: marketConfiguration } = useMarketConfiguration();
   const { data: userCollateralAssets } = useUserCollateralAssets();
   const { data: collateralConfigurations } = useCollateralConfigurations();
@@ -71,7 +71,8 @@ export const usePossiblePositionSummary = () => {
         return;
       }
       const baseTokenPrice =
-        priceData.prices[marketConfiguration.baseToken.bits];
+        priceData.prices.get(marketConfiguration.baseToken.bits)?.[0]?.price ??
+        BigNumber(0);
 
       loanAmount = loanAmount
         .plus(tokenAmount.times(action === ACTION_TYPE.BORROW ? 1 : -1))
@@ -118,16 +119,19 @@ export const usePossiblePositionSummary = () => {
         return;
       }
 
+      const assetPrice =
+        priceData.prices.get(actionTokenAssetId)?.[0]?.price ?? BigNumber(0);
+
       // Existing collateral value +/- (token supplied * price * borrow_collateral_factor)
       const collateralsValue = collateralValue.plus(
         tokenAmount
-          .times(priceData.prices[actionTokenAssetId])
+          .times(assetPrice)
           .times(action === ACTION_TYPE.SUPPLY ? 1 : -1)
       );
 
       const trueCollateralsValue = trueCollateralValue.plus(
         tokenAmount
-          .times(priceData.prices[actionTokenAssetId])
+          .times(assetPrice)
           .times(action === ACTION_TYPE.SUPPLY ? 1 : -1)
           .times(
             formatUnits(
@@ -144,7 +148,7 @@ export const usePossiblePositionSummary = () => {
       // Existing borrow capacity +/- (token supplied * price * borrow_collateral_factor) + borrwed_amount
       const newAvailableToBorrow = borrowCapacity.plus(
         tokenAmount
-          .times(priceData.prices[actionTokenAssetId])
+          .times(assetPrice)
           .times(
             formatUnits(
               BigNumber(

@@ -1,5 +1,6 @@
-// Re-export v1 hooks here
+// Re-export v2 hooks here
 
+export * from './oracles';
 export * from './oracles/use-pyth-oracle';
 export * from './use-apr';
 export * from './use-balance';

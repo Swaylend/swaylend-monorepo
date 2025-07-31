@@ -1,6 +1,6 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
-import { usePrice } from './oracles/use-pyth-oracle';
+import { usePriceData } from './oracles';
 import { useMarketConfiguration } from './use-market-configuration';
 import { useUserSupplyBorrow } from './use-user-supply-borrow';
 import { useUserTrueCollateralValue } from './use-user-true-collateral-value';
@@ -9,7 +9,7 @@ export const useHealthFactor = (marketParam?: string) => {
   const { data: trueCollateralValue } = useUserTrueCollateralValue(marketParam);
   const { data: supplyBorrow } = useUserSupplyBorrow(marketParam);
   const { data: marketConfiguration } = useMarketConfiguration(marketParam);
-  const { data: priceData } = usePrice(marketParam);
+  const { data: priceData } = usePriceData(marketParam);
 
   return useQuery({
     queryKey: [
@@ -17,7 +17,7 @@ export const useHealthFactor = (marketParam?: string) => {
       'v2',
       trueCollateralValue,
       supplyBorrow,
-      priceData?.prices,
+      priceData?.timestamp,
       marketConfiguration,
     ],
     queryFn: () => {
@@ -37,7 +37,10 @@ export const useHealthFactor = (marketParam?: string) => {
       }
 
       const borrowValue = supplyBorrow.borrowed
-        .times(priceData.prices[marketConfiguration.baseToken.bits])
+        .times(
+          priceData.prices.get(marketConfiguration.baseToken.bits)?.[0]
+            ?.price ?? BigNumber(0)
+        )
         .div(BigNumber(10).pow(marketConfiguration.baseTokenDecimals));
 
       return trueCollateralValue.div(borrowValue);

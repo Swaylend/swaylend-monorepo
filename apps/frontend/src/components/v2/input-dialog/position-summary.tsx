@@ -6,7 +6,7 @@ import {
   useMarketBalanceOfBase,
   useMarketConfiguration,
   usePossiblePositionSummary,
-  usePrice,
+  usePriceData,
   useUserCollateralUtilization,
   useUserCollateralValue,
   useUserLiquidationPoint,
@@ -26,7 +26,7 @@ export const PositionSummary = () => {
   const { data: collateralValue } = useUserCollateralValue();
   const { data: liquidationPoint } = useUserLiquidationPoint();
 
-  const { data: priceData } = usePrice();
+  const { data: priceData } = usePriceData();
 
   const totalBorrowCapacity = useMemo(() => {
     if (
@@ -77,11 +77,17 @@ export const PositionSummary = () => {
   }, [possibleCollateralUtilization, currentCollateralUtilization]);
 
   const stats = useMemo(() => {
-    let updatedBorrowCapacity = borrowCapacity?.minus(
-      BigNumber(1).div(
-        priceData?.prices[marketConfiguration?.baseToken.bits ?? ''] ?? 1
-      )
-    );
+    const baseTokenPrice = priceData?.prices.get(
+      marketConfiguration?.baseToken.bits ?? ''
+    )?.[0];
+
+    let updatedBorrowCapacity = borrowCapacity ?? BigNumber(0);
+
+    if (baseTokenPrice?.price.gt(0)) {
+      updatedBorrowCapacity = updatedBorrowCapacity.minus(
+        BigNumber(1).div(baseTokenPrice.price)
+      );
+    }
 
     updatedBorrowCapacity = updatedBorrowCapacity?.lt(0)
       ? BigNumber(0)
@@ -124,23 +130,19 @@ export const PositionSummary = () => {
         tooltip:
           'The total amount of base asset you can borrow (including borrowed amount)',
         value: `${getFormattedNumber(
-          totalBorrowCapacity.minus(
-            BigNumber(1).div(
-              priceData?.prices[marketConfiguration?.baseToken.bits ?? ''] ?? 1
-            )
-          ),
+          baseTokenPrice
+            ? totalBorrowCapacity.minus(BigNumber(1).div(baseTokenPrice.price))
+            : totalBorrowCapacity,
           4,
           true
         )} USDC`,
         changeValue: possibleBorrowCapacity
           ? `${getFormattedNumber(
-              possibleBorrowCapacity.minus(
-                BigNumber(1).div(
-                  priceData?.prices[
-                    marketConfiguration?.baseToken.bits ?? ''
-                  ] ?? 1
-                )
-              ),
+              baseTokenPrice
+                ? possibleBorrowCapacity.minus(
+                    BigNumber(1).div(baseTokenPrice.price)
+                  )
+                : possibleBorrowCapacity,
               4,
               true
             )} USDC`
@@ -164,13 +166,11 @@ export const PositionSummary = () => {
         )} USDC`,
         changeValue: possibleAvailableToBorrow
           ? `${getFormattedNumber(
-              possibleAvailableToBorrow.minus(
-                BigNumber(1).div(
-                  priceData?.prices[
-                    marketConfiguration?.baseToken.bits ?? ''
-                  ] ?? 1
-                )
-              ),
+              baseTokenPrice
+                ? possibleAvailableToBorrow.minus(
+                    BigNumber(1).div(baseTokenPrice.price)
+                  )
+                : possibleAvailableToBorrow,
               4,
               true
             )} USDC`
@@ -194,7 +194,7 @@ export const PositionSummary = () => {
     possibleBorrowCapacity,
     possibleCollateralValue,
     possibleLiquidationPoint,
-    priceData,
+    priceData?.timestamp,
   ]);
 
   return (

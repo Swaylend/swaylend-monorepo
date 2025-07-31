@@ -2,7 +2,7 @@ import { useAccount } from '@fuels/react';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { formatUnits } from '@/utils';
-import { usePrice } from './oracles/use-pyth-oracle';
+import { usePriceData } from './oracles';
 import { useCollateralConfigurations } from './use-collateral-configurations';
 import { useMarketConfiguration } from './use-market-configuration';
 import { useUserCollateralAssets } from './use-user-collateral-assets';
@@ -13,7 +13,7 @@ export const useBorrowCapacity = () => {
   const { data: supplyBorrow } = useUserSupplyBorrow();
   const { data: collateralConfigurations } = useCollateralConfigurations();
   const { data: userCollateralAssets } = useUserCollateralAssets();
-  const { data: priceData } = usePrice();
+  const { data: priceData } = usePriceData();
   const { data: marketConfiguration } = useMarketConfiguration();
 
   return useQuery({
@@ -24,7 +24,7 @@ export const useBorrowCapacity = () => {
       supplyBorrow,
       collateralConfigurations,
       userCollateralAssets,
-      priceData?.prices,
+      priceData?.timestamp,
       marketConfiguration,
     ],
     queryFn: () => {
@@ -41,13 +41,19 @@ export const useBorrowCapacity = () => {
         return null;
       }
 
+      const baseTokenPrice =
+        priceData.prices.get(marketConfiguration.baseToken.bits)?.[0]?.price ??
+        BigNumber(0);
+
       const borrowCapacity = Object.entries(userCollateralAssets)
         .reduce((acc, [key, value]) => {
+          const price = priceData.prices.get(key)?.[0]?.price ?? BigNumber(0);
+          const confidence =
+            priceData.prices.get(key)?.[0]?.confidence ?? BigNumber(0);
+
           return acc.plus(
             formatUnits(
-              value.times(
-                priceData.prices[key].minus(priceData.confidenceIntervals[key])
-              ),
+              value.times(price.minus(confidence)),
               collateralConfigurations[key].decimals
             ).times(
               formatUnits(
@@ -63,9 +69,7 @@ export const useBorrowCapacity = () => {
         }, new BigNumber(0))
         .minus(
           formatUnits(
-            supplyBorrow.borrowed.times(
-              priceData.prices[marketConfiguration.baseToken.bits]
-            ),
+            supplyBorrow.borrowed.times(baseTokenPrice),
             marketConfiguration.baseTokenDecimals
           )
         );
