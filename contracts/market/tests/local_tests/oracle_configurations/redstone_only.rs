@@ -5,7 +5,9 @@ use fuels::{
         calls::{CallHandler, CallParameters, ContractDependency},
         responses::CallResponse,
     },
-    types::{transaction::TxPolicies, transaction_builders::VariableOutputPolicy, U256},
+    types::{
+        transaction::TxPolicies, transaction_builders::VariableOutputPolicy, ContractId, U256,
+    },
 };
 use market::{OracleInput, RedstoneOracleInput};
 use market_sdk::{convert_i256_to_u64, is_i256_negative, parse_units};
@@ -37,6 +39,7 @@ async fn redstone_only() {
         redstone_mock_oracle,
         redstone_prices,
         redstone_asset_price_feeds,
+        oracle_contract_id_to_index,
         ..
     } = setup(None, TestBaseAsset::USDC, Some("tokens-redstone.json")).await;
 
@@ -377,7 +380,11 @@ async fn redstone_only() {
                     .unwrap();
 
                 OracleInput::Redstone(RedstoneOracleInput {
-                    contract_id: redstone_input.contract_id,
+                    oracle_id: *oracle_contract_id_to_index
+                        .get(&ContractId::from(
+                            redstone_mock_oracle.instance.contract_id(),
+                        ))
+                        .unwrap(),
                     price_feed_ids: redstone_input.price_feed_ids,
                     payload,
                 })

@@ -5,7 +5,9 @@ use fuels::{
         calls::{CallHandler, CallParameters, ContractDependency},
         responses::CallResponse,
     },
-    types::{transaction::TxPolicies, transaction_builders::VariableOutputPolicy, Bits256},
+    types::{
+        transaction::TxPolicies, transaction_builders::VariableOutputPolicy, Bits256, ContractId,
+    },
 };
 use market::{OracleInput, StorkOracleInput};
 use market_sdk::{convert_i256_to_u64, is_i256_negative, parse_units};
@@ -37,6 +39,7 @@ async fn stork_only() {
         stork_mock_oracle,
         stork_prices,
         stork_asset_price_feeds,
+        oracle_contract_id_to_index,
         ..
     } = setup(None, TestBaseAsset::USDC, Some("tokens-stork.json")).await;
 
@@ -377,7 +380,9 @@ async fn stork_only() {
                     .unwrap();
 
                 OracleInput::Stork(StorkOracleInput {
-                    contract_id: stork_input.contract_id,
+                    oracle_id: *oracle_contract_id_to_index
+                        .get(&ContractId::from(stork_mock_oracle.instance.contract_id()))
+                        .unwrap(),
                     update_data,
                 })
             }

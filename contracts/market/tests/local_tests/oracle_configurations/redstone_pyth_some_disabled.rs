@@ -5,7 +5,10 @@ use fuels::{
         calls::{CallHandler, CallParameters, ContractDependency},
         responses::CallResponse,
     },
-    types::{transaction::TxPolicies, transaction_builders::VariableOutputPolicy, Bits256, U256},
+    types::{
+        transaction::TxPolicies, transaction_builders::VariableOutputPolicy, Bits256, ContractId,
+        U256,
+    },
 };
 use market::{OracleInput, PythOracleInput, RedstoneOracleInput};
 use market_sdk::{convert_i256_to_u64, is_i256_negative, parse_units};
@@ -40,6 +43,7 @@ async fn redstone_pyth_some_disabled() {
         redstone_mock_oracle,
         redstone_prices,
         redstone_asset_price_feeds,
+        oracle_contract_id_to_index,
         ..
     } = setup(
         None,
@@ -423,9 +427,10 @@ async fn redstone_pyth_some_disabled() {
                     .collect::<Vec<(Bits256, (u64, u32, u64, u64))>>();
 
                 OracleInput::Pyth(PythOracleInput {
-                    contract_id: pyth_input.contract_id,
+                    oracle_id: *oracle_contract_id_to_index
+                        .get(&ContractId::from(pyth_mock_oracle.instance.contract_id()))
+                        .unwrap(),
                     price_feed_ids: pyth_input.price_feed_ids,
-                    update_fee: pyth_input.update_fee,
                     publish_times: pyth_input.publish_times,
                     update_data: pyth_mock_oracle
                         .create_update_data(&new_prices)
@@ -464,7 +469,11 @@ async fn redstone_pyth_some_disabled() {
                     .unwrap();
 
                 OracleInput::Redstone(RedstoneOracleInput {
-                    contract_id: redstone_input.contract_id,
+                    oracle_id: *oracle_contract_id_to_index
+                        .get(&ContractId::from(
+                            redstone_mock_oracle.instance.contract_id(),
+                        ))
+                        .unwrap(),
                     price_feed_ids: redstone_input.price_feed_ids,
                     payload,
                 })

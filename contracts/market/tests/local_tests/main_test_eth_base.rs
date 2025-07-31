@@ -6,7 +6,9 @@ use fuels::{
         calls::{CallHandler, CallParameters, ContractDependency},
         responses::CallResponse,
     },
-    types::{transaction::TxPolicies, transaction_builders::VariableOutputPolicy, Bits256},
+    types::{
+        transaction::TxPolicies, transaction_builders::VariableOutputPolicy, Bits256, ContractId,
+    },
 };
 use market::{OracleInput, PythOracleInput};
 use market_sdk::{convert_i256_to_u64, is_i256_negative, parse_units};
@@ -40,6 +42,7 @@ async fn main_test_eth_base() {
         eth,
         usdt,
         usdt_contract,
+        oracle_contract_id_to_index,
         ..
     } = setup(None, TestBaseAsset::ETH, None).await;
 
@@ -368,8 +371,9 @@ async fn main_test_eth_base() {
                     .collect::<Vec<(Bits256, (u64, u32, u64, u64))>>();
 
                 OracleInput::Pyth(PythOracleInput {
-                    contract_id: pyth_input.contract_id,
-                    update_fee: pyth_input.update_fee,
+                    oracle_id: *oracle_contract_id_to_index
+                        .get(&ContractId::from(pyth_mock_oracle.instance.contract_id()))
+                        .unwrap(),
                     publish_times: pyth_input.publish_times,
                     price_feed_ids: pyth_input.price_feed_ids,
                     update_data: pyth_mock_oracle

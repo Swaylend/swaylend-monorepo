@@ -951,11 +951,7 @@
       "metadataTypeId": 36,
       "components": [
         {
-          "name": "contract_id",
-          "typeId": 54
-        },
-        {
-          "name": "update_fee",
+          "name": "oracle_id",
           "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
         },
         {
@@ -995,8 +991,8 @@
       "metadataTypeId": 37,
       "components": [
         {
-          "name": "contract_id",
-          "typeId": 54
+          "name": "oracle_id",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
         },
         {
           "name": "price_feed_ids",
@@ -1019,8 +1015,8 @@
       "metadataTypeId": 38,
       "components": [
         {
-          "name": "contract_id",
-          "typeId": 54
+          "name": "oracle_id",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
         },
         {
           "name": "update_data",
@@ -1039,8 +1035,8 @@
       "metadataTypeId": 39,
       "components": [
         {
-          "name": "contract_id",
-          "typeId": 54
+          "name": "oracle_id",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
         },
         {
           "name": "placeholder",
@@ -5208,7 +5204,7 @@
     {
       "name": "DEBUG_STEP",
       "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
-      "offset": 132600,
+      "offset": 134016,
       "indirect": false
     }
   ],

@@ -37,12 +37,6 @@ pub enum OracleType {
     Twrap: (),
 }
 
-pub enum OracleInput {
-    Pyth: PythOracleInput,
-    Redstone: RedstoneOracleInput,
-    Stork: StorkOracleInput,
-    Twrap: TwrapOracleInput,
-}
 
 /// This struct contains the configuration details for contract-wide oracle settings.
 pub struct OracleGlobalConfiguration {
@@ -58,13 +52,17 @@ pub struct OracleAssetConfiguration {
     pub is_disabled: bool,
 }
 
+// Used in the EXTERNAL facing methods.
+pub enum OracleInput {
+    Pyth: PythOracleInput,
+    Redstone: RedstoneOracleInput,
+    Stork: StorkOracleInput,
+    Twrap: TwrapOracleInput,
+}
 
-pub struct PythOracleInput {
-    /// Contract ID of the Pyth contract.
-    pub contract_id: ContractId,
-
-    /// This field represents the fee required to perform the update.
-    pub update_fee: u64,
+pub struct PythOracleInput  {
+    /// Oracle ID from the global oracle configuration.
+    pub oracle_id: u64,
     /// This field contains a list of times when price feeds were published.
     pub publish_times: Vec<u64>,
     /// This field holds a collection of identifiers for the price feeds being updated.
@@ -74,23 +72,67 @@ pub struct PythOracleInput {
 }
 
 pub struct RedstoneOracleInput {
-    /// Contract ID of the Redstone contract.
-    pub contract_id: ContractId,
-    
+    /// Oracle ID from the global oracle configuration.
+    pub oracle_id: u64,
+    /// This field holds a collection of identifiers for the price feeds being updated.
     pub price_feed_ids: Vec<u256>,
+    /// This field includes the actual update data in bytes format.
     pub payload: Bytes,
 }
 
 pub struct StorkOracleInput {
-    /// Contract ID of the Stork contract.
-    pub contract_id: ContractId,
+    /// Oracle ID from the global oracle configuration.
+    pub oracle_id: u64,
 
     /// This field incldues the update data for updating the price feeds.
     pub update_data: Vec<TemporalNumericValueInput>,
 }
 
 pub struct TwrapOracleInput {
-    /// Contract ID of the Twrap contract.
+    /// Oracle ID from the global oracle configuration.
+    pub oracle_id: u64,
+
+    pub placeholder: (),    
+}
+
+// Used in the INTERNAL methods. We use the oracle_id to get the contract_id.
+pub enum OracleInputInternal {
+    Pyth: PythOracleInputInternal,
+    Redstone: RedstoneOracleInputInternal,
+    Stork: StorkOracleInputInternal,
+    Twrap: TwrapOracleInputInternal,
+}
+
+pub struct PythOracleInputInternal  {
+    /// Oracle contract id.
+    pub contract_id: ContractId,
+
+    /// This field contains a list of times when price feeds were published.
+    pub publish_times: Vec<u64>,
+    /// This field holds a collection of identifiers for the price feeds being updated.
+    pub price_feed_ids: Vec<PriceFeedId>,
+    /// This field includes the actual update data in bytes format.
+    pub update_data: Vec<Bytes>,
+}
+
+pub struct RedstoneOracleInputInternal {
+    /// Oracle contract id.
+    pub contract_id: ContractId,
+
+    pub price_feed_ids: Vec<u256>,
+    pub payload: Bytes,
+}
+
+pub struct StorkOracleInputInternal {
+    /// Oracle contract id.
+    pub contract_id: ContractId,
+
+    /// This field incldues the update data for updating the price feeds.
+    pub update_data: Vec<TemporalNumericValueInput>,
+}
+
+pub struct TwrapOracleInputInternal {
+    /// Oracle contract id.
     pub contract_id: ContractId,
 
     pub placeholder: (),    
@@ -243,9 +285,9 @@ impl Oracle {
         return (is_price_valid, final_price);
     }
 
-    pub fn update_price_feeds(oracle_input: OracleInput) {
+    pub fn update_price_feeds(oracle_input: OracleInputInternal) {
          match oracle_input {
-            OracleInput::Pyth(input) => {
+            OracleInputInternal::Pyth(input) => {
                 let contract_id = input.contract_id;
                 let oracle = abi(PythCore, contract_id.bits());
 
@@ -267,13 +309,13 @@ impl Oracle {
                         .update_data,
                 );
             },
-            OracleInput::Redstone(input) => {
+            OracleInputInternal::Redstone(input) => {
                 let contract_id = input.contract_id;
                 let oracle = abi(RedstonePrices, contract_id.bits());
 
                 oracle.update_prices(input.price_feed_ids, input.payload);
             },
-            OracleInput::Stork(input) => {
+            OracleInputInternal::Stork(input) => {
                 let contract_id = input.contract_id;
                 let oracle = abi(Stork, contract_id.bits());
 
@@ -290,7 +332,7 @@ impl Oracle {
                     coins: update_fee,
                 }(input.update_data);
             },
-            OracleInput::Twrap(input) => {
+            OracleInputInternal::Twrap(input) => {
                 let contract_id = input.contract_id;
                 // TODO: Implement
                 require(false, "Not implemented yet");

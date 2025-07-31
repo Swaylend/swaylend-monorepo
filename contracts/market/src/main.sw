@@ -16,7 +16,7 @@ use pyth_interface::{data_structures::price::PriceFeedId, PythCore};
 use market_abi::{
     Market, 
     structs::*, 
-    oracle_structs::{OracleAssetConfiguration, OracleGlobalConfiguration, OracleInput, Price, Oracle}, 
+    oracle_structs::*,
     errors::*
 };
 use std::asset::{mint_to, transfer};
@@ -1588,7 +1588,48 @@ fn update_price_feeds_internal(oracle_inputs: Vec<OracleInput>) {
     let len = oracle_inputs.len();
 
     while index < len {
-        Oracle::update_price_feeds(oracle_inputs.get(index).unwrap());
+        let oracle_input = oracle_inputs.get(index).unwrap();
+        
+        let oracle_input_internal = match oracle_input {
+            OracleInput::Pyth(input) => {
+                let oracle_configuration: OracleGlobalConfiguration = storage.oracle_global_configurations.get(input.oracle_id).try_read().unwrap();
+
+                OracleInputInternal::Pyth(PythOracleInputInternal {
+                    contract_id: oracle_configuration.contract_id,
+                    publish_times: input.publish_times,
+                    price_feed_ids: input.price_feed_ids,
+                    update_data: input.update_data,
+                })
+            },
+            OracleInput::Redstone(input) => {
+                let oracle_configuration: OracleGlobalConfiguration = storage.oracle_global_configurations.get(input.oracle_id).try_read().unwrap();
+
+                OracleInputInternal::Redstone(RedstoneOracleInputInternal {
+                    contract_id: oracle_configuration.contract_id,
+                    price_feed_ids: input.price_feed_ids,
+                    payload: input.payload,
+                })
+            },
+            OracleInput::Stork(input) => {
+                let oracle_configuration: OracleGlobalConfiguration = storage.oracle_global_configurations.get(input.oracle_id).try_read().unwrap();
+
+                OracleInputInternal::Stork(StorkOracleInputInternal {
+                    contract_id: oracle_configuration.contract_id,
+                    update_data: input.update_data,
+                })
+            },
+            OracleInput::Twrap(input) => {
+                let oracle_configuration: OracleGlobalConfiguration = storage.oracle_global_configurations.get(input.oracle_id).try_read().unwrap();
+
+                OracleInputInternal::Twrap(TwrapOracleInputInternal {
+                    contract_id: oracle_configuration.contract_id,
+                    placeholder: (),
+                })
+            },
+        };
+
+        Oracle::update_price_feeds(oracle_input_internal);
+
         index += 1;
     }
 }

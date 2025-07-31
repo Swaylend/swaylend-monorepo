@@ -81,6 +81,7 @@ pub struct TestData {
     pub stork_mock_oracle: StorkMockContract,
     pub stork_prices: Vec<(Bits256, (f64, u32, u64, u64))>,
     pub stork_asset_price_feeds: HashMap<AssetId, (Bits256, u32)>, // asset_id -> (price_feed_id, price_feed_decimals)
+    pub oracle_contract_id_to_index: HashMap<ContractId, u64>,
 }
 
 pub fn string_to_price_feed_id(
@@ -186,6 +187,19 @@ pub async fn setup(
         },
     ];
 
+    // Map of contract_id -> oracle_index (id)
+    let contract_id_to_index = HashMap::<ContractId, u64>::from([
+        (ContractId::from(pyth_mock_oracle.instance.contract_id()), 0),
+        (
+            ContractId::from(redstone_mock_oracle.instance.contract_id()),
+            1,
+        ),
+        (
+            ContractId::from(stork_mock_oracle.instance.contract_id()),
+            2,
+        ),
+    ]);
+
     for config in &global_oracle_configurations {
         market.add_new_global_oracle(config).await.unwrap();
     }
@@ -273,8 +287,9 @@ pub async fn setup(
         pyth_mock_oracle.update_prices(&prices).await.unwrap();
 
         oracle_inputs.push(OracleInput::Pyth(PythOracleInput {
-            contract_id: ContractId::from(pyth_mock_oracle.instance.contract_id()),
-            update_fee: price_feed_count as u64,
+            oracle_id: *contract_id_to_index
+                .get(&ContractId::from(pyth_mock_oracle.instance.contract_id()))
+                .unwrap(),
             publish_times: vec![publish_time; price_feed_count],
             price_feed_ids: price_feed_ids
                 .iter()
@@ -347,7 +362,11 @@ pub async fn setup(
             .unwrap();
 
         oracle_inputs.push(OracleInput::Redstone(RedstoneOracleInput {
-            contract_id: ContractId::from(redstone_mock_oracle.instance.contract_id()),
+            oracle_id: *contract_id_to_index
+                .get(&ContractId::from(
+                    redstone_mock_oracle.instance.contract_id(),
+                ))
+                .unwrap(),
             price_feed_ids: price_feed_ids,
             payload,
         }));
@@ -411,7 +430,9 @@ pub async fn setup(
             .unwrap();
 
         oracle_inputs.push(OracleInput::Stork(StorkOracleInput {
-            contract_id: ContractId::from(stork_mock_oracle.instance.contract_id()),
+            oracle_id: *contract_id_to_index
+                .get(&ContractId::from(stork_mock_oracle.instance.contract_id()))
+                .unwrap(),
             update_data: update_data_market_types,
         }));
 
@@ -448,5 +469,6 @@ pub async fn setup(
         stork_mock_oracle,
         stork_prices,
         stork_asset_price_feeds,
+        oracle_contract_id_to_index: contract_id_to_index,
     }
 }
