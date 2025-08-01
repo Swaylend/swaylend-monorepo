@@ -1,9 +1,9 @@
 import { headers } from 'next/headers';
 import { Footer } from '@/components/footer';
+import { IntroductionDialog } from '@/components/introduction-dialog';
 import { Navbar } from '@/components/navbar';
 import { Providers } from '@/components/providers';
 import { AnnouncementPopover } from '@/components/v1/announcement-popover';
-import { IntroductionDialog } from '@/components/v1/introduction-dialog';
 import { appConfig } from '@/configs';
 import { isMobile } from '@/utils/is-mobile';
 

@@ -3,7 +3,7 @@ import { ExternalLink } from 'lucide-react';
 import { useEffect } from 'react';
 import { appConfig } from '@/configs';
 import { useBalance } from '@/hooks/v1';
-import { Button } from '../../ui/button';
+import { Button } from '../ui/button';
 
 export const FundWallet = ({
   setActiveStep,

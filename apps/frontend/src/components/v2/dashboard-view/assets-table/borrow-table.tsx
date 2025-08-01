@@ -126,6 +126,7 @@ export const BorrowTable = () => {
   const { data: priceData } = usePriceData();
   const { data: marketConfiguration, isPending: isPendingMarketConfiguration } =
     useMarketConfiguration();
+
   const { data: maxBorrowAmount } = useBorrowCapacity();
   const userRole = useUserRole();
   const handleBaseTokenClick = (action: ACTION_TYPE) => {

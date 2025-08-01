@@ -53,17 +53,17 @@ export const useTransactionHistory = (page: number) => {
     queryFn: async () => {
       if (!account) return null;
 
-      const response = await fetch(appConfig.client.v1.sentioApi, {
+      const response = await fetch(appConfig.client.v2.sentioApi, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'api-key': appConfig.client.v1.sentioApiKey,
+          'api-key': appConfig.client.v2.sentioApiKey,
         },
         body: JSON.stringify({
           sqlQuery: {
             sql: transactionHistoryQuery(account, page, TX_HISTORY_PAGE_SIZE),
           },
-          version: appConfig.client.v1.sentioProcessorVersion,
+          version: appConfig.client.v2.sentioProcessorVersion,
         }),
       });
 

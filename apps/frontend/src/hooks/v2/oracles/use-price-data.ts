@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { DateTime } from 'fuels';
 import type { OracleInputInput } from '@/contract-types/v2/Market';
@@ -28,7 +28,7 @@ export const usePriceData = (marketParam?: string) => {
         { price: BigNumber; confidence: BigNumber }[]
       >();
       const oracleInputs: OracleInputInput[] = [];
-      const totalUpdateFee = BigNumber(0);
+      let totalUpdateFee = BigNumber(0);
 
       // Initalize all assetIds with an empty array
       for (const assetId of oracleAssetConfigurations?.keys() ?? []) {
@@ -42,7 +42,7 @@ export const usePriceData = (marketParam?: string) => {
           prices.get(assetId)?.push(price);
           oracleInputs.push(pythOracleData.pythOracleInput);
         }
-        totalUpdateFee.plus(pythOracleData.updateFee);
+        totalUpdateFee = totalUpdateFee.plus(pythOracleData.updateFee);
       }
 
       const timestamp = DateTime.now();
@@ -56,5 +56,6 @@ export const usePriceData = (marketParam?: string) => {
     },
     enabled:
       !!oracleAssetConfigurations && (!!pythOracleData || isPythOracleError),
+    placeholderData: keepPreviousData,
   });
 };

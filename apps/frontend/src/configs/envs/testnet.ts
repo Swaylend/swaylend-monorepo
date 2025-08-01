@@ -119,9 +119,12 @@ const markets_v1: DeployedMarkets = {
 
 const markets_v2: DeployedMarkets = {
   USDC: {
-    oracleAddress: '',
-    marketAddress: '',
-    tokenFactoryAddress: '',
+    oracleAddress:
+      '0x5d17f54708afd01530c2e0ffb123cd21e92461aae8450de2cc08d0fd330cf240',
+    marketAddress:
+      '0x64768a2ab7439771433ec28ffc8a8e0a639a2c732e639a44a56731755b2dd036',
+    tokenFactoryAddress:
+      '0xb095873ffa6237aa209dd7fa9d6fd7d9e932453f8db62b9e436766a47b17d308',
     graphqlUrl: '',
   },
 };
@@ -144,5 +147,14 @@ const assets: Record<string, string> = {
   '0x66be991ed1fe4217520bdfc25a767e9dbf24e3c7ed411d6c1cd51a7c0b6d0d24': 'sDAI',
   '0x0526a5a33267abf138d40be4a1bd982bfb00365310891c6e7e13d0d8e7c3fc23': 'weETH',
   '0x62fb3f091da88a3a520fa7b7fd12fa1ab3cbf306d57a66e345b6e9b0b883d0c2':
+    'wstETH',
+  '0x899dbd3cf8955d7b64a02f8bde800e74c10cdd92b92330c42d7c75b0ddb3dbc4': 'USDC',
+  '0x1317d8056c8504d7844b3871386ca1ec5e2ecf4743e0ca805378f9c48d4822d2': 'BTC',
+  '0x31873ec08219b39ee601747f465c6a177010d94ed5eec945275c49a44a1ce4d0': 'UNI',
+  '0x7bf88bdf02818cd03644998349704bb1f5c98615fb39c74e081081336e3c2c3b': 'ezETH',
+  '0x2df42653712c4d413170eef9695d65a21013ac8be63891a2c5967c3af96a218f': 'USDT',
+  '0xca119b2dd027d7be7061333bbb1d8bcab67bc0234cb30549322aba3ebd5ddf6a': 'sDAI',
+  '0x9fb96f6fd9de9c63a67217188bc56cee04d2a54f732dd9899bed0aeb889b075b': 'weETH',
+  '0x93dc2c176ee02ac5745272448775bf96f16fd1c31e7c3dca393eadab2d5dd43d':
     'wstETH',
 };

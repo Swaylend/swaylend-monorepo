@@ -23,28 +23,31 @@ export default function MarketContractStoreWatcher(): null {
     if (!walletOrProvider) return;
 
     for (const market of Object.keys(appConfig.client.v1.markets)) {
-      const pythContractV1 = new PythContract(
+      const pythContract = new PythContract(
         appConfig.client.v1.markets[market].oracleAddress,
         walletOrProvider
       );
 
-      const marketContractV1 = new MarketV1(
+      const marketContract = new MarketV1(
         appConfig.client.v1.markets[market].marketAddress,
         walletOrProvider
       );
 
-      const pythContractV2 = new PythContract(
+      updateContractsV1(market, pythContract, marketContract);
+    }
+
+    for (const market of Object.keys(appConfig.client.v2.markets)) {
+      const pythContract = new PythContract(
         appConfig.client.v2.markets[market].oracleAddress,
         walletOrProvider
       );
 
-      const marketContractV2 = new MarketV2(
+      const marketContract = new MarketV2(
         appConfig.client.v2.markets[market].marketAddress,
         walletOrProvider
       );
 
-      updateContractsV1(market, pythContractV1, marketContractV1);
-      updateContractsV2(market, pythContractV2, marketContractV2);
+      updateContractsV2(market, pythContract, marketContract);
     }
   }, [walletOrProvider]);
 

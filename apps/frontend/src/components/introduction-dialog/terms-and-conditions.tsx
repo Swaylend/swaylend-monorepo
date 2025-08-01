@@ -2,7 +2,7 @@ import { useAccount } from '@fuels/react';
 import Link from 'next/link';
 import { useState } from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Button } from '../../ui/button';
+import { Button } from '../ui/button';
 
 export const TermsAndConditions = ({
   setActiveStep,
@@ -57,7 +57,11 @@ export const TermsAndConditions = ({
                 className="flex items-center justify-center max-md:w-full md:gap-x-2"
                 onMouseDown={() => setIsChecked(!isChecked)}
               >
-                <Checkbox checked={isChecked} id="terms" />
+                <Checkbox
+                  checked={isChecked}
+                  className="border-lavender"
+                  id="terms"
+                />
                 <p
                   className="cursor-pointer"
                   onMouseDown={() => setIsChecked(!isChecked)}

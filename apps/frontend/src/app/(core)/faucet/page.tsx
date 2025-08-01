@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
-import { FaucetView } from '@/components/v1/faucet-view';
 import { appConfig } from '@/configs';
+import { ClientView } from './client';
 
 export const metadata: Metadata = {
   title: 'Faucet',
@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function Page() {
   if (appConfig.env === 'testnet') {
-    return <FaucetView />;
+    return <ClientView />;
   }
 
   return (

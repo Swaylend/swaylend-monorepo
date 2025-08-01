@@ -4,7 +4,7 @@ import { useAccount, useIsConnected } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import { useEffect, useState } from 'react';
 import { Step, Stepper } from 'react-form-stepper';
-import { Dialog, DialogContent, DialogTitle } from '../../ui/dialog';
+import { Dialog, DialogContent, DialogTitle } from '../ui/dialog';
 import { FundWallet } from './fund-wallet';
 import { GeneralInfo } from './general-info';
 import { TermsAndConditions } from './terms-and-conditions';

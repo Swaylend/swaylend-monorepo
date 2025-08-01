@@ -29,8 +29,11 @@ import { appConfig } from '@/configs';
 import { useTrackExternalPageView } from '@/lib/posthog';
 import { cn } from '@/lib/utils';
 import { MARKET_MODE, useMarketStore } from '@/stores/market-store';
+import { useVersionStore } from '@/stores/version-store';
 import Logo from '/public/icons/dark-logo.svg?url';
 import { Button } from '../ui/button';
+import { Label } from '../ui/label';
+import { Switch } from '../ui/switch';
 import { Line } from '../v1/line';
 import { ConnectButton } from './connect-button';
 import { Points } from './points';
@@ -49,6 +52,9 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
   const [open, setOpen] = useState(false);
   const [openDex, setOpenDex] = useState(false);
   const [openBridge, setOpenBridge] = useState(false);
+
+  const version = useVersionStore.use.version();
+  const toggleVersion = useVersionStore.use.toggleVersion();
   const marketMode = useMarketStore.use.marketMode();
   const changeMarketMode = useMarketStore.use.changeMarketMode();
   const { mutate: trackExternalPageView } = useTrackExternalPageView();
@@ -217,6 +223,16 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
             </div>
           </div>
           <div className="flex items-center gap-x-2">
+            <div className="mr-4 flex items-center space-x-1.5">
+              <Label htmlFor="version-selection">V1</Label>
+              <Switch
+                checked={version === 'v2'}
+                className="cursor-pointer dark:data-[state=unchecked]:bg-secondary"
+                id="version-selection"
+                onCheckedChange={toggleVersion}
+              />
+              <Label htmlFor="airplane-mode">V2</Label>
+            </div>
             <Points />
             <ConnectButton />
           </div>
@@ -231,6 +247,16 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
             <Image alt="logo" src={Logo} />
           </Link>
           <div className="flex items-center gap-x-2">
+            <div className="mr-4 flex items-center space-x-1.5">
+              <Label htmlFor="version-selection">V1</Label>
+              <Switch
+                checked={version === 'v2'}
+                className="cursor-pointer dark:data-[state=unchecked]:bg-secondary"
+                id="version-selection"
+                onCheckedChange={toggleVersion}
+              />
+              <Label htmlFor="airplane-mode">V2</Label>
+            </div>
             <Points />
             <ConnectButton />
             <Button

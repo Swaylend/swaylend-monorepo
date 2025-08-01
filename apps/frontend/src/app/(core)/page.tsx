@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { DashboardView } from '@/components/v1/dashboard-view';
+import { ClientView } from './client';
 
 export const metadata: Metadata = {
   title: { absolute: 'Swaylend | Lending reimagined' },
@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <div className="max-h-full">
-      <DashboardView />
+      <ClientView />
     </div>
   );
 }

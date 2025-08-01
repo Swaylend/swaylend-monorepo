@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Banner from '/public/banner.png';
-import { Button } from '../../ui/button';
+import { Button } from '../ui/button';
 
 export const GeneralInfo = ({
   setOpen,
