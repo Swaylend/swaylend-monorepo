@@ -40,8 +40,8 @@ export const usePriceData = (marketParam?: string) => {
           pythOracleData.pythPrices
         )) {
           prices.get(assetId)?.push(price);
-          oracleInputs.push(pythOracleData.pythOracleInput);
         }
+        oracleInputs.push(pythOracleData.pythOracleInput);
         totalUpdateFee = totalUpdateFee.plus(pythOracleData.updateFee);
       }
 
