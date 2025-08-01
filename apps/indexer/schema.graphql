@@ -26,6 +26,7 @@ type AssetOracleConfiguration {
 type CollateralAsset {
   id: ID!
   decimals: Int!
+  oracleMaxConfidenceWidth: BigInt!
   borrowCollateralFactor: BigInt!
   liquidateCollateralFactor: BigInt!
   liquidationPenalty: BigInt!
@@ -86,6 +87,7 @@ type MarketConfiguartion {
   id: ID!
   baseToken: String!
   baseTokenDecimals: Int!
+  oracleMaxConfidenceWidth: BigInt!
   supplyKink: BigInt!
   borrowKink: BigInt!
   supplyPerSecondInterestRateSlopeLow: BigInt!

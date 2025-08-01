@@ -10,6 +10,8 @@ Market.CollateralAssetAdded.handler(async ({ event, context }) => {
   context.CollateralAsset.set({
     id: assetId,
     decimals: event.params.configuration.decimals,
+    oracleMaxConfidenceWidth:
+      event.params.configuration.oracle_max_confidence_width,
     borrowCollateralFactor: event.params.configuration.borrow_collateral_factor,
     liquidateCollateralFactor:
       event.params.configuration.liquidate_collateral_factor,
@@ -26,6 +28,8 @@ Market.CollateralAssetUpdated.handler(async ({ event, context }) => {
   context.CollateralAsset.set({
     id: assetId,
     decimals: event.params.configuration.decimals,
+    oracleMaxConfidenceWidth:
+      event.params.configuration.oracle_max_confidence_width,
     borrowCollateralFactor: event.params.configuration.borrow_collateral_factor,
     liquidateCollateralFactor:
       event.params.configuration.liquidate_collateral_factor,
@@ -505,6 +509,7 @@ Market.MarketConfigurationEvent.handler(async ({ event, context }) => {
     id: 'MARKET_CONFIGURATION_ID',
     baseToken: marketConfiguration.base_token.bits,
     baseTokenDecimals: marketConfiguration.base_token_decimals,
+    oracleMaxConfidenceWidth: marketConfiguration.oracle_max_confidence_width,
     supplyKink: marketConfiguration.supply_kink,
     borrowKink: marketConfiguration.borrow_kink,
     supplyPerSecondInterestRateSlopeLow:
