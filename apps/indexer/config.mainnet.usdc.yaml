@@ -7,14 +7,16 @@ networks:
       url: https://mainnet2.hypersync.xyz
     contracts:
       - name: Market
-        address: 0x657ab45a6eb98a4893a99fd104347179151e8b3828fd8f2a108cc09770d1ebae
+        address: TODO
         abi_file_path: ./abi/market-abi.json
         handler: ./src/event-handlers.ts
         events:
           - name: CollateralAssetAdded
           - name: CollateralAssetUpdated
-          - name: CollateralAssetPaused
-          - name: CollateralAssetResumed
+          - name: GlobalOracleAddedEvent
+          - name: GlobalOracleUpdatedEvent
+          - name: AssetOracleAddedEvent
+          - name: AssetOracleUpdatedEvent
           - name: UserBasicEvent
           - name: MarketBasicEvent
           - name: UserSupplyCollateralEvent

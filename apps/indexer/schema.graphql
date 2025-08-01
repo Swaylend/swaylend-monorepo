@@ -1,7 +1,30 @@
+# Oracle Type Schema
+enum OracleType {
+  Pyth
+  Redstone
+  Stork
+  Twrap
+}
+
+# Oracle Global Configuration Schema
+type OracleGlobalConfiguration {
+  id: ID!
+  isDisabled: Boolean!
+  oracleType: OracleType!
+}
+
+# Asset Oracle Configuration Schema
+type AssetOracleConfiguration {
+  id: ID! # `asset.id-oracle.id`
+  priceFeedId: String!
+  isDisabled: Boolean!
+  oracle: OracleGlobalConfiguration!
+}
+
+# Asset Configuration Schema
 # Collateral Asset Schema
 type CollateralAsset {
   id: ID!
-  priceFeedId: String!
   decimals: Int!
   borrowCollateralFactor: BigInt!
   liquidateCollateralFactor: BigInt!
@@ -63,7 +86,6 @@ type MarketConfiguartion {
   id: ID!
   baseToken: String!
   baseTokenDecimals: Int!
-  baseTokenPriceFeedId: String!
   supplyKink: BigInt!
   borrowKink: BigInt!
   supplyPerSecondInterestRateSlopeLow: BigInt!

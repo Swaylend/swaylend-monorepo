@@ -9,7 +9,6 @@ Market.CollateralAssetAdded.handler(async ({ event, context }) => {
 
   context.CollateralAsset.set({
     id: assetId,
-    priceFeedId: event.params.configuration.price_feed_id,
     decimals: event.params.configuration.decimals,
     borrowCollateralFactor: event.params.configuration.borrow_collateral_factor,
     liquidateCollateralFactor:
@@ -26,7 +25,6 @@ Market.CollateralAssetUpdated.handler(async ({ event, context }) => {
 
   context.CollateralAsset.set({
     id: assetId,
-    priceFeedId: event.params.configuration.price_feed_id,
     decimals: event.params.configuration.decimals,
     borrowCollateralFactor: event.params.configuration.borrow_collateral_factor,
     liquidateCollateralFactor:
@@ -37,37 +35,111 @@ Market.CollateralAssetUpdated.handler(async ({ event, context }) => {
   });
 });
 
-// Pause Collateral Asset
-Market.CollateralAssetPaused.handlerWithLoader({
-  loader: async ({ event, context }) => {
-    const assetId = event.params.asset_id.bits;
-    return { collateralAsset: await context.CollateralAsset.get(assetId) };
-  },
-  handler: async ({ event: _, context, loaderReturn }) => {
-    const { collateralAsset } = loaderReturn;
+// Global Oracle Added Event
+Market.GlobalOracleAddedEvent.handler(async ({ event, context }) => {
+  const oracleId = event.params.oracle_id;
 
-    if (collateralAsset) {
-      context.CollateralAsset.set({
-        ...collateralAsset,
-        paused: true,
+  context.OracleGlobalConfiguration.set({
+    id: oracleId.toString(),
+    isDisabled: event.params.oracle_configuration.is_disabled,
+    oracleType: event.params.oracle_configuration.oracle_type.case,
+  });
+});
+
+// Global Oracle Updated Event
+Market.GlobalOracleUpdatedEvent.handlerWithLoader({
+  loader: async ({ event, context }) => {
+    const oracleId = event.params.oracle_id;
+    return {
+      oracle: await context.OracleGlobalConfiguration.get(oracleId.toString()),
+    };
+  },
+  handler: async ({ event, context, loaderReturn }) => {
+    const { oracle } = loaderReturn;
+
+    if (oracle) {
+      context.OracleGlobalConfiguration.set({
+        id: oracle.id,
+        isDisabled: event.params.oracle_configuration.is_disabled,
+        oracleType: event.params.oracle_configuration.oracle_type.case,
       });
     }
   },
 });
 
-// Resume Collateral Asset
-Market.CollateralAssetResumed.handlerWithLoader({
+// Asset Oracle Added Event
+Market.AssetOracleAddedEvent.handlerWithLoader({
   loader: async ({ event, context }) => {
-    const assetId = event.params.asset_id.bits;
-    return { collateralAsset: await context.CollateralAsset.get(assetId) };
+    const oracleId = event.params.oracle_configuration.oracle_id;
+    return {
+      oracle: await context.OracleGlobalConfiguration.get(oracleId.toString()),
+    };
   },
-  handler: async ({ event: _, context, loaderReturn }) => {
-    const { collateralAsset } = loaderReturn;
+  handler: async ({ event, context, loaderReturn }) => {
+    const { oracle } = loaderReturn;
 
-    if (collateralAsset) {
-      context.CollateralAsset.set({
-        ...collateralAsset,
-        paused: false,
+    let priceFeedId = '';
+
+    switch (event.params.oracle_configuration.price_feed_id.case) {
+      case 'Pyth':
+        priceFeedId = event.params.oracle_configuration.price_feed_id.payload;
+        break;
+      case 'Redstone':
+        priceFeedId =
+          event.params.oracle_configuration.price_feed_id.payload.toString();
+        break;
+      case 'Stork':
+        priceFeedId = event.params.oracle_configuration.price_feed_id.payload;
+        break;
+      default:
+        throw new Error('Invalid oracle type');
+    }
+
+    if (oracle) {
+      context.AssetOracleConfiguration.set({
+        id: `${event.params.asset_id.bits}-${oracle.id}`,
+        isDisabled: event.params.oracle_configuration.is_disabled,
+        priceFeedId,
+        oracle_id: oracle.id,
+      });
+    }
+  },
+});
+
+// Asset Oracle Updated Event
+Market.AssetOracleUpdatedEvent.handlerWithLoader({
+  loader: async ({ event, context }) => {
+    const oracleId = event.params.oracle_configuration.oracle_id;
+    return {
+      oracle: await context.OracleGlobalConfiguration.get(oracleId.toString()),
+    };
+  },
+  handler: async ({ event, context, loaderReturn }) => {
+    const { oracle } = loaderReturn;
+
+    let priceFeedId = '';
+
+    switch (event.params.oracle_configuration.price_feed_id.case) {
+      case 'Pyth':
+        priceFeedId = event.params.oracle_configuration.price_feed_id.payload;
+        break;
+      case 'Redstone':
+        priceFeedId =
+          event.params.oracle_configuration.price_feed_id.payload.toString();
+        break;
+      case 'Stork':
+        priceFeedId = event.params.oracle_configuration.price_feed_id.payload;
+        break;
+      default:
+        throw new Error('Invalid oracle type');
+    }
+
+    if (oracle) {
+      context.AssetOracleConfiguration.set({
+        id: `${event.params.asset_id.bits}-${oracle.id}`,
+        isDisabled: event.params.oracle_configuration.is_disabled,
+        priceFeedId,
+        oracle_id: oracle.id,
       });
     }
   },
@@ -76,8 +148,6 @@ Market.CollateralAssetResumed.handlerWithLoader({
 // User Basic Event
 Market.UserBasicEvent.handlerWithLoader({
   loader: async ({ event, context }) => {
-    // TODO: Verify if this needs to be handled differently
-    // case -> address or contractId
     const address = event.params.account.payload.bits;
     return { user: await context.User.get(address) };
   },
@@ -435,7 +505,6 @@ Market.MarketConfigurationEvent.handler(async ({ event, context }) => {
     id: 'MARKET_CONFIGURATION_ID',
     baseToken: marketConfiguration.base_token.bits,
     baseTokenDecimals: marketConfiguration.base_token_decimals,
-    baseTokenPriceFeedId: marketConfiguration.base_token_price_feed_id,
     supplyKink: marketConfiguration.supply_kink,
     borrowKink: marketConfiguration.borrow_kink,
     supplyPerSecondInterestRateSlopeLow:
