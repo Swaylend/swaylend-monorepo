@@ -321,5 +321,130 @@ async fn main() -> anyhow::Result<()> {
 
     println!("Asset oracle configurations updated successfully");
 
+    // Update base asset oracle configuration if it is not already up-to-date
+    let base_asset_oracle_configurations = market_config.base_asset.asset_oracle_configurations;
+    let asset_id = AssetId::from_str(market_config.base_asset.asset_id.as_str()).unwrap();
+
+    let current_asset_oracle_configurations = asset_oracle_configurations
+        .iter()
+        .find(|config| config.0 == asset_id);
+
+    if current_asset_oracle_configurations.is_none() {
+        panic!("Base asset with asset_id: {} not found", asset_id);
+    }
+
+    let current_asset_oracle_configurations =
+        current_asset_oracle_configurations.unwrap().1.clone();
+
+    for base_asset_oracle_configuration in base_asset_oracle_configurations {
+        let oracle_configuration = current_asset_oracle_configurations
+            .iter()
+            .find(|config| config.oracle_id == base_asset_oracle_configuration.oracle_id);
+
+        match oracle_configuration {
+            Some(oracle_configuration) => {
+                let oracle_type = global_oracle_configurations
+                    .iter()
+                    .enumerate()
+                    .find(|(id, _)| *id as u64 == oracle_configuration.oracle_id)
+                    .unwrap()
+                    .1
+                    .oracle_type
+                    .clone();
+
+                if !(oracle_configuration.oracle_id == base_asset_oracle_configuration.oracle_id
+                    && oracle_configuration.is_disabled
+                        == !base_asset_oracle_configuration.is_active
+                    && oracle_configuration.price_feed_id
+                        == get_price_feed_id(
+                            &oracle_type,
+                            base_asset_oracle_configuration.price_feed_id.as_str(),
+                        ))
+                {
+                    println!(
+                        "Updating asset oracle configuration for base asset: {} and oracle_id: {}",
+                        asset_id, base_asset_oracle_configuration.oracle_id
+                    );
+
+                    println!(
+                        "Old asset oracle configuration: {:#?}",
+                        oracle_configuration
+                    );
+
+                    println!(
+                        "New asset oracle configuration: {:#?}",
+                        base_asset_oracle_configuration
+                    );
+
+                    if !get_yes_no_input(
+                        "Do you really want to update this asset oracle? (yes/no): ",
+                    ) {
+                        continue;
+                    }
+
+                    market_instance
+                        .methods()
+                        .update_asset_oracle(
+                            asset_id,
+                            OracleAssetConfiguration {
+                                oracle_id: base_asset_oracle_configuration.oracle_id,
+                                price_feed_id: get_price_feed_id(
+                                    &oracle_type,
+                                    base_asset_oracle_configuration.price_feed_id.as_str(),
+                                ),
+                                is_disabled: !base_asset_oracle_configuration.is_active,
+                            },
+                        )
+                        .with_contract_ids(&[market_contract_id.clone()])
+                        .call()
+                        .await?;
+                } else {
+                    println!(
+                            "Asset oracle configuration for base asset: {} and oracle_id: {} is already up-to-date",
+                            asset_id, base_asset_oracle_configuration.oracle_id
+                        );
+                }
+            }
+            None => {
+                println!(
+                    "Adding asset oracle configuration for base asset: {} and oracle_id: {}",
+                    asset_id, base_asset_oracle_configuration.oracle_id
+                );
+
+                let oracle_type = global_oracle_configurations
+                    .iter()
+                    .enumerate()
+                    .find(|(id, _)| *id as u64 == base_asset_oracle_configuration.oracle_id)
+                    .unwrap()
+                    .1
+                    .oracle_type
+                    .clone();
+
+                if !get_yes_no_input("Do you really want to add this asset oracle? (yes/no): ") {
+                    continue;
+                }
+
+                market_instance
+                    .methods()
+                    .add_new_asset_oracle(
+                        asset_id,
+                        OracleAssetConfiguration {
+                            oracle_id: base_asset_oracle_configuration.oracle_id,
+                            price_feed_id: get_price_feed_id(
+                                &oracle_type,
+                                base_asset_oracle_configuration.price_feed_id.as_str(),
+                            ),
+                            is_disabled: !base_asset_oracle_configuration.is_active,
+                        },
+                    )
+                    .with_contract_ids(&[market_contract_id.clone()])
+                    .call()
+                    .await?;
+            }
+        }
+    }
+
+    println!("Base asset oracle configurations updated successfully");
+
     Ok(())
 }
