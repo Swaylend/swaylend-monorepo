@@ -357,7 +357,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       const {
         data: {
           asset_id: { bits: asset_id },
-          configuration: { decimals }, // TODO: Update other field
+          configuration: { decimals },
         },
       } = event;
 
@@ -1623,7 +1623,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
 
         await Promise.all(processCollateralPositionSnapshotsPromises);
       },
-      60,
-      60
+      720,
+      720
     );
 });

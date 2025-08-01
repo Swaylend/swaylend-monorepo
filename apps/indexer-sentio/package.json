@@ -7,7 +7,7 @@
     "build": "sentio build",
     "gen": "sentio gen",
     "upload": "sentio upload",
-    "upload:testnet": "sentio upload --name swaylend-testnet"
+    "upload:testnet": "sentio upload --name swaylend-testnet-v2"
   },
   "dependencies": {
     "@sentio/bigdecimal": "9.1.1-patch.3",
