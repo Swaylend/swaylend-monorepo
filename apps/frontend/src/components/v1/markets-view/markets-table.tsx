@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/table';
 import { appConfig } from '@/configs';
 import FUEL from '/public/icons/fuel-logo.svg?url';
-import { InfoIcon } from '../v1/info-icon';
+import { InfoIcon } from '../info-icon';
 import { MarketTableRow } from './market-table-row';
 
 export const MarketsTable = () => {

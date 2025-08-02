@@ -14,15 +14,15 @@ export type MarketData = {
 };
 
 export const getChartData = async () => {
-  const url = appConfig.client.v1.sentioApi;
-  const apiKey = appConfig.client.v1.sentioApiKey;
+  const url = appConfig.client.v2.sentioApi;
+  const apiKey = appConfig.client.v2.sentioApiKey;
 
   if (!(apiKey && url)) {
     return;
   }
 
   const singleMarketData = await Promise.all(
-    Object.entries(appConfig.client.v1.markets).map(async ([key, value]) => {
+    Object.entries(appConfig.client.v2.markets).map(async ([key, value]) => {
       const poolAddress = value.marketAddress;
 
       const response = await fetch(url, {
@@ -36,7 +36,7 @@ export const getChartData = async () => {
             sql: getSingleMarketQuery(poolAddress),
             size: 10_000,
           },
-          version: appConfig.client.v1.sentioProcessorVersion,
+          version: appConfig.client.v2.sentioProcessorVersion,
         }),
         next: {
           revalidate: 3600, // Cache for 1h
@@ -52,8 +52,6 @@ export const getChartData = async () => {
           suppliedValueUsd: Number(row.suppliedValueUsd),
           borrowedValueUsd: Number(row.borrowedValueUsd),
           collateralValueUsd: Number(row.collateralValueUsd),
-          // supplyApr: Number(row.supplyApr), // TODO: Include this 2 in the per market chart
-          // borrowApr: Number(row.borrowApr),
         })),
       ];
     })
@@ -70,7 +68,7 @@ export const getChartData = async () => {
         sql: getMarketsCombinedQuery(),
         size: 10_000,
       },
-      version: appConfig.client.v1.sentioProcessorVersion,
+      version: appConfig.client.v2.sentioProcessorVersion,
     }),
     next: {
       revalidate: 3600, // Cache for 1h

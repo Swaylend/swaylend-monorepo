@@ -15,7 +15,7 @@ import {
   useTotalCollateral,
   useTotalReserves,
 } from '@/hooks/v1';
-import type { ChartData } from '@/lib/charts';
+import type { ChartData } from '@/lib/charts/v1';
 import { cn } from '@/lib/utils';
 import {
   formatUnits,
@@ -28,10 +28,10 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '../ui/tooltip';
-import { IconPair } from '../v1/icon-pair';
-import { NetBorrowTooltip } from '../v1/net-borrow-tooltip';
-import { NetEarnTooltip } from '../v1/net-earn-tooltip';
+} from '../../ui/tooltip';
+import { IconPair } from '../icon-pair';
+import { NetBorrowTooltip } from '../net-borrow-tooltip';
+import { NetEarnTooltip } from '../net-earn-tooltip';
 import { KinkChart } from './kink-chart';
 import { MarketChart } from './market-chart';
 import { MarketCollateralsTable } from './market-collaterals-table';

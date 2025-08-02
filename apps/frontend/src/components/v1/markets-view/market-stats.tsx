@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
-import type { ChartData } from '@/lib/charts';
+import type { ChartData } from '@/lib/charts/v1';
 import { getFormattedPrice } from '@/utils';
-import { Skeleton } from '../ui/skeleton';
+import { Skeleton } from '../../ui/skeleton';
 
 export const MarketStats = ({
   chartData,

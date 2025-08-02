@@ -25,17 +25,17 @@ import {
   SYMBOL_TO_NAME,
 } from '@/utils';
 import SWAY from '/public/tokens/sway.svg?url';
-import { Skeleton } from '../ui/skeleton';
+import { Skeleton } from '../../ui/skeleton';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '../ui/tooltip';
-import { CircularProgressBar } from '../v1/circular-progress-bar';
-import { type Collateral, CollateralIcons } from '../v1/collateral-icons';
-import { NetBorrowTooltip } from '../v1/net-borrow-tooltip';
-import { NetEarnTooltip } from '../v1/net-earn-tooltip';
+} from '../../ui/tooltip';
+import { CircularProgressBar } from '../circular-progress-bar';
+import { type Collateral, CollateralIcons } from '../collateral-icons';
+import { NetBorrowTooltip } from '../net-borrow-tooltip';
+import { NetEarnTooltip } from '../net-earn-tooltip';
 
 const SkeletonRow = (
   <TableRow>

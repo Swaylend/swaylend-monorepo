@@ -8,7 +8,6 @@ import {
   LineChart,
   Rectangle,
   ReferenceLine,
-  ResponsiveContainer,
   XAxis,
 } from 'recharts';
 import {
@@ -22,7 +21,7 @@ import {
   useUtilization,
 } from '@/hooks/v1';
 import { formatUnits, getFormattedNumber } from '@/utils';
-import { Skeleton } from '../ui/skeleton';
+import { Skeleton } from '../../ui/skeleton';
 
 const CustomTooltip = ({ active, payload, label }: any) => {
   if (active && payload && payload.length) {
@@ -100,60 +99,61 @@ export const KinkChart = ({ marketName }: { marketName: string }) => {
   return (
     <div className="w-full">
       {rateData ? (
-        <ResponsiveContainer height={200} width="100%">
-          <ChartContainer config={chartConfig}>
-            <LineChart
-              data={rateData}
-              height={300}
-              margin={{
-                top: 5,
-                right: 30,
-                left: 20,
-                bottom: 5,
+        <ChartContainer
+          className="h-[200px] min-h-[200px] w-full"
+          config={chartConfig}
+        >
+          <LineChart
+            data={rateData}
+            height={300}
+            margin={{
+              top: 5,
+              right: 30,
+              left: 20,
+              bottom: 5,
+            }}
+            width={500}
+          >
+            <CartesianGrid strokeDasharray="3 3" vertical={false} />
+            <XAxis dataKey="percent" tick={false} />
+            <ChartTooltip
+              content={<CustomTooltip />}
+              cursor={<CustomCursor />}
+              position={{ y: 16 }}
+            />
+            <ReferenceLine
+              label={{
+                value: 'Current Utilization',
+                position: 'insideTopLeft',
+                fill: '#3FE8BD',
+                fontSize: '16px',
+                fontFamily: 'Inter',
+                fontWeight: '500',
               }}
-              width={500}
-            >
-              <CartesianGrid strokeDasharray="3 3" vertical={false} />
-              <XAxis dataKey="percent" tick={false} />
-              <ChartTooltip
-                content={<CustomTooltip />}
-                cursor={<CustomCursor />}
-                position={{ y: 16 }}
-              />
-              <ReferenceLine
-                label={{
-                  value: 'Current Utilization',
-                  position: 'insideTopLeft',
-                  fill: '#3FE8BD',
-                  fontSize: '16px',
-                  fontFamily: 'Inter',
-                  fontWeight: '500',
-                }}
-                stroke="#3FE8BD"
-                strokeWidth={2}
-                x={utilizationPosition}
-              />
-              <Line
-                dataKey="borrowValue"
-                dot={false}
-                stroke="#3FE8BD"
-                strokeWidth={2}
-                type="monotone"
-              />
-              <Line
-                dataKey="earn"
-                dot={false}
-                stroke="#8b5cf6"
-                strokeWidth={2}
-                type="monotone"
-              />
-            </LineChart>
-          </ChartContainer>
-        </ResponsiveContainer>
+              stroke="#3FE8BD"
+              strokeWidth={2}
+              x={utilizationPosition}
+            />
+            <Line
+              dataKey="borrowValue"
+              dot={false}
+              stroke="#3FE8BD"
+              strokeWidth={2}
+              type="monotone"
+            />
+            <Line
+              dataKey="earn"
+              dot={false}
+              stroke="#8b5cf6"
+              strokeWidth={2}
+              type="monotone"
+            />
+          </LineChart>
+        </ChartContainer>
       ) : (
-        <ResponsiveContainer height={200} width="100%">
+        <div className="h-[200px] w-full">
           <Skeleton className="mb-4 h-5/6 w-full rounded-md bg-primary/20" />
-        </ResponsiveContainer>
+        </div>
       )}
       <div className="-mt-4 relative flex w-full justify-between px-6 text-white/60">
         <div>0%</div>

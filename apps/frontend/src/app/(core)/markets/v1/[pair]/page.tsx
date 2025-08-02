@@ -1,8 +1,8 @@
 import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
-import MarketOverview from '@/components/v2/markets-view/market-overview';
+import MarketOverview from '@/components/v1/markets-view/market-overview';
 import { appConfig } from '@/configs';
-import { getChartData } from '@/lib/charts/v2';
+import { getChartData } from '@/lib/charts/v1';
 import { isMobile } from '@/utils/is-mobile';
 
 export async function generateMetadata({
@@ -17,7 +17,7 @@ export async function generateMetadata({
     !(
       network &&
       baseAsset &&
-      Object.keys(appConfig.client.v2.markets).includes(baseAsset.toUpperCase())
+      Object.keys(appConfig.client.v1.markets).includes(baseAsset.toUpperCase())
     )
   ) {
     return {
@@ -53,7 +53,7 @@ export default async function Page({
     !(
       network &&
       baseAsset &&
-      Object.keys(appConfig.client.v2.markets).includes(baseAsset.toUpperCase())
+      Object.keys(appConfig.client.v1.markets).includes(baseAsset.toUpperCase())
     )
   ) {
     notFound();

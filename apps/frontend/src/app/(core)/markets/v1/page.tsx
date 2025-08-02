@@ -1,10 +1,10 @@
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import Link from 'next/link';
-import { MarketStats } from '@/components/v2/markets-view/market-stats';
-import { MarketsTable } from '@/components/v2/markets-view/markets-table';
-import { MultiMarketChart } from '@/components/v2/markets-view/multi-market-chart';
-import { getChartData } from '@/lib/charts/v2';
+import { MarketStats } from '@/components/v1/markets-view/market-stats';
+import { MarketsTable } from '@/components/v1/markets-view/markets-table';
+import { MultiMarketChart } from '@/components/v1/markets-view/multi-market-chart';
+import { getChartData } from '@/lib/charts/v1';
 import { isMobile } from '@/utils/is-mobile';
 
 export const metadata: Metadata = {
@@ -28,7 +28,7 @@ export default async function Page() {
   return (
     <div className="max-h-full overflow-auto">
       <div className="w-full px-[88px] pt-[30px] underline">
-        <Link href="/markets/v1">View V1 Markets</Link>
+        <Link href="/markets">View V2 Markets</Link>
       </div>
       <div className="flex w-full flex-col items-center justify-center px-[88px] pt-[30px] pb-[55px] max-lg:hidden">
         <MarketStats chartData={chartsData?.marketsCombinedData} />

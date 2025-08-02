@@ -13,7 +13,7 @@ import {
   ChartContainer,
   ChartTooltip,
 } from '@/components/ui/chart';
-import type { ChartData } from '@/lib/charts';
+import type { ChartData } from '@/lib/charts/v1';
 import { getFormattedPrice } from '@/utils';
 
 const CustomTooltip = ({ active, payload }: any) => {

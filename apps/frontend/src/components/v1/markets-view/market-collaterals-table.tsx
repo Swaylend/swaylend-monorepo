@@ -23,7 +23,7 @@ import {
   SYMBOL_TO_ICON,
   SYMBOL_TO_NAME,
 } from '@/utils';
-import { InfoIcon } from '../v1/info-icon';
+import { InfoIcon } from '../info-icon';
 
 type TableRowProps = {
   assetId: string;
