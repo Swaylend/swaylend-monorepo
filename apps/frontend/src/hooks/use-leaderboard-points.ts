@@ -2,20 +2,25 @@ import { useQuery } from '@tanstack/react-query';
 import { appConfig } from '@/configs';
 
 type User = {
-  rank: number;
-  points: number;
   address: string;
+  points_v1: number;
+  points_v2: number;
+  points_overall: number;
+  rank_v1: number;
+  rank_v2: number;
+  rank_overall: number;
 };
+
 type Leaderboard = {
   leaderboard: User[];
 };
 
-export const useLeaderboardPoints = () => {
+export const useLeaderboardPoints = (season: string) => {
   return useQuery({
-    queryKey: ['leaderboardPoints'],
+    queryKey: ['leaderboardPoints', season],
     queryFn: async () => {
       const response = await fetch(
-        `${appConfig.client.shared.swaylendApi}/api/points`
+        `${appConfig.client.shared.swaylendApi}/api/points?season=${season}`
       );
 
       const data = await response.json();

@@ -9,7 +9,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
-import { useUser } from '@/hooks/v1';
+import { useUser } from '@/hooks';
 import { cn } from '@/lib/utils';
 import POINTS from '/public/icons/points-icon.svg?url';
 import { Button } from '../ui/button';
@@ -49,7 +49,11 @@ export const Points = () => {
         <div className="flex w-full flex-col items-center gap-y-2 rounded-xl border border-white/10 p-2">
           <div className="text-primary">SwayPoints</div>
           <div className={cn('font-semibold text-lavender')}>
-            {isConnected ? (user ? user.points : '0') : 'Connect Wallet'}
+            {isConnected
+              ? user
+                ? user.points_overall
+                : '0'
+              : 'Connect Wallet'}
           </div>
         </div>
         <Link className="mt-4 w-full" href="/leaderboard" prefetch={false}>

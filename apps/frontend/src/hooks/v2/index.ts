@@ -29,7 +29,6 @@ export * from './use-total-collateral';
 export * from './use-total-reserves';
 export * from './use-total-transaction-count';
 export * from './use-transaction-history';
-export * from './use-user';
 export * from './use-user-collateral-assets';
 export * from './use-user-collateral-utilization';
 export * from './use-user-collateral-value';
