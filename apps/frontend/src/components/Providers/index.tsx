@@ -8,6 +8,7 @@ import {
   QueryClientProvider,
 } from '@tanstack/react-query';
 import { ThemeProvider } from 'next-themes';
+import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import posthog from 'posthog-js';
 import { PostHogProvider } from 'posthog-js/react';
 import { type ReactNode, useEffect } from 'react';
@@ -71,31 +72,33 @@ export const Providers = ({ children }: { children: ReactNode }) => {
       enableSystem={false}
       forcedTheme="dark"
     >
-      <PostHogProvider client={posthog}>
-        <QueryClientProvider client={queryClient}>
-          <FuelProviderWrapper>
-            {children}
-            <MarketContractStoreWatcher />
-            <PostHogIdentify />
-            <ToastContainer
-              autoClose={5000}
-              closeOnClick={false}
-              draggable
-              hideProgressBar={false}
-              icon={false}
-              newestOnTop={true}
-              pauseOnFocusLoss
-              pauseOnHover
-              position="bottom-right"
-              progressStyle={{ background: 'hsl(var(--primary))' }}
-              rtl={false}
-              style={{ zIndex: 1000 }}
-              theme="dark"
-            />
-          </FuelProviderWrapper>
-          {/* <ReactQueryDevtools initialIsOpen={false} /> */}
-        </QueryClientProvider>
-      </PostHogProvider>
+      <NuqsAdapter>
+        <PostHogProvider client={posthog}>
+          <QueryClientProvider client={queryClient}>
+            <FuelProviderWrapper>
+              {children}
+              <MarketContractStoreWatcher />
+              <PostHogIdentify />
+              <ToastContainer
+                autoClose={5000}
+                closeOnClick={false}
+                draggable
+                hideProgressBar={false}
+                icon={false}
+                newestOnTop={true}
+                pauseOnFocusLoss
+                pauseOnHover
+                position="bottom-right"
+                progressStyle={{ background: 'hsl(var(--primary))' }}
+                rtl={false}
+                style={{ zIndex: 1000 }}
+                theme="dark"
+              />
+            </FuelProviderWrapper>
+            {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+          </QueryClientProvider>
+        </PostHogProvider>
+      </NuqsAdapter>
     </ThemeProvider>
   );
 };

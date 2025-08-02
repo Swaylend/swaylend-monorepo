@@ -132,6 +132,7 @@ const markets_v2: DeployedMarkets = {
 const marketAddressToBaseAssetName: Record<string, string> = {
   '0x6030cf103746576706d7dcc2ae6f6b32ba0db66907a8f9901a0170de5f06acc0': 'USDC',
   '0x51b9bea7822988e03520018f4a1bb39b9f5ba15c9b4b9c9340a6bc1e5958abd4': 'USDT',
+  '0x64768a2ab7439771433ec28ffc8a8e0a639a2c732e639a44a56731755b2dd036': 'USDC',
 };
 
 const assets: Record<string, string> = {

@@ -13,9 +13,7 @@ type Row = {
   collateralAmountUsd: number;
 };
 
-const userHistoryQuery = (account: string) => {
-  const poolAddress =
-    '0x657ab45a6eb98a4893a99fd104347179151e8b3828fd8f2a108cc09770d1ebae';
+const userHistoryQuery = (account: string, poolAddress: string) => {
   return `
         WITH bps AS (
             SELECT 
@@ -49,6 +47,7 @@ const userHistoryQuery = (account: string) => {
 
 export const useUserHistory = () => {
   const { account } = useAccount();
+  const poolAddress = appConfig.client.v1.markets.USDC.marketAddress;
 
   return useQuery({
     queryKey: ['userHistory', 'v1', account],
@@ -63,7 +62,7 @@ export const useUserHistory = () => {
         },
         body: JSON.stringify({
           sqlQuery: {
-            sql: userHistoryQuery(account),
+            sql: userHistoryQuery(account, poolAddress),
           },
           version: appConfig.client.v1.sentioProcessorVersion,
         }),

@@ -1,7 +1,8 @@
 'use client';
 
 import { useIsConnected } from '@fuels/react';
-import { useState } from 'react';
+import { useQueryStates } from 'nuqs';
+import { portfolioViewParams } from '@/hooks/nuqs/portfolio-view-params';
 import { Tabs, TabsList, TabsTrigger } from '../../ui/tabs';
 import { History } from './history';
 import { Markets } from './markets';
@@ -10,11 +11,11 @@ import { Overview } from './overview';
 import { Stats } from './stats';
 
 export const PortfolioView = () => {
-  const [portfolioView, setPortfolioView] = useState('markets');
+  const [{ view }, setView] = useQueryStates(portfolioViewParams);
   const { isConnected } = useIsConnected();
 
   const handleChange = (value: any) => {
-    setPortfolioView(value);
+    setView({ view: value });
   };
 
   if (!isConnected) {
@@ -31,7 +32,7 @@ export const PortfolioView = () => {
       <div className="mt-12">
         <Tabs
           className="mt-[40px] sm:mt-[55px]"
-          defaultValue={portfolioView}
+          defaultValue={view}
           onValueChange={handleChange}
         >
           <TabsList className="h-[50px] w-[600px] rounded-full">
@@ -61,9 +62,9 @@ export const PortfolioView = () => {
       </div>
 
       <div className="mt-8">
-        {portfolioView === 'markets' && <Markets />}
-        {portfolioView === 'positions' && <Overview />}
-        {portfolioView === 'history' && <History />}
+        {view === 'markets' && <Markets />}
+        {view === 'positions' && <Overview />}
+        {view === 'history' && <History />}
         {/* {portfolioView === 'rewards' && <Rewards />} */}
       </div>
     </div>

@@ -407,10 +407,7 @@ export const Markets = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-x-1 text-white">
                     Net APY
-                    <InfoIcon
-                      text="Net APY represents the total of Borrow APY and Reward APY, calculated as follows: Net APY = Borrow APY - Reward APY.
-"
-                    />
+                    <InfoIcon text="Net APY represents the total of Borrow APY and Reward APY, calculated as follows: Net APY = Borrow APY - Reward APY." />
                   </div>
                   {isLoading ? (
                     <Skeleton className="h-6 w-16 bg-white/5" />
@@ -444,10 +441,7 @@ export const Markets = () => {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-x-1 text-white">
                   Net APY
-                  <InfoIcon
-                    text="Net APY represents the total of Earn APY and Reward APY, calculated as follows: Net APY = Earn APY + Reward APY.
-"
-                  />
+                  <InfoIcon text="Net APY represents the total of Earn APY and Reward APY, calculated as follows: Net APY = Earn APY + Reward APY." />
                 </div>
                 {isLoading ? (
                   <Skeleton className="h-6 w-16 bg-white/5" />

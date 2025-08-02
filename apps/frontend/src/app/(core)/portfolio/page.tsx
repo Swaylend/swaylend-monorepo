@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';
-import { PortfolioView } from '@/components/v1/portfolio-view';
 import { isMobile } from '@/utils/is-mobile';
+import { ClientView } from './client';
 
 export const metadata: Metadata = {
   title: 'Portfolio',
@@ -24,7 +24,7 @@ export default async function Page() {
   return (
     <div className="max-h-full overflow-auto">
       <div className="flex w-full flex-col items-center justify-center px-[88px] pt-[60px] pb-[55px] max-lg:hidden">
-        <PortfolioView />
+        <ClientView />
       </div>
       <div className="flex h-[60dvh] w-full items-center justify-center lg:hidden">
         This page is not supported on this screen size.
