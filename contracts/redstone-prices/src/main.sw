@@ -60,6 +60,24 @@ impl RedstonePrices for Contract {
         price.unwrap()
     }
 
+    // Used to get the prices for the frontend from a specific payload
+    #[storage(read)]
+    fn get_prices(feed_ids: Vec<u256>, payload: Bytes) -> (Vec<u256>, u64) {
+        let timestamp = timestamp();
+
+        let config = Config {
+            feed_ids: feed_ids,
+            signers: storage.allowed_signers.load_vec(),
+            signer_count_threshold: storage.signer_count_threshold.read(),
+            block_timestamp: timestamp - TAI64_UNIX_ADJUSTMENT, // Unix seconds
+        };
+
+        // Aggregated prices and timestamp in unix milliseconds
+        let (aggregated_values, timestamp) = process_input(payload, config);
+        
+        process_input(payload, config)
+    }
+
     #[storage(write)]
     fn update_prices(feed_ids: Vec<u256>, payload: Bytes) {
         let timestamp = timestamp();

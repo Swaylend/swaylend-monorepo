@@ -3,7 +3,7 @@
 import type { PythContract } from '@pythnetwork/pyth-fuel-js';
 import { create } from 'zustand';
 import { appConfig } from '@/configs';
-import type { Market } from '@/contract-types/v2';
+import type { Market, RedstonePrices } from '@/contract-types/v2';
 import { createSelectors } from '../create-selectors';
 
 interface Store {
@@ -12,12 +12,14 @@ interface Store {
     {
       pythContract: PythContract | undefined;
       marketContract: Market | undefined;
+      redstoneContract: RedstonePrices | undefined;
     }
   >;
   updateContracts: (
     market: string,
     pythContract: PythContract | undefined,
-    marketContract: Market | undefined
+    marketContract: Market | undefined,
+    redstoneContract: RedstonePrices | undefined
   ) => void;
 }
 
@@ -28,6 +30,7 @@ export const marketStoreInitialState = {
       {
         pythContract: undefined,
         marketContract: undefined,
+        redstoneContract: undefined,
       },
     ])
   ),
@@ -38,7 +41,8 @@ const useMarketAddressBasedContractsStoreBase = create<Store>()((set) => ({
   updateContracts: (
     market: string,
     pythContract: PythContract | undefined,
-    marketContract: Market | undefined
+    marketContract: Market | undefined,
+    redstoneContract: RedstonePrices | undefined
   ) => {
     if (!(pythContract && marketContract)) return;
 
@@ -46,6 +50,7 @@ const useMarketAddressBasedContractsStoreBase = create<Store>()((set) => ({
       contracts: new Map(store.contracts).set(market, {
         pythContract,
         marketContract,
+        redstoneContract,
       }),
     }));
   },
@@ -59,3 +64,5 @@ export const selectPythContract = (state: Store, market: string) =>
   state.contracts.get(market)?.pythContract;
 export const selectMarketContract = (state: Store, market: string) =>
   state.contracts.get(market)?.marketContract;
+export const selectRedstoneContract = (state: Store, market: string) =>
+  state.contracts.get(market)?.redstoneContract;

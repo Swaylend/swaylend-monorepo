@@ -33,6 +33,9 @@ abi RedstonePrices {
 
     #[storage(read)]
     fn get_price(price_feed_id: u256) -> Price;
+
+    #[storage(read)]
+    fn get_prices(feed_ids: Vec<u256>, payload: Bytes) -> (Vec<u256>, u64);
     
     #[storage(write)]
     fn update_prices(feed_ids: Vec<u256>, payload: Bytes);

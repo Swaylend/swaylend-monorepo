@@ -60,6 +60,13 @@ impl RedstonePrices for Contract {
         price.unwrap()
     }
 
+    #[storage(read)]
+    fn get_prices(feed_ids: Vec<u256>, payload: Bytes) -> (Vec<u256>, u64) {
+        // We dont need this in the mock
+        let arr: Vec<u256> = Vec::new();
+        (arr, 0)
+    }
+
     #[storage(write)]
     fn update_prices(feed_ids: Vec<u256>, payload: Bytes) {
         // Bytes structure

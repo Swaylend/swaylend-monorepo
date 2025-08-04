@@ -8,48 +8,53 @@
       "concreteTypeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
     },
     {
+      "type": "(struct std::vec::Vec<u256>, u64)",
+      "concreteTypeId": "e34c2f53d80f2667116e2b1d557ef6e30cf510868fad2bfd788d50d506cd44e0",
+      "metadataTypeId": 0
+    },
+    {
       "type": "b256",
       "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
     },
     {
       "type": "enum ownership::errors::InitializationError",
       "concreteTypeId": "b1fddf488ccb9e63d11888b2750bbd1280a1ae1c49f2d6637fd4cf1e930d1468",
-      "metadataTypeId": 0
+      "metadataTypeId": 1
     },
     {
       "type": "enum redstone_prices_abi::Error",
       "concreteTypeId": "3591bc8ba26754d4f7ca81dfcb9f08e7d745e41e14c1374e0651997459c946ed",
-      "metadataTypeId": 1
+      "metadataTypeId": 2
     },
     {
       "type": "enum src5::AccessError",
       "concreteTypeId": "f1247475d0d1466599267010f088190f8664dd31663a40c5d5e525d8e64b995d",
-      "metadataTypeId": 2
+      "metadataTypeId": 3
     },
     {
       "type": "enum std::identity::Identity",
       "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335",
-      "metadataTypeId": 3
+      "metadataTypeId": 4
     },
     {
       "type": "struct ownership::events::OwnershipSet",
       "concreteTypeId": "8c0d2488561c35a28ef795bb8bcc4c43999cdd1e3ecbd10c226e0a68660c54d4",
-      "metadataTypeId": 6
+      "metadataTypeId": 7
     },
     {
       "type": "struct redstone_prices_abi::Price",
       "concreteTypeId": "d9e5705aca71ef75ec07f60abc04b1fc953f186733d856ba1f4cfadd72e24f07",
-      "metadataTypeId": 7
+      "metadataTypeId": 8
     },
     {
       "type": "struct std::bytes::Bytes",
       "concreteTypeId": "cdd87b7d12fe505416570c294c884bca819364863efe3bf539245fa18515fbbb",
-      "metadataTypeId": 9
+      "metadataTypeId": 10
     },
     {
       "type": "struct std::vec::Vec<b256>",
       "concreteTypeId": "32559685d0c9845f059bf9d472a0a38cf77d36c23dfcffe5489e86a65cdd9198",
-      "metadataTypeId": 13,
+      "metadataTypeId": 14,
       "typeArguments": [
         "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
       ]
@@ -57,7 +62,7 @@
     {
       "type": "struct std::vec::Vec<u256>",
       "concreteTypeId": "742d7b76206a39cfad7eaec9b457390bbd0a92fe1da596db414daa0e4964bf82",
-      "metadataTypeId": 13,
+      "metadataTypeId": 14,
       "typeArguments": [
         "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
       ]
@@ -77,8 +82,28 @@
   ],
   "metadataTypes": [
     {
-      "type": "enum ownership::errors::InitializationError",
+      "type": "(_, _)",
       "metadataTypeId": 0,
+      "components": [
+        {
+          "name": "__tuple_element",
+          "typeId": 14,
+          "typeArguments": [
+            {
+              "name": "",
+              "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+            }
+          ]
+        },
+        {
+          "name": "__tuple_element",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        }
+      ]
+    },
+    {
+      "type": "enum ownership::errors::InitializationError",
+      "metadataTypeId": 1,
       "components": [
         {
           "name": "CannotReinitialized",
@@ -88,7 +113,7 @@
     },
     {
       "type": "enum redstone_prices_abi::Error",
-      "metadataTypeId": 1,
+      "metadataTypeId": 2,
       "components": [
         {
           "name": "PriceNotFound",
@@ -106,7 +131,7 @@
     },
     {
       "type": "enum src5::AccessError",
-      "metadataTypeId": 2,
+      "metadataTypeId": 3,
       "components": [
         {
           "name": "NotOwner",
@@ -116,39 +141,39 @@
     },
     {
       "type": "enum std::identity::Identity",
-      "metadataTypeId": 3,
+      "metadataTypeId": 4,
       "components": [
         {
           "name": "Address",
-          "typeId": 8
+          "typeId": 9
         },
         {
           "name": "ContractId",
-          "typeId": 11
+          "typeId": 12
         }
       ]
     },
     {
       "type": "generic T",
-      "metadataTypeId": 4
-    },
-    {
-      "type": "raw untyped ptr",
       "metadataTypeId": 5
     },
     {
+      "type": "raw untyped ptr",
+      "metadataTypeId": 6
+    },
+    {
       "type": "struct ownership::events::OwnershipSet",
-      "metadataTypeId": 6,
+      "metadataTypeId": 7,
       "components": [
         {
           "name": "new_owner",
-          "typeId": 3
+          "typeId": 4
         }
       ]
     },
     {
       "type": "struct redstone_prices_abi::Price",
-      "metadataTypeId": 7,
+      "metadataTypeId": 8,
       "components": [
         {
           "name": "price",
@@ -156,7 +181,7 @@
         },
         {
           "name": "exponent",
-          "typeId": 14
+          "typeId": 15
         },
         {
           "name": "confidence",
@@ -170,7 +195,7 @@
     },
     {
       "type": "struct std::address::Address",
-      "metadataTypeId": 8,
+      "metadataTypeId": 9,
       "components": [
         {
           "name": "bits",
@@ -180,11 +205,11 @@
     },
     {
       "type": "struct std::bytes::Bytes",
-      "metadataTypeId": 9,
+      "metadataTypeId": 10,
       "components": [
         {
           "name": "buf",
-          "typeId": 10
+          "typeId": 11
         },
         {
           "name": "len",
@@ -194,11 +219,11 @@
     },
     {
       "type": "struct std::bytes::RawBytes",
-      "metadataTypeId": 10,
+      "metadataTypeId": 11,
       "components": [
         {
           "name": "ptr",
-          "typeId": 5
+          "typeId": 6
         },
         {
           "name": "cap",
@@ -208,7 +233,7 @@
     },
     {
       "type": "struct std::contract_id::ContractId",
-      "metadataTypeId": 11,
+      "metadataTypeId": 12,
       "components": [
         {
           "name": "bits",
@@ -218,11 +243,11 @@
     },
     {
       "type": "struct std::vec::RawVec",
-      "metadataTypeId": 12,
+      "metadataTypeId": 13,
       "components": [
         {
           "name": "ptr",
-          "typeId": 5
+          "typeId": 6
         },
         {
           "name": "cap",
@@ -230,20 +255,20 @@
         }
       ],
       "typeParameters": [
-        4
+        5
       ]
     },
     {
       "type": "struct std::vec::Vec",
-      "metadataTypeId": 13,
+      "metadataTypeId": 14,
       "components": [
         {
           "name": "buf",
-          "typeId": 12,
+          "typeId": 13,
           "typeArguments": [
             {
               "name": "",
-              "typeId": 4
+              "typeId": 5
             }
           ]
         },
@@ -253,12 +278,12 @@
         }
       ],
       "typeParameters": [
-        4
+        5
       ]
     },
     {
       "type": "u32",
-      "metadataTypeId": 14
+      "metadataTypeId": 15
     }
   ],
   "functions": [
@@ -310,6 +335,28 @@
         }
       ],
       "output": "d9e5705aca71ef75ec07f60abc04b1fc953f186733d856ba1f4cfadd72e24f07",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "get_prices",
+      "inputs": [
+        {
+          "name": "feed_ids",
+          "concreteTypeId": "742d7b76206a39cfad7eaec9b457390bbd0a92fe1da596db414daa0e4964bf82"
+        },
+        {
+          "name": "payload",
+          "concreteTypeId": "cdd87b7d12fe505416570c294c884bca819364863efe3bf539245fa18515fbbb"
+        }
+      ],
+      "output": "e34c2f53d80f2667116e2b1d557ef6e30cf510868fad2bfd788d50d506cd44e0",
       "attributes": [
         {
           "name": "storage",
