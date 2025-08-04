@@ -72,9 +72,6 @@ impl RedstonePrices for Contract {
             block_timestamp: timestamp - TAI64_UNIX_ADJUSTMENT, // Unix seconds
         };
 
-        // Aggregated prices and timestamp in unix milliseconds
-        let (aggregated_values, timestamp) = process_input(payload, config);
-        
         process_input(payload, config)
     }
 

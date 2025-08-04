@@ -77,7 +77,7 @@ export const useOraclePriceFeedData = (marketParam?: string) => {
           }
 
           const oracleType = oracleGlobalConfiguration.oracle_type;
-          const priceFeedId = getOraclePriceFeedId(config.price_feed_id);
+          const priceFeedId = `0x${getOraclePriceFeedId(config.price_feed_id)}`;
 
           oraclePriceFeeds.set(oracleType, [
             ...(oraclePriceFeeds.get(oracleType) ?? []),

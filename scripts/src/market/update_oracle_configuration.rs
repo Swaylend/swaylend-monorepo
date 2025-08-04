@@ -4,7 +4,7 @@ use fuels::{
     crypto::SecretKey,
     types::{AssetId, ContractId},
 };
-use market::{OracleAssetConfiguration, OracleGlobalConfiguration};
+use market::{OracleAssetConfiguration, OracleGlobalConfiguration, OraclePriceFeedId};
 use std::str::FromStr;
 use swaylend_scripts::utils::market::{
     get_market_instance, get_oracle_type, get_price_feed_id, read_market_config, Args,
@@ -43,6 +43,8 @@ async fn main() -> anyhow::Result<()> {
         args.args.market_target_contract_id,
     )
     .await?;
+
+    println!("market_contract_id: {}", market_contract_id);
 
     let contract_version = market_instance
         .methods()
@@ -231,12 +233,21 @@ async fn main() -> anyhow::Result<()> {
                         );
 
                         println!(
-                            "Old asset oracle configuration: {:#?}",
-                            oracle_configuration
+                            "Old asset oracle configuration:\n\t- oracle_id: {}\n\t- price_feed_id: {}\n\t- is_active: {}",
+                            oracle_configuration.oracle_id,
+                            match oracle_configuration.price_feed_id {
+                                OraclePriceFeedId::Pyth(price_feed_id) => format!("0x{:?}", hex::encode(price_feed_id.0)),
+                                OraclePriceFeedId::Redstone(price_feed_id) => format!("{:?}", price_feed_id),
+                                OraclePriceFeedId::Stork(price_feed_id) => format!("0x{:?}", hex::encode(price_feed_id.0)),
+                                _ => "Unknown".to_string(),
+                            },
+                            oracle_configuration.is_disabled,
                         );
                         println!(
-                            "New asset oracle configuration: {:#?}",
-                            collateral_asset_config_oracle_configuration
+                            "New asset oracle configuration:\n\t- oracle_id: {}\n\t- price_feed_id: {}\n\t- is_active: {}",
+                            collateral_asset_config_oracle_configuration.oracle_id,
+                            collateral_asset_config_oracle_configuration.price_feed_id,
+                            collateral_asset_config_oracle_configuration.is_active,
                         );
 
                         if !get_yes_no_input(
@@ -367,13 +378,22 @@ async fn main() -> anyhow::Result<()> {
                     );
 
                     println!(
-                        "Old asset oracle configuration: {:#?}",
-                        oracle_configuration
+                        "Old asset oracle configuration:\n\t- oracle_id: {}\n\t- price_feed_id: {}\n\t- is_active: {}\n",
+                        oracle_configuration.oracle_id,
+                        match oracle_configuration.price_feed_id {
+                            OraclePriceFeedId::Pyth(price_feed_id) => format!("0x{:?}", hex::encode(price_feed_id.0)),
+                            OraclePriceFeedId::Redstone(price_feed_id) => format!("{:?}", price_feed_id),
+                            OraclePriceFeedId::Stork(price_feed_id) => format!("0x{:?}", hex::encode(price_feed_id.0)),
+                            _ => "Unknown".to_string(),
+                        },
+                        oracle_configuration.is_disabled,
                     );
 
                     println!(
-                        "New asset oracle configuration: {:#?}",
-                        base_asset_oracle_configuration
+                        "New asset oracle configuration:\n\t- oracle_id: {}\n\t- price_feed_id: {}\n\t- is_active: {}",
+                        base_asset_oracle_configuration.oracle_id,
+                        base_asset_oracle_configuration.price_feed_id,
+                        base_asset_oracle_configuration.is_active,
                     );
 
                     if !get_yes_no_input(

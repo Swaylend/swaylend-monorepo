@@ -5,6 +5,7 @@ import type { OracleInputInput } from '@/contract-types/v2/Market';
 import { useMarketStore } from '@/stores/market-store';
 import { useOracleAssetConfigurations } from './use-oracle-asset-configurations';
 import { usePythOracle } from './use-pyth-oracle';
+import { useRedstoneOracle } from './use-redstone-oracle';
 
 export const usePriceData = (marketParam?: string) => {
   const storeMarket = useMarketStore.use.market();
@@ -14,6 +15,7 @@ export const usePriceData = (marketParam?: string) => {
     useOracleAssetConfigurations(marketParam);
   const { data: pythOracleData, isError: isPythOracleError } =
     usePythOracle(market);
+  const { data: _, isError: __ } = useRedstoneOracle(market);
 
   return useQuery({
     queryKey: [

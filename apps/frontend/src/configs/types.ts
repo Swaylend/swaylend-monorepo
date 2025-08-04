@@ -1,9 +1,21 @@
 import { z } from 'zod';
 
-export const DeployedMarketsSchema = z.record(
+export const DeployedMarketsV1Schema = z.record(
   z.string(),
   z.object({
     oracleAddress: z.string(),
+    marketAddress: z.string(),
+    tokenFactoryAddress: z.string(),
+    graphqlUrl: z.string(),
+  })
+);
+
+export const DeployedMarketsV2Schema = z.record(
+  z.string(),
+  z.object({
+    pythAddress: z.string(),
+    redstoneAddress: z.string(),
+    storkAddress: z.string(),
     marketAddress: z.string(),
     tokenFactoryAddress: z.string(),
     graphqlUrl: z.string(),
@@ -47,7 +59,7 @@ export const AppConfigSchema = z.object({
       sentioApi: z.string(),
       sentioApiKey: z.string(),
       sentioProcessorVersion: z.string(),
-      markets: DeployedMarketsSchema,
+      markets: DeployedMarketsV1Schema,
       rewards: RewardsSchema,
     }),
     v2: z.object({
@@ -55,12 +67,13 @@ export const AppConfigSchema = z.object({
       sentioApi: z.string(),
       sentioApiKey: z.string(),
       sentioProcessorVersion: z.string(),
-      markets: DeployedMarketsSchema,
+      markets: DeployedMarketsV2Schema,
       rewards: RewardsSchema,
     }),
   }),
 });
 
 export type AppConfig = z.infer<typeof AppConfigSchema>;
-export type DeployedMarkets = z.infer<typeof DeployedMarketsSchema>;
+export type DeployedMarketsV1 = z.infer<typeof DeployedMarketsV1Schema>;
+export type DeployedMarketsV2 = z.infer<typeof DeployedMarketsV2Schema>;
 export type Rewards = z.infer<typeof RewardsSchema>;

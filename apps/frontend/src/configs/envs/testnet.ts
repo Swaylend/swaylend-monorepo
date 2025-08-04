@@ -119,12 +119,16 @@ const markets_v1: DeployedMarkets = {
 
 const markets_v2: DeployedMarkets = {
   USDC: {
-    oracleAddress:
+    pythAddress:
       '0x5d17f54708afd01530c2e0ffb123cd21e92461aae8450de2cc08d0fd330cf240',
     marketAddress:
       '0x64768a2ab7439771433ec28ffc8a8e0a639a2c732e639a44a56731755b2dd036',
     tokenFactoryAddress:
       '0xb095873ffa6237aa209dd7fa9d6fd7d9e932453f8db62b9e436766a47b17d308',
+    redstoneAddress:
+      '0x1e6b0d58808c69b9b3f683cc432e6643123719db6a72b7712565475e2d3f95e2',
+    storkAddress:
+      '0x09c88f50d535ac5ce8945e34c418233b1e3834be9a88effb57cb137321fbae0c',
     graphqlUrl: '',
   },
 };

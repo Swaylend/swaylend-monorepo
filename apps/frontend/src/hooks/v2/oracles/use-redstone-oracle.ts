@@ -7,7 +7,9 @@ import {
 } from '@redstone-finance/sdk';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
-import { arrayify, DateTime } from 'fuels';
+import { arrayify } from 'ethers/lib/utils';
+import { DateTime } from 'fuels';
+import { appConfig } from '@/configs';
 import {
   type OracleInputInput,
   OracleTypeOutput,
@@ -17,7 +19,7 @@ import { useRedstoneContract } from '@/contracts/v2/use-redstone-contract';
 import { useMarketStore } from '@/stores/market-store';
 import { useOraclePriceFeedData } from './use-oracle-price-feed-data';
 
-export const useRedstonePrice = (marketParam?: string) => {
+export const useRedstoneOracle = (marketParam?: string) => {
   const storeMarket = useMarketStore.use.market();
   const market = marketParam ?? storeMarket;
   const marketContract = useMarketContract(market);
@@ -57,30 +59,40 @@ export const useRedstonePrice = (marketParam?: string) => {
         return null;
       }
 
+      const assetSymbols = redstonePriceFeedIds.map((priceFeedId) => {
+        const assetId =
+          oraclePriceFeedData.priceFeedIdToAssetId.get(priceFeedId);
+
+        if (!assetId) {
+          console.error('AssedId not found for priceFeedId', priceFeedId);
+          return '';
+        }
+
+        return appConfig.client.shared.assets[assetId]!;
+      });
+
       const oracleRegistry = await getOracleRegistryState();
       const dataPackageRequestParams = {
         dataServiceId: 'redstone-primary-prod',
-        uniqueSignersCount: 3,
+        uniqueSignersCount: 2,
         authorizedSigners: getSignersForDataServiceId(
           oracleRegistry,
           'redstone-primary-prod'
         ),
-        dataPackagesIds: Array.from(redstonePriceFeedIds.values()),
+        dataPackagesIds: assetSymbols,
       };
 
       const paramsProvider = new ContractParamsProvider(
         dataPackageRequestParams
       );
 
-      const payload: DataPackagesResponse =
-        await paramsProvider.requestDataPackages();
-      const hexPayload = convertDataPackagesResponse(payload, 'hex');
       const feed_ids = paramsProvider.getHexlifiedFeedIds();
 
+      // This is passed to the contract
+      const payload = await paramsProvider.getPayloadData();
+
       const pricesResponse = (
-        await redstoneContract.functions
-          .get_prices(feed_ids, Array.from(arrayify(hexPayload))) // TODO[v2]: Maybe need to use import from ethers utils
-          .get()
+        await redstoneContract.functions.get_prices(feed_ids, payload).get()
       ).value;
 
       // Prepare the RedstoneOracleInput object
@@ -88,7 +100,7 @@ export const useRedstonePrice = (marketParam?: string) => {
         Redstone: {
           oracle_id: redstoneOracleId,
           price_feed_ids: feed_ids,
-          payload: Array.from(arrayify(hexPayload)),
+          payload,
         },
       };
 
@@ -100,6 +112,7 @@ export const useRedstonePrice = (marketParam?: string) => {
       for (let i = 0; i < feed_ids.length; i++) {
         const priceFeedId = feed_ids[i];
         const price = pricesResponse[0][i];
+
         const assetId =
           oraclePriceFeedData.priceFeedIdToAssetId.get(priceFeedId);
 
@@ -120,14 +133,14 @@ export const useRedstonePrice = (marketParam?: string) => {
         updateFee: BigNumber(0),
       };
     },
-    refetchInterval: 5000,
+    refetchInterval: 20_000,
     enabled:
       !!oraclePriceFeedData &&
       !!marketContract &&
       !!redstoneContract &&
       !!redstonePriceFeedIds &&
       !!redstoneOracleId,
-    staleTime: 5000,
+    staleTime: 20_000,
     refetchOnWindowFocus: true,
     refetchIntervalInBackground: true,
   });

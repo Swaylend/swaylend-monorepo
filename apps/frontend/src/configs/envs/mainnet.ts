@@ -1,5 +1,5 @@
 import { defineConfig } from '../define-config';
-import type { DeployedMarkets, Rewards } from '../types';
+import type { DeployedMarketsV1, DeployedMarketsV2, Rewards } from '../types';
 
 export function createMainnetConfig() {
   return defineConfig({
@@ -46,7 +46,7 @@ export function createMainnetConfig() {
   });
 }
 
-const markets_v1: DeployedMarkets = {
+const markets_v1: DeployedMarketsV1 = {
   USDC: {
     oracleAddress:
       '0x1c86fdd9e0e7bc0d2ae1bf6817ef4834ffa7247655701ee1b031b52a24c523da',
@@ -57,9 +57,12 @@ const markets_v1: DeployedMarkets = {
   },
 };
 
-const markets_v2: DeployedMarkets = {
+const markets_v2: DeployedMarketsV2 = {
   USDC: {
-    oracleAddress: '',
+    pythAddress: '',
+    redstoneAddress: '',
+    storkAddress:
+      '0x9c118ae13927dd51ba59c0370dc8c272a3b64ccd675950750c8840a649c81149',
     marketAddress: '',
     tokenFactoryAddress: '',
     graphqlUrl: '',

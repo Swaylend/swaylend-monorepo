@@ -5,7 +5,7 @@ import { PythContract } from '@pythnetwork/pyth-fuel-js';
 import { useEffect } from 'react';
 import { appConfig } from '@/configs';
 import { Market as MarketV1 } from '@/contract-types/v1';
-import { Market as MarketV2 } from '@/contract-types/v2';
+import { Market as MarketV2, RedstonePrices } from '@/contract-types/v2';
 import { useProvider } from '@/hooks';
 import { useMarketAddressBasedContractsStore as useMarketAddressBasedContractsStoreV1 } from '@/stores/v1/market-address-based-contract-store';
 import { useMarketAddressBasedContractsStore as useMarketAddressBasedContractsStoreV2 } from '@/stores/v2/market-address-based-contract-store';
@@ -37,8 +37,9 @@ export default function MarketContractStoreWatcher(): null {
     }
 
     for (const market of Object.keys(appConfig.client.v2.markets)) {
+      // TODO[v2]: Optimize by using the same oracle instance for all markets
       const pythContract = new PythContract(
-        appConfig.client.v2.markets[market].oracleAddress,
+        appConfig.client.v2.markets[market].pythAddress,
         walletOrProvider
       );
 
@@ -47,7 +48,12 @@ export default function MarketContractStoreWatcher(): null {
         walletOrProvider
       );
 
-      updateContractsV2(market, pythContract, marketContract);
+      const redstoneContract = new RedstonePrices(
+        appConfig.client.v2.markets[market].redstoneAddress,
+        walletOrProvider
+      );
+
+      updateContractsV2(market, pythContract, marketContract, redstoneContract);
     }
   }, [walletOrProvider]);
 

@@ -13,7 +13,7 @@
 
 # FUEL TESTNET
 
-* Redstone Prices Implementation: `0xcbf981762eca5e2da43061022f5b0ae04551b396bdd3d14eb26428151bfb9d80`
+* Redstone Prices Implementation: `0x7135645ca257c15238b8b5180e1bb7a1dd45c1ff0013b29399fb148186d62c80`
 * Redstone Prices Proxy: `0x1e6b0d58808c69b9b3f683cc432e6643123719db6a72b7712565475e2d3f95e2`
 
 * Pyth Oracle contract (v1): `0x25146735b29d4216639f7f8b1d7b921ff87a1d3051de62d6cceaacabeb33b8e7`
@@ -26,7 +26,7 @@
 
 * Token factory contract: `0xb095873ffa6237aa209dd7fa9d6fd7d9e932453f8db62b9e436766a47b17d308`
 
-* Market implementation contract: `0xec06e5f424dd6d3a6ee0db1837a666cdfe590eed7f0ca31aa6fd83c280823055`
+* Market implementation contract: `0xb546283470ca9f9b06ed9cf41dff3dc2d2e353b931f8eaae69ea41a7348a5f9b`
 
 * Market proxy contract: `0x64768a2ab7439771433ec28ffc8a8e0a639a2c732e639a44a56731755b2dd036`
 
