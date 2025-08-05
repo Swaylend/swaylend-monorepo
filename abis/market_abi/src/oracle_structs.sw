@@ -27,14 +27,12 @@ pub enum OraclePriceFeedId {
     Redstone: u256,
     Pyth: b256,
     Stork: b256,
-    Twrap: (),
 }
 
 pub enum OracleType {
     Pyth: (),
     Redstone: (),
     Stork: (),
-    Twrap: (),
 }
 
 
@@ -57,7 +55,6 @@ pub enum OracleInput {
     Pyth: PythOracleInput,
     Redstone: RedstoneOracleInput,
     Stork: StorkOracleInput,
-    Twrap: TwrapOracleInput,
 }
 
 pub struct PythOracleInput  {
@@ -88,19 +85,11 @@ pub struct StorkOracleInput {
     pub update_data: Vec<TemporalNumericValueInput>,
 }
 
-pub struct TwrapOracleInput {
-    /// Oracle ID from the global oracle configuration.
-    pub oracle_id: u64,
-
-    pub placeholder: (),    
-}
-
 // Used in the INTERNAL methods. We use the oracle_id to get the contract_id.
 pub enum OracleInputInternal {
     Pyth: PythOracleInputInternal,
     Redstone: RedstoneOracleInputInternal,
     Stork: StorkOracleInputInternal,
-    Twrap: TwrapOracleInputInternal,
 }
 
 pub struct PythOracleInputInternal  {
@@ -129,13 +118,6 @@ pub struct StorkOracleInputInternal {
 
     /// This field incldues the update data for updating the price feeds.
     pub update_data: Vec<TemporalNumericValueInput>,
-}
-
-pub struct TwrapOracleInputInternal {
-    /// Oracle contract id.
-    pub contract_id: ContractId,
-
-    pub placeholder: (),    
 }
 
 pub struct Oracle {
@@ -277,9 +259,6 @@ impl Oracle {
                     require(false, Error::InvalidPriceFeedId);
                 }
             }
-            OracleType::Twrap => {
-                require(false, "Not implemented yet");
-            },
         };
 
         return (is_price_valid, final_price);
@@ -331,11 +310,6 @@ impl Oracle {
                     asset_id: AssetId::base().bits(),
                     coins: update_fee,
                 }(input.update_data);
-            },
-            OracleInputInternal::Twrap(input) => {
-                let contract_id = input.contract_id;
-                // TODO: Implement
-                require(false, "Not implemented yet");
             },
         }
     }

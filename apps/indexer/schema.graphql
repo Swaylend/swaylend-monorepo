@@ -3,7 +3,6 @@ enum OracleType {
   Pyth
   Redstone
   Stork
-  Twrap
 }
 
 # Oracle Global Configuration Schema

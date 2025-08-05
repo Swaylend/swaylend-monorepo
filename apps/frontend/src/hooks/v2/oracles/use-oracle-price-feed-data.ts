@@ -23,9 +23,6 @@ const getOraclePriceFeedId = (
   if (key === 'Pyth' || key === 'Stork') {
     return value as string; // Already strings
   }
-  if (key === 'Twrap') {
-    return '';
-  }
 
   return ''; // fallback
 };

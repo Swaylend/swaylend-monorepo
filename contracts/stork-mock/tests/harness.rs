@@ -46,7 +46,13 @@ async fn update_and_get_price() {
         .await
         .unwrap_err();
 
-    assert!(update_prices_result.to_string().contains("InsufficientFee"));
+    println!(
+        "update_prices_result: {:?}",
+        update_prices_result.to_string()
+    );
+    assert!(update_prices_result
+        .to_string()
+        .contains("Insufficient fee for updates."));
 
     stork_mock
         .update_prices(update_data.clone(), 1)

@@ -239,7 +239,6 @@ async fn main() -> anyhow::Result<()> {
                                 OraclePriceFeedId::Pyth(price_feed_id) => format!("0x{:?}", hex::encode(price_feed_id.0)),
                                 OraclePriceFeedId::Redstone(price_feed_id) => format!("{:?}", price_feed_id),
                                 OraclePriceFeedId::Stork(price_feed_id) => format!("0x{:?}", hex::encode(price_feed_id.0)),
-                                _ => "Unknown".to_string(),
                             },
                             oracle_configuration.is_disabled,
                         );
@@ -396,7 +395,6 @@ async fn main() -> anyhow::Result<()> {
                             OraclePriceFeedId::Pyth(price_feed_id) => format!("0x{:?}", hex::encode(price_feed_id.0)),
                             OraclePriceFeedId::Redstone(price_feed_id) => format!("{:?}", price_feed_id),
                             OraclePriceFeedId::Stork(price_feed_id) => format!("0x{:?}", hex::encode(price_feed_id.0)),
-                            _ => "Unknown".to_string(),
                         },
                         oracle_configuration.is_disabled,
                     );

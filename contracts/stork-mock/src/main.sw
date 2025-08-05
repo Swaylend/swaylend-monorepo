@@ -54,7 +54,7 @@ impl Stork for Contract {
     fn update_temporal_numeric_values_v1(update_data: Vec<TemporalNumericValueInput>) {
         // Check if the paid fee is enough
         let total_fee = get_total_fee(update_data.len());
-        require(msg_amount() >= total_fee && msg_asset_id() == AssetId::base(), StorkError::InsufficientFee);
+        require(msg_amount() >= total_fee && msg_asset_id() == AssetId::base(), StorkError::InsufficientFee(msg_amount()));
 
         let mut i = 0;
         let len = update_data.len();
@@ -87,6 +87,16 @@ impl Stork for Contract {
 
     #[storage(read, write)]
     fn update_stork_public_key(stork_public_key: EvmAddress) {
+        require(false, "Not implemented");
+    }
+
+    #[storage(read, write)]
+    fn propose_owner(new_owner: Address) {
+        require(false, "Not implemented");
+    }
+
+    #[storage(read, write)]
+    fn accept_ownership() {
         require(false, "Not implemented");
     }
 }

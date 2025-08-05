@@ -8,5 +8,5 @@ name = "stork_mock"
 enabled = true
 
 [dependencies]
-stork_sway_sdk = { git = "https://github.com/martines3000/stork-external", rev = "37417bbcad1838c632050655c02c7d8f9d62343f" }
+stork_sway_sdk = "0.0.3"
 signed_int = "0.26.1"

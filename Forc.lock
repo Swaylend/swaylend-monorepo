@@ -136,7 +136,8 @@ dependencies = [
 
 [[package]]
 name = "stork_sway_sdk"
-source = "git+https://github.com/martines3000/stork-external?rev#37417bbcad1838c632050655c02c7d8f9d62343f"
+version = "0.0.3"
+source = "registry+stork_sway_sdk?0.0.3#QmeEq6VVXTPpLpDEfTKU6KowBL1hcyoPLc29qbGeBg8PLS!"
 dependencies = [
     "signed_int",
     "std",
