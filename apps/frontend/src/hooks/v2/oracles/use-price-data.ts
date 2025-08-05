@@ -6,6 +6,7 @@ import { useMarketStore } from '@/stores/market-store';
 import { useOracleAssetConfigurations } from './use-oracle-asset-configurations';
 import { usePythOracle } from './use-pyth-oracle';
 import { useRedstoneOracle } from './use-redstone-oracle';
+import { useStorkOracle } from './use-stork-oracle';
 
 export const usePriceData = (marketParam?: string) => {
   const storeMarket = useMarketStore.use.market();
@@ -13,10 +14,9 @@ export const usePriceData = (marketParam?: string) => {
 
   const { data: oracleAssetConfigurations } =
     useOracleAssetConfigurations(marketParam);
-  const { data: pythOracleData, isError: isPythOracleError } =
-    usePythOracle(market);
-  const { data: redstoneOracleData, isError: isRedstoneOracleError } =
-    useRedstoneOracle(market);
+  const { data: pythOracleData } = usePythOracle(market);
+  const { data: redstoneOracleData } = useRedstoneOracle(market);
+  const { data: _ } = useStorkOracle(market);
 
   return useQuery({
     queryKey: [
@@ -73,10 +73,7 @@ export const usePriceData = (marketParam?: string) => {
         totalUpdateFee,
       };
     },
-    enabled:
-      !!oracleAssetConfigurations &&
-      (!!pythOracleData || isPythOracleError) &&
-      (!!redstoneOracleData || isRedstoneOracleError),
+    enabled: !!oracleAssetConfigurations,
     placeholderData: keepPreviousData,
   });
 };

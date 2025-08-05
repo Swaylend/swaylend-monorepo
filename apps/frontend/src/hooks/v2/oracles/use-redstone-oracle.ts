@@ -132,12 +132,7 @@ export const useRedstoneOracle = (marketParam?: string) => {
       };
     },
     refetchInterval: 20_000,
-    enabled:
-      !!oraclePriceFeedData &&
-      !!marketContract &&
-      !!redstoneContract &&
-      !!redstonePriceFeedIds &&
-      !!redstoneOracleId,
+    enabled: !!oraclePriceFeedData && !!marketContract && !!redstoneContract,
     staleTime: 20_000,
     refetchOnWindowFocus: true,
     refetchIntervalInBackground: true,

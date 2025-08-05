@@ -29,6 +29,11 @@
       "contract_id": "0x1e6b0d58808c69b9b3f683cc432e6643123719db6a72b7712565475e2d3f95e2",
       "is_active": true,
       "oracle_type": "Redstone"
+    },
+    {
+      "contract_id": "0x09c88f50d535ac5ce8945e34c418233b1e3834be9a88effb57cb137321fbae0c",
+      "is_active": true,
+      "oracle_type": "Stork"
     }
   ],
   "base_asset": {
@@ -40,11 +45,16 @@
       {
         "oracle_id": 0,
         "price_feed_id": "0xeaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a",
-        "is_active": false
+        "is_active": true
       },
       {
         "oracle_id": 1,
         "price_feed_id": "0x55534443",
+        "is_active": true
+      },
+      {
+        "oracle_id": 2,
+        "price_feed_id": "0x7416a56f222e196d0487dce8a1a8003936862e7a15092a91898d69fa8bce290c",
         "is_active": true
       }
     ]
@@ -65,6 +75,11 @@
         {
           "oracle_id": 0,
           "price_feed_id": "0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace",
+          "is_active": true
+        },
+        {
+          "oracle_id": 2,
+          "price_feed_id": "0x59102b37de83bdda9f38ac8254e596f0d9ac61d2035c07936675e87342817160",
           "is_active": true
         }
       ]
@@ -141,6 +156,11 @@
         {
           "oracle_id": 0,
           "price_feed_id": "0x2b89b9dc8fdf9f34709a5b106b472f0f39bb6ca9ce04b0fd7f2e971688e2e53b",
+          "is_active": true
+        },
+        {
+          "oracle_id": 1,
+          "price_feed_id": "0x55534454",
           "is_active": true
         }
       ]

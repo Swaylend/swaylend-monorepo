@@ -20,7 +20,7 @@ export const AssetName = ({ src, symbol, name }: AssetNameProps) => {
         />
       </div>
       <div className="font-medium text-white">{name}</div>
-      <div>{symbol}</div>
+      <div className="text-moon">{symbol}</div>
     </div>
   );
 };

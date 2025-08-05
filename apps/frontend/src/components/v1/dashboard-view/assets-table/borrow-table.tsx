@@ -280,7 +280,7 @@ export const BorrowTable = () => {
                         ]
                       }
                     </div>
-                    <div>
+                    <div className="text-moon">
                       {getFormattedNumber(
                         formatUnits(
                           balance
@@ -307,7 +307,7 @@ export const BorrowTable = () => {
               >
                 {aprData?.borrowBaseApr.times(100).toFixed(2)}%
               </TableCell>
-              <TableCell>{borrowedBalance}</TableCell>
+              <TableCell className="text-moon">{borrowedBalance}</TableCell>
               <TableCell
                 className={cn(
                   isAprPending && 'animate-pulse',

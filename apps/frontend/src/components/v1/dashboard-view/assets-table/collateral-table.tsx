@@ -199,7 +199,7 @@ const CollateralTableRow = ({
           </Tooltip>
         </TooltipProvider>
       </TableCell>
-      <TableCell>
+      <TableCell className="text-moon">
         {formattedBalance} {symbol}
       </TableCell>
       <TableCell>
@@ -266,7 +266,7 @@ const CollateralTableRow = ({
         </TooltipProvider>
       </TableCell>
       <TableCell>
-        <div className="flex h-full items-center gap-x-2">
+        <div className="flex h-full items-center gap-x-2 text-moon">
           <span className="font-medium text-lavender">
             {getFormattedPrice(
               formatUnits(protocolBalance, decimals).times(price)

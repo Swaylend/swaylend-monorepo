@@ -168,6 +168,19 @@ async fn main() -> anyhow::Result<()> {
         .await?
         .value;
 
+    let current_asset_oracle_configurations = asset_oracle_configurations.iter().find(|config| {
+        config.0
+            == AssetId::from_str(
+                "0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07",
+            )
+            .unwrap()
+    });
+
+    println!(
+        "current_asset_oracle_configurations: {:#?}",
+        current_asset_oracle_configurations
+    );
+
     let global_oracle_configurations = market_instance
         .methods()
         .get_oracle_global_configurations()
@@ -192,6 +205,7 @@ async fn main() -> anyhow::Result<()> {
 
         let current_asset_oracle_configurations =
             current_asset_oracle_configurations.unwrap().1.clone();
+
         let collateral_asset_config_oracle_configurations =
             collateral_asset_config.asset_oracle_configurations;
 
@@ -236,11 +250,11 @@ async fn main() -> anyhow::Result<()> {
                             "Old asset oracle configuration:\n\t- oracle_id: {}\n\t- price_feed_id: {}\n\t- is_active: {}",
                             oracle_configuration.oracle_id,
                             match oracle_configuration.price_feed_id {
-                                OraclePriceFeedId::Pyth(price_feed_id) => format!("0x{:?}", hex::encode(price_feed_id.0)),
-                                OraclePriceFeedId::Redstone(price_feed_id) => format!("{:?}", price_feed_id),
-                                OraclePriceFeedId::Stork(price_feed_id) => format!("0x{:?}", hex::encode(price_feed_id.0)),
+                                OraclePriceFeedId::Pyth(price_feed_id) => format!("0x{:}", hex::encode(price_feed_id.0)),
+                                OraclePriceFeedId::Redstone(price_feed_id) => format!("0x{:x}", price_feed_id),
+                                OraclePriceFeedId::Stork(price_feed_id) => format!("0x{:}", hex::encode(price_feed_id.0)),
                             },
-                            oracle_configuration.is_disabled,
+                            !oracle_configuration.is_disabled,
                         );
                         println!(
                             "New asset oracle configuration:\n\t- oracle_id: {}\n\t- price_feed_id: {}\n\t- is_active: {}",
@@ -362,18 +376,6 @@ async fn main() -> anyhow::Result<()> {
                     .oracle_type
                     .clone();
 
-                println!(
-                    "price_feed_id: {}",
-                    base_asset_oracle_configuration.price_feed_id.as_str()
-                );
-                println!(
-                    "price_feed_id: {:#?}",
-                    get_price_feed_id(
-                        &oracle_type,
-                        base_asset_oracle_configuration.price_feed_id.as_str(),
-                    )
-                );
-
                 if !(oracle_configuration.oracle_id == base_asset_oracle_configuration.oracle_id
                     && oracle_configuration.is_disabled
                         == !base_asset_oracle_configuration.is_active
@@ -392,11 +394,11 @@ async fn main() -> anyhow::Result<()> {
                         "Old asset oracle configuration:\n\t- oracle_id: {}\n\t- price_feed_id: {}\n\t- is_active: {}\n",
                         oracle_configuration.oracle_id,
                         match oracle_configuration.price_feed_id {
-                            OraclePriceFeedId::Pyth(price_feed_id) => format!("0x{:?}", hex::encode(price_feed_id.0)),
-                            OraclePriceFeedId::Redstone(price_feed_id) => format!("{:?}", price_feed_id),
-                            OraclePriceFeedId::Stork(price_feed_id) => format!("0x{:?}", hex::encode(price_feed_id.0)),
+                            OraclePriceFeedId::Pyth(price_feed_id) => format!("0x{:}", hex::encode(price_feed_id.0)),
+                            OraclePriceFeedId::Redstone(price_feed_id) => format!("0x{:x}", price_feed_id),
+                            OraclePriceFeedId::Stork(price_feed_id) => format!("0x{:}", hex::encode(price_feed_id.0)),
                         },
-                        oracle_configuration.is_disabled,
+                        !oracle_configuration.is_disabled,
                     );
 
                     println!(

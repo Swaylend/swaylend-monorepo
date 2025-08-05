@@ -123,7 +123,7 @@ export const BorrowTable = () => {
   const changeInputDialogOpen = useMarketStore.use.changeInputDialogOpen();
 
   const { data: userSupplyBorrow } = useUserSupplyBorrow();
-  const { data: priceData } = usePriceData();
+  const { data: priceData, isPending: isPriceDataPending } = usePriceData();
   const { data: marketConfiguration, isPending: isPendingMarketConfiguration } =
     useMarketConfiguration();
 
@@ -247,59 +247,92 @@ export const BorrowTable = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {isPendingMarketConfiguration || isAprPending ? (
+          {isPendingMarketConfiguration ||
+          isAprPending ||
+          isPriceDataPending ? (
             SkeletonRow
           ) : (
             <TableRow>
               <TableCell>
-                <div className="flex items-center gap-x-2">
-                  <div>
-                    {marketConfiguration && (
-                      <Image
-                        alt={
-                          appConfig.client.shared.assets[
-                            marketConfiguration.baseToken.bits
-                          ]
-                        }
-                        className="min-h-[32px] min-w-[32px] rounded-full"
-                        height={32}
-                        src={
-                          SYMBOL_TO_ICON[
-                            appConfig.client.shared.assets[
-                              marketConfiguration.baseToken.bits
-                            ]
-                          ]
-                        }
-                        width={32}
-                      />
-                    )}
-                  </div>
-                  <div>
-                    <div className="font-medium text-white">
-                      {
-                        appConfig.client.shared.assets[
-                          marketConfiguration?.baseToken.bits ?? ''
-                        ]
-                      }
-                    </div>
-                    <div>
-                      {getFormattedNumber(
-                        formatUnits(
-                          balance
-                            ? BigNumber(balance.toString())
-                            : BigNumber(0),
-                          marketConfiguration?.baseTokenDecimals ?? 9
-                        )
-                      )}{' '}
-                      {
-                        appConfig.client.shared.assets[
-                          marketConfiguration?.baseToken.bits ?? ''
-                        ]
-                      }
-                      {' in wallet'}
-                    </div>
-                  </div>
-                </div>
+                <TooltipProvider delayDuration={100}>
+                  <Tooltip>
+                    <TooltipTrigger
+                      className="cursor-pointer"
+                      onClick={(e) => e.preventDefault()}
+                    >
+                      <div className="flex w-full items-center gap-x-2">
+                        <div>
+                          {marketConfiguration && (
+                            <Image
+                              alt={
+                                appConfig.client.shared.assets[
+                                  marketConfiguration.baseToken.bits
+                                ]
+                              }
+                              className="min-h-[32px] min-w-[32px] rounded-full"
+                              height={32}
+                              src={
+                                SYMBOL_TO_ICON[
+                                  appConfig.client.shared.assets[
+                                    marketConfiguration.baseToken.bits
+                                  ]
+                                ]
+                              }
+                              width={32}
+                            />
+                          )}
+                        </div>
+                        <div className="text-left">
+                          <div className="font-medium text-white">
+                            {
+                              appConfig.client.shared.assets[
+                                marketConfiguration?.baseToken.bits ?? ''
+                              ]
+                            }
+                          </div>
+                          <div className="text-moon">
+                            {getFormattedNumber(
+                              formatUnits(
+                                balance
+                                  ? BigNumber(balance.toString())
+                                  : BigNumber(0),
+                                marketConfiguration?.baseTokenDecimals ?? 9
+                              )
+                            )}{' '}
+                            {
+                              appConfig.client.shared.assets[
+                                marketConfiguration?.baseToken.bits ?? ''
+                              ]
+                            }
+                            {' in wallet'}
+                          </div>
+                        </div>
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent
+                      onPointerDownOutside={(e) => e.preventDefault()}
+                    >
+                      <div className="w-[300px] p-2">
+                        <div className="mb-2 font-semibold text-lavender text-md">
+                          Supported Oracles
+                        </div>
+                        <div className="flex flex-col gap-y-2">
+                          {priceData?.prices
+                            .get(marketConfiguration?.baseToken.bits ?? '')
+                            ?.map((price) => (
+                              <div
+                                className="flex items-center gap-x-2"
+                                key={price.oracle}
+                              >
+                                <b>{price.oracle} price:</b> ${' '}
+                                {price.price.toFixed(6)}
+                              </div>
+                            ))}
+                        </div>
+                      </div>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               </TableCell>
               <TableCell
                 className={cn(
@@ -309,7 +342,7 @@ export const BorrowTable = () => {
               >
                 {aprData?.borrowBaseApr.times(100).toFixed(2)}%
               </TableCell>
-              <TableCell>{borrowedBalance}</TableCell>
+              <TableCell className="text-moon">{borrowedBalance}</TableCell>
               <TableCell
                 className={cn(
                   isAprPending && 'animate-pulse',

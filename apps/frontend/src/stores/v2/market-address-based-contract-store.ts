@@ -3,6 +3,7 @@
 import type { PythContract } from '@pythnetwork/pyth-fuel-js';
 import { create } from 'zustand';
 import { appConfig } from '@/configs';
+import type { Stork } from '@/contract-types/stork';
 import type { Market, RedstonePrices } from '@/contract-types/v2';
 import { createSelectors } from '../create-selectors';
 
@@ -13,13 +14,15 @@ interface Store {
       pythContract: PythContract | undefined;
       marketContract: Market | undefined;
       redstoneContract: RedstonePrices | undefined;
+      storkContract: Stork | undefined;
     }
   >;
   updateContracts: (
     market: string,
     pythContract: PythContract | undefined,
     marketContract: Market | undefined,
-    redstoneContract: RedstonePrices | undefined
+    redstoneContract: RedstonePrices | undefined,
+    storkContract: Stork | undefined
   ) => void;
 }
 
@@ -31,6 +34,7 @@ export const marketStoreInitialState = {
         pythContract: undefined,
         marketContract: undefined,
         redstoneContract: undefined,
+        storkContract: undefined,
       },
     ])
   ),
@@ -42,7 +46,8 @@ const useMarketAddressBasedContractsStoreBase = create<Store>()((set) => ({
     market: string,
     pythContract: PythContract | undefined,
     marketContract: Market | undefined,
-    redstoneContract: RedstonePrices | undefined
+    redstoneContract: RedstonePrices | undefined,
+    storkContract: Stork | undefined
   ) => {
     if (!(pythContract && marketContract)) return;
 
@@ -51,6 +56,7 @@ const useMarketAddressBasedContractsStoreBase = create<Store>()((set) => ({
         pythContract,
         marketContract,
         redstoneContract,
+        storkContract,
       }),
     }));
   },
@@ -66,3 +72,5 @@ export const selectMarketContract = (state: Store, market: string) =>
   state.contracts.get(market)?.marketContract;
 export const selectRedstoneContract = (state: Store, market: string) =>
   state.contracts.get(market)?.redstoneContract;
+export const selectStorkContract = (state: Store, market: string) =>
+  state.contracts.get(market)?.storkContract;

@@ -235,7 +235,7 @@ export const LendTable = () => {
                         }
                       </div>
                     )}
-                    <div>
+                    <div className="text-moon">
                       {getFormattedNumber(
                         formatUnits(
                           balance
@@ -262,7 +262,7 @@ export const LendTable = () => {
               >
                 {aprData?.supplyBaseApr.times(100).toFixed(2)}%
               </TableCell>
-              <TableCell>
+              <TableCell className="text-moon">
                 {getFormattedNumber(
                   formatUnits(
                     userSupplyBorrow?.supplied ?? BigNumber(0),

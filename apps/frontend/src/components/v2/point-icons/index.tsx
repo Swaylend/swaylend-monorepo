@@ -59,7 +59,7 @@ export const PointIcons = ({ points, mobile = false }: PointIconsProps) => {
                 </TooltipTrigger>
                 <TooltipContent
                   align="center"
-                  className={mobile ? 'w-64' : 'w-lg'}
+                  className={mobile ? 'w-64' : 'w-fit'}
                   onPointerDownOutside={(e) => e.preventDefault()}
                 >
                   <div className="p-1">

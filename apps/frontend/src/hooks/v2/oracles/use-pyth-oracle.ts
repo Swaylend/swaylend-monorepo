@@ -129,12 +129,7 @@ export const usePythOracle = (marketParam?: string) => {
       };
     },
     refetchInterval: 5000,
-    enabled:
-      !!provider &&
-      !!marketContract &&
-      !!pythContract &&
-      !!pythPriceFeedIds &&
-      !!pythOracleId,
+    enabled: !!provider && !!marketContract && !!pythContract,
     staleTime: 5000,
     refetchOnWindowFocus: true,
     refetchIntervalInBackground: true,

@@ -4,6 +4,7 @@ import { useWallet } from '@fuels/react';
 import { PythContract } from '@pythnetwork/pyth-fuel-js';
 import { useEffect } from 'react';
 import { appConfig } from '@/configs';
+import { Stork } from '@/contract-types/stork';
 import { Market as MarketV1 } from '@/contract-types/v1';
 import { Market as MarketV2, RedstonePrices } from '@/contract-types/v2';
 import { useProvider } from '@/hooks';
@@ -53,7 +54,18 @@ export default function MarketContractStoreWatcher(): null {
         walletOrProvider
       );
 
-      updateContractsV2(market, pythContract, marketContract, redstoneContract);
+      const storkContract = new Stork(
+        appConfig.client.v2.markets[market].storkAddress,
+        walletOrProvider
+      );
+
+      updateContractsV2(
+        market,
+        pythContract,
+        marketContract,
+        redstoneContract,
+        storkContract
+      );
     }
   }, [walletOrProvider]);
 

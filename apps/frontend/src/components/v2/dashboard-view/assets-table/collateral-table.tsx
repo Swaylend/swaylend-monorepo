@@ -1,7 +1,6 @@
 import { useAccount } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import BigNumber from 'bignumber.js';
-import Image from 'next/image';
 import { useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import {
@@ -35,14 +34,10 @@ import { PointIcons } from '@/components/v2/point-icons';
 import { POINTS_COLLATERAL } from '@/components/v2/point-icons/points-tooltip';
 import { Title } from '@/components/v2/title';
 import { appConfig } from '@/configs';
-import type {
-  CollateralConfigurationOutput,
-  OracleAssetConfigurationOutput,
-} from '@/contract-types/v2/Market';
+import type { CollateralConfigurationOutput } from '@/contract-types/v2/Market';
 import {
   useBalance,
   useCollateralConfigurations,
-  useOracleAssetConfigurations,
   usePriceData,
   useTotalCollateral,
   useUserCollateralAssets,
@@ -131,12 +126,6 @@ const CollateralTableRow = ({
                 <div className="font-bold text-lg">Collateral Details</div>
                 <div className="mt-2 flex flex-col gap-y-2">
                   <div className="flex justify-between text-md">
-                    <div className="text-lavender">Oracle Price</div>
-                    <div className="font-semibold text-moon">
-                      ${price.toFixed(2)}
-                    </div>
-                  </div>
-                  <div className="flex justify-between text-md">
                     <div className="text-lavender">Supply Cap</div>
                     <div className="font-semibold text-moon">
                       {getFormattedNumber(
@@ -205,20 +194,17 @@ const CollateralTableRow = ({
                     </div>
                   </div>
                   <div className="border-primary/20 border-t pt-2">
-                    <div className="font-semibold text-lavender text-md">
+                    <div className="mb-2 font-semibold text-lavender text-md">
                       Supported Oracles
                     </div>
                     <div className="flex flex-col gap-y-2">
                       {prices.map((price) => (
-                        <div className="flex gap-x-2" key={price.oracle}>
-                          <Image
-                            alt={`${price.oracle} oracle logo`}
-                            className="h-4 w-4"
-                            height={16}
-                            src="/tokens/bnb.svg"
-                            width={16}
-                          />
-                          <div>Price: {price.price.toFixed()}</div>
+                        <div
+                          className="flex items-center gap-x-2"
+                          key={price.oracle}
+                        >
+                          <b>{price.oracle} price:</b> ${' '}
+                          {price.price.toFixed(6)}
                         </div>
                       ))}
                     </div>
@@ -229,7 +215,7 @@ const CollateralTableRow = ({
           </Tooltip>
         </TooltipProvider>
       </TableCell>
-      <TableCell>
+      <TableCell className="text-moon">
         {formattedBalance} {symbol}
       </TableCell>
       <TableCell>
@@ -296,7 +282,7 @@ const CollateralTableRow = ({
         </TooltipProvider>
       </TableCell>
       <TableCell>
-        <div className="flex h-full items-center gap-x-2">
+        <div className="flex h-full items-center gap-x-2 text-moon">
           <span className="font-medium text-lavender">
             {getFormattedPrice(
               formatUnits(protocolBalance, decimals).times(price)
