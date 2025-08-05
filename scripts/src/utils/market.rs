@@ -285,9 +285,11 @@ pub fn get_price_feed_id(oracle_type: &OracleType, price_feed_id: &str) -> Oracl
     match oracle_type {
         OracleType::Pyth => OraclePriceFeedId::Pyth(Bits256::from_hex_str(price_feed_id).unwrap()),
         OracleType::Redstone => {
-            OraclePriceFeedId::Redstone(U256::from_dec_str(price_feed_id).unwrap())
+            OraclePriceFeedId::Redstone(U256::from_str_radix(price_feed_id, 16).unwrap())
         }
         OracleType::Twrap => OraclePriceFeedId::Twrap,
-        OracleType::Stork => OraclePriceFeedId::Stork(Bits256::from_hex_str(price_feed_id).unwrap()),
+        OracleType::Stork => {
+            OraclePriceFeedId::Stork(Bits256::from_hex_str(price_feed_id).unwrap())
+        }
     }
 }

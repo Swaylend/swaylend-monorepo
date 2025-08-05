@@ -102,7 +102,10 @@ export const usePythOracle = (marketParam?: string) => {
 
       // Format prices to BigNumber
       // AssetId -> Price
-      const prices = Object.fromEntries(
+      const prices = new Map<
+        string,
+        { price: BigNumber; confidence: BigNumber }
+      >(
         priceUpdates.parsed.map((parsedPrice) => [
           oraclePriceFeedData.priceFeedIdToAssetId.get(`0x${parsedPrice.id}`)!,
           {

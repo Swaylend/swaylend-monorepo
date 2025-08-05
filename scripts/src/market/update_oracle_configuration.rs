@@ -363,6 +363,18 @@ async fn main() -> anyhow::Result<()> {
                     .oracle_type
                     .clone();
 
+                println!(
+                    "price_feed_id: {}",
+                    base_asset_oracle_configuration.price_feed_id.as_str()
+                );
+                println!(
+                    "price_feed_id: {:#?}",
+                    get_price_feed_id(
+                        &oracle_type,
+                        base_asset_oracle_configuration.price_feed_id.as_str(),
+                    )
+                );
+
                 if !(oracle_configuration.oracle_id == base_asset_oracle_configuration.oracle_id
                     && oracle_configuration.is_disabled
                         == !base_asset_oracle_configuration.is_active

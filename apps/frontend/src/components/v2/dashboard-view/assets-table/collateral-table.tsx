@@ -193,6 +193,13 @@ const CollateralTableRow = ({
                       {collateralConfiguration.paused ? 'No' : 'Yes'}
                     </div>
                   </div>
+                  <div className="border-primary/20 border-t pt-2">
+                    <div className="text-lavender">Supported Oracles</div>
+                    <div className="flex flex-col gap-y-2">
+                      {/*
+                       */}
+                    </div>
+                  </div>
                 </div>
               </div>
             </TooltipContent>

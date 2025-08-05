@@ -114,6 +114,8 @@ impl RedstonePrices for Contract {
                 confidence: confidence,
                 publish_time: publish_time,
             });
+
+            i += 1;
         }
     }
 }

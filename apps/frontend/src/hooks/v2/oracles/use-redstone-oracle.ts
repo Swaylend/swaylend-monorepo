@@ -1,13 +1,10 @@
 import {
   ContractParamsProvider,
-  convertDataPackagesResponse,
-  type DataPackagesResponse,
   getOracleRegistryState,
   getSignersForDataServiceId,
 } from '@redstone-finance/sdk';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
-import { arrayify } from 'ethers/lib/utils';
 import { DateTime } from 'fuels';
 import { appConfig } from '@/configs';
 import {
@@ -110,7 +107,8 @@ export const useRedstoneOracle = (marketParam?: string) => {
 
       // Enumerate price feed ids
       for (let i = 0; i < feed_ids.length; i++) {
-        const priceFeedId = feed_ids[i];
+        // Note: Converting number from hex string to decimal string
+        const priceFeedId = Number(feed_ids[i]).toString(10);
         const price = pricesResponse[0][i];
 
         const assetId =
