@@ -67,7 +67,8 @@
       },
       "suspicious": {
         "noConsole": "off",
-        "noExplicitAny": "off"
+        "noExplicitAny": "off",
+        "useNumberToFixedDigitsArgument": "off"
       },
       "correctness": {
         "useExhaustiveDependencies": "off"

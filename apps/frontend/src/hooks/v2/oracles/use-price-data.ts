@@ -29,7 +29,11 @@ export const usePriceData = (marketParam?: string) => {
     queryFn: () => {
       const prices = new Map<
         string,
-        { price: BigNumber; confidence: BigNumber }[]
+        {
+          price: BigNumber;
+          confidence: BigNumber;
+          oracle: 'Redstone' | 'Pyth' | 'Stork';
+        }[]
       >();
       const oracleInputs: OracleInputInput[] = [];
       let totalUpdateFee = BigNumber(0);
@@ -41,7 +45,7 @@ export const usePriceData = (marketParam?: string) => {
 
       if (pythOracleData) {
         for (const [assetId, price] of pythOracleData.pythPrices.entries()) {
-          prices.get(assetId)?.push(price);
+          prices.get(assetId)?.push({ ...price, oracle: 'Pyth' });
         }
         oracleInputs.push(pythOracleData.pythOracleInput);
         totalUpdateFee = totalUpdateFee.plus(pythOracleData.updateFee);
@@ -52,6 +56,7 @@ export const usePriceData = (marketParam?: string) => {
           prices.get(assetId)?.push({
             price,
             confidence: BigNumber(0),
+            oracle: 'Redstone',
           });
         }
 

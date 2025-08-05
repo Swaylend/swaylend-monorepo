@@ -1,6 +1,7 @@
 import { useAccount } from '@fuels/react';
 import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import BigNumber from 'bignumber.js';
+import Image from 'next/image';
 import { useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import {
@@ -34,10 +35,14 @@ import { PointIcons } from '@/components/v2/point-icons';
 import { POINTS_COLLATERAL } from '@/components/v2/point-icons/points-tooltip';
 import { Title } from '@/components/v2/title';
 import { appConfig } from '@/configs';
-import type { CollateralConfigurationOutput } from '@/contract-types/v2/Market';
+import type {
+  CollateralConfigurationOutput,
+  OracleAssetConfigurationOutput,
+} from '@/contract-types/v2/Market';
 import {
   useBalance,
   useCollateralConfigurations,
+  useOracleAssetConfigurations,
   usePriceData,
   useTotalCollateral,
   useUserCollateralAssets,
@@ -60,6 +65,11 @@ type TableRowProps = {
   protocolBalancePending: boolean;
   handleAssetClick: (action: ACTION_TYPE, assetId: string) => void;
   collateralConfiguration: CollateralConfigurationOutput;
+  prices: {
+    price: BigNumber;
+    confidence: BigNumber;
+    oracle: 'Redstone' | 'Pyth' | 'Stork';
+  }[];
   collateralAmount: BigNumber;
   price: BigNumber;
 };
@@ -72,6 +82,7 @@ const CollateralTableRow = ({
   protocolBalance,
   handleAssetClick,
   collateralConfiguration,
+  prices,
   collateralAmount,
   price,
 }: TableRowProps) => {
@@ -194,10 +205,22 @@ const CollateralTableRow = ({
                     </div>
                   </div>
                   <div className="border-primary/20 border-t pt-2">
-                    <div className="text-lavender">Supported Oracles</div>
+                    <div className="font-semibold text-lavender text-md">
+                      Supported Oracles
+                    </div>
                     <div className="flex flex-col gap-y-2">
-                      {/*
-                       */}
+                      {prices.map((price) => (
+                        <div className="flex gap-x-2" key={price.oracle}>
+                          <Image
+                            alt={`${price.oracle} oracle logo`}
+                            className="h-4 w-4"
+                            height={16}
+                            src="/tokens/bnb.svg"
+                            width={16}
+                          />
+                          <div>Price: {price.price.toFixed()}</div>
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -476,7 +499,7 @@ export const CollateralTable = () => {
 
   const { data: collateralBalances } = useTotalCollateral();
 
-  const { data: priceData } = usePriceData();
+  const { data: priceData, isPending: isPriceDataPending } = usePriceData();
 
   const {
     data: collateralConfigurations,
@@ -538,7 +561,7 @@ export const CollateralTable = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {isPendingCollateralConfigurations ? (
+          {isPendingCollateralConfigurations || isPriceDataPending ? (
             SkeletonRow
           ) : collaterals.length === 0 ? (
             <TableRow>
@@ -569,6 +592,7 @@ export const CollateralTable = () => {
                     priceData?.prices.get(collateral.asset_id.bits)?.[0]
                       ?.price ?? new BigNumber(0)
                   }
+                  prices={priceData?.prices.get(collateral.asset_id.bits)!}
                   protocolBalance={
                     userCollateralAssets?.[collateral.asset_id.bits] ??
                     new BigNumber(0)
