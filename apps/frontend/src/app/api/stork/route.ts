@@ -7,8 +7,6 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const priceFeedIds = searchParams.get('priceFeedIds');
 
-  console.log(priceFeedIds);
-
   const response = await fetch(
     `https://rest.jp.stork-oracle.network/v1/prices/latest?assets=${priceFeedIds}`,
     {
