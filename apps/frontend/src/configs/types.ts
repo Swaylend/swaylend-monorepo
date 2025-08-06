@@ -51,6 +51,7 @@ export const AppConfigSchema = z.object({
       alchemyId: z.string(),
       baseAssetId: z.string(),
       assets: z.record(z.string(), z.string()),
+      symbols: z.record(z.string(), z.string()),
       marketAddressToBaseAssetName: z.record(z.string(), z.string()),
       useBurnerWallet: z.boolean(),
     }),

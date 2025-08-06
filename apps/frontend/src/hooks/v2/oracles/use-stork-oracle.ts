@@ -87,11 +87,12 @@ export const useStorkOracle = (marketParam?: string) => {
 
       const response = await fetch(
         `/api/stork?priceFeedIds=${assetSymbols
-          .map((symbol) => `"${symbol.toUpperCase()}USD"`)
+          .map((symbol) => `${symbol.toUpperCase()}USD`)
           .join(',')}`
       );
 
       const data = await response.json();
+
       const rawJson = data.rawJson as string;
       const safeJsonText = rawJson.replace(regex, (match) => `"${match}"`);
       const responseData = JSON.parse(safeJsonText);
@@ -102,7 +103,7 @@ export const useStorkOracle = (marketParam?: string) => {
       // Ref: https://github.com/Stork-Oracle/stork-external/blob/8c6b7ea9012a3f247f88be452ea4196d02fc8a64/contracts/fuel/cli/admin.ts#L155
       for (const data of Object.values(responseData.data)) {
         // Remove last part (USD) from asset id
-        const assetId = ((data as any).asset_id as string).slice(-3);
+        const assetSymbol = ((data as any).asset_id as string).slice(0, -3);
         const storkSignedPrice = (data as any).stork_signed_price as any;
         const id: string = storkSignedPrice.encoded_asset_id;
         const recvTime: string =
@@ -141,7 +142,7 @@ export const useStorkOracle = (marketParam?: string) => {
         updateData.push(temporalNumericValueInput);
 
         prices.set(
-          assetId,
+          appConfig.client.shared.symbols[assetSymbol]!,
           new BigNumber(quantizedValue).div(BigNumber(10).pow(18))
         );
       }

@@ -16,7 +16,7 @@ export const usePriceData = (marketParam?: string) => {
     useOracleAssetConfigurations(marketParam);
   const { data: pythOracleData } = usePythOracle(market);
   const { data: redstoneOracleData } = useRedstoneOracle(market);
-  const { data: _ } = useStorkOracle(market);
+  const { data: storkOracleData } = useStorkOracle(market);
 
   return useQuery({
     queryKey: [
@@ -25,6 +25,7 @@ export const usePriceData = (marketParam?: string) => {
       oracleAssetConfigurations,
       pythOracleData?.timestamp,
       redstoneOracleData?.timestamp,
+      storkOracleData?.timestamp,
     ],
     queryFn: () => {
       const prices = new Map<
@@ -62,6 +63,17 @@ export const usePriceData = (marketParam?: string) => {
 
         oracleInputs.push(redstoneOracleData.redstoneOracleInput);
         totalUpdateFee = totalUpdateFee.plus(redstoneOracleData.updateFee);
+      }
+
+      if (storkOracleData) {
+        for (const [assetId, price] of storkOracleData.prices.entries()) {
+          prices
+            .get(assetId)
+            ?.push({ price, confidence: BigNumber(0), oracle: 'Stork' });
+        }
+
+        oracleInputs.push(storkOracleData.storkOracleInput);
+        totalUpdateFee = totalUpdateFee.plus(storkOracleData.updateFee);
       }
 
       const timestamp = DateTime.now();
