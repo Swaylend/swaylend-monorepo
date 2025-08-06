@@ -2,10 +2,10 @@ name: Swaylend USDC Market (testnet)
 ecosystem: fuel
 networks:
   - id: 0
-    start_block: 11380000
+    start_block: 14646000
     contracts:
       - name: Market
-        address: 0x6030cf103746576706d7dcc2ae6f6b32ba0db66907a8f9901a0170de5f06acc0
+        address: 0xc95ba29f6172eccb58d489f9db30374ee593fadf962d215b33e79d2be2534ec1
         abi_file_path: ./abi/market-abi.json
         handler: ./src/EventHandlers.ts
         events:
