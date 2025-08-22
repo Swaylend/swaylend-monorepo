@@ -21,6 +21,7 @@ export function createMainnetConfig() {
         assets,
         useBurnerWallet: false,
         marketAddressToBaseAssetName,
+        symbols,
       },
       v1: {
         announcementEnabled:

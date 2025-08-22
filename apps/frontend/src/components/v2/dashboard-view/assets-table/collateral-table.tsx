@@ -596,7 +596,7 @@ export const CollateralTable = () => {
 
       <div className="mt-8 flex flex-col gap-y-4 px-4 lg:hidden">
         <Title>Collateral Assets</Title>
-        {isPendingCollateralConfigurations ? (
+        {isPendingCollateralConfigurations || isPriceDataPending ? (
           <Skeleton className="h-[100px] w-full rounded-md bg-primary/20" />
         ) : (
           <div className="flex flex-col gap-y-4">
@@ -622,6 +622,7 @@ export const CollateralTable = () => {
                     priceData?.prices.get(collateral.asset_id.bits)?.[0]
                       ?.price ?? new BigNumber(0)
                   }
+                  prices={priceData?.prices.get(collateral.asset_id.bits)!}
                   protocolBalance={
                     userCollateralAssets?.[collateral.asset_id.bits] ??
                     new BigNumber(0)
