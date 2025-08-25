@@ -15,14 +15,14 @@
     "ts-node": "^10.9.2"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.1.3",
-    "@types/chai": "^4.3.11",
+    "@biomejs/biome": "2.2.2",
+    "@types/chai": "^5.2.2",
     "@types/mocha": "10.0.10",
-    "@types/node": "24.1.0",
-    "envio": "2.24.0",
-    "mocha": "10.2.0",
-    "ts-mocha": "^10.0.0",
-    "typescript": "5.6.3"
+    "@types/node": "24.3.0",
+    "envio": "2.27.6",
+    "mocha": "11.7.1",
+    "ts-mocha": "^11.1.0",
+    "typescript": "5.9.2"
   },
   "optionalDependencies": {
     "generated": "./generated"

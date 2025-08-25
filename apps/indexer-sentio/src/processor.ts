@@ -1,5 +1,4 @@
 /** biome-ignore-all lint/complexity/noForEach: <We need it here.> */
-/** biome-ignore-all lint/nursery/noAwaitInLoop: <It is fine here.> */
 import { GLOBAL_CONFIG } from '@sentio/runtime';
 import { BigDecimal } from '@sentio/sdk';
 import { FuelNetwork } from '@sentio/sdk/fuel';

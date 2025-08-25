@@ -1,11 +1,11 @@
 import { create } from 'zustand';
 import { createSelectors } from './create-selectors';
 
-interface VersionStore {
+type VersionStore = {
   version: string;
   changeVersion: (version: string) => void;
   toggleVersion: () => void;
-}
+};
 
 export const versionStoreInitialState = {
   version: 'v2',

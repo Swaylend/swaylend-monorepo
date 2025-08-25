@@ -6,7 +6,7 @@ import { appConfig } from '@/configs';
 import type { Market } from '@/contract-types/v1';
 import { createSelectors } from '../create-selectors';
 
-interface Store {
+type Store = {
   contracts: Map<
     string,
     {
@@ -19,7 +19,7 @@ interface Store {
     pythContract: PythContract | undefined,
     marketContract: Market | undefined
   ) => void;
-}
+};
 
 export const marketStoreInitialState = {
   contracts: new Map(

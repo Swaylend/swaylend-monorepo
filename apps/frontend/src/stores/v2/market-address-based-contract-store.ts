@@ -7,7 +7,7 @@ import type { Stork } from '@/contract-types/stork';
 import type { Market, RedstonePrices } from '@/contract-types/v2';
 import { createSelectors } from '../create-selectors';
 
-interface Store {
+type Store = {
   contracts: Map<
     string,
     {
@@ -24,7 +24,7 @@ interface Store {
     redstoneContract: RedstonePrices | undefined,
     storkContract: Stork | undefined
   ) => void;
-}
+};
 
 export const marketStoreInitialState = {
   contracts: new Map(

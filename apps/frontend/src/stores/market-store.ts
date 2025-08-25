@@ -20,7 +20,7 @@ export enum MARKET_MODE {
   BORROW = 'borrow',
 }
 
-interface MarketStore {
+type MarketStore = {
   market: string;
 
   mode: ACTION_MODE;
@@ -41,7 +41,7 @@ interface MarketStore {
   changeInputDialogOpen: (open: boolean) => void;
   changeSuccessDialogOpen: (open: boolean) => void;
   changeSuccessDialogTransactionId: (transactionId: string | null) => void;
-}
+};
 
 export const marketStoreInitialState = {
   market: Object.keys(appConfig.client.v1.markets)[0],

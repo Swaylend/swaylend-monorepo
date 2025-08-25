@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.1.3/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.2.2/schema.json",
   "extends": ["ultracite"],
   "vcs": {
     "enabled": false,
@@ -10,23 +10,23 @@
     "includes": [
       "**",
       "!**/*.css",
-      "!**/node_modules/**",
-      "!**/dist/**",
-      "!**/build/**",
-      "!**/coverage/**",
-      "!**/.next/**",
-      "!**/files/**",
-      "!**/out/**",
-      "!**/target/**",
-      "!**/patches/**",
-      "!**/assets/**",
-      "!**/.nx/**",
-      "!**/data/**",
-      "!**/__generated__/**",
-      "!**/generated/**",
-      "!**/contract-types/**",
-      "!apps/indexer-sentio/src/schema/**",
-      "!apps/indexer-sentio/src/types/**"
+      "!**/node_modules",
+      "!**/dist",
+      "!**/build",
+      "!**/coverage",
+      "!**/.next",
+      "!**/files",
+      "!**/out",
+      "!**/target",
+      "!**/patches",
+      "!**/assets",
+      "!**/.nx",
+      "!**/data",
+      "!**/__generated__",
+      "!**/generated",
+      "!**/contract-types",
+      "!apps/indexer-sentio/src/schema",
+      "!apps/indexer-sentio/src/types"
     ]
   },
   "json": {
@@ -51,15 +51,17 @@
     "rules": {
       "recommended": true,
       "nursery": {
-        "noUnknownAtRule": "off",
         "noShadow": "off",
-        "noNoninteractiveElementInteractions": "off"
+        "noNonNullAssertedOptionalChain": "off",
+        "useMaxParams": "off"
       },
       "style": {
         "useBlockStatements": "off",
         "noNonNullAssertion": "off",
         "noNestedTernary": "off",
-        "noEnum": "off"
+        "noEnum": "off",
+        "noMagicNumbers": "off",
+        "useGraphqlNamingConvention": "off"
       },
       "complexity": {
         "noExcessiveCognitiveComplexity": "off",
@@ -68,19 +70,22 @@
       "suspicious": {
         "noConsole": "off",
         "noExplicitAny": "off",
-        "useNumberToFixedDigitsArgument": "off"
+        "useNumberToFixedDigitsArgument": "off",
+        "noUnknownAtRules": "off"
       },
       "correctness": {
         "useExhaustiveDependencies": "off"
       },
       "performance": {
-        "noNamespaceImport": "off"
+        "noNamespaceImport": "off",
+        "noBarrelFile": "off"
       },
       "security": {
         "noDangerouslySetInnerHtml": "off"
       },
       "a11y": {
-        "noStaticElementInteractions": "off"
+        "noStaticElementInteractions": "off",
+        "noNoninteractiveElementInteractions": "off"
       }
     }
   },

@@ -1,10 +1,10 @@
 import { create } from 'zustand';
 import { createSelectors } from './create-selectors';
 
-interface ReferralModalStore {
+type ReferralModalStore = {
   open: boolean;
   setOpen: (open: boolean) => void;
-}
+};
 
 export const referralModalStoreInitialState = {
   open: false,
