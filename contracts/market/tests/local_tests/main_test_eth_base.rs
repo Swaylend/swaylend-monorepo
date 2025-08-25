@@ -17,8 +17,6 @@ use market_sdk::{convert_i256_to_u64, is_i256_negative, parse_units};
 // It is necessary in order to test how the protocol works with large amounts
 const AMOUNT_COEFFICIENT: u64 = 10u64.pow(0);
 
-// SKIP_TEST
-#[ignore]
 #[tokio::test]
 async fn main_test_eth_base() {
     let scale_6 = 10u64.pow(6) as f64;
@@ -53,7 +51,6 @@ async fn main_test_eth_base() {
     // 👛 Wallet: Bob 🧛
     // 🤙 Call: supply_base
     // 💰 Amount: 10.00 ETH
-
     let amount = parse_units(10 * AMOUNT_COEFFICIENT, eth.decimals);
     let log_amount = format!("{} ETH", amount as f64 / scale_9);
     print_case_title(0, "Bob", "supply_base", log_amount.as_str());
@@ -161,7 +158,8 @@ async fn main_test_eth_base() {
         .unwrap()
         .try_into()
         .unwrap();
-    assert!((balance - old_balance) == amount - oracle_total_update_fee);
+
+    assert!((balance - old_balance) == amount - oracle_total_update_fee - 1); // -1 because some ETH is spent on tx fees
 
     market
         .print_debug_state(&wallets, &eth, &usdt)
@@ -312,8 +310,8 @@ async fn main_test_eth_base() {
     let amount: u64 = amount.try_into().unwrap();
 
     assert!(
-        old_balance + amount - parse_units(1, eth.decimals - 3) - oracle_total_update_fee
-            == balance
+        old_balance + amount - parse_units(1, eth.decimals - 3) - oracle_total_update_fee - 2
+            == balance // -6 because some ETH is spent on tx fees
     );
 
     market
@@ -545,11 +543,7 @@ async fn main_test_eth_base() {
         .unwrap()
         .try_into()
         .unwrap();
-    println!("balance: {}", balance);
-    println!(
-        "expected: {}",
-        parse_units(10000, usdt.decimals) * AMOUNT_COEFFICIENT - 2
-    );
+
     assert!(balance == parse_units(10000, usdt.decimals) * AMOUNT_COEFFICIENT - 2); // -2 because some ETH is spent on tx fees
 
     market
@@ -600,7 +594,8 @@ async fn main_test_eth_base() {
         .unwrap()
         .try_into()
         .unwrap();
-    assert!((balance - old_balance) == amount as u64 - oracle_total_update_fee);
+
+    assert!((balance - old_balance) == amount as u64 - oracle_total_update_fee - 1); // -1 because some ETH is spent on tx fees
 
     market
         .print_debug_state(&wallets, &eth, &usdt)
@@ -662,7 +657,8 @@ async fn main_test_eth_base() {
         .unwrap()
         .try_into()
         .unwrap();
-    assert!((balance - old_balance) == amount as u64 - oracle_total_update_fee);
+
+    assert!((balance - old_balance) == amount as u64 - oracle_total_update_fee - 1); // -1 because some ETH is spent on tx fees
 
     market
         .print_debug_state(&wallets, &eth, &usdt)

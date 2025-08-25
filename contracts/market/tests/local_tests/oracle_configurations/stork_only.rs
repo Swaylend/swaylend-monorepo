@@ -349,7 +349,7 @@ async fn stork_only() {
         let input = input.clone();
 
         let processed_input = match input {
-            OracleInput::Stork(stork_input) => {
+            OracleInput::Stork(_) => {
                 let new_prices = stork_prices
                     .iter()
                     .map(
