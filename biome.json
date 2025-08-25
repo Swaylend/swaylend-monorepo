@@ -29,6 +29,12 @@
       "!apps/indexer-sentio/src/types"
     ]
   },
+  "javascript": {
+    "formatter": {
+      "enabled": true,
+      "quoteStyle": "single"
+    }
+  },
   "json": {
     "parser": {
       "allowComments": true
