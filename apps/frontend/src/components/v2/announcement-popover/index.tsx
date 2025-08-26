@@ -1,11 +1,17 @@
 'use client';
 
+import * as VisuallyHidden from '@radix-ui/react-visually-hidden';
 import { X } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import Logo from '/public/icons/sway-icon-logo.svg?url';
 import { Button } from '../../ui/button';
-import { Dialog, DialogClose, DialogContent } from '../../ui/dialog';
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogTitle,
+} from '../../ui/dialog';
 
 export const AnnouncementPopover = () => {
   const [open, setOpen] = useState(false);
@@ -31,6 +37,9 @@ export const AnnouncementPopover = () => {
         className="top-[15%] flex w-full bg-muted sm:w-auto"
         onOpenAutoFocus={(e) => e.preventDefault()}
       >
+        <VisuallyHidden.Root asChild>
+          <DialogTitle>Announcement</DialogTitle>
+        </VisuallyHidden.Root>
         <DialogClose asChild>
           <Button
             className="absolute top-[9px] right-[9px] h-[30px] w-[30px] p-0"

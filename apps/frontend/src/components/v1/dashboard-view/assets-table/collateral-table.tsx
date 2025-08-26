@@ -373,7 +373,7 @@ const CollateralCard = ({
             </div>
             <div className="flex h-[48px] w-[30%] items-center gap-x-2">
               {Number(supplyUsed.decimalPlaces(1))}%
-              <Progress value={Number(supplyUsed)} />
+              <Progress className="h-4" value={Number(supplyUsed)} />
             </div>
           </div>
           <div className="flex w-full items-center">
