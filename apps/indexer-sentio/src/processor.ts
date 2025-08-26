@@ -454,14 +454,9 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       const id = `${chainId}_${marketAddress.toLowerCase()}_${address}_${asset_id}`;
 
       // Collateral price
-      const collateralPrice = await getPriceBySymbol(
-        appConfig.assets[asset_id],
-        ctx.timestamp
-      );
-
-      if (!collateralPrice) {
-        throw new Error(`No price found for ${asset_id} at ${ctx.timestamp}`);
-      }
+      const collateralPrice =
+        (await getPriceBySymbol(appConfig.assets[asset_id], ctx.timestamp)) ??
+        0;
 
       let collateralPosition = await ctx.store.get(CollateralPosition, id);
 
@@ -595,14 +590,9 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       }
 
       // Collateral price
-      const collateralPrice = await getPriceBySymbol(
-        appConfig.assets[asset_id],
-        ctx.timestamp
-      );
-
-      if (!collateralPrice) {
-        throw new Error(`No price found for ${asset_id} at ${ctx.timestamp}`);
-      }
+      const collateralPrice =
+        (await getPriceBySymbol(appConfig.assets[asset_id], ctx.timestamp)) ??
+        0;
 
       const newCollateralAmount =
         collateralPosition.collateralAmount - BigInt(amount.toString());
@@ -711,14 +701,9 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       }
 
       // Collateral price
-      const collateralPrice = await getPriceBySymbol(
-        appConfig.assets[asset_id],
-        ctx.timestamp
-      );
-
-      if (!collateralPrice) {
-        throw new Error(`No price found for ${asset_id} at ${ctx.timestamp}`);
-      }
+      const collateralPrice =
+        (await getPriceBySymbol(appConfig.assets[asset_id], ctx.timestamp)) ??
+        0;
 
       collateralPool.collateralAmount -= BigInt(amount.toString());
       collateralPool.collateralAmountNormalized =
@@ -777,16 +762,11 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       }
 
       // Get base asset price
-      const baseAssetPrice = await getPriceBySymbol(
-        appConfig.assets[marketConfiguration.baseTokenAddress],
-        ctx.timestamp
-      );
-
-      if (!baseAssetPrice) {
-        console.error(
-          `No price found for ${marketConfiguration.baseTokenAddress} at ${ctx.timestamp}`
-        );
-      }
+      const baseAssetPrice =
+        (await getPriceBySymbol(
+          appConfig.assets[marketConfiguration.baseTokenAddress],
+          ctx.timestamp
+        )) ?? 0;
 
       const basePrice = BigDecimal(baseAssetPrice ?? 0);
 
@@ -890,16 +870,11 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       }
 
       // Get base asset price
-      const baseAssetPrice = await getPriceBySymbol(
-        appConfig.assets[marketConfiguration.baseTokenAddress],
-        ctx.timestamp
-      );
-
-      if (!baseAssetPrice) {
-        console.error(
-          `No price found for ${marketConfiguration.baseTokenAddress} at ${ctx.timestamp}`
-        );
-      }
+      const baseAssetPrice =
+        (await getPriceBySymbol(
+          appConfig.assets[marketConfiguration.baseTokenAddress],
+          ctx.timestamp
+        )) ?? 0;
 
       const basePrice = BigDecimal(baseAssetPrice ?? 0);
 
@@ -1059,16 +1034,11 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       }
 
       // Get base asset price
-      const baseAssetPrice = await getPriceBySymbol(
-        appConfig.assets[pool.underlyingTokenAddress],
-        ctx.timestamp
-      );
-
-      if (!baseAssetPrice) {
-        console.error(
-          `No price found for ${appConfig.assets[pool.underlyingTokenAddress]} at ${ctx.timestamp}`
-        );
-      }
+      const baseAssetPrice =
+        (await getPriceBySymbol(
+          appConfig.assets[pool.underlyingTokenAddress],
+          ctx.timestamp
+        )) ?? 0;
 
       const basePrice = BigDecimal(baseAssetPrice ?? 0);
 
@@ -1236,16 +1206,11 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
           );
         }
 
-        const baseAssetPrice = await getPriceBySymbol(
-          appConfig.assets[pool.underlyingTokenAddress],
-          ctx.timestamp
-        );
-
-        if (!baseAssetPrice) {
-          console.error(
-            `No price found for ${appConfig.assets[pool.underlyingTokenAddress]} at ${ctx.timestamp}`
-          );
-        }
+        const baseAssetPrice =
+          (await getPriceBySymbol(
+            appConfig.assets[pool.underlyingTokenAddress],
+            ctx.timestamp
+          )) ?? 0;
 
         const basePrice = BigDecimal(baseAssetPrice ?? 0);
 
@@ -1497,16 +1462,11 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
         const collateralPrices = new Map<string, BigDecimal>();
 
         for (const collateralPool of collateralPools) {
-          const collateralPrice = await getPriceBySymbol(
-            appConfig.assets[collateralPool.underlyingTokenAddress],
-            ctx.timestamp
-          );
-
-          if (!collateralPrice) {
-            console.error(
-              `No price found for ${appConfig.assets[collateralPool.underlyingTokenAddress]} at ${ctx.timestamp}`
-            );
-          }
+          const collateralPrice =
+            (await getPriceBySymbol(
+              appConfig.assets[collateralPool.underlyingTokenAddress],
+              ctx.timestamp
+            )) ?? 0;
 
           collateralPrices.set(
             collateralPool.underlyingTokenAddress,
