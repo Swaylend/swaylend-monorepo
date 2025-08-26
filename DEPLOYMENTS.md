@@ -13,24 +13,18 @@
 
 # FUEL TESTNET
 
-* Redstone Prices Implementation: `0xb9001690d3e063880f9bfd5e70ea72b408fedb8ce6e5778e9378002f647e71c2`
-* Redstone Prices Proxy: `0x1e6b0d58808c69b9b3f683cc432e6643123719db6a72b7712565475e2d3f95e2`
+## Oracles
+* Redstone Prices Implementation: `0xf3b1b98c30c5b76f4261fc380323ab8941ad663208cd88d7881dc5ee252fbdbd`
+* Redstone Prices Proxy: `0x090a02db813ad32e0cf8fa27e8d5fa1f28c5cbe3826805cb7193917e7a98e74a`
 
 * Pyth Oracle contract (v1): `0x25146735b29d4216639f7f8b1d7b921ff87a1d3051de62d6cceaacabeb33b8e7`
 * Pyth Oracle contract (v2): `0x5d17f54708afd01530c2e0ffb123cd21e92461aae8450de2cc08d0fd330cf240`
 * ETH: `0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07`
 
-## USDC Market
+## Assets
 
-### Contracts
+**Token factory contract:** `0xb095873ffa6237aa209dd7fa9d6fd7d9e932453f8db62b9e436766a47b17d308`
 
-* Token factory contract: `0xb095873ffa6237aa209dd7fa9d6fd7d9e932453f8db62b9e436766a47b17d308`
-
-* Market implementation contract: `0xb546283470ca9f9b06ed9cf41dff3dc2d2e353b931f8eaae69ea41a7348a5f9b`
-
-* Market proxy contract: `0x64768a2ab7439771433ec28ffc8a8e0a639a2c732e639a44a56731755b2dd036`
-
-### Assets
 
 * USDC: `0x899dbd3cf8955d7b64a02f8bde800e74c10cdd92b92330c42d7c75b0ddb3dbc4`
 * BTC: `0x1317d8056c8504d7844b3871386ca1ec5e2ecf4743e0ca805378f9c48d4822d2`
@@ -41,18 +35,14 @@
 * weETH: `0x9fb96f6fd9de9c63a67217188bc56cee04d2a54f732dd9899bed0aeb889b075b`
 * wstETH: `0x93dc2c176ee02ac5745272448775bf96f16fd1c31e7c3dca393eadab2d5dd43d`
 
+## USDC Market
+
+* Market implementation contract: `0x4c7e66fa4bb031bddfaba9c78568c4dfbede4711eb4a9fd83016427a1986c8e9`
+
+* Market proxy contract: `0x2b2b991023784e531e5b413ba4729abeb7f959d7bf5ad73da82e4c8c1aaada89`
+
 ## USDT Market
 
-### Contracts
+* Market implementation contract: `0xc831730209b94c31c3133358b375991025c4c2db470a2177f82c7d55b0b11422`
 
-* Token factory contract: ``
-
-* Market implementation contract: ``
-
-* Market proxy contract: ``
-
-### Assets
-
-* USDT: ``
-* BTC: ``
-* BNB: ``
+* Market proxy contract: `0x45462cd7c1e5e17984a208447bf39150b3c3c667f1bda6c93ffe0c20fc7d3ae2`

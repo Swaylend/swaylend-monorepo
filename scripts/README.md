@@ -61,7 +61,7 @@ In the output you can see proxy contract id (proxy contract) and target contract
 
 ### Activate market contract
 
-This script will activate the contract - setup the market configuration, owner of the market contract, and Pyth contract id.
+This script will activate the contract - setup the market configuration and owner of the market contract.
 
 ```bash
 cargo run --release --bin activate_market -- --config-path ./configs/testnet_usdc_config.json

@@ -6,7 +6,7 @@ name = "redstone_prices"
 # address will be the addres of the proxy contract
 [proxy]
 enabled = true
-address = "0x1e6b0d58808c69b9b3f683cc432e6643123719db6a72b7712565475e2d3f95e2"
+address = "0x090a02db813ad32e0cf8fa27e8d5fa1f28c5cbe3826805cb7193917e7a98e74a"
 
 [dependencies]
 redstone_prices_abi = { path = "../../abis/redstone_prices_abi" }

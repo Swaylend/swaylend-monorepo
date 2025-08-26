@@ -21,12 +21,12 @@
   "target_reserves": 1000000000000,
   "global_oracle_configurations": [
     {
-      "contract_id": "0x25146735b29d4216639f7f8b1d7b921ff87a1d3051de62d6cceaacabeb33b8e7",
+      "contract_id": "0x5d17f54708afd01530c2e0ffb123cd21e92461aae8450de2cc08d0fd330cf240",
       "is_active": true,
       "oracle_type": "Pyth"
     },
     {
-      "contract_id": "0x1e6b0d58808c69b9b3f683cc432e6643123719db6a72b7712565475e2d3f95e2",
+      "contract_id": "0x090a02db813ad32e0cf8fa27e8d5fa1f28c5cbe3826805cb7193917e7a98e74a",
       "is_active": true,
       "oracle_type": "Redstone"
     },

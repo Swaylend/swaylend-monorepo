@@ -11,9 +11,8 @@ export function createMainnetConfig() {
 
 const markets: DeployedMarkets = {
   USDC: {
-    marketAddress:
-      '0x657ab45a6eb98a4893a99fd104347179151e8b3828fd8f2a108cc09770d1ebae',
-    startBlock: BigInt(3_000_000),
+    marketAddress: '',
+    startBlock: BigInt(0),
   },
 };
 
@@ -28,8 +27,4 @@ const assets: Record<string, string> = {
   '0x1a7815cc9f75db5c24a5b0814bfb706bb9fe485333e98254015de8f48f84c67b':
     'wstETH',
   '0x1d5d97005e41cae2187a895fd8eab0506111e0e2f3331cd3912c15c24e3c1d82': 'FUEL',
-  '0x1186afea9affb88809c210e13e2330b5258c2cef04bb8fff5eff372b7bd3f40f':
-    'SolvBTC',
-  '0x7a4f087c957d30218223c2baaaa365355c9ca81b6ea49004cfb1590a5399216f':
-    'SolvBTC.BBN',
 };

@@ -123,11 +123,24 @@ const markets_v2: DeployedMarketsV2 = {
     pythAddress:
       '0x5d17f54708afd01530c2e0ffb123cd21e92461aae8450de2cc08d0fd330cf240',
     marketAddress:
-      '0x64768a2ab7439771433ec28ffc8a8e0a639a2c732e639a44a56731755b2dd036',
+      '0x2b2b991023784e531e5b413ba4729abeb7f959d7bf5ad73da82e4c8c1aaada89',
     tokenFactoryAddress:
       '0xb095873ffa6237aa209dd7fa9d6fd7d9e932453f8db62b9e436766a47b17d308',
     redstoneAddress:
-      '0x1e6b0d58808c69b9b3f683cc432e6643123719db6a72b7712565475e2d3f95e2',
+      '0x090a02db813ad32e0cf8fa27e8d5fa1f28c5cbe3826805cb7193917e7a98e74a',
+    storkAddress:
+      '0x09c88f50d535ac5ce8945e34c418233b1e3834be9a88effb57cb137321fbae0c',
+    graphqlUrl: '',
+  },
+  USDT: {
+    pythAddress:
+      '0x5d17f54708afd01530c2e0ffb123cd21e92461aae8450de2cc08d0fd330cf240',
+    marketAddress:
+      '0x45462cd7c1e5e17984a208447bf39150b3c3c667f1bda6c93ffe0c20fc7d3ae2',
+    tokenFactoryAddress:
+      '0xb095873ffa6237aa209dd7fa9d6fd7d9e932453f8db62b9e436766a47b17d308',
+    redstoneAddress:
+      '0x090a02db813ad32e0cf8fa27e8d5fa1f28c5cbe3826805cb7193917e7a98e74a',
     storkAddress:
       '0x09c88f50d535ac5ce8945e34c418233b1e3834be9a88effb57cb137321fbae0c',
     graphqlUrl: '',
@@ -135,9 +148,10 @@ const markets_v2: DeployedMarketsV2 = {
 };
 
 const marketAddressToBaseAssetName: Record<string, string> = {
-  '0x6030cf103746576706d7dcc2ae6f6b32ba0db66907a8f9901a0170de5f06acc0': 'USDC',
+  '0xc95ba29f6172eccb58d489f9db30374ee593fadf962d215b33e79d2be2534ec1': 'USDC',
   '0x51b9bea7822988e03520018f4a1bb39b9f5ba15c9b4b9c9340a6bc1e5958abd4': 'USDT',
-  '0x64768a2ab7439771433ec28ffc8a8e0a639a2c732e639a44a56731755b2dd036': 'USDC',
+  '0x2b2b991023784e531e5b413ba4729abeb7f959d7bf5ad73da82e4c8c1aaada89': 'USDC',
+  '0x45462cd7c1e5e17984a208447bf39150b3c3c667f1bda6c93ffe0c20fc7d3ae2': 'USDT',
 };
 
 const assets: Record<string, string> = {
