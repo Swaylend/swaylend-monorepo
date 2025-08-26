@@ -52,7 +52,7 @@ export const IntroductionDialog = () => {
   return (
     <Dialog onOpenChange={setOpen} open={open}>
       <DialogContent
-        className="h-full max-h-full w-full max-w-[800px] overflow-hidden p-0 sm:h-[80%] sm:max-h-[80%]"
+        className="h-full max-h-full w-full overflow-hidden p-0 sm:h-[80%] sm:max-h-[80%] sm:max-w-[800px]"
         onInteractOutside={(e) => {
           e.preventDefault();
         }}
