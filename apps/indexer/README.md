@@ -11,7 +11,8 @@ swaylend-usdc-mainnet (v2): TODO
 
 #### Testnet
 
-swaylend-usdc-testnet (v2):
+swaylend-v2-usdc-testnet (v2):
+swaylend-v2-usdt-testnet (v2):
 
 ### Docker compose
 
