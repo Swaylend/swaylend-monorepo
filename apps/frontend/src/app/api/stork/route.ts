@@ -8,7 +8,7 @@ export async function GET(request: Request) {
   const priceFeedIds = searchParams.get('priceFeedIds');
 
   const response = await fetch(
-    `https://rest.jp.stork-oracle.network/v1/prices/latest?assets=${priceFeedIds}`,
+    `${process.env.STORK_API_URL}/v1/prices/latest?assets=${priceFeedIds}`,
     {
       method: 'GET',
       headers: {

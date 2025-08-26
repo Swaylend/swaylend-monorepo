@@ -66,7 +66,7 @@ export const MarketSwitcher = () => {
 
   return (
     <Select onValueChange={handleChange} value={market}>
-      <SelectTrigger>
+      <SelectTrigger className="bg-background hover:cursor-pointer hover:bg-background dark:bg-background dark:hover:bg-background">
         <SelectValue>
           <MarketItem
             logo={SYMBOL_TO_ICON[market]}
@@ -79,7 +79,11 @@ export const MarketSwitcher = () => {
         <SelectGroup>
           {Object.keys(appConfig.client.v2.markets).map((market) => {
             return (
-              <SelectItem key={market} value={market}>
+              <SelectItem
+                className="hover:cursor-pointer hover:bg-background dark:hover:bg-background"
+                key={market}
+                value={market}
+              >
                 <MarketItem logo={SYMBOL_TO_ICON[market]} market={market} />
               </SelectItem>
             );
