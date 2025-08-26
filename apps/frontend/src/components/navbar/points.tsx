@@ -33,7 +33,7 @@ export const Points = () => {
       >
         <Image
           alt="points-icon"
-          className="cursor-pointer"
+          className="min-h-[40px] min-w-[40px] cursor-pointer"
           height={40}
           src={POINTS}
           width={40}

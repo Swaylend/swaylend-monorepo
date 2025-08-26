@@ -68,9 +68,16 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
       {/* DESKTOP */}
       <div className="max-lg:hidden">
         <div className="flex min-h-[93px] items-center justify-between px-16">
-          <div className="flex items-center gap-x-[70px]">
+          <div className="flex items-center gap-x-[40px]">
             <Link href="/" prefetch={false}>
-              <Image alt="logo" src={Logo} />
+              <Image
+                alt="logo"
+                className="min-h-[32px] min-w-[118px]"
+                height={32}
+                priority
+                src={Logo}
+                width={118}
+              />
             </Link>
             <div className="flex h-full items-center gap-x-[25px]">
               <div>
