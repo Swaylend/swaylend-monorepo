@@ -27,10 +27,12 @@ jobs:
         uses: Swatinem/rust-cache@v2.8.0
       - name: Install wasm32-unknown-unknown
         run: rustup target add wasm32-unknown-unknown
-      - name: Build contracts
-        run: ~/.fuelup/bin/forc build --release
+      - name: Run fuelup show
+        run: ~/.fuelup/bin/fuelup show
       - name: Run contracts tests (FORC)
         run: ~/.fuelup/bin/forc test --release
+      - name: Build contracts
+        run: ~/.fuelup/bin/forc build --release
       - name: Run contracts tests (RUST)
         run: cargo test --release local_tests
       - name: Install pnpm
