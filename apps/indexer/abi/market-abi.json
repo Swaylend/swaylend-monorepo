@@ -1343,7 +1343,9 @@
           "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
         }
       ],
-      "typeParameters": [13]
+      "typeParameters": [
+        13
+      ]
     },
     {
       "type": "struct std::vec::Vec",
@@ -1364,7 +1366,9 @@
           "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
         }
       ],
-      "typeParameters": [13]
+      "typeParameters": [
+        13
+      ]
     },
     {
       "type": "struct stork_sway_sdk::interface::TemporalNumericValueInput",
@@ -1442,11 +1446,15 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Arguments"]
+          "arguments": [
+            " # Arguments"
+          ]
         },
         {
           "name": "doc-comment",
@@ -1462,31 +1470,45 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Reverts"]
+          "arguments": [
+            " # Reverts"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * When the absorb operation is paused."]
+          "arguments": [
+            " * When the absorb operation is paused."
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Writes: `2 + accounts.len() * 4`"]
+          "arguments": [
+            " * Writes: `2 + accounts.len() * 4`"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Reads: `5 + accounts.len() * 5`"]
+          "arguments": [
+            " * Reads: `5 + accounts.len() * 5`"
+          ]
         },
         {
           "name": "payable",
@@ -1494,7 +1516,9 @@
         },
         {
           "name": "storage",
-          "arguments": ["write"]
+          "arguments": [
+            "write"
+          ]
         }
       ]
     },
@@ -1514,7 +1538,9 @@
       "attributes": [
         {
           "name": "doc-comment",
-          "arguments": [" # Arguments"]
+          "arguments": [
+            " # Arguments"
+          ]
         },
         {
           "name": "doc-comment",
@@ -1530,11 +1556,15 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Reverts"]
+          "arguments": [
+            " # Reverts"
+          ]
         },
         {
           "name": "doc-comment",
@@ -1544,23 +1574,33 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Writes: `4`"]
+          "arguments": [
+            " * Writes: `4`"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Reads: `2`"]
+          "arguments": [
+            " * Reads: `2`"
+          ]
         },
         {
           "name": "storage",
-          "arguments": ["write"]
+          "arguments": [
+            "write"
+          ]
         }
       ]
     },
@@ -1576,7 +1616,9 @@
       "attributes": [
         {
           "name": "doc-comment",
-          "arguments": [" # Arguments"]
+          "arguments": [
+            " # Arguments"
+          ]
         },
         {
           "name": "doc-comment",
@@ -1586,15 +1628,21 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Reverts"]
+          "arguments": [
+            " # Reverts"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * When the caller is not the owner."]
+          "arguments": [
+            " * When the caller is not the owner."
+          ]
         },
         {
           "name": "doc-comment",
@@ -1604,23 +1652,33 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Writes: `4`"]
+          "arguments": [
+            " * Writes: `4`"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Reads: `1`"]
+          "arguments": [
+            " * Reads: `1`"
+          ]
         },
         {
           "name": "storage",
-          "arguments": ["write"]
+          "arguments": [
+            "write"
+          ]
         }
       ]
     },
@@ -1646,11 +1704,15 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Arguments"]
+          "arguments": [
+            " # Arguments"
+          ]
         },
         {
           "name": "doc-comment",
@@ -1666,15 +1728,21 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Reverts"]
+          "arguments": [
+            " # Reverts"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * When the caller is not the owner."]
+          "arguments": [
+            " * When the caller is not the owner."
+          ]
         },
         {
           "name": "doc-comment",
@@ -1690,23 +1758,33 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Writes: `1`"]
+          "arguments": [
+            " * Writes: `1`"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Reads: `2 + asset_oracle_configurations.len()`"]
+          "arguments": [
+            " * Reads: `2 + asset_oracle_configurations.len()`"
+          ]
         },
         {
           "name": "storage",
-          "arguments": ["write"]
+          "arguments": [
+            "write"
+          ]
         }
       ]
     },
@@ -1728,11 +1806,15 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Arguments"]
+          "arguments": [
+            " # Arguments"
+          ]
         },
         {
           "name": "doc-comment",
@@ -1742,15 +1824,21 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Reverts"]
+          "arguments": [
+            " # Reverts"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * When the caller is not the owner."]
+          "arguments": [
+            " * When the caller is not the owner."
+          ]
         },
         {
           "name": "doc-comment",
@@ -1760,15 +1848,21 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Writes: `2`"]
+          "arguments": [
+            " * Writes: `2`"
+          ]
         },
         {
           "name": "doc-comment",
@@ -1778,7 +1872,9 @@
         },
         {
           "name": "storage",
-          "arguments": ["write"]
+          "arguments": [
+            "write"
+          ]
         }
       ]
     },
@@ -1800,23 +1896,33 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Arguments"]
+          "arguments": [
+            " # Arguments"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * `account`: [Identity] - The account of the user."]
+          "arguments": [
+            " * `account`: [Identity] - The account of the user."
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Returns"]
+          "arguments": [
+            " # Returns"
+          ]
         },
         {
           "name": "doc-comment",
@@ -1826,11 +1932,15 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
         },
         {
           "name": "doc-comment",
@@ -1840,7 +1950,9 @@
         },
         {
           "name": "storage",
-          "arguments": ["read"]
+          "arguments": [
+            "read"
+          ]
         }
       ]
     },
@@ -1862,11 +1974,15 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Arguments"]
+          "arguments": [
+            " # Arguments"
+          ]
         },
         {
           "name": "doc-comment",
@@ -1876,15 +1992,21 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Returns"]
+          "arguments": [
+            " # Returns"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * [u64] - The balance of the specified asset."]
+          "arguments": [
+            " * [u64] - The balance of the specified asset."
+          ]
         }
       ]
     },
@@ -1914,11 +2036,15 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Arguments"]
+          "arguments": [
+            " # Arguments"
+          ]
         },
         {
           "name": "doc-comment",
@@ -1940,15 +2066,21 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Reverts"]
+          "arguments": [
+            " # Reverts"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * When the buy operation is paused."]
+          "arguments": [
+            " * When the buy operation is paused."
+          ]
         },
         {
           "name": "doc-comment",
@@ -1970,19 +2102,27 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [" * When collateral reserves are insufficient."]
+          "arguments": [
+            " * When collateral reserves are insufficient."
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Reads: `8`"]
+          "arguments": [
+            " * Reads: `8`"
+          ]
         },
         {
           "name": "payable",
@@ -1990,7 +2130,9 @@
         },
         {
           "name": "storage",
-          "arguments": ["read"]
+          "arguments": [
+            "read"
+          ]
         }
       ]
     },
@@ -2016,11 +2158,15 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Arguments"]
+          "arguments": [
+            " # Arguments"
+          ]
         },
         {
           "name": "doc-comment",
@@ -2036,11 +2182,15 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Returns"]
+          "arguments": [
+            " # Returns"
+          ]
         },
         {
           "name": "doc-comment",
@@ -2050,19 +2200,27 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Reads: `5`"]
+          "arguments": [
+            " * Reads: `5`"
+          ]
         },
         {
           "name": "storage",
-          "arguments": ["read"]
+          "arguments": [
+            "read"
+          ]
         }
       ]
     },
@@ -2079,11 +2237,15 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Reverts"]
+          "arguments": [
+            " # Reverts"
+          ]
         },
         {
           "name": "doc-comment",
@@ -2093,23 +2255,33 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Writes: `1`"]
+          "arguments": [
+            " * Writes: `1`"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Reads: `1`"]
+          "arguments": [
+            " * Reads: `1`"
+          ]
         },
         {
           "name": "storage",
-          "arguments": ["write"]
+          "arguments": [
+            "write"
+          ]
         }
       ]
     },
@@ -2126,11 +2298,15 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Returns"]
+          "arguments": [
+            " # Returns"
+          ]
         },
         {
           "name": "doc-comment",
@@ -2140,11 +2316,15 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
         },
         {
           "name": "doc-comment",
@@ -2154,7 +2334,9 @@
         },
         {
           "name": "storage",
-          "arguments": ["read"]
+          "arguments": [
+            "read"
+          ]
         }
       ]
     },
@@ -2176,19 +2358,27 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Arguments"]
+          "arguments": [
+            " # Arguments"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * `account`: [Identity] - The account of the user."]
+          "arguments": [
+            " * `account`: [Identity] - The account of the user."
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Returns"]
+          "arguments": [
+            " # Returns"
+          ]
         },
         {
           "name": "doc-comment",
@@ -2198,11 +2388,15 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
         },
         {
           "name": "doc-comment",
@@ -2212,7 +2406,9 @@
         },
         {
           "name": "storage",
-          "arguments": ["read"]
+          "arguments": [
+            "read"
+          ]
         }
       ]
     },
@@ -2240,11 +2436,15 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Arguments"]
+          "arguments": [
+            " # Arguments"
+          ]
         },
         {
           "name": "doc-comment",
@@ -2254,31 +2454,45 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Returns"]
+          "arguments": [
+            " # Returns"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * [u256] - The borrow rate (decimals 18)."]
+          "arguments": [
+            " * [u256] - The borrow rate (decimals 18)."
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Reads: `3 or 6`"]
+          "arguments": [
+            " * Reads: `3 or 6`"
+          ]
         },
         {
           "name": "storage",
-          "arguments": ["read"]
+          "arguments": [
+            "read"
+          ]
         }
       ]
     },
@@ -2295,11 +2509,15 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Returns"]
+          "arguments": [
+            " # Returns"
+          ]
         },
         {
           "name": "doc-comment",
@@ -2309,11 +2527,15 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
         },
         {
           "name": "doc-comment",
@@ -2323,7 +2545,9 @@
         },
         {
           "name": "storage",
-          "arguments": ["read"]
+          "arguments": [
+            "read"
+          ]
         }
       ]
     },
@@ -2345,11 +2569,15 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Arguments"]
+          "arguments": [
+            " # Arguments"
+          ]
         },
         {
           "name": "doc-comment",
@@ -2359,31 +2587,45 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Returns"]
+          "arguments": [
+            " # Returns"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * [I256] - The reserves (in asset decimals)."]
+          "arguments": [
+            " * [I256] - The reserves (in asset decimals)."
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Reads: `1`"]
+          "arguments": [
+            " * Reads: `1`"
+          ]
         },
         {
           "name": "storage",
-          "arguments": ["read"]
+          "arguments": [
+            "read"
+          ]
         }
       ]
     },
@@ -2400,31 +2642,45 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Returns"]
+          "arguments": [
+            " # Returns"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * [MarketBasics] - The market basic information."]
+          "arguments": [
+            " * [MarketBasics] - The market basic information."
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Reads: `1`"]
+          "arguments": [
+            " * Reads: `1`"
+          ]
         },
         {
           "name": "storage",
-          "arguments": ["read"]
+          "arguments": [
+            "read"
+          ]
         }
       ]
     },
@@ -2441,11 +2697,15 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Returns"]
+          "arguments": [
+            " # Returns"
+          ]
         },
         {
           "name": "doc-comment",
@@ -2455,19 +2715,27 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Reads: `1`"]
+          "arguments": [
+            " * Reads: `1`"
+          ]
         },
         {
           "name": "storage",
-          "arguments": ["read"]
+          "arguments": [
+            "read"
+          ]
         }
       ]
     },
@@ -2484,31 +2752,45 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Returns"]
+          "arguments": [
+            " # Returns"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * [MarketConfiguration] - The market configuration."]
+          "arguments": [
+            " * [MarketConfiguration] - The market configuration."
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Reads: `1`"]
+          "arguments": [
+            " * Reads: `1`"
+          ]
         },
         {
           "name": "storage",
-          "arguments": ["read"]
+          "arguments": [
+            "read"
+          ]
         }
       ]
     },
@@ -2525,11 +2807,15 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Returns"]
+          "arguments": [
+            " # Returns"
+          ]
         },
         {
           "name": "doc-comment",
@@ -2539,11 +2825,15 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
         },
         {
           "name": "doc-comment",
@@ -2553,7 +2843,9 @@
         },
         {
           "name": "storage",
-          "arguments": ["read"]
+          "arguments": [
+            "read"
+          ]
         }
       ]
     },
@@ -2570,11 +2862,15 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Returns"]
+          "arguments": [
+            " # Returns"
+          ]
         },
         {
           "name": "doc-comment",
@@ -2584,11 +2880,15 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
         },
         {
           "name": "doc-comment",
@@ -2598,7 +2898,9 @@
         },
         {
           "name": "storage",
-          "arguments": ["read"]
+          "arguments": [
+            "read"
+          ]
         }
       ]
     },
@@ -2615,11 +2917,15 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Returns"]
+          "arguments": [
+            " # Returns"
+          ]
         },
         {
           "name": "doc-comment",
@@ -2629,19 +2935,27 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Reads: `1`"]
+          "arguments": [
+            " * Reads: `1`"
+          ]
         },
         {
           "name": "storage",
-          "arguments": ["read"]
+          "arguments": [
+            "read"
+          ]
         }
       ]
     },
@@ -2663,11 +2977,15 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Arguments"]
+          "arguments": [
+            " # Arguments"
+          ]
         },
         {
           "name": "doc-comment",
@@ -2677,11 +2995,15 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Returns"]
+          "arguments": [
+            " # Returns"
+          ]
         },
         {
           "name": "doc-comment",
@@ -2691,31 +3013,45 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Reverts"]
+          "arguments": [
+            " # Reverts"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * When no valid price is found from any oracle."]
+          "arguments": [
+            " * When no valid price is found from any oracle."
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Reads: `2 + oracle_asset_configurations.len() * 2`"]
+          "arguments": [
+            " * Reads: `2 + oracle_asset_configurations.len() * 2`"
+          ]
         },
         {
           "name": "storage",
-          "arguments": ["read"]
+          "arguments": [
+            "read"
+          ]
         }
       ]
     },
@@ -2732,11 +3068,15 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Returns"]
+          "arguments": [
+            " # Returns"
+          ]
         },
         {
           "name": "doc-comment",
@@ -2746,11 +3086,15 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
         },
         {
           "name": "doc-comment",
@@ -2760,7 +3104,9 @@
         },
         {
           "name": "storage",
-          "arguments": ["read"]
+          "arguments": [
+            "read"
+          ]
         }
       ]
     },
@@ -2788,11 +3134,15 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Arguments"]
+          "arguments": [
+            " # Arguments"
+          ]
         },
         {
           "name": "doc-comment",
@@ -2802,31 +3152,45 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Returns"]
+          "arguments": [
+            " # Returns"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * [u256] - The supply rate (decimals 18)."]
+          "arguments": [
+            " * [u256] - The supply rate (decimals 18)."
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Reads: `3 or 6`"]
+          "arguments": [
+            " * Reads: `3 or 6`"
+          ]
         },
         {
           "name": "storage",
-          "arguments": ["read"]
+          "arguments": [
+            "read"
+          ]
         }
       ]
     },
@@ -2848,23 +3212,33 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Arguments"]
+          "arguments": [
+            " # Arguments"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * `account`: [Identity] - The account of the user."]
+          "arguments": [
+            " * `account`: [Identity] - The account of the user."
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Returns"]
+          "arguments": [
+            " # Returns"
+          ]
         },
         {
           "name": "doc-comment",
@@ -2874,19 +3248,27 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Reads: `1`"]
+          "arguments": [
+            " * Reads: `1`"
+          ]
         },
         {
           "name": "storage",
-          "arguments": ["read"]
+          "arguments": [
+            "read"
+          ]
         }
       ]
     },
@@ -2908,43 +3290,63 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Arguments"]
+          "arguments": [
+            " # Arguments"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * `account`: [Identity] - The account of the user."]
+          "arguments": [
+            " * `account`: [Identity] - The account of the user."
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Returns"]
+          "arguments": [
+            " # Returns"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * [UserBasic] - The user basic information."]
+          "arguments": [
+            " * [UserBasic] - The user basic information."
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Reads: `1`"]
+          "arguments": [
+            " * Reads: `1`"
+          ]
         },
         {
           "name": "storage",
-          "arguments": ["read"]
+          "arguments": [
+            "read"
+          ]
         }
       ]
     },
@@ -2970,11 +3372,15 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Arguments"]
+          "arguments": [
+            " # Arguments"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * `account`: [Identity] - The account of the user."]
+          "arguments": [
+            " * `account`: [Identity] - The account of the user."
+          ]
         },
         {
           "name": "doc-comment",
@@ -2984,11 +3390,15 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Returns"]
+          "arguments": [
+            " # Returns"
+          ]
         },
         {
           "name": "doc-comment",
@@ -2998,19 +3408,27 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Reads: `1`"]
+          "arguments": [
+            " * Reads: `1`"
+          ]
         },
         {
           "name": "storage",
-          "arguments": ["read"]
+          "arguments": [
+            "read"
+          ]
         }
       ]
     },
@@ -3032,23 +3450,33 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Arguments"]
+          "arguments": [
+            " # Arguments"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * `account`: [Identity] - The account of the user."]
+          "arguments": [
+            " * `account`: [Identity] - The account of the user."
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Returns"]
+          "arguments": [
+            " # Returns"
+          ]
         },
         {
           "name": "doc-comment",
@@ -3064,19 +3492,27 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [" "]
+          "arguments": [
+            " "
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Reads: `3`"]
+          "arguments": [
+            " * Reads: `3`"
+          ]
         },
         {
           "name": "storage",
-          "arguments": ["read"]
+          "arguments": [
+            "read"
+          ]
         }
       ]
     },
@@ -3093,15 +3529,21 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [" amount to total supplied amount."]
+          "arguments": [
+            " amount to total supplied amount."
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Returns"]
+          "arguments": [
+            " # Returns"
+          ]
         },
         {
           "name": "doc-comment",
@@ -3111,19 +3553,27 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Reads: 1 (Reads market basic information)."]
+          "arguments": [
+            " * Reads: 1 (Reads market basic information)."
+          ]
         },
         {
           "name": "storage",
-          "arguments": ["read"]
+          "arguments": [
+            "read"
+          ]
         }
       ]
     },
@@ -3134,15 +3584,21 @@
       "attributes": [
         {
           "name": "doc-comment",
-          "arguments": [" Get version of the smart contract"]
+          "arguments": [
+            " Get version of the smart contract"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Returns"]
+          "arguments": [
+            " # Returns"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * [u8] - The version number of the smart contract."]
+          "arguments": [
+            " * [u8] - The version number of the smart contract."
+          ]
         }
       ]
     },
@@ -3158,27 +3614,39 @@
       "attributes": [
         {
           "name": "doc-comment",
-          "arguments": [" This function checks if an account is liquidatable."]
+          "arguments": [
+            " This function checks if an account is liquidatable."
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Arguments"]
+          "arguments": [
+            " # Arguments"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * `account`: [Identity] - The account to be checked."]
+          "arguments": [
+            " * `account`: [Identity] - The account to be checked."
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Returns"]
+          "arguments": [
+            " # Returns"
+          ]
         },
         {
           "name": "doc-comment",
@@ -3188,11 +3656,15 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
         },
         {
           "name": "doc-comment",
@@ -3202,7 +3674,9 @@
         },
         {
           "name": "storage",
-          "arguments": ["read"]
+          "arguments": [
+            "read"
+          ]
         }
       ]
     },
@@ -3224,11 +3698,15 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Arguments"]
+          "arguments": [
+            " # Arguments"
+          ]
         },
         {
           "name": "doc-comment",
@@ -3238,31 +3716,45 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Reverts"]
+          "arguments": [
+            " # Reverts"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * When the caller is not the owner."]
+          "arguments": [
+            " * When the caller is not the owner."
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Writes: `1`"]
+          "arguments": [
+            " * Writes: `1`"
+          ]
         },
         {
           "name": "storage",
-          "arguments": ["write"]
+          "arguments": [
+            "write"
+          ]
         }
       ]
     },
@@ -3288,11 +3780,15 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Arguments"]
+          "arguments": [
+            " # Arguments"
+          ]
         },
         {
           "name": "doc-comment",
@@ -3308,11 +3804,15 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Returns"]
+          "arguments": [
+            " # Returns"
+          ]
         },
         {
           "name": "doc-comment",
@@ -3322,11 +3822,15 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Reverts"]
+          "arguments": [
+            " # Reverts"
+          ]
         },
         {
           "name": "doc-comment",
@@ -3336,19 +3840,27 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Reads: `2`"]
+          "arguments": [
+            " * Reads: `2`"
+          ]
         },
         {
           "name": "storage",
-          "arguments": ["read"]
+          "arguments": [
+            "read"
+          ]
         }
       ]
     },
@@ -3365,11 +3877,15 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Additional Information"]
+          "arguments": [
+            " # Additional Information"
+          ]
         },
         {
           "name": "doc-comment",
@@ -3379,35 +3895,51 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Reverts"]
+          "arguments": [
+            " # Reverts"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * When the caller is not the current owner."]
+          "arguments": [
+            " * When the caller is not the current owner."
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Writes: `1`"]
+          "arguments": [
+            " * Writes: `1`"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Reads: `1`"]
+          "arguments": [
+            " * Reads: `1`"
+          ]
         },
         {
           "name": "storage",
-          "arguments": ["write"]
+          "arguments": [
+            "write"
+          ]
         }
       ]
     },
@@ -3424,11 +3956,15 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Arguments"]
+          "arguments": [
+            " # Arguments"
+          ]
         },
         {
           "name": "doc-comment",
@@ -3438,15 +3974,21 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Reverts"]
+          "arguments": [
+            " # Reverts"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * When the supply is paused."]
+          "arguments": [
+            " * When the supply is paused."
+          ]
         },
         {
           "name": "doc-comment",
@@ -3456,23 +3998,33 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [" * When the supplied asset is not the base asset."]
+          "arguments": [
+            " * When the supplied asset is not the base asset."
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Writes: `2`"]
+          "arguments": [
+            " * Writes: `2`"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Reads: `4`"]
+          "arguments": [
+            " * Reads: `4`"
+          ]
         },
         {
           "name": "payable",
@@ -3480,7 +4032,9 @@
         },
         {
           "name": "storage",
-          "arguments": ["write"]
+          "arguments": [
+            "write"
+          ]
         }
       ]
     },
@@ -3497,15 +4051,21 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Reverts"]
+          "arguments": [
+            " # Reverts"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * When the supply is paused."]
+          "arguments": [
+            " * When the supply is paused."
+          ]
         },
         {
           "name": "doc-comment",
@@ -3515,27 +4075,39 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [" * When the collateral asset is paused."]
+          "arguments": [
+            " * When the collateral asset is paused."
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * When the total collateral exceeds the supply cap."]
+          "arguments": [
+            " * When the total collateral exceeds the supply cap."
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Writes: `2`"]
+          "arguments": [
+            " * Writes: `2`"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Reads: `4`"]
+          "arguments": [
+            " * Reads: `4`"
+          ]
         },
         {
           "name": "payable",
@@ -3543,7 +4115,9 @@
         },
         {
           "name": "storage",
-          "arguments": ["write"]
+          "arguments": [
+            "write"
+          ]
         }
       ]
     },
@@ -3565,11 +4139,15 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Arguments"]
+          "arguments": [
+            " # Arguments"
+          ]
         },
         {
           "name": "doc-comment",
@@ -3579,27 +4157,39 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Returns"]
+          "arguments": [
+            " # Returns"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * [u64] - The total collateral ammount."]
+          "arguments": [
+            " * [u64] - The total collateral ammount."
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Reads: `1`"]
+          "arguments": [
+            " * Reads: `1`"
+          ]
         },
         {
           "name": "storage",
-          "arguments": ["read"]
+          "arguments": [
+            "read"
+          ]
         }
       ]
     },
@@ -3621,11 +4211,15 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Arguments"]
+          "arguments": [
+            " # Arguments"
+          ]
         },
         {
           "name": "doc-comment",
@@ -3635,31 +4229,45 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Reverts"]
+          "arguments": [
+            " # Reverts"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * When the caller is not the current owner."]
+          "arguments": [
+            " * When the caller is not the current owner."
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Reads: `1`"]
+          "arguments": [
+            " * Reads: `1`"
+          ]
         },
         {
           "name": "storage",
-          "arguments": ["write"]
+          "arguments": [
+            "write"
+          ]
         }
       ]
     },
@@ -3685,11 +4293,15 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Arguments"]
+          "arguments": [
+            " # Arguments"
+          ]
         },
         {
           "name": "doc-comment",
@@ -3705,15 +4317,21 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Reverts"]
+          "arguments": [
+            " # Reverts"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * When the caller is not the owner."]
+          "arguments": [
+            " * When the caller is not the owner."
+          ]
         },
         {
           "name": "doc-comment",
@@ -3729,23 +4347,33 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Writes: `2`"]
+          "arguments": [
+            " * Writes: `2`"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Reads: `2 + asset_oracle_configurations.len()`"]
+          "arguments": [
+            " * Reads: `2 + asset_oracle_configurations.len()`"
+          ]
         },
         {
           "name": "storage",
-          "arguments": ["write"]
+          "arguments": [
+            "write"
+          ]
         }
       ]
     },
@@ -3765,7 +4393,9 @@
       "attributes": [
         {
           "name": "doc-comment",
-          "arguments": [" # Arguments"]
+          "arguments": [
+            " # Arguments"
+          ]
         },
         {
           "name": "doc-comment",
@@ -3781,15 +4411,21 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Reverts"]
+          "arguments": [
+            " # Reverts"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * When the caller is not the owner."]
+          "arguments": [
+            " * When the caller is not the owner."
+          ]
         },
         {
           "name": "doc-comment",
@@ -3799,23 +4435,33 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Writes: `1`"]
+          "arguments": [
+            " * Writes: `1`"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Reads: `1`"]
+          "arguments": [
+            " * Reads: `1`"
+          ]
         },
         {
           "name": "storage",
-          "arguments": ["write"]
+          "arguments": [
+            "write"
+          ]
         }
       ]
     },
@@ -3841,11 +4487,15 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Arguments"]
+          "arguments": [
+            " # Arguments"
+          ]
         },
         {
           "name": "doc-comment",
@@ -3861,15 +4511,21 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Reverts"]
+          "arguments": [
+            " # Reverts"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * When the caller is not the owner."]
+          "arguments": [
+            " * When the caller is not the owner."
+          ]
         },
         {
           "name": "doc-comment",
@@ -3879,23 +4535,33 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Writes: `1`"]
+          "arguments": [
+            " * Writes: `1`"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Reads: `1`"]
+          "arguments": [
+            " * Reads: `1`"
+          ]
         },
         {
           "name": "storage",
-          "arguments": ["write"]
+          "arguments": [
+            "write"
+          ]
         }
       ]
     },
@@ -3917,11 +4583,15 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Arguments"]
+          "arguments": [
+            " # Arguments"
+          ]
         },
         {
           "name": "doc-comment",
@@ -3931,35 +4601,51 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Reverts"]
+          "arguments": [
+            " # Reverts"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * When the caller is not the owner."]
+          "arguments": [
+            " * When the caller is not the owner."
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Writes: `1`"]
+          "arguments": [
+            " * Writes: `1`"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Reads: `2`"]
+          "arguments": [
+            " * Reads: `2`"
+          ]
         },
         {
           "name": "storage",
-          "arguments": ["write"]
+          "arguments": [
+            "write"
+          ]
         }
       ]
     },
@@ -3981,11 +4667,15 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Arguments"]
+          "arguments": [
+            " # Arguments"
+          ]
         },
         {
           "name": "doc-comment",
@@ -3995,27 +4685,39 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Returns"]
+          "arguments": [
+            " # Returns"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" This function does not return a value."]
+          "arguments": [
+            " This function does not return a value."
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Reads: `0`"]
+          "arguments": [
+            " * Reads: `0`"
+          ]
         },
         {
           "name": "payable",
@@ -4023,7 +4725,9 @@
         },
         {
           "name": "storage",
-          "arguments": ["read"]
+          "arguments": [
+            "read"
+          ]
         }
       ]
     },
@@ -4049,11 +4753,15 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Arguments"]
+          "arguments": [
+            " # Arguments"
+          ]
         },
         {
           "name": "doc-comment",
@@ -4069,19 +4777,27 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Reverts"]
+          "arguments": [
+            " # Reverts"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * When the withdraw operation is paused."]
+          "arguments": [
+            " * When the withdraw operation is paused."
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * When the amount is invalid (zero or negative)."]
+          "arguments": [
+            " * When the amount is invalid (zero or negative)."
+          ]
         },
         {
           "name": "doc-comment",
@@ -4097,19 +4813,27 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Writes: `3`"]
+          "arguments": [
+            " * Writes: `3`"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Reads: `5`"]
+          "arguments": [
+            " * Reads: `5`"
+          ]
         },
         {
           "name": "payable",
@@ -4117,7 +4841,9 @@
         },
         {
           "name": "storage",
-          "arguments": ["write"]
+          "arguments": [
+            "write"
+          ]
         }
       ]
     },
@@ -4147,7 +4873,9 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Arguments"]
+          "arguments": [
+            " # Arguments"
+          ]
         },
         {
           "name": "doc-comment",
@@ -4169,35 +4897,51 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Reverts"]
+          "arguments": [
+            " # Reverts"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * When the withdraw operation is paused."]
+          "arguments": [
+            " * When the withdraw operation is paused."
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * When the user is not collateralized."]
+          "arguments": [
+            " * When the user is not collateralized."
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Writes: `2`"]
+          "arguments": [
+            " * Writes: `2`"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Reads: `4`"]
+          "arguments": [
+            " * Reads: `4`"
+          ]
         },
         {
           "name": "payable",
@@ -4205,7 +4949,9 @@
         },
         {
           "name": "storage",
-          "arguments": ["write"]
+          "arguments": [
+            "write"
+          ]
         }
       ]
     },
@@ -4231,11 +4977,15 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Arguments"]
+          "arguments": [
+            " # Arguments"
+          ]
         },
         {
           "name": "doc-comment",
@@ -4251,15 +5001,21 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Reverts"]
+          "arguments": [
+            " # Reverts"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * When the caller is not the owner."]
+          "arguments": [
+            " * When the caller is not the owner."
+          ]
         },
         {
           "name": "doc-comment",
@@ -4269,19 +5025,27 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
+          "arguments": [
+            ""
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
+          "arguments": [
+            " # Number of Storage Accesses"
+          ]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Reads: `4`"]
+          "arguments": [
+            " * Reads: `4`"
+          ]
         },
         {
           "name": "storage",
-          "arguments": ["read"]
+          "arguments": [
+            "read"
+          ]
         }
       ]
     },
@@ -4292,7 +5056,9 @@
       "attributes": [
         {
           "name": "storage",
-          "arguments": ["read"]
+          "arguments": [
+            "read"
+          ]
         }
       ]
     }

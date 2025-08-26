@@ -28,11 +28,13 @@ import type { Enum, Vec } from "./common";
 
 export type IdentityInput = Enum<{ Address: AddressInput, ContractId: ContractIdInput }>;
 export type IdentityOutput = Enum<{ Address: AddressOutput, ContractId: ContractIdOutput }>;
-export enum StorkErrorInput { InsufficientFee = 'InsufficientFee', NoFreshUpdate = 'NoFreshUpdate', FeedNotFound = 'FeedNotFound', StaleValue = 'StaleValue', InvalidSignature = 'InvalidSignature' };
-export enum StorkErrorOutput { InsufficientFee = 'InsufficientFee', NoFreshUpdate = 'NoFreshUpdate', FeedNotFound = 'FeedNotFound', StaleValue = 'StaleValue', InvalidSignature = 'InvalidSignature' };
+export type StorkErrorInput = Enum<{ IncorrectFeeAsset: AssetIdInput, InsufficientFee: BigNumberish, NoFreshUpdate: undefined, FeedNotFound: string, InvalidSignature: TemporalNumericValueInputInput }>;
+export type StorkErrorOutput = Enum<{ IncorrectFeeAsset: AssetIdOutput, InsufficientFee: BN, NoFreshUpdate: void, FeedNotFound: string, InvalidSignature: TemporalNumericValueInputOutput }>;
 
 export type AddressInput = { bits: string };
 export type AddressOutput = AddressInput;
+export type AssetIdInput = { bits: string };
+export type AssetIdOutput = AssetIdInput;
 export type ContractIdInput = { bits: string };
 export type ContractIdOutput = ContractIdInput;
 export type I128Input = { underlying: U128Input };
@@ -81,14 +83,19 @@ const abi = {
       "metadataTypeId": 4
     },
     {
+      "type": "struct std::address::Address",
+      "concreteTypeId": "f597b637c3b0f588fb8d7086c6f4735caa3122b85f0423b82e489f9bb58e2308",
+      "metadataTypeId": 5
+    },
+    {
       "type": "struct std::string::String",
       "concreteTypeId": "9a7f1d3e963c10e0a4ea70a8e20a4813d1dc5682e28f74cb102ae50d32f7f98c",
-      "metadataTypeId": 9
+      "metadataTypeId": 10
     },
     {
       "type": "struct std::vec::Vec<struct stork_sway_sdk::interface::TemporalNumericValueInput>",
       "concreteTypeId": "e67278f564f3da524afebc87950681dff66e11946370df7f4c68b5f01329590b",
-      "metadataTypeId": 12,
+      "metadataTypeId": 13,
       "typeArguments": [
         "672654baba0e998dd82f818c92c2b544c9275ee09007b0f65f59195a94a916d6"
       ]
@@ -96,17 +103,17 @@ const abi = {
     {
       "type": "struct std::vm::evm::evm_address::EvmAddress",
       "concreteTypeId": "05a44d8c3e00faf7ed545823b7a2b32723545d8715d87a0ab3cf65904948e8d2",
-      "metadataTypeId": 13
+      "metadataTypeId": 14
     },
     {
       "type": "struct stork_sway_sdk::interface::TemporalNumericValueInput",
       "concreteTypeId": "672654baba0e998dd82f818c92c2b544c9275ee09007b0f65f59195a94a916d6",
-      "metadataTypeId": 14
+      "metadataTypeId": 15
     },
     {
       "type": "struct stork_sway_sdk::temporal_numeric_value::TemporalNumericValue",
       "concreteTypeId": "6972e006137b782c482ffc099e21cc55fce9151a2096dd6582df22c9dc81bd9c",
-      "metadataTypeId": 15
+      "metadataTypeId": 16
     },
     {
       "type": "u64",
@@ -128,7 +135,7 @@ const abi = {
         },
         {
           "name": "ContractId",
-          "typeId": 8
+          "typeId": 9
         }
       ]
     },
@@ -137,24 +144,29 @@ const abi = {
       "metadataTypeId": 1,
       "components": [
         {
+          "name": "IncorrectFeeAsset",
+          "typeId": 6,
+          "errorMessage": "Incorrect fee asset."
+        },
+        {
           "name": "InsufficientFee",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
+          "errorMessage": "Insufficient fee for updates."
         },
         {
           "name": "NoFreshUpdate",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+          "errorMessage": "No fresh update."
         },
         {
           "name": "FeedNotFound",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
-        },
-        {
-          "name": "StaleValue",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "typeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b",
+          "errorMessage": "Feed not found."
         },
         {
           "name": "InvalidSignature",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "typeId": 15,
+          "errorMessage": "Invalid signature."
         }
       ]
     },
@@ -172,7 +184,7 @@ const abi = {
       "components": [
         {
           "name": "underlying",
-          "typeId": 10
+          "typeId": 11
         }
       ]
     },
@@ -187,12 +199,22 @@ const abi = {
       ]
     },
     {
-      "type": "struct std::bytes::Bytes",
+      "type": "struct std::asset_id::AssetId",
       "metadataTypeId": 6,
       "components": [
         {
+          "name": "bits",
+          "typeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+        }
+      ]
+    },
+    {
+      "type": "struct std::bytes::Bytes",
+      "metadataTypeId": 7,
+      "components": [
+        {
           "name": "buf",
-          "typeId": 7
+          "typeId": 8
         },
         {
           "name": "len",
@@ -202,7 +224,7 @@ const abi = {
     },
     {
       "type": "struct std::bytes::RawBytes",
-      "metadataTypeId": 7,
+      "metadataTypeId": 8,
       "components": [
         {
           "name": "ptr",
@@ -216,7 +238,7 @@ const abi = {
     },
     {
       "type": "struct std::contract_id::ContractId",
-      "metadataTypeId": 8,
+      "metadataTypeId": 9,
       "components": [
         {
           "name": "bits",
@@ -226,17 +248,17 @@ const abi = {
     },
     {
       "type": "struct std::string::String",
-      "metadataTypeId": 9,
+      "metadataTypeId": 10,
       "components": [
         {
           "name": "bytes",
-          "typeId": 6
+          "typeId": 7
         }
       ]
     },
     {
       "type": "struct std::u128::U128",
-      "metadataTypeId": 10,
+      "metadataTypeId": 11,
       "components": [
         {
           "name": "upper",
@@ -250,7 +272,7 @@ const abi = {
     },
     {
       "type": "struct std::vec::RawVec",
-      "metadataTypeId": 11,
+      "metadataTypeId": 12,
       "components": [
         {
           "name": "ptr",
@@ -267,11 +289,11 @@ const abi = {
     },
     {
       "type": "struct std::vec::Vec",
-      "metadataTypeId": 12,
+      "metadataTypeId": 13,
       "components": [
         {
           "name": "buf",
-          "typeId": 11,
+          "typeId": 12,
           "typeArguments": [
             {
               "name": "",
@@ -290,7 +312,7 @@ const abi = {
     },
     {
       "type": "struct std::vm::evm::evm_address::EvmAddress",
-      "metadataTypeId": 13,
+      "metadataTypeId": 14,
       "components": [
         {
           "name": "bits",
@@ -300,11 +322,11 @@ const abi = {
     },
     {
       "type": "struct stork_sway_sdk::interface::TemporalNumericValueInput",
-      "metadataTypeId": 14,
+      "metadataTypeId": 15,
       "components": [
         {
           "name": "temporal_numeric_value",
-          "typeId": 15
+          "typeId": 16
         },
         {
           "name": "id",
@@ -334,7 +356,7 @@ const abi = {
     },
     {
       "type": "struct stork_sway_sdk::temporal_numeric_value::TemporalNumericValue",
-      "metadataTypeId": 15,
+      "metadataTypeId": 16,
       "components": [
         {
           "name": "timestamp_ns",
@@ -348,6 +370,20 @@ const abi = {
     }
   ],
   "functions": [
+    {
+      "name": "accept_ownership",
+      "inputs": [],
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read",
+            "write"
+          ]
+        }
+      ]
+    },
     {
       "name": "get_temporal_numeric_value_unchecked_v1",
       "inputs": [
@@ -398,6 +434,25 @@ const abi = {
         {
           "name": "single_update_fee_in_wei",
           "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        }
+      ],
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read",
+            "write"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "propose_owner",
+      "inputs": [
+        {
+          "name": "new_owner",
+          "concreteTypeId": "f597b637c3b0f588fb8d7086c6f4735caa3122b85f0423b82e489f9bb58e2308"
         }
       ],
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
@@ -576,9 +631,11 @@ export class StorkMockInterface extends Interface {
   }
 
   declare functions: {
+    accept_ownership: FunctionFragment;
     get_temporal_numeric_value_unchecked_v1: FunctionFragment;
     get_update_fee_v1: FunctionFragment;
     initialize: FunctionFragment;
+    propose_owner: FunctionFragment;
     single_update_fee_in_wei: FunctionFragment;
     stork_public_key: FunctionFragment;
     update_single_update_fee_in_wei: FunctionFragment;
@@ -595,9 +652,11 @@ export class StorkMock extends __Contract {
 
   declare interface: StorkMockInterface;
   declare functions: {
+    accept_ownership: InvokeFunction<[], void>;
     get_temporal_numeric_value_unchecked_v1: InvokeFunction<[id: string], TemporalNumericValueOutput>;
     get_update_fee_v1: InvokeFunction<[update_data: Vec<TemporalNumericValueInputInput>], BN>;
     initialize: InvokeFunction<[initial_owner: IdentityInput, stork_public_key: EvmAddress, single_update_fee_in_wei: BigNumberish], void>;
+    propose_owner: InvokeFunction<[new_owner: AddressInput], void>;
     single_update_fee_in_wei: InvokeFunction<[], BN>;
     stork_public_key: InvokeFunction<[], EvmAddress>;
     update_single_update_fee_in_wei: InvokeFunction<[single_update_fee_in_wei: BigNumberish], void>;
