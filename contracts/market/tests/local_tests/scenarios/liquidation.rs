@@ -189,7 +189,7 @@ async fn absorb_and_liquidate() {
                     oracle_id: *oracle_contract_id_to_index
                         .get(&ContractId::from(pyth_mock_oracle.instance.contract_id()))
                         .unwrap(),
-                    
+
                     publish_times: pyth_input.publish_times,
                     price_feed_ids: pyth_input.price_feed_ids,
                     update_data: pyth_mock_oracle
@@ -345,8 +345,12 @@ async fn absorb_and_liquidate() {
     // Sumbit tx
     let submitted_tx = multi_call_handler.submit().await.unwrap();
 
+    // Wait a bit for the transaction to be committed
+    tokio::time::sleep(tokio::time::Duration::from_millis(50)).await;
+
     // Wait for response
     let _: CallResponse<((), ())> = submitted_tx.response().await.unwrap();
+
     let alice_balance: u64 = alice
         .get_asset_balance(&eth.asset_id)
         .await
@@ -547,7 +551,7 @@ async fn all_assets_liquidated() {
                     oracle_id: *oracle_contract_id_to_index
                         .get(&ContractId::from(pyth_mock_oracle.instance.contract_id()))
                         .unwrap(),
-                    
+
                     publish_times: pyth_input.publish_times,
                     price_feed_ids: pyth_input.price_feed_ids,
                     update_data: pyth_mock_oracle
@@ -697,6 +701,9 @@ async fn all_assets_liquidated() {
 
     // Sumbit tx
     let submitted_tx = multi_call_handler.submit().await.unwrap();
+
+    // Wait a bit for the transaction to be committed
+    tokio::time::sleep(tokio::time::Duration::from_millis(50)).await;
 
     // Wait for response
     let _: CallResponse<((), ())> = submitted_tx.response().await.unwrap();

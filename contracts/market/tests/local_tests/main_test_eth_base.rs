@@ -533,6 +533,9 @@ async fn main_test_eth_base() {
     // Sumbit tx
     let submitted_tx = multi_call_handler.submit().await.unwrap();
 
+    // Wait a bit for the transaction to be committed
+    tokio::time::sleep(tokio::time::Duration::from_millis(50)).await;
+
     // Wait for response
     let _: CallResponse<((), ())> = submitted_tx.response().await.unwrap();
 
