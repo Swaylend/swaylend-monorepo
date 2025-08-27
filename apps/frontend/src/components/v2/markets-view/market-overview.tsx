@@ -241,7 +241,9 @@ export default function MarketOverview({
                 $
                 {getFormattedNumber(
                   BigNumber(
-                    priceData?.prices[marketConfiguration?.baseToken.bits!] ?? 0
+                    priceData?.prices.get(
+                      marketConfiguration?.baseToken.bits!
+                    )?.[0]?.price ?? 0
                   )
                 )}
               </div>
