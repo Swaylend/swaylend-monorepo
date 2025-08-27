@@ -337,13 +337,13 @@ async fn absorb_and_liquidate() {
         .call_params(call_params_base_asset)
         .unwrap();
 
-    let mutli_call_handler = CallHandler::new_multi_call(alice.clone())
+    let multi_call_handler = CallHandler::new_multi_call(alice.clone())
         .add_call(update_balance_call)
         .add_call(buy_collateral_call)
         .with_variable_output_policy(VariableOutputPolicy::Exactly(2));
 
     // Sumbit tx
-    let submitted_tx = mutli_call_handler.submit().await.unwrap();
+    let submitted_tx = multi_call_handler.submit().await.unwrap();
 
     // Wait for response
     let _: CallResponse<((), ())> = submitted_tx.response().await.unwrap();
@@ -690,13 +690,13 @@ async fn all_assets_liquidated() {
         .call_params(call_params_base_asset)
         .unwrap();
 
-    let mutli_call_handler = CallHandler::new_multi_call(alice.clone())
+    let multi_call_handler = CallHandler::new_multi_call(alice.clone())
         .add_call(update_balance_call)
         .add_call(buy_collateral_call)
         .with_variable_output_policy(VariableOutputPolicy::Exactly(2));
 
     // Sumbit tx
-    let submitted_tx = mutli_call_handler.submit().await.unwrap();
+    let submitted_tx = multi_call_handler.submit().await.unwrap();
 
     // Wait for response
     let _: CallResponse<((), ())> = submitted_tx.response().await.unwrap();

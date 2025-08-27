@@ -446,7 +446,7 @@ async fn main_test() {
                     oracle_id: *oracle_contract_id_to_index
                         .get(&ContractId::from(pyth_mock_oracle.instance.contract_id()))
                         .unwrap(),
-                    
+
                     publish_times: pyth_input.publish_times,
                     price_feed_ids: pyth_input.price_feed_ids,
                     update_data: pyth_mock_oracle
@@ -616,13 +616,13 @@ async fn main_test() {
         .call_params(call_params_base_asset)
         .unwrap();
 
-    let mutli_call_handler = CallHandler::new_multi_call(bob.clone())
+    let multi_call_handler = CallHandler::new_multi_call(bob.clone())
         .add_call(update_balance_call)
         .add_call(buy_collateral_call)
         .with_variable_output_policy(VariableOutputPolicy::Exactly(2));
 
     // Sumbit tx
-    let submitted_tx = mutli_call_handler.submit().await.unwrap();
+    let submitted_tx = multi_call_handler.submit().await.unwrap();
 
     // Wait for response
     let _: CallResponse<((), ())> = submitted_tx.response().await.unwrap();
