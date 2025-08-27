@@ -11,11 +11,11 @@ import {
   useMarketBalanceOfBase,
   useMarketBasics,
   useMarketConfiguration,
-  usePrice,
+  usePriceData,
   useTotalCollateral,
   useTotalReserves,
-} from '@/hooks/v1';
-import type { ChartData } from '@/lib/charts/v1';
+} from '@/hooks/v2';
+import type { ChartData } from '@/lib/charts/v2';
 import { cn } from '@/lib/utils';
 import {
   formatUnits,
@@ -59,7 +59,7 @@ export default function MarketOverview({
   const { data: totalCollateral } = useTotalCollateral(baseAsset);
   const { data: marketBasics } = useMarketBasics(baseAsset);
 
-  const { data: priceData } = usePrice(baseAsset);
+  const { data: priceData } = usePriceData(baseAsset);
 
   const totalCollateralValue = useMemo(() => {
     if (!(priceData && totalCollateral && collateralConfigurations)) {
@@ -69,7 +69,8 @@ export default function MarketOverview({
     return Array.from(totalCollateral.entries()).reduce(
       (sum, [assetId, value]) => {
         if (!collateralConfigurations[assetId]) return sum;
-        const assetPrice = priceData.prices[assetId] ?? BigNumber(0);
+        const assetPrice =
+          priceData.prices.get(assetId)?.[0]?.price ?? BigNumber(0);
         const balance = formatUnits(
           value,
           collateralConfigurations[assetId].decimals

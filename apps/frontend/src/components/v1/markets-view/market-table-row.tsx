@@ -135,7 +135,7 @@ export const MarketTableRow = ({
           <div>
             <Image
               alt={marketName}
-              className={'rounded-full'}
+              className={'min-h-[32px] min-w-[32px] rounded-full'}
               height={32}
               src={SYMBOL_TO_ICON[marketName]}
               width={32}

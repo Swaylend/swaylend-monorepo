@@ -4,7 +4,7 @@ import type {
   OraclePriceFeedIdOutput,
   OracleTypeOutput,
 } from '@/contract-types/v2/Market';
-import { useMarketContract } from '@/contracts/v1/use-market-contract';
+import { useMarketContract } from '@/contracts/v2/use-market-contract';
 import { useMarketStore } from '@/stores/market-store';
 import { createStableHash } from '@/utils';
 import { useOracleAssetConfigurations } from './use-oracle-asset-configurations';

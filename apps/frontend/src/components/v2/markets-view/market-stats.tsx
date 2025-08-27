@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-import type { ChartData } from '@/lib/charts/v1';
+import type { ChartData } from '@/lib/charts/v2';
 import { getFormattedPrice } from '@/utils';
 import { Skeleton } from '../../ui/skeleton';
 

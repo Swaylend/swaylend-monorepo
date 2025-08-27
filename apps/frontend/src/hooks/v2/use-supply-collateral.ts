@@ -6,7 +6,7 @@ import {
   ErrorToast,
   PendingToast,
   TransactionSuccessToast,
-} from '@/components/v1/toasts';
+} from '@/components/v2/toasts';
 import { useMarketContract } from '@/contracts/v2/use-market-contract';
 import { useMarketStore } from '@/stores/market-store';
 import { createStableHash } from '@/utils';

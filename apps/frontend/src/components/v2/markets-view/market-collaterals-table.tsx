@@ -8,14 +8,14 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { AssetName } from '@/components/v1/asset-name';
+import { AssetName } from '@/components/v2/asset-name';
 import { appConfig } from '@/configs';
 import {
   useCollateralConfigurations,
   useCollateralReserves,
-  usePrice,
+  usePriceData,
   useTotalCollateral,
-} from '@/hooks/v1';
+} from '@/hooks/v2';
 import {
   formatUnits,
   getFormattedNumber,
@@ -107,7 +107,7 @@ export const MarketCollateralsTable = ({
   }, [collateralConfigurations]);
   const { data: totalCollateral } = useTotalCollateral(marketName);
 
-  const { data: priceData } = usePrice(marketName);
+  const { data: priceData } = usePriceData(marketName);
 
   return (
     <div className="w-full rounded-lg border bg-linear-to-b from-white/10 to-card">
@@ -176,7 +176,8 @@ export const MarketCollateralsTable = ({
                 collateral.liquidation_penalty.toString()
               )}
               price={
-                priceData?.prices[collateral.asset_id.bits] ?? BigNumber(0)
+                priceData?.prices.get(collateral.asset_id.bits)?.[0]?.price ??
+                BigNumber(0)
               }
               symbol={appConfig.client.shared.assets[collateral.asset_id.bits]}
               totalSupply={totalCollateral?.get(collateral.asset_id.bits)}

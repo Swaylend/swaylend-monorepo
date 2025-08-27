@@ -19,7 +19,7 @@ import {
   useCreateChartData,
   useMarketConfiguration,
   useUtilization,
-} from '@/hooks/v1';
+} from '@/hooks/v2';
 import { formatUnits, getFormattedNumber } from '@/utils';
 import { Skeleton } from '../../ui/skeleton';
 

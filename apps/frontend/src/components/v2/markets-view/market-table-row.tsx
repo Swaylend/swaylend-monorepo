@@ -13,10 +13,10 @@ import {
   useCollateralConfigurations,
   useMarketBasics,
   useMarketConfiguration,
-  usePrice,
+  usePriceData,
   useTotalCollateral,
   useUtilization,
-} from '@/hooks/v1';
+} from '@/hooks/v2';
 import { cn } from '@/lib/utils';
 import {
   formatUnits,
@@ -100,7 +100,7 @@ export const MarketTableRow = ({
 
   const { data: totalCollateral } = useTotalCollateral(marketName);
 
-  const { data: priceData } = usePrice(marketName);
+  const { data: priceData } = usePriceData(marketName);
 
   const totalCollateralValue = useMemo(() => {
     if (!(priceData && totalCollateral && collateralConfigurations)) {
@@ -110,7 +110,8 @@ export const MarketTableRow = ({
     return Array.from(totalCollateral.entries()).reduce(
       (sum, [assetId, value]) => {
         if (!collateralConfigurations[assetId]) return sum;
-        const assetPrice = priceData.prices[assetId] ?? BigNumber(0);
+        const assetPrice =
+          priceData.prices.get(assetId)?.[0]?.price ?? BigNumber(0);
         return sum.plus(
           assetPrice.times(
             value.div(
@@ -135,7 +136,7 @@ export const MarketTableRow = ({
           <div>
             <Image
               alt={marketName}
-              className={'rounded-full'}
+              className={'min-h-[32px] min-w-[32px] rounded-full'}
               height={32}
               src={SYMBOL_TO_ICON[marketName]}
               width={32}

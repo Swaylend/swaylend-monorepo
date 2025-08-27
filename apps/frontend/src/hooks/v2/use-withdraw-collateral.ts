@@ -6,7 +6,7 @@ import {
   ErrorToast,
   PendingToast,
   TransactionSuccessToast,
-} from '@/components/v1/toasts';
+} from '@/components/v2/toasts';
 import { appConfig } from '@/configs';
 import { useMarketContract } from '@/contracts/v2/use-market-contract';
 import { usePythContract } from '@/contracts/v2/use-pyth-contract';

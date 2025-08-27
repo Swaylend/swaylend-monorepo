@@ -35,7 +35,7 @@ export const CollateralIcons = ({ collaterals }: CollateralIconsProps) => {
                   <TooltipTrigger onClick={(e) => e.preventDefault()}>
                     <Image
                       alt={collateral.name}
-                      className="rounded-full"
+                      className="min-h-[28px] min-w-[28px] rounded-full"
                       height={28}
                       src={collateral.icon}
                       width={28}

@@ -3,7 +3,7 @@
 import BigNumber from 'bignumber.js';
 import { Area, AreaChart, Rectangle, XAxis } from 'recharts';
 import type { DataKey } from 'recharts/types/util/types';
-import type { ChartData } from '@/lib/charts/v1';
+import type { ChartData } from '@/lib/charts/v2';
 import { getFormattedPrice } from '@/utils';
 import { type ChartConfig, ChartContainer, ChartTooltip } from '../../ui/chart';
 

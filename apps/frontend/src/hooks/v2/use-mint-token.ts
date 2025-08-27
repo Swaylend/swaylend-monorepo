@@ -7,9 +7,9 @@ import {
   ErrorToast,
   PendingToast,
   TransactionSuccessToast,
-} from '@/components/v1/toasts';
+} from '@/components/v2/toasts';
 import { appConfig } from '@/configs';
-import { Token } from '@/contract-types/v1';
+import { Token } from '@/contract-types/v2';
 import { useMarketStore } from '@/stores/market-store';
 import { FAUCET_AMOUNTS } from '@/utils';
 
