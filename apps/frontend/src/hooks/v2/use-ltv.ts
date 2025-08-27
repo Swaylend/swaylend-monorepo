@@ -16,7 +16,7 @@ export const useLTV = (marketParam?: string) => {
     queryKey: [
       'ltv',
       'v2',
-      collateralValue,
+      collateralValue?.toString(),
       createStableHash(supplyBorrow),
       priceData?.timestamp,
       createStableHash(marketConfiguration),

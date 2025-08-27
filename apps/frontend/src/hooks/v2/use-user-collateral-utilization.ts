@@ -18,7 +18,7 @@ export const useUserCollateralUtilization = (marketParam?: string) => {
       'v2',
       createStableHash(userSupplyBorrow),
       createStableHash(marketConfiguration),
-      trueCollateralValue,
+      trueCollateralValue?.toString(),
       marketParam,
       priceData?.timestamp,
     ],

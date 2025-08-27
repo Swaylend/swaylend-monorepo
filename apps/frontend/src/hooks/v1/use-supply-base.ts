@@ -9,6 +9,7 @@ import {
 } from '@/components/v1/toasts';
 import { useMarketContract } from '@/contracts/v1/use-market-contract';
 import { useMarketStore } from '@/stores/market-store';
+import { createStableHash } from '@/utils';
 import { useMarketConfiguration } from './use-market-configuration';
 
 export const useSupplyBase = () => {
@@ -28,8 +29,7 @@ export const useSupplyBase = () => {
     mutationKey: [
       'supplyBase',
       account,
-      marketConfiguration,
-      marketContract?.account?.address,
+      createStableHash(marketConfiguration),
       marketContract?.id,
     ],
     mutationFn: async (tokenAmount: BigNumber) => {
@@ -74,13 +74,7 @@ export const useSupplyBase = () => {
     onSettled: () => {
       // Invalidate queries
       queryClient.invalidateQueries({
-        queryKey: [
-          'userSupplyBorrow',
-          'v1',
-          account,
-          marketContract?.account?.address,
-          marketContract?.id,
-        ],
+        queryKey: ['userSupplyBorrow', 'v1', account, marketContract?.id],
       });
 
       // Invalidate Fuel balance query

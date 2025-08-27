@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import {
   calculateBorrowRate,
   calculateSupplyRate,
+  createStableHash,
   getBorrowApr,
   getSupplyApr,
 } from '@/utils';
@@ -49,6 +50,6 @@ export const useCreateChartData = (
       console.error(error);
       return null;
     }
-  }, [marketName, marketConfiguration]);
+  }, [marketName, createStableHash(marketConfiguration)]);
   return { data };
 };

@@ -1,6 +1,6 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
-import { formatUnits } from '@/utils';
+import { createStableHash, formatUnits } from '@/utils';
 import { usePriceData } from './oracles';
 import { useCollateralConfigurations } from './use-collateral-configurations';
 import { useMarketConfiguration } from './use-market-configuration';
@@ -22,11 +22,11 @@ export const useMaxWithdrawableCollateral = (
       'userMaxWithdrawableCollateral',
       'v2',
       assetId,
-      collateralBalances,
-      collateralConfig,
-      supplyBorrow,
+      createStableHash(collateralBalances),
+      createStableHash(collateralConfig),
+      createStableHash(supplyBorrow),
       priceData?.timestamp,
-      marketConfiguration,
+      createStableHash(marketConfiguration),
     ],
     queryFn: () => {
       if (

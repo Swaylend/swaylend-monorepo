@@ -16,7 +16,7 @@ export const useHealthFactor = (marketParam?: string) => {
     queryKey: [
       'healthFactor',
       'v2',
-      trueCollateralValue,
+      trueCollateralValue?.toString(),
       createStableHash(supplyBorrow),
       priceData?.timestamp,
       createStableHash(marketConfiguration),

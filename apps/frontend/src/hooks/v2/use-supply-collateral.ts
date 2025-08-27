@@ -9,6 +9,7 @@ import {
 } from '@/components/v1/toasts';
 import { useMarketContract } from '@/contracts/v2/use-market-contract';
 import { useMarketStore } from '@/stores/market-store';
+import { createStableHash } from '@/utils';
 import { useCollateralConfigurations } from './use-collateral-configurations';
 
 type useSupplyCollateralProps = {
@@ -36,8 +37,7 @@ export const useSupplyCollateral = ({
       'supplyCollateral',
       actionTokenAssetId,
       account,
-      collateralConfigurations,
-      marketContract?.account?.address,
+      createStableHash(collateralConfigurations),
       marketContract?.id,
     ],
     mutationFn: async (tokenAmount: BigNumber) => {
@@ -91,19 +91,13 @@ export const useSupplyCollateral = ({
       // Invalidate queries
       queryClient.invalidateQueries({
         exact: false,
-        queryKey: [
-          'collateralAssets',
-          'v2',
-          account,
-          marketContract?.account?.address,
-          marketContract?.id,
-        ],
+        queryKey: ['collateralAssets', 'v2', account, marketContract?.id],
       });
 
       // Invalidate Fuel balance query
       queryClient.invalidateQueries({
         exact: true,
-        queryKey: ['balance', 'v2', account, actionTokenAssetId],
+        queryKey: ['balance', account, actionTokenAssetId],
       });
     },
   });

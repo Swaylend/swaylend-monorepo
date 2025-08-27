@@ -11,8 +11,8 @@ export const useUserLiquidationPoint = () => {
     queryKey: [
       'userLiquidationPoint',
       'v1',
-      collateralValue,
-      userCollateralUtilization,
+      collateralValue?.toString(),
+      userCollateralUtilization?.toString(),
     ],
     queryFn: () => {
       if (!(collateralValue && userCollateralUtilization)) return BigNumber(0);

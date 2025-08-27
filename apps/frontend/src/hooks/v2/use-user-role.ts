@@ -1,6 +1,7 @@
 import { useIsConnected } from '@fuels/react';
 import BigNumber from 'bignumber.js';
 import { useMemo } from 'react';
+import { createStableHash } from '@/utils';
 import { usePriceData } from './oracles';
 import { useMarketConfiguration } from './use-market-configuration';
 import { useUserSupplyBorrow } from './use-user-supply-borrow';
@@ -59,7 +60,7 @@ export const useUserRole = () => {
   }, [
     isConnected,
     userSupplyBorrow,
-    marketConfiguration,
+    createStableHash(marketConfiguration),
     priceData?.timestamp,
   ]);
 };

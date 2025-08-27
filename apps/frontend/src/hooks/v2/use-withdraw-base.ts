@@ -11,6 +11,7 @@ import { appConfig } from '@/configs';
 import { useMarketContract } from '@/contracts/v2/use-market-contract';
 import { usePythContract } from '@/contracts/v2/use-pyth-contract';
 import { useMarketStore } from '@/stores/market-store';
+import { createStableHash } from '@/utils';
 import { usePriceData } from './oracles';
 import { useMarketConfiguration } from './use-market-configuration';
 
@@ -33,10 +34,8 @@ export const useWithdrawBase = () => {
     mutationKey: [
       'withdrawBase',
       account,
-      marketConfiguration,
-      marketContract?.account?.address,
+      createStableHash(marketConfiguration),
       marketContract?.id,
-      pythContract?.account?.address,
       pythContract?.id,
       priceData?.timestamp,
     ],
@@ -91,13 +90,7 @@ export const useWithdrawBase = () => {
     onSettled: () => {
       // Invalidate queries
       queryClient.invalidateQueries({
-        queryKey: [
-          'userSupplyBorrow',
-          'v2',
-          account,
-          marketContract?.account?.address,
-          marketContract?.id,
-        ],
+        queryKey: ['userSupplyBorrow', 'v2', account, marketContract?.id],
       });
 
       // Invalidate Fuel balance query

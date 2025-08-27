@@ -186,7 +186,7 @@ export const usePossiblePositionSummary = () => {
 
   useMemo(() => {
     calcPositionSummary();
-  }, [actionTokenAssetId, tokenAmount, action]);
+  }, [actionTokenAssetId, tokenAmount?.toString(), action]);
 
   return {
     possibleBorrowCapacity,

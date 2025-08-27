@@ -19,8 +19,8 @@ export const useApr = (marketParam?: string) => {
     queryKey: [
       'apr',
       'v1',
-      supplyRate,
-      borrowRate,
+      supplyRate?.toString(),
+      borrowRate?.toString(),
       createStableHash(rewardsData),
     ],
     queryFn: () => {

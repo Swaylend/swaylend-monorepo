@@ -12,6 +12,7 @@ import type { PriceDataUpdateInput } from '@/contract-types/v1/Market';
 import { useMarketContract } from '@/contracts/v1/use-market-contract';
 import { usePythContract } from '@/contracts/v1/use-pyth-contract';
 import { useMarketStore } from '@/stores/market-store';
+import { createStableHash } from '@/utils';
 import { useMarketConfiguration } from './use-market-configuration';
 
 export const useWithdrawBase = () => {
@@ -32,10 +33,8 @@ export const useWithdrawBase = () => {
     mutationKey: [
       'withdrawBase',
       account,
-      marketConfiguration,
-      marketContract?.account?.address,
+      createStableHash(marketConfiguration),
       marketContract?.id,
-      pythContract?.account?.address,
       pythContract?.id,
     ],
     mutationFn: async ({
@@ -87,13 +86,7 @@ export const useWithdrawBase = () => {
     onSettled: () => {
       // Invalidate queries
       queryClient.invalidateQueries({
-        queryKey: [
-          'userSupplyBorrow',
-          'v1',
-          account,
-          marketContract?.account?.address,
-          marketContract?.id,
-        ],
+        queryKey: ['userSupplyBorrow', 'v1', account, marketContract?.id],
       });
 
       // Invalidate Fuel balance query

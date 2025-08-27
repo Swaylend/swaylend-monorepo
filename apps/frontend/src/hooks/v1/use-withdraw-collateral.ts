@@ -12,6 +12,7 @@ import type { PriceDataUpdateInput } from '@/contract-types/v1/Market';
 import { useMarketContract } from '@/contracts/v1/use-market-contract';
 import { usePythContract } from '@/contracts/v1/use-pyth-contract';
 import { useMarketStore } from '@/stores/market-store';
+import { createStableHash } from '@/utils';
 import { useCollateralConfigurations } from './use-collateral-configurations';
 
 type useWithdrawCollateralProps = {
@@ -39,9 +40,8 @@ export const useWithdrawCollateral = ({
       'withdrawCollateral',
       actionTokenAssetId,
       account,
-      marketContract?.account?.address,
+      createStableHash(collateralConfigurations),
       marketContract?.id,
-      pythContract?.account?.address,
       pythContract?.id,
     ],
     mutationFn: async ({
@@ -106,19 +106,13 @@ export const useWithdrawCollateral = ({
     onSettled: () => {
       // Invalidate queries
       queryClient.invalidateQueries({
-        queryKey: [
-          'collateralAssets',
-          'v1',
-          account,
-          marketContract?.account?.address,
-          marketContract?.id,
-        ],
+        queryKey: ['collateralAssets', 'v1', account, marketContract?.id],
       });
 
       // Invalidate Fuel balance query
       queryClient.invalidateQueries({
         exact: true,
-        queryKey: ['balance', 'v1', account, actionTokenAssetId],
+        queryKey: ['balance', account, actionTokenAssetId],
       });
     },
   });
