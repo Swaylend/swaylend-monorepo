@@ -3,7 +3,6 @@
 export * from './oracles';
 export * from './oracles/use-pyth-oracle';
 export * from './use-apr';
-export * from './use-balance';
 export * from './use-borrow-base';
 export * from './use-borrow-capacity';
 export * from './use-borrow-rate';

@@ -9,12 +9,7 @@ export const useCollateralConfigurations = (marketParam?: string) => {
   const marketContract = useMarketContract(market);
 
   return useQuery({
-    queryKey: [
-      'collateralConfigurations',
-      'v2',
-      marketContract?.account?.address,
-      marketContract?.id,
-    ],
+    queryKey: ['collateralConfigurations', 'v2', marketContract?.id],
     queryFn: async () => {
       if (!marketContract) return null;
 

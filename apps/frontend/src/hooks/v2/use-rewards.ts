@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { appConfig } from '@/configs';
 import { useMarketStore } from '@/stores/market-store';
+import { createStableHash } from '@/utils';
 import { usePriceData } from './oracles';
 import { useMarketBasicsWithInterest } from './use-market-basics-with-interest';
 import { useMarketConfiguration } from './use-market-configuration';
@@ -36,9 +37,9 @@ export const useRewards = (marketParam?: string) => {
       'rewards',
       'v2',
       market,
-      marketBasics,
+      createStableHash(marketBasics),
       priceData?.timestamp,
-      marketConfiguration,
+      createStableHash(marketConfiguration),
     ],
     queryFn: () => {
       if (!(marketBasics && priceData && marketConfiguration)) {

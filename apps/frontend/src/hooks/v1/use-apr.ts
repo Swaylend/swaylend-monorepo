@@ -1,6 +1,7 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { useMarketStore } from '@/stores/market-store';
+import { createStableHash } from '@/utils';
 import { useBorrowRate } from './use-borrow-rate';
 import { useRewards } from './use-rewards';
 import { useSupplyRate } from './use-supply-rate';
@@ -15,7 +16,13 @@ export const useApr = (marketParam?: string) => {
   const { data: borrowRate } = useBorrowRate(market);
 
   return useQuery({
-    queryKey: ['apr', 'v1', supplyRate, borrowRate, rewardsData],
+    queryKey: [
+      'apr',
+      'v1',
+      supplyRate,
+      borrowRate,
+      createStableHash(rewardsData),
+    ],
     queryFn: () => {
       if (!(supplyRate && borrowRate && rewardsData)) {
         return {

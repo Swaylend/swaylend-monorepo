@@ -1,5 +1,6 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
+import { createStableHash } from '@/utils';
 import { useMarketConfiguration } from './use-market-configuration';
 import { usePrice } from './use-price';
 import { useUserSupplyBorrow } from './use-user-supply-borrow';
@@ -16,9 +17,9 @@ export const useHealthFactor = (marketParam?: string) => {
       'healthFactor',
       'v1',
       trueCollateralValue,
-      supplyBorrow,
-      priceData?.prices,
-      marketConfiguration,
+      createStableHash(supplyBorrow),
+      createStableHash(priceData?.prices),
+      createStableHash(marketConfiguration),
     ],
     queryFn: () => {
       if (

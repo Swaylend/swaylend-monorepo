@@ -55,19 +55,20 @@ export const usePrice = (marketParam?: string) => {
     return assets;
   }, [marketConfiguration, collateralConfigurations]);
 
-  const priceFeedIdToAssetIdKey = useMemo(
-    () => Object.fromEntries(priceFeedIdToAssetId?.entries() ?? []),
-    [priceFeedIdToAssetId]
-  );
+  // Use lightweight hash instead of full object for query key
+  const priceFeedIdsHash = useMemo(() => {
+    if (!priceFeedIdToAssetId) return null;
+    const ids = Array.from(priceFeedIdToAssetId.keys()).sort();
+    return ids.join(',');
+  }, [priceFeedIdToAssetId]);
 
   return useQuery({
     queryKey: [
       'pythPrices',
       'v1',
-      priceFeedIdToAssetIdKey,
-      marketContract?.account?.address,
+      market,
+      priceFeedIdsHash,
       marketContract?.id,
-      pythContract?.account?.address,
       pythContract?.id,
     ],
     queryFn: async () => {
@@ -134,14 +135,12 @@ export const usePrice = (marketParam?: string) => {
         priceUpdateData,
       };
     },
-    refetchInterval: 5000,
+    refetchInterval: 15_000,
     enabled:
       !!provider &&
       !!priceFeedIdToAssetId &&
       !!marketContract &&
       !!pythContract,
-    staleTime: 5000,
-    refetchOnWindowFocus: true,
-    refetchIntervalInBackground: true,
+    staleTime: 15_000,
   });
 };

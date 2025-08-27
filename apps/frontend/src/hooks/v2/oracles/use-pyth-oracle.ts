@@ -46,11 +46,9 @@ export const usePythOracle = (marketParam?: string) => {
     queryKey: [
       'pythPrices',
       'v2',
-      marketContract?.account?.address,
       marketContract?.id,
-      pythContract?.account?.address,
       pythContract?.id,
-      pythPriceFeedIds,
+      pythPriceFeedIds?.join(','),
       pythOracleId,
     ],
     queryFn: async () => {
@@ -128,10 +126,8 @@ export const usePythOracle = (marketParam?: string) => {
         updateFee: BigNumber(fee.toString()),
       };
     },
-    refetchInterval: 5000,
+    refetchInterval: 15_000,
     enabled: !!provider && !!marketContract && !!pythContract,
-    staleTime: 5000,
-    refetchOnWindowFocus: true,
-    refetchIntervalInBackground: true,
+    staleTime: 15_000,
   });
 };

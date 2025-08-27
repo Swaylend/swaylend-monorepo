@@ -43,7 +43,9 @@ const MarketItem = ({
         />
       </div>
 
-      <div className={cn(selected && 'hidden xl:block', 'text-moon')}>Fuel</div>
+      <div className={cn(selected && 'hidden xl:block', 'text-md text-moon')}>
+        Fuel
+      </div>
       <div
         className={cn(
           selected && 'text-sm xl:text-md',

@@ -9,12 +9,7 @@ export const useOracleGlobalConfigurations = (marketParam?: string) => {
   const marketContract = useMarketContract(market);
 
   return useQuery({
-    queryKey: [
-      'oracleGlobalConfigurations',
-      'v2',
-      marketContract?.account?.address,
-      marketContract?.id,
-    ],
+    queryKey: ['oracleGlobalConfigurations', 'v2', marketContract?.id],
     queryFn: async () => {
       if (!marketContract) return null;
 

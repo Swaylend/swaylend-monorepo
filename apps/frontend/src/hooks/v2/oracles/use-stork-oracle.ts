@@ -55,9 +55,9 @@ export const useStorkOracle = (marketParam?: string) => {
     queryKey: [
       'storkPrices',
       'v2',
-      marketContract?.account?.address,
       marketContract?.id,
-      storkPriceFeedIds,
+      storkContract?.id,
+      storkPriceFeedIds?.join(','),
       storkOracleId,
     ],
     queryFn: async () => {
@@ -168,10 +168,8 @@ export const useStorkOracle = (marketParam?: string) => {
         updateFee: BigNumber(fee.toString()),
       };
     },
-    refetchInterval: 20_000,
+    refetchInterval: 30_000,
     enabled: !!oraclePriceFeedData && !!marketContract && !!storkContract,
-    staleTime: 20_000,
-    refetchOnWindowFocus: true,
-    refetchIntervalInBackground: true,
+    staleTime: 30_000,
   });
 };

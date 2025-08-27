@@ -95,6 +95,7 @@ const rewards_v1: Rewards = {
 
 const rewards_v2: Rewards = {
   USDC: [],
+  USDT: [],
 };
 
 const markets_v1: DeployedMarketsV1 = {

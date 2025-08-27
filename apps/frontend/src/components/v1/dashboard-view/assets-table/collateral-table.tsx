@@ -35,8 +35,8 @@ import { POINTS_COLLATERAL } from '@/components/v1/point-icons/points-tooltip';
 import { Title } from '@/components/v1/title';
 import { appConfig } from '@/configs';
 import type { CollateralConfigurationOutput } from '@/contract-types/v1/Market';
+import { useBalance } from '@/hooks';
 import {
-  useBalance,
   useCollateralConfigurations,
   usePrice,
   useTotalCollateral,

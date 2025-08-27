@@ -18,10 +18,9 @@ export const useMarketBalanceOfBase = (marketParam?: string) => {
     queryKey: [
       'marketBalanceOfBase',
       'v1',
-      market,
-      marketBasics,
-      marketConfiguration,
-      totalReserves,
+      marketBasics?.total_supply_base?.toString(),
+      marketBasics?.total_borrow_base?.toString(),
+      totalReserves?.toString(),
     ],
     queryFn: () => {
       if (!(marketBasics && marketConfiguration && totalReserves)) {
@@ -43,7 +42,7 @@ export const useMarketBalanceOfBase = (marketParam?: string) => {
         ),
       };
     },
-    refetchOnWindowFocus: false,
     enabled: !!marketBasics && !!marketConfiguration && !!totalReserves,
+    staleTime: 60_000,
   });
 };

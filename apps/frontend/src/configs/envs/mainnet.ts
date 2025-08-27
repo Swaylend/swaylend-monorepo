@@ -137,10 +137,12 @@ const rewards_v1: Rewards = {
       durationInDays: 8,
     },
   ],
+  USDT: [],
 };
 
 const rewards_v2: Rewards = {
   USDC: [],
+  USDT: [],
 };
 
 const assets: Record<string, string> = {

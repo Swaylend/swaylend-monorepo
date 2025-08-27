@@ -12,13 +12,7 @@ export const useCollateralReserves = (
   const marketContract = useMarketContract(market);
 
   return useQuery({
-    queryKey: [
-      'collateralReserves',
-      'v1',
-      marketContract?.account?.address,
-      marketContract?.id,
-      assetId,
-    ],
+    queryKey: ['collateralReserves', 'v1', marketContract?.id, assetId],
     queryFn: async () => {
       if (!(assetId && marketContract)) return null;
 

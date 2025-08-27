@@ -10,8 +10,8 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { appConfig } from '@/configs';
+import { useBalance } from '@/hooks';
 import {
-  useBalance,
   useBorrowBase,
   useBorrowCapacity,
   useCollateralConfigurations,

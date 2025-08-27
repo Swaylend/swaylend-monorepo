@@ -6,6 +6,7 @@ import type {
 } from '@/contract-types/v2/Market';
 import { useMarketContract } from '@/contracts/v1/use-market-contract';
 import { useMarketStore } from '@/stores/market-store';
+import { createStableHash } from '@/utils';
 import { useOracleAssetConfigurations } from './use-oracle-asset-configurations';
 import { useOracleGlobalConfigurations } from './use-oracle-global-configurations';
 
@@ -39,10 +40,17 @@ export const useOraclePriceFeedData = (marketParam?: string) => {
     queryKey: [
       'oraclePriceFeedData',
       'v2',
-      marketContract?.account?.address,
       marketContract?.id,
-      Array.from(oracleAssetConfigurations?.entries() ?? []),
-      Array.from(oracleGlobalConfigurations?.entries() ?? []),
+      createStableHash(
+        oracleAssetConfigurations
+          ? Object.fromEntries(oracleAssetConfigurations)
+          : null
+      ),
+      createStableHash(
+        oracleGlobalConfigurations
+          ? Object.fromEntries(oracleGlobalConfigurations)
+          : null
+      ),
     ],
     queryFn: () => {
       if (

@@ -34,13 +34,10 @@ export const useBorrowBase = () => {
   return useMutation({
     mutationKey: [
       'borrowBase',
+      'v2',
       account,
-      marketConfiguration,
-      marketContract?.account?.address,
       marketContract?.id,
-      pythContract?.account?.address,
       pythContract?.id,
-      redstoneContract?.account?.address,
       redstoneContract?.id,
       priceData?.timestamp,
     ],
@@ -96,13 +93,7 @@ export const useBorrowBase = () => {
     onSettled: () => {
       // Invalidate queries
       queryClient.invalidateQueries({
-        queryKey: [
-          'userSupplyBorrow',
-          'v2',
-          account,
-          marketContract?.account?.address,
-          marketContract?.id,
-        ],
+        queryKey: ['userSupplyBorrow', 'v2', account, marketContract?.id],
       });
 
       // Invalidate Fuel balance query

@@ -1,6 +1,6 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { Address, type BytesLike } from 'fuels';
-import { useProvider } from '../use-provider';
+import { useProvider } from './use-provider';
 
 type UseBalanceParams = {
   address?: string;
@@ -11,7 +11,8 @@ export const useBalance = ({ address, assetId }: UseBalanceParams) => {
   const { provider } = useProvider();
 
   return useQuery({
-    queryKey: ['balance', 'v2', address, assetId],
+    // Unified query key for both versions to enable cache sharing
+    queryKey: ['balance', address, assetId],
     queryFn: async () => {
       if (!(provider && address)) return null;
 
@@ -25,6 +26,6 @@ export const useBalance = ({ address, assetId }: UseBalanceParams) => {
     initialData: null,
     enabled: !!provider,
     placeholderData: keepPreviousData,
-    staleTime: 0,
+    staleTime: 30_000,
   });
 };

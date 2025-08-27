@@ -57,6 +57,7 @@
     "react-wavify": "^1.11.1",
     "recharts": "2.15.4",
     "sharp": "^0.34.3",
+    "stable-hash": "0.0.6",
     "tailwind-merge": "^3.3.1",
     "tailwind-scrollbar": "^4.0.2",
     "tw-animate-css": "^1.3.6",

@@ -36,10 +36,10 @@ import {
 } from '@/components/v1/point-icons/points-tooltip';
 import { Title } from '@/components/v1/title';
 import { appConfig } from '@/configs';
+import { useBalance } from '@/hooks';
 import {
   USER_ROLE,
   useApr,
-  useBalance,
   useBorrowCapacity,
   useMarketConfiguration,
   usePrice,

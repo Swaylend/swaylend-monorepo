@@ -1,5 +1,6 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
+import { createStableHash } from '@/utils';
 import { useMarketConfiguration } from './use-market-configuration';
 import { usePrice } from './use-price';
 import { useUserCollateralValue } from './use-user-collateral-value';
@@ -16,9 +17,9 @@ export const useLTV = (marketParam?: string) => {
       'ltv',
       'v1',
       collateralValue,
-      supplyBorrow,
-      priceData?.prices,
-      marketConfiguration,
+      createStableHash(supplyBorrow),
+      createStableHash(priceData?.prices),
+      createStableHash(marketConfiguration),
     ],
     queryFn: () => {
       if (

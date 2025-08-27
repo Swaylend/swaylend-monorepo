@@ -1,4 +1,5 @@
 export * from './use-airdrops';
+export * from './use-balance';
 export * from './use-claim-airdrop';
 export * from './use-is-airdrop-claimed';
 export * from './use-leaderboard-points';

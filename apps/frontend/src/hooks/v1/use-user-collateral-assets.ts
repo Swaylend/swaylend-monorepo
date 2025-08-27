@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { useMarketContract } from '@/contracts/v1/use-market-contract';
 import { useMarketStore } from '@/stores/market-store';
+import { createStableHash } from '@/utils';
 import { useCollateralConfigurations } from './use-collateral-configurations';
 
 export const useUserCollateralAssets = (marketParam?: string) => {
@@ -16,9 +17,8 @@ export const useUserCollateralAssets = (marketParam?: string) => {
       'collateralAssets',
       'v1',
       account,
-      marketContract?.account?.address,
       marketContract?.id,
-      collateralConfigurations,
+      createStableHash(collateralConfigurations),
     ],
     queryFn: async () => {
       if (!(account && collateralConfigurations && marketContract)) return null;

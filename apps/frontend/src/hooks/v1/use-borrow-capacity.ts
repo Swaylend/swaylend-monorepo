@@ -1,7 +1,7 @@
 import { useAccount } from '@fuels/react';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
-import { formatUnits } from '@/utils';
+import { createStableHash, formatUnits } from '@/utils';
 import { useCollateralConfigurations } from './use-collateral-configurations';
 import { useMarketConfiguration } from './use-market-configuration';
 import { usePrice } from './use-price';
@@ -21,11 +21,11 @@ export const useBorrowCapacity = () => {
       'borrowCapacity',
       'v1',
       account,
-      supplyBorrow,
-      collateralConfigurations,
-      userCollateralAssets,
-      priceData?.prices,
-      marketConfiguration,
+      createStableHash(supplyBorrow),
+      createStableHash(collateralConfigurations),
+      createStableHash(userCollateralAssets),
+      createStableHash(priceData?.prices),
+      createStableHash(marketConfiguration),
     ],
     queryFn: () => {
       if (

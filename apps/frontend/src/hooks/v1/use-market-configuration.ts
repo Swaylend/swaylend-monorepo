@@ -9,12 +9,7 @@ export const useMarketConfiguration = (marketParam?: string) => {
   const marketContract = useMarketContract(market);
 
   return useQuery({
-    queryKey: [
-      'marketConfiguration',
-      'v1',
-      marketContract?.account?.address,
-      marketContract?.id,
-    ],
+    queryKey: ['marketConfiguration', 'v1', marketContract?.id],
     queryFn: async () => {
       if (!marketContract) return null;
 
@@ -49,7 +44,7 @@ export const useMarketConfiguration = (marketParam?: string) => {
         targetReserves: marketConfiguration.target_reserves,
       };
     },
-    refetchOnWindowFocus: false,
     enabled: !!marketContract,
+    staleTime: 5 * 60 * 1000,
   });
 };

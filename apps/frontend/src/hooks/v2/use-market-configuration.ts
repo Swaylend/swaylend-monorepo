@@ -8,12 +8,7 @@ export const useMarketConfiguration = (marketParam?: string) => {
   const marketContract = useMarketContract(market);
 
   return useQuery({
-    queryKey: [
-      'marketConfiguration',
-      'v2',
-      marketContract?.account?.address,
-      marketContract?.id,
-    ],
+    queryKey: ['marketConfiguration', 'v2', marketContract?.id],
     queryFn: async () => {
       if (!marketContract) return null;
 
@@ -49,7 +44,7 @@ export const useMarketConfiguration = (marketParam?: string) => {
           marketConfiguration.oracle_max_confidence_width,
       };
     },
-    refetchOnWindowFocus: false,
     enabled: !!marketContract,
+    staleTime: 5 * 60 * 1000,
   });
 };

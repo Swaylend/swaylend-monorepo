@@ -9,12 +9,7 @@ export const useOracleAssetConfigurations = (marketParam?: string) => {
   const marketContract = useMarketContract(market);
 
   return useQuery({
-    queryKey: [
-      'oracleAssetConfigurations',
-      'v2',
-      marketContract?.account?.address,
-      marketContract?.id,
-    ],
+    queryKey: ['oracleAssetConfigurations', 'v2', marketContract?.id],
     queryFn: async () => {
       if (!marketContract) return null;
 

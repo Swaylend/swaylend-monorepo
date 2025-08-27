@@ -5,8 +5,8 @@ import BigNumber from 'bignumber.js';
 import { BN, toFixed } from 'fuels';
 import { useMemo } from 'react';
 import { appConfig } from '@/configs';
+import { useBalance } from '@/hooks';
 import {
-  useBalance,
   useCollateralConfigurations,
   useMarketConfiguration,
   useMintToken,

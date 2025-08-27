@@ -7,6 +7,7 @@ import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { ThemeProvider } from 'next-themes';
 import { NuqsAdapter } from 'nuqs/adapters/next/app';
 import posthog from 'posthog-js';
@@ -21,10 +22,12 @@ function makeQueryClient() {
   return new QueryClient({
     defaultOptions: {
       queries: {
-        // With SSR, we usually want to set some default staleTime
-        // above 0 to avoid refetching immediately on the client
-        gcTime: 5 * 60 * 1000, // Run GC every 5 mins
-        staleTime: 1 * 60 * 1000, // Cache for 1 mins
+        gcTime: 10 * 60 * 1000, // Run GC every 10 mins
+        staleTime: 60 * 1000, // 1 minute default
+        retry: process.env.NODE_ENV === 'development' ? 1 : 3,
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: true,
+        refetchIntervalInBackground: false,
       },
     },
   });
@@ -95,7 +98,9 @@ export const Providers = ({ children }: { children: ReactNode }) => {
                 theme="dark"
               />
             </FuelProviderWrapper>
-            {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+            {process.env.NODE_ENV === 'development' && (
+              <ReactQueryDevtools initialIsOpen={false} />
+            )}
           </QueryClientProvider>
         </PostHogProvider>
       </NuqsAdapter>

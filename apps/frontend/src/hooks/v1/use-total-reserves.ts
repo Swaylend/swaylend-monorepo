@@ -9,12 +9,7 @@ export const useTotalReserves = (marketParam?: string) => {
   const marketContract = useMarketContract(market);
 
   return useQuery({
-    queryKey: [
-      'totalReserves',
-      'v1',
-      marketContract?.account?.address,
-      marketContract?.id,
-    ],
+    queryKey: ['totalReserves', 'v1', marketContract?.id],
     queryFn: async () => {
       if (!marketContract) return BigNumber(0);
 

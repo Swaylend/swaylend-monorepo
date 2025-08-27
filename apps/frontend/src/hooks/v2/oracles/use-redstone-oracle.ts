@@ -36,11 +36,9 @@ export const useRedstoneOracle = (marketParam?: string) => {
     queryKey: [
       'redstonePrices',
       'v2',
-      marketContract?.account?.address,
       marketContract?.id,
-      redstoneContract?.account?.address,
       redstoneContract?.id,
-      redstonePriceFeedIds,
+      redstonePriceFeedIds?.join(','),
       redstoneOracleId,
     ],
     queryFn: async () => {
@@ -131,10 +129,8 @@ export const useRedstoneOracle = (marketParam?: string) => {
         updateFee: BigNumber(0),
       };
     },
-    refetchInterval: 20_000,
+    refetchInterval: 30_000,
     enabled: !!oraclePriceFeedData && !!marketContract && !!redstoneContract,
-    staleTime: 20_000,
-    refetchOnWindowFocus: true,
-    refetchIntervalInBackground: true,
+    staleTime: 30_000,
   });
 };

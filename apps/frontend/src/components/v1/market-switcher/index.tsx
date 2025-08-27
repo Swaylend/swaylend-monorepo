@@ -23,7 +23,7 @@ const MarketItem = ({
   selected?: boolean;
 }) => {
   return (
-    <div className="flex w-full cursor-pointer items-center justify-center gap-x-2 px-2">
+    <div className="flex h-full w-full cursor-pointer items-center justify-center gap-x-2 px-2">
       <div className="flex items-center">
         <div className="flex h-[32px] min-w-[32px] items-center justify-center rounded-full bg-white/10">
           <Image
@@ -43,7 +43,9 @@ const MarketItem = ({
         />
       </div>
 
-      <div className={cn(selected && 'hidden xl:block', 'text-moon')}>Fuel</div>
+      <div className={cn(selected && 'hidden xl:block', 'text-md text-moon')}>
+        Fuel
+      </div>
       <div
         className={cn(
           selected && 'text-sm xl:text-md',

@@ -1,6 +1,6 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
-import { formatUnits } from '@/utils';
+import { createStableHash, formatUnits } from '@/utils';
 import { useCollateralConfigurations } from './use-collateral-configurations';
 import { usePrice } from './use-price';
 import { useUserCollateralAssets } from './use-user-collateral-assets';
@@ -15,9 +15,9 @@ export const useUserCollateralValue = (marketParam?: string) => {
     queryKey: [
       'userCollateralValue',
       'v1',
-      collateralBalances,
-      priceData?.prices,
-      collateralConfig,
+      createStableHash(collateralBalances),
+      createStableHash(priceData?.prices),
+      createStableHash(collateralConfig),
     ],
     queryFn: () => {
       if (

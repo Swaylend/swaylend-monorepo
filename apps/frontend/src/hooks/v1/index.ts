@@ -1,6 +1,5 @@
 // Re-export v1 hooks here
 export * from './use-apr';
-export * from './use-balance';
 export * from './use-borrow-base';
 export * from './use-borrow-capacity';
 export * from './use-borrow-rate';

@@ -11,13 +11,7 @@ export const useUserSupplyBorrow = (marketParam?: string) => {
   const marketContract = useMarketContract(market);
 
   return useQuery({
-    queryKey: [
-      'userSupplyBorrow',
-      'v2',
-      account,
-      marketContract?.account?.address,
-      marketContract?.id,
-    ],
+    queryKey: ['userSupplyBorrow', 'v2', account, marketContract?.id],
     queryFn: async () => {
       if (!account) {
         return {
@@ -38,7 +32,7 @@ export const useUserSupplyBorrow = (marketParam?: string) => {
       };
     },
     enabled: !!marketContract,
-    refetchOnWindowFocus: false,
     placeholderData: keepPreviousData,
+    staleTime: 30_000,
   });
 };

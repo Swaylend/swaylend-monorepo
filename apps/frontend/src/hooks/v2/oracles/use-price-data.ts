@@ -3,6 +3,7 @@ import BigNumber from 'bignumber.js';
 import { DateTime } from 'fuels';
 import type { OracleInputInput } from '@/contract-types/v2/Market';
 import { useMarketStore } from '@/stores/market-store';
+import { createStableHash } from '@/utils';
 import { useOracleAssetConfigurations } from './use-oracle-asset-configurations';
 import { usePythOracle } from './use-pyth-oracle';
 import { useRedstoneOracle } from './use-redstone-oracle';
@@ -22,7 +23,7 @@ export const usePriceData = (marketParam?: string) => {
     queryKey: [
       'priceData',
       'v2',
-      oracleAssetConfigurations,
+      createStableHash(oracleAssetConfigurations),
       pythOracleData?.timestamp,
       redstoneOracleData?.timestamp,
       storkOracleData?.timestamp,
@@ -87,5 +88,6 @@ export const usePriceData = (marketParam?: string) => {
     },
     enabled: !!oracleAssetConfigurations,
     placeholderData: keepPreviousData,
+    staleTime: 10_000,
   });
 };
