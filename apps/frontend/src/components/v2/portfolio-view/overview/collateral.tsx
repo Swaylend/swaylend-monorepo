@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
 import Image from 'next/image';
 import Link from 'next/link';
-import { type ReactNode, useMemo } from 'react';
+import { useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AssetName } from '@/components/v2/asset-name';
@@ -233,7 +233,7 @@ export const Collateral = () => {
   );
 };
 
-const CollateralRow = ({ market }: { market: string }): ReactNode => {
+const CollateralRow = ({ market }: { market: string }) => {
   const { data: priceData, isPending: isPendingPriceData } =
     usePriceData(market);
   const {
@@ -253,7 +253,7 @@ const CollateralRow = ({ market }: { market: string }): ReactNode => {
   }, [collateralUtilization]);
 
   const { data: userLiquidationPoint, isPending: isPendingLP } =
-    useUserLiquidationPoint();
+    useUserLiquidationPoint(market);
 
   const isLoading = useMemo(() => {
     return [

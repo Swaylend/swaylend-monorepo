@@ -98,7 +98,7 @@ export const Liquidity = () => {
   );
 };
 
-const LiquidityRow = ({ market }: { market: string }): any => {
+const LiquidityRow = ({ market }: { market: string }) => {
   const { data: userSupplyBorrow, isPending: isPendingUserSupplyBorrow } =
     useUserSupplyBorrow(market);
   const { data: priceData, isPending: isPendingPriceData } =

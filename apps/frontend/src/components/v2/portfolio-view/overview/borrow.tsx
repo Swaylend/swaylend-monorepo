@@ -1,7 +1,7 @@
 import BigNumber from 'bignumber.js';
 import Image from 'next/image';
 import Link from 'next/link';
-import { type ReactNode, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { CollateralIcons } from '@/components/v2/collateral-icons';
@@ -118,7 +118,7 @@ export const Borrow = () => {
   );
 };
 
-const BorrowRow = ({ market }: { market: string }): ReactNode => {
+const BorrowRow = ({ market }: { market: string }) => {
   const { data: userSupplyBorrow, isPending: isPendingUserSupplyBorrow } =
     useUserSupplyBorrow(market);
   const { data: priceData, isPending: isPendingPriceData } =
