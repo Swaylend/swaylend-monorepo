@@ -8,88 +8,12 @@ import { useClaimAirdrop } from '@/hooks/use-claim-airdrop';
 import { useIsAirdropClaimed } from '@/hooks/use-is-airdrop-claimed';
 import {
   useCollateralConfigurations,
-  useLMRewards,
   useMarketConfiguration,
 } from '@/hooks/v2';
 import { cn } from '@/lib/utils';
 import { SYMBOL_TO_ICON } from '@/utils';
 import { Card, CardContent, CardHeader } from '../../ui/card';
 import { Skeleton } from '../../ui/skeleton';
-
-const OldRewrdCard = ({
-  totalAmount,
-  token,
-  userAmount,
-  distributionDate,
-}: {
-  totalAmount: string;
-  token: string;
-  userAmount: string;
-  distributionDate: string;
-}) => {
-  const tokenSymbol = appConfig.client.shared.assets[token];
-
-  return (
-    <Card className="border border-purple/20 bg-card text-card-foreground">
-      <CardHeader className="p-4">
-        <div className="mb-2 font-semibold text-lg">Reward</div>
-        <div className="flex items-center gap-2">
-          <div className="flex h-7 w-7 items-center justify-center rounded-full bg-purple/20">
-            <div className="relative h-5 w-5">
-              <Image
-                alt={`${tokenSymbol} logo`}
-                className="rounded-full"
-                layout="fill"
-                src={SYMBOL_TO_ICON[tokenSymbol]}
-              />
-            </div>
-          </div>
-          <span className="text-base">{tokenSymbol}</span>
-        </div>
-      </CardHeader>
-      <CardContent className="p-4 pt-0">
-        <div className="space-y-3 text-sm">
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">Distribution</span>
-            <span>Airdrop</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">Total</span>
-            <span>{totalAmount}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">Your rewards</span>
-            <span>{userAmount}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">End date</span>
-            <span>{dayjs(distributionDate).format('DD/MM/YYYY')}</span>
-          </div>
-          <div className="pt-2">
-            <div className="mb-2 flex items-center justify-between">
-              <span>Campaign status:</span>
-              <span className="text-purple">Completed</span>
-            </div>
-          </div>
-          {/* <div className="text-center text-xs mt-3">
-        <span className="text-muted-foreground">
-          Check the Fuel token rewards{' '}
-        </span>
-        <a
-          href={'https://google.com'}
-          className={cn(
-            'hover:underline',
-            status === 'Active' ? 'text-primary' : 'text-purple'
-          )}
-        >
-          Terms of Service
-        </a>
-      </div> */}
-        </div>
-      </CardContent>
-    </Card>
-  );
-};
 
 const _RewardCard = ({ data }: { data: Airdrop }) => {
   const status =
@@ -276,33 +200,11 @@ const _RewardCard = ({ data }: { data: Airdrop }) => {
 
 export const Rewards = () => {
   // const { data: airdrops, isPending } = useAirdrops();
-  const { data: lmRewards, isPending: isLMRewardsPending } = useLMRewards();
 
-  // if (isPending || isLMRewardsPending) {
-  if (isLMRewardsPending) {
-    return (
-      <div className="w-full p-4">
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          <Skeleton className="h-[200px] w-full" />
-        </div>
-      </div>
-    );
-  }
+  // if (isPending) {
 
   return (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      <OldRewrdCard
-        distributionDate="2025-02-17"
-        token="0x1d5d97005e41cae2187a895fd8eab0506111e0e2f3331cd3912c15c24e3c1d82"
-        totalAmount="7400000"
-        userAmount={lmRewards?.part_1 ?? '0'}
-      />
-      <OldRewrdCard
-        distributionDate="2025-03-01"
-        token="0x1d5d97005e41cae2187a895fd8eab0506111e0e2f3331cd3912c15c24e3c1d82"
-        totalAmount="65000000"
-        userAmount={lmRewards?.part_2 ?? '0'}
-      />
       {/* {airdrops?.map((data) => (
         <RewardCard key={data.id} data={data} />
       ))} */}
