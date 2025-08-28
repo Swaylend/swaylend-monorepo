@@ -1,11 +1,15 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
+import { useMarketStore } from '@/stores/market-store';
 import { useUserCollateralUtilization } from './use-user-collateral-utilization';
 import { useUserCollateralValue } from './use-user-collateral-value';
 
-export const useUserLiquidationPoint = () => {
-  const { data: collateralValue } = useUserCollateralValue();
-  const { data: userCollateralUtilization } = useUserCollateralUtilization();
+export const useUserLiquidationPoint = (marketParam?: string) => {
+  const market = marketParam || useMarketStore.use.market();
+
+  const { data: collateralValue } = useUserCollateralValue(market);
+  const { data: userCollateralUtilization } =
+    useUserCollateralUtilization(market);
 
   return useQuery({
     queryKey: [

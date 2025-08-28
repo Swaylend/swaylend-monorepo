@@ -301,7 +301,7 @@ export const Collateral = () => {
         );
         const market = 'USDC';
         const assetPrice =
-          priceDataUSDC.prices.get(assetId)?.[0]?.price ?? BigNumber(0); // TODO[v2]: Check if this is correct. Also check other places with same logic applied.
+          priceDataUSDC.prices.get(assetId)?.[0]?.price ?? BigNumber(0);
         const value = getFormattedPrice(assetPrice.times(amount));
         return { market, assetId, value, amount };
       });

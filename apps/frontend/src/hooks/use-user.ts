@@ -2,7 +2,6 @@ import { useAccount } from '@fuels/react';
 import { useQuery } from '@tanstack/react-query';
 import { appConfig } from '@/configs';
 
-// TODO[v2]: Change the API struct
 type User = {
   points_v1: number;
   points_v2: number;

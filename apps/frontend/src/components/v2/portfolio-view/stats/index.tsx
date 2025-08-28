@@ -121,7 +121,7 @@ export const Stats = () => {
         formatUnits(
           value.times(
             priceDataUSDC.prices.get(key)?.[0]?.price ?? BigNumber(0)
-          ), // TODO[v2]: Check if this is correct. Also check other places with same logic applied.
+          ),
           colateralConfigurationsUSDC[key].decimals
         )
       );

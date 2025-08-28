@@ -38,7 +38,6 @@ export default function MarketContractStoreWatcher(): null {
     }
 
     for (const market of Object.keys(appConfig.client.v2.markets)) {
-      // TODO[v2]: Optimize by using the same oracle instance for all markets
       const pythContract = new PythContract(
         appConfig.client.v2.markets[market].pythAddress,
         walletOrProvider
