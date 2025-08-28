@@ -29,7 +29,12 @@ import {
 } from '@/hooks/v1';
 import { cn } from '@/lib/utils';
 import { ACTION_TYPE, useMarketStore } from '@/stores/market-store';
-import { formatUnits, getFormattedNumber, SYMBOL_TO_NAME } from '@/utils';
+import {
+  createStableHash,
+  formatUnits,
+  getFormattedNumber,
+  SYMBOL_TO_NAME,
+} from '@/utils';
 import { Button } from '../../ui/button';
 import { InputField } from './input-field';
 import { PositionSummary } from './position-summary';
@@ -490,7 +495,11 @@ export const InputDialog = () => {
     return finalBalance.toFixed(
       collateralConfigurations?.[actionTokenAssetId ?? '']?.decimals
     );
-  }, [finalBalance, marketConfiguration, collateralConfigurations]);
+  }, [
+    finalBalance.toString(),
+    createStableHash(marketConfiguration),
+    createStableHash(collateralConfigurations),
+  ]);
 
   useEffect(() => {
     if (!isConnected) {

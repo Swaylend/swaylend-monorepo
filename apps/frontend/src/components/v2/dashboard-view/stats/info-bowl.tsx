@@ -73,8 +73,18 @@ export const InfoBowl = () => {
 
   const isLoading = useMemo(() => {
     if (!isConnected) return isAprPending;
-    return [isPendingUserSupplyBorrow, isAprPending].some((res) => res);
-  }, [isConnected, isAprPending, isPendingUserSupplyBorrow]);
+
+    return [
+      isPendingUserSupplyBorrow,
+      isAprPending,
+      collateralUtilization == null || !collateralUtilization?.isFinite(),
+    ].some((res) => res);
+  }, [
+    isConnected,
+    isAprPending,
+    isPendingUserSupplyBorrow,
+    collateralUtilization,
+  ]);
 
   return (
     <TooltipProvider delayDuration={100}>

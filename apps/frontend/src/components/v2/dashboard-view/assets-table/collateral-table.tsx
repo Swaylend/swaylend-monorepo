@@ -60,11 +60,13 @@ type TableRowProps = {
   protocolBalancePending: boolean;
   handleAssetClick: (action: ACTION_TYPE, assetId: string) => void;
   collateralConfiguration: CollateralConfigurationOutput;
-  prices: {
-    price: BigNumber;
-    confidence: BigNumber;
-    oracle: 'Redstone' | 'Pyth' | 'Stork';
-  }[];
+  prices:
+    | {
+        price: BigNumber;
+        confidence: BigNumber;
+        oracle: 'Redstone' | 'Pyth' | 'Stork';
+      }[]
+    | undefined;
   collateralAmount: BigNumber;
   price: BigNumber;
 };
@@ -198,7 +200,7 @@ const CollateralTableRow = ({
                       Supported Oracles
                     </div>
                     <div className="flex flex-col gap-y-2">
-                      {prices.map((price) => (
+                      {prices?.map((price) => (
                         <div
                           className="flex items-center gap-x-2"
                           key={price.oracle}
@@ -578,7 +580,7 @@ export const CollateralTable = () => {
                     priceData?.prices.get(collateral.asset_id.bits)?.[0]
                       ?.price ?? new BigNumber(0)
                   }
-                  prices={priceData?.prices.get(collateral.asset_id.bits)!}
+                  prices={priceData?.prices.get(collateral.asset_id.bits)}
                   protocolBalance={
                     userCollateralAssets?.[collateral.asset_id.bits] ??
                     new BigNumber(0)

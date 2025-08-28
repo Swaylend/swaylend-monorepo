@@ -14,18 +14,18 @@ export const useBalance = ({ address, assetId }: UseBalanceParams) => {
     // Unified query key for both versions to enable cache sharing
     queryKey: ['balance', address, assetId],
     queryFn: async () => {
-      if (!(provider && address)) return null;
+      if (!(provider && address && assetId)) return null;
 
       const currentFuelBalance = await provider.getBalance(
         new Address(address),
-        assetId ?? (await provider.getBaseAssetId()) // Use the base asset ID if no asset ID is provided
+        assetId
       );
 
       return currentFuelBalance || null;
     },
-    initialData: null,
     enabled: !!provider,
     placeholderData: keepPreviousData,
     staleTime: 30_000,
+    refetchOnWindowFocus: true,
   });
 };

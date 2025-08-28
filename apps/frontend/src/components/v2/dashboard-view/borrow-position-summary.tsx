@@ -65,7 +65,7 @@ export const BorrowPositionSummary = () => {
         <div className="flex flex-col items-center justify-center gap-y-1">
           {open ? (
             <button
-              className="z-10"
+              className="z-10 hover:cursor-pointer"
               onClick={() => setOpen(false)}
               type="button"
             >
@@ -73,7 +73,7 @@ export const BorrowPositionSummary = () => {
             </button>
           ) : (
             <button
-              className="z-10"
+              className="z-10 hover:cursor-pointer"
               onClick={() => setOpen(true)}
               type="button"
             >

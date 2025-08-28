@@ -61,6 +61,7 @@ export const useBorrowCapacity = () => {
             )
           );
         }, new BigNumber(0))
+        .div(priceData.prices[marketConfiguration.baseToken.bits])
         .minus(
           formatUnits(
             supplyBorrow.borrowed.times(

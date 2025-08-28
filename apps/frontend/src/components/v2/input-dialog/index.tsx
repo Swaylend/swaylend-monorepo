@@ -29,7 +29,12 @@ import {
 } from '@/hooks/v2';
 import { cn } from '@/lib/utils';
 import { ACTION_TYPE, useMarketStore } from '@/stores/market-store';
-import { formatUnits, getFormattedNumber, SYMBOL_TO_NAME } from '@/utils';
+import {
+  createStableHash,
+  formatUnits,
+  getFormattedNumber,
+  SYMBOL_TO_NAME,
+} from '@/utils';
 import { Button } from '../../ui/button';
 import { InputField } from './input-field';
 import { PositionSummary } from './position-summary';
@@ -192,6 +197,10 @@ export const InputDialog = () => {
       marketConfiguration.baseToken.bits
     )?.[0];
 
+    if (!baseTokenPrice) {
+      return BigNumber(0);
+    }
+
     if (action === 'REPAY') {
       const owed = formatUnits(
         userSupplyBorrow.borrowed,
@@ -230,11 +239,6 @@ export const InputDialog = () => {
     }
 
     if (action === 'BORROW') {
-      if (!baseTokenPrice || baseTokenPrice.price.eq(0)) {
-        return borrowCapacity ?? BigNumber(0);
-      }
-
-      // Borrow $1 less than max borrowable amount to avoid "Trying to borrow more than the max borrowable amount" errors when prices change.
       return (
         borrowCapacity?.minus(BigNumber(1).div(baseTokenPrice.price)) ??
         BigNumber(0)
@@ -495,7 +499,11 @@ export const InputDialog = () => {
     return finalBalance.toFixed(
       collateralConfigurations?.[actionTokenAssetId ?? '']?.decimals
     );
-  }, [finalBalance, marketConfiguration, collateralConfigurations]);
+  }, [
+    finalBalance.toString(),
+    createStableHash(marketConfiguration),
+    createStableHash(collateralConfigurations),
+  ]);
 
   useEffect(() => {
     if (!isConnected) {

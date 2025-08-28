@@ -24,8 +24,8 @@ export const useBorrowCapacity = () => {
       createStableHash(supplyBorrow),
       createStableHash(collateralConfigurations),
       createStableHash(userCollateralAssets),
-      priceData?.timestamp,
       createStableHash(marketConfiguration),
+      priceData?.timestamp,
     ],
     queryFn: () => {
       if (
@@ -67,6 +67,7 @@ export const useBorrowCapacity = () => {
             )
           );
         }, new BigNumber(0))
+        .div(baseTokenPrice)
         .minus(
           formatUnits(
             supplyBorrow.borrowed.times(baseTokenPrice),
