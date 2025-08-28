@@ -20,6 +20,7 @@ import {
   useMarketStore,
 } from '@/stores/market-store';
 import {
+  createStableHash,
   formatUnits,
   getFormattedPrice,
   SYMBOL_TO_ICON,
@@ -294,7 +295,11 @@ const CollateralRow = ({ market }: { market: string }) => {
         const value = getFormattedPrice(assetPrice.times(amount));
         return { market, assetId, value, amount };
       });
-  }, [priceData, userCollateralAssets, colateralConfigurations]);
+  }, [
+    priceData?.timestamp,
+    createStableHash(userCollateralAssets),
+    createStableHash(colateralConfigurations),
+  ]);
 
   if (isLoading) {
     return SkeletonRow(market);

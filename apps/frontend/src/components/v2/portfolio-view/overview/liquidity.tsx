@@ -17,6 +17,7 @@ import {
   useMarketStore,
 } from '@/stores/market-store';
 import {
+  createStableHash,
   formatUnits,
   getFormattedPrice,
   SYMBOL_TO_ICON,
@@ -134,7 +135,10 @@ const LiquidityRow = ({ market }: { market: string }) => {
       return null;
     }
     return res;
-  }, [userSupplyBorrow, marketConfiguration]);
+  }, [
+    createStableHash(userSupplyBorrow),
+    createStableHash(marketConfiguration),
+  ]);
 
   const suppliedPrice = useMemo(() => {
     if (!(priceData && supplied && marketConfiguration)) {
@@ -146,7 +150,11 @@ const LiquidityRow = ({ market }: { market: string }) => {
     )?.[0];
 
     return baseTokenPrice?.price.times(supplied) ?? BigNumber(0);
-  }, [priceData?.timestamp, supplied, marketConfiguration]);
+  }, [
+    priceData?.timestamp,
+    supplied?.toString(),
+    createStableHash(marketConfiguration),
+  ]);
 
   const changeAction = useMarketStore.use.changeAction();
   const changeTokenAmount = useMarketStore.use.changeTokenAmount();

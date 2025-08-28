@@ -22,6 +22,7 @@ import {
   useMarketStore,
 } from '@/stores/market-store';
 import {
+  createStableHash,
   formatUnits,
   getFormattedPrice,
   SYMBOL_TO_ICON,
@@ -175,7 +176,10 @@ const BorrowRow = ({ market }: { market: string }) => {
       return null;
     }
     return res;
-  }, [userSupplyBorrow, marketConfiguration]);
+  }, [
+    createStableHash(userSupplyBorrow),
+    createStableHash(marketConfiguration),
+  ]);
 
   const borrowedPrice = useMemo(() => {
     if (!(priceData && borrowed && marketConfiguration)) {
@@ -184,7 +188,11 @@ const BorrowRow = ({ market }: { market: string }) => {
     return priceData.prices[marketConfiguration?.baseToken.bits].times(
       borrowed
     );
-  }, [priceData, borrowed, marketConfiguration]);
+  }, [
+    createStableHash(priceData),
+    createStableHash(marketConfiguration),
+    borrowed?.toString(),
+  ]);
 
   const collateralIcons = useMemo(() => {
     if (!userCollateralAssets) return [];
@@ -205,7 +213,7 @@ const BorrowRow = ({ market }: { market: string }) => {
           icon: SYMBOL_TO_ICON[symbol],
         };
       });
-  }, [userCollateralAssets]);
+  }, [createStableHash(userCollateralAssets)]);
 
   const changeAction = useMarketStore.use.changeAction();
   const changeTokenAmount = useMarketStore.use.changeTokenAmount();

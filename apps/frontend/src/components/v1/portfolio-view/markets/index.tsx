@@ -26,7 +26,12 @@ import {
   MARKET_MODE,
   useMarketStore,
 } from '@/stores/market-store';
-import { formatUnits, getFormattedPrice, SYMBOL_TO_ICON } from '@/utils';
+import {
+  createStableHash,
+  formatUnits,
+  getFormattedPrice,
+  SYMBOL_TO_ICON,
+} from '@/utils';
 
 export const Markets = () => {
   return (
@@ -137,7 +142,11 @@ const Market = ({ market }: { market: string }) => {
     );
 
     return suppliedCollateral;
-  }, [priceData, userCollateralAssets, colateralConfigurations]);
+  }, [
+    createStableHash(priceData),
+    createStableHash(userCollateralAssets),
+    createStableHash(colateralConfigurations),
+  ]);
 
   const totalSuppliedBaseAssets = useMemo(() => {
     if (!(marketConfiguration && priceData && userSupplyBorrow))
@@ -149,7 +158,11 @@ const Market = ({ market }: { market: string }) => {
     );
 
     return supplied;
-  }, [marketConfiguration, priceData, userSupplyBorrow]);
+  }, [
+    createStableHash(marketConfiguration),
+    createStableHash(priceData),
+    createStableHash(userSupplyBorrow),
+  ]);
 
   const totalBorrowedBaseAssets = useMemo(() => {
     if (!(marketConfiguration && priceData && userSupplyBorrow))
@@ -161,14 +174,18 @@ const Market = ({ market }: { market: string }) => {
     );
 
     return borrowed;
-  }, [marketConfiguration, priceData, userSupplyBorrow]);
+  }, [
+    createStableHash(marketConfiguration),
+    createStableHash(priceData),
+    createStableHash(userSupplyBorrow),
+  ]);
 
   const marketType = useMemo(() => {
     if (totalBorrowedBaseAssets.gte(totalSuppliedBaseAssets)) {
       return 'Borrow';
     }
     return 'Earn';
-  }, [totalBorrowedBaseAssets]);
+  }, [totalBorrowedBaseAssets.toString()]);
 
   const apy = useMemo(() => {
     if (marketType === 'Borrow') {
@@ -206,7 +223,11 @@ const Market = ({ market }: { market: string }) => {
       : updatedBorrowCapacity;
 
     return updatedBorrowCapacity;
-  }, [marketConfiguration, borrowCapacity, priceData]);
+  }, [
+    createStableHash(marketConfiguration),
+    createStableHash(borrowCapacity),
+    createStableHash(priceData),
+  ]);
 
   return (
     <Card className="mt-8 w-full">

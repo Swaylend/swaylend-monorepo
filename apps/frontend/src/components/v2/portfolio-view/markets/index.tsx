@@ -92,7 +92,7 @@ const Market = ({ market }: { market: string }) => {
 
   const currentCollateralUtilization = useMemo(() => {
     return Number(collateralUtilization?.times(100).toFixed(2));
-  }, [collateralUtilization]);
+  }, [collateralUtilization?.toString()]);
 
   const { data: borrowCapacity, isPending: isPendingBC } = useBorrowCapacity();
 
@@ -159,7 +159,11 @@ const Market = ({ market }: { market: string }) => {
     );
 
     return supplied;
-  }, [marketConfiguration, priceData, userSupplyBorrow]);
+  }, [
+    createStableHash(marketConfiguration),
+    createStableHash(priceData),
+    createStableHash(userSupplyBorrow),
+  ]);
 
   const totalBorrowedBaseAssets = useMemo(() => {
     if (!(marketConfiguration && priceData && userSupplyBorrow))
@@ -171,35 +175,51 @@ const Market = ({ market }: { market: string }) => {
     );
 
     return borrowed;
-  }, [marketConfiguration, priceData, userSupplyBorrow]);
+  }, [
+    createStableHash(marketConfiguration),
+    createStableHash(priceData),
+    createStableHash(userSupplyBorrow),
+  ]);
 
   const marketType = useMemo(() => {
     if (totalBorrowedBaseAssets.gte(totalSuppliedBaseAssets)) {
       return 'Borrow';
     }
     return 'Earn';
-  }, [totalBorrowedBaseAssets]);
+  }, [totalBorrowedBaseAssets.toString()]);
 
   const apy = useMemo(() => {
     if (marketType === 'Borrow') {
       return aprData?.borrowBaseApr.times(100).toFixed(2);
     }
     return aprData?.supplyBaseApr.times(100).toFixed(2);
-  }, [marketType, aprData]);
+  }, [
+    marketType,
+    aprData?.borrowBaseApr?.toString(),
+    aprData?.supplyBaseApr?.toString(),
+  ]);
 
   const rewardApy = useMemo(() => {
     if (marketType === 'Borrow') {
       return aprData?.borrowRewardApr.times(100).toFixed(2);
     }
     return aprData?.supplyRewardApr.times(100).toFixed(2);
-  }, [marketType, aprData]);
+  }, [
+    marketType,
+    aprData?.borrowRewardApr?.toString(),
+    aprData?.supplyRewardApr?.toString(),
+  ]);
 
   const netApy = useMemo(() => {
     if (marketType === 'Borrow') {
       return aprData?.netBorrowApr.times(100).toFixed(2);
     }
     return aprData?.netSupplyApr.times(100).toFixed(2);
-  }, [marketType, aprData]);
+  }, [
+    marketType,
+    aprData?.netBorrowApr?.toString(),
+    aprData?.netSupplyApr?.toString(),
+  ]);
 
   const updatedBorrowCapacity = useMemo(() => {
     if (!(marketConfiguration && priceData && borrowCapacity)) {
@@ -223,7 +243,11 @@ const Market = ({ market }: { market: string }) => {
       : updatedBorrowCapacity;
 
     return updatedBorrowCapacity;
-  }, [marketConfiguration, borrowCapacity, priceData?.timestamp]);
+  }, [
+    createStableHash(marketConfiguration),
+    createStableHash(borrowCapacity),
+    priceData?.timestamp,
+  ]);
 
   return (
     <Card className="mt-8 w-full">

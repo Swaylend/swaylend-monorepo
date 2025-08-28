@@ -20,6 +20,7 @@ import {
   useMarketStore,
 } from '@/stores/market-store';
 import {
+  createStableHash,
   formatUnits,
   getFormattedPrice,
   SYMBOL_TO_ICON,
@@ -249,7 +250,7 @@ const CollateralRow = ({ market }: { market: string }) => {
 
   const currentCollateralUtilization = useMemo(() => {
     return Number(collateralUtilization?.times(100).toFixed(2));
-  }, [collateralUtilization]);
+  }, [collateralUtilization?.toString()]);
 
   const { data: userLiquidationPoint, isPending: isPendingLP } =
     useUserLiquidationPoint(market);
@@ -293,7 +294,11 @@ const CollateralRow = ({ market }: { market: string }) => {
         );
         return { market, assetId, value, amount };
       });
-  }, [priceData, userCollateralAssets, collateralConfigurations]);
+  }, [
+    createStableHash(priceData),
+    createStableHash(userCollateralAssets),
+    createStableHash(collateralConfigurations),
+  ]);
 
   if (isLoading) {
     return SkeletonRow(market);
