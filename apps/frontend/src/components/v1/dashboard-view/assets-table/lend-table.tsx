@@ -212,7 +212,7 @@ export const LendTable = () => {
                             marketConfiguration.baseToken.bits
                           ]
                         }
-                        className="rounded-full"
+                        className="min-h-[32px] min-w-[32px] rounded-full"
                         height={32}
                         src={
                           SYMBOL_TO_ICON[
@@ -385,7 +385,7 @@ export const LendTable = () => {
                               marketConfiguration.baseToken.bits
                             ]
                           }
-                          className={'rounded-full'}
+                          className={'min-h-[32px] min-w-[32px] rounded-full'}
                           height={32}
                           src={
                             SYMBOL_TO_ICON[

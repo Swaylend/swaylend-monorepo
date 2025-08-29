@@ -178,6 +178,8 @@ const assets: Record<string, string> = {
   '0x9fb96f6fd9de9c63a67217188bc56cee04d2a54f732dd9899bed0aeb889b075b': 'weETH',
   '0x93dc2c176ee02ac5745272448775bf96f16fd1c31e7c3dca393eadab2d5dd43d':
     'wstETH',
+  '0x741722fc499391b975ecdfc759f41651bcb09dbe84e330c5eab6527c8d02664b':
+    'stFUEL',
 };
 
 // NOTE: This will not cause issues, as there will always be only one asset per symbol in production
@@ -186,9 +188,10 @@ const symbols: Record<string, string> = {
   USDT: '0x2df42653712c4d413170eef9695d65a21013ac8be63891a2c5967c3af96a218f',
   BTC: '0x1317d8056c8504d7844b3871386ca1ec5e2ecf4743e0ca805378f9c48d4822d2',
   UNI: '0x31873ec08219b39ee601747f465c6a177010d94ed5eec945275c49a44a1ce4d0',
-  ezETH: '0x7bf88bdf02818cd03644998349704bb1f5c98615fb39c74e081081336e3c2c3b',
-  sDAI: '0xca119b2dd027d7be7061333bbb1d8bcab67bc0234cb30549322aba3ebd5ddf6a',
-  weETH: '0x9fb96f6fd9de9c63a67217188bc56cee04d2a54f732dd9899bed0aeb889b075b',
-  wstETH: '0x93dc2c176ee02ac5745272448775bf96f16fd1c31e7c3dca393eadab2d5dd43d',
+  EZETH: '0x7bf88bdf02818cd03644998349704bb1f5c98615fb39c74e081081336e3c2c3b',
+  SDAI: '0xca119b2dd027d7be7061333bbb1d8bcab67bc0234cb30549322aba3ebd5ddf6a',
+  WEETH: '0x9fb96f6fd9de9c63a67217188bc56cee04d2a54f732dd9899bed0aeb889b075b',
+  WSTETH: '0x93dc2c176ee02ac5745272448775bf96f16fd1c31e7c3dca393eadab2d5dd43d',
   ETH: '0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07',
+  STFUEL: '0x741722fc499391b975ecdfc759f41651bcb09dbe84e330c5eab6527c8d02664b',
 };

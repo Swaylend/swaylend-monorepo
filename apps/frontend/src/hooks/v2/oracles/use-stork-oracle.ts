@@ -18,6 +18,8 @@ import { useOraclePriceFeedData } from './use-oracle-price-feed-data';
 
 const regex = /(?<!["\d])\b\d{16,}\b(?!["])/g;
 
+const RR_ASSETS = ['stFUEL'];
+
 function stringToI128Input(value: string): I128Input {
   const valueBn = bn(value);
   const indent = bn(1).shln(127);
@@ -87,7 +89,15 @@ export const useStorkOracle = (marketParam?: string) => {
 
       const response = await fetch(
         `/api/stork?priceFeedIds=${assetSymbols
-          .map((symbol) => `${symbol.toUpperCase()}USD`)
+          .map((symbol) => {
+            let assetName = `${symbol.toUpperCase()}USD`;
+
+            if (RR_ASSETS.includes(symbol)) {
+              assetName += '_RR';
+            }
+
+            return assetName;
+          })
           .join(',')}`
       );
 
@@ -103,7 +113,11 @@ export const useStorkOracle = (marketParam?: string) => {
       // Ref: https://github.com/Stork-Oracle/stork-external/blob/8c6b7ea9012a3f247f88be452ea4196d02fc8a64/contracts/fuel/cli/admin.ts#L155
       for (const data of Object.values(responseData.data)) {
         // Remove last part (USD) from asset id
-        const assetSymbol = ((data as any).asset_id as string).slice(0, -3);
+        const assetId = (data as any).asset_id as string;
+        const assetSymbol = assetId.endsWith('_RR')
+          ? assetId.slice(0, -6)
+          : assetId.slice(0, -3);
+
         const storkSignedPrice = (data as any).stork_signed_price as any;
         const id: string = storkSignedPrice.encoded_asset_id;
         const recvTime: string =
@@ -140,6 +154,11 @@ export const useStorkOracle = (marketParam?: string) => {
         };
 
         updateData.push(temporalNumericValueInput);
+
+        if (!appConfig.client.shared.symbols[assetSymbol]) {
+          console.error('Asset symbol not found', assetSymbol);
+          continue;
+        }
 
         prices.set(
           appConfig.client.shared.symbols[assetSymbol]!,
