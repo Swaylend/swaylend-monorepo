@@ -45,4 +45,6 @@ const assets: Record<string, string> = {
   '0x9fb96f6fd9de9c63a67217188bc56cee04d2a54f732dd9899bed0aeb889b075b': 'weETH',
   '0x93dc2c176ee02ac5745272448775bf96f16fd1c31e7c3dca393eadab2d5dd43d':
     'wstETH',
+  '0x741722fc499391b975ecdfc759f41651bcb09dbe84e330c5eab6527c8d02664b':
+    'stFUEL',
 };
