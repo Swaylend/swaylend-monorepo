@@ -12,6 +12,8 @@ export const AppConfigSchema = z.object({
   env: z.enum(['testnet', 'mainnet']),
   markets: DeployedMarketsSchema,
   assets: z.record(z.string(), z.string()),
+  swaylendApi: z.string(),
+  swaylendApiKey: z.string(),
 });
 
 export type AppConfig = z.infer<typeof AppConfigSchema>;

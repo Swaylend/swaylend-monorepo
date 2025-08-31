@@ -6,6 +6,8 @@ export function createTestnetConfig() {
     env: 'testnet',
     markets,
     assets,
+    swaylendApi: 'https://testnet-api.swaylend.com',
+    swaylendApiKey: process.env.SWAYLEND_API_KEY!,
   });
 }
 

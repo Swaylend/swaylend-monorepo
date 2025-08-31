@@ -6,6 +6,8 @@ export function createMainnetConfig() {
     env: 'mainnet',
     markets,
     assets,
+    swaylendApi: 'https://api.swaylend.com',
+    swaylendApiKey: process.env.SWAYLEND_API_KEY!,
   });
 }
 

@@ -32,6 +32,57 @@ const FACTOR_SCALE_18 = 10n ** 18n;
 const SECONDS_PER_YEAR = 365n * 24n * 60n * 60n;
 const I256_INDENT = 2n ** 255n;
 
+const getPriceFromSwaylendApi = async (
+  asset: string,
+  timestamp: number,
+  maxRetries = 3
+): Promise<number> => {
+  let lastError: Error | undefined;
+
+  let symbol = `${asset.toUpperCase()}USD`;
+
+  if (asset.toUpperCase() === 'STFUEL') {
+    symbol += '_RR';
+  }
+
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      const response = await fetch(
+        `${appConfig.swaylendApi}/api/stork/historical?asset=${symbol}&timestamp=${timestamp}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${appConfig.swaylendApiKey}`,
+          },
+        }
+      );
+
+      // Check if response is ok, else retry
+      if (response.ok) {
+        const data = await response.json();
+        return data.price;
+      }
+
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    } catch (error) {
+      console.error(error);
+
+      lastError = error;
+
+      if (attempt === maxRetries) {
+        throw lastError;
+      }
+
+      // Exponential backoff: 1s, 2s, 4s, etc.
+      const delay = 2 ** attempt * 1000;
+      await new Promise((resolve) => setTimeout(resolve, delay));
+    }
+  }
+
+  throw lastError;
+};
+
 const getBorrowRate = (
   marketConfig: MarketConfiguration,
   utilization: bigint
@@ -454,9 +505,22 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       const id = `${chainId}_${marketAddress.toLowerCase()}_${address}_${asset_id}`;
 
       // Collateral price
-      const collateralPrice =
+      let collateralPrice =
         (await getPriceBySymbol(appConfig.assets[asset_id], ctx.timestamp)) ??
         0;
+
+      if (collateralPrice === 0) {
+        collateralPrice = await getPriceFromSwaylendApi(
+          appConfig.assets[asset_id],
+          ctx.timestamp.getTime() / 1000
+        );
+      }
+
+      if (!collateralPrice) {
+        throw new Error(
+          `Collateral price not found for asset ${asset_id} on chain ${chainId}`
+        );
+      }
 
       let collateralPosition = await ctx.store.get(CollateralPosition, id);
 
@@ -590,9 +654,22 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       }
 
       // Collateral price
-      const collateralPrice =
+      let collateralPrice =
         (await getPriceBySymbol(appConfig.assets[asset_id], ctx.timestamp)) ??
         0;
+
+      if (collateralPrice === 0) {
+        collateralPrice = await getPriceFromSwaylendApi(
+          appConfig.assets[asset_id],
+          ctx.timestamp.getTime() / 1000
+        );
+      }
+
+      if (!collateralPrice) {
+        throw new Error(
+          `Collateral price not found for asset ${asset_id} on chain ${chainId}`
+        );
+      }
 
       const newCollateralAmount =
         collateralPosition.collateralAmount - BigInt(amount.toString());
@@ -701,9 +778,22 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       }
 
       // Collateral price
-      const collateralPrice =
+      let collateralPrice =
         (await getPriceBySymbol(appConfig.assets[asset_id], ctx.timestamp)) ??
         0;
+
+      if (collateralPrice === 0) {
+        collateralPrice = await getPriceFromSwaylendApi(
+          appConfig.assets[asset_id],
+          ctx.timestamp.getTime() / 1000
+        );
+      }
+
+      if (!collateralPrice) {
+        throw new Error(
+          `Collateral price not found for asset ${asset_id} on chain ${chainId}`
+        );
+      }
 
       collateralPool.collateralAmount -= BigInt(amount.toString());
       collateralPool.collateralAmountNormalized =
@@ -762,11 +852,24 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       }
 
       // Get base asset price
-      const baseAssetPrice =
+      let baseAssetPrice =
         (await getPriceBySymbol(
           appConfig.assets[marketConfiguration.baseTokenAddress],
           ctx.timestamp
         )) ?? 0;
+
+      if (baseAssetPrice === 0) {
+        baseAssetPrice = await getPriceFromSwaylendApi(
+          appConfig.assets[marketConfiguration.baseTokenAddress],
+          ctx.timestamp.getTime() / 1000
+        );
+      }
+
+      if (!baseAssetPrice) {
+        throw new Error(
+          `Base asset price not found for market ${marketAddress.toLowerCase()} on chain ${chainId}`
+        );
+      }
 
       const basePrice = BigDecimal(baseAssetPrice ?? 0);
 
@@ -870,11 +973,24 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       }
 
       // Get base asset price
-      const baseAssetPrice =
+      let baseAssetPrice =
         (await getPriceBySymbol(
           appConfig.assets[marketConfiguration.baseTokenAddress],
           ctx.timestamp
         )) ?? 0;
+
+      if (baseAssetPrice === 0) {
+        baseAssetPrice = await getPriceFromSwaylendApi(
+          appConfig.assets[marketConfiguration.baseTokenAddress],
+          ctx.timestamp.getTime() / 1000
+        );
+      }
+
+      if (!baseAssetPrice) {
+        throw new Error(
+          `Base asset price not found for market ${marketAddress.toLowerCase()} on chain ${chainId}`
+        );
+      }
 
       const basePrice = BigDecimal(baseAssetPrice ?? 0);
 
@@ -1034,11 +1150,24 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       }
 
       // Get base asset price
-      const baseAssetPrice =
+      let baseAssetPrice =
         (await getPriceBySymbol(
           appConfig.assets[pool.underlyingTokenAddress],
           ctx.timestamp
         )) ?? 0;
+
+      if (baseAssetPrice === 0) {
+        baseAssetPrice = await getPriceFromSwaylendApi(
+          appConfig.assets[pool.underlyingTokenAddress],
+          ctx.timestamp.getTime() / 1000
+        );
+      }
+
+      if (!baseAssetPrice) {
+        throw new Error(
+          `Base asset price not found for market ${marketAddress.toLowerCase()} on chain ${chainId}`
+        );
+      }
 
       const basePrice = BigDecimal(baseAssetPrice ?? 0);
 
@@ -1113,14 +1242,21 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
         );
       }
 
-      const baseAssetPrice = await getPriceBySymbol(
+      let baseAssetPrice = await getPriceBySymbol(
         appConfig.assets[marketConfiguration.baseTokenAddress],
         ctx.timestamp
       );
 
+      if (baseAssetPrice === 0) {
+        baseAssetPrice = await getPriceFromSwaylendApi(
+          appConfig.assets[marketConfiguration.baseTokenAddress],
+          ctx.timestamp.getTime() / 1000
+        );
+      }
+
       if (!baseAssetPrice) {
-        console.error(
-          `No price found for ${appConfig.assets[marketConfiguration.baseTokenAddress]} at ${ctx.timestamp}`
+        throw new Error(
+          `Base asset price not found for market ${marketAddress.toLowerCase()} on chain ${chainId}`
         );
       }
 
@@ -1206,11 +1342,24 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
           );
         }
 
-        const baseAssetPrice =
+        let baseAssetPrice =
           (await getPriceBySymbol(
             appConfig.assets[pool.underlyingTokenAddress],
             ctx.timestamp
           )) ?? 0;
+
+        if (baseAssetPrice === 0) {
+          baseAssetPrice = await getPriceFromSwaylendApi(
+            appConfig.assets[pool.underlyingTokenAddress],
+            ctx.timestamp.getTime() / 1000
+          );
+        }
+
+        if (!baseAssetPrice) {
+          throw new Error(
+            `Base asset price not found for market ${pool.poolAddress} on chain ${chainId}`
+          );
+        }
 
         const basePrice = BigDecimal(baseAssetPrice ?? 0);
 
@@ -1462,11 +1611,24 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
         const collateralPrices = new Map<string, BigDecimal>();
 
         for (const collateralPool of collateralPools) {
-          const collateralPrice =
+          let collateralPrice =
             (await getPriceBySymbol(
               appConfig.assets[collateralPool.underlyingTokenAddress],
               ctx.timestamp
             )) ?? 0;
+
+          if (collateralPrice === 0) {
+            collateralPrice = await getPriceFromSwaylendApi(
+              appConfig.assets[collateralPool.underlyingTokenAddress],
+              ctx.timestamp.getTime() / 1000
+            );
+          }
+
+          if (!collateralPrice) {
+            throw new Error(
+              `Collateral price not found for asset ${collateralPool.underlyingTokenAddress} on chain ${chainId}`
+            );
+          }
 
           collateralPrices.set(
             collateralPool.underlyingTokenAddress,
