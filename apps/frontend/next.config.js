@@ -24,11 +24,6 @@ const CONNECT_DOMAINS = [
   'https://gateway-lon.liquify.com',
   'https://gateway.liquify.com',
   'https://hermes.pyth.network',
-  // Redstone
-  'https://oracle-gateway-1.a.redstone.finance',
-  'https://oracle-gateway-2.a.redstone.finance',
-  'https://oracle-gateway-1.a.redstone.vip',
-  'https://oracle-gateway-2.a.redstone.vip',
   // OpenBlock
   'https://www.data-openblocklabs.com',
 ];

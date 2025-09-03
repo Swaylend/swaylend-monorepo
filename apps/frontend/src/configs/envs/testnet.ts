@@ -127,8 +127,6 @@ const markets_v2: DeployedMarketsV2 = {
       '0x2b2b991023784e531e5b413ba4729abeb7f959d7bf5ad73da82e4c8c1aaada89',
     tokenFactoryAddress:
       '0xb095873ffa6237aa209dd7fa9d6fd7d9e932453f8db62b9e436766a47b17d308',
-    redstoneAddress:
-      '0x090a02db813ad32e0cf8fa27e8d5fa1f28c5cbe3826805cb7193917e7a98e74a',
     storkAddress:
       '0x09c88f50d535ac5ce8945e34c418233b1e3834be9a88effb57cb137321fbae0c',
     graphqlUrl: '',
@@ -140,8 +138,6 @@ const markets_v2: DeployedMarketsV2 = {
       '0x45462cd7c1e5e17984a208447bf39150b3c3c667f1bda6c93ffe0c20fc7d3ae2',
     tokenFactoryAddress:
       '0xb095873ffa6237aa209dd7fa9d6fd7d9e932453f8db62b9e436766a47b17d308',
-    redstoneAddress:
-      '0x090a02db813ad32e0cf8fa27e8d5fa1f28c5cbe3826805cb7193917e7a98e74a',
     storkAddress:
       '0x09c88f50d535ac5ce8945e34c418233b1e3834be9a88effb57cb137321fbae0c',
     graphqlUrl: '',

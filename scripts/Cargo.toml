@@ -37,15 +37,6 @@ path = "src/market/fill_reserves.rs"
 name = "update_oracle_configuration"
 path = "src/market/update_oracle_configuration.rs"
 
-# Redstone-prices scripts
-[[bin]]
-name = "activate_redstone_prices"
-path = "src/redstone-prices/activate_redstone_prices.rs"
-
-[[bin]]
-name = "update_redstone_prices_configuration"
-path = "src/redstone-prices/update_redstone_prices_configuration.rs"
-
 # Testnet scripts
 [[bin]]
 name = "deploy_tokens"
@@ -73,7 +64,6 @@ tai64 = { workspace = true }
 hex = { workspace = true }
 
 market = { workspace = true }
-redstone_prices = { workspace = true }
 
 token_sdk = { workspace = true }
 pyth_mock_sdk = { workspace = true }

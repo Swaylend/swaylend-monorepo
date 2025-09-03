@@ -24,11 +24,6 @@
       "contract_id": "",
       "is_active": true,
       "oracle_type": "Pyth"
-    },
-    {
-      "contract_id": "",
-      "is_active": true,
-      "oracle_type": "Redstone"
     }
   ],
   "base_asset": {

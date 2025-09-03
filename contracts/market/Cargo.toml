@@ -25,7 +25,6 @@ serde_json = { workspace = true }
 market_sdk = { workspace = true }
 token_sdk = { workspace = true }
 pyth_mock_sdk = { workspace = true }
-redstone_prices_mock_sdk = { workspace = true }
 stork_mock_sdk = { workspace = true }
 pyth_sdk = { workspace = true }
 dotenv = { workspace = true }

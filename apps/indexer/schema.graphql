@@ -1,7 +1,6 @@
 # Oracle Type Schema
 enum OracleType {
   Pyth
-  Redstone
   Stork
 }
 

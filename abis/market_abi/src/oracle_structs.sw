@@ -2,7 +2,6 @@ library;
 
 use ::errors::*;
 
-use redstone_prices_abi::{RedstonePrices};
 use std::bytes::Bytes;
 use std::block::timestamp;
 use pyth_interface::{PythCore, data_structures::price::PriceFeedId};
@@ -24,14 +23,12 @@ pub struct Price {
 }
 
 pub enum OraclePriceFeedId {
-    Redstone: u256,
     Pyth: b256,
     Stork: b256,
 }
 
 pub enum OracleType {
     Pyth: (),
-    Redstone: (),
     Stork: (),
 }
 
@@ -53,7 +50,6 @@ pub struct OracleAssetConfiguration {
 // Used in the EXTERNAL facing methods.
 pub enum OracleInput {
     Pyth: PythOracleInput,
-    Redstone: RedstoneOracleInput,
     Stork: StorkOracleInput,
 }
 
@@ -68,15 +64,6 @@ pub struct PythOracleInput  {
     pub update_data: Vec<Bytes>,
 }
 
-pub struct RedstoneOracleInput {
-    /// Oracle ID from the global oracle configuration.
-    pub oracle_id: u64,
-    /// This field holds a collection of identifiers for the price feeds being updated.
-    pub price_feed_ids: Vec<u256>,
-    /// This field includes the actual update data in bytes format.
-    pub payload: Bytes,
-}
-
 pub struct StorkOracleInput {
     /// Oracle ID from the global oracle configuration.
     pub oracle_id: u64,
@@ -88,7 +75,6 @@ pub struct StorkOracleInput {
 // Used in the INTERNAL methods. We use the oracle_id to get the contract_id.
 pub enum OracleInputInternal {
     Pyth: PythOracleInputInternal,
-    Redstone: RedstoneOracleInputInternal,
     Stork: StorkOracleInputInternal,
 }
 
@@ -104,13 +90,6 @@ pub struct PythOracleInputInternal  {
     pub update_data: Vec<Bytes>,
 }
 
-pub struct RedstoneOracleInputInternal {
-    /// Oracle contract id.
-    pub contract_id: ContractId,
-
-    pub price_feed_ids: Vec<u256>,
-    pub payload: Bytes,
-}
 
 pub struct StorkOracleInputInternal {
     /// Oracle contract id.
@@ -175,41 +154,6 @@ impl Oracle {
                     if is_price_valid {
                         final_price = Price {
                             price: price.price.into(),
-                            exponent: price.exponent,
-                            confidence: price.confidence.into(),
-                            publish_time: price.publish_time,
-                        };
-                    }
-                } else {
-                    require(false, Error::InvalidPriceFeedId);
-                }
-            },
-            OracleType::Redstone => {
-                let oracle = abi(RedstonePrices, contract_id.bits());
-
-                if let OraclePriceFeedId::Redstone(id) = price_feed_id {
-                    let price = oracle.get_price(id);
-
-                    if price.price == 0 {
-                        is_price_valid = false;
-                    }
-
-                    // validate values
-                    if price.publish_time < timestamp() {
-                        let staleness = timestamp() - price.publish_time;
-                        if staleness > ORACLE_MAX_STALENESS {
-                            is_price_valid = false;
-                        }
-                    } else {
-                        let aheadness = price.publish_time - timestamp();
-                        if aheadness > ORACLE_MAX_AHEADNESS {
-                            is_price_valid = false;
-                        }
-                    }
-
-                    if is_price_valid {
-                        final_price = Price {
-                            price: price.price,
                             exponent: price.exponent,
                             confidence: price.confidence.into(),
                             publish_time: price.publish_time,
@@ -287,12 +231,6 @@ impl Oracle {
                     input
                         .update_data,
                 );
-            },
-            OracleInputInternal::Redstone(input) => {
-                let contract_id = input.contract_id;
-                let oracle = abi(RedstonePrices, contract_id.bits());
-
-                oracle.update_prices(input.price_feed_ids, input.payload);
             },
             OracleInputInternal::Stork(input) => {
                 let contract_id = input.contract_id;

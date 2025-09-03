@@ -6,7 +6,6 @@ import { useMarketStore } from '@/stores/market-store';
 import { createStableHash } from '@/utils';
 import { useOracleAssetConfigurations } from './use-oracle-asset-configurations';
 import { usePythOracle } from './use-pyth-oracle';
-import { useRedstoneOracle } from './use-redstone-oracle';
 import { useStorkOracle } from './use-stork-oracle';
 
 export const usePriceData = (marketParam?: string) => {
@@ -16,7 +15,6 @@ export const usePriceData = (marketParam?: string) => {
   const { data: oracleAssetConfigurations } =
     useOracleAssetConfigurations(marketParam);
   const { data: pythOracleData } = usePythOracle(market);
-  const { data: redstoneOracleData } = useRedstoneOracle(market);
   const { data: storkOracleData } = useStorkOracle(market);
 
   return useQuery({
@@ -25,7 +23,6 @@ export const usePriceData = (marketParam?: string) => {
       'v2',
       createStableHash(oracleAssetConfigurations),
       pythOracleData?.timestamp,
-      redstoneOracleData?.timestamp,
       storkOracleData?.timestamp,
     ],
     queryFn: () => {
@@ -34,7 +31,7 @@ export const usePriceData = (marketParam?: string) => {
         {
           price: BigNumber;
           confidence: BigNumber;
-          oracle: 'Redstone' | 'Pyth' | 'Stork';
+          oracle: 'Pyth' | 'Stork';
         }[]
       >();
       const oracleInputs: OracleInputInput[] = [];
@@ -51,19 +48,6 @@ export const usePriceData = (marketParam?: string) => {
         }
         oracleInputs.push(pythOracleData.pythOracleInput);
         totalUpdateFee = totalUpdateFee.plus(pythOracleData.updateFee);
-      }
-
-      if (redstoneOracleData) {
-        for (const [assetId, price] of redstoneOracleData.prices.entries()) {
-          prices.get(assetId)?.push({
-            price,
-            confidence: BigNumber(0),
-            oracle: 'Redstone',
-          });
-        }
-
-        oracleInputs.push(redstoneOracleData.redstoneOracleInput);
-        totalUpdateFee = totalUpdateFee.plus(redstoneOracleData.updateFee);
       }
 
       if (storkOracleData) {

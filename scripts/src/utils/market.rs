@@ -274,7 +274,6 @@ pub async fn get_market_instance(
 pub fn get_oracle_type(oracle_type: &str) -> OracleType {
     match oracle_type {
         "Pyth" => OracleType::Pyth,
-        "Redstone" => OracleType::Redstone,
         "Stork" => OracleType::Stork,
         _ => panic!("Invalid oracle type: {}", oracle_type),
     }
@@ -283,9 +282,6 @@ pub fn get_oracle_type(oracle_type: &str) -> OracleType {
 pub fn get_price_feed_id(oracle_type: &OracleType, price_feed_id: &str) -> OraclePriceFeedId {
     match oracle_type {
         OracleType::Pyth => OraclePriceFeedId::Pyth(Bits256::from_hex_str(price_feed_id).unwrap()),
-        OracleType::Redstone => {
-            OraclePriceFeedId::Redstone(U256::from_str_radix(price_feed_id, 16).unwrap())
-        }
         OracleType::Stork => {
             OraclePriceFeedId::Stork(Bits256::from_hex_str(price_feed_id).unwrap())
         }

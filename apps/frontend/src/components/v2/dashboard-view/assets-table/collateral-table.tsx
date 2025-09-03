@@ -64,7 +64,7 @@ type TableRowProps = {
     | {
         price: BigNumber;
         confidence: BigNumber;
-        oracle: 'Redstone' | 'Pyth' | 'Stork';
+        oracle: 'Pyth' | 'Stork';
       }[]
     | undefined;
   collateralAmount: BigNumber;

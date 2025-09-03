@@ -4,7 +4,6 @@ license = "Apache-2.0"
 name = "market_abi"
 
 [dependencies]
-redstone_prices_abi = { path = "../redstone_prices_abi" }
 pyth_interface = { git = "https://github.com/pyth-network/pyth-crosschain", rev = "10e5345ea2e29a5cc43311d43e681cf335e834f3" }
 signed_int = "0.26.1"
 stork_sway_sdk = "0.0.3"

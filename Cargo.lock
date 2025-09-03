@@ -6250,7 +6250,6 @@ dependencies = [
  "pyth_mock_sdk",
  "pyth_sdk",
  "rand",
- "redstone_prices_mock_sdk",
  "serde",
  "serde_json",
  "stork_mock_sdk",
@@ -7575,51 +7574,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "redstone_prices"
-version = "0.1.0"
-dependencies = [
- "chrono",
- "dotenv",
- "fuels 0.74.0",
- "redstone_prices_sdk",
- "tokio",
-]
-
-[[package]]
-name = "redstone_prices_mock"
-version = "0.1.0"
-dependencies = [
- "dotenv",
- "fuels 0.74.0",
- "redstone_prices_mock_sdk",
- "tokio",
-]
-
-[[package]]
-name = "redstone_prices_mock_sdk"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "fuels 0.74.0",
- "rand",
- "redstone_prices_mock",
- "serde",
- "serde_json",
-]
-
-[[package]]
-name = "redstone_prices_sdk"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "fuels 0.74.0",
- "rand",
- "redstone_prices",
- "serde",
- "serde_json",
-]
-
-[[package]]
 name = "ref-cast"
 version = "1.0.24"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -8708,7 +8662,6 @@ dependencies = [
  "market",
  "pyth_mock_sdk",
  "rand",
- "redstone_prices",
  "serde",
  "serde_json",
  "tai64",

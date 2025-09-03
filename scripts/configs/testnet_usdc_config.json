@@ -26,11 +26,6 @@
       "oracle_type": "Pyth"
     },
     {
-      "contract_id": "0x090a02db813ad32e0cf8fa27e8d5fa1f28c5cbe3826805cb7193917e7a98e74a",
-      "is_active": true,
-      "oracle_type": "Redstone"
-    },
-    {
       "contract_id": "0x09c88f50d535ac5ce8945e34c418233b1e3834be9a88effb57cb137321fbae0c",
       "is_active": true,
       "oracle_type": "Stork"

@@ -91,7 +91,7 @@ impl StorkMockContract {
 
         for (price_feed_id, (price, exponent, publish_time, _)) in prices {
             // NOTE: We don't want to overflow f64 so we are doing some weird hacks here
-            // This differs from Redstone and Pyth mocks as we already provide
+            // This differs from Pyth mock as we already provide
             // the scaled price. Here we need to scale it as it can overflow f64 (exponent is 18)
             let half = exponent / 2;
             let remainder = half + (exponent % 2);
@@ -127,7 +127,7 @@ impl StorkMockContract {
 
         for (price_feed_id, (price, exponent, publish_time, _)) in prices {
             // NOTE: We don't want to overflow f64 so we are doing some weird hacks here
-            // This differs from Redstone and Pyth mocks as we already provide
+            // This differs from Pyth mock as we already provide
             // the scaled price. Here we need to scale it as it can overflow f64 (exponent is 18)
             let half = exponent / 2;
             let remainder = half + (exponent % 2);

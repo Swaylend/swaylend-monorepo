@@ -88,10 +88,6 @@ Market.AssetOracleAddedEvent.handlerWithLoader({
       case 'Pyth':
         priceFeedId = event.params.oracle_configuration.price_feed_id.payload;
         break;
-      case 'Redstone':
-        priceFeedId =
-          event.params.oracle_configuration.price_feed_id.payload.toString();
-        break;
       case 'Stork':
         priceFeedId = event.params.oracle_configuration.price_feed_id.payload;
         break;
@@ -126,10 +122,6 @@ Market.AssetOracleUpdatedEvent.handlerWithLoader({
     switch (event.params.oracle_configuration.price_feed_id.case) {
       case 'Pyth':
         priceFeedId = event.params.oracle_configuration.price_feed_id.payload;
-        break;
-      case 'Redstone':
-        priceFeedId =
-          event.params.oracle_configuration.price_feed_id.payload.toString();
         break;
       case 'Stork':
         priceFeedId = event.params.oracle_configuration.price_feed_id.payload;

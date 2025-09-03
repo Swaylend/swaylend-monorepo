@@ -7,16 +7,14 @@ NETWORK=devnet
 TOKEN_CONTRACT_ID="0xf8895b6a0361548e6493da30d0a68661b99c44f84ff3b5a2c51fe1ae8d5d0a44"
 SRC_20_CONTRACT_ID="0x7b1345c8aaa5aeec29f52da3ba4038ce154d4f6ddcf6691c431463fa3bf30477"
 PYTH_MOCK_CONTRACT_ID="0xfb38fd890d8f4b2482a807e32a9eec7a152713c0cbb6d0c9af1ef884ea4e6cbf"
-# This is the redstone-prices-mock deployed on devnet
-REDSTONE_PRICES_TARGET_CONTRACT_ID="0x008fee26e325131828c14f68682f517a768b342601eb64c634fdf8df39a9560c"
-REDSTONE_PRICES_PROXY_CONTRACT_ID="0xde5ea52f4edba0b665380544f3cc0a66adb9e532c389a256d27db961bb63705e"
+
 # Market deployed on devnet
 MARKET_TARGET_CONTRACT_ID="0x69de6c52b2539d652c8b4f30a88baad8aef05c3cb534e125cf439b89c975dc10"
 MARKET_PROXY_CONTRACT_ID="0x1a28ebb545dc8ca32bf84fda133c28c784ef54a4572f0491760fb56496df8e4c"
 
-read -p "Have you deleted proxy address from contracts/market/Forc.toml, contracts/redstone-prices/Forc.toml and contracts/redstone-prices-mock/Forc.toml? (y/n): " answer
+read -p "Have you deleted proxy address from contracts/market/Forc.toml? (y/n): " answer
 if [ "$answer" != "y" ]; then
-    echo "Please delete the proxy address from contracts/market/Forc.toml, contracts/redstone-prices/Forc.toml and contracts/redstone-prices-mock/Forc.toml before continuing."
+    echo "Please delete the proxy address from contracts/market/Forc.toml before continuing."
     exit 1
 fi
 
@@ -25,9 +23,7 @@ forc deploy --default-signer --node-url http://localhost:4000/v1/graphql \
     --salt market:0x0000000000000000000000000000000000000000000000000000000000000001 \
     --salt token:0x0000000000000000000000000000000000000000000000000000000000000002 \
     --salt pyth-mock:0x0000000000000000000000000000000000000000000000000000000000000003 \
-    --salt redstone-prices:0x0000000000000000000000000000000000000000000000000000000000000004 \
-    --salt redstone-prices-mock:0x0000000000000000000000000000000000000000000000000000000000000005 \
-    --salt src-20:0x0000000000000000000000000000000000000000000000000000000000000006
+    --salt src-20:0x000000000000000000000000000000000000000000000000000000000000000
 
 cd ./scripts
 

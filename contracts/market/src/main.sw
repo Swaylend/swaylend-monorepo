@@ -1601,15 +1601,6 @@ fn update_price_feeds_internal(oracle_inputs: Vec<OracleInput>) {
                     update_data: input.update_data,
                 })
             },
-            OracleInput::Redstone(input) => {
-                let oracle_configuration: OracleGlobalConfiguration = storage.oracle_global_configurations.get(input.oracle_id).try_read().unwrap();
-
-                OracleInputInternal::Redstone(RedstoneOracleInputInternal {
-                    contract_id: oracle_configuration.contract_id,
-                    price_feed_ids: input.price_feed_ids,
-                    payload: input.payload,
-                })
-            },
             OracleInput::Stork(input) => {
                 let oracle_configuration: OracleGlobalConfiguration = storage.oracle_global_configurations.get(input.oracle_id).try_read().unwrap();
 

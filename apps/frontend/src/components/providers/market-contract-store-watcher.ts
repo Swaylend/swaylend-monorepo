@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import { appConfig } from '@/configs';
 import { Stork } from '@/contract-types/stork';
 import { Market as MarketV1 } from '@/contract-types/v1';
-import { Market as MarketV2, RedstonePrices } from '@/contract-types/v2';
+import { Market as MarketV2 } from '@/contract-types/v2';
 import { useProvider } from '@/hooks';
 import { useMarketAddressBasedContractsStore as useMarketAddressBasedContractsStoreV1 } from '@/stores/v1/market-address-based-contract-store';
 import { useMarketAddressBasedContractsStore as useMarketAddressBasedContractsStoreV2 } from '@/stores/v2/market-address-based-contract-store';
@@ -48,23 +48,12 @@ export default function MarketContractStoreWatcher(): null {
         walletOrProvider
       );
 
-      const redstoneContract = new RedstonePrices(
-        appConfig.client.v2.markets[market].redstoneAddress,
-        walletOrProvider
-      );
-
       const storkContract = new Stork(
         appConfig.client.v2.markets[market].storkAddress,
         walletOrProvider
       );
 
-      updateContractsV2(
-        market,
-        pythContract,
-        marketContract,
-        redstoneContract,
-        storkContract
-      );
+      updateContractsV2(market, pythContract, marketContract, storkContract);
     }
   }, [walletOrProvider]);
 

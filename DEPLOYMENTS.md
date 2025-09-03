@@ -14,8 +14,6 @@
 # FUEL TESTNET
 
 ## Oracles
-* Redstone Prices Implementation: `0xf3b1b98c30c5b76f4261fc380323ab8941ad663208cd88d7881dc5ee252fbdbd`
-* Redstone Prices Proxy: `0x090a02db813ad32e0cf8fa27e8d5fa1f28c5cbe3826805cb7193917e7a98e74a`
 
 * Pyth Oracle contract (v1): `0x25146735b29d4216639f7f8b1d7b921ff87a1d3051de62d6cceaacabeb33b8e7`
 * Pyth Oracle contract (v2): `0x5d17f54708afd01530c2e0ffb123cd21e92461aae8450de2cc08d0fd330cf240`

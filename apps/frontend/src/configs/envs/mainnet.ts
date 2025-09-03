@@ -61,7 +61,6 @@ const markets_v1: DeployedMarketsV1 = {
 const markets_v2: DeployedMarketsV2 = {
   USDC: {
     pythAddress: '',
-    redstoneAddress: '',
     storkAddress:
       '0x9c118ae13927dd51ba59c0370dc8c272a3b64ccd675950750c8840a649c81149',
     marketAddress: '',

@@ -2,13 +2,10 @@
 members = [
     # ABIs
     "abis/market_abi",
-    "abis/redstone_prices_abi",
     # Contracts
     "contracts/market",
     "contracts/src-20",
     "contracts/token",
     "contracts/pyth-mock",
-    "contracts/redstone-prices",
-    "contracts/redstone-prices-mock",
     "contracts/stork-mock",
 ]

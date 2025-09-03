@@ -14,7 +14,6 @@ export const DeployedMarketsV2Schema = z.record(
   z.string(),
   z.object({
     pythAddress: z.string(),
-    redstoneAddress: z.string(),
     storkAddress: z.string(),
     marketAddress: z.string(),
     tokenFactoryAddress: z.string(),

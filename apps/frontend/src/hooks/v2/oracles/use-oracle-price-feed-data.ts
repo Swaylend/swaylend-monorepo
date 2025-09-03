@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import type { BN } from 'fuels';
 import type {
   OraclePriceFeedIdOutput,
   OracleTypeOutput,
@@ -18,9 +17,6 @@ const getOraclePriceFeedId = (
   )[0] as keyof typeof oraclePriceFeedId;
   const value = oraclePriceFeedId[key];
 
-  if (key === 'Redstone') {
-    return (value as BN).toString(); // BN has a toString() method
-  }
   if (key === 'Pyth' || key === 'Stork') {
     return value as string; // Already strings
   }
