@@ -7,11 +7,10 @@ use fuels::test_helpers::{
 use fuels::types::{AssetId, Bits256, ContractId, Identity, U256};
 use market::{
     OracleAssetConfiguration, OracleGlobalConfiguration, OracleInput, OracleType, PythOracleInput,
-    RedstoneOracleInput, StorkOracleInput,
+    StorkOracleInput,
 };
 use market_sdk::{get_market_config, Market};
 use pyth_mock_sdk::PythMockContract;
-use redstone_prices_mock_sdk::RedstonePricesMockContract;
 use std::collections::HashMap;
 use std::result::Result::Ok;
 use stork_mock_sdk::*;
@@ -75,9 +74,6 @@ pub struct TestData {
     pub pyth_mock_oracle: PythMockContract,
     pub pyth_prices: Vec<(Bits256, (u64, u32, u64, u64))>,
     pub pyth_asset_price_feeds: HashMap<AssetId, (Bits256, u32)>, // asset_id -> (price_feed_id, price_feed_decimals)
-    pub redstone_mock_oracle: RedstonePricesMockContract,
-    pub redstone_prices: Vec<(U256, (u64, u32, u64, u64))>,
-    pub redstone_asset_price_feeds: HashMap<AssetId, (U256, u32)>, // asset_id -> (price_feed_id, price_feed_decimals)
     pub stork_mock_oracle: StorkMockContract,
     pub stork_prices: Vec<(Bits256, (f64, u32, u64, u64))>,
     pub stork_asset_price_feeds: HashMap<AssetId, (Bits256, u32)>, // asset_id -> (price_feed_id, price_feed_decimals)
@@ -90,7 +86,6 @@ pub fn string_to_price_feed_id(
 ) -> market::OraclePriceFeedId {
     match oracle_type.as_str() {
         "Pyth" => market::OraclePriceFeedId::Pyth(Bits256::from_hex_str(&price_feed_id).unwrap()),
-        "Redstone" => market::OraclePriceFeedId::Redstone(U256::from(price_feed_id.as_bytes())),
         "Stork" => market::OraclePriceFeedId::Stork(Bits256::from_hex_str(&price_feed_id).unwrap()),
         _ => panic!("Invalid oracle type: {}", oracle_type),
     }
@@ -110,11 +105,6 @@ pub async fn setup(
 
     //--------------- ORACLES ---------------
     let pyth_mock_oracle = PythMockContract::deploy(&admin).await.unwrap();
-    let redstone_mock_oracle = RedstonePricesMockContract::deploy(&admin).await.unwrap();
-    redstone_mock_oracle
-        .activate(1, vec![], admin.address().into())
-        .await
-        .unwrap();
     let stork_mock_oracle = StorkMockContract::deploy(&admin).await.unwrap();
 
     //--------------- TOKENS ---------------
@@ -174,11 +164,6 @@ pub async fn setup(
             oracle_type: OracleType::Pyth,
         },
         OracleGlobalConfiguration {
-            contract_id: ContractId::from(redstone_mock_oracle.instance.contract_id()),
-            is_disabled: false,
-            oracle_type: OracleType::Redstone,
-        },
-        OracleGlobalConfiguration {
             contract_id: ContractId::from(stork_mock_oracle.instance.contract_id()),
             is_disabled: false,
             oracle_type: OracleType::Stork,
@@ -189,12 +174,8 @@ pub async fn setup(
     let contract_id_to_index = HashMap::<ContractId, u64>::from([
         (ContractId::from(pyth_mock_oracle.instance.contract_id()), 0),
         (
-            ContractId::from(redstone_mock_oracle.instance.contract_id()),
-            1,
-        ),
-        (
             ContractId::from(stork_mock_oracle.instance.contract_id()),
-            2,
+            1,
         ),
     ]);
 
@@ -305,71 +286,6 @@ pub async fn setup(
         oracle_total_update_fee += price_feed_count as u64;
     }
 
-    // Prepare redstone input
-    let mut redstone_asset_price_feeds = HashMap::new();
-    let mut redstone_prices = Vec::new();
-    let redstone_publish_time: u64 =
-        tai64::Tai64::from_unix(Utc::now().timestamp().try_into().unwrap()).0;
-    let redstone_confidence = 0;
-
-    for asset in &assets {
-        let oracle_configs = oracle_configs.get(&asset.1.asset_id).unwrap();
-        let config = oracle_configs.iter().find(|c| c.oracle_id == 1);
-
-        if config.is_none() {
-            continue;
-        }
-
-        let config = config.unwrap();
-        let price = asset.1.default_price * 10u64.pow(config.price_feed_decimals as u32);
-
-        redstone_prices.push((
-            U256::from(config.price_feed_id.as_bytes()),
-            (
-                price,
-                config.price_feed_decimals,
-                redstone_publish_time,
-                redstone_confidence,
-            ),
-        ));
-
-        redstone_asset_price_feeds.insert(
-            asset.1.asset_id,
-            (
-                U256::from(config.price_feed_id.as_bytes()),
-                config.price_feed_decimals,
-            ),
-        );
-
-        println!(
-            "[Redstone] Price for {} = {}",
-            asset.1.symbol,
-            price as f64 / 10u64.pow(config.price_feed_decimals as u32) as f64
-        );
-    }
-
-    if redstone_prices.len() > 0 {
-        let (price_feed_ids, payload) = redstone_mock_oracle
-            .create_update_data(&redstone_prices)
-            .await
-            .unwrap();
-
-        redstone_mock_oracle
-            .update_prices(price_feed_ids.clone(), payload.clone())
-            .await
-            .unwrap();
-
-        oracle_inputs.push(OracleInput::Redstone(RedstoneOracleInput {
-            oracle_id: *contract_id_to_index
-                .get(&ContractId::from(
-                    redstone_mock_oracle.instance.contract_id(),
-                ))
-                .unwrap(),
-            price_feed_ids: price_feed_ids,
-            payload,
-        }));
-    }
-
     // Prepare stork input
     let mut stork_asset_price_feeds = HashMap::new();
     let mut stork_prices: Vec<(Bits256, (f64, u32, u64, u64))> = Vec::new();
@@ -461,9 +377,6 @@ pub async fn setup(
         pyth_mock_oracle,
         pyth_prices: prices,
         pyth_asset_price_feeds,
-        redstone_mock_oracle,
-        redstone_prices,
-        redstone_asset_price_feeds,
         stork_mock_oracle,
         stork_prices,
         stork_asset_price_feeds,
