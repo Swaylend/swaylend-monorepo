@@ -76,7 +76,6 @@ async fn reserves_test() {
         // Step 3: Bob repays 4000 USDC
         let res = market.get_user_basic(bob_account).await.unwrap();
         let abc = convert_i256_to_i64(&res.value.principal);
-        println!("abc: {abc}");
         let principal_value: u64 = convert_i256_to_i64(&res.value.principal).abs() as u64;
         let repay_amount: u64 = principal_value + parse_units(10, usdc.decimals);
 
