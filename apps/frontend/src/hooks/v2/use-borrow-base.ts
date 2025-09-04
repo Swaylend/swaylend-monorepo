@@ -10,6 +10,7 @@ import {
 import { appConfig } from '@/configs';
 import { useMarketContract } from '@/contracts/v2/use-market-contract';
 import { usePythContract } from '@/contracts/v2/use-pyth-contract';
+import { useStorkContract } from '@/contracts/v2/use-stork-contract';
 import { useMarketStore } from '@/stores/market-store';
 import { usePriceData } from './oracles';
 import { useMarketConfiguration } from './use-market-configuration';
@@ -25,6 +26,7 @@ export const useBorrowBase = () => {
   const { data: marketConfiguration } = useMarketConfiguration();
   const marketContract = useMarketContract(market);
   const pythContract = usePythContract(market);
+  const storkContract = useStorkContract(market);
   const { data: priceData } = usePriceData(market);
 
   const queryClient = useQueryClient();
@@ -36,6 +38,7 @@ export const useBorrowBase = () => {
       account,
       marketContract?.id,
       pythContract?.id,
+      storkContract?.id,
       priceData?.timestamp,
     ],
     mutationFn: async ({ tokenAmount }: { tokenAmount: BigNumber }) => {
@@ -45,6 +48,7 @@ export const useBorrowBase = () => {
           marketConfiguration &&
           marketContract &&
           pythContract &&
+          storkContract &&
           priceData
         )
       ) {
@@ -63,7 +67,7 @@ export const useBorrowBase = () => {
             assetId: appConfig.client.shared.baseAssetId,
           },
         })
-        .addContracts([pythContract])
+        .addContracts([pythContract, storkContract])
         .call();
 
       const transactionResult = await toast.promise(waitForResult(), {

@@ -10,6 +10,7 @@ import {
 import { appConfig } from '@/configs';
 import { useMarketContract } from '@/contracts/v2/use-market-contract';
 import { usePythContract } from '@/contracts/v2/use-pyth-contract';
+import { useStorkContract } from '@/contracts/v2/use-stork-contract';
 import { useMarketStore } from '@/stores/market-store';
 import { createStableHash } from '@/utils';
 import { usePriceData } from './oracles';
@@ -29,6 +30,7 @@ export const useWithdrawBase = () => {
   const queryClient = useQueryClient();
   const marketContract = useMarketContract(market);
   const pythContract = usePythContract(market);
+  const storkContract = useStorkContract(market);
 
   return useMutation({
     mutationKey: [
@@ -64,7 +66,7 @@ export const useWithdrawBase = () => {
             assetId: appConfig.client.shared.baseAssetId,
           },
         })
-        .addContracts([pythContract])
+        .addContracts([pythContract, storkContract])
         .call();
 
       const transactionResult = await toast.promise(waitForResult(), {
