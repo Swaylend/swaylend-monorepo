@@ -13,6 +13,12 @@
         "price_feed_id": "0xeaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a",
         "price_feed_decimals": 7,
         "oracle_type": "Pyth"
+      },
+      {
+        "oracle_id": 1,
+        "price_feed_id": "0x4ad4b613b0b1726a9f2950f6462c5133f8f56ab1d2dc1b03ba91153b4380a0e6",
+        "price_feed_decimals": 18,
+        "oracle_type": "Stork"
       }
     ]
   },
@@ -34,6 +40,12 @@
         "price_feed_id": "0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace",
         "price_feed_decimals": 8,
         "oracle_type": "Pyth"
+      },
+      {
+        "oracle_id": 1,
+        "price_feed_id": "0x59102b37de83bdda9f38ac8254e596f0d9ac61d2035c07936675e87342817160",
+        "price_feed_decimals": 18,
+        "oracle_type": "Stork"
       }
     ]
   },
@@ -52,9 +64,15 @@
     "oracle_configuration": [
       {
         "oracle_id": 0,
-        "price_feed_id": "0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43",
+        "price_feed_id": "0x78d185a741d07edb3412b09008b7c5cfb9bbbd7d568bf00ba737b456ba171501",
         "price_feed_decimals": 7,
         "oracle_type": "Pyth"
+      },
+      {
+        "oracle_id": 1,
+        "price_feed_id": "0x7404e3d104ea7841c3d9e6fd20adfe99b4ad586bc08d8f3bd3afef894cf184de",
+        "price_feed_decimals": 18,
+        "oracle_type": "Stork"
       }
     ]
   },
@@ -76,6 +94,12 @@
         "price_feed_id": "0x78d185a741d07edb3412b09008b7c5cfb9bbbd7d568bf00ba737b456ba171501",
         "price_feed_decimals": 8,
         "oracle_type": "Pyth"
+      },
+      {
+        "oracle_id": 1,
+        "price_feed_id": "0x9e6266a76df39a05a79ea6566fb4780787a70d8bd92ac5e8d5227ee526d20554",
+        "price_feed_decimals": 18,
+        "oracle_type": "Stork"
       }
     ]
   },
@@ -91,6 +115,19 @@
     "liquidate_collateral_factor": 950000000000000000,
     "liquidation_penalty": 950000000000000000,
     "supply_cap": 10000000000000,
-    "oracle_configuration": []
+    "oracle_configuration": [
+      {
+        "oracle_id": 0,
+        "price_feed_id": "0x2b89b9dc8fdf9f34709a5b106b472f0f39bb6ca9ce04b0fd7f2e971688e2e53b",
+        "price_feed_decimals": 7,
+        "oracle_type": "Pyth"
+      },
+      {
+        "oracle_id": 1,
+        "price_feed_id": "0x6dcd0a8fb0460d4f0f98c524e06c10c63377cd098b589c0b90314bfb55751558",
+        "price_feed_decimals": 18,
+        "oracle_type": "Stork"
+      }
+    ]
   }
 ]

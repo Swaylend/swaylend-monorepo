@@ -10,13 +10,13 @@ async fn reverts_when_all_oracles_are_disabled_globaly() {
         market,
         oracle_total_update_fee,
         pyth_mock_oracle,
-        redstone_mock_oracle,
+        stork_mock_oracle,
         oracle_inputs,
         ..
-    } = setup(None, TestBaseAsset::USDC, Some("tokens-redstone.json")).await;
+    } = setup(None, TestBaseAsset::USDC, Some("tokens-stork.json")).await;
 
     let oracle_contracts: Vec<&dyn ContractDependency> =
-        vec![&redstone_mock_oracle.instance, &pyth_mock_oracle.instance];
+        vec![&stork_mock_oracle.instance, &pyth_mock_oracle.instance];
 
     // Update price feeds
     market
@@ -73,13 +73,13 @@ async fn reverts_when_all_oracles_are_disabled_for_asset() {
         market,
         oracle_total_update_fee,
         pyth_mock_oracle,
-        redstone_mock_oracle,
+        stork_mock_oracle,
         oracle_inputs,
         ..
-    } = setup(None, TestBaseAsset::USDC, Some("tokens-redstone.json")).await;
+    } = setup(None, TestBaseAsset::USDC, Some("tokens-stork.json")).await;
 
     let oracle_contracts: Vec<&dyn ContractDependency> =
-        vec![&redstone_mock_oracle.instance, &pyth_mock_oracle.instance];
+        vec![&stork_mock_oracle.instance, &pyth_mock_oracle.instance];
 
     // Update price feeds
     market

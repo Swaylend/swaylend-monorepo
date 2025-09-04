@@ -6,10 +6,10 @@ use fuels::{
         responses::CallResponse,
     },
     types::{
-        transaction::TxPolicies, transaction_builders::VariableOutputPolicy, ContractId, U256,
+        transaction::TxPolicies, transaction_builders::VariableOutputPolicy, Bits256, ContractId,
     },
 };
-use market::{OracleInput, RedstoneOracleInput};
+use market::{OracleInput, StorkOracleInput};
 use market_sdk::{convert_i256_to_u64, is_i256_negative, parse_units};
 
 // Multiplies all values by this number
@@ -17,7 +17,7 @@ use market_sdk::{convert_i256_to_u64, is_i256_negative, parse_units};
 const AMOUNT_COEFFICIENT: u64 = 10u64.pow(0);
 
 #[tokio::test]
-async fn redstone_pyth() {
+async fn stork_pyth_some_inputs_missing() {
     let scale_6 = 10u64.pow(6) as f64;
     let scale_9 = 10u64.pow(9) as f64;
 
@@ -37,15 +37,47 @@ async fn redstone_pyth() {
         mut oracle_inputs,
         oracle_total_update_fee,
         pyth_mock_oracle,
-        redstone_mock_oracle,
-        redstone_prices,
-        redstone_asset_price_feeds,
+        pyth_prices,
+        stork_mock_oracle,
+        stork_prices,
+        stork_asset_price_feeds,
         oracle_contract_id_to_index,
         ..
-    } = setup(None, TestBaseAsset::USDC, Some("tokens-pyth-redstone.json")).await;
+    } = setup(
+        None,
+        TestBaseAsset::USDC,
+        Some("tokens-pyth-stork-some-inputs-missing.json"),
+    )
+    .await;
 
     let oracle_contracts: Vec<&dyn ContractDependency> =
-        vec![&pyth_mock_oracle.instance, &redstone_mock_oracle.instance];
+        vec![&pyth_mock_oracle.instance, &stork_mock_oracle.instance];
+
+    // Set Pyth prices to some old publish time
+    pyth_mock_oracle
+        .update_prices(
+            &pyth_prices
+                .iter()
+                .map(
+                    |(price_feed_id, (price, price_feed_decimals, _, confidence))| {
+                        (
+                            *price_feed_id,
+                            (*price, *price_feed_decimals, 0, *confidence),
+                        )
+                    },
+                )
+                .collect::<Vec<(Bits256, (u64, u32, u64, u64))>>(),
+        )
+        .await
+        .unwrap();
+
+    // Filter out pyth inputs from oracle_inputs
+    oracle_inputs = oracle_inputs
+        .into_iter()
+        .filter(|input| !matches!(input, OracleInput::Pyth(_)))
+        .collect::<Vec<OracleInput>>();
+
+    println!("oracle_inputs: {:?}", oracle_inputs);
 
     // =================================================
     // ==================== Step #0 ====================
@@ -267,7 +299,7 @@ async fn redstone_pyth() {
         .available_to_borrow(&oracle_contracts, alice_account)
         .await
         .unwrap();
-    let log_amount = format!("{} USDC", amount as f64 / scale_6);
+    let log_amount = format!("{} USDC", amount as f64 / scale_9);
     print_case_title(5, "Alice", "withdraw_base", log_amount.as_str());
 
     // Alice calls withdraw_base
@@ -342,7 +374,7 @@ async fn redstone_pyth() {
         .unwrap()
         .value;
 
-    let (redstone_uni_price_feed_id, _) = redstone_asset_price_feeds.get(&uni.asset_id).unwrap();
+    let (stork_uni_price_feed_id, _) = stork_asset_price_feeds.get(&uni.asset_id).unwrap();
     let old_oracle_inputs = oracle_inputs.clone();
     let mut new_oracle_inputs = Vec::new();
 
@@ -350,8 +382,8 @@ async fn redstone_pyth() {
         let input = input.clone();
 
         let processed_input = match input {
-            OracleInput::Redstone(redstone_input) => {
-                let new_prices = redstone_prices
+            OracleInput::Stork(_) => {
+                let new_prices = stork_prices
                     .iter()
                     .map(
                         |(
@@ -361,8 +393,8 @@ async fn redstone_pyth() {
                             (
                                 *price_feed_id,
                                 (
-                                    if *price_feed_id == *redstone_uni_price_feed_id {
-                                        (*price as f64 * 0.7) as u64
+                                    if *price_feed_id == *stork_uni_price_feed_id {
+                                        *price * 0.7
                                     } else {
                                         *price
                                     },
@@ -373,21 +405,18 @@ async fn redstone_pyth() {
                             )
                         },
                     )
-                    .collect::<Vec<(U256, (u64, u32, u64, u64))>>();
+                    .collect::<Vec<(Bits256, (f64, u32, u64, u64))>>();
 
-                let (_, payload) = redstone_mock_oracle
-                    .create_update_data(&new_prices)
+                let update_data = stork_mock_oracle
+                    .create_update_data_market_types(&new_prices)
                     .await
                     .unwrap();
 
-                OracleInput::Redstone(RedstoneOracleInput {
+                OracleInput::Stork(StorkOracleInput {
                     oracle_id: *oracle_contract_id_to_index
-                        .get(&ContractId::from(
-                            redstone_mock_oracle.instance.contract_id(),
-                        ))
+                        .get(&ContractId::from(stork_mock_oracle.instance.contract_id()))
                         .unwrap(),
-                    price_feed_ids: redstone_input.price_feed_ids,
-                    payload,
+                    update_data,
                 })
             }
             _ => input,

@@ -7,10 +7,9 @@ use fuels::{
     },
     types::{
         transaction::TxPolicies, transaction_builders::VariableOutputPolicy, Bits256, ContractId,
-        U256,
     },
 };
-use market::{OracleInput, PythOracleInput, RedstoneOracleInput};
+use market::{OracleInput, PythOracleInput, StorkOracleInput};
 use market_sdk::{convert_i256_to_u64, is_i256_negative, parse_units};
 
 // Multiplies all values by this number
@@ -18,7 +17,7 @@ use market_sdk::{convert_i256_to_u64, is_i256_negative, parse_units};
 const AMOUNT_COEFFICIENT: u64 = 10u64.pow(0);
 
 #[tokio::test]
-async fn redstone_pyth_some_disabled() {
+async fn stork_pyth_some_disabled() {
     let scale_6 = 10u64.pow(6) as f64;
     let scale_9 = 10u64.pow(9) as f64;
 
@@ -40,20 +39,20 @@ async fn redstone_pyth_some_disabled() {
         pyth_mock_oracle,
         pyth_prices,
         pyth_asset_price_feeds,
-        redstone_mock_oracle,
-        redstone_prices,
-        redstone_asset_price_feeds,
+        stork_mock_oracle,
+        stork_prices,
+        stork_asset_price_feeds,
         oracle_contract_id_to_index,
         ..
     } = setup(
         None,
         TestBaseAsset::USDC,
-        Some("tokens-pyth-redstone-some-disabled.json"),
+        Some("tokens-pyth-stork-some-disabled.json"),
     )
     .await;
 
     let oracle_contracts: Vec<&dyn ContractDependency> =
-        vec![&pyth_mock_oracle.instance, &redstone_mock_oracle.instance];
+        vec![&pyth_mock_oracle.instance, &stork_mock_oracle.instance];
 
     let oracle_asset_configurations = market
         .get_oracle_asset_configurations()
@@ -76,24 +75,6 @@ async fn redstone_pyth_some_disabled() {
 
     market
         .update_asset_oracle(usdc.asset_id, &usdc_oracle_configuration)
-        .await
-        .unwrap();
-
-    // Disable Redstone for UNI
-    let mut uni_oracle_configuration = oracle_asset_configurations
-        .iter()
-        .find(|(asset_id, _)| *asset_id == uni.asset_id)
-        .unwrap()
-        .1
-        .iter()
-        .find(|oracle_configuration| oracle_configuration.oracle_id == 1)
-        .unwrap()
-        .clone();
-
-    uni_oracle_configuration.is_disabled = true;
-
-    market
-        .update_asset_oracle(uni.asset_id, &uni_oracle_configuration)
         .await
         .unwrap();
 
@@ -392,7 +373,7 @@ async fn redstone_pyth_some_disabled() {
         .unwrap()
         .value;
 
-    let (redstone_uni_price_feed_id, _) = redstone_asset_price_feeds.get(&uni.asset_id).unwrap();
+    let (stork_uni_price_feed_id, _) = stork_asset_price_feeds.get(&uni.asset_id).unwrap();
     let (pyth_uni_price_feed_id, _) = pyth_asset_price_feeds.get(&uni.asset_id).unwrap();
     let old_oracle_inputs = oracle_inputs.clone();
     let mut new_oracle_inputs = Vec::new();
@@ -438,8 +419,8 @@ async fn redstone_pyth_some_disabled() {
                         .unwrap(),
                 })
             }
-            OracleInput::Redstone(redstone_input) => {
-                let new_prices = redstone_prices
+            OracleInput::Stork(_) => {
+                let new_prices = stork_prices
                     .iter()
                     .map(
                         |(
@@ -449,8 +430,8 @@ async fn redstone_pyth_some_disabled() {
                             (
                                 *price_feed_id,
                                 (
-                                    if *price_feed_id == *redstone_uni_price_feed_id {
-                                        (*price as f64 * 0.7) as u64
+                                    if *price_feed_id == *stork_uni_price_feed_id {
+                                        *price * 0.7
                                     } else {
                                         *price
                                     },
@@ -461,21 +442,18 @@ async fn redstone_pyth_some_disabled() {
                             )
                         },
                     )
-                    .collect::<Vec<(U256, (u64, u32, u64, u64))>>();
+                    .collect::<Vec<(Bits256, (f64, u32, u64, u64))>>();
 
-                let (_, payload) = redstone_mock_oracle
-                    .create_update_data(&new_prices)
+                let update_data = stork_mock_oracle
+                    .create_update_data_market_types(&new_prices)
                     .await
                     .unwrap();
 
-                OracleInput::Redstone(RedstoneOracleInput {
+                OracleInput::Stork(StorkOracleInput {
                     oracle_id: *oracle_contract_id_to_index
-                        .get(&ContractId::from(
-                            redstone_mock_oracle.instance.contract_id(),
-                        ))
+                        .get(&ContractId::from(stork_mock_oracle.instance.contract_id()))
                         .unwrap(),
-                    price_feed_ids: redstone_input.price_feed_ids,
-                    payload,
+                    update_data,
                 })
             }
             _ => input,

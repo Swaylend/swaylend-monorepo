@@ -16,7 +16,6 @@ name = "market_abi"
 source = "member"
 dependencies = [
     "pyth_interface",
-    "redstone_prices_abi",
     "signed_int",
     "std",
     "stork_sway_sdk",
@@ -41,36 +40,6 @@ name = "pyth_mock"
 source = "member"
 dependencies = [
     "pyth_interface",
-    "std",
-]
-
-[[package]]
-name = "redstone"
-source = "git+https://github.com/martines3000/redstone-fuel-sdk?rev#206a1f3d62fdc6465004d86ebe1df118bd5350d4"
-dependencies = ["std"]
-
-[[package]]
-name = "redstone_prices"
-source = "member"
-dependencies = [
-    "ownership",
-    "redstone",
-    "redstone_prices_abi",
-    "std",
-]
-
-[[package]]
-name = "redstone_prices_abi"
-source = "member"
-dependencies = ["std"]
-
-[[package]]
-name = "redstone_prices_mock"
-source = "member"
-dependencies = [
-    "ownership",
-    "redstone",
-    "redstone_prices_abi",
     "std",
 ]
 

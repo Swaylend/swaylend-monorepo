@@ -9,7 +9,7 @@
     "mint_amount": 10000,
     "oracle_configuration": [
       {
-        "oracle_id": 2,
+        "oracle_id": 1,
         "price_feed_id": "0x4ad4b613b0b1726a9f2950f6462c5133f8f56ab1d2dc1b03ba91153b4380a0e6",
         "price_feed_decimals": 18,
         "oracle_type": "Stork"
@@ -30,7 +30,7 @@
     "supply_cap": 5000000000000,
     "oracle_configuration": [
       {
-        "oracle_id": 2,
+        "oracle_id": 1,
         "price_feed_id": "0x59102b37de83bdda9f38ac8254e596f0d9ac61d2035c07936675e87342817160",
         "price_feed_decimals": 18,
         "oracle_type": "Stork"
@@ -51,7 +51,7 @@
     "supply_cap": 10000000000,
     "oracle_configuration": [
       {
-        "oracle_id": 2,
+        "oracle_id": 1,
         "price_feed_id": "0x7404e3d104ea7841c3d9e6fd20adfe99b4ad586bc08d8f3bd3afef894cf184de",
         "price_feed_decimals": 18,
         "oracle_type": "Stork"
@@ -72,7 +72,7 @@
     "supply_cap": 400000000000000,
     "oracle_configuration": [
       {
-        "oracle_id": 2,
+        "oracle_id": 1,
         "price_feed_id": "0x9e6266a76df39a05a79ea6566fb4780787a70d8bd92ac5e8d5227ee526d20554",
         "price_feed_decimals": 18,
         "oracle_type": "Stork"
@@ -93,7 +93,7 @@
     "supply_cap": 10000000000000,
     "oracle_configuration": [
       {
-        "oracle_id": 2,
+        "oracle_id": 1,
         "price_feed_id": "0x6dcd0a8fb0460d4f0f98c524e06c10c63377cd098b589c0b90314bfb55751558",
         "price_feed_decimals": 18,
         "oracle_type": "Stork"
