@@ -100,66 +100,76 @@ export const History = () => {
             SkeletonRow
           ) : totalTransactionCount > 0 ? (
             <>
-              {transactionHistory?.map((tx: any) => (
-                <TableRow key={tx.id}>
-                  <TableCell className="text-moon">
-                    <div className="flex items-center gap-x-2">
-                      <div>
-                        <Image
-                          alt={tx.market}
-                          className={'rounded-full'}
-                          height={32}
-                          src={SYMBOL_TO_ICON[tx.market]}
-                          width={32}
-                        />
-                      </div>
-                      <div>
-                        <div className="flex items-baseline gap-x-2">
-                          <div className="font-semibold text-md text-white">
-                            {SYMBOL_TO_NAME[tx.market]}
-                          </div>
-                          <div className="font-semibold text-moon text-sm">
-                            {tx.market}
+              {transactionHistory?.map((tx: any) => {
+                console.log('tx.market', tx.market);
+                console.log(
+                  'SYMBOL_TO_ICON[tx.market]',
+                  SYMBOL_TO_ICON[tx.market]
+                );
+
+                return (
+                  <TableRow key={tx.id}>
+                    <TableCell className="text-moon">
+                      <div className="flex items-center gap-x-2">
+                        <div>
+                          <Image
+                            alt={tx.market}
+                            className={'rounded-full'}
+                            height={32}
+                            src={SYMBOL_TO_ICON[tx.market]}
+                            width={32}
+                          />
+                        </div>
+                        <div>
+                          <div className="flex items-baseline gap-x-2">
+                            <div className="font-semibold text-md text-white">
+                              {SYMBOL_TO_NAME[tx.market]}
+                            </div>
+                            <div className="font-semibold text-moon text-sm">
+                              {tx.market}
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </TableCell>
-                  <TableCell className="font-semibold text-lavender text-md">
-                    {tx.eventType === 'Withdrawal' ? 'Withdraw' : tx.eventType}
-                  </TableCell>
-                  <TableCell className="text-moon">
-                    <AssetName
-                      name={SYMBOL_TO_NAME[tx.token]}
-                      src={SYMBOL_TO_ICON[tx.token]}
-                      symbol={tx.token}
-                    />
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-x-2">
-                      <span className="font-medium text-lavender">
-                        $ {tx.amountUsd}
-                      </span>
-                      <span>
-                        {Number.parseFloat(tx.amount).toFixed(2)} {tx.token}
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-moon">
-                    <div>
-                      <a
-                        className="cursor-pointer font-normal text-primary underline hover:opacity-80"
-                        href={`${appConfig.client.shared.fuelExplorerUrl}/tx/${tx.transactionHash}`}
-                        rel="noreferrer"
-                        target="_blank"
-                      >
-                        {`${tx.transactionHash.slice(0, 8)}...${tx.transactionHash.slice(-4)}`}
-                      </a>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-lavender">{tx.date}</TableCell>
-                </TableRow>
-              ))}
+                    </TableCell>
+                    <TableCell className="font-semibold text-lavender text-md">
+                      {tx.eventType === 'Withdrawal'
+                        ? 'Withdraw'
+                        : tx.eventType}
+                    </TableCell>
+                    <TableCell className="text-moon">
+                      <AssetName
+                        name={SYMBOL_TO_NAME[tx.token]}
+                        src={SYMBOL_TO_ICON[tx.token]}
+                        symbol={tx.token}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-x-2">
+                        <span className="font-medium text-lavender">
+                          $ {tx.amountUsd}
+                        </span>
+                        <span>
+                          {Number.parseFloat(tx.amount).toFixed(2)} {tx.token}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-moon">
+                      <div>
+                        <a
+                          className="cursor-pointer font-normal text-primary underline hover:opacity-80"
+                          href={`${appConfig.client.shared.fuelExplorerUrl}/tx/${tx.transactionHash}`}
+                          rel="noreferrer"
+                          target="_blank"
+                        >
+                          {`${tx.transactionHash.slice(0, 8)}...${tx.transactionHash.slice(-4)}`}
+                        </a>
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-lavender">{tx.date}</TableCell>
+                  </TableRow>
+                );
+              })}
               <TableRow>
                 <TableCell colSpan={8}>
                   <div className="flex w-full items-center justify-center gap-x-2 font-semibold text-md text-moon">
