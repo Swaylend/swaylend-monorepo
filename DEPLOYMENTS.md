@@ -17,6 +17,7 @@
 
 * Pyth Oracle contract (v1): `0x25146735b29d4216639f7f8b1d7b921ff87a1d3051de62d6cceaacabeb33b8e7`
 * Pyth Oracle contract (v2): `0x5d17f54708afd01530c2e0ffb123cd21e92461aae8450de2cc08d0fd330cf240`
+* Stork Oracle contract: `0x09c88f50d535ac5ce8945e34c418233b1e3834be9a88effb57cb137321fbae0c`
 * ETH: `0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07`
 
 ## Assets
@@ -35,12 +36,12 @@
 
 ## USDC Market
 
-* Market implementation contract: `0x4c7e66fa4bb031bddfaba9c78568c4dfbede4711eb4a9fd83016427a1986c8e9`
+* Market implementation contract: `0x3785db6d683cd736c74f7d471d46a89c043fa71e91bac1d33ded00fa231afa83`
 
-* Market proxy contract: `0x2b2b991023784e531e5b413ba4729abeb7f959d7bf5ad73da82e4c8c1aaada89`
+* Market proxy contract: `0x196515642b3715732aaae6683ae75e4a079dd25b6ca6af7863e541d440f8252c`
 
 ## USDT Market
 
-* Market implementation contract: `0xc831730209b94c31c3133358b375991025c4c2db470a2177f82c7d55b0b11422`
+* Market implementation contract: `0xc88893bcb98b8b53e164ddff18aa2844b6ff8ed693198334ed6dcb767f363076`
 
-* Market proxy contract: `0x45462cd7c1e5e17984a208447bf39150b3c3c667f1bda6c93ffe0c20fc7d3ae2`
+* Market proxy contract: `0x4aabbbb7a4d5f458a8751e007d4d7d08cbedd60f0352478d6b9f0090beb17745`

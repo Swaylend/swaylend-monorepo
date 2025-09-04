@@ -93,9 +93,6 @@ importers:
       '@radix-ui/react-visually-hidden':
         specifier: ^1.2.3
         version: 1.2.3(@types/react-dom@19.1.7(@types/react@19.1.11))(@types/react@19.1.11)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
-      '@redstone-finance/sdk':
-        specifier: 0.8.0
-        version: 0.8.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
       '@svgr/webpack':
         specifier: ^8.1.0
         version: 8.1.0(typescript@5.9.2)
@@ -3819,18 +3816,6 @@ packages:
       '@types/react':
         optional: true
 
-  '@redstone-finance/oracles-smartweave-contracts@0.8.0':
-    resolution: {integrity: sha512-7lRYSIFeOdLkamUNTzGW5oaP07eXZtfa1jnyuloyIFTgEhSKA2JiAAo7tGqAFvI10Z3kdrLPp1XM4AEVxEMlNQ==}
-
-  '@redstone-finance/protocol@0.8.0':
-    resolution: {integrity: sha512-QnNjRnMVn8IgGJvPjNet/E5Y0h7+OngqxdboKHBf9DKxmewOdDR/iYFQAfynDafoqUmsTp/+6caAZbhVkBZvYQ==}
-
-  '@redstone-finance/sdk@0.8.0':
-    resolution: {integrity: sha512-yVVbIuZFi7u8ROWQ0php3h44z6SB1U6jVNsMxRt/nfq/jy/+CGdTkAfDX5s7CJDzgV8z9apEycLoJCHaPZL0QQ==}
-
-  '@redstone-finance/utils@0.8.0':
-    resolution: {integrity: sha512-GT+G5gYDQ2tPD9cgnIa3a3m9EK3n2fVJbl7FSfqU4q5aSpMUWFW/CY20L243bb2bz76e151RFq01p6GXn/Cs7Q==}
-
   '@repeaterjs/repeater@3.0.6':
     resolution: {integrity: sha512-Javneu5lsuhwNCryN+pXH93VPQ8g0dBX7wItHFgYiwQmzE1sVdg5tWHiOgHywzL2W21XQopa7IwIEnNbmeUJYA==}
 
@@ -4519,9 +4504,6 @@ packages:
 
   '@types/js-yaml@4.0.9':
     resolution: {integrity: sha512-k4MGaQl5TGo/iipqb2UDG2UwjXziSWkh0uysQelTlJpX1qGlpUZYm8PnO4DxG1qBomtJUdYJ6qR6xdIah10JLg==}
-
-  '@types/lodash@4.17.20':
-    resolution: {integrity: sha512-H3MHACvFUEiujabxhaI/ImO6gUrd8oOurg7LQtS7mbwIXA/cUqWrvBsaeJ23aZEPk1TAYkurjfMbSELfoCXlGA==}
 
   '@types/mocha@10.0.10':
     resolution: {integrity: sha512-xPyYSz1cMPnJQhl0CLMH68j3gprKZaTjG3s5Vi+fDgx+uhG9NOXwbVt52eFS8ECyXhyKcjDLCBEqBExKuiZb7Q==}
@@ -5666,9 +5648,6 @@ packages:
     resolution: {integrity: sha512-ZqRXc+tZukToSNmh5C2iWMSoV3X1YUcPbqEM4DkEG5tNQXrQUZCNVGGv3IuicnkMtPfGf3Xtp8WCXs295iQ1pQ==}
     engines: {node: '>= 0.10.0'}
 
-  consola@2.15.3:
-    resolution: {integrity: sha512-9vAdYbHj6x2fLKC4+oPH0kFzY/orMZyG2Aj+kNylHxKGJ/Ed4dpNyAQYwJOdqO4zdM7XpVHmyejQDcQHrnuXbw==}
-
   consola@3.4.2:
     resolution: {integrity: sha512-5IKcdX0nnYavi6G7TtOhwkYzyjfJlatbjMjuLSfE2kYT5pMDOilZ4OvMhi637CcDICTmz3wARPoyhqyX1Y+XvA==}
     engines: {node: ^14.18.0 || >=16.10.0}
@@ -5923,9 +5902,6 @@ packages:
 
   decimal.js-light@2.5.1:
     resolution: {integrity: sha512-qIMFpTMZmny+MMIitAB6D7iVPEorVw6YQRWkvarTkT4tBeSLLiHzcwj6q0MmYSFCiVpiqPJTJEYIrpcPzVEIvg==}
-
-  decimal.js@10.6.0:
-    resolution: {integrity: sha512-YpgQiITW3JXGntzdUmyUR1V812Hn8T1YVXhCu+wO3OpS4eU9l4YdD3qjyiKdV6mvV29zapkMeD390UVEf2lkUg==}
 
   decode-uri-component@0.2.2:
     resolution: {integrity: sha512-FqUYQ+8o158GyGTrMFJms9qh3CqTKvAqgqsTnkLI8sKu0028orqBhxNMFkFen0zGyg6epACD32pjVk58ngIErQ==}
@@ -14776,48 +14752,6 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.1.11
 
-  '@redstone-finance/oracles-smartweave-contracts@0.8.0': {}
-
-  '@redstone-finance/protocol@0.8.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
-    dependencies:
-      decimal.js: 10.6.0
-      ethers: 5.8.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      secp256k1: 5.0.1
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
-
-  '@redstone-finance/sdk@0.8.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
-    dependencies:
-      '@ethersproject/bytes': 5.8.0
-      '@ethersproject/strings': 5.8.0
-      '@redstone-finance/oracles-smartweave-contracts': 0.8.0
-      '@redstone-finance/protocol': 0.8.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@redstone-finance/utils': 0.8.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      '@types/lodash': 4.17.20
-      axios: 1.11.0
-      ethers: 5.8.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      lodash: 4.17.21
-      zod: 3.25.76
-    transitivePeerDependencies:
-      - bufferutil
-      - debug
-      - utf-8-validate
-
-  '@redstone-finance/utils@0.8.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)':
-    dependencies:
-      '@types/lodash': 4.17.20
-      axios: 1.11.0
-      consola: 2.15.3
-      decimal.js: 10.6.0
-      ethers: 5.8.0(bufferutil@4.0.9)(utf-8-validate@5.0.10)
-      lodash: 4.17.21
-      zod: 3.25.76
-    transitivePeerDependencies:
-      - bufferutil
-      - debug
-      - utf-8-validate
-
   '@repeaterjs/repeater@3.0.6': {}
 
   '@rescript/react@0.12.1(react-dom@19.1.1(react@18.2.0))(react@18.2.0)':
@@ -15743,8 +15677,6 @@ snapshots:
       '@types/istanbul-lib-report': 3.0.3
 
   '@types/js-yaml@4.0.9': {}
-
-  '@types/lodash@4.17.20': {}
 
   '@types/mocha@10.0.10': {}
 
@@ -18011,8 +17943,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  consola@2.15.3: {}
-
   consola@3.4.2: {}
 
   constant-case@3.0.4:
@@ -18240,8 +18170,6 @@ snapshots:
   decamelize@4.0.0: {}
 
   decimal.js-light@2.5.1: {}
-
-  decimal.js@10.6.0: {}
 
   decode-uri-component@0.2.2: {}
 

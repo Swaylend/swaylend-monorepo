@@ -39,6 +39,7 @@ export const useWithdrawBase = () => {
       createStableHash(marketConfiguration),
       marketContract?.id,
       pythContract?.id,
+      storkContract?.id,
       priceData?.timestamp,
     ],
     mutationFn: async ({ tokenAmount }: { tokenAmount: BigNumber }) => {
@@ -48,6 +49,7 @@ export const useWithdrawBase = () => {
           marketConfiguration &&
           marketContract &&
           pythContract &&
+          storkContract &&
           priceData
         )
       ) {

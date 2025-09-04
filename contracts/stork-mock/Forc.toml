@@ -6,6 +6,7 @@ name = "stork_mock"
 # address will be the addres of the proxy contract
 [proxy]
 enabled = true
+address = "0xa0de331d9dba33a1e088916b6efd8a7df4213511d68a1f210f4e3f3e3a53b708"
 
 [dependencies]
 stork_sway_sdk = "0.0.3"

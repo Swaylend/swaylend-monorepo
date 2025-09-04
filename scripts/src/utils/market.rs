@@ -1,7 +1,7 @@
 use clap::Parser;
 use fuels::{
     accounts::wallet::Wallet,
-    types::{AssetId, Bits256, ContractId, U256},
+    types::{AssetId, Bits256, ContractId},
 };
 use market::{
     CollateralConfiguration, MarketConfiguration, MarketContract, OraclePriceFeedId, OracleType,
