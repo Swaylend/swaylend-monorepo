@@ -9,7 +9,8 @@ import { useCollateralConfigurations } from './use-collateral-configurations';
 export const useUserCollateralAssets = (marketParam?: string) => {
   const { account } = useAccount();
   const market = marketParam || useMarketStore.use.market();
-  const { data: collateralConfigurations } = useCollateralConfigurations();
+  const { data: collateralConfigurations } =
+    useCollateralConfigurations(market);
   const marketContract = useMarketContract(market);
 
   return useQuery({

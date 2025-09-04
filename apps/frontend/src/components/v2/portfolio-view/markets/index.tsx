@@ -77,6 +77,7 @@ const Market = ({ market }: { market: string }) => {
     data: userCollateralAssets,
     isPending: isPendingUserCollateralAssets,
   } = useUserCollateralAssets(market);
+
   const { data: marketConfiguration, isPending: isPendingMarketConfiguration } =
     useMarketConfiguration(market);
   const {
@@ -127,8 +128,9 @@ const Market = ({ market }: { market: string }) => {
   }, [currentCollateralUtilization]);
 
   const totalSuppliedCollateral = useMemo(() => {
-    if (!(priceData && userCollateralAssets && collateralConfigurations))
+    if (!(priceData && userCollateralAssets && collateralConfigurations)) {
       return BigNumber(0);
+    }
 
     const suppliedCollateral = Object.entries(userCollateralAssets).reduce(
       (acc, [key, value]) => {

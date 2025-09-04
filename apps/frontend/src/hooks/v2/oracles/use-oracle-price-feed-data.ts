@@ -29,8 +29,10 @@ export const useOraclePriceFeedData = (marketParam?: string) => {
   const market = marketParam ?? storeMarket;
   const marketContract = useMarketContract(market);
 
-  const { data: oracleAssetConfigurations } = useOracleAssetConfigurations();
-  const { data: oracleGlobalConfigurations } = useOracleGlobalConfigurations();
+  const { data: oracleAssetConfigurations } =
+    useOracleAssetConfigurations(market);
+  const { data: oracleGlobalConfigurations } =
+    useOracleGlobalConfigurations(market);
 
   return useQuery({
     queryKey: [
