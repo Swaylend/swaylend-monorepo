@@ -298,7 +298,7 @@ pub async fn setup(
 
     for asset in &assets {
         let oracle_configs = oracle_configs.get(&asset.1.asset_id).unwrap();
-        let config = oracle_configs.iter().find(|c| c.oracle_id == 2);
+        let config = oracle_configs.iter().find(|c| c.oracle_id == 1);
 
         if config.is_none() {
             continue;
