@@ -128,7 +128,7 @@ export const MarketTableRow = ({
   ) : (
     <TableRow
       className="cursor-pointer transition-colors duration-200 hover:bg-white/5"
-      onClick={() => router.push(`/markets/fuel-${marketName}`)}
+      onClick={() => router.push(`/markets/v1/fuel-${marketName}`)}
     >
       <TableCell>
         <div className="flex items-center gap-x-2">
