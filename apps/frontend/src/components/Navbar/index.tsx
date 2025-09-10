@@ -197,15 +197,20 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
                   <DropdownMenuItem>
                     <div
                       onMouseDown={() => {
-                        trackExternalPageView('https://mira.ly/');
-                        window.open('https://mira.ly/', '_blank');
+                        trackExternalPageView(
+                          'https://www.microchain.systems/'
+                        );
+                        window.open(
+                          'https://www.microchain.systems/',
+                          '_blank'
+                        );
                         setOpenDex(false);
                       }}
                       rel="noreferrer"
                       className="w-full"
                     >
                       <div className="w-full flex items-center justify-between text-md font-medium text-lavender py-1 px-0.5 gap-x-2 cursor-pointer hover:underline">
-                        MIRA
+                        Microchain
                         <ExternalLink className="w-4 h-4" />
                       </div>
                     </div>

@@ -8,10 +8,10 @@ export default async function Page() {
   return (
     <div className="w-full h-full p-4">
       <iframe
-        title="mira.ly"
+        title="Microchain"
         allowTransparency={true}
         className="w-full h-[75vh] md:h-[85vh] rounded-2xl border-0 scrollbar-none"
-        src="https://mira.ly/widget/"
+        src="https://www.microchain.systems/widget/"
       />
     </div>
   );
