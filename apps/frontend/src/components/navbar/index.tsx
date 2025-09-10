@@ -206,14 +206,19 @@ export const Navbar = ({ mobile = false }: { mobile?: boolean }) => {
                     <div
                       className="w-full"
                       onMouseDown={() => {
-                        trackExternalPageView('https://mira.ly/');
-                        window.open('https://mira.ly/', '_blank');
+                        trackExternalPageView(
+                          'https://www.microchain.systems/'
+                        );
+                        window.open(
+                          'https://www.microchain.systems/',
+                          '_blank'
+                        );
                         setOpenDex(false);
                       }}
                       rel="noreferrer"
                     >
                       <div className="flex w-full cursor-pointer items-center justify-between gap-x-2 px-0.5 py-1 font-medium text-lavender text-md hover:underline">
-                        MIRA
+                        Microchain
                         <ExternalLink className="h-4 w-4" />
                       </div>
                     </div>

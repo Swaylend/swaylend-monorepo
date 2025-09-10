@@ -10,8 +10,8 @@ export default function Page() {
       <iframe
         allowTransparency={true}
         className="scrollbar-none h-[75vh] w-full rounded-2xl border-0 md:h-[85vh]"
-        src="https://mira.ly/widget/"
-        title="mira.ly"
+        src="https://www.microchain.systems/widget/"
+        title="Microchain"
       />
     </div>
   );

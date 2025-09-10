@@ -10,7 +10,7 @@ export default function Page() {
       <iframe
         className="scrollbar-none h-[60vh] w-full rounded-2xl border-0 md:h-[85vh]"
         src="https://layerswap.io/app/?&to=FUEL_MAINNET&from=ETHEREUM_MAINNET"
-        title="mira.ly"
+        title="Layerswap"
       />
     </div>
   );
