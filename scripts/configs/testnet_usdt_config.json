@@ -3,8 +3,9 @@
   "withdraw_paused": false,
   "absorb_paused": false,
   "buy_paused": false,
-  "supply_kink": 850000000000000000,
-  "borrow_kink": 850000000000000000,
+  "supply_kink": 900000000000000000,
+  "borrow_kink": 900000000000000000,
+  "oracle_max_confidence_width": 300,
   "supply_per_second_interest_rate_slope_low": 1236681887,
   "supply_per_second_interest_rate_slope_high": 114155251141,
   "supply_per_second_interest_rate_base": 0,
@@ -18,50 +19,93 @@
   "base_min_for_rewards": 1000000000,
   "base_borrow_min": 10000000,
   "target_reserves": 1000000000000,
-  "pyth_contract_id": "0x25146735b29d4216639f7f8b1d7b921ff87a1d3051de62d6cceaacabeb33b8e7",
+  "global_oracle_configurations": [
+    {
+      "contract_id": "0x5d17f54708afd01530c2e0ffb123cd21e92461aae8450de2cc08d0fd330cf240",
+      "is_active": true,
+      "oracle_type": "Pyth"
+    },
+    {
+      "contract_id": "0x09c88f50d535ac5ce8945e34c418233b1e3834be9a88effb57cb137321fbae0c",
+      "is_active": true,
+      "oracle_type": "Stork"
+    }
+  ],
   "base_asset": {
-    "asset_id": "0xc264acd28eaf6f33e0e13360a37741dc91221aaa8817e1b4e462d61bb08c5835",
-    "price_feed_id": "0x2b89b9dc8fdf9f34709a5b106b472f0f39bb6ca9ce04b0fd7f2e971688e2e53b",
+    "asset_id": "0x2df42653712c4d413170eef9695d65a21013ac8be63891a2c5967c3af96a218f",
     "name": "Tether",
     "symbol": "USDT",
-    "decimals": 6
+    "decimals": 6,
+    "asset_oracle_configurations": [
+      {
+        "oracle_id": 0,
+        "price_feed_id": "0x2b89b9dc8fdf9f34709a5b106b472f0f39bb6ca9ce04b0fd7f2e971688e2e53b",
+        "is_active": true
+      }
+    ]
   },
   "collateral_assets": [
     {
       "asset_id": "0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07",
-      "price_feed_id": "0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace",
       "name": "Ethereum",
       "symbol": "ETH",
       "decimals": 9,
-      "borrow_collateral_factor": 800000000000000000,
-      "liquidate_collateral_factor": 850000000000000000,
+      "oracle_max_confidence_width": 300,
+      "borrow_collateral_factor": 850000000000000000,
+      "liquidate_collateral_factor": 890000000000000000,
       "liquidation_penalty": 900000000000000000,
-      "supply_cap": 1000000000000,
-      "is_active": true
+      "supply_cap": 3300000000000,
+      "is_active": true,
+      "asset_oracle_configurations": [
+        {
+          "oracle_id": 0,
+          "price_feed_id": "0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace",
+          "is_active": false
+        },
+        {
+          "oracle_id": 1,
+          "price_feed_id": "0x59102b37de83bdda9f38ac8254e596f0d9ac61d2035c07936675e87342817160",
+          "is_active": true
+        }
+      ]
     },
     {
-      "asset_id": "0xf3e2b3960e0930402a5d6047883f5c178a30aa5db2f0d7302d582cefb59a1575",
-      "price_feed_id": "0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43",
-      "name": "Bitcoin",
-      "symbol": "BTC",
-      "decimals": 8,
-      "borrow_collateral_factor": 700000000000000000,
-      "liquidate_collateral_factor": 770000000000000000,
+      "asset_id": "0x899dbd3cf8955d7b64a02f8bde800e74c10cdd92b92330c42d7c75b0ddb3dbc4",
+      "name": "USDC",
+      "symbol": "USDC",
+      "decimals": 6,
+      "oracle_max_confidence_width": 300,
+      "borrow_collateral_factor": 900000000000000000,
+      "liquidate_collateral_factor": 950000000000000000,
       "liquidation_penalty": 950000000000000000,
-      "supply_cap": 2000000000,
-      "is_active": true
+      "supply_cap": 10000000000000,
+      "is_active": true,
+      "asset_oracle_configurations": [
+        {
+          "oracle_id": 1,
+          "price_feed_id": "0x7416a56f222e196d0487dce8a1a8003936862e7a15092a91898d69fa8bce290c",
+          "is_active": true
+        }
+      ]
     },
     {
-      "asset_id": "0x790d2c0eb869e72cf42540d928ce728c253142d5ef07ed22b75009e40660e4ea",
-      "price_feed_id": "0x2f95862b045670cd22bee3114c39763a4a08beeb663b145d283c31d7d1101c4f",
-      "name": "BNB",
-      "symbol": "BNB",
+      "asset_id": "0x741722fc499391b975ecdfc759f41651bcb09dbe84e330c5eab6527c8d02664b",
+      "name": "stFUEL",
+      "symbol": "stFUEL",
       "decimals": 9,
-      "borrow_collateral_factor": 750000000000000000,
-      "liquidate_collateral_factor": 810000000000000000,
-      "liquidation_penalty": 930000000000000000,
-      "supply_cap": 400000000000000,
-      "is_active": true
+      "oracle_max_confidence_width": 300,
+      "borrow_collateral_factor": 800000000000000000,
+      "liquidate_collateral_factor": 830000000000000000,
+      "liquidation_penalty": 900000000000000000,
+      "supply_cap": 42000000000000000,
+      "is_active": true,
+      "asset_oracle_configurations": [
+        {
+          "oracle_id": 1,
+          "price_feed_id": "0xa3ed2e58076f53e8dd15c8463ee49e6ce547355c34c639777c5dace3728e2ded",
+          "is_active": true
+        }
+      ]
     }
   ]
 }

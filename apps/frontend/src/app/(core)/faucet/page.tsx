@@ -1,7 +1,6 @@
-import { FaucetView } from '@/components/FaucetView';
-import { appConfig } from '@/configs';
-
 import type { Metadata } from 'next';
+import { appConfig } from '@/configs';
+import { ClientView } from './client';
 
 export const metadata: Metadata = {
   title: 'Faucet',
@@ -9,11 +8,11 @@ export const metadata: Metadata = {
 
 export default function Page() {
   if (appConfig.env === 'testnet') {
-    return <FaucetView />;
+    return <ClientView />;
   }
 
   return (
-    <div className="h-full flex justify-center items-center">
+    <div className="flex h-full items-center justify-center">
       Faucet is only available on testnet
     </div>
   );

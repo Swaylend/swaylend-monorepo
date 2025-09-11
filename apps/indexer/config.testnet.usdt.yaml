@@ -2,17 +2,19 @@ name: Swaylend USDT Market (testnet)
 ecosystem: fuel
 networks:
   - id: 0
-    start_block: 11380000
+    start_block: 37000000
     contracts:
       - name: Market
-        address: 0x51b9bea7822988e03520018f4a1bb39b9f5ba15c9b4b9c9340a6bc1e5958abd4
+        address: 0x4aabbbb7a4d5f458a8751e007d4d7d08cbedd60f0352478d6b9f0090beb17745
         abi_file_path: ./abi/market-abi.json
-        handler: ./src/EventHandlers.ts
+        handler: ./src/event-handlers.ts
         events:
           - name: CollateralAssetAdded
           - name: CollateralAssetUpdated
-          - name: CollateralAssetPaused
-          - name: CollateralAssetResumed
+          - name: GlobalOracleAddedEvent
+          - name: GlobalOracleUpdatedEvent
+          - name: AssetOracleAddedEvent
+          - name: AssetOracleUpdatedEvent
           - name: UserBasicEvent
           - name: MarketBasicEvent
           - name: UserSupplyCollateralEvent

@@ -25,13 +25,15 @@ export const FAUCET_URL = 'https://faucet-testnet.fuel.network/';
 
 export const FAUCET_AMOUNTS: Record<string, number> = {
   BTC: 1,
-  USDC: 1000000,
-  USDT: 100000000,
+  USDC: 1_000_000,
+  USDT: 100_000_000,
   BNB: 300,
   ezETH: 1,
-  sDAI: 100000,
+  sDAI: 100_000,
   weETH: 1,
   wstETH: 1,
+  FUEL: 1_000_000,
+  stFUEL: 1_000_000,
   // Testnet only
   UNI: 50,
   pzETH: 1,
@@ -51,6 +53,7 @@ export const SYMBOL_TO_ICON: Record<string, any> = {
   sDAI: sdai,
   weETH: weeth,
   wstETH: wsteth,
+  stFUEL: '/tokens/stfuel.png',
   // Testnet only
   UNI: uni,
   pzETH: pzeth,
@@ -69,6 +72,7 @@ export const SYMBOL_TO_NAME: Record<string, string> = {
   weETH: 'weETH',
   wstETH: 'wstETH',
   FUEL: 'FUEL',
+  stFUEL: 'stFUEL',
   // Testnet only
   UNI: 'Uniswap',
   pzETH: 'pzETH',

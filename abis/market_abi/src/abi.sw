@@ -1,11 +1,13 @@
 library;
 
 pub mod structs;
+pub mod oracle_structs;
+pub mod errors;
 
-use pyth_interface::{data_structures::price::{Price, PriceFeedId}};
 use structs::*;
+use oracle_structs::*;
 use std::bytes::Bytes;
-use sway_libs::signed_integers::i256::I256;
+use signed_int::i256::I256;
 
 abi Market {
     // Get version of the smart contract
@@ -28,12 +30,6 @@ abi Market {
     fn add_collateral_asset(configuration: CollateralConfiguration);
 
     #[storage(write)]
-    fn pause_collateral_asset(asset_id: AssetId);
-
-    #[storage(write)]
-    fn resume_collateral_asset(asset_id: AssetId);
-
-    #[storage(write)]
     fn update_collateral_asset(asset_id: AssetId, configuration: CollateralConfiguration);    
 
     #[storage(read)]
@@ -45,7 +41,7 @@ abi Market {
     fn supply_collateral(); // Payment is required: any collateral asset
 
     #[payable, storage(write)]
-    fn withdraw_collateral(asset_id: AssetId, amount: u64, price_data_update: PriceDataUpdate);
+    fn withdraw_collateral(asset_id: AssetId, amount: u64, oracle_inputs: Vec<OracleInput>);
 
     #[storage(read)]
     fn get_user_collateral(account: Identity, asset_id: AssetId) -> u64;
@@ -65,7 +61,7 @@ abi Market {
     fn supply_base(); // Payment is required: base asset (USDC)
 
     #[payable, storage(write)]
-    fn withdraw_base(amount: u64, price_data_update: PriceDataUpdate);
+    fn withdraw_base(amount: u64, oracle_inputs: Vec<OracleInput>);
 
     #[storage(read)]
     fn get_user_supply_borrow(account: Identity) -> (u256, u256); 
@@ -76,7 +72,7 @@ abi Market {
     // # 5. Liquidation management
     // Liquidates the user if there is insufficient collateral for the borrowing. 
     #[payable, storage(write)]
-    fn absorb(accounts: Vec<Identity>, price_data_update: PriceDataUpdate);
+    fn absorb(accounts: Vec<Identity>, oracle_inputs: Vec<OracleInput>);
 
     #[storage(read)]
     fn is_liquidatable(account: Identity) -> bool;
@@ -136,21 +132,12 @@ abi Market {
     #[storage(read)]
     fn get_borrow_rate(utilization: u256) -> u256;
 
-    // ## 10. Pyth calls
-    #[storage(write)]
-    fn set_pyth_contract_id(contract_id: ContractId);
-
+    // ## 10. Oracle calls
     #[storage(read)]
-    fn get_pyth_contract_id() -> ContractId;
-    
-    #[storage(read)]
-    fn get_price(price_feed_id: PriceFeedId) -> Price;
-
-    #[storage(read)]
-    fn update_fee(update_data: Vec<Bytes>) -> u64;
+    fn get_price(asset_id: AssetId) -> Price;    
 
     #[payable, storage(read)]
-    fn update_price_feeds_if_necessary(price_data_update: PriceDataUpdate);
+    fn update_price_feeds(oracle_inputs: Vec<OracleInput>);
         
     // ## 11. Changing market configuration
     #[storage(write)]
@@ -162,4 +149,23 @@ abi Market {
 
     #[storage(write)]
     fn renounce_ownership();
+
+    // ## 13. Oracle management
+    #[storage(write)]
+    fn add_new_global_oracle(oracle_configuration: OracleGlobalConfiguration);
+
+    #[storage(write)]
+    fn update_global_oracle(oracle_id: u64, oracle_configuration: OracleGlobalConfiguration);
+
+    #[storage(read)]
+    fn get_oracle_global_configurations() -> Vec<OracleGlobalConfiguration>;
+
+    #[storage(write)]
+    fn add_new_asset_oracle(asset_id: AssetId, oracle_configuration: OracleAssetConfiguration);
+
+    #[storage(write)]
+    fn update_asset_oracle(asset_id: AssetId, oracle_configuration: OracleAssetConfiguration);
+
+    #[storage(read)]
+    fn get_oracle_asset_configurations() -> Vec<(AssetId, Vec<OracleAssetConfiguration>)>;
 }

@@ -1,0 +1,40 @@
+import { useWallet } from '@fuels/react';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { appConfig } from '@/configs';
+
+export type Airdrop = {
+  id: number;
+  startDate: string;
+  endDate: string;
+  token: string;
+  contractAddress: string;
+  isEligible: {
+    isEligible: boolean;
+    amount: string;
+    treeIndex: number;
+  };
+  totalAmount: string;
+};
+
+export const useAirdrops = () => {
+  const { wallet } = useWallet();
+
+  return useQuery({
+    queryKey: ['airdrops', wallet?.address],
+    queryFn: async () => {
+      const result = await fetch(
+        `${appConfig.client.shared.swaylendApi}/api/airdrops${wallet?.address ? `?address=${wallet?.address}` : ''}`
+      );
+
+      if (!result.ok) {
+        throw new Error('Failed to fetch airdrops');
+      }
+
+      const data = await result.json();
+
+      return data.airdrops as Airdrop[];
+    },
+    placeholderData: keepPreviousData,
+    staleTime: 1000 * 60 * 1, // 1 minute
+  });
+};

@@ -1,6 +1,5 @@
 use crate::utils::{print_case_title, setup, TestBaseAsset, TestData};
-use fuels::accounts::ViewOnlyAccount;
-use market::PriceDataUpdate;
+use fuels::{accounts::ViewOnlyAccount, programs::calls::ContractDependency};
 use market_sdk::parse_units;
 
 const AMOUNT_COEFFICIENT: u64 = 10u64.pow(0);
@@ -16,24 +15,17 @@ async fn collateral_borrow_test() {
         alice,
         alice_account,
         market,
-        assets,
         usdc,
-        oracle,
-        price_feed_ids,
-        publish_time,
-        prices,
+        oracle_inputs,
         usdc_contract,
         uni,
         uni_contract,
+        pyth_mock_oracle,
+        oracle_total_update_fee,
         ..
-    } = setup(None, TestBaseAsset::USDC).await;
+    } = setup(None, TestBaseAsset::USDC, None).await;
 
-    let price_data_update = PriceDataUpdate {
-        update_fee: 0,
-        price_feed_ids,
-        publish_times: vec![publish_time; assets.len()],
-        update_data: oracle.create_update_data(&prices).await.unwrap(),
-    };
+    let oracle_contracts: Vec<&dyn ContractDependency> = vec![&pyth_mock_oracle.instance];
 
     // =================================================
     // ==================== Step #0 ====================
@@ -49,7 +41,12 @@ async fn collateral_borrow_test() {
         .mint(alice_account, alice_mint_amount)
         .await
         .unwrap();
-    let balance = alice.get_asset_balance(&usdc.asset_id).await.unwrap();
+    let balance: u64 = alice
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == alice_mint_amount);
 
     let alice_supply_res = market
@@ -75,7 +72,12 @@ async fn collateral_borrow_test() {
         .mint(bob_account, bob_mint_amount)
         .await
         .unwrap();
-    let bob_balance = bob.get_asset_balance(&uni.asset_id).await.unwrap();
+    let bob_balance: u64 = bob
+        .get_asset_balance(&uni.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(bob_balance == bob_mint_amount);
     let bob_supply_res = market
         .with_account(&bob)
@@ -108,7 +110,12 @@ async fn collateral_borrow_test() {
         .with_account(&bob)
         .await
         .unwrap()
-        .withdraw_base(&[&oracle.instance], amount_to_fail, &price_data_update)
+        .withdraw_base(
+            &oracle_contracts,
+            amount_to_fail,
+            &oracle_inputs,
+            oracle_total_update_fee,
+        )
         .await;
     assert!(withdraw_base_fail.is_err());
 
@@ -119,10 +126,20 @@ async fn collateral_borrow_test() {
         .with_account(&bob)
         .await
         .unwrap()
-        .withdraw_base(&[&oracle.instance], amount, &price_data_update)
+        .withdraw_base(
+            &oracle_contracts,
+            amount,
+            &oracle_inputs,
+            oracle_total_update_fee,
+        )
         .await;
     assert!(bob_withdraw_res.is_ok());
-    let balance = bob.get_asset_balance(&usdc.asset_id).await.unwrap();
+    let balance: u64 = bob
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == amount);
     market
         .print_debug_state(&wallets, &usdc, &uni)
@@ -166,10 +183,11 @@ async fn collateral_borrow_test() {
         .await
         .unwrap()
         .withdraw_collateral(
-            &[&oracle.instance],
+            &oracle_contracts,
             uni.asset_id,
             bob_collateral_amount,
-            &price_data_update,
+            &oracle_inputs,
+            oracle_total_update_fee,
         )
         .await;
     // it should fail because bob has not repayed everything yet
@@ -205,10 +223,11 @@ async fn collateral_borrow_test() {
         .await
         .unwrap()
         .withdraw_collateral(
-            &[&oracle.instance],
+            &oracle_contracts,
             uni.asset_id,
             bob_withdraw_amount_fail,
-            &price_data_update,
+            &oracle_inputs,
+            oracle_total_update_fee,
         )
         .await;
     assert!(withdraw_collateral_fail_res.is_err());
@@ -223,10 +242,11 @@ async fn collateral_borrow_test() {
         .await
         .unwrap()
         .withdraw_collateral(
-            &[&oracle.instance],
+            &oracle_contracts,
             uni.asset_id,
             bob_withdraw_amount.try_into().unwrap(),
-            &price_data_update,
+            &oracle_inputs,
+            oracle_total_update_fee,
         )
         .await;
 
@@ -246,24 +266,17 @@ async fn collateral_borrow_timeskip_test() {
         alice,
         alice_account,
         market,
-        assets,
         usdc,
-        oracle,
-        price_feed_ids,
-        publish_time,
-        prices,
+        oracle_inputs,
         usdc_contract,
         uni,
         uni_contract,
+        pyth_mock_oracle,
+        oracle_total_update_fee,
         ..
-    } = setup(None, TestBaseAsset::USDC).await;
+    } = setup(None, TestBaseAsset::USDC, None).await;
 
-    let price_data_update = PriceDataUpdate {
-        update_fee: 0,
-        price_feed_ids,
-        publish_times: vec![publish_time; assets.len()],
-        update_data: oracle.create_update_data(&prices).await.unwrap(),
-    };
+    let oracle_contracts: Vec<&dyn ContractDependency> = vec![&pyth_mock_oracle.instance];
 
     // =================================================
     // ==================== Step #0 ====================
@@ -279,7 +292,12 @@ async fn collateral_borrow_timeskip_test() {
         .mint(alice_account, alice_mint_amount)
         .await
         .unwrap();
-    let balance = alice.get_asset_balance(&usdc.asset_id).await.unwrap();
+    let balance: u64 = alice
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == alice_mint_amount);
 
     let alice_supply_res = market
@@ -305,7 +323,12 @@ async fn collateral_borrow_timeskip_test() {
         .mint(bob_account, bob_mint_amount)
         .await
         .unwrap();
-    let bob_balance = bob.get_asset_balance(&uni.asset_id).await.unwrap();
+    let bob_balance: u64 = bob
+        .get_asset_balance(&uni.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(bob_balance == bob_mint_amount);
     let bob_supply_res = market
         .with_account(&bob)
@@ -340,11 +363,21 @@ async fn collateral_borrow_timeskip_test() {
         .with_account(&bob)
         .await
         .unwrap()
-        .withdraw_base(&[&oracle.instance], amount, &price_data_update)
+        .withdraw_base(
+            &oracle_contracts,
+            amount,
+            &oracle_inputs,
+            oracle_total_update_fee,
+        )
         .await;
     assert!(bob_withdraw_res.is_ok());
 
-    let balance = bob.get_asset_balance(&usdc.asset_id).await.unwrap();
+    let balance: u64 = bob
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == amount);
     market
         .print_debug_state(&wallets, &usdc, &uni)
@@ -408,10 +441,11 @@ async fn collateral_borrow_timeskip_test() {
         .await
         .unwrap()
         .withdraw_collateral(
-            &[&oracle.instance],
+            &oracle_contracts,
             uni.asset_id,
             bob_withdraw_amount,
-            &price_data_update,
+            &oracle_inputs,
+            oracle_total_update_fee,
         )
         .await;
 

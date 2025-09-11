@@ -1,15 +1,16 @@
 use crate::utils::{print_case_title, setup, TestBaseAsset, TestData};
-use chrono::Utc;
 use fuels::{
     accounts::Account,
     prelude::ViewOnlyAccount,
     programs::{
-        calls::{CallHandler, CallParameters},
+        calls::{CallHandler, CallParameters, ContractDependency},
         responses::CallResponse,
     },
-    types::{transaction::TxPolicies, transaction_builders::VariableOutputPolicy},
+    types::{
+        transaction::TxPolicies, transaction_builders::VariableOutputPolicy, Bits256, ContractId,
+    },
 };
-use market::PriceDataUpdate;
+use market::{OracleInput, PythOracleInput};
 use market_sdk::{convert_i256_to_u64, is_i256_negative, parse_units};
 
 // Multiplies all values by this number
@@ -17,7 +18,7 @@ use market_sdk::{convert_i256_to_u64, is_i256_negative, parse_units};
 const AMOUNT_COEFFICIENT: u64 = 10u64.pow(0);
 
 #[tokio::test]
-async fn main_test() {
+async fn main_test_eth_base() {
     let scale_6 = 10u64.pow(6) as f64;
     let scale_9 = 10u64.pow(9) as f64;
 
@@ -31,30 +32,25 @@ async fn main_test() {
         chad,
         chad_account,
         market,
-        oracle,
-        price_feed_ids,
-        assets,
-        publish_time,
-        prices,
+        mut oracle_inputs,
+        oracle_total_update_fee,
+        pyth_mock_oracle,
+        pyth_prices,
+        pyth_asset_price_feeds,
         eth,
         usdt,
         usdt_contract,
+        oracle_contract_id_to_index,
         ..
-    } = setup(None, TestBaseAsset::ETH).await;
+    } = setup(None, TestBaseAsset::ETH, None).await;
 
-    let price_data_update = PriceDataUpdate {
-        update_fee: 1,
-        price_feed_ids,
-        publish_times: vec![publish_time; assets.len()],
-        update_data: oracle.create_update_data(&prices).await.unwrap(),
-    };
+    let oracle_contracts: Vec<&dyn ContractDependency> = vec![&pyth_mock_oracle.instance];
 
     // =================================================
     // ==================== Step #0 ====================
     // 👛 Wallet: Bob 🧛
     // 🤙 Call: supply_base
     // 💰 Amount: 10.00 ETH
-
     let amount = parse_units(10 * AMOUNT_COEFFICIENT, eth.decimals);
     let log_amount = format!("{} ETH", amount as f64 / scale_9);
     print_case_title(0, "Bob", "supply_base", log_amount.as_str());
@@ -93,7 +89,12 @@ async fn main_test() {
     // Transfer of 10000 USDT to the Alice's wallet
     usdt_contract.mint(alice_account, amount).await.unwrap();
 
-    let balance = alice.get_asset_balance(&usdt.asset_id).await.unwrap();
+    let balance: u64 = alice
+        .get_asset_balance(&usdt.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == amount);
 
     // Alice calls supply_collateral
@@ -129,20 +130,36 @@ async fn main_test() {
     let log_amount = format!("{} ETH", amount as f64 / scale_9);
     print_case_title(2, "Alice", "withdraw_base", log_amount.as_str());
 
-    let old_balance = alice.get_asset_balance(&eth.asset_id).await.unwrap();
+    let old_balance: u64 = alice
+        .get_asset_balance(&eth.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
 
     // Alice calls withdraw_base
     market
         .with_account(&alice)
         .await
         .unwrap()
-        .withdraw_base(&[&oracle.instance], amount, &price_data_update)
+        .withdraw_base(
+            &oracle_contracts,
+            amount,
+            &oracle_inputs,
+            oracle_total_update_fee,
+        )
         .await
         .unwrap();
 
     // ETH balance check
-    let balance = alice.get_asset_balance(&eth.asset_id).await.unwrap();
-    assert!((balance - old_balance) == amount - 1);
+    let balance: u64 = alice
+        .get_asset_balance(&eth.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
+
+    assert!((balance - old_balance) == amount - oracle_total_update_fee - 1); // -1 because some ETH is spent on tx fees
 
     market
         .print_debug_state(&wallets, &eth, &usdt)
@@ -164,7 +181,12 @@ async fn main_test() {
     // Transfer of 15000 USDT to the Chad's wallet
     usdt_contract.mint(chad_account, amount).await.unwrap();
 
-    let balance = chad.get_asset_balance(&usdt.asset_id).await.unwrap();
+    let balance: u64 = chad
+        .get_asset_balance(&usdt.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == amount);
 
     // Chad calls supply_collateral
@@ -226,13 +248,18 @@ async fn main_test() {
     // 🤙 Call: withdraw_base
     // 💰 Amount: ~1.57 ETH (available_to_borrow)
     let amount = market
-        .available_to_borrow(&[&oracle.instance], alice_account)
+        .available_to_borrow(&oracle_contracts, alice_account)
         .await
         .unwrap();
     let log_amount = format!("{} ETH", amount as f64 / scale_9);
     print_case_title(5, "Alice", "withdraw_base", log_amount.as_str());
 
-    let old_balance = alice.get_asset_balance(&eth.asset_id).await.unwrap();
+    let old_balance: u64 = alice
+        .get_asset_balance(&eth.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
 
     // Alice calls withdraw_base
     market
@@ -240,18 +267,19 @@ async fn main_test() {
         .await
         .unwrap()
         .withdraw_base(
-            &[&oracle.instance],
+            &oracle_contracts,
             (amount - u128::from(parse_units(1, eth.decimals - 3)))
                 .try_into()
                 .unwrap(),
-            &price_data_update,
+            &oracle_inputs,
+            oracle_total_update_fee,
         )
         .await
         .unwrap();
 
     // available_to_borrow should be 0.00100000 ETH
     let res = market
-        .available_to_borrow(&[&oracle.instance], alice_account)
+        .available_to_borrow(&oracle_contracts, alice_account)
         .await
         .unwrap();
 
@@ -263,18 +291,28 @@ async fn main_test() {
         .await
         .unwrap()
         .withdraw_base(
-            &[&oracle.instance],
+            &oracle_contracts,
             parse_units(2, eth.decimals - 3),
-            &price_data_update,
+            &oracle_inputs,
+            oracle_total_update_fee,
         )
         .await
         .is_err();
     assert!(res);
 
     // ETH balance should be amount - ~1.57 ETH + 1 ETH from case #2
-    let balance = alice.get_asset_balance(&eth.asset_id).await.unwrap();
+    let balance: u64 = alice
+        .get_asset_balance(&eth.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     let amount: u64 = amount.try_into().unwrap();
-    assert!(old_balance + amount - parse_units(1, eth.decimals - 3) - 1 == balance);
+
+    assert!(
+        old_balance + amount - parse_units(1, eth.decimals - 3) - oracle_total_update_fee - 2
+            == balance // -6 because some ETH is spent on tx fees
+    );
 
     market
         .print_debug_state(&wallets, &eth, &usdt)
@@ -289,36 +327,84 @@ async fn main_test() {
     // 💰 Amount: -30%
 
     print_case_title(6, "Admin", "Drop of collateral price", "-30%");
-    let res = oracle.price(usdt.price_feed_id).await.unwrap().value;
-    let new_price = (res.price as f64 * 0.7) as u64;
-    let prices = Vec::from([(
-        usdt.price_feed_id,
-        (
-            new_price,
-            usdt.price_feed_decimals,
-            res.publish_time,
-            res.confidence,
-        ),
-    )]);
 
-    let price_data_update_old = price_data_update.clone();
-    oracle.update_prices(&prices).await.unwrap();
+    let old_price = market
+        .get_price(&oracle_contracts, usdt.asset_id)
+        .await
+        .unwrap()
+        .value;
 
-    // New `price_data_update` that will be used in the next steps
-    let price_data_update = PriceDataUpdate {
-        update_fee: 1,
-        price_feed_ids: vec![usdt.price_feed_id],
-        publish_times: vec![tai64::Tai64::from_unix(Utc::now().timestamp().try_into().unwrap()).0],
-        update_data: oracle.create_update_data(&prices).await.unwrap(),
-    };
+    let (usdt_price_feed_id, usdt_price_feed_decimals) =
+        pyth_asset_price_feeds.get(&usdt.asset_id).unwrap();
+    let old_oracle_inputs = oracle_inputs.clone();
+    let mut new_oracle_inputs = Vec::new();
+
+    for input in oracle_inputs.iter() {
+        let input = input.clone();
+
+        let processed_input = match input {
+            OracleInput::Pyth(pyth_input) => {
+                let new_prices = pyth_prices
+                    .iter()
+                    .map(
+                        |(
+                            price_feed_id,
+                            (price, price_feed_decimals, publish_time, confidence),
+                        )| {
+                            (
+                                *price_feed_id,
+                                (
+                                    if *price_feed_id == *usdt_price_feed_id {
+                                        (*price as f64 * 0.7) as u64
+                                    } else {
+                                        *price
+                                    },
+                                    *price_feed_decimals,
+                                    *publish_time,
+                                    *confidence,
+                                ),
+                            )
+                        },
+                    )
+                    .collect::<Vec<(Bits256, (u64, u32, u64, u64))>>();
+
+                OracleInput::Pyth(PythOracleInput {
+                    oracle_id: *oracle_contract_id_to_index
+                        .get(&ContractId::from(pyth_mock_oracle.instance.contract_id()))
+                        .unwrap(),
+                    publish_times: pyth_input.publish_times,
+                    price_feed_ids: pyth_input.price_feed_ids,
+                    update_data: pyth_mock_oracle
+                        .create_update_data(&new_prices)
+                        .await
+                        .unwrap(),
+                })
+            }
+            _ => input,
+        };
+
+        new_oracle_inputs.push(processed_input);
+    }
+
+    oracle_inputs = new_oracle_inputs;
+
+    // Update price feeds
+    market
+        .update_price_feeds(&oracle_contracts, &oracle_inputs, oracle_total_update_fee)
+        .await
+        .unwrap();
+
+    // Get new price
+    let new_price = market
+        .get_price(&oracle_contracts, usdt.asset_id)
+        .await
+        .unwrap()
+        .value;
 
     println!(
-        "🔻 USDT price drops: ${}  -> ${}",
-        res.price as f64 / 10_u64.pow(usdt.price_feed_decimals) as f64,
-        new_price as f64 / 10_u64.pow(usdt.price_feed_decimals) as f64
+        "🔻 USDT price drops: ${}  -> ${}. Decimals: {}",
+        old_price.price, new_price.price, usdt_price_feed_decimals
     );
-    let res = oracle.price(usdt.price_feed_id).await.unwrap().value;
-    assert!(new_price == res.price);
 
     market
         .print_debug_state(&wallets, &eth, &usdt)
@@ -336,7 +422,7 @@ async fn main_test() {
 
     assert!(
         market
-            .is_liquidatable(&[&oracle.instance], alice_account)
+            .is_liquidatable(&oracle_contracts, alice_account)
             .await
             .unwrap()
             .value
@@ -346,7 +432,12 @@ async fn main_test() {
         .with_account(&bob)
         .await
         .unwrap()
-        .absorb(&[&oracle.instance], vec![alice_account], &price_data_update)
+        .absorb(
+            &oracle_contracts,
+            vec![alice_account],
+            &oracle_inputs,
+            oracle_total_update_fee,
+        )
         .await
         .unwrap();
 
@@ -374,8 +465,9 @@ async fn main_test() {
     // 💰 Amount: ~2.77 ETH
 
     // Reset prices back to old values
+    oracle_inputs = old_oracle_inputs.clone();
     market
-        .update_price_feeds_if_necessary(&[&oracle.instance], &price_data_update_old)
+        .update_price_feeds(&oracle_contracts, &oracle_inputs, oracle_total_update_fee)
         .await
         .unwrap();
 
@@ -391,7 +483,7 @@ async fn main_test() {
 
     let amount = market
         .collateral_value_to_sell(
-            &[&oracle.instance],
+            &oracle_contracts,
             usdt.asset_id,
             convert_i256_to_u64(&reserves),
         )
@@ -406,15 +498,14 @@ async fn main_test() {
     let tx_policies = TxPolicies::default().with_script_gas_limit(1_000_000);
 
     // Params for update_price_feeds_if_necessary
-    let call_params_update_price =
-        CallParameters::default().with_amount(price_data_update.update_fee);
+    let call_params_update_price = CallParameters::default().with_amount(oracle_total_update_fee);
 
     // Update price feeds if necessary
     let update_balance_call = market
         .instance
         .methods()
-        .update_price_feeds_if_necessary(price_data_update_old.clone())
-        .with_contracts(&[&oracle.instance])
+        .update_price_feeds(oracle_inputs.clone())
+        .with_contracts(&oracle_contracts)
         .with_tx_policies(tx_policies)
         .call_params(call_params_update_price)
         .unwrap();
@@ -429,24 +520,33 @@ async fn main_test() {
         .instance
         .methods()
         .buy_collateral(usdt.asset_id, 1u64.into(), bob_account)
-        .with_contracts(&[&oracle.instance])
+        .with_contracts(&oracle_contracts)
         .with_tx_policies(tx_policies)
         .call_params(call_params_base_asset)
         .unwrap();
 
-    let mutli_call_handler = CallHandler::new_multi_call(bob.clone())
+    let multi_call_handler = CallHandler::new_multi_call(bob.clone())
         .add_call(update_balance_call)
         .add_call(buy_collateral_call)
         .with_variable_output_policy(VariableOutputPolicy::Exactly(2));
 
     // Sumbit tx
-    let submitted_tx = mutli_call_handler.submit().await.unwrap();
+    let submitted_tx = multi_call_handler.submit().await.unwrap();
+
+    // Wait a bit for the transaction to be committed
+    tokio::time::sleep(tokio::time::Duration::from_millis(50)).await;
 
     // Wait for response
     let _: CallResponse<((), ())> = submitted_tx.response().await.unwrap();
 
     // Check
-    let balance = bob.get_asset_balance(&usdt.asset_id).await.unwrap();
+    let balance: u64 = bob
+        .get_asset_balance(&usdt.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
+
     assert!(balance == parse_units(10000, usdt.decimals) * AMOUNT_COEFFICIENT - 2); // -2 because some ETH is spent on tx fees
 
     market
@@ -465,7 +565,12 @@ async fn main_test() {
     let log_amount = format!("{} ETH", amount as f64 / scale_9);
     print_case_title(9, "Bob", "withdraw_base", log_amount.as_str());
 
-    let old_balance = bob.get_asset_balance(&eth.asset_id).await.unwrap();
+    let old_balance: u64 = bob
+        .get_asset_balance(&eth.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
 
     // Bob calls withdraw_base
     market
@@ -473,9 +578,10 @@ async fn main_test() {
         .await
         .unwrap()
         .withdraw_base(
-            &[&oracle.instance],
+            &oracle_contracts,
             amount.try_into().unwrap(),
-            &price_data_update,
+            &oracle_inputs,
+            oracle_total_update_fee,
         )
         .await
         .unwrap();
@@ -485,8 +591,14 @@ async fn main_test() {
     assert!(supplied == 0);
 
     // ETH balance check
-    let balance = bob.get_asset_balance(&eth.asset_id).await.unwrap();
-    assert!((balance - old_balance) == amount as u64 - 1);
+    let balance: u64 = bob
+        .get_asset_balance(&eth.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
+
+    assert!((balance - old_balance) == amount as u64 - oracle_total_update_fee - 1); // -1 because some ETH is spent on tx fees
 
     market
         .print_debug_state(&wallets, &eth, &usdt)
@@ -504,7 +616,12 @@ async fn main_test() {
     let log_amount = format!("{} ETH", amount as f64 / scale_9);
     print_case_title(10, "Chad", "withdraw_base", log_amount.as_str());
 
-    let old_balance = chad.get_asset_balance(&eth.asset_id).await.unwrap();
+    let old_balance: u64 = chad
+        .get_asset_balance(&eth.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
 
     // Reserves are negative and we can't withdraw more ETH than is available
     // So we need to send some ETH to the contract to make the reserves positive
@@ -524,9 +641,10 @@ async fn main_test() {
         .await
         .unwrap()
         .withdraw_base(
-            &[&oracle.instance],
+            &oracle_contracts,
             amount.try_into().unwrap(),
-            &price_data_update,
+            &oracle_inputs,
+            oracle_total_update_fee,
         )
         .await
         .unwrap();
@@ -536,8 +654,14 @@ async fn main_test() {
     assert!(supplied == 0);
 
     // ETH balance check
-    let balance = chad.get_asset_balance(&eth.asset_id).await.unwrap();
-    assert!((balance - old_balance) == amount as u64 - 1);
+    let balance: u64 = chad
+        .get_asset_balance(&eth.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
+
+    assert!((balance - old_balance) == amount as u64 - oracle_total_update_fee - 1); // -1 because some ETH is spent on tx fees
 
     market
         .print_debug_state(&wallets, &eth, &usdt)
@@ -545,11 +669,11 @@ async fn main_test() {
         .unwrap();
     market.debug_increment_timestamp().await.unwrap();
 
-    // // =================================================
-    // // ==================== Step #11 ====================
-    // // 👛 Wallet: Chad 🤵
-    // // 🤙 Call: withdraw_collateral
-    // // 💰 Amount: 15000 USDT
+    // =================================================
+    // ==================== Step #11 ====================
+    // 👛 Wallet: Chad 🤵
+    // 🤙 Call: withdraw_collateral
+    // 💰 Amount: 15000 USDT
 
     let amount = market
         .get_user_collateral(chad_account, usdt.asset_id)
@@ -565,16 +689,22 @@ async fn main_test() {
         .await
         .unwrap()
         .withdraw_collateral(
-            &[&oracle.instance],
+            &oracle_contracts,
             usdt.asset_id,
             amount.try_into().unwrap(),
-            &price_data_update,
+            &oracle_inputs,
+            oracle_total_update_fee,
         )
         .await
         .unwrap();
 
     // USDT balance check
-    let balance = chad.get_asset_balance(&usdt.asset_id).await.unwrap();
+    let balance: u64 = chad
+        .get_asset_balance(&usdt.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == amount);
 
     market

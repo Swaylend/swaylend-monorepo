@@ -1,38 +1,52 @@
-import { defineConfig } from '../defineConfig';
-import type { DeployedMarkets, Rewards } from '../types';
+import { defineConfig } from '../define-config';
+import type { DeployedMarketsV1, DeployedMarketsV2, Rewards } from '../types';
 
 export function createTestnetConfig() {
   return defineConfig({
     env: 'testnet',
     client: {
-      swaylendApi: process.env.NEXT_PUBLIC_SWAYLEND_API ?? '',
-      posthogKey: process.env.NEXT_PUBLIC_POSTHOG_KEY ?? '',
-      posthogHost: process.env.NEXT_PUBLIC_POSTHOG_HOST ?? '',
-      hermesApi: process.env.NEXT_PUBLIC_HERMES_API ?? '',
-      walletConnectProjectId:
-        process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID ?? '',
-      fuelExplorerUrl: process.env.NEXT_PUBLIC_FUEL_EXPLORER_URL ?? '',
-      fuelNodeUrl: process.env.NEXT_PUBLIC_FUEL_NODE_URL ?? '',
-      alchemyId: process.env.NEXT_PUBLIC_ALCHEMY_ID ?? '',
-      fuelOblApi: process.env.NEXT_PUBLIC_FUEL_OBL_API ?? '',
-      announcementEnabled:
-        process.env.NEXT_PUBLIC_ANNOUNCEMENT_ENABLED === 'true',
-      sentioApi: process.env.NEXT_PUBLIC_SENTIO_API_URL ?? '',
-      sentioApiKey: process.env.NEXT_PUBLIC_SENTIO_API_KEY ?? '',
-      sentioProcessorVersion:
-        process.env.NEXT_PUBLIC_SENTIO_PROCESSOR_VERSION ?? '',
+      shared: {
+        swaylendApi: process.env.NEXT_PUBLIC_SWAYLEND_API ?? '',
+        posthogKey: process.env.NEXT_PUBLIC_POSTHOG_KEY ?? '',
+        posthogHost: process.env.NEXT_PUBLIC_POSTHOG_HOST ?? '',
+        hermesApi: process.env.NEXT_PUBLIC_HERMES_API ?? '',
+        walletConnectProjectId:
+          process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID ?? '',
+        fuelExplorerUrl: process.env.NEXT_PUBLIC_FUEL_EXPLORER_URL ?? '',
+        fuelNodeUrl: process.env.NEXT_PUBLIC_FUEL_NODE_URL ?? '',
+        alchemyId: process.env.NEXT_PUBLIC_ALCHEMY_ID ?? '',
+        baseAssetId:
+          '0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07',
+        assets,
+        symbols,
+        useBurnerWallet: true,
+        marketAddressToBaseAssetName,
+      },
+      v1: {
+        announcementEnabled:
+          process.env.NEXT_PUBLIC_V1_ANNOUNCEMENT_ENABLED === 'true',
+        sentioApi: process.env.NEXT_PUBLIC_V1_SENTIO_API_URL ?? '',
+        sentioApiKey: process.env.NEXT_PUBLIC_V1_SENTIO_API_KEY ?? '',
+        sentioProcessorVersion:
+          process.env.NEXT_PUBLIC_V1_SENTIO_PROCESSOR_VERSION ?? '',
+        markets: markets_v1,
+        rewards: rewards_v1,
+      },
+      v2: {
+        announcementEnabled:
+          process.env.NEXT_PUBLIC_V2_ANNOUNCEMENT_ENABLED === 'true',
+        sentioApi: process.env.NEXT_PUBLIC_V2_SENTIO_API_URL ?? '',
+        sentioApiKey: process.env.NEXT_PUBLIC_V2_SENTIO_API_KEY ?? '',
+        sentioProcessorVersion:
+          process.env.NEXT_PUBLIC_V2_SENTIO_PROCESSOR_VERSION ?? '',
+        markets: markets_v2,
+        rewards: rewards_v2,
+      },
     },
-    markets: markets,
-    marketAddressToBaseAssetName: marketAddressToBaseAssetName,
-    assets: assets,
-    baseAssetId:
-      '0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07',
-    useBurnerWallet: true,
-    rewards: rewards,
   });
 }
 
-const rewards: Rewards = {
+const rewards_v1: Rewards = {
   USDC: [
     {
       poolSize: 200,
@@ -79,12 +93,17 @@ const rewards: Rewards = {
   ],
 };
 
-const markets: DeployedMarkets = {
+const rewards_v2: Rewards = {
+  USDC: [],
+  USDT: [],
+};
+
+const markets_v1: DeployedMarketsV1 = {
   USDC: {
     oracleAddress:
       '0x25146735b29d4216639f7f8b1d7b921ff87a1d3051de62d6cceaacabeb33b8e7',
     marketAddress:
-      '0x6030cf103746576706d7dcc2ae6f6b32ba0db66907a8f9901a0170de5f06acc0',
+      '0xc95ba29f6172eccb58d489f9db30374ee593fadf962d215b33e79d2be2534ec1',
     tokenFactoryAddress:
       '0x3e4f1948aece07d3f30c8c5c425f914ac74653827de48394466f2a887eebe9c7',
     graphqlUrl: '',
@@ -100,9 +119,36 @@ const markets: DeployedMarkets = {
   },
 };
 
+const markets_v2: DeployedMarketsV2 = {
+  USDC: {
+    pythAddress:
+      '0x5d17f54708afd01530c2e0ffb123cd21e92461aae8450de2cc08d0fd330cf240',
+    marketAddress:
+      '0x196515642b3715732aaae6683ae75e4a079dd25b6ca6af7863e541d440f8252c',
+    tokenFactoryAddress:
+      '0xb095873ffa6237aa209dd7fa9d6fd7d9e932453f8db62b9e436766a47b17d308',
+    storkAddress:
+      '0x09c88f50d535ac5ce8945e34c418233b1e3834be9a88effb57cb137321fbae0c',
+    graphqlUrl: '',
+  },
+  USDT: {
+    pythAddress:
+      '0x5d17f54708afd01530c2e0ffb123cd21e92461aae8450de2cc08d0fd330cf240',
+    marketAddress:
+      '0x4aabbbb7a4d5f458a8751e007d4d7d08cbedd60f0352478d6b9f0090beb17745',
+    tokenFactoryAddress:
+      '0xb095873ffa6237aa209dd7fa9d6fd7d9e932453f8db62b9e436766a47b17d308',
+    storkAddress:
+      '0x09c88f50d535ac5ce8945e34c418233b1e3834be9a88effb57cb137321fbae0c',
+    graphqlUrl: '',
+  },
+};
+
 const marketAddressToBaseAssetName: Record<string, string> = {
-  '0x6030cf103746576706d7dcc2ae6f6b32ba0db66907a8f9901a0170de5f06acc0': 'USDC',
+  '0xc95ba29f6172eccb58d489f9db30374ee593fadf962d215b33e79d2be2534ec1': 'USDC',
   '0x51b9bea7822988e03520018f4a1bb39b9f5ba15c9b4b9c9340a6bc1e5958abd4': 'USDT',
+  '0x196515642b3715732aaae6683ae75e4a079dd25b6ca6af7863e541d440f8252c': 'USDC',
+  '0x4aabbbb7a4d5f458a8751e007d4d7d08cbedd60f0352478d6b9f0090beb17745': 'USDT',
 };
 
 const assets: Record<string, string> = {
@@ -119,4 +165,29 @@ const assets: Record<string, string> = {
   '0x0526a5a33267abf138d40be4a1bd982bfb00365310891c6e7e13d0d8e7c3fc23': 'weETH',
   '0x62fb3f091da88a3a520fa7b7fd12fa1ab3cbf306d57a66e345b6e9b0b883d0c2':
     'wstETH',
+  '0x899dbd3cf8955d7b64a02f8bde800e74c10cdd92b92330c42d7c75b0ddb3dbc4': 'USDC',
+  '0x1317d8056c8504d7844b3871386ca1ec5e2ecf4743e0ca805378f9c48d4822d2': 'BTC',
+  '0x31873ec08219b39ee601747f465c6a177010d94ed5eec945275c49a44a1ce4d0': 'UNI',
+  '0x7bf88bdf02818cd03644998349704bb1f5c98615fb39c74e081081336e3c2c3b': 'ezETH',
+  '0x2df42653712c4d413170eef9695d65a21013ac8be63891a2c5967c3af96a218f': 'USDT',
+  '0xca119b2dd027d7be7061333bbb1d8bcab67bc0234cb30549322aba3ebd5ddf6a': 'sDAI',
+  '0x9fb96f6fd9de9c63a67217188bc56cee04d2a54f732dd9899bed0aeb889b075b': 'weETH',
+  '0x93dc2c176ee02ac5745272448775bf96f16fd1c31e7c3dca393eadab2d5dd43d':
+    'wstETH',
+  '0x741722fc499391b975ecdfc759f41651bcb09dbe84e330c5eab6527c8d02664b':
+    'stFUEL',
+};
+
+// NOTE: This will not cause issues, as there will always be only one asset per symbol in production
+const symbols: Record<string, string> = {
+  USDC: '0x899dbd3cf8955d7b64a02f8bde800e74c10cdd92b92330c42d7c75b0ddb3dbc4',
+  USDT: '0x2df42653712c4d413170eef9695d65a21013ac8be63891a2c5967c3af96a218f',
+  BTC: '0x1317d8056c8504d7844b3871386ca1ec5e2ecf4743e0ca805378f9c48d4822d2',
+  UNI: '0x31873ec08219b39ee601747f465c6a177010d94ed5eec945275c49a44a1ce4d0',
+  EZETH: '0x7bf88bdf02818cd03644998349704bb1f5c98615fb39c74e081081336e3c2c3b',
+  SDAI: '0xca119b2dd027d7be7061333bbb1d8bcab67bc0234cb30549322aba3ebd5ddf6a',
+  WEETH: '0x9fb96f6fd9de9c63a67217188bc56cee04d2a54f732dd9899bed0aeb889b075b',
+  WSTETH: '0x93dc2c176ee02ac5745272448775bf96f16fd1c31e7c3dca393eadab2d5dd43d',
+  ETH: '0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07',
+  STFUEL: '0x741722fc499391b975ecdfc759f41651bcb09dbe84e330c5eab6527c8d02664b',
 };

@@ -4,19 +4,21 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "build": "sentio build --skip-deps --skip-gen",
-    "gen": "sentio gen --skip-deps",
-    "upload": "sentio upload --skip-deps --skip-gen",
-    "upload:testnet": "sentio upload --name swaylend-testnet --skip-deps --skip-gen"
+    "build": "sentio build",
+    "gen": "sentio gen",
+    "upload": "sentio upload",
+    "upload:testnet": "sentio upload --name swaylend-testnet-v2"
   },
   "dependencies": {
-    "@sentio/sdk": "2.59.2",
+    "@sentio/bigdecimal": "9.1.1-patch.3",
+    "@sentio/runtime": "^2.59.4",
+    "@sentio/sdk": "2.60.3",
     "dayjs": "^1.11.13",
-    "fuels": "0.100.2",
-    "zod": "^3.23.8"
+    "fuels": "0.101.3",
+    "zod": "^4.0.14"
   },
   "devDependencies": {
-    "@sentio/cli": "2.27.0",
-    "typescript": "^5.6.3"
+    "@sentio/cli": "2.28.2",
+    "typescript": "^5.9.2"
   }
 }

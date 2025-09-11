@@ -7,12 +7,14 @@ networks:
       - name: Market
         address: 0xc3b2b490962167949c59a8ff55ceebbcc1878b46d82494e03cec27c082bf489a
         abi_file_path: ./abi/market-abi.json
-        handler: ./src/EventHandlers.ts
+        handler: ./src/event-handlers.ts
         events:
           - name: CollateralAssetAdded
           - name: CollateralAssetUpdated
-          - name: CollateralAssetPaused
-          - name: CollateralAssetResumed
+          - name: GlobalOracleAddedEvent
+          - name: GlobalOracleUpdatedEvent
+          - name: AssetOracleAddedEvent
+          - name: AssetOracleUpdatedEvent
           - name: UserBasicEvent
           - name: MarketBasicEvent
           - name: UserSupplyCollateralEvent

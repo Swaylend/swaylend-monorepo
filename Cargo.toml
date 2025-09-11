@@ -9,6 +9,7 @@ members = [
     "libs/market_sdk",
     "libs/token_sdk",
     "libs/pyth_mock_sdk",
+    "libs/stork_mock_sdk",
     # Scripts
     "scripts",
 ]
@@ -22,16 +23,18 @@ rust-version = "1.79.0"
 market_sdk = { path = "libs/market_sdk" }
 token_sdk = { path = "libs/token_sdk" }
 pyth_mock_sdk = { path = "libs/pyth_mock_sdk" }
+stork_mock_sdk = { path = "libs/stork_mock_sdk" }
 
 # Local contracts (types)
 pyth_mock = { path = "contracts/pyth-mock" }
 market = { path = "contracts/market" }
 token = { path = "contracts/token" }
+stork_mock = { path = "contracts/stork-mock" }
 
 # External
-pyth_sdk = { git = "https://github.com/pyth-network/pyth-crosschain", rev = "aa9509ccd37cf5dc73fee891a5730c351d15235f" }
+pyth_sdk = { git = "https://github.com/pyth-network/pyth-crosschain", rev = "10e5345ea2e29a5cc43311d43e681cf335e834f3" }
 tokio = { version = "1.12", features = ["full"] }
-fuels = { version = "0.66.9", features = ["fuel-core-lib"] }
+fuels = { version = "0.74.0", features = ["fuel-core-lib"] }
 dotenv = "0.15.0"
 serde = "1.0.197"
 serde_json = "1.0.114"

@@ -1,11 +1,16 @@
 {
   "programType": "contract",
-  "specVersion": "1",
+  "specVersion": "1.1",
   "encodingVersion": "1",
   "concreteTypes": [
     {
       "type": "()",
       "concreteTypeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+    },
+    {
+      "type": "(struct std::asset_id::AssetId, struct std::vec::Vec<struct market_abi::oracle_structs::OracleAssetConfiguration>)",
+      "concreteTypeId": "b072c5015ba8b39919ce2bee5eb82df8a68a78047f142cb1cc257655454c10bb",
+      "metadataTypeId": 1
     },
     {
       "type": "(struct std::asset_id::AssetId, u64)",
@@ -15,232 +20,249 @@
     {
       "type": "(u256, u256)",
       "concreteTypeId": "2770d9f762bf8ec295d5c253193cd2897c893401f1f438769f92d212641ec779",
-      "metadataTypeId": 1
-    },
-    {
-      "type": "b256",
-      "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+      "metadataTypeId": 2
     },
     {
       "type": "bool",
       "concreteTypeId": "b760f44fa5965c2474a3b471467a22c43185152129295af588b022ae50b50903"
     },
     {
-      "type": "enum market_abi::structs::Error",
-      "concreteTypeId": "4e6aabd209068d31558291cfd07cff9366801b052a1767bd0a9eb34bf55e8a0e",
-      "metadataTypeId": 2
-    },
-    {
-      "type": "enum standards::src5::AccessError",
-      "concreteTypeId": "3f702ea3351c9c1ece2b84048006c8034a24cbc2bad2e740d0412b4172951d3d",
-      "metadataTypeId": 3
-    },
-    {
-      "type": "enum standards::src5::State",
-      "concreteTypeId": "192bc7098e2fe60635a9918afb563e4e5419d386da2bdbf0d716b4bc8549802c",
+      "type": "enum market_abi::errors::Error",
+      "concreteTypeId": "77603686940a4d84cd67e50ef7c5be1bcf4f54752a1eadbc6279abef2871cec0",
       "metadataTypeId": 4
+    },
+    {
+      "type": "enum market_abi::oracle_structs::OracleInput",
+      "concreteTypeId": "6dd8771c6810b3450ed6e1962bbc18051a781c76db9429af83ddad47eabf61a5",
+      "metadataTypeId": 5
+    },
+    {
+      "type": "enum ownership::errors::InitializationError",
+      "concreteTypeId": "b1fddf488ccb9e63d11888b2750bbd1280a1ae1c49f2d6637fd4cf1e930d1468",
+      "metadataTypeId": 8
+    },
+    {
+      "type": "enum reentrancy::errors::ReentrancyError",
+      "concreteTypeId": "e52e660ff9a330c417b6493bb8d3d0049bafaa6c4a771b32b205d71bc2bc5ace",
+      "metadataTypeId": 9
+    },
+    {
+      "type": "enum src5::AccessError",
+      "concreteTypeId": "f1247475d0d1466599267010f088190f8664dd31663a40c5d5e525d8e64b995d",
+      "metadataTypeId": 10
+    },
+    {
+      "type": "enum src5::State",
+      "concreteTypeId": "287a382c1e0b1f11d12a422e77a248d27761327cd17515cc6e6369d528cf31ca",
+      "metadataTypeId": 11
     },
     {
       "type": "enum std::identity::Identity",
       "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335",
-      "metadataTypeId": 5
-    },
-    {
-      "type": "enum sway_libs::ownership::errors::InitializationError",
-      "concreteTypeId": "1dfe7feadc1d9667a4351761230f948744068a090fe91b1bc6763a90ed5d3893",
-      "metadataTypeId": 6
-    },
-    {
-      "type": "enum sway_libs::reentrancy::errors::ReentrancyError",
-      "concreteTypeId": "4d216c57b3357523323f59401c7355785b41bdf832f6e1106272186b94797038",
-      "metadataTypeId": 7
+      "metadataTypeId": 12
     },
     {
       "type": "struct events::AbsorbCollateralEvent",
       "concreteTypeId": "31d6845ccbeb9e71f30bf07140659072ce92db76041efd6861d6895dace9e658",
-      "metadataTypeId": 10
+      "metadataTypeId": 15
+    },
+    {
+      "type": "struct events::AssetOracleAddedEvent",
+      "concreteTypeId": "4e9faf20e535faab6575c50457dd2ab8fbdff828d70b4c21c0a89e5c659e180c",
+      "metadataTypeId": 16
+    },
+    {
+      "type": "struct events::AssetOracleUpdatedEvent",
+      "concreteTypeId": "466b9a731cee18e6b75003e874e1554132eb23261d6976439c080c9eebe7769b",
+      "metadataTypeId": 17
     },
     {
       "type": "struct events::BuyCollateralEvent",
       "concreteTypeId": "a95331d2168897d0f550d1c4f7fc582926a79b3e825866ecf8c11ef8dfb692c6",
-      "metadataTypeId": 11
+      "metadataTypeId": 18
     },
     {
       "type": "struct events::CollateralAssetAdded",
       "concreteTypeId": "ea2a9368cd82d633fcc3411dbff6c25a78c7ccf550034427221102b74d7926db",
-      "metadataTypeId": 12
-    },
-    {
-      "type": "struct events::CollateralAssetPaused",
-      "concreteTypeId": "457cc10e18076b4e7a0ccc563fd089b256767bb56a148450f7e58f0d7cbf54ef",
-      "metadataTypeId": 13
-    },
-    {
-      "type": "struct events::CollateralAssetResumed",
-      "concreteTypeId": "81fb1b4fe81422099de81384a1f433aac8964b267aac0428e6bf423e46b88df9",
-      "metadataTypeId": 14
+      "metadataTypeId": 19
     },
     {
       "type": "struct events::CollateralAssetUpdated",
       "concreteTypeId": "6b698723a311c1005f7846d11d7ce209d68d00c120ee855364c14656ffb5b5a7",
-      "metadataTypeId": 15
+      "metadataTypeId": 20
+    },
+    {
+      "type": "struct events::GlobalOracleAddedEvent",
+      "concreteTypeId": "6502050b3c829c791812e9a559d73ec5774d45ae98cd39e63524f5c749bfc384",
+      "metadataTypeId": 21
+    },
+    {
+      "type": "struct events::GlobalOracleUpdatedEvent",
+      "concreteTypeId": "5f46aa41f9dd71277c9437d6fc171170ca4ef336adf163ae833ecc548df59936",
+      "metadataTypeId": 22
     },
     {
       "type": "struct events::MarketBasicEvent",
       "concreteTypeId": "6a4af7c6d1aa3fedf33604a44da789ba359bf8f662a56fbc4de9603b8e732291",
-      "metadataTypeId": 16
+      "metadataTypeId": 23
     },
     {
       "type": "struct events::MarketConfigurationEvent",
       "concreteTypeId": "61d1473d8ec7f29c9b7f67ec6b840b973400d6af66df556a4fb5ea9884f780b7",
-      "metadataTypeId": 17
+      "metadataTypeId": 24
     },
     {
       "type": "struct events::PauseConfigurationEvent",
       "concreteTypeId": "ecf750cd9cc44add1b8fc9f1b11bb65d0981711b42c84d20aec21ef32bab7682",
-      "metadataTypeId": 18
+      "metadataTypeId": 25
     },
     {
       "type": "struct events::ReservesWithdrawnEvent",
       "concreteTypeId": "27b6995841bd520fff14deec990e8d66c03d8df59a510fa25e505694b0bc6ebe",
-      "metadataTypeId": 19
-    },
-    {
-      "type": "struct events::SetPythContractIdEvent",
-      "concreteTypeId": "d1ce69d85e3baf58b6bc7ebe55774b2c0ff63b955321139eece739000f91b995",
-      "metadataTypeId": 20
+      "metadataTypeId": 26
     },
     {
       "type": "struct events::UserBasicEvent",
       "concreteTypeId": "496e403bcde15a6d2d8a6ac3ae964a1db2145d27464fad7ae2b0dd4390c90c19",
-      "metadataTypeId": 21
+      "metadataTypeId": 27
     },
     {
       "type": "struct events::UserLiquidatedEvent",
       "concreteTypeId": "92d691781932f1848ba9433a9b1c09a97f985b331d88a1a289fc54569161d639",
-      "metadataTypeId": 22
+      "metadataTypeId": 28
     },
     {
       "type": "struct events::UserSupplyBaseEvent",
       "concreteTypeId": "1aed7a0722d2031e0bce0b49bb46e0f91a2237480a9d928eb696c7d1a6d7250c",
-      "metadataTypeId": 23
+      "metadataTypeId": 29
     },
     {
       "type": "struct events::UserSupplyCollateralEvent",
       "concreteTypeId": "61825e22a76ff7a0ca3ce1004c7d128c7844a8dde36cf7ea9077f8a57ef1f88a",
-      "metadataTypeId": 24
+      "metadataTypeId": 30
     },
     {
       "type": "struct events::UserWithdrawBaseEvent",
       "concreteTypeId": "3bbf66e44a782b08497502f3c67b5e181f14ef16755805fd800040f902019de1",
-      "metadataTypeId": 25
+      "metadataTypeId": 31
     },
     {
       "type": "struct events::UserWithdrawCollateralEvent",
       "concreteTypeId": "76ac511aac239f80b30e11716c2a730f0a814ea3acc85a13abb1777519465a4a",
-      "metadataTypeId": 26
+      "metadataTypeId": 32
+    },
+    {
+      "type": "struct market_abi::oracle_structs::OracleAssetConfiguration",
+      "concreteTypeId": "1879564999642fb9173ebff7798e329d086fbc55a22e49fae9ca3ffa0b335d38",
+      "metadataTypeId": 33
+    },
+    {
+      "type": "struct market_abi::oracle_structs::OracleGlobalConfiguration",
+      "concreteTypeId": "01210575f1835aeca139979da2cb6453cd17b03fa86a9e7b4b3f2b81555d94e1",
+      "metadataTypeId": 34
+    },
+    {
+      "type": "struct market_abi::oracle_structs::Price",
+      "concreteTypeId": "8ee135b402c6cdf4d978c3b48941502d7dc1329302dd2807f0513343419c4574",
+      "metadataTypeId": 35
     },
     {
       "type": "struct market_abi::structs::CollateralConfiguration",
       "concreteTypeId": "027212d4a883f4144f8043ef93fee6aa9d766041c7735fa37fae71d45ab6d92d",
-      "metadataTypeId": 27
+      "metadataTypeId": 38
     },
     {
       "type": "struct market_abi::structs::MarketBasics",
       "concreteTypeId": "8f0ca9732dda82407f3d36328a5e4b89421c5f1c404a9568afa856df6efb5802",
-      "metadataTypeId": 28
+      "metadataTypeId": 39
     },
     {
       "type": "struct market_abi::structs::MarketConfiguration",
       "concreteTypeId": "788c494dd193488709eb7174a5299c17819b0c2e68089b18e0474d616080cc9c",
-      "metadataTypeId": 29
+      "metadataTypeId": 40
     },
     {
       "type": "struct market_abi::structs::PauseConfiguration",
       "concreteTypeId": "8ec71ec402ef77ffda0627839b31dd1444fad8b4a95507e86bfa89f0517dbc3d",
-      "metadataTypeId": 30
-    },
-    {
-      "type": "struct market_abi::structs::PriceDataUpdate",
-      "concreteTypeId": "60b16a7d7d88977a17d1cbc5d1d741c4872c833abbe5cd6eaa5e2d741cd8bf19",
-      "metadataTypeId": 31
+      "metadataTypeId": 41
     },
     {
       "type": "struct market_abi::structs::UserBasic",
       "concreteTypeId": "2878312d8fe9af45fe59b9252d6afa651128c8f755ca8f26ae4d67ede06b8ea1",
-      "metadataTypeId": 32
+      "metadataTypeId": 42
     },
     {
-      "type": "struct pyth_interface::data_structures::price::Price",
-      "concreteTypeId": "8aba92fff7345309d4313706ed7db3a811609f62da8f0d2859819db43d461ff8",
-      "metadataTypeId": 33
+      "type": "struct ownership::events::OwnershipRenounced",
+      "concreteTypeId": "f407ab6707e340f081ad27d36c1d30ad14e67562f96d6267bf3082e9adb3e46d",
+      "metadataTypeId": 43
+    },
+    {
+      "type": "struct ownership::events::OwnershipSet",
+      "concreteTypeId": "8c0d2488561c35a28ef795bb8bcc4c43999cdd1e3ecbd10c226e0a68660c54d4",
+      "metadataTypeId": 44
+    },
+    {
+      "type": "struct ownership::events::OwnershipTransferred",
+      "concreteTypeId": "a2a2643e0252b510328c0323a0ea60724fb4cb3309a2322ab31b27566ff9a79d",
+      "metadataTypeId": 45
+    },
+    {
+      "type": "struct signed_int::i256::I256",
+      "concreteTypeId": "d9f8e3b5fb5bf9244761ce4e7ec85a20edb544d4d100c5a050aaf0fc4ef8a9ec",
+      "metadataTypeId": 47
     },
     {
       "type": "struct std::asset_id::AssetId",
       "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974",
-      "metadataTypeId": 35
+      "metadataTypeId": 49
     },
     {
-      "type": "struct std::bytes::Bytes",
-      "concreteTypeId": "cdd87b7d12fe505416570c294c884bca819364863efe3bf539245fa18515fbbb",
-      "metadataTypeId": 36
-    },
-    {
-      "type": "struct std::contract_id::ContractId",
-      "concreteTypeId": "29c10735d33b5159f0c71ee1dbd17b36a3e69e41f00fab0d42e1bd9f428d8a54",
-      "metadataTypeId": 38
+      "type": "struct std::vec::Vec<(struct std::asset_id::AssetId, struct std::vec::Vec<struct market_abi::oracle_structs::OracleAssetConfiguration>)>",
+      "concreteTypeId": "3b08ec702f021c63225115c90e1f8ff6584eed6c94e590a7f70b0fdd2aef6bbb",
+      "metadataTypeId": 55,
+      "typeArguments": [
+        "b072c5015ba8b39919ce2bee5eb82df8a68a78047f142cb1cc257655454c10bb"
+      ]
     },
     {
       "type": "struct std::vec::Vec<(struct std::asset_id::AssetId, u64)>",
       "concreteTypeId": "d0540b5a00688e21ad7a3f5d7db93636c18f3ef7aed40d4e48f0cffc74683bcb",
-      "metadataTypeId": 40,
+      "metadataTypeId": 55,
       "typeArguments": [
         "229de6686c9c66098e7188f64d380a851d5ebacacaf90d991adf5b5952a70f7b"
       ]
     },
     {
+      "type": "struct std::vec::Vec<enum market_abi::oracle_structs::OracleInput>",
+      "concreteTypeId": "b8c096640d00461e94891decbf44e3f86379e168323628c152ad941a7a979ff6",
+      "metadataTypeId": 55,
+      "typeArguments": [
+        "6dd8771c6810b3450ed6e1962bbc18051a781c76db9429af83ddad47eabf61a5"
+      ]
+    },
+    {
       "type": "struct std::vec::Vec<enum std::identity::Identity>",
       "concreteTypeId": "2f79033d0d3729398611309f48578b56cf5162ba85e50f4d8fb79c9d9d1abc7b",
-      "metadataTypeId": 40,
+      "metadataTypeId": 55,
       "typeArguments": [
         "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
       ]
     },
     {
+      "type": "struct std::vec::Vec<struct market_abi::oracle_structs::OracleGlobalConfiguration>",
+      "concreteTypeId": "1173ea0b63954052c7dc2b7551996fd1cc6becd5943a51f4d7c7c7717cfba2b5",
+      "metadataTypeId": 55,
+      "typeArguments": [
+        "01210575f1835aeca139979da2cb6453cd17b03fa86a9e7b4b3f2b81555d94e1"
+      ]
+    },
+    {
       "type": "struct std::vec::Vec<struct market_abi::structs::CollateralConfiguration>",
       "concreteTypeId": "135bedc713ecdc7e568f13811c40a9df6a62b44f54789c3f87066e7ccaedcc14",
-      "metadataTypeId": 40,
+      "metadataTypeId": 55,
       "typeArguments": [
         "027212d4a883f4144f8043ef93fee6aa9d766041c7735fa37fae71d45ab6d92d"
       ]
-    },
-    {
-      "type": "struct std::vec::Vec<struct std::bytes::Bytes>",
-      "concreteTypeId": "2601885b27af3627b8910876fc176d900cec2b16ec78c538f5f312e785d915f5",
-      "metadataTypeId": 40,
-      "typeArguments": [
-        "cdd87b7d12fe505416570c294c884bca819364863efe3bf539245fa18515fbbb"
-      ]
-    },
-    {
-      "type": "struct sway_libs::ownership::events::OwnershipRenounced",
-      "concreteTypeId": "43c4fa7b3297401afbf300127e59ea913e5c8f0c7ae69abbec789ab0bb872bed",
-      "metadataTypeId": 41
-    },
-    {
-      "type": "struct sway_libs::ownership::events::OwnershipSet",
-      "concreteTypeId": "e1ef35033ea9d2956f17c3292dea4a46ce7d61fdf37bbebe03b7b965073f43b5",
-      "metadataTypeId": 42
-    },
-    {
-      "type": "struct sway_libs::ownership::events::OwnershipTransferred",
-      "concreteTypeId": "b3fffbcb3158d7c010c31b194b60fb7857adb4ad61bdcf4b8b42958951d9f308",
-      "metadataTypeId": 43
-    },
-    {
-      "type": "struct sway_libs::signed_integers::i256::I256",
-      "concreteTypeId": "1c791a2f63a6d482f33e38564a4c4f67f2351f36419d0c750ce825e233c86ae1",
-      "metadataTypeId": 44
     },
     {
       "type": "u256",
@@ -262,7 +284,7 @@
       "components": [
         {
           "name": "__tuple_element",
-          "typeId": 35
+          "typeId": 49
         },
         {
           "name": "__tuple_element",
@@ -276,6 +298,26 @@
       "components": [
         {
           "name": "__tuple_element",
+          "typeId": 49
+        },
+        {
+          "name": "__tuple_element",
+          "typeId": 55,
+          "typeArguments": [
+            {
+              "name": "",
+              "typeId": 33
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "(_, _)",
+      "metadataTypeId": 2,
+      "components": [
+        {
+          "name": "__tuple_element",
           "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
         },
         {
@@ -285,8 +327,12 @@
       ]
     },
     {
-      "type": "enum market_abi::structs::Error",
-      "metadataTypeId": 2,
+      "type": "b256",
+      "metadataTypeId": 3
+    },
+    {
+      "type": "enum market_abi::errors::Error",
+      "metadataTypeId": 4,
       "components": [
         {
           "name": "AlreadyInitialized",
@@ -353,18 +399,116 @@
           "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
         },
         {
-          "name": "OracleContractIdNotSet",
+          "name": "OraclePriceValidationError",
           "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
         },
         {
-          "name": "OraclePriceValidationError",
+          "name": "UnknownOracle",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "InvalidOracleType",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "InvalidOracleInput",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "GlobalOracleAlreadyExists",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "AssetOracleAlreadyExists",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "GlobalOracleNotFound",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "AssetOracleNotFound",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "OracleNoValidPrice",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "InvalidPriceFeedId",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "Unknown",
           "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
         }
       ]
     },
     {
-      "type": "enum standards::src5::AccessError",
-      "metadataTypeId": 3,
+      "type": "enum market_abi::oracle_structs::OracleInput",
+      "metadataTypeId": 5,
+      "components": [
+        {
+          "name": "Pyth",
+          "typeId": 36
+        },
+        {
+          "name": "Stork",
+          "typeId": 37
+        }
+      ]
+    },
+    {
+      "type": "enum market_abi::oracle_structs::OraclePriceFeedId",
+      "metadataTypeId": 6,
+      "components": [
+        {
+          "name": "Pyth",
+          "typeId": 3
+        },
+        {
+          "name": "Stork",
+          "typeId": 3
+        }
+      ]
+    },
+    {
+      "type": "enum market_abi::oracle_structs::OracleType",
+      "metadataTypeId": 7,
+      "components": [
+        {
+          "name": "Pyth",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        },
+        {
+          "name": "Stork",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        }
+      ]
+    },
+    {
+      "type": "enum ownership::errors::InitializationError",
+      "metadataTypeId": 8,
+      "components": [
+        {
+          "name": "CannotReinitialized",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        }
+      ]
+    },
+    {
+      "type": "enum reentrancy::errors::ReentrancyError",
+      "metadataTypeId": 9,
+      "components": [
+        {
+          "name": "NonReentrant",
+          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+        }
+      ]
+    },
+    {
+      "type": "enum src5::AccessError",
+      "metadataTypeId": 10,
       "components": [
         {
           "name": "NotOwner",
@@ -373,8 +517,8 @@
       ]
     },
     {
-      "type": "enum standards::src5::State",
-      "metadataTypeId": 4,
+      "type": "enum src5::State",
+      "metadataTypeId": 11,
       "components": [
         {
           "name": "Uninitialized",
@@ -382,7 +526,7 @@
         },
         {
           "name": "Initialized",
-          "typeId": 5
+          "typeId": 12
         },
         {
           "name": "Revoked",
@@ -392,57 +536,37 @@
     },
     {
       "type": "enum std::identity::Identity",
-      "metadataTypeId": 5,
+      "metadataTypeId": 12,
       "components": [
         {
           "name": "Address",
-          "typeId": 34
+          "typeId": 48
         },
         {
           "name": "ContractId",
-          "typeId": 38
-        }
-      ]
-    },
-    {
-      "type": "enum sway_libs::ownership::errors::InitializationError",
-      "metadataTypeId": 6,
-      "components": [
-        {
-          "name": "CannotReinitialized",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
-        }
-      ]
-    },
-    {
-      "type": "enum sway_libs::reentrancy::errors::ReentrancyError",
-      "metadataTypeId": 7,
-      "components": [
-        {
-          "name": "NonReentrant",
-          "typeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+          "typeId": 52
         }
       ]
     },
     {
       "type": "generic T",
-      "metadataTypeId": 8
+      "metadataTypeId": 13
     },
     {
       "type": "raw untyped ptr",
-      "metadataTypeId": 9
+      "metadataTypeId": 14
     },
     {
       "type": "struct events::AbsorbCollateralEvent",
-      "metadataTypeId": 10,
+      "metadataTypeId": 15,
       "components": [
         {
           "name": "account",
-          "typeId": 5
+          "typeId": 12
         },
         {
           "name": "asset_id",
-          "typeId": 35
+          "typeId": 49
         },
         {
           "name": "amount",
@@ -454,25 +578,53 @@
         },
         {
           "name": "decimals",
-          "typeId": 45
+          "typeId": 58
+        }
+      ]
+    },
+    {
+      "type": "struct events::AssetOracleAddedEvent",
+      "metadataTypeId": 16,
+      "components": [
+        {
+          "name": "asset_id",
+          "typeId": 49
+        },
+        {
+          "name": "oracle_configuration",
+          "typeId": 33
+        }
+      ]
+    },
+    {
+      "type": "struct events::AssetOracleUpdatedEvent",
+      "metadataTypeId": 17,
+      "components": [
+        {
+          "name": "asset_id",
+          "typeId": 49
+        },
+        {
+          "name": "oracle_configuration",
+          "typeId": 33
         }
       ]
     },
     {
       "type": "struct events::BuyCollateralEvent",
-      "metadataTypeId": 11,
+      "metadataTypeId": 18,
       "components": [
         {
           "name": "caller",
-          "typeId": 5
+          "typeId": 12
         },
         {
           "name": "recipient",
-          "typeId": 5
+          "typeId": 12
         },
         {
           "name": "asset_id",
-          "typeId": 35
+          "typeId": 49
         },
         {
           "name": "amount",
@@ -486,93 +638,101 @@
     },
     {
       "type": "struct events::CollateralAssetAdded",
-      "metadataTypeId": 12,
+      "metadataTypeId": 19,
       "components": [
         {
           "name": "asset_id",
-          "typeId": 35
+          "typeId": 49
         },
         {
           "name": "configuration",
-          "typeId": 27
-        }
-      ]
-    },
-    {
-      "type": "struct events::CollateralAssetPaused",
-      "metadataTypeId": 13,
-      "components": [
-        {
-          "name": "asset_id",
-          "typeId": 35
-        }
-      ]
-    },
-    {
-      "type": "struct events::CollateralAssetResumed",
-      "metadataTypeId": 14,
-      "components": [
-        {
-          "name": "asset_id",
-          "typeId": 35
+          "typeId": 38
         }
       ]
     },
     {
       "type": "struct events::CollateralAssetUpdated",
-      "metadataTypeId": 15,
+      "metadataTypeId": 20,
       "components": [
         {
           "name": "asset_id",
-          "typeId": 35
+          "typeId": 49
         },
         {
           "name": "configuration",
-          "typeId": 27
+          "typeId": 38
+        }
+      ]
+    },
+    {
+      "type": "struct events::GlobalOracleAddedEvent",
+      "metadataTypeId": 21,
+      "components": [
+        {
+          "name": "oracle_id",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        },
+        {
+          "name": "oracle_configuration",
+          "typeId": 34
+        }
+      ]
+    },
+    {
+      "type": "struct events::GlobalOracleUpdatedEvent",
+      "metadataTypeId": 22,
+      "components": [
+        {
+          "name": "oracle_id",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        },
+        {
+          "name": "oracle_configuration",
+          "typeId": 34
         }
       ]
     },
     {
       "type": "struct events::MarketBasicEvent",
-      "metadataTypeId": 16,
+      "metadataTypeId": 23,
       "components": [
         {
           "name": "market_basic",
-          "typeId": 28
+          "typeId": 39
         }
       ]
     },
     {
       "type": "struct events::MarketConfigurationEvent",
-      "metadataTypeId": 17,
+      "metadataTypeId": 24,
       "components": [
         {
           "name": "market_config",
-          "typeId": 29
+          "typeId": 40
         }
       ]
     },
     {
       "type": "struct events::PauseConfigurationEvent",
-      "metadataTypeId": 18,
+      "metadataTypeId": 25,
       "components": [
         {
           "name": "pause_config",
-          "typeId": 30
+          "typeId": 41
         }
       ]
     },
     {
       "type": "struct events::ReservesWithdrawnEvent",
-      "metadataTypeId": 19,
+      "metadataTypeId": 26,
       "components": [
         {
           "name": "caller",
-          "typeId": 5
+          "typeId": 12
         },
         {
           "name": "to",
-          "typeId": 5
+          "typeId": 12
         },
         {
           "name": "amount",
@@ -581,40 +741,30 @@
       ]
     },
     {
-      "type": "struct events::SetPythContractIdEvent",
-      "metadataTypeId": 20,
-      "components": [
-        {
-          "name": "contract_id",
-          "typeId": 38
-        }
-      ]
-    },
-    {
       "type": "struct events::UserBasicEvent",
-      "metadataTypeId": 21,
+      "metadataTypeId": 27,
       "components": [
         {
           "name": "account",
-          "typeId": 5
+          "typeId": 12
         },
         {
           "name": "user_basic",
-          "typeId": 32
+          "typeId": 42
         }
       ]
     },
     {
       "type": "struct events::UserLiquidatedEvent",
-      "metadataTypeId": 22,
+      "metadataTypeId": 28,
       "components": [
         {
           "name": "account",
-          "typeId": 5
+          "typeId": 12
         },
         {
           "name": "liquidator",
-          "typeId": 5
+          "typeId": 12
         },
         {
           "name": "base_paid_out",
@@ -634,17 +784,17 @@
         },
         {
           "name": "decimals",
-          "typeId": 45
+          "typeId": 58
         }
       ]
     },
     {
       "type": "struct events::UserSupplyBaseEvent",
-      "metadataTypeId": 23,
+      "metadataTypeId": 29,
       "components": [
         {
           "name": "account",
-          "typeId": 5
+          "typeId": 12
         },
         {
           "name": "supply_amount",
@@ -658,15 +808,15 @@
     },
     {
       "type": "struct events::UserSupplyCollateralEvent",
-      "metadataTypeId": 24,
+      "metadataTypeId": 30,
       "components": [
         {
           "name": "account",
-          "typeId": 5
+          "typeId": 12
         },
         {
           "name": "asset_id",
-          "typeId": 35
+          "typeId": 49
         },
         {
           "name": "amount",
@@ -676,11 +826,11 @@
     },
     {
       "type": "struct events::UserWithdrawBaseEvent",
-      "metadataTypeId": 25,
+      "metadataTypeId": 31,
       "components": [
         {
           "name": "account",
-          "typeId": 5
+          "typeId": 12
         },
         {
           "name": "withdraw_amount",
@@ -694,15 +844,15 @@
     },
     {
       "type": "struct events::UserWithdrawCollateralEvent",
-      "metadataTypeId": 26,
+      "metadataTypeId": 32,
       "components": [
         {
           "name": "account",
-          "typeId": 5
+          "typeId": 12
         },
         {
           "name": "asset_id",
-          "typeId": 35
+          "typeId": 49
         },
         {
           "name": "amount",
@@ -711,20 +861,138 @@
       ]
     },
     {
-      "type": "struct market_abi::structs::CollateralConfiguration",
-      "metadataTypeId": 27,
+      "type": "struct market_abi::oracle_structs::OracleAssetConfiguration",
+      "metadataTypeId": 33,
       "components": [
         {
-          "name": "asset_id",
-          "typeId": 35
+          "name": "oracle_id",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
         },
         {
           "name": "price_feed_id",
-          "typeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+          "typeId": 6
+        },
+        {
+          "name": "is_disabled",
+          "typeId": "b760f44fa5965c2474a3b471467a22c43185152129295af588b022ae50b50903"
+        }
+      ]
+    },
+    {
+      "type": "struct market_abi::oracle_structs::OracleGlobalConfiguration",
+      "metadataTypeId": 34,
+      "components": [
+        {
+          "name": "contract_id",
+          "typeId": 52
+        },
+        {
+          "name": "is_disabled",
+          "typeId": "b760f44fa5965c2474a3b471467a22c43185152129295af588b022ae50b50903"
+        },
+        {
+          "name": "oracle_type",
+          "typeId": 7
+        }
+      ]
+    },
+    {
+      "type": "struct market_abi::oracle_structs::Price",
+      "metadataTypeId": 35,
+      "components": [
+        {
+          "name": "price",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "exponent",
+          "typeId": 58
+        },
+        {
+          "name": "confidence",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+        },
+        {
+          "name": "publish_time",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        }
+      ]
+    },
+    {
+      "type": "struct market_abi::oracle_structs::PythOracleInput",
+      "metadataTypeId": 36,
+      "components": [
+        {
+          "name": "oracle_id",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        },
+        {
+          "name": "publish_times",
+          "typeId": 55,
+          "typeArguments": [
+            {
+              "name": "",
+              "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+            }
+          ]
+        },
+        {
+          "name": "price_feed_ids",
+          "typeId": 55,
+          "typeArguments": [
+            {
+              "name": "",
+              "typeId": 3
+            }
+          ]
+        },
+        {
+          "name": "update_data",
+          "typeId": 55,
+          "typeArguments": [
+            {
+              "name": "",
+              "typeId": 50
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "struct market_abi::oracle_structs::StorkOracleInput",
+      "metadataTypeId": 37,
+      "components": [
+        {
+          "name": "oracle_id",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        },
+        {
+          "name": "update_data",
+          "typeId": 55,
+          "typeArguments": [
+            {
+              "name": "",
+              "typeId": 56
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "struct market_abi::structs::CollateralConfiguration",
+      "metadataTypeId": 38,
+      "components": [
+        {
+          "name": "asset_id",
+          "typeId": 49
         },
         {
           "name": "decimals",
-          "typeId": 45
+          "typeId": 58
+        },
+        {
+          "name": "oracle_max_confidence_width",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
         },
         {
           "name": "borrow_collateral_factor",
@@ -750,7 +1018,7 @@
     },
     {
       "type": "struct market_abi::structs::MarketBasics",
-      "metadataTypeId": 28,
+      "metadataTypeId": 39,
       "components": [
         {
           "name": "base_supply_index",
@@ -784,19 +1052,19 @@
     },
     {
       "type": "struct market_abi::structs::MarketConfiguration",
-      "metadataTypeId": 29,
+      "metadataTypeId": 40,
       "components": [
         {
           "name": "base_token",
-          "typeId": 35
+          "typeId": 49
         },
         {
           "name": "base_token_decimals",
-          "typeId": 45
+          "typeId": 58
         },
         {
-          "name": "base_token_price_feed_id",
-          "typeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+          "name": "oracle_max_confidence_width",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
         },
         {
           "name": "supply_kink",
@@ -862,7 +1130,7 @@
     },
     {
       "type": "struct market_abi::structs::PauseConfiguration",
-      "metadataTypeId": 30,
+      "metadataTypeId": 41,
       "components": [
         {
           "name": "supply_paused",
@@ -883,52 +1151,12 @@
       ]
     },
     {
-      "type": "struct market_abi::structs::PriceDataUpdate",
-      "metadataTypeId": 31,
-      "components": [
-        {
-          "name": "update_fee",
-          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
-        },
-        {
-          "name": "publish_times",
-          "typeId": 40,
-          "typeArguments": [
-            {
-              "name": "",
-              "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
-            }
-          ]
-        },
-        {
-          "name": "price_feed_ids",
-          "typeId": 40,
-          "typeArguments": [
-            {
-              "name": "",
-              "typeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
-            }
-          ]
-        },
-        {
-          "name": "update_data",
-          "typeId": 40,
-          "typeArguments": [
-            {
-              "name": "",
-              "typeId": 36
-            }
-          ]
-        }
-      ]
-    },
-    {
       "type": "struct market_abi::structs::UserBasic",
-      "metadataTypeId": 32,
+      "metadataTypeId": 42,
       "components": [
         {
           "name": "principal",
-          "typeId": 44
+          "typeId": 47
         },
         {
           "name": "base_tracking_index",
@@ -941,54 +1169,86 @@
       ]
     },
     {
-      "type": "struct pyth_interface::data_structures::price::Price",
-      "metadataTypeId": 33,
+      "type": "struct ownership::events::OwnershipRenounced",
+      "metadataTypeId": 43,
       "components": [
         {
-          "name": "confidence",
-          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+          "name": "previous_owner",
+          "typeId": 12
+        }
+      ]
+    },
+    {
+      "type": "struct ownership::events::OwnershipSet",
+      "metadataTypeId": 44,
+      "components": [
+        {
+          "name": "new_owner",
+          "typeId": 12
+        }
+      ]
+    },
+    {
+      "type": "struct ownership::events::OwnershipTransferred",
+      "metadataTypeId": 45,
+      "components": [
+        {
+          "name": "new_owner",
+          "typeId": 12
         },
         {
-          "name": "exponent",
-          "typeId": 45
-        },
+          "name": "previous_owner",
+          "typeId": 12
+        }
+      ]
+    },
+    {
+      "type": "struct signed_int::i128::I128",
+      "metadataTypeId": 46,
+      "components": [
         {
-          "name": "price",
-          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
-        },
+          "name": "underlying",
+          "typeId": 53
+        }
+      ]
+    },
+    {
+      "type": "struct signed_int::i256::I256",
+      "metadataTypeId": 47,
+      "components": [
         {
-          "name": "publish_time",
-          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+          "name": "underlying",
+          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
         }
       ]
     },
     {
       "type": "struct std::address::Address",
-      "metadataTypeId": 34,
+      "metadataTypeId": 48,
       "components": [
         {
           "name": "bits",
-          "typeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+          "typeId": 3
         }
       ]
     },
     {
       "type": "struct std::asset_id::AssetId",
-      "metadataTypeId": 35,
+      "metadataTypeId": 49,
       "components": [
         {
           "name": "bits",
-          "typeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+          "typeId": 3
         }
       ]
     },
     {
       "type": "struct std::bytes::Bytes",
-      "metadataTypeId": 36,
+      "metadataTypeId": 50,
       "components": [
         {
           "name": "buf",
-          "typeId": 37
+          "typeId": 51
         },
         {
           "name": "len",
@@ -998,11 +1258,11 @@
     },
     {
       "type": "struct std::bytes::RawBytes",
-      "metadataTypeId": 37,
+      "metadataTypeId": 51,
       "components": [
         {
           "name": "ptr",
-          "typeId": 9
+          "typeId": 14
         },
         {
           "name": "cap",
@@ -1012,40 +1272,54 @@
     },
     {
       "type": "struct std::contract_id::ContractId",
-      "metadataTypeId": 38,
+      "metadataTypeId": 52,
       "components": [
         {
           "name": "bits",
-          "typeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+          "typeId": 3
+        }
+      ]
+    },
+    {
+      "type": "struct std::u128::U128",
+      "metadataTypeId": 53,
+      "components": [
+        {
+          "name": "upper",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        },
+        {
+          "name": "lower",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
         }
       ]
     },
     {
       "type": "struct std::vec::RawVec",
-      "metadataTypeId": 39,
+      "metadataTypeId": 54,
       "components": [
         {
           "name": "ptr",
-          "typeId": 9
+          "typeId": 14
         },
         {
           "name": "cap",
           "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
         }
       ],
-      "typeParameters": [8]
+      "typeParameters": [13]
     },
     {
       "type": "struct std::vec::Vec",
-      "metadataTypeId": 40,
+      "metadataTypeId": 55,
       "components": [
         {
           "name": "buf",
-          "typeId": 39,
+          "typeId": 54,
           "typeArguments": [
             {
               "name": "",
-              "typeId": 8
+              "typeId": 13
             }
           ]
         },
@@ -1054,70 +1328,74 @@
           "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
         }
       ],
-      "typeParameters": [8]
+      "typeParameters": [13]
     },
     {
-      "type": "struct sway_libs::ownership::events::OwnershipRenounced",
-      "metadataTypeId": 41,
+      "type": "struct stork_sway_sdk::interface::TemporalNumericValueInput",
+      "metadataTypeId": 56,
       "components": [
         {
-          "name": "previous_owner",
-          "typeId": 5
-        }
-      ]
-    },
-    {
-      "type": "struct sway_libs::ownership::events::OwnershipSet",
-      "metadataTypeId": 42,
-      "components": [
-        {
-          "name": "new_owner",
-          "typeId": 5
-        }
-      ]
-    },
-    {
-      "type": "struct sway_libs::ownership::events::OwnershipTransferred",
-      "metadataTypeId": 43,
-      "components": [
-        {
-          "name": "new_owner",
-          "typeId": 5
+          "name": "temporal_numeric_value",
+          "typeId": 57
         },
         {
-          "name": "previous_owner",
-          "typeId": 5
+          "name": "id",
+          "typeId": 3
+        },
+        {
+          "name": "publisher_merkle_root",
+          "typeId": 3
+        },
+        {
+          "name": "value_compute_alg_hash",
+          "typeId": 3
+        },
+        {
+          "name": "r",
+          "typeId": 3
+        },
+        {
+          "name": "s",
+          "typeId": 3
+        },
+        {
+          "name": "v",
+          "typeId": "c89951a24c6ca28c13fd1cfdc646b2b656d69e61a92b91023be7eb58eb914b6b"
         }
       ]
     },
     {
-      "type": "struct sway_libs::signed_integers::i256::I256",
-      "metadataTypeId": 44,
+      "type": "struct stork_sway_sdk::temporal_numeric_value::TemporalNumericValue",
+      "metadataTypeId": 57,
       "components": [
         {
-          "name": "underlying",
-          "typeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
+          "name": "timestamp_ns",
+          "typeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        },
+        {
+          "name": "quantized_value",
+          "typeId": 46
         }
       ]
     },
     {
       "type": "u32",
-      "metadataTypeId": 45
+      "metadataTypeId": 58
     }
   ],
   "functions": [
     {
+      "name": "absorb",
       "inputs": [
         {
           "name": "accounts",
           "concreteTypeId": "2f79033d0d3729398611309f48578b56cf5162ba85e50f4d8fb79c9d9d1abc7b"
         },
         {
-          "name": "price_data_update",
-          "concreteTypeId": "60b16a7d7d88977a17d1cbc5d1d741c4872c833abbe5cd6eaa5e2d741cd8bf19"
+          "name": "oracle_inputs",
+          "concreteTypeId": "b8c096640d00461e94891decbf44e3f86379e168323628c152ad941a7a979ff6"
         }
       ],
-      "name": "absorb",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
@@ -1143,8 +1421,20 @@
         {
           "name": "doc-comment",
           "arguments": [
-            " * `price_data_update`: [PriceDataUpdate] - The price data update struct to be used for updating the price feeds."
+            " * `oracle_inputs`: [Vec<OracleInput>] - The oracle inputs to be used for updating the price feeds."
           ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [""]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [" # Reverts"]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [" * When the absorb operation is paused."]
         },
         {
           "name": "doc-comment",
@@ -1173,6 +1463,7 @@
       ]
     },
     {
+      "name": "activate_contract",
       "inputs": [
         {
           "name": "market_configuration",
@@ -1183,7 +1474,6 @@
           "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
         }
       ],
-      "name": "activate_contract",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
@@ -1239,13 +1529,13 @@
       ]
     },
     {
+      "name": "add_collateral_asset",
       "inputs": [
         {
           "name": "configuration",
           "concreteTypeId": "027212d4a883f4144f8043ef93fee6aa9d766041c7735fa37fae71d45ab6d92d"
         }
       ],
-      "name": "add_collateral_asset",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
@@ -1286,7 +1576,7 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Writes: `2`"]
+          "arguments": [" * Writes: `4`"]
         },
         {
           "name": "doc-comment",
@@ -1299,13 +1589,171 @@
       ]
     },
     {
+      "name": "add_new_asset_oracle",
+      "inputs": [
+        {
+          "name": "asset_id",
+          "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
+        },
+        {
+          "name": "oracle_configuration",
+          "concreteTypeId": "1879564999642fb9173ebff7798e329d086fbc55a22e49fae9ca3ffa0b335d38"
+        }
+      ],
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "attributes": [
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " This function adds a new oracle configuration for a specific asset."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [""]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [" # Arguments"]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `asset_id`: [AssetId] - The asset ID for which the oracle configuration is being added."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `oracle_configuration`: [OracleAssetConfiguration] - The oracle configuration to be added."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [""]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [" # Reverts"]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [" * When the caller is not the owner."]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the referenced global oracle configuration does not exist."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When an oracle configuration with the same oracle ID already exists for this asset."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [""]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [" # Number of Storage Accesses"]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [" * Writes: `1`"]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [" * Reads: `2 + asset_oracle_configurations.len()`"]
+        },
+        {
+          "name": "storage",
+          "arguments": ["write"]
+        }
+      ]
+    },
+    {
+      "name": "add_new_global_oracle",
+      "inputs": [
+        {
+          "name": "oracle_configuration",
+          "concreteTypeId": "01210575f1835aeca139979da2cb6453cd17b03fa86a9e7b4b3f2b81555d94e1"
+        }
+      ],
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "attributes": [
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " This function adds a new global oracle configuration to the market."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [""]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [" # Arguments"]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `oracle_configuration`: [OracleGlobalConfiguration] - The global oracle configuration to be added."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [""]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [" # Reverts"]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [" * When the caller is not the owner."]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When an oracle with the same contract ID already exists."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [""]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [" # Number of Storage Accesses"]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [" * Writes: `2`"]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `2 + storage.oracle_global_configurations_keys.len() * 2`"
+          ]
+        },
+        {
+          "name": "storage",
+          "arguments": ["write"]
+        }
+      ]
+    },
+    {
+      "name": "available_to_borrow",
       "inputs": [
         {
           "name": "account",
           "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
         }
       ],
-      "name": "available_to_borrow",
       "output": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e",
       "attributes": [
         {
@@ -1361,13 +1809,13 @@
       ]
     },
     {
+      "name": "balance_of",
       "inputs": [
         {
           "name": "asset_id",
           "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
         }
       ],
-      "name": "balance_of",
       "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
       "attributes": [
         {
@@ -1405,6 +1853,7 @@
       ]
     },
     {
+      "name": "buy_collateral",
       "inputs": [
         {
           "name": "asset_id",
@@ -1419,7 +1868,6 @@
           "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
         }
       ],
-      "name": "buy_collateral",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
@@ -1511,6 +1959,7 @@
       ]
     },
     {
+      "name": "collateral_value_to_sell",
       "inputs": [
         {
           "name": "asset_id",
@@ -1521,7 +1970,6 @@
           "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
         }
       ],
-      "name": "collateral_value_to_sell",
       "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
       "attributes": [
         {
@@ -1583,8 +2031,8 @@
       ]
     },
     {
-      "inputs": [],
       "name": "debug_increment_timestamp",
+      "inputs": [],
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
@@ -1630,8 +2078,8 @@
       ]
     },
     {
-      "inputs": [],
       "name": "get_all_totals_collateral",
+      "inputs": [],
       "output": "d0540b5a00688e21ad7a3f5d7db93636c18f3ef7aed40d4e48f0cffc74683bcb",
       "attributes": [
         {
@@ -1675,13 +2123,13 @@
       ]
     },
     {
+      "name": "get_all_user_collateral",
       "inputs": [
         {
           "name": "account",
           "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
         }
       ],
-      "name": "get_all_user_collateral",
       "output": "d0540b5a00688e21ad7a3f5d7db93636c18f3ef7aed40d4e48f0cffc74683bcb",
       "attributes": [
         {
@@ -1723,12 +2171,6 @@
         {
           "name": "doc-comment",
           "arguments": [
-            " * Writes: `storage.collateral_configurations_keys.len()`"
-          ]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [
             " * Reads: `1 + storage.collateral_configurations_keys.len() * 3`"
           ]
         },
@@ -1739,13 +2181,13 @@
       ]
     },
     {
+      "name": "get_borrow_rate",
       "inputs": [
         {
           "name": "utilization",
           "concreteTypeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
         }
       ],
-      "name": "get_borrow_rate",
       "output": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e",
       "attributes": [
         {
@@ -1805,8 +2247,8 @@
       ]
     },
     {
-      "inputs": [],
       "name": "get_collateral_configurations",
+      "inputs": [],
       "output": "135bedc713ecdc7e568f13811c40a9df6a62b44f54789c3f87066e7ccaedcc14",
       "attributes": [
         {
@@ -1850,14 +2292,14 @@
       ]
     },
     {
+      "name": "get_collateral_reserves",
       "inputs": [
         {
           "name": "asset_id",
           "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
         }
       ],
-      "name": "get_collateral_reserves",
-      "output": "1c791a2f63a6d482f33e38564a4c4f67f2351f36419d0c750ce825e233c86ae1",
+      "output": "d9f8e3b5fb5bf9244761ce4e7ec85a20edb544d4d100c5a050aaf0fc4ef8a9ec",
       "attributes": [
         {
           "name": "doc-comment",
@@ -1910,8 +2352,8 @@
       ]
     },
     {
-      "inputs": [],
       "name": "get_market_basics",
+      "inputs": [],
       "output": "8f0ca9732dda82407f3d36328a5e4b89421c5f1c404a9568afa856df6efb5802",
       "attributes": [
         {
@@ -1951,8 +2393,8 @@
       ]
     },
     {
-      "inputs": [],
       "name": "get_market_basics_with_interest",
+      "inputs": [],
       "output": "8f0ca9732dda82407f3d36328a5e4b89421c5f1c404a9568afa856df6efb5802",
       "attributes": [
         {
@@ -1994,8 +2436,8 @@
       ]
     },
     {
-      "inputs": [],
       "name": "get_market_configuration",
+      "inputs": [],
       "output": "788c494dd193488709eb7174a5299c17819b0c2e68089b18e0474d616080cc9c",
       "attributes": [
         {
@@ -2035,8 +2477,98 @@
       ]
     },
     {
+      "name": "get_oracle_asset_configurations",
       "inputs": [],
+      "output": "3b08ec702f021c63225115c90e1f8ff6584eed6c94e590a7f70b0fdd2aef6bbb",
+      "attributes": [
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " This function retrieves all oracle asset configurations for all assets in the market."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [""]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [" # Returns"]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * [Vec<(AssetId, Vec<OracleAssetConfiguration>)>] - A list of tuples containing asset IDs and their corresponding oracle configurations."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [""]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [" # Number of Storage Accesses"]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `4 + storage.oracle_asset_configurations_keys.len() * 3`"
+          ]
+        },
+        {
+          "name": "storage",
+          "arguments": ["read"]
+        }
+      ]
+    },
+    {
+      "name": "get_oracle_global_configurations",
+      "inputs": [],
+      "output": "1173ea0b63954052c7dc2b7551996fd1cc6becd5943a51f4d7c7c7717cfba2b5",
+      "attributes": [
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " This function retrieves all global oracle configurations in the market."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [""]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [" # Returns"]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * [Vec<OracleGlobalConfiguration>] - A list of all global oracle configurations."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [""]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [" # Number of Storage Accesses"]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * Reads: `1 + storage.oracle_global_configurations_keys.len() * 2`"
+          ]
+        },
+        {
+          "name": "storage",
+          "arguments": ["read"]
+        }
+      ]
+    },
+    {
       "name": "get_pause_configuration",
+      "inputs": [],
       "output": "8ec71ec402ef77ffda0627839b31dd1444fad8b4a95507e86bfa89f0517dbc3d",
       "attributes": [
         {
@@ -2072,37 +2604,25 @@
           "arguments": [" * Reads: `1`"]
         },
         {
-          "name": "doc-comment",
-          "arguments": [""]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [" * Reads: `1`"]
-        },
-        {
           "name": "storage",
           "arguments": ["read"]
         }
       ]
     },
     {
+      "name": "get_price",
       "inputs": [
         {
-          "name": "price_feed_id",
-          "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
+          "name": "asset_id",
+          "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
         }
       ],
-      "name": "get_price",
-      "output": "8aba92fff7345309d4313706ed7db3a811609f62da8f0d2859819db43d461ff8",
+      "output": "8ee135b402c6cdf4d978c3b48941502d7dc1329302dd2807f0513343419c4574",
       "attributes": [
         {
           "name": "doc-comment",
           "arguments": [
-            " This function ensures that the price data is fresh and meets the required validation criteria."
+            " This function retrieves the price for a specified asset from the oracle system."
           ]
         },
         {
@@ -2116,7 +2636,7 @@
         {
           "name": "doc-comment",
           "arguments": [
-            " * `price_feed_id`: [PriceFeedId] - The ID of the price feed for which the price is being retrieved."
+            " * `asset_id`: [AssetId] - The ID of the asset for which the price is being retrieved."
           ]
         },
         {
@@ -2143,25 +2663,7 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [
-            " * When the `contract_id` is zero, indicating the oracle contract ID is not set."
-          ]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [
-            " * When the price is stale or ahead of the current timestamp."
-          ]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [" * When the price is less than or equal to zero."]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [
-            " * When the confidence value exceeds the allowed width."
-          ]
+          "arguments": [" * When no valid price is found from any oracle."]
         },
         {
           "name": "doc-comment",
@@ -2173,7 +2675,7 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Reads: `1`"]
+          "arguments": [" * Reads: `2 + oracle_asset_configurations.len() * 2`"]
         },
         {
           "name": "storage",
@@ -2182,52 +2684,9 @@
       ]
     },
     {
-      "inputs": [],
-      "name": "get_pyth_contract_id",
-      "output": "29c10735d33b5159f0c71ee1dbd17b36a3e69e41f00fab0d42e1bd9f428d8a54",
-      "attributes": [
-        {
-          "name": "doc-comment",
-          "arguments": [
-            " This function retrieves the contract ID of the Pyth contract."
-          ]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [""]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [" # Returns"]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [
-            " * [ContractId] - The contract ID of the Pyth contract."
-          ]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [""]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [" * Reads: `1`"]
-        },
-        {
-          "name": "storage",
-          "arguments": ["read"]
-        }
-      ]
-    },
-    {
-      "inputs": [],
       "name": "get_reserves",
-      "output": "1c791a2f63a6d482f33e38564a4c4f67f2351f36419d0c750ce825e233c86ae1",
+      "inputs": [],
+      "output": "d9f8e3b5fb5bf9244761ce4e7ec85a20edb544d4d100c5a050aaf0fc4ef8a9ec",
       "attributes": [
         {
           "name": "doc-comment",
@@ -2270,13 +2729,13 @@
       ]
     },
     {
+      "name": "get_supply_rate",
       "inputs": [
         {
           "name": "utilization",
           "concreteTypeId": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e"
         }
       ],
-      "name": "get_supply_rate",
       "output": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e",
       "attributes": [
         {
@@ -2336,14 +2795,14 @@
       ]
     },
     {
+      "name": "get_user_balance_with_interest",
       "inputs": [
         {
           "name": "account",
           "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
         }
       ],
-      "name": "get_user_balance_with_interest",
-      "output": "1c791a2f63a6d482f33e38564a4c4f67f2351f36419d0c750ce825e233c86ae1",
+      "output": "d9f8e3b5fb5bf9244761ce4e7ec85a20edb544d4d100c5a050aaf0fc4ef8a9ec",
       "attributes": [
         {
           "name": "doc-comment",
@@ -2396,13 +2855,13 @@
       ]
     },
     {
+      "name": "get_user_basic",
       "inputs": [
         {
           "name": "account",
           "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
         }
       ],
-      "name": "get_user_basic",
       "output": "2878312d8fe9af45fe59b9252d6afa651128c8f755ca8f26ae4d67ede06b8ea1",
       "attributes": [
         {
@@ -2454,6 +2913,7 @@
       ]
     },
     {
+      "name": "get_user_collateral",
       "inputs": [
         {
           "name": "account",
@@ -2464,7 +2924,6 @@
           "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
         }
       ],
-      "name": "get_user_collateral",
       "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
       "attributes": [
         {
@@ -2511,7 +2970,7 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Writes: `1`"]
+          "arguments": [" * Reads: `1`"]
         },
         {
           "name": "storage",
@@ -2520,13 +2979,13 @@
       ]
     },
     {
+      "name": "get_user_supply_borrow",
       "inputs": [
         {
           "name": "account",
           "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
         }
       ],
-      "name": "get_user_supply_borrow",
       "output": "2770d9f762bf8ec295d5c253193cd2897c893401f1f438769f92d212641ec779",
       "attributes": [
         {
@@ -2586,8 +3045,8 @@
       ]
     },
     {
-      "inputs": [],
       "name": "get_utilization",
+      "inputs": [],
       "output": "1b5759d94094368cfd443019e7ca5ec4074300e544e5ea993a979f5da627261e",
       "attributes": [
         {
@@ -2633,8 +3092,8 @@
       ]
     },
     {
-      "inputs": [],
       "name": "get_version",
+      "inputs": [],
       "output": "c89951a24c6ca28c13fd1cfdc646b2b656d69e61a92b91023be7eb58eb914b6b",
       "attributes": [
         {
@@ -2652,13 +3111,13 @@
       ]
     },
     {
+      "name": "is_liquidatable",
       "inputs": [
         {
           "name": "account",
           "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
         }
       ],
-      "name": "is_liquidatable",
       "output": "b760f44fa5965c2474a3b471467a22c43185152129295af588b022ae50b50903",
       "attributes": [
         {
@@ -2675,7 +3134,7 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [" * account: [Identity] - The account to be checked."]
+          "arguments": [" * `account`: [Identity] - The account to be checked."]
         },
         {
           "name": "doc-comment",
@@ -2701,7 +3160,9 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Reads: 1"]
+          "arguments": [
+            " * Reads: `6 + storage.collateral_configurations_keys.len() * 4`"
+          ]
         },
         {
           "name": "storage",
@@ -2710,13 +3171,13 @@
       ]
     },
     {
+      "name": "pause",
       "inputs": [
         {
           "name": "pause_config",
           "concreteTypeId": "8ec71ec402ef77ffda0627839b31dd1444fad8b4a95507e86bfa89f0517dbc3d"
         }
       ],
-      "name": "pause",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
@@ -2770,60 +3231,7 @@
       ]
     },
     {
-      "inputs": [
-        {
-          "name": "asset_id",
-          "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
-        }
-      ],
-      "name": "pause_collateral_asset",
-      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
-      "attributes": [
-        {
-          "name": "doc-comment",
-          "arguments": [" # Arguments"]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [
-            " * `asset_id`: [AssetId] - The asset ID of the collateral asset to be paused."
-          ]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [""]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [" # Reverts"]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [" * When the caller is not the owner."]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [""]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [" * Writes: `1`"]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [" * Reads: `1`   "]
-        },
-        {
-          "name": "storage",
-          "arguments": ["write"]
-        }
-      ]
-    },
-    {
+      "name": "quote_collateral",
       "inputs": [
         {
           "name": "asset_id",
@@ -2834,7 +3242,6 @@
           "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
         }
       ],
-      "name": "quote_collateral",
       "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
       "attributes": [
         {
@@ -2910,10 +3317,16 @@
       ]
     },
     {
-      "inputs": [],
       "name": "renounce_ownership",
+      "inputs": [],
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " This function allows the current owner to renounce their ownership of the contract, making it ownerless."
+          ]
+        },
         {
           "name": "doc-comment",
           "arguments": [""]
@@ -2934,49 +3347,11 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [" * Reads: `1`"]
-        },
-        {
-          "name": "storage",
-          "arguments": ["write"]
-        }
-      ]
-    },
-    {
-      "inputs": [
-        {
-          "name": "asset_id",
-          "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
-        }
-      ],
-      "name": "resume_collateral_asset",
-      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
-      "attributes": [
-        {
-          "name": "doc-comment",
-          "arguments": [" # Arguments"]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [
-            " * `asset_id`: [AssetId] - The asset ID of the collateral asset to be resumed."
-          ]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [""]
-        },
-        {
-          "name": "doc-comment",
           "arguments": [" # Reverts"]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * When the caller is not the owner."]
+          "arguments": [" * When the caller is not the current owner."]
         },
         {
           "name": "doc-comment",
@@ -3001,68 +3376,8 @@
       ]
     },
     {
-      "inputs": [
-        {
-          "name": "contract_id",
-          "concreteTypeId": "29c10735d33b5159f0c71ee1dbd17b36a3e69e41f00fab0d42e1bd9f428d8a54"
-        }
-      ],
-      "name": "set_pyth_contract_id",
-      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
-      "attributes": [
-        {
-          "name": "doc-comment",
-          "arguments": [
-            " This function sets the Pyth contract ID, allowing the contract to interact with the Pyth oracle."
-          ]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [""]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [" # Arguments:"]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [
-            " * `contract_id`: [ContractId] - The contract ID of the Pyth oracle to be set."
-          ]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [""]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [" # Reverts"]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [" * When the caller is not the owner."]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [""]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [" # Number of Storage Accesses"]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [" * Writes: `1`"]
-        },
-        {
-          "name": "storage",
-          "arguments": ["write"]
-        }
-      ]
-    },
-    {
-      "inputs": [],
       "name": "supply_base",
+      "inputs": [],
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
@@ -3134,8 +3449,8 @@
       ]
     },
     {
-      "inputs": [],
       "name": "supply_collateral",
+      "inputs": [],
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
@@ -3197,13 +3512,13 @@
       ]
     },
     {
+      "name": "totals_collateral",
       "inputs": [
         {
           "name": "asset_id",
           "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
         }
       ],
-      "name": "totals_collateral",
       "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
       "attributes": [
         {
@@ -3244,7 +3559,7 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Writes: `1`"]
+          "arguments": [" * Reads: `1`"]
         },
         {
           "name": "storage",
@@ -3253,13 +3568,13 @@
       ]
     },
     {
+      "name": "transfer_ownership",
       "inputs": [
         {
           "name": "new_owner",
           "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
         }
       ],
-      "name": "transfer_ownership",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
@@ -3313,6 +3628,93 @@
       ]
     },
     {
+      "name": "update_asset_oracle",
+      "inputs": [
+        {
+          "name": "asset_id",
+          "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
+        },
+        {
+          "name": "oracle_configuration",
+          "concreteTypeId": "1879564999642fb9173ebff7798e329d086fbc55a22e49fae9ca3ffa0b335d38"
+        }
+      ],
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "attributes": [
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " This function updates an existing oracle configuration for a specific asset."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [""]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [" # Arguments"]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `asset_id`: [AssetId] - The asset ID for which the oracle configuration is being updated."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * `oracle_configuration`: [OracleAssetConfiguration] - The new oracle configuration."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [""]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [" # Reverts"]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [" * When the caller is not the owner."]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the referenced global oracle configuration does not exist."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the oracle configuration with the specified oracle ID is not found for this asset."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [""]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [" # Number of Storage Accesses"]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [" * Writes: `2`"]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [" * Reads: `2 + asset_oracle_configurations.len()`"]
+        },
+        {
+          "name": "storage",
+          "arguments": ["write"]
+        }
+      ]
+    },
+    {
+      "name": "update_collateral_asset",
       "inputs": [
         {
           "name": "asset_id",
@@ -3323,7 +3725,6 @@
           "concreteTypeId": "027212d4a883f4144f8043ef93fee6aa9d766041c7735fa37fae71d45ab6d92d"
         }
       ],
-      "name": "update_collateral_asset",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
@@ -3383,19 +3784,23 @@
       ]
     },
     {
+      "name": "update_global_oracle",
       "inputs": [
         {
-          "name": "update_data",
-          "concreteTypeId": "2601885b27af3627b8910876fc176d900cec2b16ec78c538f5f312e785d915f5"
+          "name": "oracle_id",
+          "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
+        },
+        {
+          "name": "oracle_configuration",
+          "concreteTypeId": "01210575f1835aeca139979da2cb6453cd17b03fa86a9e7b4b3f2b81555d94e1"
         }
       ],
-      "name": "update_fee",
-      "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
           "name": "doc-comment",
           "arguments": [
-            " This function interacts with an external oracle to obtain the update fee and ensures that the contract ID is valid."
+            " This function updates an existing global oracle configuration."
           ]
         },
         {
@@ -3409,20 +3814,14 @@
         {
           "name": "doc-comment",
           "arguments": [
-            " * `update_data`: [Vec<Bytes>] - The data used for the fee update request."
+            " * `oracle_id`: [u64] - The ID of the oracle to be updated."
           ]
         },
         {
           "name": "doc-comment",
-          "arguments": [""]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [" # Returns"]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [" * [u64] - The update fee retrieved from the oracle."]
+          "arguments": [
+            " * `oracle_configuration`: [OracleGlobalConfiguration] - The new oracle configuration."
+          ]
         },
         {
           "name": "doc-comment",
@@ -3434,8 +3833,12 @@
         },
         {
           "name": "doc-comment",
+          "arguments": [" * When the caller is not the owner."]
+        },
+        {
+          "name": "doc-comment",
           "arguments": [
-            " * When the contract ID is not set (i.e., it is zero)."
+            " * When the oracle with the specified ID does not exist."
           ]
         },
         {
@@ -3448,22 +3851,26 @@
         },
         {
           "name": "doc-comment",
+          "arguments": [" * Writes: `1`"]
+        },
+        {
+          "name": "doc-comment",
           "arguments": [" * Reads: `1`"]
         },
         {
           "name": "storage",
-          "arguments": ["read"]
+          "arguments": ["write"]
         }
       ]
     },
     {
+      "name": "update_market_configuration",
       "inputs": [
         {
           "name": "configuration",
           "concreteTypeId": "788c494dd193488709eb7174a5299c17819b0c2e68089b18e0474d616080cc9c"
         }
       ],
-      "name": "update_market_configuration",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
@@ -3521,19 +3928,19 @@
       ]
     },
     {
+      "name": "update_price_feeds",
       "inputs": [
         {
-          "name": "price_data_update",
-          "concreteTypeId": "60b16a7d7d88977a17d1cbc5d1d741c4872c833abbe5cd6eaa5e2d741cd8bf19"
+          "name": "oracle_inputs",
+          "concreteTypeId": "b8c096640d00461e94891decbf44e3f86379e168323628c152ad941a7a979ff6"
         }
       ],
-      "name": "update_price_feeds_if_necessary",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
           "name": "doc-comment",
           "arguments": [
-            " This function ensures that the provided price data update is valid and performs an update if the conditions are met."
+            " This function updates the price feeds using the provided oracle inputs."
           ]
         },
         {
@@ -3547,7 +3954,7 @@
         {
           "name": "doc-comment",
           "arguments": [
-            " * `price_data_update`: [PriceDataUpdate] - The data necessary for updating the price feeds."
+            " * `oracle_inputs`: [Vec<OracleInput>] - The oracle inputs necessary for updating the price feeds."
           ]
         },
         {
@@ -3568,31 +3975,11 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [" # Reverts"]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [
-            " * When the contract ID is not set (i.e., it is zero)."
-          ]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [
-            " * When the payment amount is insufficient or the asset ID is not the base asset."
-          ]
-        },
-        {
-          "name": "doc-comment",
-          "arguments": [""]
-        },
-        {
-          "name": "doc-comment",
           "arguments": [" # Number of Storage Accesses"]
         },
         {
           "name": "doc-comment",
-          "arguments": [" * Reads: `1`"]
+          "arguments": [" * Reads: `0`"]
         },
         {
           "name": "payable",
@@ -3605,17 +3992,17 @@
       ]
     },
     {
+      "name": "withdraw_base",
       "inputs": [
         {
           "name": "amount",
           "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
         },
         {
-          "name": "price_data_update",
-          "concreteTypeId": "60b16a7d7d88977a17d1cbc5d1d741c4872c833abbe5cd6eaa5e2d741cd8bf19"
+          "name": "oracle_inputs",
+          "concreteTypeId": "b8c096640d00461e94891decbf44e3f86379e168323628c152ad941a7a979ff6"
         }
       ],
-      "name": "withdraw_base",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
@@ -3641,7 +4028,7 @@
         {
           "name": "doc-comment",
           "arguments": [
-            " * `price_data_update`: [PriceDataUpdate] - The price data update struct to be used for updating the price feeds."
+            " * `oracle_inputs`: [Vec<OracleInput>] - The oracle inputs to be used for updating the price feeds."
           ]
         },
         {
@@ -3654,7 +4041,23 @@
         },
         {
           "name": "doc-comment",
-          "arguments": [" * When the user is not collateralized."]
+          "arguments": [" * When the withdraw operation is paused."]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [" * When the amount is invalid (zero or negative)."]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the borrow amount is too small (below minimum)."
+          ]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [
+            " * When the user is not collateralized (if borrowing is required)."
+          ]
         },
         {
           "name": "doc-comment",
@@ -3683,6 +4086,7 @@
       ]
     },
     {
+      "name": "withdraw_collateral",
       "inputs": [
         {
           "name": "asset_id",
@@ -3693,11 +4097,10 @@
           "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
         },
         {
-          "name": "price_data_update",
-          "concreteTypeId": "60b16a7d7d88977a17d1cbc5d1d741c4872c833abbe5cd6eaa5e2d741cd8bf19"
+          "name": "oracle_inputs",
+          "concreteTypeId": "b8c096640d00461e94891decbf44e3f86379e168323628c152ad941a7a979ff6"
         }
       ],
-      "name": "withdraw_collateral",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
@@ -3725,7 +4128,7 @@
         {
           "name": "doc-comment",
           "arguments": [
-            " * `price_data_update`: [PriceDataUpdate] - The price data update struct to be used for updating the price feeds."
+            " * `oracle_inputs`: [Vec<OracleInput>] - The oracle inputs to be used for updating the price feeds."
           ]
         },
         {
@@ -3735,6 +4138,10 @@
         {
           "name": "doc-comment",
           "arguments": [" # Reverts"]
+        },
+        {
+          "name": "doc-comment",
+          "arguments": [" * When the withdraw operation is paused."]
         },
         {
           "name": "doc-comment",
@@ -3767,6 +4174,7 @@
       ]
     },
     {
+      "name": "withdraw_reserves",
       "inputs": [
         {
           "name": "to",
@@ -3777,7 +4185,6 @@
           "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
         }
       ],
-      "name": "withdraw_reserves",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
@@ -3843,9 +4250,9 @@
       ]
     },
     {
-      "inputs": [],
       "name": "owner",
-      "output": "192bc7098e2fe60635a9918afb563e4e5419d386da2bdbf0d716b4bc8549802c",
+      "inputs": [],
+      "output": "287a382c1e0b1f11d12a422e77a248d27761327cd17515cc6e6369d528cf31ca",
       "attributes": [
         {
           "name": "storage",
@@ -3856,12 +4263,12 @@
   ],
   "loggedTypes": [
     {
-      "logId": "5557842539076482339",
-      "concreteTypeId": "4d216c57b3357523323f59401c7355785b41bdf832f6e1106272186b94797038"
+      "logId": "16514249102412951748",
+      "concreteTypeId": "e52e660ff9a330c417b6493bb8d3d0049bafaa6c4a771b32b205d71bc2bc5ace"
     },
     {
-      "logId": "5650517601072614705",
-      "concreteTypeId": "4e6aabd209068d31558291cfd07cff9366801b052a1767bd0a9eb34bf55e8a0e"
+      "logId": "8601935239914868100",
+      "concreteTypeId": "77603686940a4d84cd67e50ef7c5be1bcf4f54752a1eadbc6279abef2871cec0"
     },
     {
       "logId": "3591203286967623281",
@@ -3880,12 +4287,12 @@
       "concreteTypeId": "92d691781932f1848ba9433a9b1c09a97f985b331d88a1a289fc54569161d639"
     },
     {
-      "logId": "2161305517876418151",
-      "concreteTypeId": "1dfe7feadc1d9667a4351761230f948744068a090fe91b1bc6763a90ed5d3893"
+      "logId": "12825652816513834595",
+      "concreteTypeId": "b1fddf488ccb9e63d11888b2750bbd1280a1ae1c49f2d6637fd4cf1e930d1468"
     },
     {
-      "logId": "16280289466020123285",
-      "concreteTypeId": "e1ef35033ea9d2956f17c3292dea4a46ce7d61fdf37bbebe03b7b965073f43b5"
+      "logId": "10091762507985991074",
+      "concreteTypeId": "8c0d2488561c35a28ef795bb8bcc4c43999cdd1e3ecbd10c226e0a68660c54d4"
     },
     {
       "logId": "17075205356227152605",
@@ -3896,32 +4303,28 @@
       "concreteTypeId": "61d1473d8ec7f29c9b7f67ec6b840b973400d6af66df556a4fb5ea9884f780b7"
     },
     {
-      "logId": "4571204900286667806",
-      "concreteTypeId": "3f702ea3351c9c1ece2b84048006c8034a24cbc2bad2e740d0412b4172951d3d"
+      "logId": "17376141311665587813",
+      "concreteTypeId": "f1247475d0d1466599267010f088190f8664dd31663a40c5d5e525d8e64b995d"
     },
     {
       "logId": "16873461032230770227",
       "concreteTypeId": "ea2a9368cd82d633fcc3411dbff6c25a78c7ccf550034427221102b74d7926db"
     },
     {
+      "logId": "5665439412074707627",
+      "concreteTypeId": "4e9faf20e535faab6575c50457dd2ab8fbdff828d70b4c21c0a89e5c659e180c"
+    },
+    {
+      "logId": "7278385493602114681",
+      "concreteTypeId": "6502050b3c829c791812e9a559d73ec5774d45ae98cd39e63524f5c749bfc384"
+    },
+    {
       "logId": "12201150593867749328",
       "concreteTypeId": "a95331d2168897d0f550d1c4f7fc582926a79b3e825866ecf8c11ef8dfb692c6"
     },
     {
-      "logId": "5007089152005991246",
-      "concreteTypeId": "457cc10e18076b4e7a0ccc563fd089b256767bb56a148450f7e58f0d7cbf54ef"
-    },
-    {
-      "logId": "4883303303013154842",
-      "concreteTypeId": "43c4fa7b3297401afbf300127e59ea913e5c8f0c7ae69abbec789ab0bb872bed"
-    },
-    {
-      "logId": "9366109880057078281",
-      "concreteTypeId": "81fb1b4fe81422099de81384a1f433aac8964b267aac0428e6bf423e46b88df9"
-    },
-    {
-      "logId": "15118137377144155992",
-      "concreteTypeId": "d1ce69d85e3baf58b6bc7ebe55774b2c0ff63b955321139eece739000f91b995"
+      "logId": "17584211729093705968",
+      "concreteTypeId": "f407ab6707e340f081ad27d36c1d30ad14e67562f96d6267bf3082e9adb3e46d"
     },
     {
       "logId": "1940341185534100254",
@@ -3932,12 +4335,20 @@
       "concreteTypeId": "61825e22a76ff7a0ca3ce1004c7d128c7844a8dde36cf7ea9077f8a57ef1f88a"
     },
     {
-      "logId": "12970362301975156672",
-      "concreteTypeId": "b3fffbcb3158d7c010c31b194b60fb7857adb4ad61bdcf4b8b42958951d9f308"
+      "logId": "11719039397861176592",
+      "concreteTypeId": "a2a2643e0252b510328c0323a0ea60724fb4cb3309a2322ab31b27566ff9a79d"
+    },
+    {
+      "logId": "5074319224360278246",
+      "concreteTypeId": "466b9a731cee18e6b75003e874e1554132eb23261d6976439c080c9eebe7769b"
     },
     {
       "logId": "7739866021742362880",
       "concreteTypeId": "6b698723a311c1005f7846d11d7ce209d68d00c120ee855364c14656ffb5b5a7"
+    },
+    {
+      "logId": "6865361882314535207",
+      "concreteTypeId": "5f46aa41f9dd71277c9437d6fc171170ca4ef336adf163ae833ecc548df59936"
     },
     {
       "logId": "4305272899477449480",
@@ -3957,7 +4368,9 @@
     {
       "name": "DEBUG_STEP",
       "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
-      "offset": 137368
+      "offset": 129136,
+      "indirect": false
     }
-  ]
+  ],
+  "errorCodes": {}
 }

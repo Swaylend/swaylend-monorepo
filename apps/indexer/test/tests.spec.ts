@@ -1,4 +1,4 @@
-import assert from 'node:assert';
+import assert from 'node:assert/strict';
 import {
   type AbsorbCollateralEvent,
   type BuyCollateralEvent,
@@ -6,6 +6,7 @@ import {
   type LiquidationEvent,
   type MarketConfiguartion,
   type MarketState,
+  type OracleGlobalConfiguration,
   type PauseConfiguration,
   type ReservesWithdrawnEvent,
   TestHelpers,
@@ -14,6 +15,7 @@ import {
   type UserCollateral,
   type UserCollateralEvent,
 } from 'generated';
+
 const { MockDb, Market, Addresses } = TestHelpers;
 
 const MARKET_ID = 'MARKET_ID';
@@ -22,8 +24,8 @@ const MARKET_CONFIGURATION_ID = 'MARKET_CONFIGURATION_ID';
 
 const TEST_ASSET_ID =
   '0x17c2876b5dd4cec132ba8c7b5ea1b38d0522c6c3ca697471242f52f4ab3adbf5';
-const TEST_PRICE_FEED_ID =
-  '0xe62df6c8b4a85fe1a67db44dc12de5db330f7ac66b72dc658afedf0f4a415b43';
+const TEST_ORACLE_CONTRACT_ID =
+  '0x25146735b29d4216639f7f8b1d7b921ff87a1d3051de62d6cceaacabeb33b8e7';
 
 const ALICE_ADDRESS = Addresses.mockAddresses[1];
 const BOB_ADDRESS = Addresses.mockAddresses[2];
@@ -31,8 +33,8 @@ const BOB_ADDRESS = Addresses.mockAddresses[2];
 const I256_INDENT = 2n ** 255n;
 
 describe('Market contract event tests', () => {
-  describe('CollateralAsset events', async () => {
-    it('CollateralAssetAdded -> CollateralAssetUpdated -> CollateralAssetPaused -> CollateralAssetResumed', async () => {
+  describe('CollateralAsset events', () => {
+    it('CollateralAssetAdded -> CollateralAssetUpdated', async () => {
       // Initializing the mock database
       const mockDbInitial = MockDb.createMockDb();
 
@@ -44,7 +46,7 @@ describe('Market contract event tests', () => {
           asset_id: { bits: assetId },
           configuration: {
             asset_id: { bits: assetId },
-            price_feed_id: TEST_PRICE_FEED_ID,
+            oracle_max_confidence_width: BigInt(300),
             decimals: 0,
             borrow_collateral_factor: BigInt(0),
             liquidate_collateral_factor: BigInt(0),
@@ -63,8 +65,8 @@ describe('Market contract event tests', () => {
       // Expected entity that should be created
       let expectedCollateralAsset: CollateralAsset = {
         id: assetId,
-        priceFeedId: TEST_PRICE_FEED_ID,
         decimals: 0,
+        oracleMaxConfidenceWidth: BigInt(300),
         borrowCollateralFactor: BigInt(0),
         liquidateCollateralFactor: BigInt(0),
         liquidationPenalty: BigInt(0),
@@ -85,8 +87,8 @@ describe('Market contract event tests', () => {
           asset_id: { bits: assetId },
           configuration: {
             asset_id: { bits: assetId },
-            price_feed_id: TEST_PRICE_FEED_ID,
             decimals: 1,
+            oracle_max_confidence_width: BigInt(300),
             borrow_collateral_factor: BigInt(2),
             liquidate_collateral_factor: BigInt(3),
             liquidation_penalty: BigInt(4),
@@ -104,70 +106,8 @@ describe('Market contract event tests', () => {
       // Expected entity that should be created
       expectedCollateralAsset = {
         id: assetId,
-        priceFeedId: TEST_PRICE_FEED_ID,
         decimals: 1,
-        borrowCollateralFactor: BigInt(2),
-        liquidateCollateralFactor: BigInt(3),
-        liquidationPenalty: BigInt(4),
-        supplyCap: BigInt(5),
-        paused: false,
-      };
-
-      // Getting the entity from the mock database
-      actualCollateralAsset =
-        updatedMockDb.entities.CollateralAsset.get(assetId);
-
-      // Asserting that the entity in the mock database is the same as the expected entity
-      assert.deepEqual(expectedCollateralAsset, actualCollateralAsset);
-
-      // Creating a mock collateral asset paused event
-      const mockCollateralAssetPausedEvent =
-        Market.CollateralAssetPaused.mockData({
-          asset_id: { bits: assetId },
-        });
-
-      // Processing the mock event on the mock database
-      updatedMockDb = await Market.CollateralAssetPaused.processEvent({
-        event: mockCollateralAssetPausedEvent,
-        mockDb: updatedMockDb,
-      });
-
-      // Expected entity that should be created
-      expectedCollateralAsset = {
-        id: assetId,
-        priceFeedId: TEST_PRICE_FEED_ID,
-        decimals: 1,
-        borrowCollateralFactor: BigInt(2),
-        liquidateCollateralFactor: BigInt(3),
-        liquidationPenalty: BigInt(4),
-        supplyCap: BigInt(5),
-        paused: true,
-      };
-
-      // Getting the entity from the mock database
-      actualCollateralAsset =
-        updatedMockDb.entities.CollateralAsset.get(assetId);
-
-      // Asserting that the entity in the mock database is the same as the expected entity
-      assert.deepEqual(expectedCollateralAsset, actualCollateralAsset);
-
-      // Create a mock collateral resumed event
-      const mockCollateralAssetResumedEvent =
-        Market.CollateralAssetResumed.mockData({
-          asset_id: { bits: assetId },
-        });
-
-      // Processing the mock event on the mock database
-      updatedMockDb = await Market.CollateralAssetResumed.processEvent({
-        event: mockCollateralAssetResumedEvent,
-        mockDb: updatedMockDb,
-      });
-
-      // Expected entity that should be created
-      expectedCollateralAsset = {
-        id: assetId,
-        priceFeedId: TEST_PRICE_FEED_ID,
-        decimals: 1,
+        oracleMaxConfidenceWidth: BigInt(300),
         borrowCollateralFactor: BigInt(2),
         liquidateCollateralFactor: BigInt(3),
         liquidationPenalty: BigInt(4),
@@ -184,7 +124,7 @@ describe('Market contract event tests', () => {
     });
   });
 
-  describe('User basic event', async () => {
+  describe('User basic event', () => {
     it('Creates a User entity with possitive principal', async () => {
       // Initializing the mock database
       const mockDbInitial = MockDb.createMockDb();
@@ -215,7 +155,7 @@ describe('Market contract event tests', () => {
       // Expected entity that should be created
       const expectedUser: User = {
         id: address,
-        address: address,
+        address,
         principal: BigInt(100),
         baseTrackingIndex: BigInt(0),
         baseTrackingAccrued: BigInt(0),
@@ -260,7 +200,7 @@ describe('Market contract event tests', () => {
       // Expected entity that should be created
       const expectedUser: User = {
         id: address,
-        address: address,
+        address,
         principal: -BigInt(100),
         baseTrackingIndex: BigInt(0),
         baseTrackingAccrued: BigInt(0),
@@ -305,7 +245,7 @@ describe('Market contract event tests', () => {
       // Expected entity that should be created
       let expectedUser: User = {
         id: address,
-        address: address,
+        address,
         principal: BigInt(100),
         baseTrackingIndex: BigInt(0),
         baseTrackingAccrued: BigInt(0),
@@ -344,7 +284,7 @@ describe('Market contract event tests', () => {
       // Expected entity that should be created
       expectedUser = {
         id: address,
-        address: address,
+        address,
         principal: BigInt(333),
         baseTrackingIndex: BigInt(0),
         baseTrackingAccrued: BigInt(0),
@@ -361,7 +301,7 @@ describe('Market contract event tests', () => {
     });
   });
 
-  describe('Market basic event', async () => {
+  describe('Market basic event', () => {
     it('Creates a Market basic entity', async () => {
       // Initializing the mock database
       const mockDbInitial = MockDb.createMockDb();
@@ -405,7 +345,7 @@ describe('Market contract event tests', () => {
     });
   });
 
-  describe('User collateral events', async () => {
+  describe('User collateral events', () => {
     it('UserSupplyCollateralEvent -> UserWithdrawCollateralEvent', async () => {
       // Initializing the mock database
       const mockDbInitial = MockDb.createMockDb();
@@ -518,7 +458,7 @@ describe('Market contract event tests', () => {
     });
   });
 
-  describe('User base events', async () => {
+  describe('User base events', () => {
     it('UserSupplyBaseEvent (supply, repay) -> UserWithdrawBaseEvent (withdraw, borrow)', async () => {
       // Initializing the mock database
       const mockDbInitial = MockDb.createMockDb();
@@ -647,7 +587,7 @@ describe('Market contract event tests', () => {
     });
   });
 
-  describe('Liquidation event', async () => {
+  describe('Liquidation event', () => {
     it('Create a LiquidationEvent entity and updates user entity', async () => {
       // Initializing the mock database
       const mockDbInitial = MockDb.createMockDb();
@@ -758,7 +698,7 @@ describe('Market contract event tests', () => {
     });
   });
 
-  describe('Absorb collateral event', async () => {
+  describe('Absorb collateral event', () => {
     it('Create an AbsorbCollateralEvent entity and updates UserCollateral entity', async () => {
       // Initializing the mock database
       const mockDbInitial = MockDb.createMockDb();
@@ -864,7 +804,7 @@ describe('Market contract event tests', () => {
     });
   });
 
-  describe('Buy collateral event', async () => {
+  describe('Buy collateral event', () => {
     it('Create a BuyCollateralEvent entity and a user entity', async () => {
       // Initializing the mock database
       const mockDbInitial = MockDb.createMockDb();
@@ -915,7 +855,7 @@ describe('Market contract event tests', () => {
       // Should also update the corresponding User entity
       const expectedUserEntity: User = {
         id: address,
-        address: address,
+        address,
         principal: BigInt(0),
         baseTrackingIndex: BigInt(0),
         baseTrackingAccrued: BigInt(0),
@@ -1000,7 +940,7 @@ describe('Market contract event tests', () => {
       // Should also update the corresponding User entity
       let expectedUserEntity: User = {
         id: address,
-        address: address,
+        address,
         principal: BigInt(0),
         baseTrackingIndex: BigInt(0),
         baseTrackingAccrued: BigInt(0),
@@ -1057,7 +997,7 @@ describe('Market contract event tests', () => {
       // Should also update the corresponding User entity
       expectedUserEntity = {
         id: address,
-        address: address,
+        address,
         principal: BigInt(0),
         baseTrackingIndex: BigInt(0),
         baseTrackingAccrued: BigInt(0),
@@ -1074,7 +1014,7 @@ describe('Market contract event tests', () => {
     });
   });
 
-  describe('Reserves withdrawn event', async () => {
+  describe('Reserves withdrawn event', () => {
     it('Create a ReservesWithdrawnEvent entity', async () => {
       // Initializing the mock database
       const mockDbInitial = MockDb.createMockDb();
@@ -1125,7 +1065,7 @@ describe('Market contract event tests', () => {
     });
   });
 
-  describe('Pause configuration event', async () => {
+  describe('Pause configuration event', () => {
     it('Create a PauseConfigurationEvent entity', async () => {
       // Initializing the mock database
       const mockDbInitial = MockDb.createMockDb();
@@ -1168,7 +1108,7 @@ describe('Market contract event tests', () => {
     });
   });
 
-  describe('Market configuration event', async () => {
+  describe('Market configuration event', () => {
     it('Create a MarketConfigurationEvent entity', async () => {
       // Initializing the mock database
       const mockDbInitial = MockDb.createMockDb();
@@ -1179,22 +1119,22 @@ describe('Market contract event tests', () => {
           market_config: {
             base_token_decimals: 6,
             base_token: { bits: TEST_ASSET_ID },
-            base_token_price_feed_id: TEST_PRICE_FEED_ID,
+            oracle_max_confidence_width: BigInt(300),
             supply_kink: BigInt('850000000000000000'),
             borrow_kink: BigInt('850000000000000000'),
-            supply_per_second_interest_rate_slope_low: BigInt(1141552511),
-            supply_per_second_interest_rate_slope_high: BigInt(50735667174),
+            supply_per_second_interest_rate_slope_low: BigInt(1_141_552_511),
+            supply_per_second_interest_rate_slope_high: BigInt(50_735_667_174),
             supply_per_second_interest_rate_base: BigInt(0),
-            borrow_per_second_interest_rate_slope_low: BigInt(1585489599),
-            borrow_per_second_interest_rate_slope_high: BigInt(57077625570),
-            borrow_per_second_interest_rate_base: BigInt(475646879),
+            borrow_per_second_interest_rate_slope_low: BigInt(1_585_489_599),
+            borrow_per_second_interest_rate_slope_high: BigInt(57_077_625_570),
+            borrow_per_second_interest_rate_base: BigInt(475_646_879),
             store_front_price_factor: BigInt('600000000000000000'),
-            base_tracking_index_scale: BigInt(1000000000000000),
+            base_tracking_index_scale: BigInt(1_000_000_000_000_000),
             base_tracking_supply_speed: BigInt(0),
             base_tracking_borrow_speed: BigInt(0),
-            base_min_for_rewards: BigInt(1000000000),
+            base_min_for_rewards: BigInt(1_000_000_000),
             base_borrow_min: BigInt(1000),
-            target_reserves: BigInt(1000000000000),
+            target_reserves: BigInt(1_000_000_000_000),
           },
         });
 
@@ -1209,22 +1149,22 @@ describe('Market contract event tests', () => {
         id: MARKET_CONFIGURATION_ID,
         baseToken: TEST_ASSET_ID,
         baseTokenDecimals: 6,
-        baseTokenPriceFeedId: TEST_PRICE_FEED_ID,
+        oracleMaxConfidenceWidth: BigInt(300),
         supplyKink: BigInt('850000000000000000'),
         borrowKink: BigInt('850000000000000000'),
-        supplyPerSecondInterestRateSlopeLow: BigInt(1141552511),
-        supplyPerSecondInterestRateSlopeHigh: BigInt(50735667174),
+        supplyPerSecondInterestRateSlopeLow: BigInt(1_141_552_511),
+        supplyPerSecondInterestRateSlopeHigh: BigInt(50_735_667_174),
         supplyPerSecondInterestRateBase: BigInt(0),
-        borrowPerSecondInterestRateSlopeLow: BigInt(1585489599),
-        borrowPerSecondInterestRateSlopeHigh: BigInt(57077625570),
-        borrowPerSecondInterestRateBase: BigInt(475646879),
+        borrowPerSecondInterestRateSlopeLow: BigInt(1_585_489_599),
+        borrowPerSecondInterestRateSlopeHigh: BigInt(57_077_625_570),
+        borrowPerSecondInterestRateBase: BigInt(475_646_879),
         storeFrontPriceFactor: BigInt('600000000000000000'),
-        baseTrackingIndexScale: BigInt(1000000000000000),
+        baseTrackingIndexScale: BigInt(1_000_000_000_000_000),
         baseTrackingSupplySpeed: BigInt(0),
         baseTrackingBorrowSpeed: BigInt(0),
-        baseMinForRewards: BigInt(1000000000),
+        baseMinForRewards: BigInt(1_000_000_000),
         baseBorrowMin: BigInt(1000),
-        targetReserves: BigInt(1000000000000),
+        targetReserves: BigInt(1_000_000_000_000),
       };
 
       // Getting the entity from the mock database
@@ -1235,6 +1175,53 @@ describe('Market contract event tests', () => {
       assert.deepEqual(
         expectedMarketConfigurationEvent,
         actualMarketConfigurationEvent
+      );
+    });
+  });
+
+  describe('Oracle events', () => {
+    it('GlobalOracleAddedEvent', async () => {
+      // Initializing the mock database
+      const mockDbInitial = MockDb.createMockDb();
+
+      // Create a mock global oracle added event
+      const mockGlobalOracleAddedEvent = Market.GlobalOracleAddedEvent.mockData(
+        {
+          oracle_id: BigInt(0),
+          oracle_configuration: {
+            contract_id: {
+              bits: TEST_ORACLE_CONTRACT_ID,
+            },
+            is_disabled: false,
+            oracle_type: {
+              case: 'Pyth',
+              payload: void 0,
+            },
+          },
+        }
+      );
+
+      // Processing the mock event on the mock database
+      const updatedMockDb = await Market.GlobalOracleAddedEvent.processEvent({
+        event: mockGlobalOracleAddedEvent,
+        mockDb: mockDbInitial,
+      });
+
+      // Expected entity that should be created
+      const expectedGlobalOracleAddedEvent: OracleGlobalConfiguration = {
+        id: BigInt(0).toString(),
+        isDisabled: false,
+        oracleType: 'Pyth',
+      };
+
+      // Getting the entity from the mock database
+      const actualGlobalOracleAddedEvent =
+        updatedMockDb.entities.OracleGlobalConfiguration.get('0');
+
+      // Asserting that the entity in the mock database is the same as the expected entity
+      assert.deepEqual(
+        expectedGlobalOracleAddedEvent,
+        actualGlobalOracleAddedEvent
       );
     });
   });

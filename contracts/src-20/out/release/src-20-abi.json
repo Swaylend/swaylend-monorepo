@@ -1,6 +1,6 @@
 {
   "programType": "contract",
-  "specVersion": "1",
+  "specVersion": "1.1",
   "encodingVersion": "1",
   "concreteTypes": [
     {
@@ -12,13 +12,13 @@
       "concreteTypeId": "7c5ee1cecf5f8eacd1284feb5f0bf2bdea533a51e2f0c9aabe9236d335989f3b"
     },
     {
-      "type": "enum standards::src5::AccessError",
-      "concreteTypeId": "3f702ea3351c9c1ece2b84048006c8034a24cbc2bad2e740d0412b4172951d3d",
+      "type": "enum src5::AccessError",
+      "concreteTypeId": "f1247475d0d1466599267010f088190f8664dd31663a40c5d5e525d8e64b995d",
       "metadataTypeId": 0
     },
     {
-      "type": "enum standards::src5::State",
-      "concreteTypeId": "192bc7098e2fe60635a9918afb563e4e5419d386da2bdbf0d716b4bc8549802c",
+      "type": "enum src5::State",
+      "concreteTypeId": "287a382c1e0b1f11d12a422e77a248d27761327cd17515cc6e6369d528cf31ca",
       "metadataTypeId": 1
     },
     {
@@ -71,23 +71,23 @@
       "concreteTypeId": "fd59cdd2c531ab3564f4fcc13eb876860d4d7cd4d12aa1f042a5aeceacde951f"
     },
     {
-      "type": "struct standards::src20::SetDecimalsEvent",
-      "concreteTypeId": "fbe071a6e7ca2b2b5e503e82638f9f11c861a6fb452b65473eca8260db87392d",
+      "type": "struct src20::SetDecimalsEvent",
+      "concreteTypeId": "b6a606756ed20ecf9e047dfc134b0a9ba42ccc642956ce4205e784e82ee1daa1",
       "metadataTypeId": 6
     },
     {
-      "type": "struct standards::src20::SetNameEvent",
-      "concreteTypeId": "6ce295b0fb4c1c15e8ed1cfa4babda47d8a04940a5266a3229e12243a2e37c2c",
+      "type": "struct src20::SetNameEvent",
+      "concreteTypeId": "2c4e26d9fde4e3c732683d47b93ece2ba27aa77cc27495ea42fe5491ef144f0d",
       "metadataTypeId": 7
     },
     {
-      "type": "struct standards::src20::SetSymbolEvent",
-      "concreteTypeId": "a8a4b78066c51a50da6349bd395fe1c67e774d75c1db2c5c22288a432d7a363d",
+      "type": "struct src20::SetSymbolEvent",
+      "concreteTypeId": "3dc850985943a7e8e5becd967e8b8eaa26a7dec1f75a1a80ace5b3bf622b1e1a",
       "metadataTypeId": 8
     },
     {
-      "type": "struct standards::src20::TotalSupplyEvent",
-      "concreteTypeId": "f255d5cc2114d1b6bc34bef4c28d4b60caccffd9a672ed16b79ea217e1c4a8a3",
+      "type": "struct src20::TotalSupplyEvent",
+      "concreteTypeId": "7a3907033239b7e20b602aaf2a1a55863934467688426a359aae8b410786d2ba",
       "metadataTypeId": 9
     },
     {
@@ -111,7 +111,7 @@
   ],
   "metadataTypes": [
     {
-      "type": "enum standards::src5::AccessError",
+      "type": "enum src5::AccessError",
       "metadataTypeId": 0,
       "components": [
         {
@@ -121,7 +121,7 @@
       ]
     },
     {
-      "type": "enum standards::src5::State",
+      "type": "enum src5::State",
       "metadataTypeId": 1,
       "components": [
         {
@@ -178,7 +178,7 @@
       "metadataTypeId": 5
     },
     {
-      "type": "struct standards::src20::SetDecimalsEvent",
+      "type": "struct src20::SetDecimalsEvent",
       "metadataTypeId": 6,
       "components": [
         {
@@ -196,7 +196,7 @@
       ]
     },
     {
-      "type": "struct standards::src20::SetNameEvent",
+      "type": "struct src20::SetNameEvent",
       "metadataTypeId": 7,
       "components": [
         {
@@ -220,7 +220,7 @@
       ]
     },
     {
-      "type": "struct standards::src20::SetSymbolEvent",
+      "type": "struct src20::SetSymbolEvent",
       "metadataTypeId": 8,
       "components": [
         {
@@ -244,7 +244,7 @@
       ]
     },
     {
-      "type": "struct standards::src20::TotalSupplyEvent",
+      "type": "struct src20::TotalSupplyEvent",
       "metadataTypeId": 9,
       "components": [
         {
@@ -332,19 +332,19 @@
   ],
   "functions": [
     {
-      "inputs": [],
       "name": "asset_id",
+      "inputs": [],
       "output": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974",
       "attributes": null
     },
     {
+      "name": "constructor",
       "inputs": [
         {
           "name": "owner_",
           "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
         }
       ],
-      "name": "constructor",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
@@ -357,24 +357,24 @@
       ]
     },
     {
+      "name": "max_supply",
       "inputs": [
         {
           "name": "asset",
           "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
         }
       ],
-      "name": "max_supply",
       "output": "d852149004cc9ec0bbe7dc4e37bffea1d41469b759512b6136f2e865a4c06e7d",
       "attributes": null
     },
     {
+      "name": "decimals",
       "inputs": [
         {
           "name": "asset",
           "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
         }
       ],
-      "name": "decimals",
       "output": "2da102c46c7263beeed95818cd7bee801716ba8303dddafdcd0f6c9efda4a0f1",
       "attributes": [
         {
@@ -386,31 +386,13 @@
       ]
     },
     {
-      "inputs": [
-        {
-          "name": "asset",
-          "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
-        }
-      ],
       "name": "name",
-      "output": "7c06d929390a9aeeb8ffccf8173ac0d101a9976d99dda01cce74541a81e75ac0",
-      "attributes": [
-        {
-          "name": "storage",
-          "arguments": [
-            "read"
-          ]
-        }
-      ]
-    },
-    {
       "inputs": [
         {
           "name": "asset",
           "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
         }
       ],
-      "name": "symbol",
       "output": "7c06d929390a9aeeb8ffccf8173ac0d101a9976d99dda01cce74541a81e75ac0",
       "attributes": [
         {
@@ -422,8 +404,26 @@
       ]
     },
     {
-      "inputs": [],
+      "name": "symbol",
+      "inputs": [
+        {
+          "name": "asset",
+          "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
+        }
+      ],
+      "output": "7c06d929390a9aeeb8ffccf8173ac0d101a9976d99dda01cce74541a81e75ac0",
+      "attributes": [
+        {
+          "name": "storage",
+          "arguments": [
+            "read"
+          ]
+        }
+      ]
+    },
+    {
       "name": "total_assets",
+      "inputs": [],
       "output": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
       "attributes": [
         {
@@ -435,13 +435,13 @@
       ]
     },
     {
+      "name": "total_supply",
       "inputs": [
         {
           "name": "asset",
           "concreteTypeId": "c0710b6731b1dd59799cf6bef33eee3b3b04a2e40e80a0724090215bbf2ca974"
         }
       ],
-      "name": "total_supply",
       "output": "d852149004cc9ec0bbe7dc4e37bffea1d41469b759512b6136f2e865a4c06e7d",
       "attributes": [
         {
@@ -453,9 +453,9 @@
       ]
     },
     {
-      "inputs": [],
       "name": "owner",
-      "output": "192bc7098e2fe60635a9918afb563e4e5419d386da2bdbf0d716b4bc8549802c",
+      "inputs": [],
+      "output": "287a382c1e0b1f11d12a422e77a248d27761327cd17515cc6e6369d528cf31ca",
       "attributes": [
         {
           "name": "storage",
@@ -466,6 +466,7 @@
       ]
     },
     {
+      "name": "burn",
       "inputs": [
         {
           "name": "sub_id",
@@ -476,7 +477,6 @@
           "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
         }
       ],
-      "name": "burn",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
@@ -493,6 +493,7 @@
       ]
     },
     {
+      "name": "mint",
       "inputs": [
         {
           "name": "recipient",
@@ -507,7 +508,6 @@
           "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0"
         }
       ],
-      "name": "mint",
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
@@ -520,8 +520,8 @@
       ]
     },
     {
-      "inputs": [],
       "name": "emit_src20_events",
+      "inputs": [],
       "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
       "attributes": [
         {
@@ -539,24 +539,24 @@
       "concreteTypeId": "8c25cb3686462e9a86d2883c5688a22fe738b0bbc85f458d2d2b5f3f667c6d5a"
     },
     {
-      "logId": "17462098202904023478",
-      "concreteTypeId": "f255d5cc2114d1b6bc34bef4c28d4b60caccffd9a672ed16b79ea217e1c4a8a3"
+      "logId": "8807078256608655330",
+      "concreteTypeId": "7a3907033239b7e20b602aaf2a1a55863934467688426a359aae8b410786d2ba"
     },
     {
-      "logId": "4571204900286667806",
-      "concreteTypeId": "3f702ea3351c9c1ece2b84048006c8034a24cbc2bad2e740d0412b4172951d3d"
+      "logId": "17376141311665587813",
+      "concreteTypeId": "f1247475d0d1466599267010f088190f8664dd31663a40c5d5e525d8e64b995d"
     },
     {
-      "logId": "7845998088195677205",
-      "concreteTypeId": "6ce295b0fb4c1c15e8ed1cfa4babda47d8a04940a5266a3229e12243a2e37c2c"
+      "logId": "3192531903561655239",
+      "concreteTypeId": "2c4e26d9fde4e3c732683d47b93ece2ba27aa77cc27495ea42fe5491ef144f0d"
     },
     {
-      "logId": "12152039456660331088",
-      "concreteTypeId": "a8a4b78066c51a50da6349bd395fe1c67e774d75c1db2c5c22288a432d7a363d"
+      "logId": "4451896846918592488",
+      "concreteTypeId": "3dc850985943a7e8e5becd967e8b8eaa26a7dec1f75a1a80ace5b3bf622b1e1a"
     },
     {
-      "logId": "18149631459970394923",
-      "concreteTypeId": "fbe071a6e7ca2b2b5e503e82638f9f11c861a6fb452b65473eca8260db87392d"
+      "logId": "13161214062477053647",
+      "concreteTypeId": "b6a606756ed20ecf9e047dfc134b0a9ba42ccc642956ce4205e784e82ee1daa1"
     }
   ],
   "messagesTypes": [],
@@ -564,22 +564,27 @@
     {
       "name": "DECIMALS",
       "concreteTypeId": "c89951a24c6ca28c13fd1cfdc646b2b656d69e61a92b91023be7eb58eb914b6b",
-      "offset": 25248
+      "offset": 17928,
+      "indirect": false
     },
     {
       "name": "NAME",
       "concreteTypeId": "fd59cdd2c531ab3564f4fcc13eb876860d4d7cd4d12aa1f042a5aeceacde951f",
-      "offset": 25264
+      "offset": 17944,
+      "indirect": false
     },
     {
       "name": "SYMBOL",
       "concreteTypeId": "84877f6e98274b9e4721db68b4c0bdb9e52b8e9572c5bd7811c07a41ced882c7",
-      "offset": 25272
+      "offset": 17952,
+      "indirect": false
     },
     {
       "name": "MAX_SUPPLY",
       "concreteTypeId": "1506e6f44c1d6291cdf46395a8e573276a4fa79e8ace3fc891e092ef32d1b0a0",
-      "offset": 25256
+      "offset": 17936,
+      "indirect": false
     }
-  ]
+  ],
+  "errorCodes": {}
 }

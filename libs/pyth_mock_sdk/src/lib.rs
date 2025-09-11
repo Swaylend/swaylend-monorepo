@@ -3,21 +3,22 @@ use pyth_mock::*;
 use std::path::PathBuf;
 
 use fuels::{
-    accounts::wallet::WalletUnlocked,
+    accounts::wallet::Wallet,
     programs::{
+        calls::CallParameters,
         contract::{Contract, LoadConfiguration, StorageConfiguration},
         responses::CallResponse,
     },
-    types::{bech32::Bech32ContractId, transaction::TxPolicies, Bits256, Bytes},
+    types::{transaction::TxPolicies, Bits256, Bytes, ContractId},
 };
 use rand::Rng;
 
 pub struct PythMockContract {
-    pub instance: PythMock<WalletUnlocked>,
+    pub instance: PythMock<Wallet>,
 }
 
 impl PythMockContract {
-    pub async fn deploy(wallet: &WalletUnlocked) -> anyhow::Result<Self> {
+    pub async fn deploy(wallet: &Wallet) -> anyhow::Result<Self> {
         let mut rng = rand::thread_rng();
         let salt = rng.gen::<[u8; 32]>();
 
@@ -32,7 +33,8 @@ impl PythMockContract {
         let contract_id = Contract::load_from(pyth_mock_binary_path, contract_configuration)?
             .with_salt(salt)
             .deploy(wallet, TxPolicies::default())
-            .await?;
+            .await?
+            .contract_id;
 
         let pyth_mock = PythMock::new(contract_id.clone(), wallet.clone());
 
@@ -49,15 +51,17 @@ impl PythMockContract {
         &self,
         update_data: Vec<Bytes>,
     ) -> anyhow::Result<CallResponse<()>> {
+        let call_params = CallParameters::default().with_amount(update_data.len() as u64);
         Ok(self
             .instance
             .methods()
             .update_price_feeds(update_data)
+            .call_params(call_params)?
             .call()
             .await?)
     }
 
-    pub fn contract_id(&self) -> &Bech32ContractId {
+    pub fn contract_id(&self) -> ContractId {
         self.instance.contract_id()
     }
 
@@ -95,11 +99,13 @@ impl PythMockContract {
         prices: &Vec<(Bits256, (u64, u32, u64, u64))>,
     ) -> anyhow::Result<CallResponse<()>> {
         let update_data: Vec<Bytes> = self.create_update_data(prices).await?;
+        let call_params = CallParameters::default().with_amount(update_data.len() as u64);
 
         Ok(self
             .instance
             .methods()
             .update_price_feeds(update_data)
+            .call_params(call_params)?
             .call()
             .await?)
     }

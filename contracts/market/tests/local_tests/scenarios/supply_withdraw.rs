@@ -1,6 +1,5 @@
 use crate::utils::{print_case_title, setup, TestBaseAsset, TestData};
-use fuels::prelude::ViewOnlyAccount;
-use market::PriceDataUpdate;
+use fuels::{prelude::ViewOnlyAccount, programs::calls::ContractDependency};
 use market_sdk::parse_units;
 
 const SCALE_6: f64 = 10u64.pow(6) as f64;
@@ -15,20 +14,13 @@ async fn supply_withdraw_test() {
         usdc,
         market,
         uni,
-        oracle,
-        price_feed_ids,
-        assets,
-        publish_time,
-        prices,
+        pyth_mock_oracle,
+        oracle_inputs,
+        oracle_total_update_fee,
         ..
-    } = setup(None, TestBaseAsset::USDC).await;
+    } = setup(None, TestBaseAsset::USDC, None).await;
 
-    let price_data_update = PriceDataUpdate {
-        update_fee: 1,
-        price_feed_ids,
-        publish_times: vec![publish_time; assets.len()],
-        update_data: oracle.create_update_data(&prices).await.unwrap(),
-    };
+    let oracle_contracts: Vec<&dyn ContractDependency> = vec![&pyth_mock_oracle.instance];
 
     // =================================================
     // ==================== Step #0 ====================
@@ -42,7 +34,12 @@ async fn supply_withdraw_test() {
         .await
         .unwrap();
 
-    let balance = alice.get_asset_balance(&usdc.asset_id).await.unwrap();
+    let balance: u64 = alice
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == mint_amount);
 
     // Alice calls supply_base with more than she has, results in tx revert
@@ -78,9 +75,10 @@ async fn supply_withdraw_test() {
         .await
         .unwrap()
         .withdraw_base(
-            &[&oracle.instance],
+            &oracle_contracts,
             (supply_amount + 1).try_into().unwrap(),
-            &price_data_update,
+            &oracle_inputs,
+            oracle_total_update_fee,
         )
         .await;
     // make sure withdraw_base was reverted
@@ -96,9 +94,10 @@ async fn supply_withdraw_test() {
         .await
         .unwrap()
         .withdraw_base(
-            &[&oracle.instance],
+            &oracle_contracts,
             withdraw_amount.try_into().unwrap(),
-            &price_data_update,
+            &oracle_inputs,
+            oracle_total_update_fee,
         )
         .await;
     // make sure withdraw_base was ok

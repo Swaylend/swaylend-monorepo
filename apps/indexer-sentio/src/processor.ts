@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/complexity/noForEach: <We need it here.> */
 import { GLOBAL_CONFIG } from '@sentio/runtime';
 import { BigDecimal } from '@sentio/sdk';
 import { FuelNetwork } from '@sentio/sdk/fuel';
@@ -30,6 +31,57 @@ const FACTOR_SCALE_15 = 10n ** 15n;
 const FACTOR_SCALE_18 = 10n ** 18n;
 const SECONDS_PER_YEAR = 365n * 24n * 60n * 60n;
 const I256_INDENT = 2n ** 255n;
+
+const getPriceFromSwaylendApi = async (
+  asset: string,
+  timestamp: number,
+  maxRetries = 3
+): Promise<number> => {
+  let lastError: Error | undefined;
+
+  let symbol = `${asset.toUpperCase()}USD`;
+
+  if (asset.toUpperCase() === 'STFUEL') {
+    symbol += '_RR';
+  }
+
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      const response = await fetch(
+        `${appConfig.swaylendApi}/api/stork/historical?asset=${symbol}&timestamp=${timestamp}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${appConfig.swaylendApiKey}`,
+          },
+        }
+      );
+
+      // Check if response is ok, else retry
+      if (response.ok) {
+        const data = await response.json();
+        return data.price;
+      }
+
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    } catch (error) {
+      console.error(error);
+
+      lastError = error;
+
+      if (attempt === maxRetries) {
+        throw lastError;
+      }
+
+      // Exponential backoff: 1s, 2s, 4s, etc.
+      const delay = 2 ** attempt * 1000;
+      await new Promise((resolve) => setTimeout(resolve, delay));
+    }
+  }
+
+  throw lastError;
+};
 
 const getBorrowRate = (
   marketConfig: MarketConfiguration,
@@ -124,7 +176,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
     chainId:
       appConfig.env === 'testnet' ? FuelNetwork.TEST_NET : FuelNetwork.MAIN_NET,
     address: marketAddress.toLowerCase(),
-    startBlock: startBlock,
+    startBlock,
   })
     .onLogMarketConfigurationEvent(async (event, ctx) => {
       if (!ctx.transaction?.isStatusSuccess) {
@@ -154,35 +206,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
 
       let marketConfiguration = await ctx.store.get(MarketConfiguration, id);
 
-      if (!marketConfiguration) {
-        marketConfiguration = new MarketConfiguration({
-          id,
-          chainId: chainId,
-          contractAddress: marketAddress.toLowerCase(),
-          baseTokenAddress: base_token,
-          baseTokenDecimals: base_token_decimals,
-          supplyKink: BigInt(supply_kink.toString()),
-          borrowKink: BigInt(borrow_kink.toString()),
-          supplyPerSecondInterestRateBase: BigInt(
-            supply_per_second_interest_rate_base.toString()
-          ),
-          supplyPerSecondInterestRateSlopeLow: BigInt(
-            supply_per_second_interest_rate_slope_low.toString()
-          ),
-          supplyPerSecondInterestRateSlopeHigh: BigInt(
-            supply_per_second_interest_rate_slope_high.toString()
-          ),
-          borrowPerSecondInterestRateBase: BigInt(
-            borrow_per_second_interest_rate_base.toString()
-          ),
-          borrowPerSecondInterestRateSlopeLow: BigInt(
-            borrow_per_second_interest_rate_slope_low.toString()
-          ),
-          borrowPerSecondInterestRateSlopeHigh: BigInt(
-            borrow_per_second_interest_rate_slope_high.toString()
-          ),
-        });
-      } else {
+      if (marketConfiguration) {
         marketConfiguration.baseTokenAddress = base_token;
         marketConfiguration.baseTokenDecimals = base_token_decimals;
         marketConfiguration.chainId = chainId;
@@ -207,6 +231,34 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
         marketConfiguration.borrowPerSecondInterestRateSlopeHigh = BigInt(
           borrow_per_second_interest_rate_slope_high.toString()
         );
+      } else {
+        marketConfiguration = new MarketConfiguration({
+          id,
+          chainId,
+          contractAddress: marketAddress.toLowerCase(),
+          baseTokenAddress: base_token,
+          baseTokenDecimals: base_token_decimals,
+          supplyKink: BigInt(supply_kink.toString()),
+          borrowKink: BigInt(borrow_kink.toString()),
+          supplyPerSecondInterestRateBase: BigInt(
+            supply_per_second_interest_rate_base.toString()
+          ),
+          supplyPerSecondInterestRateSlopeLow: BigInt(
+            supply_per_second_interest_rate_slope_low.toString()
+          ),
+          supplyPerSecondInterestRateSlopeHigh: BigInt(
+            supply_per_second_interest_rate_slope_high.toString()
+          ),
+          borrowPerSecondInterestRateBase: BigInt(
+            borrow_per_second_interest_rate_base.toString()
+          ),
+          borrowPerSecondInterestRateSlopeLow: BigInt(
+            borrow_per_second_interest_rate_slope_low.toString()
+          ),
+          borrowPerSecondInterestRateSlopeHigh: BigInt(
+            borrow_per_second_interest_rate_slope_high.toString()
+          ),
+        });
       }
 
       await ctx.store.upsert(marketConfiguration);
@@ -224,7 +276,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
 
         const pool = new Pool({
           id: poolId,
-          chainId: chainId,
+          chainId,
           creationBlockNumber: Number(ctx.transaction?.blockNumber),
           creationTimestamp: DateTime.fromTai64(
             ctx.transaction.time
@@ -264,19 +316,18 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
         id
       );
 
-      if (!collateralConfiguration) {
-        collateralConfiguration = new CollateralConfiguration({
-          id,
-          chainId: chainId,
-          contractAddress: marketAddress.toLowerCase(),
-          assetAddress: asset_id,
-          decimals: decimals,
-        });
-      } else {
+      if (collateralConfiguration) {
         throw new Error(
           `Collateral configuration already exists for asset ${asset_id} on chain ${chainId}`
         );
       }
+      collateralConfiguration = new CollateralConfiguration({
+        id,
+        chainId,
+        contractAddress: marketAddress.toLowerCase(),
+        assetAddress: asset_id,
+        decimals,
+      });
 
       await ctx.store.upsert(collateralConfiguration);
 
@@ -293,7 +344,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
 
         const pool = new Pool({
           id: poolId,
-          chainId: chainId,
+          chainId,
           creationBlockNumber: Number(ctx.transaction?.blockNumber),
           creationTimestamp: DateTime.fromTai64(
             ctx.transaction.time
@@ -314,7 +365,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
 
       const poolSnapshot = new CollateralPool({
         id: collateralPoolId,
-        chainId: chainId,
+        chainId,
         poolAddress: marketAddress.toLowerCase(),
         underlyingTokenAddress: asset_id,
         underlyingTokenSymbol: appConfig.assets[asset_id],
@@ -356,7 +407,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       const {
         data: {
           asset_id: { bits: asset_id },
-          configuration: { decimals }, // TODO: Update other field
+          configuration: { decimals },
         },
       } = event;
 
@@ -376,10 +427,10 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
 
       collateralConfiguration = new CollateralConfiguration({
         id,
-        chainId: chainId,
+        chainId,
         contractAddress: marketAddress.toLowerCase(),
         assetAddress: asset_id,
-        decimals: decimals,
+        decimals,
       });
 
       await ctx.store.upsert(collateralConfiguration);
@@ -406,18 +457,18 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
 
       let userBasic = await ctx.store.get(UserBasic, userBasicId);
 
-      if (!userBasic) {
+      if (userBasic) {
+        userBasic.principal = value < 0 ? -value : value;
+        userBasic.isNegative = value < 0;
+      } else {
         userBasic = new UserBasic({
           id: userBasicId,
-          chainId: chainId,
+          chainId,
           contractAddress: marketAddress.toLowerCase(),
-          address: address,
+          address,
           principal: value < 0 ? -value : value,
           isNegative: value < 0,
         });
-      } else {
-        userBasic.principal = value < 0 ? -value : value;
-        userBasic.isNegative = value < 0;
       }
 
       await ctx.store.upsert(userBasic);
@@ -454,21 +505,40 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       const id = `${chainId}_${marketAddress.toLowerCase()}_${address}_${asset_id}`;
 
       // Collateral price
-      const collateralPrice = await getPriceBySymbol(
-        appConfig.assets[asset_id],
-        ctx.timestamp
-      );
+      let collateralPrice =
+        (await getPriceBySymbol(appConfig.assets[asset_id], ctx.timestamp)) ??
+        0;
+
+      if (collateralPrice === 0) {
+        collateralPrice = await getPriceFromSwaylendApi(
+          appConfig.assets[asset_id],
+          ctx.timestamp.getTime() / 1000
+        );
+      }
 
       if (!collateralPrice) {
-        throw new Error(`No price found for ${asset_id} at ${ctx.timestamp}`);
+        throw new Error(
+          `Collateral price not found for asset ${asset_id} on chain ${chainId}`
+        );
       }
 
       let collateralPosition = await ctx.store.get(CollateralPosition, id);
 
-      if (!collateralPosition) {
+      if (collateralPosition) {
+        const newCollateralAmount =
+          collateralPosition.collateralAmount + BigInt(amount.toString());
+        collateralPosition.collateralAmount = newCollateralAmount;
+        collateralPosition.collateralAmountNormalized = newCollateralAmount
+          .asBigDecimal()
+          .dividedBy(BigDecimal(10).pow(collateralConfiguration.decimals));
+        collateralPosition.collateralAmountUsd = newCollateralAmount
+          .asBigDecimal()
+          .dividedBy(BigDecimal(10).pow(collateralConfiguration.decimals))
+          .times(BigDecimal(collateralPrice));
+      } else {
         collateralPosition = new CollateralPosition({
           id,
-          chainId: chainId,
+          chainId,
           poolAddress: marketAddress.toLowerCase(),
           userAddress: address,
           underlyingTokenAddress: collateralConfiguration.assetAddress,
@@ -488,17 +558,6 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
             .dividedBy(BigDecimal(10).pow(collateralConfiguration.decimals))
             .times(BigDecimal(collateralPrice)),
         });
-      } else {
-        const newCollateralAmount =
-          collateralPosition.collateralAmount + BigInt(amount.toString());
-        collateralPosition.collateralAmount = newCollateralAmount;
-        collateralPosition.collateralAmountNormalized = newCollateralAmount
-          .asBigDecimal()
-          .dividedBy(BigDecimal(10).pow(collateralConfiguration.decimals));
-        collateralPosition.collateralAmountUsd = newCollateralAmount
-          .asBigDecimal()
-          .dividedBy(BigDecimal(10).pow(collateralConfiguration.decimals))
-          .times(BigDecimal(collateralPrice));
       }
 
       await ctx.store.upsert(collateralPosition);
@@ -516,8 +575,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
         );
       }
 
-      collateralPool.collateralAmount =
-        collateralPool.collateralAmount + BigInt(amount.toString());
+      collateralPool.collateralAmount += BigInt(amount.toString());
       collateralPool.collateralAmountNormalized =
         collateralPool.collateralAmount
           .asBigDecimal()
@@ -596,13 +654,21 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       }
 
       // Collateral price
-      const collateralPrice = await getPriceBySymbol(
-        appConfig.assets[asset_id],
-        ctx.timestamp
-      );
+      let collateralPrice =
+        (await getPriceBySymbol(appConfig.assets[asset_id], ctx.timestamp)) ??
+        0;
+
+      if (collateralPrice === 0) {
+        collateralPrice = await getPriceFromSwaylendApi(
+          appConfig.assets[asset_id],
+          ctx.timestamp.getTime() / 1000
+        );
+      }
 
       if (!collateralPrice) {
-        throw new Error(`No price found for ${asset_id} at ${ctx.timestamp}`);
+        throw new Error(
+          `Collateral price not found for asset ${asset_id} on chain ${chainId}`
+        );
       }
 
       const newCollateralAmount =
@@ -632,8 +698,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
         );
       }
 
-      collateralPool.collateralAmount =
-        collateralPool.collateralAmount - BigInt(amount.toString());
+      collateralPool.collateralAmount -= BigInt(amount.toString());
       collateralPool.collateralAmountNormalized =
         collateralPool.collateralAmount
           .asBigDecimal()
@@ -682,7 +747,6 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
           account,
           asset_id: { bits: asset_id },
           amount,
-          decimals,
         },
       } = event;
 
@@ -714,17 +778,24 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       }
 
       // Collateral price
-      const collateralPrice = await getPriceBySymbol(
-        appConfig.assets[asset_id],
-        ctx.timestamp
-      );
+      let collateralPrice =
+        (await getPriceBySymbol(appConfig.assets[asset_id], ctx.timestamp)) ??
+        0;
 
-      if (!collateralPrice) {
-        throw new Error(`No price found for ${asset_id} at ${ctx.timestamp}`);
+      if (collateralPrice === 0) {
+        collateralPrice = await getPriceFromSwaylendApi(
+          appConfig.assets[asset_id],
+          ctx.timestamp.getTime() / 1000
+        );
       }
 
-      collateralPool.collateralAmount =
-        collateralPool.collateralAmount - BigInt(amount.toString());
+      if (!collateralPrice) {
+        throw new Error(
+          `Collateral price not found for asset ${asset_id} on chain ${chainId}`
+        );
+      }
+
+      collateralPool.collateralAmount -= BigInt(amount.toString());
       collateralPool.collateralAmountNormalized =
         collateralPool.collateralAmount
           .asBigDecimal()
@@ -781,14 +852,22 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       }
 
       // Get base asset price
-      const baseAssetPrice = await getPriceBySymbol(
-        appConfig.assets[marketConfiguration.baseTokenAddress],
-        ctx.timestamp
-      );
+      let baseAssetPrice =
+        (await getPriceBySymbol(
+          appConfig.assets[marketConfiguration.baseTokenAddress],
+          ctx.timestamp
+        )) ?? 0;
+
+      if (baseAssetPrice === 0) {
+        baseAssetPrice = await getPriceFromSwaylendApi(
+          appConfig.assets[marketConfiguration.baseTokenAddress],
+          ctx.timestamp.getTime() / 1000
+        );
+      }
 
       if (!baseAssetPrice) {
-        console.error(
-          `No price found for ${marketConfiguration.baseTokenAddress} at ${ctx.timestamp}`
+        throw new Error(
+          `Base asset price not found for market ${marketAddress.toLowerCase()} on chain ${chainId}`
         );
       }
 
@@ -894,14 +973,22 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       }
 
       // Get base asset price
-      const baseAssetPrice = await getPriceBySymbol(
-        appConfig.assets[marketConfiguration.baseTokenAddress],
-        ctx.timestamp
-      );
+      let baseAssetPrice =
+        (await getPriceBySymbol(
+          appConfig.assets[marketConfiguration.baseTokenAddress],
+          ctx.timestamp
+        )) ?? 0;
+
+      if (baseAssetPrice === 0) {
+        baseAssetPrice = await getPriceFromSwaylendApi(
+          appConfig.assets[marketConfiguration.baseTokenAddress],
+          ctx.timestamp.getTime() / 1000
+        );
+      }
 
       if (!baseAssetPrice) {
-        console.error(
-          `No price found for ${marketConfiguration.baseTokenAddress} at ${ctx.timestamp}`
+        throw new Error(
+          `Base asset price not found for market ${marketAddress.toLowerCase()} on chain ${chainId}`
         );
       }
 
@@ -1003,10 +1090,16 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       const marketBasicId = `${chainId}_${marketAddress.toLowerCase()}`;
       let marketBasic = await ctx.store.get(MarketBasic, marketBasicId);
 
-      if (!marketBasic) {
+      if (marketBasic) {
+        marketBasic.lastAccrualTime = BigInt(last_accrual_time.toString());
+        marketBasic.baseSupplyIndex = BigInt(base_supply_index.toString());
+        marketBasic.baseBorrowIndex = BigInt(base_borrow_index.toString());
+        marketBasic.totalSupplyBase = BigInt(total_supply_base.toString());
+        marketBasic.totalBorrowBase = BigInt(total_borrow_base.toString());
+      } else {
         marketBasic = new MarketBasic({
           id: marketBasicId,
-          chainId: chainId,
+          chainId,
           contractAddress: marketAddress.toLowerCase(),
           lastAccrualTime: BigInt(last_accrual_time.toString()),
           baseSupplyIndex: BigInt(base_supply_index.toString()),
@@ -1014,12 +1107,6 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
           totalSupplyBase: BigInt(total_supply_base.toString()),
           totalBorrowBase: BigInt(total_borrow_base.toString()),
         });
-      } else {
-        marketBasic.lastAccrualTime = BigInt(last_accrual_time.toString());
-        marketBasic.baseSupplyIndex = BigInt(base_supply_index.toString());
-        marketBasic.baseBorrowIndex = BigInt(base_borrow_index.toString());
-        marketBasic.totalSupplyBase = BigInt(total_supply_base.toString());
-        marketBasic.totalBorrowBase = BigInt(total_borrow_base.toString());
       }
 
       await ctx.store.upsert(marketBasic);
@@ -1063,14 +1150,22 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       }
 
       // Get base asset price
-      const baseAssetPrice = await getPriceBySymbol(
-        appConfig.assets[pool.underlyingTokenAddress],
-        ctx.timestamp
-      );
+      let baseAssetPrice =
+        (await getPriceBySymbol(
+          appConfig.assets[pool.underlyingTokenAddress],
+          ctx.timestamp
+        )) ?? 0;
+
+      if (baseAssetPrice === 0) {
+        baseAssetPrice = await getPriceFromSwaylendApi(
+          appConfig.assets[pool.underlyingTokenAddress],
+          ctx.timestamp.getTime() / 1000
+        );
+      }
 
       if (!baseAssetPrice) {
-        console.error(
-          `No price found for ${appConfig.assets[pool.underlyingTokenAddress]} at ${ctx.timestamp}`
+        throw new Error(
+          `Base asset price not found for market ${marketAddress.toLowerCase()} on chain ${chainId}`
         );
       }
 
@@ -1096,21 +1191,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
       const supplyApr = getApr(supplyRate);
       const borrowApr = getApr(borrowRate);
 
-      if (!basePool) {
-        basePool = new BasePool({
-          id: basePoolId,
-          chainId: chainId,
-          poolAddress: marketAddress.toLowerCase(),
-          suppliedAmount: BigInt(total_supply_base.toString()),
-          suppliedAmountNormalized: suppliedAmountNormalized,
-          suppliedAmountUsd: suppliedAmountNormalized.times(basePrice),
-          supplyApr: supplyApr,
-          borrowedAmount: BigInt(total_borrow_base.toString()),
-          borrowedAmountNormalized: borrowedAmountNormalized,
-          borrowedAmountUsd: borrowedAmountNormalized.times(basePrice),
-          borrowApr: borrowApr,
-        });
-      } else {
+      if (basePool) {
         basePool.suppliedAmount = BigInt(total_supply_base.toString());
         basePool.suppliedAmountNormalized = suppliedAmountNormalized;
         basePool.suppliedAmountUsd = suppliedAmountNormalized.times(basePrice);
@@ -1119,6 +1200,20 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
         basePool.borrowedAmountNormalized = borrowedAmountNormalized;
         basePool.borrowedAmountUsd = borrowedAmountNormalized.times(basePrice);
         basePool.borrowApr = borrowApr;
+      } else {
+        basePool = new BasePool({
+          id: basePoolId,
+          chainId,
+          poolAddress: marketAddress.toLowerCase(),
+          suppliedAmount: BigInt(total_supply_base.toString()),
+          suppliedAmountNormalized,
+          suppliedAmountUsd: suppliedAmountNormalized.times(basePrice),
+          supplyApr,
+          borrowedAmount: BigInt(total_borrow_base.toString()),
+          borrowedAmountNormalized,
+          borrowedAmountUsd: borrowedAmountNormalized.times(basePrice),
+          borrowApr,
+        });
       }
 
       await ctx.store.upsert(basePool);
@@ -1147,14 +1242,21 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
         );
       }
 
-      const baseAssetPrice = await getPriceBySymbol(
+      let baseAssetPrice = await getPriceBySymbol(
         appConfig.assets[marketConfiguration.baseTokenAddress],
         ctx.timestamp
       );
 
+      if (baseAssetPrice === 0) {
+        baseAssetPrice = await getPriceFromSwaylendApi(
+          appConfig.assets[marketConfiguration.baseTokenAddress],
+          ctx.timestamp.getTime() / 1000
+        );
+      }
+
       if (!baseAssetPrice) {
-        console.error(
-          `No price found for ${appConfig.assets[marketConfiguration.baseTokenAddress]} at ${ctx.timestamp}`
+        throw new Error(
+          `Base asset price not found for market ${marketAddress.toLowerCase()} on chain ${chainId}`
         );
       }
 
@@ -1240,14 +1342,22 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
           );
         }
 
-        const baseAssetPrice = await getPriceBySymbol(
-          appConfig.assets[pool.underlyingTokenAddress],
-          ctx.timestamp
-        );
+        let baseAssetPrice =
+          (await getPriceBySymbol(
+            appConfig.assets[pool.underlyingTokenAddress],
+            ctx.timestamp
+          )) ?? 0;
+
+        if (baseAssetPrice === 0) {
+          baseAssetPrice = await getPriceFromSwaylendApi(
+            appConfig.assets[pool.underlyingTokenAddress],
+            ctx.timestamp.getTime() / 1000
+          );
+        }
 
         if (!baseAssetPrice) {
-          console.error(
-            `No price found for ${appConfig.assets[pool.underlyingTokenAddress]} at ${ctx.timestamp}`
+          throw new Error(
+            `Base asset price not found for market ${pool.poolAddress} on chain ${chainId}`
           );
         }
 
@@ -1334,30 +1444,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
               : BigDecimal(0);
 
             // Create base position snapshot if it doesn't exist
-            if (!basePositionSnapshot) {
-              const underlyingTokenAddress =
-                marketConfiguration.baseTokenAddress;
-
-              basePositionSnapshot = new BasePositionSnapshot({
-                id: basePositionSnapshotId,
-                timestamp: START_TIME_UNIX,
-                blockDate: START_TIME_FORMATED,
-                chainId: chainId,
-                poolAddress: userBasic.contractAddress,
-                underlyingTokenAddress: underlyingTokenAddress,
-                underlyingTokenSymbol: appConfig.assets[underlyingTokenAddress],
-                userAddress: userBasic.address,
-                suppliedAmount: suppliedAmount,
-                suppliedAmountNormalized: suppliedAmountNormalized,
-                suppliedAmountUsd: suppliedAmountNormalized.times(basePrice),
-                borrowedAmount: borrowedAmount,
-                borrowedAmountNormalized: borrowedAmountNormalized,
-                borrowedAmountUsd: borrowedAmountNormalized.times(basePrice),
-                collateralAmount: 0n,
-                collateralAmountNormalized: BigDecimal(0),
-                collateralAmountUsd: BigDecimal(0),
-              });
-            } else {
+            if (basePositionSnapshot) {
               basePositionSnapshot.timestamp = START_TIME_UNIX;
               basePositionSnapshot.blockDate = START_TIME_FORMATED;
               basePositionSnapshot.suppliedAmount = suppliedAmount;
@@ -1370,6 +1457,29 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
                 borrowedAmountNormalized;
               basePositionSnapshot.borrowedAmountUsd =
                 borrowedAmountNormalized.times(basePrice);
+            } else {
+              const underlyingTokenAddress =
+                marketConfiguration.baseTokenAddress;
+
+              basePositionSnapshot = new BasePositionSnapshot({
+                id: basePositionSnapshotId,
+                timestamp: START_TIME_UNIX,
+                blockDate: START_TIME_FORMATED,
+                chainId,
+                poolAddress: userBasic.contractAddress,
+                underlyingTokenAddress,
+                underlyingTokenSymbol: appConfig.assets[underlyingTokenAddress],
+                userAddress: userBasic.address,
+                suppliedAmount,
+                suppliedAmountNormalized,
+                suppliedAmountUsd: suppliedAmountNormalized.times(basePrice),
+                borrowedAmount,
+                borrowedAmountNormalized,
+                borrowedAmountUsd: borrowedAmountNormalized.times(basePrice),
+                collateralAmount: 0n,
+                collateralAmountNormalized: BigDecimal(0),
+                collateralAmountUsd: BigDecimal(0),
+              });
             }
 
             await ctx.store.upsert(basePositionSnapshot);
@@ -1418,47 +1528,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
         const supplyApr = getApr(supplyRate);
         const borrowApr = getApr(borrowRate);
 
-        if (!basePoolSnapshot) {
-          basePoolSnapshot = new BasePoolSnapshot({
-            id: basePoolSnapshotId,
-            timestamp: START_TIME_UNIX,
-            blockDate: START_TIME_FORMATED,
-            chainId: chainId,
-            poolAddress: marketBasic.contractAddress,
-            underlyingTokenAddress: underlyingTokenAddress,
-            underlyingTokenSymbol: appConfig.assets[underlyingTokenAddress],
-            underlyingTokenPriceUsd: basePrice,
-            availableAmount: totalSupplyBase - totalBorrowBase,
-            availableAmountNormalized: totalSupplyBaseNormalized.minus(
-              totalBorrowBaseNormalized
-            ),
-            availableAmountUsd: totalSupplyBaseNormalized
-              .minus(totalBorrowBaseNormalized)
-              .times(basePrice),
-
-            suppliedAmount: totalSupplyBase,
-            suppliedAmountNormalized: totalSupplyBaseNormalized,
-            suppliedAmountUsd: totalSupplyBaseNormalized.times(basePrice),
-            collateralAmount: 0n,
-            collateralAmountNormalized: BigDecimal(0),
-            collateralAmountUsd: BigDecimal(0),
-            collateralFactor: BigDecimal(0),
-            supplyIndex: marketBasic.baseSupplyIndex
-              .asBigDecimal()
-              .dividedBy(FACTOR_SCALE_15.asBigDecimal()),
-            supplyApr: supplyApr,
-            borrowedAmount: totalBorrowBase,
-            borrowedAmountNormalized: totalBorrowBaseNormalized,
-            borrowedAmountUsd: totalBorrowBaseNormalized.times(basePrice),
-            borrowIndex: marketBasic.baseBorrowIndex
-              .asBigDecimal()
-              .dividedBy(FACTOR_SCALE_15.asBigDecimal()),
-            borrowApr: borrowApr,
-            totalFeesUsd: BigDecimal(0),
-            userFeesUsd: BigDecimal(0),
-            protocolFeesUsd: BigDecimal(0),
-          });
-        } else {
+        if (basePoolSnapshot) {
           basePoolSnapshot.timestamp = START_TIME_UNIX;
           basePoolSnapshot.blockDate = START_TIME_FORMATED;
           basePoolSnapshot.availableAmount = totalSupplyBase - totalBorrowBase;
@@ -1483,6 +1553,46 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
             .dividedBy(FACTOR_SCALE_15.asBigDecimal());
           basePoolSnapshot.supplyApr = supplyApr;
           basePoolSnapshot.borrowApr = borrowApr;
+        } else {
+          basePoolSnapshot = new BasePoolSnapshot({
+            id: basePoolSnapshotId,
+            timestamp: START_TIME_UNIX,
+            blockDate: START_TIME_FORMATED,
+            chainId,
+            poolAddress: marketBasic.contractAddress,
+            underlyingTokenAddress,
+            underlyingTokenSymbol: appConfig.assets[underlyingTokenAddress],
+            underlyingTokenPriceUsd: basePrice,
+            availableAmount: totalSupplyBase - totalBorrowBase,
+            availableAmountNormalized: totalSupplyBaseNormalized.minus(
+              totalBorrowBaseNormalized
+            ),
+            availableAmountUsd: totalSupplyBaseNormalized
+              .minus(totalBorrowBaseNormalized)
+              .times(basePrice),
+
+            suppliedAmount: totalSupplyBase,
+            suppliedAmountNormalized: totalSupplyBaseNormalized,
+            suppliedAmountUsd: totalSupplyBaseNormalized.times(basePrice),
+            collateralAmount: 0n,
+            collateralAmountNormalized: BigDecimal(0),
+            collateralAmountUsd: BigDecimal(0),
+            collateralFactor: BigDecimal(0),
+            supplyIndex: marketBasic.baseSupplyIndex
+              .asBigDecimal()
+              .dividedBy(FACTOR_SCALE_15.asBigDecimal()),
+            supplyApr,
+            borrowedAmount: totalBorrowBase,
+            borrowedAmountNormalized: totalBorrowBaseNormalized,
+            borrowedAmountUsd: totalBorrowBaseNormalized.times(basePrice),
+            borrowIndex: marketBasic.baseBorrowIndex
+              .asBigDecimal()
+              .dividedBy(FACTOR_SCALE_15.asBigDecimal()),
+            borrowApr,
+            totalFeesUsd: BigDecimal(0),
+            userFeesUsd: BigDecimal(0),
+            protocolFeesUsd: BigDecimal(0),
+          });
         }
 
         await ctx.store.upsert(basePoolSnapshot);
@@ -1501,14 +1611,22 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
         const collateralPrices = new Map<string, BigDecimal>();
 
         for (const collateralPool of collateralPools) {
-          const collateralPrice = await getPriceBySymbol(
-            appConfig.assets[collateralPool.underlyingTokenAddress],
-            ctx.timestamp
-          );
+          let collateralPrice =
+            (await getPriceBySymbol(
+              appConfig.assets[collateralPool.underlyingTokenAddress],
+              ctx.timestamp
+            )) ?? 0;
+
+          if (collateralPrice === 0) {
+            collateralPrice = await getPriceFromSwaylendApi(
+              appConfig.assets[collateralPool.underlyingTokenAddress],
+              ctx.timestamp.getTime() / 1000
+            );
+          }
 
           if (!collateralPrice) {
-            console.error(
-              `No price found for ${appConfig.assets[collateralPool.underlyingTokenAddress]} at ${ctx.timestamp}`
+            throw new Error(
+              `Collateral price not found for asset ${collateralPool.underlyingTokenAddress} on chain ${chainId}`
             );
           }
 
@@ -1528,20 +1646,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
               collateralPoolSnapshotId
             );
 
-            if (!collateralPoolSnapshot) {
-              collateralPoolSnapshot = new CollateralPoolSnapshot({
-                ...collateralPool,
-                timestamp: START_TIME_UNIX,
-                blockDate: START_TIME_FORMATED,
-                underlyingTokenPriceUsd: collateralPrices.get(
-                  collateralPool.underlyingTokenAddress
-                ),
-                collateralAmountUsd:
-                  collateralPool.collateralAmountNormalized.times(
-                    collateralPrices.get(collateralPool.underlyingTokenAddress)!
-                  ),
-              });
-            } else {
+            if (collateralPoolSnapshot) {
               collateralPoolSnapshot.timestamp = START_TIME_UNIX;
               collateralPoolSnapshot.blockDate = START_TIME_FORMATED;
               collateralPoolSnapshot.underlyingTokenPriceUsd =
@@ -1565,6 +1670,19 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
 
               collateralPoolSnapshot.collateralFactor =
                 collateralPool.collateralFactor;
+            } else {
+              collateralPoolSnapshot = new CollateralPoolSnapshot({
+                ...collateralPool,
+                timestamp: START_TIME_UNIX,
+                blockDate: START_TIME_FORMATED,
+                underlyingTokenPriceUsd: collateralPrices.get(
+                  collateralPool.underlyingTokenAddress
+                ),
+                collateralAmountUsd:
+                  collateralPool.collateralAmountNormalized.times(
+                    collateralPrices.get(collateralPool.underlyingTokenAddress)!
+                  ),
+              });
             }
 
             await ctx.store.upsert(collateralPoolSnapshot);
@@ -1593,19 +1711,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
               collateralPositionSnapshotId
             );
 
-            if (!collateralPositionSnapshot) {
-              collateralPositionSnapshot = new CollateralPositionSnapshot({
-                ...collateralPosition,
-                timestamp: START_TIME_UNIX,
-                blockDate: START_TIME_FORMATED,
-                collateralAmountUsd:
-                  collateralPosition.collateralAmountNormalized.times(
-                    collateralPrices.get(
-                      collateralPosition.underlyingTokenAddress!
-                    )!
-                  ),
-              });
-            } else {
+            if (collateralPositionSnapshot) {
               collateralPositionSnapshot.timestamp = START_TIME_UNIX;
               collateralPositionSnapshot.blockDate = START_TIME_FORMATED;
 
@@ -1619,6 +1725,18 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
                     collateralPosition.underlyingTokenAddress!
                   )!
                 );
+            } else {
+              collateralPositionSnapshot = new CollateralPositionSnapshot({
+                ...collateralPosition,
+                timestamp: START_TIME_UNIX,
+                blockDate: START_TIME_FORMATED,
+                collateralAmountUsd:
+                  collateralPosition.collateralAmountNormalized.times(
+                    collateralPrices.get(
+                      collateralPosition.underlyingTokenAddress!
+                    )!
+                  ),
+              });
             }
 
             await ctx.store.upsert(collateralPositionSnapshot);
@@ -1626,7 +1744,7 @@ Object.values(appConfig.markets).forEach(({ marketAddress, startBlock }) => {
 
         await Promise.all(processCollateralPositionSnapshotsPromises);
       },
-      60,
-      60
+      720,
+      720
     );
 });

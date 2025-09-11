@@ -1,0 +1,28 @@
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import BigNumber from 'bignumber.js';
+import { useMarketStore } from '@/stores/market-store';
+import { useUserCollateralUtilization } from './use-user-collateral-utilization';
+import { useUserCollateralValue } from './use-user-collateral-value';
+
+export const useUserLiquidationPoint = (marketParam?: string) => {
+  const market = marketParam || useMarketStore.use.market();
+  const { data: collateralValue } = useUserCollateralValue(market);
+  const { data: userCollateralUtilization } =
+    useUserCollateralUtilization(market);
+
+  return useQuery({
+    queryKey: [
+      'userLiquidationPoint',
+      'v1',
+      collateralValue?.toString(),
+      userCollateralUtilization?.toString(),
+    ],
+    queryFn: () => {
+      if (!(collateralValue && userCollateralUtilization)) return BigNumber(0);
+      return collateralValue.times(userCollateralUtilization);
+    },
+    enabled: !!collateralValue && !!userCollateralUtilization,
+    refetchOnWindowFocus: false,
+    placeholderData: keepPreviousData,
+  });
+};

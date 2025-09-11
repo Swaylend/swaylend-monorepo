@@ -1,16 +1,14 @@
 [[package]]
-name = "core"
-source = "path+from-root-F64B6E1A883A7E7B"
-
-[[package]]
 name = "market"
 source = "member"
 dependencies = [
     "market_abi",
+    "ownership",
     "pyth_interface",
-    "standards git+https://github.com/FuelLabs/sway-standards?tag=v0.6.1#792639cdf391565e6e6a02482ea8a46d9604a6f5",
+    "reentrancy",
+    "signed_int",
+    "src5 registry+src5?0.8.1#QmcUKCMFWYYpGzqSxZFn3d97MhQ9RAiEMoQGWjVE2AmMFN!",
     "std",
-    "sway_libs",
 ]
 
 [[package]]
@@ -18,17 +16,24 @@ name = "market_abi"
 source = "member"
 dependencies = [
     "pyth_interface",
+    "signed_int",
     "std",
-    "sway_libs",
+    "stork_sway_sdk",
+]
+
+[[package]]
+name = "ownership"
+version = "0.26.1"
+source = "registry+ownership?0.26.1#QmcmRuXsD2ZaE74nZ5vGxc1QhYJhjQKMwho6ZfkYt1cs6Q!"
+dependencies = [
+    "src5 registry+src5?0.8.0#QmNRPZrPHFBiEAyWPU8gesdPsD2zb3cMKwEgxJwV1ZEjyD!",
+    "std",
 ]
 
 [[package]]
 name = "pyth_interface"
-source = "git+https://github.com/pyth-network/pyth-crosschain?rev#7de4ce3ec8defd97641c1d25302abe117bf5092b"
-dependencies = [
-    "standards git+https://github.com/FuelLabs/sway-standards?tag=v0.4.4#a001d3c248595112aae67e5633a06ef9bc0536ae",
-    "std",
-]
+source = "git+https://github.com/pyth-network/pyth-crosschain?rev#10e5345ea2e29a5cc43311d43e681cf335e834f3"
+dependencies = ["std"]
 
 [[package]]
 name = "pyth_mock"
@@ -39,38 +44,71 @@ dependencies = [
 ]
 
 [[package]]
+name = "reentrancy"
+version = "0.26.0"
+source = "registry+reentrancy?0.26.0#QmP25Uux1SYjT97JiBJGw15NQtKHzbYczhHkwcoh3Bqh4C!"
+dependencies = ["std"]
+
+[[package]]
+name = "signed_int"
+version = "0.26.1"
+source = "registry+signed_int?0.26.1#QmWB8r7jN9bE1sVUJzQoTCbsTXyL6qB55mSfeicd6EtoAo!"
+dependencies = ["std"]
+
+[[package]]
 name = "src-20"
 source = "member"
 dependencies = [
-    "standards git+https://github.com/FuelLabs/sway-standards?tag=v0.6.1#792639cdf391565e6e6a02482ea8a46d9604a6f5",
+    "src20",
+    "src3",
+    "src5 registry+src5?0.8.1#QmcUKCMFWYYpGzqSxZFn3d97MhQ9RAiEMoQGWjVE2AmMFN!",
     "std",
 ]
 
 [[package]]
-name = "standards"
-source = "git+https://github.com/FuelLabs/sway-standards?tag=v0.4.4#a001d3c248595112aae67e5633a06ef9bc0536ae"
+name = "src20"
+version = "0.8.1"
+source = "registry+src20?0.8.1#QmeJqNZFcPCUgKDWRjeKHQhEraMHX9n5sr8S9Vkt4wmnV1!"
 dependencies = ["std"]
 
 [[package]]
-name = "standards"
-source = "git+https://github.com/FuelLabs/sway-standards?tag=v0.6.0#65e09f95ea8b9476b171a66c8a47108f352fa32c"
+name = "src3"
+version = "0.8.1"
+source = "registry+src3?0.8.1#QmaRv83wVWP9UnUCtMMoJih9f8eCiA3k4MnH75m4zVZQ18!"
 dependencies = ["std"]
 
 [[package]]
-name = "standards"
-source = "git+https://github.com/FuelLabs/sway-standards?tag=v0.6.1#792639cdf391565e6e6a02482ea8a46d9604a6f5"
+name = "src5"
+version = "0.8.0"
+source = "registry+src5?0.8.0#QmNRPZrPHFBiEAyWPU8gesdPsD2zb3cMKwEgxJwV1ZEjyD!"
+dependencies = ["std"]
+
+[[package]]
+name = "src5"
+version = "0.8.1"
+source = "registry+src5?0.8.1#QmcUKCMFWYYpGzqSxZFn3d97MhQ9RAiEMoQGWjVE2AmMFN!"
 dependencies = ["std"]
 
 [[package]]
 name = "std"
-source = "git+https://github.com/fuellabs/sway?tag=v0.66.4#d7dd104dac4394aa7af56f05b720c975744db853"
-dependencies = ["core"]
+version = "0.69.1"
+source = "registry+std?0.69.1#QmbPunScay4xpfHKpxQ71dFKXSiyJuPP8P8YhgX5Dkmzm9!"
 
 [[package]]
-name = "sway_libs"
-source = "git+https://github.com/FuelLabs/sway-libs?tag=v0.24.0#e19f96f85ae12426d20adc176b70aa38fd9a2a5b"
+name = "stork_mock"
+source = "member"
 dependencies = [
-    "standards git+https://github.com/FuelLabs/sway-standards?tag=v0.6.0#65e09f95ea8b9476b171a66c8a47108f352fa32c",
+    "signed_int",
+    "std",
+    "stork_sway_sdk",
+]
+
+[[package]]
+name = "stork_sway_sdk"
+version = "0.0.3"
+source = "registry+stork_sway_sdk?0.0.3#QmeEq6VVXTPpLpDEfTKU6KowBL1hcyoPLc29qbGeBg8PLS!"
+dependencies = [
+    "signed_int",
     "std",
 ]
 
@@ -78,6 +116,7 @@ dependencies = [
 name = "token"
 source = "member"
 dependencies = [
-    "standards git+https://github.com/FuelLabs/sway-standards?tag=v0.6.1#792639cdf391565e6e6a02482ea8a46d9604a6f5",
+    "src20",
+    "src3",
     "std",
 ]

@@ -2,11 +2,10 @@ use market::*;
 use rand::Rng;
 use token::*;
 
-use fuels::accounts::wallet::WalletUnlocked;
+use fuels::accounts::wallet::Wallet;
 use fuels::programs::contract::{Contract, LoadConfiguration};
-use fuels::types::bech32::Bech32ContractId;
 use fuels::types::transaction::TxPolicies;
-use fuels::types::{AssetId, Bits256, Bytes32, ContractId};
+use fuels::types::{AssetId, Bits256, ContractId};
 use serde::Deserialize;
 use std::collections::HashMap;
 use std::path::PathBuf;
@@ -16,7 +15,7 @@ use crate::TokenAsset;
 
 #[derive(Clone)]
 pub struct TokenContract {
-    pub instance: Token<WalletUnlocked>,
+    pub instance: Token<Wallet>,
 }
 
 #[derive(Clone)]
@@ -26,8 +25,14 @@ pub struct Asset {
     pub symbol: String,
     pub bits256: Bits256,
     pub default_price: u64,
-    pub price_feed_id: Bits256,
+}
+
+#[derive(Deserialize, Clone)]
+pub struct OracleAssetConfiguration {
+    pub oracle_id: u64,
+    pub price_feed_id: String,
     pub price_feed_decimals: u32,
+    pub oracle_type: String,
 }
 
 #[derive(Deserialize)]
@@ -38,16 +43,16 @@ pub struct TokenConfig {
     pub symbol: String,
     pub default_price: u64,
     pub decimals: u32,
+    pub oracle_max_confidence_width: u64,
     pub borrow_collateral_factor: Option<u128>,
     pub liquidate_collateral_factor: Option<u128>,
     pub liquidation_penalty: Option<u128>,
     pub supply_cap: Option<u64>,
-    pub price_feed_id: String,
-    pub price_feed_decimals: u32,
+    pub oracle_configuration: Vec<OracleAssetConfiguration>,
 }
 
 impl TokenContract {
-    pub async fn deploy(wallet: &WalletUnlocked) -> anyhow::Result<Self> {
+    pub async fn deploy(wallet: &Wallet) -> anyhow::Result<Self> {
         let configurables = TokenConfigurables::default();
         let root = PathBuf::from(env!("CARGO_WORKSPACE_DIR"));
         let bin_path = root.join("contracts/token/out/release/token.bin");
@@ -59,51 +64,58 @@ impl TokenContract {
         let id = Contract::load_from(bin_path, config)?
             .with_salt(salt)
             .deploy(wallet, TxPolicies::default())
-            .await?;
+            .await?
+            .contract_id;
+
         let instance = Token::new(id.clone(), wallet.clone());
 
         Ok(Self { instance })
     }
 
-    pub async fn new(contract_id: ContractId, wallet: WalletUnlocked) -> Self {
+    pub async fn new(contract_id: ContractId, wallet: Wallet) -> Self {
         Self {
             instance: Token::new(contract_id, wallet),
         }
     }
 
-    pub async fn with_account(&self, account: &WalletUnlocked) -> anyhow::Result<Self> {
+    pub async fn with_account(&self, account: &Wallet) -> anyhow::Result<Self> {
         Ok(Self {
             instance: Token::new(self.instance.contract_id().clone(), account.clone()),
         })
     }
 
-    pub fn id(&self) -> Bytes32 {
-        self.instance.contract_id().hash
-    }
-
-    pub fn contract_id(&self) -> &Bech32ContractId {
+    pub fn contract_id(&self) -> ContractId {
         self.instance.contract_id()
     }
 
     pub async fn deploy_tokens(
         &self,
-        wallet: &WalletUnlocked,
+        wallet: &Wallet,
         is_local_tests: Option<bool>,
-    ) -> (HashMap<String, Asset>, Vec<CollateralConfiguration>) {
+        config_file: Option<&str>,
+    ) -> (
+        HashMap<String, Asset>,
+        Vec<CollateralConfiguration>,
+        HashMap<AssetId, Vec<OracleAssetConfiguration>>,
+    ) {
         let local_tests = is_local_tests.unwrap_or(false);
-        let tokens_json_path =
-            PathBuf::from(env!("CARGO_WORKSPACE_DIR")).join("contracts/market/tests/tokens.json");
+        let tokens_json_path = if let Some(config_file) = config_file {
+            PathBuf::from(env!("CARGO_WORKSPACE_DIR"))
+                .join(format!("contracts/market/tests/configs/{}", config_file))
+        } else {
+            PathBuf::from(env!("CARGO_WORKSPACE_DIR")).join("contracts/market/tests/tokens.json")
+        };
         let tokens_json = std::fs::read_to_string(tokens_json_path).unwrap();
         let token_configs: Vec<TokenConfig> = serde_json::from_str(&tokens_json).unwrap();
 
         let mut assets: HashMap<String, Asset> = HashMap::new();
         let mut asset_configs: Vec<CollateralConfiguration> = vec![];
+        let mut oracle_configs: HashMap<AssetId, Vec<OracleAssetConfiguration>> = HashMap::new();
 
         for config in token_configs {
             let symbol = config.symbol;
 
-            let token =
-                TokenAsset::new(wallet.clone(), self.instance.contract_id().into(), &symbol);
+            let token = TokenAsset::new(wallet.clone(), self.instance.contract_id(), &symbol);
 
             let asset_id = if symbol == "ETH" && local_tests {
                 AssetId::from_str(
@@ -119,9 +131,9 @@ impl TokenContract {
             // Everything except USDC is collateral
             if symbol != "USDC" {
                 asset_configs.push(CollateralConfiguration {
-                    asset_id: asset_id.into(),
-                    price_feed_id: Bits256::from_hex_str(config.price_feed_id.as_str()).unwrap(),
+                    asset_id: asset_id,
                     decimals: config.decimals,
+                    oracle_max_confidence_width: config.oracle_max_confidence_width.into(),
                     borrow_collateral_factor: config.borrow_collateral_factor.unwrap().into(), // decimals: 18
                     liquidate_collateral_factor: config.liquidate_collateral_factor.unwrap().into(), // decimals: 18
                     liquidation_penalty: config.liquidation_penalty.unwrap().into(), // decimals: 18
@@ -133,30 +145,35 @@ impl TokenContract {
             assets.insert(
                 symbol.clone(),
                 Asset {
-                    asset_id: asset_id.into(),
-                    price_feed_id: Bits256::from_hex_str(config.price_feed_id.as_str()).unwrap(),
-                    price_feed_decimals: config.price_feed_decimals,
+                    asset_id: asset_id,
                     decimals: token.decimals,
                     symbol: token.symbol,
                     bits256: asset_id.into(),
                     default_price: config.default_price,
                 },
             );
+
+            oracle_configs.insert(asset_id, config.oracle_configuration.clone());
         }
 
-        (assets, asset_configs)
+        (assets, asset_configs, oracle_configs)
     }
 
     pub async fn load_tokens(
         &self,
         tokens_json_path: &str,
-        wallet: &WalletUnlocked,
-    ) -> (HashMap<String, Asset>, Vec<CollateralConfiguration>) {
+        wallet: &Wallet,
+    ) -> (
+        HashMap<String, Asset>,
+        Vec<CollateralConfiguration>,
+        HashMap<String, Vec<OracleAssetConfiguration>>,
+    ) {
         let tokens_json = std::fs::read_to_string(tokens_json_path).unwrap();
         let token_configs: Vec<TokenConfig> = serde_json::from_str(&tokens_json).unwrap();
 
         let mut assets: HashMap<String, Asset> = HashMap::new();
         let mut asset_configs: Vec<CollateralConfiguration> = Vec::new();
+        let mut oracle_configs: HashMap<String, Vec<OracleAssetConfiguration>> = HashMap::new();
 
         for config in token_configs {
             let symbol = config.symbol;
@@ -174,8 +191,6 @@ impl TokenContract {
                 symbol.clone(),
                 Asset {
                     asset_id: asset_id.into(),
-                    price_feed_id: Bits256::from_hex_str(config.price_feed_id.as_str()).unwrap(),
-                    price_feed_decimals: config.price_feed_decimals,
                     decimals: config.decimals.into(),
                     symbol: symbol.clone(),
                     bits256: asset_id.into(),
@@ -188,7 +203,7 @@ impl TokenContract {
                 asset_configs.push(CollateralConfiguration {
                     asset_id: asset_id.into(),
                     decimals: config.decimals,
-                    price_feed_id: Bits256::from_hex_str(config.price_feed_id.as_str()).unwrap(),
+                    oracle_max_confidence_width: config.oracle_max_confidence_width.into(),
                     borrow_collateral_factor: config.borrow_collateral_factor.unwrap().into(), // decimals: 18
                     liquidate_collateral_factor: config.liquidate_collateral_factor.unwrap().into(), // decimals: 18
                     liquidation_penalty: config.liquidation_penalty.unwrap().into(), // decimals: 18
@@ -196,7 +211,9 @@ impl TokenContract {
                     paused: false,
                 })
             }
+
+            oracle_configs.insert(symbol.clone(), config.oracle_configuration.clone());
         }
-        (assets, asset_configs)
+        (assets, asset_configs, oracle_configs)
     }
 }

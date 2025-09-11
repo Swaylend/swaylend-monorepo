@@ -1,5 +1,6 @@
 mod collateral_borrow;
 mod configuration;
+mod invalid_price;
 mod liquidation;
 mod multicall_absorb_buy_collateral;
 mod multicall_withdraw_supply;

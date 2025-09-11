@@ -1,19 +1,24 @@
-import MarketOverview from '@/components/MarketsView/MarketOverview';
-import { appConfig } from '@/configs';
-import { getChartData } from '@/lib/charts';
-import { isMobile } from '@/utils/isMobile';
 import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
+import MarketOverview from '@/components/v2/markets-view/market-overview';
+import { appConfig } from '@/configs';
+import { getChartData } from '@/lib/charts/v2';
+import { isMobile } from '@/utils/is-mobile';
 
 export async function generateMetadata({
   params,
-}: { params: { pair: string } }) {
-  const [network, baseAsset] = params.pair.split('-');
+}: {
+  params: Promise<{ pair: string }>;
+}) {
+  const { pair } = await params;
+  const [network, baseAsset] = pair.split('-');
 
   if (
-    !network ||
-    !baseAsset ||
-    !Object.keys(appConfig.markets).includes(baseAsset.toUpperCase())
+    !(
+      network &&
+      baseAsset &&
+      Object.keys(appConfig.client.v2.markets).includes(baseAsset.toUpperCase())
+    )
   ) {
     return {
       title: 'Markets',
@@ -25,23 +30,31 @@ export async function generateMetadata({
   };
 }
 
-export default async function Page({ params }: { params: { pair: string } }) {
-  const userAgent = headers().get('user-agent') || '';
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ pair: string }>;
+}) {
+  const userAgent = (await headers()).get('user-agent') || '';
   const mobile = isMobile(userAgent);
 
   if (mobile) {
     return (
-      <div className="w-full h-[60dvh] flex items-center justify-center">
+      <div className="flex h-[60dvh] w-full items-center justify-center">
         This page is not available on mobile devices.
       </div>
     );
   }
 
-  const [network, baseAsset] = params.pair.split('-');
+  const { pair } = await params;
+  const [network, baseAsset] = pair.split('-');
+
   if (
-    !network ||
-    !baseAsset ||
-    !Object.keys(appConfig.markets).includes(baseAsset.toUpperCase())
+    !(
+      network &&
+      baseAsset &&
+      Object.keys(appConfig.client.v2.markets).includes(baseAsset.toUpperCase())
+    )
   ) {
     notFound();
   }
@@ -50,11 +63,11 @@ export default async function Page({ params }: { params: { pair: string } }) {
   return (
     <>
       <MarketOverview
-        network={network}
         baseAsset={baseAsset.toUpperCase()}
         chartData={chartData?.singleMarketData[baseAsset]}
+        network={network}
       />
-      <div className="lg:hidden w-full h-[60dvh] flex items-center justify-center">
+      <div className="flex h-[60dvh] w-full items-center justify-center lg:hidden">
         This page is not supported on this screen size.
       </div>
     </>

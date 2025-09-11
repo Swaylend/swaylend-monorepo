@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <div className="h-screen flex justify-center items-center text-primary">
+    <div className="flex h-screen items-center justify-center text-primary">
       This page is blocked in your country.
     </div>
   );

@@ -1,20 +1,15 @@
 // methods callable by owner:
 // 	1.	✅ add_collateral_asset(configuration: CollateralConfiguration)
-// 	2.	✅ pause_collateral_asset(asset_id: b256)
-// 	3.	✅ resume_collateral_asset(asset_id: b256)
-// 	4.	✅ update_collateral_asset(asset_id: b256, configuration: CollateralConfiguration)
-// 	5.	✅ withdraw_reserves(to: Address, amount: u256)
-// 	6.	✅ pause(pause_config: PauseConfiguration)
-// 	7.	✅ set_pyth_contract_id(contract_id: ContractId)
-// 	8.	✅ update_market_configuration(configuration: MarketConfiguration)
+// 	2.	✅ update_collateral_asset(asset_id: b256, configuration: CollateralConfiguration)
+// 	3.	✅ withdraw_reserves(to: Address, amount: u256)
+// 	4.	✅ pause(pause_config: PauseConfiguration)
+// 	5.	✅ update_market_configuration(configuration: MarketConfiguration)
 // additional tests for:
-//  9.  ✅ transfer_ownership
-//  10. ✅ renounce_ownership
-
-use std::str::FromStr;
+//  6.  ✅ transfer_ownership
+//  7.  ✅ renounce_ownership
 
 use crate::utils::{setup, TestBaseAsset, TestData};
-use fuels::types::{ContractId, U256};
+use fuels::types::U256;
 use market::{CollateralConfiguration, PauseConfiguration};
 use market_sdk::get_market_config;
 
@@ -31,14 +26,14 @@ async fn owner_test() {
         assets,
         usdc,
         ..
-    } = setup(None, TestBaseAsset::USDC).await;
+    } = setup(None, TestBaseAsset::USDC, None).await;
 
     let asset_id = assets["ETH"].asset_id;
 
     let mock_collateral_config = CollateralConfiguration {
         asset_id: assets["USDC"].asset_id.into(),
-        price_feed_id: assets["USDC"].price_feed_id,
         decimals: assets["USDC"].decimals.try_into().unwrap(),
+        oracle_max_confidence_width: 300u64.into(),
         borrow_collateral_factor: U256::from(18), // decimals: 18
         liquidate_collateral_factor: U256::from(18), // decimals: 18
         liquidation_penalty: U256::from(18),      // decimals: 18
@@ -61,38 +56,6 @@ async fn owner_test() {
     // make sure add_collateral_asset was ok
     assert!(admin_add_collat_res.is_ok());
     assert!(alice_add_collat_res.is_err());
-
-    let admin_pause_collat_res = market
-        .with_account(&admin)
-        .await
-        .unwrap()
-        .pause_collateral_asset(asset_id)
-        .await;
-    let alice_pause_collat_res = market
-        .with_account(&alice)
-        .await
-        .unwrap()
-        .pause_collateral_asset(asset_id)
-        .await;
-    // make sure pause_collateral_asset was ok
-    assert!(admin_pause_collat_res.is_ok());
-    assert!(alice_pause_collat_res.is_err());
-
-    let admin_resume_collat_res = market
-        .with_account(&admin)
-        .await
-        .unwrap()
-        .resume_collateral_asset(asset_id)
-        .await;
-    let alice_resume_collat_res = market
-        .with_account(&alice)
-        .await
-        .unwrap()
-        .resume_collateral_asset(asset_id)
-        .await;
-    // make sure resume_collateral_asset was ok
-    assert!(admin_resume_collat_res.is_ok());
-    assert!(alice_resume_collat_res.is_err());
 
     let admin_update_collat_res = market
         .with_account(&admin)
@@ -154,32 +117,7 @@ async fn owner_test() {
     assert!(admin_pause_collat_res.is_ok());
     assert!(alice_pause_collat_res.is_err());
 
-    let contract_id =
-        ContractId::from_str("0x0000000000000000000000000000000000000000000000000000000000000000")
-            .unwrap();
-
-    let admin_set_pyth_contract_id_res = market
-        .with_account(&admin)
-        .await
-        .unwrap()
-        .set_pyth_contract_id(contract_id)
-        .await;
-    let alice_set_pyth_contract_id_res = market
-        .with_account(&alice)
-        .await
-        .unwrap()
-        .set_pyth_contract_id(contract_id)
-        .await;
-    // make sure set_pyth_contract_id was ok
-    assert!(admin_set_pyth_contract_id_res.is_ok());
-    assert!(alice_set_pyth_contract_id_res.is_err());
-
-    let market_config = get_market_config(
-        usdc.asset_id,
-        usdc.decimals as u32,
-        assets["USDC"].price_feed_id,
-    )
-    .unwrap();
+    let market_config = get_market_config(usdc.asset_id, usdc.decimals as u32).unwrap();
 
     let alice_update_market_configuration_res = market
         .with_account(&alice)

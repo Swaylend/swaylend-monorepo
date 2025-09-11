@@ -1,0 +1,89 @@
+use clap::Parser;
+use fuels::{
+    accounts::{
+        provider::Provider, signers::private_key::PrivateKeySigner, wallet::Wallet, ViewOnlyAccount,
+    },
+    crypto::SecretKey,
+    types::AssetId,
+};
+use std::str::FromStr;
+use swaylend_scripts::utils::market::{get_market_instance, read_market_config, Args};
+use swaylend_scripts::utils::shared::{get_yes_no_input, read_env, verify_connected_network};
+
+#[derive(Parser, Debug)]
+pub struct ArgsExtended {
+    #[clap(flatten)]
+    pub args: Args,
+    #[arg(long, required = true)]
+    pub config_path: String,
+}
+
+#[tokio::main]
+async fn main() -> anyhow::Result<()> {
+    println!("ACTIVATING MARKET");
+
+    read_env();
+
+    let args = ArgsExtended::parse();
+
+    let provider = Provider::connect(&args.args.provider_url).await.unwrap();
+
+    if !verify_connected_network(&provider, args.args.network).await? {
+        eprintln!("Connected to the wrong network!");
+        return Ok(());
+    }
+
+    let secret = SecretKey::from_str(&args.args.signing_key).unwrap();
+    let wallet = Wallet::new(PrivateKeySigner::new(secret), provider.clone());
+
+    let (market_instance, market_contract_id) = get_market_instance(
+        &wallet,
+        args.args.market_proxy_contract_id,
+        args.args.market_target_contract_id,
+    )
+    .await?;
+
+    let contract_version = market_instance
+        .methods()
+        .get_version()
+        .with_contract_ids(&[market_contract_id.clone()])
+        .call()
+        .await;
+    println!(
+        "Sanity check: working on contract version: {:?}",
+        contract_version.unwrap().value
+    );
+
+    let market_config = read_market_config(&args.config_path)?;
+
+    println!("Market configuration: {:#?}", market_config);
+
+    if !get_yes_no_input("Do you want to activate market with the config above? (yes/no): ") {
+        return Ok(());
+    }
+
+    // activate contract
+    market_instance
+        .methods()
+        .activate_contract(market_config.clone().into(), wallet.address().into())
+        .with_contract_ids(&[market_contract_id.clone()])
+        .call()
+        .await?;
+
+    // read values to see if they are set correctly
+    assert_eq!(
+        market_instance
+            .methods()
+            .get_market_configuration()
+            .with_contract_ids(&[market_contract_id.clone()])
+            .call()
+            .await?
+            .value
+            .base_token,
+        AssetId::from_str(market_config.base_asset.asset_id.as_str()).unwrap()
+    );
+
+    println!("Market activated successfully!");
+
+    Ok(())
+}

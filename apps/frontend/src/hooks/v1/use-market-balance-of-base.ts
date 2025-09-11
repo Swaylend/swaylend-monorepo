@@ -1,0 +1,48 @@
+import { useQuery } from '@tanstack/react-query';
+import BigNumber from 'bignumber.js';
+import { useMarketStore } from '@/stores/market-store';
+import { formatUnits } from '@/utils';
+import { useMarketBasics } from './use-market-basics';
+import { useMarketConfiguration } from './use-market-configuration';
+import { useTotalReserves } from './use-total-reserves';
+
+export const useMarketBalanceOfBase = (marketParam?: string) => {
+  const storeMarket = useMarketStore.use.market();
+  const market = marketParam ?? storeMarket;
+
+  const { data: marketBasics } = useMarketBasics(market);
+  const { data: marketConfiguration } = useMarketConfiguration(market);
+  const { data: totalReserves } = useTotalReserves(market);
+
+  return useQuery({
+    queryKey: [
+      'marketBalanceOfBase',
+      'v1',
+      marketBasics?.total_supply_base?.toString(),
+      marketBasics?.total_borrow_base?.toString(),
+      totalReserves?.toString(),
+    ],
+    queryFn: () => {
+      if (!(marketBasics && marketConfiguration && totalReserves)) {
+        return {
+          raw: BigNumber(0),
+          formatted: BigNumber(0),
+        };
+      }
+
+      const balanceOfBase = BigNumber(marketBasics.total_supply_base.toString())
+        .minus(BigNumber(marketBasics.total_borrow_base.toString()))
+        .plus(totalReserves);
+
+      return {
+        raw: balanceOfBase,
+        formatted: formatUnits(
+          balanceOfBase,
+          marketConfiguration.baseTokenDecimals
+        ),
+      };
+    },
+    enabled: !!marketBasics && !!marketConfiguration && !!totalReserves,
+    staleTime: 60_000,
+  });
+};

@@ -2,12 +2,11 @@ use crate::utils::{print_case_title, setup, TestBaseAsset, TestData};
 use fuels::{
     accounts::ViewOnlyAccount,
     programs::{
-        calls::{CallHandler, CallParameters},
+        calls::{CallHandler, CallParameters, ContractDependency},
         responses::CallResponse,
     },
     types::{transaction::TxPolicies, transaction_builders::VariableOutputPolicy},
 };
-use market::PriceDataUpdate;
 use market_sdk::parse_units;
 
 const AMOUNT_COEFFICIENT: u64 = 10u64.pow(0);
@@ -26,20 +25,13 @@ async fn multicall_withdraw_supply_test() {
         usdc,
         usdc_contract,
         eth,
-        oracle,
-        price_feed_ids,
-        publish_time,
-        prices,
-        assets,
+        oracle_inputs,
+        pyth_mock_oracle,
+        oracle_total_update_fee,
         ..
-    } = setup(None, TestBaseAsset::USDC).await;
+    } = setup(None, TestBaseAsset::USDC, None).await;
 
-    let price_data_update = PriceDataUpdate {
-        update_fee: 1,
-        price_feed_ids,
-        publish_times: vec![publish_time; assets.len()],
-        update_data: oracle.create_update_data(&prices).await.unwrap(),
-    };
+    let oracle_contracts: Vec<&dyn ContractDependency> = vec![&pyth_mock_oracle.instance];
 
     // =================================================
     // ==================== Step #0 ====================
@@ -55,7 +47,12 @@ async fn multicall_withdraw_supply_test() {
         .mint(alice_account, alice_mint_amount)
         .await
         .unwrap();
-    let balance = alice.get_asset_balance(&usdc.asset_id).await.unwrap();
+    let balance: u64 = alice
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == alice_mint_amount);
 
     let alice_supply_res = market
@@ -101,7 +98,12 @@ async fn multicall_withdraw_supply_test() {
         .mint(bob_account, bob_mint_amount)
         .await
         .unwrap();
-    let balance = bob.get_asset_balance(&usdc.asset_id).await.unwrap();
+    let balance: u64 = bob
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == bob_mint_amount);
     let bob_withdraw_amount = parse_units(100 * AMOUNT_COEFFICIENT, usdc.decimals);
     let bob_withdraw_log_amount = format!("{} USDC", bob_withdraw_amount as f64 / SCALE_6);
@@ -118,10 +120,10 @@ async fn multicall_withdraw_supply_test() {
     let withdraw_base_call = market
         .instance
         .methods()
-        .withdraw_base(bob_withdraw_amount.into(), price_data_update.clone())
-        .with_contracts(&[&oracle.instance])
+        .withdraw_base(bob_withdraw_amount.into(), oracle_inputs.clone())
+        .with_contracts(&oracle_contracts)
         .with_tx_policies(tx_policies)
-        .call_params(CallParameters::default().with_amount(price_data_update.update_fee))
+        .call_params(CallParameters::default().with_amount(oracle_total_update_fee))
         .unwrap();
 
     // Supply base
@@ -145,11 +147,19 @@ async fn multicall_withdraw_supply_test() {
     // Submit tx
     let submitted_tx = multi_call_handler.submit().await.unwrap();
 
+    // Wait a bit for the transaction to be committed
+    tokio::time::sleep(tokio::time::Duration::from_millis(50)).await;
+
     // Wait for response
     let _: CallResponse<((), ())> = submitted_tx.response().await.unwrap();
 
     // Check asset balance
-    let balance = bob.get_asset_balance(&usdc.asset_id).await.unwrap();
+    let balance: u64 = bob
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == bob_mint_amount);
 
     market

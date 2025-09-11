@@ -1,22 +1,25 @@
 library;
 
-use sway_libs::signed_integers::i256::I256;
+use ::oracle_structs::*;
+use ::errors::*;
+use signed_int::i256::I256;
 use std::bytes::Bytes;
-use pyth_interface::{data_structures::price::{PriceFeedId}};
+use std::storage::storage_vec::*;
+use pyth_interface::{data_structures::price::PriceFeedId};
 
 pub const BASE_ACCRUAL_SCALE: u256 = 1_000_000; // 1e6
 pub const BASE_INDEX_SCALE_15: u256 = 1_000_000_000_000_000; // 1e15
 pub const FACTOR_SCALE_18: u256 = 1_000_000_000_000_000_000; // 1e18
-pub const ORACLE_CONF_BASIS_POINTS: u256 = 10_000; // 1e4
 
 /// This struct contains the configuration details for collateral management.
 pub struct CollateralConfiguration {
     /// This field represents the ID of the asset.
     pub asset_id: AssetId,
-    /// This field holds the price feed ID for the asset.
-    pub price_feed_id: b256,
     /// This field represents the number of decimals for the asset.
     pub decimals: u32,
+    /// This field represents the max confidence width for the prices returned by the oracles that use confidence intervals. 
+    /// Example: 300 / 10000 = 3.0 %. Where 10000 is the basis points (ORACLE_CONF_BASIS_POINTS = 1e4)
+    pub oracle_max_confidence_width: u256,
     /// This field represents the collateral factor for borrowing.
     pub borrow_collateral_factor: u256, // decimals: 18
     /// This field represents the collateral factor for liquidation.
@@ -35,8 +38,9 @@ pub struct MarketConfiguration {
     pub base_token: AssetId,
     /// This field represents the number of decimals for the base token.
     pub base_token_decimals: u32,
-    /// This field holds the price feed ID for the base token.
-    pub base_token_price_feed_id: b256,
+    /// This field represents the max confidence width for the prices returned by the oracles that use confidence intervals. 
+    /// Example: 300 / 10000 = 3.0 %. Where 10000 is the basis points (ORACLE_CONF_BASIS_POINTS = 1e4)
+    pub oracle_max_confidence_width: u256,
     /// This field represents the supply kink.
     pub supply_kink: u256, // decimals: 18
     /// This field represents the borrow kink.
@@ -74,7 +78,7 @@ impl MarketConfiguration {
         MarketConfiguration {
             base_token: AssetId::zero(),
             base_token_decimals: 0,
-            base_token_price_feed_id: b256::zero(),
+            oracle_max_confidence_width: 300, // 300 / 10000 = 3.0 % 
             supply_kink: 0,
             borrow_kink: 0,
             supply_per_second_interest_rate_slope_low: 0,
@@ -187,7 +191,7 @@ pub enum PricePosition {
     UpperBound: (),
 }
 
-impl core::ops::Eq for PricePosition {
+impl std::ops::PartialEq for PricePosition {
     fn eq(self, other: Self) -> bool {
         match (self, other) {
             (PricePosition::LowerBound, PricePosition::LowerBound) => true,
@@ -198,23 +202,4 @@ impl core::ops::Eq for PricePosition {
     }
 }
 
-pub enum Error {
-    AlreadyInitialized: (),
-    Paused: (),
-    Unauthorized: (),
-    InsufficientReserves: (),
-    NotLiquidatable: (),
-    NotForSale: (),
-    TooMuchSlippage: (),
-    SupplyCapExceeded: (),
-    NotCollateralized: (),
-    BorrowTooSmall: (),
-    NotPermitted: (),
-    InvalidPayment: (),
-    UnknownAsset: (),
-    DebuggingDisabled: (),
-    NotYetActive: (),
-    AlreadyActive: (),
-    OracleContractIdNotSet: (),
-    OraclePriceValidationError: (),
-}
+impl std::ops::Eq for PricePosition {}

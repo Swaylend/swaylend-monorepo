@@ -4,4 +4,4 @@ license = "Apache-2.0"
 name = "pyth_mock"
 
 [dependencies]
-pyth_interface = { git = "https://github.com/pyth-network/pyth-crosschain", rev = "7de4ce3ec8defd97641c1d25302abe117bf5092b" }
+pyth_interface = { git = "https://github.com/pyth-network/pyth-crosschain", rev = "10e5345ea2e29a5cc43311d43e681cf335e834f3" }

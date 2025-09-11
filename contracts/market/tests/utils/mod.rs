@@ -1,13 +1,19 @@
 use chrono::Utc;
-use fuels::accounts::wallet::WalletUnlocked;
+use fuels::accounts::wallet::Wallet;
+use fuels::accounts::ViewOnlyAccount;
 use fuels::test_helpers::{
-    launch_custom_provider_and_get_wallets, NodeConfig, Trigger, WalletsConfig
+    launch_custom_provider_and_get_wallets, NodeConfig, Trigger, WalletsConfig,
 };
-use fuels::types::{Bits256, ContractId, Identity};
+use fuels::types::{AssetId, Bits256, ContractId, Identity, U256};
+use market::{
+    OracleAssetConfiguration, OracleGlobalConfiguration, OracleInput, OracleType, PythOracleInput,
+    StorkOracleInput,
+};
 use market_sdk::{get_market_config, Market};
 use pyth_mock_sdk::PythMockContract;
 use std::collections::HashMap;
 use std::result::Result::Ok;
+use stork_mock_sdk::*;
 use token_sdk::{Asset, TokenAsset, TokenContract};
 
 pub fn print_case_title(num: u8, name: &str, call: &str, amount: &str) {
@@ -21,12 +27,12 @@ pub fn print_case_title(num: u8, name: &str, call: &str, amount: &str) {
     );
 }
 
-pub async fn init_wallets(use_gas_price: bool) -> Vec<WalletUnlocked> {
+pub async fn init_wallets() -> Vec<Wallet> {
     let wallets_config = WalletsConfig::new(Some(5), Some(1000), Some(1_000_000_000));
 
     let provider_config = NodeConfig {
         block_production: Trigger::Instant,
-        starting_gas_price: if use_gas_price { 0 } else { 1 },
+        starting_gas_price: 1,
         ..NodeConfig::default()
     };
 
@@ -45,15 +51,14 @@ pub enum TestBaseAsset {
 }
 
 pub struct TestData {
-    pub admin: WalletUnlocked,
+    pub admin: Wallet,
     pub admin_account: Identity,
-    pub alice: WalletUnlocked,
+    pub alice: Wallet,
     pub alice_account: Identity,
-    pub bob: WalletUnlocked,
+    pub bob: Wallet,
     pub bob_account: Identity,
-    pub chad: WalletUnlocked,
+    pub chad: Wallet,
     pub chad_account: Identity,
-    pub oracle: PythMockContract,
     pub market: Market,
     pub usdc: Asset,
     pub usdc_contract: TokenAsset,
@@ -62,29 +67,51 @@ pub struct TestData {
     pub uni: Asset,
     pub uni_contract: TokenAsset,
     pub eth: Asset,
-    pub wallets: Vec<WalletUnlocked>,
-    pub price_feed_ids: Vec<Bits256>,
-    pub publish_time: u64,
+    pub wallets: Vec<Wallet>,
     pub assets: HashMap<String, Asset>,
-    pub prices: Vec<(Bits256, (u64, u32, u64, u64))>,
+    pub oracle_inputs: Vec<OracleInput>,
+    pub oracle_total_update_fee: u64,
+    pub pyth_mock_oracle: PythMockContract,
+    pub pyth_prices: Vec<(Bits256, (u64, u32, u64, u64))>,
+    pub pyth_asset_price_feeds: HashMap<AssetId, (Bits256, u32)>, // asset_id -> (price_feed_id, price_feed_decimals)
+    pub stork_mock_oracle: StorkMockContract,
+    pub stork_prices: Vec<(Bits256, (f64, u32, u64, u64))>,
+    pub stork_asset_price_feeds: HashMap<AssetId, (Bits256, u32)>, // asset_id -> (price_feed_id, price_feed_decimals)
+    pub oracle_contract_id_to_index: HashMap<ContractId, u64>,
 }
 
-pub async fn setup(debug_step: Option<u64>, base_asset: TestBaseAsset) -> TestData {
+pub fn string_to_price_feed_id(
+    price_feed_id: String,
+    oracle_type: String,
+) -> market::OraclePriceFeedId {
+    match oracle_type.as_str() {
+        "Pyth" => market::OraclePriceFeedId::Pyth(Bits256::from_hex_str(&price_feed_id).unwrap()),
+        "Stork" => market::OraclePriceFeedId::Stork(Bits256::from_hex_str(&price_feed_id).unwrap()),
+        _ => panic!("Invalid oracle type: {}", oracle_type),
+    }
+}
+
+pub async fn setup(
+    debug_step: Option<u64>,
+    base_asset: TestBaseAsset,
+    config_file: Option<&str>,
+) -> TestData {
     //--------------- WALLETS ---------------
-    let no_fees = base_asset == TestBaseAsset::ETH;
-    let wallets = init_wallets(no_fees).await;
+    let wallets = init_wallets().await;
     let admin = &wallets[0];
     let alice = &wallets[1];
     let bob = &wallets[2];
     let chad = &wallets[3];
 
-    //--------------- ORACLE ---------------
-    let oracle = PythMockContract::deploy(&admin).await.unwrap();
-    let oracle_contract_id = ContractId::from(oracle.instance.contract_id());
+    //--------------- ORACLES ---------------
+    let pyth_mock_oracle = PythMockContract::deploy(&admin).await.unwrap();
+    let stork_mock_oracle = StorkMockContract::deploy(&admin).await.unwrap();
 
     //--------------- TOKENS ---------------
     let token_contract = TokenContract::deploy(&admin).await.unwrap();
-    let (assets, asset_configs) = token_contract.deploy_tokens(&admin, Some(true)).await;
+    let (assets, asset_configs, oracle_configs) = token_contract
+        .deploy_tokens(&admin, Some(true), config_file)
+        .await;
 
     let usdc = assets.get("USDC").unwrap();
     let usdc_contract = TokenAsset::new(
@@ -109,12 +136,8 @@ pub async fn setup(debug_step: Option<u64>, base_asset: TestBaseAsset) -> TestDa
 
     //--------------- MARKET ---------------
     let market_config = match base_asset {
-        TestBaseAsset::USDC => {
-            get_market_config(usdc.asset_id, usdc.decimals as u32, usdc.price_feed_id).unwrap()
-        }
-        TestBaseAsset::ETH => {
-            get_market_config(eth.asset_id, eth.decimals as u32, eth.price_feed_id).unwrap()
-        }
+        TestBaseAsset::USDC => get_market_config(usdc.asset_id, usdc.decimals as u32).unwrap(),
+        TestBaseAsset::ETH => get_market_config(eth.asset_id, eth.decimals as u32).unwrap(),
     };
 
     // debug step
@@ -127,45 +150,209 @@ pub async fn setup(debug_step: Option<u64>, base_asset: TestBaseAsset) -> TestDa
         .await
         .unwrap();
 
-    // Set Pyth contract ID
-    market
-        .set_pyth_contract_id(oracle_contract_id)
-        .await
-        .unwrap();
-
     //--------------- SETUP COLLATERALS ---------------
     for config in &asset_configs {
         market.add_collateral_asset(&config).await.unwrap();
     }
 
+    //--------------- SETUP GLOBAL ORACLES ---------------
+    // We only add Pyth for now
+    let global_oracle_configurations = vec![
+        OracleGlobalConfiguration {
+            contract_id: ContractId::from(pyth_mock_oracle.instance.contract_id()),
+            is_disabled: false,
+            oracle_type: OracleType::Pyth,
+        },
+        OracleGlobalConfiguration {
+            contract_id: ContractId::from(stork_mock_oracle.instance.contract_id()),
+            is_disabled: false,
+            oracle_type: OracleType::Stork,
+        },
+    ];
+
+    // Map of contract_id -> oracle_index (id)
+    let contract_id_to_index = HashMap::<ContractId, u64>::from([
+        (ContractId::from(pyth_mock_oracle.instance.contract_id()), 0),
+        (
+            ContractId::from(stork_mock_oracle.instance.contract_id()),
+            1,
+        ),
+    ]);
+
+    for config in &global_oracle_configurations {
+        market.add_new_global_oracle(config).await.unwrap();
+    }
+
+    //--------------- SETUP ASSET ORACLES ---------------
+    for (asset_id, configs) in &oracle_configs {
+        for config in configs {
+            println!(
+                "Adding oracle type {} for asset {} with id {} and price feed id {}",
+                config.oracle_type, asset_id, config.oracle_id, config.price_feed_id
+            );
+            market
+                .add_new_asset_oracle(
+                    *asset_id,
+                    &OracleAssetConfiguration {
+                        oracle_id: config.oracle_id,
+                        price_feed_id: string_to_price_feed_id(
+                            config.price_feed_id.clone(),
+                            config.oracle_type.clone(),
+                        ),
+                        is_disabled: false,
+                    },
+                )
+                .await
+                .unwrap();
+
+            println!(
+                "Added oracle type {} for asset {} with id {} and price feed id {}",
+                config.oracle_type, asset_id, config.oracle_id, config.price_feed_id
+            );
+        }
+    }
+
+    let mut oracle_inputs: Vec<OracleInput> = Vec::new();
+    let mut oracle_total_update_fee = 0;
+
     // ==================== Set oracle prices ====================
+
+    // Prepare PythOracleInput
+    let mut pyth_asset_price_feeds = HashMap::new();
     let mut prices = Vec::new();
     let mut price_feed_ids = Vec::new();
     let publish_time: u64 = tai64::Tai64::from_unix(Utc::now().timestamp().try_into().unwrap()).0;
     let confidence = 0;
 
     for asset in &assets {
-        let price = asset.1.default_price * 10u64.pow(asset.1.price_feed_decimals);
+        let oracle_configs = oracle_configs.get(&asset.1.asset_id).unwrap();
+        let config = oracle_configs.iter().find(|c| c.oracle_id == 0);
+
+        if config.is_none() {
+            continue;
+        }
+
+        let config = config.unwrap();
+        let price = asset.1.default_price * 10u64.pow(config.price_feed_decimals as u32);
 
         prices.push((
-            asset.1.price_feed_id,
-            (price, asset.1.price_feed_decimals, publish_time, confidence),
-        ))
-    }
+            Bits256::from_hex_str(&config.price_feed_id).unwrap(),
+            (price, config.price_feed_decimals, publish_time, confidence),
+        ));
 
-    oracle.update_prices(&prices).await.unwrap();
+        price_feed_ids.push(string_to_price_feed_id(
+            config.price_feed_id.clone(),
+            config.oracle_type.clone(),
+        ));
 
-    for asset in &assets {
-        let price = oracle.price(asset.1.price_feed_id).await.unwrap().value;
-
-        price_feed_ids.push(asset.1.price_feed_id);
+        pyth_asset_price_feeds.insert(
+            asset.1.asset_id,
+            (
+                Bits256::from_hex_str(&config.price_feed_id).unwrap(),
+                config.price_feed_decimals,
+            ),
+        );
 
         println!(
-            "Price for {} = {}",
+            "[Pyth] Price for {} = {}",
             asset.1.symbol,
-            price.price as f64 / 10u64.pow(asset.1.price_feed_decimals as u32) as f64
+            price as f64 / 10u64.pow(config.price_feed_decimals as u32) as f64
         );
     }
+
+    if price_feed_ids.len() > 0 {
+        let price_feed_count = price_feed_ids.len();
+
+        pyth_mock_oracle.update_prices(&prices).await.unwrap();
+
+        oracle_inputs.push(OracleInput::Pyth(PythOracleInput {
+            oracle_id: *contract_id_to_index
+                .get(&ContractId::from(pyth_mock_oracle.instance.contract_id()))
+                .unwrap(),
+            publish_times: vec![publish_time; price_feed_count],
+            price_feed_ids: price_feed_ids
+                .iter()
+                .map(|id| {
+                    if let market::OraclePriceFeedId::Pyth(id) = id {
+                        id.clone()
+                    } else {
+                        panic!("Invalid price feed id: {:?}", id)
+                    }
+                })
+                .collect::<Vec<Bits256>>(),
+            update_data: pyth_mock_oracle.create_update_data(&prices).await.unwrap(),
+        }));
+
+        oracle_total_update_fee += price_feed_count as u64;
+    }
+
+    // Prepare stork input
+    let mut stork_asset_price_feeds = HashMap::new();
+    let mut stork_prices: Vec<(Bits256, (f64, u32, u64, u64))> = Vec::new();
+    let stork_publish_time: u64 = Utc::now()
+        .timestamp_nanos_opt()
+        .unwrap()
+        .try_into()
+        .unwrap();
+    let stork_confidence = 0;
+
+    for asset in &assets {
+        let oracle_configs = oracle_configs.get(&asset.1.asset_id).unwrap();
+        let config = oracle_configs.iter().find(|c| c.oracle_id == 1);
+
+        if config.is_none() {
+            continue;
+        }
+
+        let config = config.unwrap();
+
+        let exponent = config.price_feed_decimals;
+        let price = asset.1.default_price as f64;
+
+        stork_prices.push((
+            Bits256::from_hex_str(&config.price_feed_id).unwrap(),
+            (price, exponent, stork_publish_time, stork_confidence),
+        ));
+
+        stork_asset_price_feeds.insert(
+            asset.1.asset_id,
+            (
+                Bits256::from_hex_str(&config.price_feed_id).unwrap(),
+                config.price_feed_decimals,
+            ),
+        );
+
+        println!("[Stork] Price for {} = {}", asset.1.symbol, price);
+    }
+
+    if stork_prices.len() > 0 {
+        let price_feed_count = stork_prices.len();
+
+        let update_data = stork_mock_oracle
+            .create_update_data(&stork_prices)
+            .await
+            .unwrap();
+
+        let update_data_market_types = stork_mock_oracle
+            .create_update_data_market_types(&stork_prices)
+            .await
+            .unwrap();
+
+        stork_mock_oracle
+            .update_prices(update_data, price_feed_count as u64)
+            .await
+            .unwrap();
+
+        oracle_inputs.push(OracleInput::Stork(StorkOracleInput {
+            oracle_id: *contract_id_to_index
+                .get(&ContractId::from(stork_mock_oracle.instance.contract_id()))
+                .unwrap(),
+            update_data: update_data_market_types,
+        }));
+
+        oracle_total_update_fee += price_feed_count as u64;
+    }
+
     TestData {
         wallets: wallets.clone(),
         admin: admin.clone(),
@@ -176,7 +363,6 @@ pub async fn setup(debug_step: Option<u64>, base_asset: TestBaseAsset) -> TestDa
         bob_account: bob.address().into(),
         chad: chad.clone(),
         chad_account: chad.address().into(),
-        oracle,
         market,
         usdc: usdc.clone(),
         usdc_contract,
@@ -185,9 +371,15 @@ pub async fn setup(debug_step: Option<u64>, base_asset: TestBaseAsset) -> TestDa
         uni: uni.clone(),
         uni_contract,
         eth: eth.clone(),
-        price_feed_ids,
-        publish_time,
         assets,
-        prices,
+        oracle_inputs,
+        oracle_total_update_fee,
+        pyth_mock_oracle,
+        pyth_prices: prices,
+        pyth_asset_price_feeds,
+        stork_mock_oracle,
+        stork_prices,
+        stork_asset_price_feeds,
+        oracle_contract_id_to_index: contract_id_to_index,
     }
 }

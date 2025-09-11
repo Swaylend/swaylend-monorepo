@@ -12,8 +12,13 @@ mod events;
 
 use events::*;
 
-use pyth_interface::{data_structures::price::{Price, PriceFeedId}, PythCore};
-use market_abi::{Market, structs::*,};
+use pyth_interface::{data_structures::price::PriceFeedId, PythCore};
+use market_abi::{
+    Market, 
+    structs::*, 
+    oracle_structs::*,
+    errors::*
+};
 use std::asset::{mint_to, transfer};
 use std::auth::{AuthError, msg_sender};
 use std::call_frames::msg_asset_id;
@@ -27,18 +32,14 @@ use std::u128::U128;
 use std::vec::Vec;
 use std::bytes::Bytes;
 use std::convert::TryFrom;
-use sway_libs::reentrancy::reentrancy_guard;
-use standards::src5::{SRC5, State};
-use sway_libs::ownership::*;
-use sway_libs::signed_integers::i256::I256;
+
+use reentrancy::reentrancy_guard;
+use src5::{SRC5, State};
+use ownership::*;
+use signed_int::i256::I256;
 
 // version of the smart contract
-const VERSION: u8 = 5_u8;
-
-// pyth oracle configuration params
-const ORACLE_MAX_STALENESS: u64 = 60; // 60 seconds
-const ORACLE_MAX_AHEADNESS: u64 = 60; // 60 seconds
-const ORACLE_MAX_CONF_WIDTH: u256 = 300; // 300 / 10000 = 3.0 % 
+const VERSION: u8 = 1_u8;
 
 // This is set during deployment of the contract
 configurable {
@@ -52,6 +53,14 @@ storage {
     collateral_configurations: StorageMap<AssetId, CollateralConfiguration> = StorageMap {},
     // list of asset ids of collateral assets
     collateral_configurations_keys: StorageVec<AssetId> = StorageVec {},
+    // oracle configurations
+    oracle_global_configurations: StorageMap<u64, OracleGlobalConfiguration> = StorageMap {},
+    // list of oracle ids
+    oracle_global_configurations_keys: StorageVec<u64> = StorageVec {},
+    // oracle asset configurations
+    oracle_asset_configurations: StorageMap<AssetId, StorageVec<OracleAssetConfiguration>> = StorageMap {},
+    // list of asset ids of oracle asset configurations
+    oracle_asset_configurations_keys: StorageVec<AssetId> = StorageVec {},
     // booleans to pause certain functionalities
     pause_config: PauseConfiguration = PauseConfiguration::default(),
     // total collateral for each asset
@@ -64,8 +73,6 @@ storage {
     market_basic: MarketBasics = MarketBasics::default(),
     // debug timestamp (for testing purposes)
     debug_timestamp: u64 = 0,
-    // pyth contract id
-    pyth_contract_id: ContractId = ContractId::zero(),
 }
 
 // Market contract implementation
@@ -115,7 +122,7 @@ impl Market for Contract {
         let pause_config = PauseConfiguration {
             supply_paused: false,
             withdraw_paused: false,
-            absorb_paused: false,
+            absorb_paused: false,   
             buy_paused: false,
         };
 
@@ -165,7 +172,7 @@ impl Market for Contract {
     /// * When the asset already exists, indicated by a non-`None` value in the storage.
     ///
     /// # Number of Storage Accesses
-    /// * Writes: `2`
+    /// * Writes: `4`
     /// * Reads: `1`
     #[storage(write)]
     fn add_collateral_asset(configuration: CollateralConfiguration) {
@@ -189,65 +196,17 @@ impl Market for Contract {
             .collateral_configurations_keys
             .push(configuration.asset_id);
 
+        // Add empty oracle asset configurations
+        storage.oracle_asset_configurations.insert(configuration.asset_id, StorageVec {});
+        storage.oracle_asset_configurations_keys.push(configuration.asset_id);
+
         log(CollateralAssetAdded {
             asset_id: configuration.asset_id,
             configuration,
         });
     }
 
-    // ## 2.2 Pause an existing collateral asset
-    /// # Arguments
-    /// * `asset_id`: [AssetId] - The asset ID of the collateral asset to be paused.
-    ///
-    /// # Reverts
-    /// * When the caller is not the owner.
-    ///
-    /// # Number of Storage Accesses
-    /// * Writes: `1`
-    /// * Reads: `1`   
-    #[storage(write)]
-    fn pause_collateral_asset(asset_id: AssetId) {
-        // Only owner can pause collateral asset
-        only_owner();
-
-        let mut configuration = storage.collateral_configurations.get(asset_id).read();
-        configuration.paused = true;
-        storage
-            .collateral_configurations
-            .insert(asset_id, configuration);
-
-        log(CollateralAssetPaused {
-            asset_id: configuration.asset_id,
-        });
-    }
-
-    // ## 2.3 Resume a paused collateral asset
-    /// # Arguments
-    /// * `asset_id`: [AssetId] - The asset ID of the collateral asset to be resumed.
-    ///
-    /// # Reverts
-    /// * When the caller is not the owner.
-    ///
-    /// # Number of Storage Accesses
-    /// * Writes: `1`
-    /// * Reads: `1`
-    #[storage(write)]
-    fn resume_collateral_asset(asset_id: AssetId) {
-        // Only owner can resume collateral asset
-        only_owner();
-
-        let mut configuration = storage.collateral_configurations.get(asset_id).read();
-        configuration.paused = false;
-        storage
-            .collateral_configurations
-            .insert(asset_id, configuration);
-
-        log(CollateralAssetResumed {
-            asset_id: configuration.asset_id,
-        });
-    }
-
-    // ## 2.4 Update an existing collateral asset configuration
+    // ## 2.2 Update an existing collateral asset configuration
     /// # Arguments
     /// * `asset_id`: [AssetId] - The asset ID of the collateral asset to be updated.
     /// * `configuration`: [CollateralConfiguration] - The new collateral configuration.
@@ -284,7 +243,7 @@ impl Market for Contract {
         });
     }
 
-    // ## 2.5 Get all collateral asset configurations
+    // ## 2.3 Get all collateral asset configurations
     /// This function retrieves all collateral asset configurations in the market.
     ///
     /// # Returns
@@ -367,9 +326,10 @@ impl Market for Contract {
     /// # Arguments
     /// * `asset_id`: [AssetId] - The asset ID of the collateral asset to be withdrawn.
     /// * `amount`: [u64] - The amount of collateral to be withdrawn.
-    /// * `price_data_update`: [PriceDataUpdate] - The price data update struct to be used for updating the price feeds.
+    /// * `oracle_inputs`: [Vec<OracleInput>] - The oracle inputs to be used for updating the price feeds.
     ///
     /// # Reverts
+    /// * When the withdraw operation is paused.
     /// * When the user is not collateralized.
     ///
     /// # Number of Storage Accesses
@@ -379,7 +339,7 @@ impl Market for Contract {
     fn withdraw_collateral(
         asset_id: AssetId,
         amount: u64,
-        price_data_update: PriceDataUpdate,
+        oracle_inputs: Vec<OracleInput>,
     ) {
         reentrancy_guard();
 
@@ -398,7 +358,7 @@ impl Market for Contract {
             .insert((caller, asset_id), user_collateral);
 
         // Update price data
-        update_price_feeds_if_necessary_internal(price_data_update);
+        update_price_feeds_internal(oracle_inputs);
 
         // Note: no accrue interest, BorrowCollateralFactor < LiquidationCollateralFactor covers small changes
         // Check if the user is borrow collateralized
@@ -424,7 +384,7 @@ impl Market for Contract {
     /// * [u64] - The amount of collateral the user has supplied for the specified asset.
     ///
     /// # Number of Storage Accesses
-    /// * Writes: `1`
+    /// * Reads: `1`
     #[storage(read)]
     fn get_user_collateral(account: Identity, asset_id: AssetId) -> u64 {
         storage.user_collateral.get((account, asset_id)).try_read().unwrap_or(0)
@@ -439,7 +399,6 @@ impl Market for Contract {
     /// * [Vec<(AssetId, u64)>] - A list of tuples containing the asset ID and total collateral for each collateral asset.
     ///
     /// # Number of Storage Accesses
-    /// * Writes: `storage.collateral_configurations_keys.len()`
     /// * Reads: `1 + storage.collateral_configurations_keys.len() * 3`
     #[storage(read)]
     fn get_all_user_collateral(account: Identity) -> Vec<(AssetId, u64)> {
@@ -467,7 +426,7 @@ impl Market for Contract {
     /// * [u64] - The total collateral ammount.
 
     /// # Number of Storage Accesses
-    /// * Writes: `1`
+    /// * Reads: `1`
     #[storage(read)]
     fn totals_collateral(asset_id: AssetId) -> u64 {
         storage.totals_collateral.get(asset_id).try_read().unwrap_or(0)
@@ -579,16 +538,19 @@ impl Market for Contract {
     ///
     /// # Arguments
     /// * `amount`: [u64] - The amount of base asset to be withdrawn.
-    /// * `price_data_update`: [PriceDataUpdate] - The price data update struct to be used for updating the price feeds.
+    /// * `oracle_inputs`: [Vec<OracleInput>] - The oracle inputs to be used for updating the price feeds.
     ///
     /// # Reverts
-    /// * When the user is not collateralized.
+    /// * When the withdraw operation is paused.
+    /// * When the amount is invalid (zero or negative).
+    /// * When the borrow amount is too small (below minimum).
+    /// * When the user is not collateralized (if borrowing is required).
     ///
     /// # Number of Storage Accesses
     /// * Writes: `3`
     /// * Reads: `5`
     #[payable, storage(write)]
-    fn withdraw_base(amount: u64, price_data_update: PriceDataUpdate) {
+    fn withdraw_base(amount: u64, oracle_inputs: Vec<OracleInput>) {
         reentrancy_guard();
 
         // Only allow withdrawing if paused flag is not set
@@ -644,7 +606,7 @@ impl Market for Contract {
             );
 
             // Update price data
-            update_price_feeds_if_necessary_internal(price_data_update);
+            update_price_feeds_internal(oracle_inputs);
 
             // Check that the user is borrow collateralized
             require(is_borrow_collateralized(caller), Error::NotCollateralized);
@@ -711,10 +673,10 @@ impl Market for Contract {
                 continue;
             }
 
-            let price = get_price_internal(collateral_configuration.price_feed_id, PricePosition::LowerBound); // decimals: price.exponent
+            let price = get_price_internal(collateral_configuration.asset_id, PricePosition::LowerBound); // decimals: price.exponent
             let price_exponent = price.exponent;
             let price_scale = u256::from(10_u64).pow(price.exponent);
-            let price = u256::from(price.price); // decimals: price.exponent
+            let price = price.price; // decimals: price.exponent
             let amount = balance * collateral_configuration.borrow_collateral_factor / FACTOR_SCALE_18; // decimals: collateral_configuration.decimals
             let collateral_scale = u256::from(10_u64).pow(collateral_configuration.decimals);
             let base_asset_scale = u256::from(10_u64).pow(market_configuration.base_token_decimals);
@@ -724,9 +686,9 @@ impl Market for Contract {
         };
 
         // Get the base token price 
-        let base_price = get_price_internal(market_configuration.base_token_price_feed_id, PricePosition::Middle); // decimals: base_price.exponent
+        let base_price = get_price_internal(market_configuration.base_token, PricePosition::Middle); // decimals: base_price.exponent
         let base_price_scale = u256::from(10_u64).pow(base_price.exponent);
-        let base_price = u256::from(base_price.price); // decimals: base_price.exponent
+        let base_price = base_price.price; // decimals: base_price.exponent
 
         let borrow_limit = borrow_limit * base_price_scale / base_price; // decimals: base_token_decimals
 
@@ -745,13 +707,16 @@ impl Market for Contract {
     ///
     /// # Arguments
     /// * `accounts`: [Vec<Identity>] - The list of underwater accounts to be absorbed.
-    /// * `price_data_update`: [PriceDataUpdate] - The price data update struct to be used for updating the price feeds.
+    /// * `oracle_inputs`: [Vec<OracleInput>] - The oracle inputs to be used for updating the price feeds.
+    ///
+    /// # Reverts
+    /// * When the absorb operation is paused.
     ///
     /// # Number of Storage Accesses
     /// * Writes: `2 + accounts.len() * 4`
     /// * Reads: `5 + accounts.len() * 5`
     #[payable, storage(write)]
-    fn absorb(accounts: Vec<Identity>, price_data_update: PriceDataUpdate) {
+    fn absorb(accounts: Vec<Identity>, oracle_inputs: Vec<OracleInput>) {
         reentrancy_guard();
 
         // Check that the pause flag is not set
@@ -761,7 +726,7 @@ impl Market for Contract {
         accrue_internal();
 
         // Update price data
-        update_price_feeds_if_necessary_internal(price_data_update);
+        update_price_feeds_internal(oracle_inputs);
 
         let mut index = 0;
         // Loop and absorb each account
@@ -775,13 +740,13 @@ impl Market for Contract {
     /// This function checks if an account is liquidatable.
     ///
     /// # Arguments
-    /// * account: [Identity] - The account to be checked.
+    /// * `account`: [Identity] - The account to be checked.
     ///
     /// # Returns
     /// * [bool] - True if the account is liquidatable, False otherwise.
     ///
     /// # Number of Storage Accesses
-    /// * Reads: 1
+    /// * Reads: `6 + storage.collateral_configurations_keys.len() * 4`
     #[storage(read)]
     fn is_liquidatable(account: Identity) -> bool {
         let present = get_user_balance_with_interest_internal(account);
@@ -880,16 +845,16 @@ impl Market for Contract {
         let market_configuration = storage.market_configuration.read();
 
         // Get the collateral asset price
-        let asset_price = get_price_internal(collateral_configuration.price_feed_id, PricePosition::UpperBound); // decimals: asset_price.exponent
+        let asset_price = get_price_internal(collateral_configuration.asset_id, PricePosition::UpperBound); // decimals: asset_price.exponent
         let asset_price_scale = u256::from(10_u64).pow(asset_price.exponent);
-        let asset_price = u256::from(asset_price.price); // decimals: asset_price.exponent
+        let asset_price = asset_price.price; // decimals: asset_price.exponent
         let discount_factor: u256 = market_configuration.store_front_price_factor * (FACTOR_SCALE_18 - collateral_configuration.liquidation_penalty) / FACTOR_SCALE_18; // decimals: 18
         let asset_price_discounted: u256 = asset_price * (FACTOR_SCALE_18 - discount_factor) / FACTOR_SCALE_18; // decimals: asset_price.exponent
 
         // Get the base token price 
-        let base_price = get_price_internal(market_configuration.base_token_price_feed_id, PricePosition::Middle); // decimals: base_price.exponent
+        let base_price = get_price_internal(market_configuration.base_token, PricePosition::Middle); // decimals: base_price.exponent
         let base_price_scale = u256::from(10_u64).pow(base_price.exponent);
-        let base_price = u256::from(base_price.price); // decimals: base_price.exponent
+        let base_price = base_price.price; // decimals: base_price.exponent
         let collateral_scale = u256::from(10_u64).pow(collateral_configuration.decimals);
         let base_asset_scale = u256::from(10_u64).pow(market_configuration.base_token_decimals);
 
@@ -1019,9 +984,6 @@ impl Market for Contract {
     ///
     /// # Returns
     /// * [PauseConfiguration] - The current pause configuration settings.
-    ///
-    /// # Number of Storage Accesses
-    /// * Reads: `1`
     ///
     /// # Number of Storage Accesses
     /// * Reads: `1`
@@ -1187,96 +1149,38 @@ impl Market for Contract {
         get_borrow_rate_internal(utilization)
     }
 
-    // ## 10. Pyth Oracle management
-    /// This function sets the Pyth contract ID, allowing the contract to interact with the Pyth oracle.
-    ///
-    /// # Arguments:
-    /// * `contract_id`: [ContractId] - The contract ID of the Pyth oracle to be set.
-    ///
-    /// # Reverts
-    /// * When the caller is not the owner.
-    ///
-    /// # Number of Storage Accesses
-    /// * Writes: `1`
-    #[storage(write)]
-    fn set_pyth_contract_id(contract_id: ContractId) {
-        // Only owner can set the Pyth contract ID
-        only_owner();
-        storage.pyth_contract_id.write(contract_id);
-
-        // Emit Pyth contract ID set event
-        log(SetPythContractIdEvent { contract_id });
-    }
-
-    /// This function retrieves the contract ID of the Pyth contract.
-    ///
-    /// # Returns
-    /// * [ContractId] - The contract ID of the Pyth contract.
-    ///
-    /// # Number of Storage Accesses
-    /// * Reads: `1`
-    #[storage(read)]
-    fn get_pyth_contract_id() -> ContractId {
-        storage.pyth_contract_id.read()
-    }
-
-    /// This function ensures that the price data is fresh and meets the required validation criteria.
+    /// This function retrieves the price for a specified asset from the oracle system.
     ///
     /// # Arguments
-    /// * `price_feed_id`: [PriceFeedId] - The ID of the price feed for which the price is being retrieved.
+    /// * `asset_id`: [AssetId] - The ID of the asset for which the price is being retrieved.
     ///
     /// # Returns
     /// * [Price] - The price data retrieved from the oracle.
     ///
     /// # Reverts
-    /// * When the `contract_id` is zero, indicating the oracle contract ID is not set.
-    /// * When the price is stale or ahead of the current timestamp.
-    /// * When the price is less than or equal to zero.
-    /// * When the confidence value exceeds the allowed width.
+    /// * When no valid price is found from any oracle.
     ///
     /// # Number of Storage Accesses
-    /// * Reads: `1`
+    /// * Reads: `2 + oracle_asset_configurations.len() * 2`
     #[storage(read)]
-    fn get_price(price_feed_id: PriceFeedId) -> Price {
-        get_price_internal(price_feed_id, PricePosition::Middle)
+    fn get_price(asset_id: AssetId) -> Price {
+        get_price_internal(asset_id, PricePosition::Middle)
     }
 
-    /// This function interacts with an external oracle to obtain the update fee and ensures that the contract ID is valid.
+    /// This function updates the price feeds using the provided oracle inputs.
     ///
     /// # Arguments
-    /// * `update_data`: [Vec<Bytes>] - The data used for the fee update request.
-    ///
-    /// # Returns
-    /// * [u64] - The update fee retrieved from the oracle.
-    ///
-    /// # Reverts
-    /// * When the contract ID is not set (i.e., it is zero).
-    ///
-    /// # Number of Storage Accesses
-    /// * Reads: `1`
-    #[storage(read)]
-    fn update_fee(update_data: Vec<Bytes>) -> u64 {
-        update_fee_internal(update_data)
-    }
-
-    /// This function ensures that the provided price data update is valid and performs an update if the conditions are met.
-    ///
-    /// # Arguments
-    /// * `price_data_update`: [PriceDataUpdate] - The data necessary for updating the price feeds.
+    /// * `oracle_inputs`: [Vec<OracleInput>] - The oracle inputs necessary for updating the price feeds.
     ///
     /// # Returns
     /// This function does not return a value.
     ///
-    /// # Reverts
-    /// * When the contract ID is not set (i.e., it is zero).
-    /// * When the payment amount is insufficient or the asset ID is not the base asset.
-    ///
     /// # Number of Storage Accesses
-    /// * Reads: `1`
+    /// * Reads: `0`
     #[payable, storage(read)]
-    fn update_price_feeds_if_necessary(price_data_update: PriceDataUpdate) {
+    fn update_price_feeds(oracle_inputs: Vec<OracleInput>) {
         reentrancy_guard();
-        update_price_feeds_if_necessary_internal(price_data_update)
+        update_price_feeds_internal(oracle_inputs)
     }
 
     // ## 11. Changing market configuration
@@ -1327,16 +1231,259 @@ impl Market for Contract {
         transfer_ownership(new_owner);
     }
 
-    // This function allows the current owner to renounce their ownership of the contract, making it ownerless.
+    /// This function allows the current owner to renounce their ownership of the contract, making it ownerless.
     ///
     /// # Additional Information
     /// This action is irreversible and should be done with caution, as it removes all ownership privileges.
     ///
+    /// # Reverts
+    /// * When the caller is not the current owner.
+    ///
     /// # Number of Storage Accesses
+    /// * Writes: `1`
     /// * Reads: `1`
     #[storage(write)]
     fn renounce_ownership() {
         renounce_ownership();
+    }
+
+    // ## 13. Oracle management
+    /// This function adds a new global oracle configuration to the market.
+    ///
+    /// # Arguments
+    /// * `oracle_configuration`: [OracleGlobalConfiguration] - The global oracle configuration to be added.
+    ///
+    /// # Reverts
+    /// * When the caller is not the owner.
+    /// * When an oracle with the same contract ID already exists.
+    ///
+    /// # Number of Storage Accesses
+    /// * Writes: `2`
+    /// * Reads: `2 + storage.oracle_global_configurations_keys.len() * 2`
+    #[storage(write)]
+    fn add_new_global_oracle(oracle_configuration: OracleGlobalConfiguration) {
+        // Only owner can add a new oracle
+        only_owner();
+
+        // Check if oracle with contract_id already exists
+        let len = storage.oracle_global_configurations_keys.len();
+        let mut index = 0;
+
+        while index < len {
+            let stored_oracle_configuration = storage.oracle_global_configurations.get(storage.oracle_global_configurations_keys.get(index).unwrap().read()).read();
+            require(oracle_configuration.contract_id != stored_oracle_configuration.contract_id, Error::GlobalOracleAlreadyExists);
+            index += 1;
+        }
+
+        let oracle_id = storage.oracle_global_configurations_keys.len();
+        storage.oracle_global_configurations_keys.push(oracle_id);
+        storage.oracle_global_configurations.insert(oracle_id, oracle_configuration);
+
+        // Emit global oracle added event
+        log(GlobalOracleAddedEvent {
+            oracle_id,
+            oracle_configuration,
+        });
+    }
+
+    /// This function updates an existing global oracle configuration.
+    ///
+    /// # Arguments
+    /// * `oracle_id`: [u64] - The ID of the oracle to be updated.
+    /// * `oracle_configuration`: [OracleGlobalConfiguration] - The new oracle configuration.
+    ///
+    /// # Reverts
+    /// * When the caller is not the owner.
+    /// * When the oracle with the specified ID does not exist.
+    ///
+    /// # Number of Storage Accesses
+    /// * Writes: `1`
+    /// * Reads: `1`
+    #[storage(write)]
+    fn update_global_oracle(oracle_id: u64, oracle_configuration: OracleGlobalConfiguration) {
+        // Only owner can update an oracle
+        only_owner();
+
+        // Check if oracle exists
+        require(
+            storage
+                .oracle_global_configurations
+                .get(oracle_id)
+                .try_read()
+                .is_some(),
+            Error::GlobalOracleNotFound,
+        );
+
+        storage.oracle_global_configurations.insert(oracle_id, oracle_configuration);
+        
+        // Emit global oracle updated event
+        log(GlobalOracleUpdatedEvent {
+            oracle_id,
+            oracle_configuration,
+        });
+    }
+
+    /// This function retrieves all global oracle configurations in the market.
+    ///
+    /// # Returns
+    /// * [Vec<OracleGlobalConfiguration>] - A list of all global oracle configurations.
+    ///
+    /// # Number of Storage Accesses
+    /// * Reads: `1 + storage.oracle_global_configurations_keys.len() * 2`
+    #[storage(read)]
+    fn get_oracle_global_configurations() -> Vec<OracleGlobalConfiguration> {
+        let mut result = Vec::new();
+        let mut index = 0;
+
+        let len = storage.oracle_global_configurations_keys.len();
+
+        while index < len {
+            let oracle_configuration = storage.oracle_global_configurations.get(storage.oracle_global_configurations_keys.get(index).unwrap().read()).read();
+            result.push(oracle_configuration);
+            index += 1;
+        }
+
+        result
+    }
+
+    /// This function adds a new oracle configuration for a specific asset.
+    ///
+    /// # Arguments
+    /// * `asset_id`: [AssetId] - The asset ID for which the oracle configuration is being added.
+    /// * `oracle_configuration`: [OracleAssetConfiguration] - The oracle configuration to be added.
+    ///
+    /// # Reverts
+    /// * When the caller is not the owner.
+    /// * When the referenced global oracle configuration does not exist.
+    /// * When an oracle configuration with the same oracle ID already exists for this asset.
+    ///
+    /// # Number of Storage Accesses
+    /// * Writes: `1`
+    /// * Reads: `2 + asset_oracle_configurations.len()`
+    #[storage(write)]
+    fn add_new_asset_oracle(asset_id: AssetId, oracle_configuration: OracleAssetConfiguration) {
+        // Only owner can add a new oracle
+        only_owner();
+
+        // Global oracle configuration must exist
+        require(
+            storage
+                .oracle_global_configurations
+                .get(oracle_configuration.oracle_id)
+                .try_read()
+                .is_some(),
+            Error::GlobalOracleNotFound,
+        );
+
+        // Check if oracle with contract_id already exists
+        let asset_oracle_configurations: StorageKey<StorageVec<OracleAssetConfiguration>> = storage.oracle_asset_configurations.get(asset_id);
+        let len = asset_oracle_configurations.len();
+        let mut index = 0;
+
+        while index < len {
+            let stored_oracle_configuration = asset_oracle_configurations.get(index).unwrap().try_read().unwrap();
+            require(oracle_configuration.oracle_id != stored_oracle_configuration.oracle_id, Error::AssetOracleAlreadyExists);
+            index += 1;
+        }
+
+        asset_oracle_configurations.push(oracle_configuration);
+
+        // Emit asset oracle added event
+        log(AssetOracleAddedEvent {
+            asset_id,
+            oracle_configuration,
+        });
+    }
+
+    /// This function updates an existing oracle configuration for a specific asset.
+    ///
+    /// # Arguments
+    /// * `asset_id`: [AssetId] - The asset ID for which the oracle configuration is being updated.
+    /// * `oracle_configuration`: [OracleAssetConfiguration] - The new oracle configuration.
+    ///
+    /// # Reverts
+    /// * When the caller is not the owner.
+    /// * When the referenced global oracle configuration does not exist.
+    /// * When the oracle configuration with the specified oracle ID is not found for this asset.
+    ///
+    /// # Number of Storage Accesses
+    /// * Writes: `2`
+    /// * Reads: `2 + asset_oracle_configurations.len()`
+    #[storage(write)]
+    fn update_asset_oracle(asset_id: AssetId, oracle_configuration: OracleAssetConfiguration) {
+        // Only owner can update an oracle
+        only_owner();
+
+        // Global oracle configuration must exist
+        require(
+            storage
+                .oracle_global_configurations
+                .get(oracle_configuration.oracle_id)
+                .try_read()
+                .is_some(),
+            Error::GlobalOracleNotFound,
+        );
+
+        // Check if oracle exists
+        let asset_oracle_configurations: StorageKey<StorageVec<OracleAssetConfiguration>> = storage.oracle_asset_configurations.get(asset_id);
+        let len = asset_oracle_configurations.len();
+        let mut index = 0;
+        let mut found = false;
+
+        while index < len {
+            let stored_oracle_configuration = asset_oracle_configurations.get(index).unwrap().try_read().unwrap();
+            if stored_oracle_configuration.oracle_id == oracle_configuration.oracle_id {
+                found = true;
+                asset_oracle_configurations.remove(index);
+                break;
+            }
+            index += 1;
+        }
+
+        require(found, Error::AssetOracleNotFound);
+
+        asset_oracle_configurations.push(oracle_configuration);
+       
+        // Emit asset oracle updated event
+        log(AssetOracleUpdatedEvent {
+            asset_id,
+            oracle_configuration,
+        });
+    }
+
+
+    /// This function retrieves all oracle asset configurations for all assets in the market.
+    ///
+    /// # Returns
+    /// * [Vec<(AssetId, Vec<OracleAssetConfiguration>)>] - A list of tuples containing asset IDs and their corresponding oracle configurations.
+    ///
+    /// # Number of Storage Accesses
+    /// * Reads: `4 + storage.oracle_asset_configurations_keys.len() * 3`
+    #[storage(read)]
+    fn get_oracle_asset_configurations() -> Vec<(AssetId, Vec<OracleAssetConfiguration>)> {
+        let mut result: Vec<(AssetId, Vec<OracleAssetConfiguration>)> = Vec::new();
+
+        // Add asset oracle configurations
+        let len = storage.oracle_asset_configurations_keys.len();
+        let mut index = 0;
+
+        while index < len {
+            let asset_id: AssetId = storage.oracle_asset_configurations_keys.get(index).unwrap().read();
+            let oracle_asset_configurations: StorageKey<StorageVec<OracleAssetConfiguration>> = storage.oracle_asset_configurations.get(asset_id);
+            let configurations = oracle_asset_configurations.load_vec();
+
+            result.push((asset_id, configurations));
+            index += 1;
+        }
+
+        // Add base asset oracle configuration
+        let base_asset_id = storage.market_configuration.read().base_token;
+        let base_asset_oracle_configurations: StorageKey<StorageVec<OracleAssetConfiguration>> = storage.oracle_asset_configurations.get(base_asset_id);
+        let base_asset_configurations = base_asset_oracle_configurations.load_vec();
+
+        result.push((base_asset_id, base_asset_configurations));
+
+        result
     }
 }
 
@@ -1347,54 +1494,74 @@ impl SRC5 for Contract {
     }
 }
 
-/// This function ensures that the price data is fresh and meets the required validation criteria.
+/// This function retrieves the price for a specified asset from the oracle system.
 ///
 /// # Arguments
-/// * `price_feed_id`: [PriceFeedId] - The ID of the price feed for which the price is being retrieved.
+/// * `asset_id`: [AssetId] - The ID of the asset for which the price is being retrieved.
+/// * `price_position`: [PricePosition] - The position for price calculation (LowerBound, Middle, UpperBound).
 ///
 /// # Returns
 /// * [Price] - The price data retrieved from the oracle.
 ///
 /// # Reverts
-/// * When the `contract_id` is zero, indicating the oracle contract ID is not set.
-/// * When the price is stale or ahead of the current timestamp.
-/// * When the price is less than or equal to zero.
-/// * When the confidence value exceeds the allowed width.
+/// * When no valid price is found from any oracle.
 ///
 /// # Number of Storage Accesses
-/// * Reads: `1`
+/// * Reads: `2 + oracle_asset_configurations.len() * 2`
 #[storage(read)]
-fn get_price_internal(price_feed_id: PriceFeedId, price_position: PricePosition) -> Price {
-    let contract_id = storage.pyth_contract_id.read();
-    require(
-        contract_id != ContractId::zero(),
-        Error::OracleContractIdNotSet,
-    );
-
-    let oracle = abi(PythCore, contract_id.bits());
-    let mut price = oracle.price(price_feed_id);
-
-    // validate values
-    if price.publish_time < std::block::timestamp() {
-        let staleness = std::block::timestamp() - price.publish_time;
-        require(
-            staleness <= ORACLE_MAX_STALENESS,
-            Error::OraclePriceValidationError,
-        );
+fn get_price_internal(asset_id: AssetId, price_position: PricePosition) -> Price {
+    let oracle_asset_configurations: StorageKey<StorageVec<OracleAssetConfiguration>> = storage.oracle_asset_configurations.get(asset_id);
+    let oracle_max_confidence_width = if asset_id == storage.market_configuration.read().base_token {
+        storage.market_configuration.read().oracle_max_confidence_width
     } else {
-        let aheadness = price.publish_time - std::block::timestamp();
-        require(
-            aheadness <= ORACLE_MAX_AHEADNESS,
-            Error::OraclePriceValidationError,
-        );
+       storage.collateral_configurations.get(asset_id).try_read().unwrap().oracle_max_confidence_width
+    };
+
+    let mut price = Price {
+        price: 0,
+        exponent: 0,
+        confidence: 0,
+        publish_time: 0,
+    };
+
+    let mut is_price_valid = false;
+
+    // Loop through oracle asset configurations and return the first successful price. Revert if no price is found.
+    let mut index = 0;
+    let len = oracle_asset_configurations.len();
+
+    while index < len {
+        let oracle_asset_configuration: OracleAssetConfiguration = oracle_asset_configurations.get(index).unwrap().try_read().unwrap();
+
+        // Check if oracle is disabled
+        if !oracle_asset_configuration.is_disabled {
+            // Get the price feed id
+            let price_feed_id = oracle_asset_configuration.price_feed_id;
+
+            // Get global oracle configuration
+            let oracle_configuration: OracleGlobalConfiguration = storage.oracle_global_configurations.get(oracle_asset_configuration.oracle_id).try_read().unwrap();
+
+            if !oracle_configuration.is_disabled {
+                let oracle = Oracle {
+                    contract_id: oracle_configuration.contract_id,
+                    oracle_type: oracle_configuration.oracle_type,
+                };
+
+
+                let (is_fetched_price_valid, fetched_price) = oracle.get_price(price_feed_id, oracle_max_confidence_width);
+
+                if is_fetched_price_valid {
+                    price = fetched_price;
+                    is_price_valid = true;
+                    break;
+                }
+            }
+        }
+        
+        index += 1;
     }
 
-    require(price.price != 0, Error::OraclePriceValidationError);
-
-    require(
-        u256::from(price.confidence) <= (u256::from(price.price) * ORACLE_MAX_CONF_WIDTH / ORACLE_CONF_BASIS_POINTS),
-        Error::OraclePriceValidationError,
-    );
+    require(is_price_valid, Error::OracleNoValidPrice);
 
     if price_position == PricePosition::LowerBound {
         price.price = price.price - price.confidence;
@@ -1405,74 +1572,49 @@ fn get_price_internal(price_feed_id: PriceFeedId, price_position: PricePosition)
     price
 }
 
-/// This function interacts with an external oracle to obtain the update fee and ensures that the contract ID is valid.
+/// This function updates the price feeds using the provided oracle inputs.
 ///
 /// # Arguments
-/// * `update_data`: [Vec<Bytes>] - The data used for the fee update request.
-///
-/// # Returns
-/// * [u64] - The update fee retrieved from the oracle.
-///
-/// # Reverts
-/// * When the contract ID is not set (i.e., it is zero).
-///
-/// # Number of Storage Accesses
-/// * Reads: `1`
-#[storage(read)]
-fn update_fee_internal(update_data: Vec<Bytes>) -> u64 {
-    let contract_id = storage.pyth_contract_id.read();
-    require(
-        contract_id != ContractId::zero(),
-        Error::OracleContractIdNotSet,
-    );
-
-    let oracle = abi(PythCore, contract_id.bits());
-    let fee = oracle.update_fee(update_data);
-    fee
-}
-
-/// This function ensures that the provided price data update is valid and performs an update if the conditions are met.
-///
-/// # Arguments
-/// * `price_data_update`: [PriceDataUpdate] - The data necessary for updating the price feeds.
+/// * `oracle_inputs`: [Vec<OracleInput>] - The oracle inputs necessary for updating the price feeds.
 ///
 /// # Returns
 /// This function does not return a value.
 ///
-/// # Reverts
-/// * When the contract ID is not set (i.e., it is zero).
-/// * When the payment amount is insufficient or the asset ID is not the base asset.
-///
 /// # Number of Storage Accesses
-/// * Reads: `1`
-#[payable, storage(read)]
-fn update_price_feeds_if_necessary_internal(price_data_update: PriceDataUpdate) {
-    let contract_id = storage.pyth_contract_id.read();
-    require(
-        contract_id != ContractId::zero(),
-        Error::OracleContractIdNotSet,
-    );
+/// * Reads: `0`
+#[storage(read)]
+fn update_price_feeds_internal(oracle_inputs: Vec<OracleInput>) {
+    let mut index = 0;
+    let len = oracle_inputs.len();
 
-    // check if the payment is sufficient
-    require(
-        msg_amount() >= price_data_update
-            .update_fee && msg_asset_id() == AssetId::base(),
-        Error::InvalidPayment,
-    );
+    while index < len {
+        let oracle_input = oracle_inputs.get(index).unwrap();
+        
+        let oracle_input_internal = match oracle_input {
+            OracleInput::Pyth(input) => {
+                let oracle_configuration: OracleGlobalConfiguration = storage.oracle_global_configurations.get(input.oracle_id).try_read().unwrap();
 
-    let oracle = abi(PythCore, contract_id.bits());
-    oracle
-        .update_price_feeds_if_necessary {
-            asset_id: AssetId::base().bits(),
-            coins: price_data_update.update_fee,
-        }(
-            price_data_update
-                .price_feed_ids,
-            price_data_update
-                .publish_times,
-            price_data_update
-                .update_data,
-        );
+                OracleInputInternal::Pyth(PythOracleInputInternal {
+                    contract_id: oracle_configuration.contract_id,
+                    publish_times: input.publish_times,
+                    price_feed_ids: input.price_feed_ids,
+                    update_data: input.update_data,
+                })
+            },
+            OracleInput::Stork(input) => {
+                let oracle_configuration: OracleGlobalConfiguration = storage.oracle_global_configurations.get(input.oracle_id).try_read().unwrap();
+
+                OracleInputInternal::Stork(StorkOracleInputInternal {
+                    contract_id: oracle_configuration.contract_id,
+                    update_data: input.update_data,
+                })
+            },
+        };
+
+        Oracle::update_price_feeds(oracle_input_internal);
+
+        index += 1;
+    }
 }
 
 /// Returns the current timestamp or the timestamp of the last debug step if debugging is enabled.
@@ -1797,6 +1939,7 @@ fn is_borrow_collateralized(account: Identity) -> bool {
     let mut index = 0;
     let len = storage.collateral_configurations_keys.len();
 
+
     while index < len {
         let collateral_configuration = storage.collateral_configurations.get(storage.collateral_configurations_keys.get(index).unwrap().read()).read();
 
@@ -1807,20 +1950,24 @@ fn is_borrow_collateralized(account: Identity) -> bool {
             continue;
         }
 
-        let price = get_price_internal(collateral_configuration.price_feed_id, PricePosition::LowerBound); // decimals: price.exponent decimals
+
+
+        let price = get_price_internal(collateral_configuration.asset_id, PricePosition::LowerBound); // decimals: price.exponent decimals
         let price_scale = u256::from(10_u64).pow(price.exponent);
-        let price = u256::from(price.price); // decimals: price.exponent
+        let price = price.price; // decimals: price.exponent
         let collateral_scale = u256::from(10_u64).pow(collateral_configuration.decimals);
         let base_scale = u256::from(10_u64).pow(storage.market_configuration.read().base_token_decimals);
 
         let amount = balance * price / price_scale; // decimals: collateral_configuration.decimals
         borrow_limit += amount * collateral_configuration.borrow_collateral_factor * base_scale / FACTOR_SCALE_18 / collateral_scale; // decimals: base_token_decimals
         index += 1;
+
     }
 
-    let base_token_price = get_price_internal(storage.market_configuration.read().base_token_price_feed_id, PricePosition::Middle); // decimals: base_token_price.exponent 
+
+    let base_token_price = get_price_internal(storage.market_configuration.read().base_token, PricePosition::Middle); // decimals: base_token_price.exponent 
     let base_token_price_scale = u256::from(10_u64).pow(base_token_price.exponent);
-    let base_token_price = u256::from(base_token_price.price);
+    let base_token_price = base_token_price.price;
     let borrow_amount = u256::try_from(present.wrapping_neg()).unwrap() * base_token_price / base_token_price_scale; // decimals: base_token_decimals
     
     borrow_amount <= borrow_limit
@@ -1861,9 +2008,9 @@ fn is_liquidatable_internal(account: Identity, present: I256) -> bool {
             continue;
         }
 
-        let price = get_price_internal(collateral_configuration.price_feed_id, PricePosition::LowerBound); // decimals: price.exponent
+        let price = get_price_internal(collateral_configuration.asset_id, PricePosition::LowerBound); // decimals: price.exponent
         let price_scale = u256::from(10.pow(price.exponent));
-        let price = u256::from(price.price); // decimals: price.exponent
+        let price = price.price; // decimals: price.exponent
         let collateral_scale = u256::from(10_u64).pow(collateral_configuration.decimals);
         let base_scale = u256::from(10_u64).pow(storage.market_configuration.read().base_token_decimals);
 
@@ -1872,9 +2019,9 @@ fn is_liquidatable_internal(account: Identity, present: I256) -> bool {
         index += 1;
     }
 
-    let base_token_price = get_price_internal(storage.market_configuration.read().base_token_price_feed_id, PricePosition::Middle); // decimals: base_token_price.exponent
+    let base_token_price = get_price_internal(storage.market_configuration.read().base_token, PricePosition::Middle); // decimals: base_token_price.exponent
     let base_token_price_scale = u256::from(10_u64).pow(base_token_price.exponent);
-    let base_token_price = u256::from(base_token_price.price); // decimals: base_token_price.exponent
+    let base_token_price = base_token_price.price; // decimals: base_token_price.exponent
     let borrow_amount = present * base_token_price / base_token_price_scale; // decimals: base_token_decimals
 
     borrow_amount > liquidation_treshold
@@ -2095,14 +2242,14 @@ fn quote_collateral_internal(asset_id: AssetId, base_amount: u64) -> u64 {
     let market_configuration = storage.market_configuration.read();
 
     // Get the asset price
-    let asset_price = get_price_internal(collateral_configuration.price_feed_id, PricePosition::UpperBound); // decimals: asset_price.exponent
+    let asset_price = get_price_internal(collateral_configuration.asset_id, PricePosition::UpperBound); // decimals: asset_price.exponent
     let asset_price_scale = u256::from(10_u64).pow(asset_price.exponent);
-    let asset_price = u256::from(asset_price.price); // decimals: asset_price.exponent
+    let asset_price = asset_price.price; // decimals: asset_price.exponent
 
     // Get the base token price
-    let base_price = get_price_internal(market_configuration.base_token_price_feed_id, PricePosition::Middle); // decimals: base_price.exponent 
+    let base_price = get_price_internal(market_configuration.base_token, PricePosition::Middle); // decimals: base_price.exponent 
     let base_price_scale = u256::from(10_u64).pow(base_price.exponent);
-    let base_price = u256::from(base_price.price); // decimals: base_price.exponent 
+    let base_price = base_price.price; // decimals: base_price.exponent 
     let discount_factor: u256 = market_configuration.store_front_price_factor * (FACTOR_SCALE_18 - collateral_configuration.liquidation_penalty) / FACTOR_SCALE_18; // decimals: 18
     let asset_price_discounted: u256 = asset_price * (FACTOR_SCALE_18 - discount_factor) / FACTOR_SCALE_18; // decimals: asset_price.exponent
     let collateral_scale = u256::from(10_u64).pow(collateral_configuration.decimals);
@@ -2205,10 +2352,10 @@ fn absorb_internal(account: Identity) {
             );
 
         // Get price of the collateral asset
-        let price = get_price_internal(collateral_configuration.price_feed_id, PricePosition::LowerBound); // decimals: price.exponent
+        let price = get_price_internal(collateral_configuration.asset_id, PricePosition::LowerBound); // decimals: price.exponent
         let price_exponent = price.exponent;
         let price_scale = u256::from(10_u64).pow(price.exponent);
-        let price = u256::from(price.price); // decimals: price.exponent
+        let price = price.price; // decimals: price.exponent
         let collateral_scale = u256::from(10_u64).pow(collateral_configuration.decimals);
 
         // Apply liquidation penalty to the seized amount
@@ -2230,10 +2377,10 @@ fn absorb_internal(account: Identity) {
     }
 
     // Get the base token price
-    let base_price = get_price_internal(market_configuration.base_token_price_feed_id, PricePosition::Middle); // decimals: base_token_price.exponent
+    let base_price = get_price_internal(market_configuration.base_token, PricePosition::Middle); // decimals: base_token_price.exponent
     let base_price_exponent = base_price.exponent;
     let base_price_scale = u256::from(10_u64).pow(base_price.exponent);
-    let base_price = u256::from(base_price.price); // decimals: base_token_price.exponent
+    let base_price = base_price.price; // decimals: base_token_price.exponent
     let base_scale = (u256::from(10_u64)).pow(market_configuration.base_token_decimals);
 
     // Calculate the new balance of the user

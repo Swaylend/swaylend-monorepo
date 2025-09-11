@@ -1,6 +1,6 @@
 library;
 
-use market_abi::structs::*;
+use market_abi::{structs::*, oracle_structs::*};
 
 // Collateral Asset Events
 
@@ -20,18 +20,6 @@ pub struct CollateralAssetUpdated {
     pub configuration: CollateralConfiguration,
 }
 
-/// This struct represents an event when a collateral asset is paused.
-pub struct CollateralAssetPaused {
-    /// This field represents the ID of the asset that is paused.
-    pub asset_id: AssetId,
-}
-
-/// This struct represents an event when a collateral asset is resumed.
-pub struct CollateralAssetResumed {
-    /// This field represents the ID of the asset that is resumed.
-    pub asset_id: AssetId,
-}
-
 // User Basic Event
 /// This struct represents an event related to a user's basic information.
 pub struct UserBasicEvent {
@@ -49,6 +37,7 @@ pub struct MarketBasicEvent {
 }
 
 // User Collateral Events
+
 /// This struct represents an event when a user supplies collateral.
 pub struct UserSupplyCollateralEvent {
     /// This field represents the identity of the user account.
@@ -70,6 +59,7 @@ pub struct UserWithdrawCollateralEvent {
 }
 
 // User Base Asset Events
+
 /// This struct represents an event when a user supplies base assets.
 pub struct UserSupplyBaseEvent {
     /// This field represents the identity of the user account.
@@ -91,6 +81,7 @@ pub struct UserWithdrawBaseEvent {
 }
 
 // Liquidation Events
+
 /// This struct represents an event when collateral is absorbed.
 pub struct AbsorbCollateralEvent {
     /// This field represents the identity of the user account.
@@ -163,7 +154,36 @@ pub struct MarketConfigurationEvent {
     pub market_config: MarketConfiguration,
 }
 
-// Set pyth contract id event
-pub struct SetPythContractIdEvent {
-    pub contract_id: ContractId,
+// Oracle Events
+
+/// This struct represents an event when a global oracle is added.
+pub struct GlobalOracleAddedEvent {
+    /// This field represents the ID of the global oracle being added.
+    pub oracle_id: u64,
+    /// This field holds the configuration details for the global oracle.
+    pub oracle_configuration: OracleGlobalConfiguration,
+}
+
+/// This struct represents an event when a global oracle is updated.
+pub struct GlobalOracleUpdatedEvent {
+    /// This field represents the ID of the global oracle being updated.
+    pub oracle_id: u64,
+    /// This field holds the updated configuration details for the global oracle.
+    pub oracle_configuration: OracleGlobalConfiguration,
+}
+
+/// This struct represents an event when an asset oracle is added.
+pub struct AssetOracleAddedEvent {
+    /// This field represents the ID of the asset being added.
+    pub asset_id: AssetId,
+    /// This field holds the configuration details for the asset oracle.
+    pub oracle_configuration: OracleAssetConfiguration,
+}
+
+/// This struct represents an event when an asset oracle is updated.
+pub struct AssetOracleUpdatedEvent {
+    /// This field represents the ID of the asset being updated.
+    pub asset_id: AssetId,
+    /// This field holds the updated configuration details for the asset oracle.
+    pub oracle_configuration: OracleAssetConfiguration,
 }

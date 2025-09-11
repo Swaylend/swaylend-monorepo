@@ -2,17 +2,19 @@ name: Swaylend USDC Market (testnet)
 ecosystem: fuel
 networks:
   - id: 0
-    start_block: 11380000
+    start_block: 37000000
     contracts:
       - name: Market
-        address: 0x6030cf103746576706d7dcc2ae6f6b32ba0db66907a8f9901a0170de5f06acc0
+        address: 0x196515642b3715732aaae6683ae75e4a079dd25b6ca6af7863e541d440f8252c
         abi_file_path: ./abi/market-abi.json
-        handler: ./src/EventHandlers.ts
+        handler: ./src/event-handlers.ts
         events:
           - name: CollateralAssetAdded
           - name: CollateralAssetUpdated
-          - name: CollateralAssetPaused
-          - name: CollateralAssetResumed
+          - name: GlobalOracleAddedEvent
+          - name: GlobalOracleUpdatedEvent
+          - name: AssetOracleAddedEvent
+          - name: AssetOracleUpdatedEvent
           - name: UserBasicEvent
           - name: MarketBasicEvent
           - name: UserSupplyCollateralEvent

@@ -4,45 +4,51 @@ version = "0.1.0"
 edition = "2021"
 license = "Apache-2.0"
 
+# Market scripts
 [[bin]]
 name = "activate_market"
-path = "src/activate_market.rs"
+path = "src/market/activate_market.rs"
 
 [[bin]]
 name = "update_collateral_assets"
-path = "src/update_collateral_assets.rs"
+path = "src/market/update_collateral_assets.rs"
 
 [[bin]]
-name = "change_proxy_owner"
-path = "src/change_proxy_owner.rs"
+name = "change_market_proxy_owner"
+path = "src/market/change_market_proxy_owner.rs"
 
 [[bin]]
 name = "change_market_owner"
-path = "src/change_market_owner.rs"
+path = "src/market/change_market_owner.rs"
 
 [[bin]]
 name = "update_market"
-path = "src/update_market.rs"
+path = "src/market/update_market.rs"
 
 [[bin]]
 name = "withdraw_reserves"
-path = "src/withdraw_reserves.rs"
-
-[[bin]]
-name = "deploy_tokens"
-path = "src/deploy_tokens.rs"
-
-[[bin]]
-name = "mint_tokens"
-path = "src/mint_tokens.rs"
-
-[[bin]]
-name = "deploy_pyth"
-path = "src/deploy_pyth.rs"
+path = "src/market/withdraw_reserves.rs"
 
 [[bin]]
 name = "fill_reserves"
-path = "src/fill_reserves.rs"
+path = "src/market/fill_reserves.rs"
+
+[[bin]]
+name = "update_oracle_configuration"
+path = "src/market/update_oracle_configuration.rs"
+
+# Testnet scripts
+[[bin]]
+name = "deploy_tokens"
+path = "src/testnet/deploy_tokens.rs"
+
+[[bin]]
+name = "mint_tokens"
+path = "src/testnet/mint_tokens.rs"
+
+[[bin]]
+name = "deploy_pyth"
+path = "src/testnet/deploy_pyth.rs"
 
 [dependencies]
 fuels = { workspace = true }

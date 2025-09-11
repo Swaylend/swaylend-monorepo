@@ -1,24 +1,26 @@
-import { defineConfig } from '../defineConfig.js';
+import { defineConfig } from '../define-config.js';
 import type { DeployedMarkets } from '../types.js';
 
 export function createTestnetConfig() {
   return defineConfig({
     env: 'testnet',
-    markets: markets,
-    assets: assets,
+    markets,
+    assets,
+    swaylendApi: 'https://testnet-api.swaylend.com',
+    swaylendApiKey: process.env.SWAYLEND_API_KEY!,
   });
 }
 
 const markets: DeployedMarkets = {
   USDC: {
     marketAddress:
-      '0x6030cf103746576706d7dcc2ae6f6b32ba0db66907a8f9901a0170de5f06acc0',
-    startBlock: BigInt(14646058),
+      '0x196515642b3715732aaae6683ae75e4a079dd25b6ca6af7863e541d440f8252c',
+    startBlock: BigInt(37_000_000),
   },
   USDT: {
     marketAddress:
-      '0x51b9bea7822988e03520018f4a1bb39b9f5ba15c9b4b9c9340a6bc1e5958abd4',
-    startBlock: BigInt(11380000),
+      '0x4aabbbb7a4d5f458a8751e007d4d7d08cbedd60f0352478d6b9f0090beb17745',
+    startBlock: BigInt(37_000_000),
   },
 };
 
@@ -36,4 +38,15 @@ const assets: Record<string, string> = {
   '0x0526a5a33267abf138d40be4a1bd982bfb00365310891c6e7e13d0d8e7c3fc23': 'weETH',
   '0x62fb3f091da88a3a520fa7b7fd12fa1ab3cbf306d57a66e345b6e9b0b883d0c2':
     'wstETH',
+  '0x899dbd3cf8955d7b64a02f8bde800e74c10cdd92b92330c42d7c75b0ddb3dbc4': 'USDC',
+  '0x1317d8056c8504d7844b3871386ca1ec5e2ecf4743e0ca805378f9c48d4822d2': 'BTC',
+  '0x31873ec08219b39ee601747f465c6a177010d94ed5eec945275c49a44a1ce4d0': 'UNI',
+  '0x7bf88bdf02818cd03644998349704bb1f5c98615fb39c74e081081336e3c2c3b': 'ezETH',
+  '0x2df42653712c4d413170eef9695d65a21013ac8be63891a2c5967c3af96a218f': 'USDT',
+  '0xca119b2dd027d7be7061333bbb1d8bcab67bc0234cb30549322aba3ebd5ddf6a': 'sDAI',
+  '0x9fb96f6fd9de9c63a67217188bc56cee04d2a54f732dd9899bed0aeb889b075b': 'weETH',
+  '0x93dc2c176ee02ac5745272448775bf96f16fd1c31e7c3dca393eadab2d5dd43d':
+    'wstETH',
+  '0x741722fc499391b975ecdfc759f41651bcb09dbe84e330c5eab6527c8d02664b':
+    'stFUEL',
 };

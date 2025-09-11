@@ -5,4 +5,5 @@ build
 dist
 .env
 .DS_Store
-out
+**/out/debug/
+deployments/

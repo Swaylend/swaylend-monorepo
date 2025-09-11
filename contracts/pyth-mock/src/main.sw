@@ -9,6 +9,8 @@ use pyth_interface::{
 };
 use std::bytes::Bytes;
 use std::hash::Hash;
+use std::context::msg_amount;
+use std::call_frames::msg_asset_id;
 
 storage {
     latest_price_feed: StorageMap<PriceFeedId, Price> = StorageMap {},
@@ -64,12 +66,15 @@ impl PythCore for Contract {
 
     #[storage(read)]
     fn update_fee(update_data: Vec<Bytes>) -> u64 {
-        let res: u64 = 1;
-        res
+       update_data.len()
     }
 
     #[storage(read, write), payable]
     fn update_price_feeds(update_data: Vec<Bytes>) {
+        // Check if the paid fee is enough
+        let total_fee = update_data.len();
+        require(msg_amount() >= total_fee && msg_asset_id() == AssetId::base(), PythError::InsufficientFee);
+
         let mut index = 0;
 
         // Bytes structure

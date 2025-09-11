@@ -1,26 +1,26 @@
-import { AnnouncementPopover } from '@/components/AnnouncementPopover';
-import { Footer } from '@/components/Footer';
-import { IntroductionDialog } from '@/components/IntroductionDialog';
-import { Navbar } from '@/components/Navbar';
-import { Providers } from '@/components/Providers';
-import { appConfig } from '@/configs';
-import { isMobile } from '@/utils/isMobile';
 import { headers } from 'next/headers';
+import { Footer } from '@/components/footer';
+import { IntroductionDialog } from '@/components/introduction-dialog';
+import { Navbar } from '@/components/navbar';
+import { Providers } from '@/components/providers';
+import { AnnouncementPopover } from '@/components/v1/announcement-popover';
+import { appConfig } from '@/configs';
+import { isMobile } from '@/utils/is-mobile';
 
-export default function AppLayout({
+export default async function AppLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const userAgent = headers().get('user-agent') || '';
+  const userAgent = (await headers()).get('user-agent') || '';
   const mobile = isMobile(userAgent);
   return (
     <Providers>
-      <div className="h-screen flex flex-col min-h-dvh">
+      <div className="flex h-screen min-h-dvh flex-col">
         <Navbar mobile={mobile} />
-        <div className="bg-background flex-1">{children}</div>
+        <div className="flex-1 bg-background">{children}</div>
         <Footer />
-        {!mobile && appConfig.client.announcementEnabled && (
+        {!mobile && appConfig.client.v1.announcementEnabled && (
           <AnnouncementPopover />
         )}
         <IntroductionDialog />

@@ -1,9 +1,8 @@
 use crate::utils::TestBaseAsset;
 use crate::utils::{setup, TestData};
-use chrono::Utc;
-use fuels::prelude::ViewOnlyAccount;
-use market::PauseConfiguration;
-use market::PriceDataUpdate;
+use fuels::types::{Bits256, ContractId};
+use fuels::{accounts::ViewOnlyAccount, programs::calls::ContractDependency};
+use market::{OracleInput, PauseConfiguration, PythOracleInput};
 use market_sdk::convert_i256_to_u64;
 use market_sdk::is_i256_negative;
 use market_sdk::parse_units;
@@ -21,20 +20,16 @@ async fn pause_test() {
         market,
         uni,
         uni_contract,
-        oracle,
-        price_feed_ids,
-        assets,
-        publish_time,
-        prices,
+        mut oracle_inputs,
+        pyth_mock_oracle,
+        pyth_prices,
+        pyth_asset_price_feeds,
+        oracle_total_update_fee,
+        oracle_contract_id_to_index,
         ..
-    } = setup(None, TestBaseAsset::USDC).await;
+    } = setup(None, TestBaseAsset::USDC, None).await;
 
-    let price_data_update = PriceDataUpdate {
-        update_fee: 1,
-        price_feed_ids,
-        publish_times: vec![publish_time; assets.len()],
-        update_data: oracle.create_update_data(&prices).await.unwrap(),
-    };
+    let oracle_contracts: Vec<&dyn ContractDependency> = vec![&pyth_mock_oracle.instance];
 
     // =================================================
     // ==================== Step #0 ====================
@@ -47,7 +42,12 @@ async fn pause_test() {
     // Transfer of 400 USDC to the Bob's wallet
     usdc_contract.mint(bob_account, amount).await.unwrap();
 
-    let balance = bob.get_asset_balance(&usdc.asset_id).await.unwrap();
+    let balance: u64 = bob
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == amount);
 
     // Bob calls supply_base
@@ -77,7 +77,12 @@ async fn pause_test() {
     // Transfer of 40 UNI to the Alice's wallet
     uni_contract.mint(alice_account, amount).await.unwrap();
 
-    let balance = alice.get_asset_balance(&uni.asset_id).await.unwrap();
+    let balance: u64 = alice
+        .get_asset_balance(&uni.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == amount);
 
     // Alice calls supply_collateral
@@ -112,12 +117,22 @@ async fn pause_test() {
         .with_account(&alice)
         .await
         .unwrap()
-        .withdraw_base(&[&oracle.instance], amount, &price_data_update)
+        .withdraw_base(
+            &oracle_contracts,
+            amount,
+            &oracle_inputs,
+            oracle_total_update_fee,
+        )
         .await
         .unwrap();
 
     // USDC balance check
-    let balance = alice.get_asset_balance(&usdc.asset_id).await.unwrap();
+    let balance: u64 = alice
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == amount);
 
     market.debug_increment_timestamp().await.unwrap();
@@ -128,29 +143,84 @@ async fn pause_test() {
     // 🤙 Drop of collateral price
     // 💰 Amount: -30%
 
-    let res = oracle.price(uni.price_feed_id).await.unwrap().value;
-    let new_price = (res.price as f64 * 0.7) as u64;
-    let prices = Vec::from([(
-        uni.price_feed_id,
-        (
-            new_price,
-            uni.price_feed_decimals,
-            res.publish_time,
-            res.confidence,
-        ),
-    )]);
-    oracle.update_prices(&prices).await.unwrap();
+    let old_price = market
+        .get_price(&oracle_contracts, uni.asset_id)
+        .await
+        .unwrap()
+        .value;
 
-    // New `price_data_update` that will be used in the next steps
-    let price_data_update = PriceDataUpdate {
-        update_fee: 1,
-        price_feed_ids: vec![uni.price_feed_id],
-        publish_times: vec![tai64::Tai64::from_unix(Utc::now().timestamp().try_into().unwrap()).0],
-        update_data: oracle.create_update_data(&prices).await.unwrap(),
-    };
+    let (uni_price_feed_id, uni_price_feed_decimals) =
+        pyth_asset_price_feeds.get(&uni.asset_id).unwrap();
+    let old_oracle_inputs = oracle_inputs.clone();
+    let mut new_oracle_inputs = Vec::new();
 
-    let res = oracle.price(uni.price_feed_id).await.unwrap().value;
-    assert!(new_price == res.price);
+    for input in oracle_inputs.iter() {
+        let input = input.clone();
+
+        let processed_input = match input {
+            OracleInput::Pyth(pyth_input) => {
+                let new_prices = pyth_prices
+                    .iter()
+                    .map(
+                        |(
+                            price_feed_id,
+                            (price, price_feed_decimals, publish_time, confidence),
+                        )| {
+                            (
+                                *price_feed_id,
+                                (
+                                    if *price_feed_id == *uni_price_feed_id {
+                                        (*price as f64 * 0.7) as u64
+                                    } else {
+                                        *price
+                                    },
+                                    *price_feed_decimals,
+                                    *publish_time,
+                                    *confidence,
+                                ),
+                            )
+                        },
+                    )
+                    .collect::<Vec<(Bits256, (u64, u32, u64, u64))>>();
+
+                OracleInput::Pyth(PythOracleInput {
+                    oracle_id: *oracle_contract_id_to_index
+                        .get(&ContractId::from(pyth_mock_oracle.instance.contract_id()))
+                        .unwrap(),
+
+                    publish_times: pyth_input.publish_times,
+                    price_feed_ids: pyth_input.price_feed_ids,
+                    update_data: pyth_mock_oracle
+                        .create_update_data(&new_prices)
+                        .await
+                        .unwrap(),
+                })
+            }
+            _ => input,
+        };
+
+        new_oracle_inputs.push(processed_input);
+    }
+
+    oracle_inputs = new_oracle_inputs;
+
+    // Update price feeds
+    market
+        .update_price_feeds(&oracle_contracts, &oracle_inputs, oracle_total_update_fee)
+        .await
+        .unwrap();
+
+    // Get new price
+    let new_price = market
+        .get_price(&oracle_contracts, uni.asset_id)
+        .await
+        .unwrap()
+        .value;
+
+    println!(
+        "🔻 UNI price drops: ${}  -> ${}. Decimals: {}",
+        old_price.price, new_price.price, uni_price_feed_decimals
+    );
 
     market.debug_increment_timestamp().await.unwrap();
 
@@ -162,7 +232,7 @@ async fn pause_test() {
 
     assert!(
         market
-            .is_liquidatable(&[&oracle.instance], alice_account)
+            .is_liquidatable(&oracle_contracts, alice_account)
             .await
             .unwrap()
             .value
@@ -172,7 +242,12 @@ async fn pause_test() {
         .with_account(&bob)
         .await
         .unwrap()
-        .absorb(&[&oracle.instance], vec![alice_account], &price_data_update)
+        .absorb(
+            &oracle_contracts,
+            vec![alice_account],
+            &oracle_inputs,
+            oracle_total_update_fee,
+        )
         .await
         .unwrap();
 
@@ -207,7 +282,7 @@ async fn pause_test() {
 
     let amount = market
         .collateral_value_to_sell(
-            &[&oracle.instance],
+            &oracle_contracts,
             uni.asset_id,
             convert_i256_to_u64(&reserves),
         )
@@ -219,7 +294,12 @@ async fn pause_test() {
     usdc_contract.mint(bob_account, amount).await.unwrap();
 
     // Сheck balance
-    let balance = bob.get_asset_balance(&usdc.asset_id).await.unwrap();
+    let balance: u64 = bob
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == amount);
 
     // Bob calls buy_collateral
@@ -228,7 +308,7 @@ async fn pause_test() {
         .await
         .unwrap()
         .buy_collateral(
-            &[&oracle.instance],
+            &oracle_contracts,
             usdc.asset_id,
             amount as u64,
             uni.asset_id,
@@ -245,22 +325,14 @@ async fn pause_test() {
     // 👛 Wallet: Admin 🗿
     // 🤙 Call: reset UNI price and pause
 
-    let price = oracle.price(uni.price_feed_id).await.unwrap().value;
-    let amount = parse_units(5, uni.price_feed_decimals.into()); // 1 UNI = $5
-    oracle
-        .update_prices(&Vec::from([(
-            uni.price_feed_id,
-            (
-                amount,
-                uni.price_feed_decimals,
-                price.publish_time,
-                price.confidence,
-            ),
-        )]))
+    market
+        .update_price_feeds(
+            &oracle_contracts,
+            &old_oracle_inputs,
+            oracle_total_update_fee,
+        )
         .await
         .unwrap();
-    let res = oracle.price(uni.price_feed_id).await.unwrap().value;
-    assert!(res.price == amount);
 
     let pause_config = PauseConfiguration {
         supply_paused: true,
@@ -297,7 +369,12 @@ async fn pause_test() {
     // Transfer of 400 USDC to the Bob's wallet
     usdc_contract.mint(bob_account, amount).await.unwrap();
 
-    let balance = bob.get_asset_balance(&usdc.asset_id).await.unwrap();
+    let balance: u64 = bob
+        .get_asset_balance(&usdc.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == amount);
 
     // Bob calls supply_base
@@ -321,7 +398,12 @@ async fn pause_test() {
     // Transfer of 40 UNI to the Alice's wallet
     uni_contract.mint(alice_account, amount).await.unwrap();
 
-    let balance = alice.get_asset_balance(&uni.asset_id).await.unwrap();
+    let balance: u64 = alice
+        .get_asset_balance(&uni.asset_id)
+        .await
+        .unwrap()
+        .try_into()
+        .unwrap();
     assert!(balance == amount);
 
     // Alice calls supply_collateral
@@ -348,7 +430,12 @@ async fn pause_test() {
         .with_account(&alice)
         .await
         .unwrap()
-        .withdraw_base(&[&oracle.instance], amount, &price_data_update)
+        .withdraw_base(
+            &oracle_contracts,
+            amount,
+            &oracle_inputs,
+            oracle_total_update_fee,
+        )
         .await
         .is_err();
     assert!(res);
@@ -360,17 +447,18 @@ async fn pause_test() {
         .await
         .unwrap()
         .withdraw_collateral(
-            &[&oracle.instance],
+            &oracle_contracts,
             uni.asset_id,
             amount,
-            &price_data_update,
+            &oracle_inputs,
+            oracle_total_update_fee,
         )
         .await
         .is_err();
     assert!(res);
 
     // =================================================
-    // ==================== Step #4 ====================
+    // ==================== Step #10 ====================
     // 👛 Wallet: Bob 🦹
     // 🤙 Call: absorb
     // 🔥 Target: Alice
@@ -379,13 +467,18 @@ async fn pause_test() {
         .with_account(&bob)
         .await
         .unwrap()
-        .absorb(&[&oracle.instance], vec![alice_account], &price_data_update)
+        .absorb(
+            &oracle_contracts,
+            vec![alice_account],
+            &oracle_inputs,
+            oracle_total_update_fee,
+        )
         .await
         .is_err();
     assert!(res);
 
     // =================================================
-    // ==================== Step #5 ====================
+    // ==================== Step #11 ====================
     // 👛 Wallet: Bob 🤵
     // 🤙 Call: buy_collateral
     // 💰 Amount: 172.44 USDC
@@ -402,7 +495,7 @@ async fn pause_test() {
 
     let amount = market
         .collateral_value_to_sell(
-            &[&oracle.instance],
+            &oracle_contracts,
             uni.asset_id,
             convert_i256_to_u64(&reserves),
         )
@@ -416,7 +509,7 @@ async fn pause_test() {
         .await
         .unwrap()
         .buy_collateral(
-            &[&oracle.instance],
+            &oracle_contracts,
             usdc.asset_id,
             amount,
             uni.asset_id,

@@ -33,5 +33,3 @@ Tokens:
 * USDC: `0xdb012cf2f31dcb9b46ed0ef619abe040db24172deb8f7c1ef573097b2225d8b6`
 * BTC: `0x50ec3fd9d54db44697b4613b2b6d6f16df5b9f8e3e7a6fba3c51896cfaeec3a7`
 * UNI: `0x2cc3e9fa1a1009342165b57d375790f91959346a6558f9bceb378a31bd4ca992`
-
-> Also deploys src-20 on 0x02a2e4643e3a8c41ab7aa39a29ea60142a8e1d857775ae116ce60a4eeb9039e8, for now useless.

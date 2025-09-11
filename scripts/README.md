@@ -24,19 +24,19 @@ Market contract is deploy with the proxy (proxy contract + loader contract with 
 ```bash
 cd ../contracts/market && forc deploy                                  && cd ../../scripts # mainnet
 cd ../contracts/market && forc deploy --testnet                        && cd ../../scripts # testnet
-cd ../contracts/market && /home/vid/Documents/Company/fuel/sway/target/debug/forc-deploy --node-url http://127.0.0.1:4000 && cd ../../scripts # devnet
+cd ../contracts/market && forc deploy --node-url http://127.0.0.1:4000 && cd ../../scripts # devnet
 ```
 
 In the output you can see proxy contract id (proxy contract) and target contract id (loader contract). Add them to the `.env` .
 
-**Note:** This command will add proxy address in the `Forc.toml` in the `../contracts/market` folder. Make sure the address is not wrriten in ` ` Forc.toml ` ` when deploying the contracts again.
+**Note:** This command will add proxy address in the `Forc.toml` in the `../contracts/market` folder. Make sure the address is not wrriten in  `Forc.toml` when deploying the contracts again.
 
 ### Activate market contract
 
-This script will activate the contract - setup the market configuration, owner of the market contract, and Pyth contract id.
+This script will activate the contract - setup the market configuration and owner of the market contract.
 
 ```bash
-cargo run --bin activate_market -- --config-path ./configs/testnet_usdc_config.json
+cargo run --release --bin activate_market -- --config-path ./configs/testnet_usdc_config.json
 ```
 
 ### Update collateral assets
@@ -44,7 +44,15 @@ cargo run --bin activate_market -- --config-path ./configs/testnet_usdc_config.j
 This script will update the collateral asset configuration (add new collateral assets, pause collateral assets, unpause collateral assets, update collateral asset configuration ...).
 
 ```bash
-cargo run --bin update_collateral_assets -- --config-path ./configs/testnet_usdc_config.json
+cargo run --release --bin update_collateral_assets -- --config-path ./configs/testnet_usdc_config.json
+```
+
+### Update oracle configuration
+
+This script will update the oracle configuration (add new oracle, pause oracle, unpause oracle, update oracle configuration ...).
+
+```bash
+cargo run --release --bin update_oracle_configuration -- --config-path ./configs/testnet_usdc_config.json
 ```
 
 ### Upgrade market contract
@@ -54,7 +62,7 @@ When you want to upgrade the market contract, make the changes to the contract, 
 ```bash
 cd ../contracts/market && forc deploy                                  && cd ../../scripts # mainnet
 cd ../contracts/market && forc deploy --testnet                        && cd ../../scripts # testnet
-cd ../contracts/market && /home/vid/Documents/Company/fuel/sway/target/debug/forc-deploy --node-url http://127.0.0.1:4000 && cd ../../scripts # devnet
+cd ../contracts/market && forc deploy --node-url http://127.0.0.1:4000 && cd ../../scripts # devnet
 ```
 
 ### Change proxy owner
@@ -62,7 +70,7 @@ cd ../contracts/market && /home/vid/Documents/Company/fuel/sway/target/debug/for
 This script will change proxy owner.
 
 ```bash
-cargo run --bin change_proxy_owner -- --new-owner contract:0x546403add23accc66d96e853245db1398fb8d0ffbea184395f04ae3d26fd516f
+cargo run --release --bin change_proxy_owner -- --new-owner contract:0x546403add23accc66d96e853245db1398fb8d0ffbea184395f04ae3d26fd516f
 ```
 
 ### Change market owner
@@ -70,7 +78,7 @@ cargo run --bin change_proxy_owner -- --new-owner contract:0x546403add23accc66d9
 This script will change market owner.
 
 ```bash
-cargo run --bin change_market_owner -- --new-owner address:0x2968d3dd71d8b517fdb57e837c419c58f7404744fb51c16e0e0a2dc18892b1f8
+cargo run --release --bin change_market_owner -- --new-owner address:0x2968d3dd71d8b517fdb57e837c419c58f7404744fb51c16e0e0a2dc18892b1f8
 ```
 
 ### Update market configuration
@@ -78,7 +86,7 @@ cargo run --bin change_market_owner -- --new-owner address:0x2968d3dd71d8b517fdb
 This script will update market configuration (change supply/borrow kink, interest rate curves ...).
 
 ```bash
-cargo run --bin update_market -- --config-path ./configs/testnet_usdc_config.json
+cargo run --release --bin update_market -- --config-path ./configs/testnet_usdc_config.json
 ```
 
 ### Withdraw reserves
@@ -86,7 +94,7 @@ cargo run --bin update_market -- --config-path ./configs/testnet_usdc_config.jso
 This script will withdraw reserves.
 
 ```bash
-cargo run --bin withdraw_reserves -- --amount 100000000 --recipient address:0x2968d3dd71d8b517fdb57e837c419c58f7404744fb51c16e0e0a2dc18892b1f8
+cargo run --release --bin withdraw_reserves -- --amount 100000000 --recipient address:0x2968d3dd71d8b517fdb57e837c419c58f7404744fb51c16e0e0a2dc18892b1f8
 ```
 
 ### Fill reserves
@@ -94,7 +102,7 @@ cargo run --bin withdraw_reserves -- --amount 100000000 --recipient address:0x29
 This script will fill reserves. It will use the account provided in the .env `SIGNING_KEY` and the base asset of the market contract.
 
 ```bash
-cargo run --bin fill_reserves -- --amount 100000000 
+cargo run --release --bin fill_reserves -- --amount 100000000 
 ```
 
 ### Testnet: deploy tokens contract
@@ -102,7 +110,7 @@ cargo run --bin fill_reserves -- --amount 100000000
 This script will deploy custom tokens contract.
 
 ```bash
-cargo run --bin deploy_tokens
+cargo run --release --bin deploy_tokens
 ```
 
 ### Testnet: deploy Pyth oracle contract
@@ -110,7 +118,7 @@ cargo run --bin deploy_tokens
 This script will deploy Pyth mock oracle contract.
 
 ```bash
-cargo run --bin deploy_pyth
+cargo run --release --bin deploy_pyth
 ```
 
 ### Testnet: mint tokens
@@ -118,5 +126,5 @@ cargo run --bin deploy_pyth
 This script will mint tokens provided in the config file (base asset and collateral assets). For recipient, use `address` or `contract` prefix (depends to whom you want to mint tokens).
 
 ```bash
-cargo run --bin mint_tokens -- --config-path ./configs/testnet_usdc_config.json --token-contract-id 0xb55fa4f5c9d10d64b272b046e133eac9beab496587e0ed02d5620a69b77b9028 --recipient contract:0x0e5e4311f2ab9bd5dc6ac5d39a363b1488eed59e178367d1702126948951245f --amount 10000000000
+cargo run --release --bin mint_tokens -- --config-path ./configs/testnet_usdc_config.json --token-contract-id 0xb55fa4f5c9d10d64b272b046e133eac9beab496587e0ed02d5620a69b77b9028 --recipient contract:0x0e5e4311f2ab9bd5dc6ac5d39a363b1488eed59e178367d1702126948951245f --amount 10000000000
 ```

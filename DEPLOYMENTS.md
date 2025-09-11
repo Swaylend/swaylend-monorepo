@@ -12,40 +12,36 @@
 ---
 
 # FUEL TESTNET
-* Pyth Oracle contract: `0xe31e04946c67fb41923f93d50ee7fc1c6c99d6e07c02860c6bea5f4a13919277`
 
+## Oracles
+
+* Pyth Oracle contract (v1): `0x25146735b29d4216639f7f8b1d7b921ff87a1d3051de62d6cceaacabeb33b8e7`
+* Pyth Oracle contract (v2): `0x5d17f54708afd01530c2e0ffb123cd21e92461aae8450de2cc08d0fd330cf240`
+* Stork Oracle contract: `0x09c88f50d535ac5ce8945e34c418233b1e3834be9a88effb57cb137321fbae0c`
 * ETH: `0xf8f8b6283d7fa5b672b530cbb84fcccb4ff8dc40f8176ef4544ddb1f1952ad07`
+
+## Assets
+
+**Token factory contract:** `0xb095873ffa6237aa209dd7fa9d6fd7d9e932453f8db62b9e436766a47b17d308`
+
+
+* USDC: `0x899dbd3cf8955d7b64a02f8bde800e74c10cdd92b92330c42d7c75b0ddb3dbc4`
+* BTC: `0x1317d8056c8504d7844b3871386ca1ec5e2ecf4743e0ca805378f9c48d4822d2`
+* UNI: `0x31873ec08219b39ee601747f465c6a177010d94ed5eec945275c49a44a1ce4d0`
+* ezETH: `0x7bf88bdf02818cd03644998349704bb1f5c98615fb39c74e081081336e3c2c3b`
+* USDT: `0x2df42653712c4d413170eef9695d65a21013ac8be63891a2c5967c3af96a218f`
+* sDAI: `0xca119b2dd027d7be7061333bbb1d8bcab67bc0234cb30549322aba3ebd5ddf6a`
+* weETH: `0x9fb96f6fd9de9c63a67217188bc56cee04d2a54f732dd9899bed0aeb889b075b`
+* wstETH: `0x93dc2c176ee02ac5745272448775bf96f16fd1c31e7c3dca393eadab2d5dd43d`
 
 ## USDC Market
 
-### Contracts
+* Market implementation contract: `0x3785db6d683cd736c74f7d471d46a89c043fa71e91bac1d33ded00fa231afa83`
 
-* Token factory contract: `0x3e4f1948aece07d3f30c8c5c425f914ac74653827de48394466f2a887eebe9c7`
-
-* Market implementation contract: `0x499874255bbb90ed6848c5555f8bf5a24bf162e7202900efe6c24b9df2232005`
-
-* Market proxy contract: `0x6030cf103746576706d7dcc2ae6f6b32ba0db66907a8f9901a0170de5f06acc0`
-
-### Assets
-
-* USDC: `0x3aced3c270121c9d85e00fb14f079ecc666b733b12a0d15df1c2ecae26c1167a`
-* BTC: `0x506442d6926065fe53dd09870b7392dd46bfe39b761ab347b11cc2e1f8874250`
-* UNI: `0xa95097d8fe21970639e543db9b7f590aa678f325bce3dbc12a682cdcbbfae378`
-* ezETH: `0x24dd639420a98a5d9d3015280e82cafefb3b88d75f996107d1a3b12da831f733`
-* USDT: `0xf30eade9911f75e819deff8fa76f7cf54c477180c756f5a9c3db6fe1986fe485`
+* Market proxy contract: `0x196515642b3715732aaae6683ae75e4a079dd25b6ca6af7863e541d440f8252c`
 
 ## USDT Market
 
-### Contracts
+* Market implementation contract: `0xc88893bcb98b8b53e164ddff18aa2844b6ff8ed693198334ed6dcb767f363076`
 
-* Token factory contract: `0x1ea9a306a5f280cfe7bd1fdc96815a6438069668e495a2f5a727c7b9b90691cb`
-
-* Market implementation contract: `0x88116ee7519e73b0b3af3eb939acc0bcdc38937a41855c63d5aa78020eea8013`
-
-* Market proxy contract: `0x51b9bea7822988e03520018f4a1bb39b9f5ba15c9b4b9c9340a6bc1e5958abd4`
-
-### Assets
-
-* USDT: `0xc264acd28eaf6f33e0e13360a37741dc91221aaa8817e1b4e462d61bb08c5835`
-* BTC: `0xf3e2b3960e0930402a5d6047883f5c178a30aa5db2f0d7302d582cefb59a1575`
-* BNB: `0x790d2c0eb869e72cf42540d928ce728c253142d5ef07ed22b75009e40660e4ea`
+* Market proxy contract: `0x4aabbbb7a4d5f458a8751e007d4d7d08cbedd60f0352478d6b9f0090beb17745`

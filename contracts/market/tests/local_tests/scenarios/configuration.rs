@@ -1,6 +1,6 @@
 use crate::utils::{setup, TestBaseAsset, TestData};
-use fuels::types::U256;
-use market::{CollateralConfiguration, MarketConfiguration, PriceDataUpdate};
+use fuels::{programs::calls::ContractDependency, types::U256};
+use market::{CollateralConfiguration, MarketConfiguration};
 use market_sdk::parse_units;
 
 #[tokio::test]
@@ -13,23 +13,16 @@ async fn collateral_configuration_test() {
         alice,
         alice_account,
         market,
-        assets,
         usdc,
-        oracle,
-        price_feed_ids,
-        publish_time,
-        prices,
+        oracle_inputs,
         usdc_contract,
         eth,
+        pyth_mock_oracle,
+        oracle_total_update_fee,
         ..
-    } = setup(None, TestBaseAsset::USDC).await;
+    } = setup(None, TestBaseAsset::USDC, None).await;
 
-    let price_data_update = PriceDataUpdate {
-        update_fee: 0,
-        price_feed_ids,
-        publish_times: vec![publish_time; assets.len()],
-        update_data: oracle.create_update_data(&prices).await.unwrap(),
-    };
+    let oracle_contracts: Vec<&dyn ContractDependency> = vec![&pyth_mock_oracle.instance];
 
     usdc_contract
         .mint(alice_account, parse_units(10000, usdc.decimals))
@@ -63,7 +56,7 @@ async fn collateral_configuration_test() {
         .with_account(&bob)
         .await
         .unwrap()
-        .available_to_borrow(&[&oracle.instance], bob_account)
+        .available_to_borrow(&oracle_contracts, bob_account)
         .await
         .unwrap();
     println!("Bob available_to_borrow: {:?}", res);
@@ -88,7 +81,7 @@ async fn collateral_configuration_test() {
             .with_account(&bob)
             .await
             .unwrap()
-            .available_to_borrow(&[&oracle.instance], bob_account)
+            .available_to_borrow(&oracle_contracts, bob_account)
             .await
             .unwrap()
     );
@@ -101,9 +94,10 @@ async fn collateral_configuration_test() {
         .await
         .unwrap()
         .withdraw_base(
-            &[&oracle.instance],
+            &oracle_contracts,
             amount.try_into().unwrap(),
-            &price_data_update,
+            &oracle_inputs,
+            oracle_total_update_fee,
         )
         .await;
     assert!(res.is_ok());
@@ -114,9 +108,10 @@ async fn collateral_configuration_test() {
         .await
         .unwrap()
         .withdraw_base(
-            &[&oracle.instance],
+            &oracle_contracts,
             amount.try_into().unwrap(),
-            &price_data_update,
+            &oracle_inputs,
+            oracle_total_update_fee,
         )
         .await;
     // Fails because Bob cant borrow anymore
@@ -150,7 +145,10 @@ async fn collateral_configuration_test() {
         .unwrap();
 
     let res = market
-        .available_to_borrow(&[&oracle.instance], bob_account)
+        .with_account(&bob)
+        .await
+        .unwrap()
+        .available_to_borrow(&oracle_contracts, bob_account)
         .await
         .unwrap();
     // Res should equal 350 USDC because of the new collateral factor
@@ -164,12 +162,13 @@ async fn market_configuration_test() {
         market,
         usdc,
         ..
-    } = setup(None, TestBaseAsset::USDC).await;
+    } = setup(None, TestBaseAsset::USDC, None).await;
 
     let old_market_config = market.get_market_configuration().await.unwrap().value;
     let new_market_config = MarketConfiguration {
         supply_kink: 900000000000000000u64.into(),
         borrow_kink: 900000000000000000u64.into(),
+        oracle_max_confidence_width: 300u64.into(),
         supply_per_second_interest_rate_slope_low: 1141552514.into(),
         supply_per_second_interest_rate_slope_high: 50735667178u64.into(),
         supply_per_second_interest_rate_base: 1.into(),
@@ -185,7 +184,6 @@ async fn market_configuration_test() {
         target_reserves: 2000000000000u64.into(),
         base_token: usdc.asset_id,
         base_token_decimals: usdc.decimals.try_into().unwrap(),
-        base_token_price_feed_id: usdc.price_feed_id,
     };
 
     let res = market

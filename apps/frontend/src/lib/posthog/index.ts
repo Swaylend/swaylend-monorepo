@@ -9,9 +9,11 @@ export const useTrackExternalPageView = () => {
     mutationFn: async (url: string) => {
       if (posthog) {
         posthog.capture('External Page View', {
-          url: url,
+          url,
         });
       }
+
+      return await Promise.resolve();
     },
   });
 };
