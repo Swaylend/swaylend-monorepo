@@ -18,6 +18,7 @@ import {
 import {
   SYMBOL_TO_ICON,
   SYMBOL_TO_NAME,
+  formatPrice,
   formatUnits,
   getFormattedNumber,
   getFormattedPrice,
@@ -78,7 +79,7 @@ const MarketCollateralsTableRow = ({
         )}
       </TableCell>
       <TableCell className="text-lavender font-medium">
-        {price.toFixed(2).toString()} $
+        $ {formatPrice(price)}
       </TableCell>
       <TableCell className="text-lavender font-medium">
         {formatUnits(collateralFactor, 16).toString()}%

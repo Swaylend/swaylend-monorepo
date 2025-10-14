@@ -50,6 +50,7 @@ import {
 import {
   SYMBOL_TO_ICON,
   SYMBOL_TO_NAME,
+  formatPrice,
   formatUnits,
   getFormattedNumber,
   getFormattedPrice,
@@ -127,7 +128,7 @@ const CollateralTableRow = ({
                   <div className="text-md flex justify-between">
                     <div className="text-lavender">Oracle Price</div>
                     <div className="font-semibold text-moon">
-                      ${price.toFixed(2)}
+                      ${formatPrice(price)}
                     </div>
                   </div>
                   <div className="text-md flex justify-between">

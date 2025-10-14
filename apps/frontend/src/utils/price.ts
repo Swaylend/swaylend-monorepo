@@ -38,3 +38,13 @@ export const getFormattedNumber = (
 
   return `${number.toFixed(decimals, BigNumber.ROUND_FLOOR)}`;
 };
+
+export const formatPrice = (price: BigNumber): string => {
+  let formatted;
+  if (price.gt(10)) return price.toFixed(2);
+  if (price.gt(1)) return price.toFixed(3);
+  if (price.gt(0.01)) formatted = price.toFixed(4);
+  if (price.gt(0.001)) formatted = price.toFixed(5);
+  formatted = price.toFixed(6);
+  return Number.parseFloat(formatted).toString();
+};
