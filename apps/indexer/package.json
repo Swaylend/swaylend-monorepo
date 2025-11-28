@@ -19,7 +19,7 @@
     "@types/chai": "^4.3.11",
     "@types/mocha": "10.0.10",
     "@types/node": "20.17.x",
-    "envio": "2.24.0",
+    "envio": "2.32.3",
     "mocha": "10.2.0",
     "ts-mocha": "^10.0.0",
     "typescript": "5.6.3"
