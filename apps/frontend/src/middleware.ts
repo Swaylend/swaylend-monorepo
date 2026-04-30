@@ -28,7 +28,8 @@ export default function middleware(req: NextRequest) {
   if (
     req.nextUrl.pathname !== '/blocked' &&
     process.env.NODE_ENV !== 'development' &&
-    (!country || BLOCKED_COUNTRIES.includes(country))
+    country &&
+    BLOCKED_COUNTRIES.includes(country)
   ) {
     return NextResponse.redirect(new URL('/blocked', req.url));
   }
