@@ -1,0 +1,33 @@
+{
+  "name": "swaylend-scripts-ts",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "TypeScript port of the Rust admin scripts at swaylend-monorepo/scripts/, with Bako Safe multisig support for owner-only actions.",
+  "scripts": {
+    "typegen": "touch abis/proxy.bin && fuels typegen -i abis/*-abi.json -o src/sway-api",
+    "build": "tsc --noEmit",
+    "activate-market": "tsx src/owner/activate-market.ts",
+    "update-market": "tsx src/owner/update-market.ts",
+    "update-collateral-assets": "tsx src/owner/update-collateral-assets.ts",
+    "change-market-owner": "tsx src/owner/change-market-owner.ts",
+    "change-proxy-owner": "tsx src/owner/change-proxy-owner.ts",
+    "withdraw-reserves": "tsx src/owner/withdraw-reserves.ts",
+    "fill-reserves": "tsx src/permissionless/fill-reserves.ts",
+    "deploy-tokens": "tsx src/permissionless/deploy-tokens.ts",
+    "deploy-pyth": "tsx src/permissionless/deploy-pyth.ts",
+    "deploy-market": "tsx src/permissionless/deploy-market.ts",
+    "mint-tokens": "tsx src/permissionless/mint-tokens.ts"
+  },
+  "dependencies": {
+    "bakosafe": "0.5.4",
+    "fuels": "0.101.3",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "tsx": "^4.19.0",
+    "typescript": "^5.9.2"
+  },
+  "packageManager": "pnpm@9.14.2"
+}

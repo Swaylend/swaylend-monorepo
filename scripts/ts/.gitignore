@@ -1,0 +1,6 @@
+node_modules
+.env
+src/sway-api
+abis/proxy.bin
+*.log
+.DS_Store
