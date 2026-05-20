@@ -4,6 +4,17 @@ This folder contains all scrips and necessary files for deployments of Swaylend 
 
 If you are interested in testing on local devnet, checkout the `devnet` folder.
 
+### Two implementations: Rust and TypeScript (+ Bako)
+
+Two side-by-side implementations live here:
+
+| Path | Wallet model | Notes |
+|---|---|---|
+| `./` (this dir) — Rust, run via `cargo run --bin <name>` | Single private key (`SIGNING_KEY` env) | The original. Required while ownership is held by a single key. |
+| [`./ts/`](./ts) — TypeScript, run via `pnpm <script>` | **Bako Safe** predicate-multisig vault for owner ops; regular EOA for permissionless | Use this once ownership is on a Bako vault. No Rust SDK for Bako exists, so a TS port was a prerequisite for multisig admin. |
+
+Both implementations consume the shared `configs/*.json` market configs.
+
 ## Scripts
 
 Before we begin, you need to do a few things:
