@@ -4,10 +4,10 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc --build --clean",
-    "codegen": "envio codegen",
-    "dev": "envio dev",
+    "codegen": "envio codegen --config config.mainnet.usdc.yaml",
+    "dev": "envio dev --config config.mainnet.usdc.yaml",
     "test": "ts-mocha test/**/*.spec.ts",
-    "start": "envio start"
+    "start": "envio start --config config.mainnet.usdc.yaml"
   },
   "dependencies": {
     "chai": "4.3.10",

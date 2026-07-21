@@ -1,4 +1,4 @@
-import { indexer, Market } from "envio";
+import { indexer } from "envio";
 const MARKET_ID = 'MARKET_ID';
 const PUASE_CONFIGURATION_ID = 'PUASE_CONFIGURATION_ID';
 const MARKET_CONFIGURATION_ID = 'MARKET_CONFIGURATION_ID';
