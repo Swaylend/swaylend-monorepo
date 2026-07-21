@@ -1,4 +1,4 @@
-import { Market } from 'generated';
+import { indexer } from "envio";
 const MARKET_ID = 'MARKET_ID';
 const PUASE_CONFIGURATION_ID = 'PUASE_CONFIGURATION_ID';
 const MARKET_CONFIGURATION_ID = 'MARKET_CONFIGURATION_ID';
@@ -6,7 +6,9 @@ const MARKET_CONFIGURATION_ID = 'MARKET_CONFIGURATION_ID';
 const I256_INDENT = 2n ** 255n;
 
 // Add Collateral Asset
-Market.CollateralAssetAdded.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "Market", event: "CollateralAssetAdded" },
+  async ({ event, context }) => {
   const assetId = event.params.asset_id.bits;
 
   context.CollateralAsset.set({
@@ -20,10 +22,13 @@ Market.CollateralAssetAdded.handler(async ({ event, context }) => {
     supplyCap: event.params.configuration.supply_cap,
     paused: event.params.configuration.paused,
   });
-});
+}
+);
 
 // Update collateral asset
-Market.CollateralAssetUpdated.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "Market", event: "CollateralAssetUpdated" },
+  async ({ event, context }) => {
   const assetId = event.params.asset_id.bits;
 
   context.CollateralAsset.set({
@@ -37,85 +42,94 @@ Market.CollateralAssetUpdated.handler(async ({ event, context }) => {
     supplyCap: event.params.configuration.supply_cap,
     paused: event.params.configuration.paused,
   });
-});
+}
+);
 
 // Pause Collateral Asset
-Market.CollateralAssetPaused.handlerWithLoader({
-  loader: async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "Market", event: "CollateralAssetPaused" },
+  async ({ event, context }) => {
+    const loaderReturn = await (async ({ event, context }) => {
     const assetId = event.params.asset_id.bits;
     return { collateralAsset: await context.CollateralAsset.get(assetId) };
-  },
-  handler: async ({ event, context, loaderReturn }) => {
-    const { collateralAsset } = loaderReturn;
+  })({ event, context });
 
-    if (collateralAsset) {
-      context.CollateralAsset.set({
-        ...collateralAsset,
-        paused: true,
-      });
-    }
-  },
-});
+        const { collateralAsset } = loaderReturn;
+
+        if (collateralAsset) {
+          context.CollateralAsset.set({
+            ...collateralAsset,
+            paused: true,
+          });
+        }
+  }
+);
 
 // Resume Collateral Asset
-Market.CollateralAssetResumed.handlerWithLoader({
-  loader: async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "Market", event: "CollateralAssetResumed" },
+  async ({ event, context }) => {
+    const loaderReturn = await (async ({ event, context }) => {
     const assetId = event.params.asset_id.bits;
     return { collateralAsset: await context.CollateralAsset.get(assetId) };
-  },
-  handler: async ({ event, context, loaderReturn }) => {
-    const { collateralAsset } = loaderReturn;
+  })({ event, context });
 
-    if (collateralAsset) {
-      context.CollateralAsset.set({
-        ...collateralAsset,
-        paused: false,
-      });
-    }
-  },
-});
+        const { collateralAsset } = loaderReturn;
+
+        if (collateralAsset) {
+          context.CollateralAsset.set({
+            ...collateralAsset,
+            paused: false,
+          });
+        }
+  }
+);
 
 // User Basic Event
-Market.UserBasicEvent.handlerWithLoader({
-  loader: async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "Market", event: "UserBasicEvent" },
+  async ({ event, context }) => {
+    const loaderReturn = await (async ({ event, context }) => {
     // TODO: Verify if this needs to be handled differently
     // case -> address or contractId
     const address = event.params.account.payload.bits;
     return { user: await context.User.get(address) };
-  },
-  handler: async ({ event, context, loaderReturn }) => {
-    const { user } = loaderReturn;
+  })({ event, context });
 
-    if (!user) {
-      const principalValue =
-        event.params.user_basic.principal.underlying - I256_INDENT;
+        const { user } = loaderReturn;
 
-      const address = event.params.account.payload.bits;
+        if (!user) {
+          const principalValue =
+            event.params.user_basic.principal.underlying - I256_INDENT;
 
-      context.User.set({
-        id: address,
-        address: address,
-        principal: principalValue,
-        baseTrackingIndex: event.params.user_basic.base_tracking_index,
-        baseTrackingAccrued: event.params.user_basic.base_tracking_accrued,
-        totalCollateralBought: BigInt(0),
-        totalValueLiquidated: BigInt(0),
-      });
+          const address = event.params.account.payload.bits;
 
-      return;
-    }
+          context.User.set({
+            id: address,
+            address: address,
+            principal: principalValue,
+            baseTrackingIndex: event.params.user_basic.base_tracking_index,
+            baseTrackingAccrued: event.params.user_basic.base_tracking_accrued,
+            totalCollateralBought: BigInt(0),
+            totalValueLiquidated: BigInt(0),
+          });
 
-    context.User.set({
-      ...user,
-      principal: event.params.user_basic.principal.underlying - I256_INDENT,
-      baseTrackingIndex: event.params.user_basic.base_tracking_index,
-      baseTrackingAccrued: event.params.user_basic.base_tracking_accrued,
-    });
-  },
-});
+          return;
+        }
+
+        context.User.set({
+          ...user,
+          principal: event.params.user_basic.principal.underlying - I256_INDENT,
+          baseTrackingIndex: event.params.user_basic.base_tracking_index,
+          baseTrackingAccrued: event.params.user_basic.base_tracking_accrued,
+        });
+  }
+);
 
 // Market Basic Event
-Market.MarketBasicEvent.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "Market", event: "MarketBasicEvent" },
+  async ({ event, context }) => {
   context.MarketState.set({
     id: MARKET_ID,
     baseBorrowIndex: event.params.market_basic.base_borrow_index,
@@ -126,11 +140,14 @@ Market.MarketBasicEvent.handler(async ({ event, context }) => {
     trackingBorrowIndex: event.params.market_basic.tracking_borrow_index,
     trackingSupplyIndex: event.params.market_basic.tracking_supply_index,
   });
-});
+}
+);
 
 // User Collateral Events
-Market.UserSupplyCollateralEvent.handlerWithLoader({
-  loader: async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "Market", event: "UserSupplyCollateralEvent" },
+  async ({ event, context }) => {
+    const loaderReturn = await (async ({ event, context }) => {
     const address = event.params.account.payload.bits;
 
     const userCollateralId = `${address}-${event.params.asset_id.bits}`;
@@ -144,102 +161,106 @@ Market.UserSupplyCollateralEvent.handlerWithLoader({
       userCollateral,
       user,
     };
-  },
-  handler: async ({ event, context, loaderReturn }) => {
-    const { userCollateral, user } = loaderReturn;
-    const id = `${event.transaction.id}_${event.logIndex}`;
-    const address = event.params.account.payload.bits;
+  })({ event, context });
 
-    // Create user if it doesn't exist
-    if (!user) {
-      context.User.set({
-        id: address,
-        address: address,
-        principal: BigInt(0),
-        baseTrackingIndex: BigInt(0),
-        baseTrackingAccrued: BigInt(0),
-        totalCollateralBought: BigInt(0),
-        totalValueLiquidated: BigInt(0),
-      });
-    }
+        const { userCollateral, user } = loaderReturn;
+        const id = `${event.transaction.id}_${event.logIndex}`;
+        const address = event.params.account.payload.bits;
 
-    context.UserCollateralEvent.set({
-      id,
-      user_id: address,
-      collateralAsset_id: event.params.asset_id.bits,
-      amount: event.params.amount,
-      actionType: 'Supply',
-      timestamp: event.block.time,
-    });
+        // Create user if it doesn't exist
+        if (!user) {
+          context.User.set({
+            id: address,
+            address: address,
+            principal: BigInt(0),
+            baseTrackingIndex: BigInt(0),
+            baseTrackingAccrued: BigInt(0),
+            totalCollateralBought: BigInt(0),
+            totalValueLiquidated: BigInt(0),
+          });
+        }
 
-    // Also update the many-to-many relationship
-    const userCollateralId = `${address}-${event.params.asset_id.bits}`;
+        context.UserCollateralEvent.set({
+          id,
+          user_id: address,
+          collateralAsset_id: event.params.asset_id.bits,
+          amount: event.params.amount,
+          actionType: 'Supply',
+          timestamp: event.block.time,
+        });
 
-    // Create user collateral if it doesn't exist
-    if (!userCollateral) {
-      context.UserCollateral.set({
-        id: userCollateralId,
-        user_id: address,
-        collateralAsset_id: event.params.asset_id.bits,
-        amount: event.params.amount,
-      });
-    } else {
-      // Update user collateral
-      context.UserCollateral.set({
-        ...userCollateral,
-        amount: userCollateral.amount + event.params.amount,
-      });
-    }
-  },
-});
+        // Also update the many-to-many relationship
+        const userCollateralId = `${address}-${event.params.asset_id.bits}`;
 
-Market.UserWithdrawCollateralEvent.handlerWithLoader({
-  loader: async ({ event, context }) => {
+        // Create user collateral if it doesn't exist
+        if (!userCollateral) {
+          context.UserCollateral.set({
+            id: userCollateralId,
+            user_id: address,
+            collateralAsset_id: event.params.asset_id.bits,
+            amount: event.params.amount,
+          });
+        } else {
+          // Update user collateral
+          context.UserCollateral.set({
+            ...userCollateral,
+            amount: userCollateral.amount + event.params.amount,
+          });
+        }
+  }
+);
+
+indexer.onEvent(
+  { contract: "Market", event: "UserWithdrawCollateralEvent" },
+  async ({ event, context }) => {
+    const loaderReturn = await (async ({ event, context }) => {
     const address = event.params.account.payload.bits;
     const userCollateralId = `${address}-${event.params.asset_id.bits}`;
 
     return {
       userCollateral: await context.UserCollateral.get(userCollateralId),
     };
-  },
-  handler: async ({ event, context, loaderReturn }) => {
-    const { userCollateral } = loaderReturn;
+  })({ event, context });
 
-    const id = `${event.transaction.id}_${event.logIndex}`;
-    const address = event.params.account.payload.bits;
+        const { userCollateral } = loaderReturn;
 
-    context.UserCollateralEvent.set({
-      id,
-      user_id: address,
-      collateralAsset_id: event.params.asset_id.bits,
-      amount: event.params.amount,
-      actionType: 'Withdraw',
-      timestamp: event.block.time,
-    });
+        const id = `${event.transaction.id}_${event.logIndex}`;
+        const address = event.params.account.payload.bits;
 
-    // Also update the many-to-many relationship
-    const userCollateralId = `${address}-${event.params.asset_id.bits}`;
+        context.UserCollateralEvent.set({
+          id,
+          user_id: address,
+          collateralAsset_id: event.params.asset_id.bits,
+          amount: event.params.amount,
+          actionType: 'Withdraw',
+          timestamp: event.block.time,
+        });
 
-    // Create user collateral if it doesn't exist
-    if (!userCollateral) {
-      context.UserCollateral.set({
-        id: userCollateralId,
-        user_id: address,
-        collateralAsset_id: event.params.asset_id.bits,
-        amount: event.params.amount,
-      });
-    } else {
-      // Update user collateral
-      context.UserCollateral.set({
-        ...userCollateral,
-        amount: userCollateral.amount - event.params.amount,
-      });
-    }
-  },
-});
+        // Also update the many-to-many relationship
+        const userCollateralId = `${address}-${event.params.asset_id.bits}`;
+
+        // Create user collateral if it doesn't exist
+        if (!userCollateral) {
+          context.UserCollateral.set({
+            id: userCollateralId,
+            user_id: address,
+            collateralAsset_id: event.params.asset_id.bits,
+            amount: event.params.amount,
+          });
+        } else {
+          // Update user collateral
+          context.UserCollateral.set({
+            ...userCollateral,
+            amount: userCollateral.amount - event.params.amount,
+          });
+        }
+  }
+);
 
 // User Base Asset Events
-Market.UserSupplyBaseEvent.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "Market", event: "UserSupplyBaseEvent" },
+  async ({ event, context }) => {
   const id = `${event.transaction.id}_${event.logIndex}`;
   const address = event.params.account.payload.bits;
 
@@ -262,9 +283,12 @@ Market.UserSupplyBaseEvent.handler(async ({ event, context }) => {
       timestamp: event.block.time,
     });
   }
-});
+}
+);
 
-Market.UserWithdrawBaseEvent.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "Market", event: "UserWithdrawBaseEvent" },
+  async ({ event, context }) => {
   const id = `${event.transaction.id}_${event.logIndex}`;
   const address = event.params.account.payload.bits;
 
@@ -287,56 +311,61 @@ Market.UserWithdrawBaseEvent.handler(async ({ event, context }) => {
       timestamp: event.block.time,
     });
   }
-});
+}
+);
 
 // Liquidation Events
-Market.UserLiquidatedEvent.handlerWithLoader({
-  loader: async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "Market", event: "UserLiquidatedEvent" },
+  async ({ event, context }) => {
+    const loaderReturn = await (async ({ event, context }) => {
     const address = event.params.liquidator.payload.bits;
     const liquidatorId = `${address}`;
     return { liquidator: await context.User.get(liquidatorId) };
-  },
-  handler: async ({ event, context, loaderReturn }) => {
-    const id = `${event.transaction.id}_${event.logIndex}`;
-    const address = event.params.liquidator.payload.bits;
+  })({ event, context });
 
-    const { liquidator } = loaderReturn;
+        const id = `${event.transaction.id}_${event.logIndex}`;
+        const address = event.params.liquidator.payload.bits;
 
-    // Create liquidator if it doesn't exist
-    if (!liquidator) {
-      context.User.set({
-        id: address,
-        address: address,
-        principal: BigInt(0),
-        baseTrackingIndex: BigInt(0),
-        baseTrackingAccrued: BigInt(0),
-        totalCollateralBought: BigInt(0),
-        totalValueLiquidated: BigInt(event.params.total_base_value),
-      });
-    } else {
-      // Update liquidator
-      context.User.set({
-        ...liquidator,
-        totalValueLiquidated:
-          liquidator.totalValueLiquidated + event.params.total_base_value,
-      });
-    }
+        const { liquidator } = loaderReturn;
 
-    context.LiquidationEvent.set({
-      id,
-      liquidator_id: address,
-      liquidated_id: event.params.account.payload.bits,
-      basePaidOut: event.params.base_paid_out,
-      basePaidOutValue: event.params.base_paid_out_value,
-      totalBase: event.params.total_base,
-      totalBaseValue: event.params.total_base_value,
-      decimals: event.params.decimals,
-      timestamp: event.block.time,
-    });
-  },
-});
+        // Create liquidator if it doesn't exist
+        if (!liquidator) {
+          context.User.set({
+            id: address,
+            address: address,
+            principal: BigInt(0),
+            baseTrackingIndex: BigInt(0),
+            baseTrackingAccrued: BigInt(0),
+            totalCollateralBought: BigInt(0),
+            totalValueLiquidated: BigInt(event.params.total_base_value),
+          });
+        } else {
+          // Update liquidator
+          context.User.set({
+            ...liquidator,
+            totalValueLiquidated:
+              liquidator.totalValueLiquidated + event.params.total_base_value,
+          });
+        }
 
-Market.AbsorbCollateralEvent.handler(async ({ event, context }) => {
+        context.LiquidationEvent.set({
+          id,
+          liquidator_id: address,
+          liquidated_id: event.params.account.payload.bits,
+          basePaidOut: event.params.base_paid_out,
+          basePaidOutValue: event.params.base_paid_out_value,
+          totalBase: event.params.total_base,
+          totalBaseValue: event.params.total_base_value,
+          decimals: event.params.decimals,
+          timestamp: event.block.time,
+        });
+  }
+);
+
+indexer.onEvent(
+  { contract: "Market", event: "AbsorbCollateralEvent" },
+  async ({ event, context }) => {
   const id = `${event.transaction.id}_${event.logIndex}`;
   const address = event.params.account.payload.bits;
 
@@ -358,53 +387,58 @@ Market.AbsorbCollateralEvent.handler(async ({ event, context }) => {
     collateralAsset_id: event.params.asset_id.bits,
     amount: BigInt(0),
   });
-});
+}
+);
 
 // Buy Collateral Event
-Market.BuyCollateralEvent.handlerWithLoader({
-  loader: async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "Market", event: "BuyCollateralEvent" },
+  async ({ event, context }) => {
+    const loaderReturn = await (async ({ event, context }) => {
     const address = event.params.caller.payload.bits;
     return { user: await context.User.get(address) };
-  },
-  handler: async ({ event, context, loaderReturn }) => {
-    const id = `${event.transaction.id}_${event.logIndex}`;
+  })({ event, context });
 
-    const { user } = loaderReturn;
-    const address = event.params.caller.payload.bits;
+        const id = `${event.transaction.id}_${event.logIndex}`;
 
-    // Create user if it doesn't exist
-    if (!user) {
-      context.User.set({
-        id: address,
-        address: address,
-        principal: BigInt(0),
-        baseTrackingIndex: BigInt(0),
-        baseTrackingAccrued: BigInt(0),
-        totalCollateralBought: event.params.price,
-        totalValueLiquidated: BigInt(0),
-      });
-    } else {
-      // Update user
-      context.User.set({
-        ...user,
-        totalCollateralBought: user.totalCollateralBought + event.params.price,
-      });
-    }
+        const { user } = loaderReturn;
+        const address = event.params.caller.payload.bits;
 
-    context.BuyCollateralEvent.set({
-      id,
-      user_id: address,
-      recipient: event.params.recipient.payload.bits,
-      collateralAsset_id: event.params.asset_id.bits,
-      amount: event.params.amount,
-      price: event.params.price,
-      timestamp: event.block.time,
-    });
-  },
-});
+        // Create user if it doesn't exist
+        if (!user) {
+          context.User.set({
+            id: address,
+            address: address,
+            principal: BigInt(0),
+            baseTrackingIndex: BigInt(0),
+            baseTrackingAccrued: BigInt(0),
+            totalCollateralBought: event.params.price,
+            totalValueLiquidated: BigInt(0),
+          });
+        } else {
+          // Update user
+          context.User.set({
+            ...user,
+            totalCollateralBought: user.totalCollateralBought + event.params.price,
+          });
+        }
+
+        context.BuyCollateralEvent.set({
+          id,
+          user_id: address,
+          recipient: event.params.recipient.payload.bits,
+          collateralAsset_id: event.params.asset_id.bits,
+          amount: event.params.amount,
+          price: event.params.price,
+          timestamp: event.block.time,
+        });
+  }
+);
 
 // Reserves Withdrawn Event
-Market.ReservesWithdrawnEvent.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "Market", event: "ReservesWithdrawnEvent" },
+  async ({ event, context }) => {
   const id = `${event.transaction.id}_${event.logIndex}`;
 
   context.ReservesWithdrawnEvent.set({
@@ -414,10 +448,13 @@ Market.ReservesWithdrawnEvent.handler(async ({ event, context }) => {
     amount: event.params.amount,
     timestamp: event.block.time,
   });
-});
+}
+);
 
 // Pause Configuration Event
-Market.PauseConfigurationEvent.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "Market", event: "PauseConfigurationEvent" },
+  async ({ event, context }) => {
   const pauseConfiguration = event.params.pause_config;
 
   context.PauseConfiguration.set({
@@ -427,10 +464,13 @@ Market.PauseConfigurationEvent.handler(async ({ event, context }) => {
     absorbPaused: pauseConfiguration.absorb_paused,
     buyPaused: pauseConfiguration.buy_paused,
   });
-});
+}
+);
 
 // Market Configuration Event
-Market.MarketConfigurationEvent.handler(async ({ event, context }) => {
+indexer.onEvent(
+  { contract: "Market", event: "MarketConfigurationEvent" },
+  async ({ event, context }) => {
   const marketConfiguration = event.params.market_config;
 
   context.MarketConfiguartion.set({
@@ -460,4 +500,5 @@ Market.MarketConfigurationEvent.handler(async ({ event, context }) => {
     baseBorrowMin: marketConfiguration.base_borrow_min,
     targetReserves: marketConfiguration.target_reserves,
   });
-});
+}
+);

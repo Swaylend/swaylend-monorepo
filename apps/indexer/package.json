@@ -4,27 +4,28 @@
   "license": "MIT",
   "scripts": {
     "build": "tsc --build --clean",
-    "codegen": "envio codegen",
-    "dev": "envio dev",
+    "codegen": "envio codegen --config config.mainnet.usdc.yaml",
+    "dev": "envio dev --config config.mainnet.usdc.yaml",
     "test": "ts-mocha test/**/*.spec.ts",
-    "start": "envio start"
+    "start": "envio start --config config.mainnet.usdc.yaml"
   },
   "dependencies": {
     "chai": "4.3.10",
     "ethers": "6.13.4",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "envio": "3.2.1"
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "@types/chai": "^4.3.11",
     "@types/mocha": "10.0.10",
     "@types/node": "20.17.x",
-    "envio": "2.32.3",
     "mocha": "10.2.0",
     "ts-mocha": "^10.0.0",
     "typescript": "5.6.3"
   },
-  "optionalDependencies": {
-    "generated": "./generated"
+  "type": "module",
+  "engines": {
+    "node": ">=22.0.0"
   }
 }
