@@ -1,6 +1,6 @@
 name: Swaylend USDT Market (testnet)
 ecosystem: fuel
-networks:
+chains:
   - id: 0
     start_block: 11380000
     contracts:
