@@ -1,8 +1,11 @@
 import type { Provider } from 'fuels';
 import type { Network } from './config';
 
+// Fuel mainnet reports its chain name as "Ignition", not "mainnet", so matching
+// on the literal word rejects the real mainnet and every owner script fails its
+// network check before doing anything.
 const EXPECTED_CHAIN_NAME: Record<Network, string[]> = {
-  mainnet: ['mainnet'],
+  mainnet: ['mainnet', 'ignition'],
   testnet: ['testnet'],
   devnet: ['devnet', 'local'],
 };

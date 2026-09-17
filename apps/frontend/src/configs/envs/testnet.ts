@@ -8,7 +8,6 @@ export function createTestnetConfig() {
       swaylendApi: process.env.NEXT_PUBLIC_SWAYLEND_API ?? '',
       posthogKey: process.env.NEXT_PUBLIC_POSTHOG_KEY ?? '',
       posthogHost: process.env.NEXT_PUBLIC_POSTHOG_HOST ?? '',
-      hermesApi: process.env.NEXT_PUBLIC_HERMES_API ?? '',
       walletConnectProjectId:
         process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID ?? '',
       fuelExplorerUrl: process.env.NEXT_PUBLIC_FUEL_EXPLORER_URL ?? '',

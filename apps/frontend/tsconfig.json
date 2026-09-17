@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
     "lib": ["dom", "dom.iterable", "esnext"],
+    // ES2020 for the BigInt literals the Stork update encoder uses.
+    "target": "ES2020",
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
