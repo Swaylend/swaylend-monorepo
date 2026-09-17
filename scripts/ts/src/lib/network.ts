@@ -19,8 +19,7 @@ export async function verifyNetwork(
   const allowed = EXPECTED_CHAIN_NAME[expected];
   if (!allowed.some((a) => name.includes(a))) {
     throw new Error(
-      `Network mismatch: expected ${expected} (one of ${allowed.join(', ')}), got chain name "${chain.name}".\n` +
-        `Check PROVIDER_URL and NETWORK env vars.`
+      `Network mismatch: expected ${expected} (one of ${allowed.join(', ')}), got chain name "${chain.name}".\nCheck PROVIDER_URL and NETWORK env vars.`
     );
   }
   console.log(`✓ Connected to ${chain.name} (${expected})`);
