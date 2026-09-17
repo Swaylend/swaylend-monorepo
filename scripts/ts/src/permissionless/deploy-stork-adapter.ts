@@ -20,8 +20,8 @@ import { config } from '../lib/config';
 import { verifyNetwork } from '../lib/network';
 import { confirm } from '../lib/prompt';
 import { createWallet } from '../lib/wallet';
-import { StorkPythAdapterFactory } from '../sway-api/StorkPythAdapterFactory';
 import { StorkPythAdapter } from '../sway-api/StorkPythAdapter';
+import { StorkPythAdapterFactory } from '../sway-api/StorkPythAdapterFactory';
 
 type FeedEntry = {
   symbol: string;
@@ -46,11 +46,19 @@ function readFeedsConfig(path: string): FeedsConfig {
   const cfg = JSON.parse(readFileSync(path, 'utf8')) as FeedsConfig;
 
   if (cfg.network !== config.network) {
-    throw new Error(`Config is for ${cfg.network} but NETWORK=${config.network}.`);
+    throw new Error(
+      `Config is for ${cfg.network} but NETWORK=${config.network}.`
+    );
   }
   for (const f of cfg.feeds) {
-    if (f.exponent > 18) throw new Error(`${f.symbol}: exponent ${f.exponent} exceeds Stork's 18 decimals.`);
-    if (f.confBps > MAX_CONF_BPS) throw new Error(`${f.symbol}: confBps ${f.confBps} exceeds the ${MAX_CONF_BPS} bps cap.`);
+    if (f.exponent > 18)
+      throw new Error(
+        `${f.symbol}: exponent ${f.exponent} exceeds Stork's 18 decimals.`
+      );
+    if (f.confBps > MAX_CONF_BPS)
+      throw new Error(
+        `${f.symbol}: confBps ${f.confBps} exceeds the ${MAX_CONF_BPS} bps cap.`
+      );
   }
   return cfg;
 }
@@ -65,15 +73,20 @@ export async function deployStorkAdapter(configPath: string) {
   console.log(`Feeds:          ${cfg.feeds.map((f) => f.symbol).join(', ')}`);
 
   if (cfg.unsupported?.length) {
-    console.warn('\n⚠️  Assets with no Stork feed — the market cannot price these after the switch:');
-    for (const u of cfg.unsupported) console.warn(`     ${u.symbol}: ${u.reason}`);
+    console.warn(
+      '\n⚠️  Assets with no Stork feed — the market cannot price these after the switch:'
+    );
+    for (const u of cfg.unsupported)
+      console.warn(`     ${u.symbol}: ${u.reason}`);
   }
 
   const bakoVault = config.bako.walletAddress;
   if (bakoVault) {
     console.log(`\nOwnership will transfer to Bako vault: ${bakoVault}`);
   } else {
-    console.warn('\n⚠️  BAKO_WALLET_ADDRESS not set — ownership will stay with the deployer.');
+    console.warn(
+      '\n⚠️  BAKO_WALLET_ADDRESS not set — ownership will stay with the deployer.'
+    );
   }
 
   if (!(await confirm('\nDeploy the Stork adapter?'))) {
@@ -91,13 +104,18 @@ export async function deployStorkAdapter(configPath: string) {
   console.log('\n→ initialize(owner = deployer, stork_contract_id)');
   await (
     await adapter.functions
-      .initialize({ Address: { bits: wallet.address.toB256() } }, { bits: cfg.storkContractId })
+      .initialize(
+        { Address: { bits: wallet.address.toB256() } },
+        { bits: cfg.storkContractId }
+      )
       .call()
   ).waitForResult();
   console.log('   done.');
 
   for (const f of cfg.feeds) {
-    console.log(`→ set_feed ${f.symbol.padEnd(7)} expo=${f.exponent} confBps=${f.confBps} -> ${f.storkAsset}`);
+    console.log(
+      `→ set_feed ${f.symbol.padEnd(7)} expo=${f.exponent} confBps=${f.confBps} -> ${f.storkAsset}`
+    );
     await (
       await adapter.functions
         .set_feed(f.priceFeedId, {
@@ -112,7 +130,9 @@ export async function deployStorkAdapter(configPath: string) {
   console.log('\n→ Verifying feeds read back correctly...');
   for (const f of cfg.feeds) {
     const { value } = await adapter.functions.get_feed(f.priceFeedId).get();
-    const ok = value?.stork_id === f.storkAssetId && Number(value?.exponent) === f.exponent;
+    const ok =
+      value?.stork_id === f.storkAssetId &&
+      Number(value?.exponent) === f.exponent;
     console.log(`   ${ok ? '✓' : '✗'} ${f.symbol}`);
     if (!ok) throw new Error(`Feed ${f.symbol} did not read back as written.`);
   }
@@ -120,14 +140,18 @@ export async function deployStorkAdapter(configPath: string) {
   if (bakoVault) {
     console.log(`\n→ transfer_ownership -> ${bakoVault}`);
     await (
-      await adapter.functions.transfer_ownership({ Address: { bits: bakoVault } }).call()
+      await adapter.functions
+        .transfer_ownership({ Address: { bits: bakoVault } })
+        .call()
     ).waitForResult();
     const { value: owner } = await adapter.functions.owner().get();
     console.log(`   owner is now: ${JSON.stringify(owner)}`);
   }
 
   console.log('\nNext: point the market at it (reversible).');
-  console.log(`  1. Set "pyth_contract_id": "${contractId}" in the market config JSON`);
+  console.log(
+    `  1. Set "pyth_contract_id": "${contractId}" in the market config JSON`
+  );
   console.log('  2. pnpm update-market <path/to/market-config.json>');
 }
 

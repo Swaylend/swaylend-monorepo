@@ -61,18 +61,25 @@ const ADAPTER = process.env.ADAPTER_ID!;
   for (const f of feeds.feeds) {
     const p = prices.get(f.storkAsset)!;
     updateData.push(arrayify(encodeStorkUpdate(p)));
-    publishTimes.push(DateTime.fromUnixSeconds(Number(p.timestampNs / 1_000_000_000n)).toTai64());
+    publishTimes.push(
+      DateTime.fromUnixSeconds(Number(p.timestampNs / 1_000_000_000n)).toTai64()
+    );
     priceFeedIds.push(f.priceFeedId);
   }
 
-  const { value: fee } = await adapter.functions.update_fee(updateData).addContracts([stork]).get();
+  const { value: fee } = await adapter.functions
+    .update_fee(updateData)
+    .addContracts([stork])
+    .get();
   console.log(`update_fee (via Stork.get_update_fee_v1): ${fee.toString()}`);
 
   console.log('→ update_price_feeds_if_necessary ...');
   const call = await adapter.functions
     .update_price_feeds_if_necessary(priceFeedIds, publishTimes, updateData)
     .addContracts([stork])
-    .callParams({ forward: { amount: fee, assetId: await provider.getBaseAssetId() } })
+    .callParams({
+      forward: { amount: fee, assetId: await provider.getBaseAssetId() },
+    })
     .call();
   const res = await call.waitForResult();
   console.log(`   mined: ${res.transactionId}`);
@@ -80,7 +87,10 @@ const ADAPTER = process.env.ADAPTER_ID!;
   console.log('\n→ Reading prices back through the Pyth ABI:');
   let allOk = true;
   for (const f of feeds.feeds) {
-    const { value } = await adapter.functions.price(f.priceFeedId).addContracts([stork]).get();
+    const { value } = await adapter.functions
+      .price(f.priceFeedId)
+      .addContracts([stork])
+      .get();
     const quantized = prices.get(f.storkAsset)!.quantizedValue;
 
     // Exact: the adapter must report precisely the quantized value at the
@@ -99,9 +109,9 @@ const ADAPTER = process.env.ADAPTER_ID!;
     allOk &&= ok;
     console.log(
       `  ${ok ? 'PASS' : 'FAIL'} ${f.symbol.padEnd(7)} $${toDecimal(quantized).toFixed(10)}` +
-      ` onchain=${value.price.toString()} expected=${expectedPrice} expo=${value.exponent}` +
-      ` conf=${value.confidence.toString()} age=${age}s` +
-      `${ok ? '' : `  [price=${priceOk} expo=${expoOk} conf=${confOk} fresh=${freshOk}]`}`
+        ` onchain=${value.price.toString()} expected=${expectedPrice} expo=${value.exponent}` +
+        ` conf=${value.confidence.toString()} age=${age}s` +
+        `${ok ? '' : `  [price=${priceOk} expo=${expoOk} conf=${confOk} fresh=${freshOk}]`}`
     );
   }
   console.log(`\nend-to-end: ${allOk ? 'ALL PASS' : 'FAILURES'}`);

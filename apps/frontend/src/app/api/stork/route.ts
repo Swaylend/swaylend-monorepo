@@ -38,7 +38,10 @@ export async function GET(request: NextRequest) {
   // Validate rather than forward blindly, so this cannot be used as an open
   // proxy onto Stork's API with our credentials attached.
   const assets = requested.split(',').map((a) => a.trim().toUpperCase());
-  if (assets.length > MAX_ASSETS || !assets.every((a) => ASSET_PATTERN.test(a))) {
+  if (
+    assets.length > MAX_ASSETS ||
+    !assets.every((a) => ASSET_PATTERN.test(a))
+  ) {
     return NextResponse.json(
       { error: 'Invalid "assets" parameter' },
       { status: 400 }

@@ -52,7 +52,9 @@ function env(name: string): string {
  * strings.
  */
 function parsePreservingPrecision(text: string): unknown {
-  return JSON.parse(text.replace(/"timestamp":\s*(\d{16,})/g, '"timestamp":"$1"'));
+  return JSON.parse(
+    text.replace(/"timestamp":\s*(\d{16,})/g, '"timestamp":"$1"')
+  );
 }
 
 /**
@@ -61,12 +63,18 @@ function parsePreservingPrecision(text: string): unknown {
  * Stork 404s the whole request if any asset is unknown, so callers should pass
  * only assets they know are in the catalogue.
  */
-export async function fetchStorkPrices(assets: string[]): Promise<Map<string, StorkPrice>> {
+export async function fetchStorkPrices(
+  assets: string[]
+): Promise<Map<string, StorkPrice>> {
   const url = `${env('STORK_API_URL').replace(/\/$/, '')}/v1/prices/latest?assets=${assets.join(',')}`;
-  const res = await fetch(url, { headers: { Authorization: `Basic ${env('STORK_API_KEY')}` } });
+  const res = await fetch(url, {
+    headers: { Authorization: `Basic ${env('STORK_API_KEY')}` },
+  });
 
   if (!res.ok) {
-    throw new Error(`Stork ${res.status} for [${assets.join(', ')}]: ${await res.text()}`);
+    throw new Error(
+      `Stork ${res.status} for [${assets.join(', ')}]: ${await res.text()}`
+    );
   }
 
   const body = parsePreservingPrecision(await res.text()) as {
@@ -95,7 +103,9 @@ export async function fetchStorkPrices(assets: string[]): Promise<Map<string, St
 function hexToBytes(hex: string, expectedLen: number): Uint8Array {
   const clean = hex.startsWith('0x') ? hex.slice(2) : hex;
   if (clean.length !== expectedLen * 2) {
-    throw new Error(`Expected ${expectedLen}-byte hex, got ${clean.length / 2} bytes: ${hex}`);
+    throw new Error(
+      `Expected ${expectedLen}-byte hex, got ${clean.length / 2} bytes: ${hex}`
+    );
   }
   const out = new Uint8Array(expectedLen);
   for (let i = 0; i < expectedLen; i++) {
@@ -141,14 +151,18 @@ export function encodeStorkUpdate(price: StorkPrice): Uint8Array {
   out.set(hexToBytes(signed.calculation_alg.checksum, 32), 88);
   out.set(hexToBytes(sig.r, 32), 120);
   out.set(hexToBytes(sig.s, 32), 152);
-  out[184] = Number.parseInt(sig.v.startsWith('0x') ? sig.v.slice(2) : sig.v, 16);
+  out[184] = Number.parseInt(
+    sig.v.startsWith('0x') ? sig.v.slice(2) : sig.v,
+    16
+  );
 
   return out;
 }
 
 /** Converts Stork's 18-decimal value to the exponent a given feed reports. */
 export function toPythPrice(quantizedValue: bigint, exponent: number): bigint {
-  if (exponent > 18) throw new Error(`Exponent ${exponent} exceeds Stork's 18 decimals`);
+  if (exponent > 18)
+    throw new Error(`Exponent ${exponent} exceeds Stork's 18 decimals`);
   return quantizedValue / 10n ** BigInt(18 - exponent);
 }
 
