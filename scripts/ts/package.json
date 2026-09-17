@@ -17,7 +17,9 @@
     "deploy-tokens": "tsx src/permissionless/deploy-tokens.ts",
     "deploy-pyth": "tsx src/permissionless/deploy-pyth.ts",
     "deploy-market": "tsx src/permissionless/deploy-market.ts",
-    "mint-tokens": "tsx src/permissionless/mint-tokens.ts"
+    "mint-tokens": "tsx src/permissionless/mint-tokens.ts",
+    "deploy-stork-adapter": "tsx src/permissionless/deploy-stork-adapter.ts",
+    "verify-stork-adapter": "tsx src/permissionless/verify-stork-adapter.ts"
   },
   "dependencies": {
     "bakosafe": "0.5.4",

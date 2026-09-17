@@ -1,30 +1,32 @@
 import type { PriceDataUpdateInput } from '@/contract-types/Market';
 import { selectMarket, useMarketStore } from '@/stores';
 
+import { getStorkFeed } from '@/configs/storkFeeds';
 import { useMarketContract } from '@/contracts/useMarketContract';
 import { usePythContract } from '@/contracts/usePythContract';
-import { HermesClient } from '@pythnetwork/hermes-client';
+import { encodeStorkUpdate, fetchStorkPrices, toPythPrice } from '@/lib/stork';
 import { useQuery } from '@tanstack/react-query';
 import BigNumber from 'bignumber.js';
 import { arrayify } from 'fuels';
 import { DateTime } from 'fuels';
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useCollateralConfigurations } from './useCollateralConfigurations';
 import { useMarketConfiguration } from './useMarketConfiguration';
 import { useProvider } from './useProvider';
 
+/**
+ * Prices come from Stork, written on-chain through the stork-pyth-adapter.
+ *
+ * Pyth's Core upgrade (Aug 2026) put Hermes behind an API key and removed the
+ * FUEL and ezETH feeds, so the market can no longer be priced from Pyth. The
+ * adapter implements the Pyth ABI over Stork, which is why `usePythContract`
+ * still works here - it just resolves to the adapter's contract id.
+ *
+ * Stork publishes no confidence interval, so the adapter synthesises one from a
+ * per-feed basis-point spread; the same spread is applied here so the UI agrees
+ * with what the contract computes.
+ */
 export const usePrice = (marketParam?: string) => {
-  const [hermesClient, _] = useState(
-    () =>
-      new HermesClient(
-        process.env.NEXT_PUBLIC_HERMES_API ?? 'https://hermes.pyth.network',
-        {
-          httpRetries: 1,
-          timeout: 3000,
-        }
-      )
-  );
-
   const { provider } = useProvider();
 
   const storeMarket = useMarketStore(selectMarket);
@@ -64,7 +66,7 @@ export const usePrice = (marketParam?: string) => {
 
   return useQuery({
     queryKey: [
-      'pythPrices',
+      'storkPrices',
       priceFeedIdToAssetIdKey,
       marketContract?.account?.address,
       marketContract?.id,
@@ -76,62 +78,64 @@ export const usePrice = (marketParam?: string) => {
         return null;
       }
 
-      const priceFeedIds = Array.from(priceFeedIdToAssetId.keys());
+      // Only request feeds Stork actually carries. Asking for an unknown asset
+      // fails the whole request, which would take down pricing for every other
+      // asset too.
+      const feeds = Array.from(priceFeedIdToAssetId.keys())
+        .map((priceFeedId) => {
+          const feed = getStorkFeed(priceFeedId);
+          return feed ? { priceFeedId, ...feed } : null;
+        })
+        .filter((f): f is NonNullable<typeof f> => f !== null);
 
-      // Fetch price updates from Hermes client
-      let priceUpdates;
-      try {
-        priceUpdates = await hermesClient.getLatestPriceUpdates(priceFeedIds);
-      } catch (error) {
-        const client = new HermesClient('https://hermes.pyth.network');
-
-        priceUpdates = await client.getLatestPriceUpdates(priceFeedIds);
+      if (feeds.length === 0) {
+        throw new Error('No Stork feeds configured for this market');
       }
 
-      if (
-        !priceUpdates ||
-        !priceUpdates.parsed ||
-        priceUpdates.parsed.length === 0
-      ) {
+      const storkPrices = await fetchStorkPrices(feeds.map((f) => f.asset));
+
+      const prices: Record<string, BigNumber> = {};
+      const confidenceIntervals: Record<string, BigNumber> = {};
+      const updateData: Uint8Array[] = [];
+      const publishTimes: string[] = [];
+      const priceFeedIds: string[] = [];
+
+      for (const feed of feeds) {
+        const storkPrice = storkPrices.get(feed.asset);
+        const assetId = priceFeedIdToAssetId.get(feed.priceFeedId);
+        if (!storkPrice || !assetId) continue;
+
+        const scaled = toPythPrice(storkPrice.quantizedValue, feed.exponent);
+        const scale = BigNumber(10).pow(BigNumber(-feed.exponent));
+
+        prices[assetId] = BigNumber(scaled.toString()).times(scale);
+        confidenceIntervals[assetId] = BigNumber(
+          ((scaled * BigInt(feed.confBps)) / 10000n).toString()
+        ).times(scale);
+
+        updateData.push(arrayify(encodeStorkUpdate(storkPrice)));
+        publishTimes.push(
+          DateTime.fromUnixSeconds(
+            Number(storkPrice.timestampNs / 1_000_000_000n)
+          ).toTai64()
+        );
+        priceFeedIds.push(feed.priceFeedId);
+      }
+
+      if (updateData.length === 0) {
         throw new Error('Failed to fetch price');
       }
-
-      const buffer = Buffer.from(priceUpdates.binary.data[0], 'hex');
-      const updateData = [arrayify(buffer)];
 
       const { value: fee } = await marketContract.functions
         .update_fee(updateData)
         .get();
 
-      // Prepare the PriceDateUpdateInput object
       const priceUpdateData: PriceDataUpdateInput = {
         update_fee: fee,
-        publish_times: priceUpdates.parsed.map((parsedPrice) =>
-          DateTime.fromUnixSeconds(parsedPrice.price.publish_time).toTai64()
-        ),
+        publish_times: publishTimes,
         price_feed_ids: priceFeedIds,
         update_data: updateData,
       };
-
-      // Format prices to BigNumber
-      const prices = Object.fromEntries(
-        priceUpdates.parsed.map((parsedPrice) => [
-          priceFeedIdToAssetId.get(`0x${parsedPrice.id}`)!,
-          BigNumber(parsedPrice.price.price).times(
-            BigNumber(10).pow(BigNumber(parsedPrice.price.expo))
-          ),
-        ])
-      );
-
-      // Format confidence intervals to BigNumber
-      const confidenceIntervals = Object.fromEntries(
-        priceUpdates.parsed.map((parsedPrice) => [
-          priceFeedIdToAssetId.get(`0x${parsedPrice.id}`)!,
-          BigNumber(parsedPrice.price.conf).times(
-            BigNumber(10).pow(BigNumber(parsedPrice.price.expo))
-          ),
-        ])
-      );
 
       return {
         prices,

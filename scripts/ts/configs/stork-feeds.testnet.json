@@ -1,0 +1,75 @@
+{
+  "network": "testnet",
+  "storkContractId": "0x09c88f50d535ac5ce8945e34c418233b1e3834be9a88effb57cb137321fbae0c",
+  "comment": [
+    "Testnet twin of stork-feeds.mainnet.json, pointing at Stork's testnet contract.",
+    "Stork asset ids are chain-independent, so the feed mappings are identical;",
+    "only the contract id differs. Used to rehearse the migration before mainnet."
+  ],
+  "feeds": [
+    {
+      "symbol": "USDC",
+      "storkAsset": "USDCUSD",
+      "priceFeedId": "0xeaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a",
+      "storkAssetId": "0x7416a56f222e196d0487dce8a1a8003936862e7a15092a91898d69fa8bce290c",
+      "exponent": 7,
+      "confBps": 5
+    },
+    {
+      "symbol": "ETH",
+      "storkAsset": "ETHUSD",
+      "priceFeedId": "0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace",
+      "storkAssetId": "0x59102b37de83bdda9f38ac8254e596f0d9ac61d2035c07936675e87342817160",
+      "exponent": 8,
+      "confBps": 10
+    },
+    {
+      "symbol": "ezETH",
+      "storkAsset": "EZETHUSD",
+      "priceFeedId": "0x06c217a791f5c4f988b36629af4cb88fad827b2485400a358f3b02886b54de92",
+      "storkAssetId": "0x4f7d209f5e6cfb557e5b148b744e1317ae2de9449ba4a53e7b6493a2aeda3fb4",
+      "exponent": 8,
+      "confBps": 15
+    },
+    {
+      "symbol": "USDT",
+      "storkAsset": "USDTUSD",
+      "priceFeedId": "0x2b89b9dc8fdf9f34709a5b106b472f0f39bb6ca9ce04b0fd7f2e971688e2e53b",
+      "storkAssetId": "0x6dcd0a8fb0460d4f0f98c524e06c10c63377cd098b589c0b90314bfb55751558",
+      "exponent": 7,
+      "confBps": 5
+    },
+    {
+      "symbol": "sDAI",
+      "storkAsset": "SDAIUSD",
+      "priceFeedId": "0x710659c5a68e2416ce4264ca8d50d34acc20041d91289110eea152c52ff3dc39",
+      "storkAssetId": "0xf31e0ed7d2f9d8fe977679f2b18841571a064b9b072cf7daa755a526fe9579ec",
+      "exponent": 8,
+      "confBps": 10
+    },
+    {
+      "symbol": "weETH",
+      "storkAsset": "WEETHUSD",
+      "priceFeedId": "0x9ee4e7c60b940440a261eb54b6d8149c23b580ed7da3139f7f08f4ea29dad395",
+      "storkAssetId": "0x2778ff4ef448d972c023c579b2bff9c55d48d0fde830dcdd72fff8189c01993e",
+      "exponent": 8,
+      "confBps": 15
+    },
+    {
+      "symbol": "wstETH",
+      "storkAsset": "WSTETHUSD",
+      "priceFeedId": "0x6df640f3b8963d8f8358f791f352b8364513f6ab1cca5ed3f1f7b5448980e784",
+      "storkAssetId": "0x56dd6ca223192c3f415d95b0e6812b9405845c7853522975239c88b6f4f34cbd",
+      "exponent": 8,
+      "confBps": 15
+    },
+    {
+      "symbol": "FUEL",
+      "storkAsset": "FUELUSD",
+      "priceFeedId": "0x8a757d54e5d34c7ff1aea8502a2d968686027a304d00418092aaf7e60ed98d95",
+      "storkAssetId": "0x670b7091d54af59331f97a1ce4a321eab14fd257a8b57b75ce4d4a5afc9186f4",
+      "exponent": 12,
+      "confBps": 25
+    }
+  ]
+}

@@ -31,7 +31,6 @@ export const AppConfigSchema = z.object({
     swaylendApi: z.string(),
     posthogKey: z.string(),
     posthogHost: z.string(),
-    hermesApi: z.string(),
     walletConnectProjectId: z.string(),
     fuelNodeUrl: z.string(),
     fuelExplorerUrl: z.string(),

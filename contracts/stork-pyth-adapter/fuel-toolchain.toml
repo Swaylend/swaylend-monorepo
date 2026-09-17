@@ -1,0 +1,5 @@
+# The Stork Sway SDK targets std 0.69.x, so this contract pins a newer forc
+# than the rest of the workspace (0.66.4). It is intentionally NOT a workspace
+# member for that reason - build it from this directory.
+[toolchain]
+channel = "mainnet"

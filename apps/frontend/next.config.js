@@ -19,10 +19,8 @@ const CONNECT_DOMAINS = [
   'https://eu.i.posthog.com',
   // Sentio
   'https://app.sentio.xyz',
-  // Hermes
-  'https://gateway-lon.liquify.com',
-  'https://gateway.liquify.com',
-  'https://hermes.pyth.network',
+  // Prices are fetched from Stork through /api/stork on this origin, so no
+  // oracle host is needed here.
   // OpenBlock
   'https://www.data-openblocklabs.com',
 ];

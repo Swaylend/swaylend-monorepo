@@ -1,0 +1,18 @@
+[[package]]
+name = "signed_int"
+version = "0.26.1"
+source = "registry+signed_int?0.26.1#QmWB8r7jN9bE1sVUJzQoTCbsTXyL6qB55mSfeicd6EtoAo!"
+dependencies = ["std"]
+
+[[package]]
+name = "std"
+version = "0.69.1"
+source = "registry+std?0.69.1#QmbPunScay4xpfHKpxQ71dFKXSiyJuPP8P8YhgX5Dkmzm9!"
+
+[[package]]
+name = "stork_pyth_adapter"
+source = "member"
+dependencies = [
+    "signed_int",
+    "std",
+]
