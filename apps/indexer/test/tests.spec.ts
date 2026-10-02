@@ -1,19 +1,5 @@
 import assert from 'node:assert';
-import {
-  type AbsorbCollateralEvent,
-  type BuyCollateralEvent,
-  type CollateralAsset,
-  type LiquidationEvent,
-  type MarketConfiguartion,
-  type MarketState,
-  type PauseConfiguration,
-  type ReservesWithdrawnEvent,
-  TestHelpers,
-  type User,
-  type UserBaseEvent,
-  type UserCollateral,
-  type UserCollateralEvent,
-} from 'generated';
+import { type AbsorbCollateralEvent, type BuyCollateralEvent, type CollateralAsset, type LiquidationEvent, type MarketConfiguartion, type MarketState, type PauseConfiguration, type ReservesWithdrawnEvent, TestHelpers, type User, type UserBaseEvent, type UserCollateral, type UserCollateralEvent } from "envio";
 const { MockDb, Market, Addresses } = TestHelpers;
 
 const MARKET_ID = 'MARKET_ID';

@@ -1,6 +1,6 @@
 name: Swaylend USDC Market
 ecosystem: fuel
-networks:
+chains:
   - id: 9889
     start_block: 3000000
     hyperfuel_config:

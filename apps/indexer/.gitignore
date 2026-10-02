@@ -31,3 +31,5 @@ cache
 build
 *.bs.js
 generated
+.env
+.envio/
